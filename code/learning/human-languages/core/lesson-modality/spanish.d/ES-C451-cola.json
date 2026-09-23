@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C451-cola",
+    "language": "spanish",
+    "chapter": 451,
+    "sequence": 11830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e06cacc71836bf8"
+  },
+  "findings": []
+}

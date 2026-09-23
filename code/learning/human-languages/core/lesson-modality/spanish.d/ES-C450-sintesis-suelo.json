@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C450-sintesis-suelo",
+    "language": "spanish",
+    "chapter": 450,
+    "sequence": 11820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a40bb66622b27d69"
+  },
+  "findings": []
+}

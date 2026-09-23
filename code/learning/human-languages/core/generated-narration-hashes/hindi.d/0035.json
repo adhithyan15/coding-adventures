@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 35,
-  "sourceHash": "fnv1a64:aad4ad02c91be722",
+  "sourceHash": "fnv1a64:5c93225f199fd2c3",
   "lessonIds": [
     "HI-C35-lena",
     "HI-S146-letter-va",
@@ -14,6 +14,6 @@
   "text": "hindi/narration/ch35.txt",
   "json": "hindi/narration/ch35.json",
   "textHash": "fnv1a64:cfa62b12c58bc6de",
-  "jsonHash": "fnv1a64:d3c22fc3f85cd1da",
+  "jsonHash": "fnv1a64:5e08616f8a89b5db",
   "findings": []
 }

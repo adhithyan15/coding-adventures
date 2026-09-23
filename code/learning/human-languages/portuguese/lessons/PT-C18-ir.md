@@ -10,7 +10,7 @@ gloss: "to go — two letters long, and welded together out of three separate La
 concept_tag: VERB-GO
 prerequisites: [PT-C18-ter-haver, PT-C16-ser-roots]
 sounds: [final-r, nasal-ao]
-roots: [ire-latin, latin-vadere]
+roots: [ire-latin, vadere-latin]
 etymology_hook: "ir ← īre (→ exit, transit, initial, itinerary, ambition, perish, obituary, and the grammar word preterite), but vou/vais/vai ← vādere 'to advance' (→ evade, invade, pervade) and fui ← esse's old perfect: one two-letter verb, three ancestors"
 duration:
   max_seconds: 228

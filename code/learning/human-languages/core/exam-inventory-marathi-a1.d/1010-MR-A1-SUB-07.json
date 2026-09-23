@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-SUB-07",
+  "category": "Subordination",
+  "label": "simultaneity: jevhaa and the -lyaavar participle",
+  "probe": [
+    "MR-JOIN-JEVHA",
+    "MR-GRAMMAR-LYAAVAR"
+  ],
+  "note": "Closed by MR-C36-jevha and MR-C36-lyaavar (chapter 36). Both atoms are required because the point names both exponents, and they mean different things: jevhaa is simultaneity, -lyaavar is sequence.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SUB-08"
+  ]
+}

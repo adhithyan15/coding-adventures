@@ -1,0 +1,22 @@
+{
+  "chapter": 444,
+  "title": "La Casa Por Fuera",
+  "label": "ch:es-casa-fuera",
+  "canDo": "I can report what is wrong with a home and say what I did about it: the heating, the material, the garden, the thing I covered, the trolley I took to the shop.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C444-sintesis-casa",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C444-CASA-01",
+      "ES-LEX-C444-CASA-02",
+      "ES-LEX-C444-CASA-03",
+      "ES-LEX-C444-CASA-04",
+      "ES-LEX-C444-CASA-05"
+    ],
+    "note": "Tranche 3b, wordlist derived by the solo-blocker rule described on chapter 440. THREE THINGS A WORD CAN DO ON ITS WAY INTO SPANISH, set side by side: madera ARRIVED TWICE (materia is the learned twin -- the tranche's third doublet after nadar/natacion in 438 and hacer/factura in 441), planta ARRIVED ONCE AND SPREAD (sole of the foot, then the cutting pressed in by the heel, then the floor plan you stand on, and English 'plan' is the same word again), and carrito is neither -- carro came in and Spanish grew -ito on it centuries later. materia meant TIMBER before it meant matter, from mater, the mothering trunk that puts out branches, so the abstract sense came second: matter was named after wood. CUBIERTO IS A THIRD IRREGULAR PARTICIPLE joining abierto (ch37) and answering cerrado (439); they break together BECAUSE THEY RHYME in -brir, so the irregulars come in small families and one member gives you the rest. It also supplies the clean counterexample to disfrutar in 440: des- in descubrir REALLY reverses (cover -> un-cover -> discover) where dis- in disfrutar did not, so the same shape has two behaviours and only the whole word's meaning says which. carrito teaches that -ito's first job is NOT size: momentito is not a shorter moment, it softens the request; plus poco -> poquito keeping the hard k, and the unkinder cousin -illo."
+  }
+}

@@ -10,7 +10,7 @@ gloss: "to expect"
 concept_tag: PT-VERB-EXPECT
 prerequisites: [PT-C21-esperar-hope]
 sounds: [open-e, prop-e]
-roots: [latin-sperare]
+roots: [sperare-latin]
 etymology_hook: "waiting for something made esperar a natural verb for expectation"
 duration:
   max_seconds: 125

@@ -10,7 +10,7 @@ gloss: to read — from a Latin verb that first meant "to gather," which is why 
 concept_tag: VERB-READ
 prerequisites: [FR-C25-penser, FR-C22-chien-chat]
 sounds: [r-uvular, silent-final]
-roots: [latin-legere]
+roots: [legere-latin]
 etymology_hook: "lire ← Latin legere, first 'to gather, to pick out' and only later 'to read' → legible, legend ('things to be read'), lecture ('a reading'), lesson, collect, select, elect, neglect, elegant, intellect, diligent"
 duration:
   max_seconds: 262

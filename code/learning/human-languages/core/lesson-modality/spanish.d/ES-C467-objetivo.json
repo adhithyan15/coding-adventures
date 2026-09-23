@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C467-objetivo",
+    "language": "spanish",
+    "chapter": 467,
+    "sequence": 12780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfaf9588e4d9232e"
+  },
+  "findings": []
+}

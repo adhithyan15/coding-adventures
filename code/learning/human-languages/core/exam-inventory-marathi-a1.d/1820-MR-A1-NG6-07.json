@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-NG6-07",
+  "category": "Evaluative notions",
+  "label": "capacity and competence",
+  "probe": [
+    "MR-LEX-MAHIT-JANNE",
+    "MR-GRAMMAR-DATIVE-KNOWLEDGE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG6-09"
+  ]
+}

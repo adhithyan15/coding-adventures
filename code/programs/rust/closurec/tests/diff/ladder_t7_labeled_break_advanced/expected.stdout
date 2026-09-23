@@ -1,0 +1,1 @@
+var a=0;a:for(;a<2;a++)for(var b=0;b<2;b++)break a;console.log(a);

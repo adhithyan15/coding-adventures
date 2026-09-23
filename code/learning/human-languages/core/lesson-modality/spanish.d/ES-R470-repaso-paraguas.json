@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R470-repaso-paraguas",
+    "language": "spanish",
+    "chapter": 470,
+    "sequence": 12970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b0ac331b6ab2101"
+  },
+  "findings": []
+}

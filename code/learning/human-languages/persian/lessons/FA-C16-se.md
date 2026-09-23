@@ -11,7 +11,7 @@ gloss: "three — the first number this book can already write"
 concept_tag: FA-NUMBER-THREE
 prerequisites: [FA-C16-do]
 sounds: [rtl, short-vowels-unwritten, heh-e]
-roots: [proto-indo-european-treyes]
+roots: [pie-treyes]
 etymology_hook: "se continues Middle Persian se, from Proto-Indo-European *treyes — English three, Latin tres — and it is written with two letters the script chapter already taught."
 duration:
   max_seconds: 240

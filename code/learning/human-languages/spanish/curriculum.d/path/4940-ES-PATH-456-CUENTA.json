@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-456-CUENTA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-456-CUENTA"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C450-entrenamiento",
+    "language": "spanish",
+    "chapter": 450,
+    "sequence": 11800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebd4e2f05d49c1fa"
+  },
+  "findings": []
+}

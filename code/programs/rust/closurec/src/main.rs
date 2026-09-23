@@ -305,10 +305,9 @@ mod tests {
         let spec = load_spec_from_str(CLI_SPEC_JSON).expect("cli.spec.json must load");
         assert_eq!(spec.name, "closurec");
         assert_eq!(spec.cli_builder_spec_version, "1.0");
-        // 100 user-visible flag entries (some are alias variants
-        // of the same logical flag — see jscomp_dev_mode /
-        // dev_mode, checks_only / checks_only_alias,
-        // warnings_allowlist_file / warnings_whitelist_file_alias).
+        // Roughly 100 canonical user-visible flag entries. Alternate long
+        // spellings live in each flag's long_aliases array and do not inflate
+        // this count.
         assert!(
             spec.flags.len() >= 90,
             "expected ~100 Closure-Compiler flags; got {}",
@@ -325,6 +324,8 @@ mod tests {
         assert!(text.contains("closurec"));
         assert!(text.contains("--js"));
         assert!(text.contains("--js_output_file"));
+        assert!(text.contains("--checks_only, --checks-only"));
+        assert!(text.contains("--define <STRING>, --D <STRING>"));
     }
 
     #[test]
@@ -461,27 +462,10 @@ mod tests {
     }
 
     #[test]
-    fn deprecated_hyphenated_alias_is_rejected() {
-        // The Java tool accepts `--checks-only` (hyphenated) as
-        // an alias for `--checks_only` (underscored canonical).
-        // cli-builder doesn't natively support multiple long-form
-        // aliases per flag, so v0.1.0 implements only the
-        // canonical underscored names. Passing the hyphenated
-        // form should fail with a useful "unknown flag" error
-        // pointing the user at the canonical name.
-        //
-        // This locks in the limitation as a *known* behavior
-        // rather than an accident — future versions may add
-        // hyphenated aliases via cli-builder enhancements
-        // (tracked in CLOC08 known-gaps).
-        let (text, _code) =
-            parse_and_run(&args(&["--checks-only"]));
-        assert!(
-            text.to_lowercase().contains("unknown")
-                || text.to_lowercase().contains("checks-only"),
-            "expected unknown-flag error for hyphenated alias; got: {}",
-            text
-        );
+    fn upstream_long_alias_parses_cleanly() {
+        let (text, code) = parse_and_run(&args(&["--checks-only"]));
+        assert_eq!(code, ExitCode::SUCCESS);
+        assert_parsed_cleanly(&text);
     }
 
     #[test]

@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "The Teens Are a Rule, Not Nine Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d266850c0b41e0f2",
+  "sourceHash": "fnv1a64:2f79128ce982d5b8",
   "lessons": [
     {
       "id": "FA-C18-yazdah",
@@ -156,7 +156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e2cffeab9df5cf8",
+      "sourceHash": "fnv1a64:2e486822bf2c76f7",
       "notice": null,
       "blocks": [
         {
@@ -275,7 +275,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5adc692455c2be8",
+      "sourceHash": "fnv1a64:732b1761065b51e3",
       "notice": null,
       "blocks": [
         {

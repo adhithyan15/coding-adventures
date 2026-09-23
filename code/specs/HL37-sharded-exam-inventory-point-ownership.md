@@ -4,7 +4,9 @@ Exam inventories are authored external or editorial targets. Their metadata,
 scope, provenance, and points remain one public `ExamInventory`, but the source
 need not be one conflict domain. Malayalam A1 crossed that threshold at 4,839
 lines and 39 touches in the latest 200 human-language commits; Hindi A1 followed
-at 2,881 lines and 22 touches after the same boundary proved stable.
+at 2,881 lines and 22 touches after the same boundary proved stable. Marathi A1
+then crossed it at 4,780 lines and 13 unique-commit touches in the latest
+500-commit audit.
 
 ## Canonical layout
 

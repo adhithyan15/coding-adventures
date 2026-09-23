@@ -1,0 +1,981 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 453,
+  "title": "El turno",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:0a01d8b7002cdb9f",
+  "lessons": [
+    {
+      "id": "ES-C453-limpieza",
+      "sequence": 11970,
+      "title": "la limpieza — the cleaning",
+      "headword": "la limpieza",
+      "romanization": "la limpieza",
+      "gloss": "cleaning — the fourth way Spanish turns a word into the name of a doing",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f15251c1fae2be67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say limpio and la mudanza. One is a description, the other names a job of work. You are about to turn the first into the second."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la limpieza",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la limpieza — cleaning, the cleaning."
+            },
+            {
+              "kind": "speech",
+              "text": "El turno de limpieza — the cleaning shift. Productos de limpieza — cleaning products. La limpieza del portal es los martes — the entrance hall is cleaned on Tuesdays."
+            },
+            {
+              "kind": "speech",
+              "text": "It names the activity, not the state. For the state you still say está limpio. Limpiar is the verb: hay que limpiar la cocina."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: four endings, four genders settled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You now have the full set of Spanish's everyday noun-makers:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "ending",
+                "example",
+                "gender"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "ending: -anza. example: la mudanza. gender: feminine.",
+                "ending: -miento. example: el seguimiento. gender: masculine.",
+                "ending: -eza. example: la limpieza. gender: feminine.",
+                "ending: -ción. example: la instalación. gender: feminine."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three of the four are feminine, and -miento is the one to remember as the exception. Learn the ending and the article stops being a guess."
+            },
+            {
+              "kind": "speech",
+              "text": "Which ending a given word takes is not predictable — limpieza and not limpiamiento, seguimiento and not seguianza — and there is no rule waiting to be found. What is reliable is the gender, and that is most of what you needed."
+            },
+            {
+              "kind": "speech",
+              "text": "-eza attaches to adjectives rather than verbs: limpio gives limpieza, triste gives tristeza, pobre gives pobreza. It names the quality, and in this one case also the work of producing it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin limpidus, clear — as in water you can see through."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the same word as limpid, and kept it for water and for prose. Spanish let it drift from \"clear\" to \"clean\", which is a short walk: a clear stream is a clean one."
+            },
+            {
+              "kind": "speech",
+              "text": "There is an older Spanish word for clean, neto, from Latin nitidus, and it survives in el peso neto on a packet. Where Spanish kept two, it usually gave them separate jobs."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cleaning shift",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cleaning shift]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the kitchen is clean, using the adjective",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the kitchen is clean, using the adjective]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the four endings is masculine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the four endings is masculine]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The cleaning? (La limpieza.) The verb? (Limpiar.) What did limpidus mean? (Clear — see-through water.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C453-instalacion",
+      "sequence": 11980,
+      "title": "la instalación — the act, and the thing",
+      "headword": "la instalación",
+      "romanization": "la instalación",
+      "gloss": "the facility, the installation — a noun that means both the act and the thing",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7982c8322c1c75f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say arreglar and la oficina. Somebody put the heating into that building, and there is one word for both halves of that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la instalación",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la instalación — the installation, the fitting: and also the thing fitted."
+            },
+            {
+              "kind": "speech",
+              "text": "La instalación del aire acondicionado — putting the air conditioning in. La instalación eléctrica es vieja — the wiring is old. And in the plural, the premises: las instalaciones deportivas — the sports facilities."
+            },
+            {
+              "kind": "speech",
+              "text": "Instalar is the verb, for a boiler and for a program alike."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: -ción names the act and then the result",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This double sense is not a quirk of one word. It is what -ción does:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the act",
+                "the result"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "word: la instalación. the act: fitting it. the result: the wiring.",
+                "word: la construcción. the act: building it. the result: the building.",
+                "word: la decoración. the act: decorating. the result: the decor."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The noun names the doing, and then drifts onto whatever the doing left behind. When you meet a -ción word, expect both readings and let the sentence pick: durante la instalación is the act, revisar la instalación is the thing."
+            },
+            {
+              "kind": "speech",
+              "text": "Every one is feminine, and every one takes an accent in the singular that it loses in the plural — instalación, instalaciones — for the reason almacén did."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Old French installer: in- plus stalle, a stall — a seat in a choir, from a Germanic word for a standing-place."
+            },
+            {
+              "kind": "speech",
+              "text": "To install somebody was to put them in their stall: to seat a canon in his place in the cathedral. The word began as ceremony, moved to furniture, and now means putting a boiler on a wall or software on a machine."
+            },
+            {
+              "kind": "speech",
+              "text": "The Germanic stall is still around in English for a horse's, in stall the market stand, and in stand itself. A boiler and a cathedral canon are installed with the same word because both have been put where they belong."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the wiring is old",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the wiring is old]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sports facilities are closed for cleaning",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sports facilities are closed for cleaning]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what -ción nouns name besides the act",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *-ción* nouns name besides the act]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The installation? (La instalación.) The plural? (Las instalaciones, accent gone.) What was a stalle? (A stall — a standing-place, a seat.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C453-rotativo",
+      "sequence": 11990,
+      "title": "rotativo — it comes round again",
+      "headword": "rotativo",
+      "romanization": "rotativo",
+      "gloss": "rotating, on a rota — the third word in the track built on a wheel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c37cc2ac15f4c98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la rueda and alrededor. A third word off the same Latin wheel is coming."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rotativo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rotativo — rotating, done in turns, on a rota."
+            },
+            {
+              "kind": "speech",
+              "text": "Un turno rotativo — a rotating shift. La limpieza es rotativa — the cleaning goes round the neighbours. Presidencia rotativa — a chairmanship that passes from one member to the next."
+            },
+            {
+              "kind": "speech",
+              "text": "The idea is always the same: the job does not stay with one person, it comes round. Rotar is the verb, and la rotación the noun with the ending from the lesson before this one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: -ivo describes what a thing does",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-ivo makes an adjective meaning \"of the kind that does this\":"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "adjective"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "verb: rotar. adjective: rotativo — that rotates.",
+                "verb: informar. adjective: informativo — that informs.",
+                "verb: decorar. adjective: decorativo — that decorates."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "It is not about being in the act. A turno rotativo is not rotating at this moment; it is a shift of the rotating kind. The ending names a habit or a capacity, which is why un cartel informativo is informative whether or not anybody is reading it."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the identical ending in rotative, informative, decorative, and uses it the same way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin rota, wheel — for the third time, and it is worth stopping on."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "how the wheel got in"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: la rueda. how the wheel got in: straight down from rota, vowel broken by stress.",
+                "word: alrededor. how the wheel got in: retrō bent sideways by rota.",
+                "word: rotativo. how the wheel got in: lifted from rota whole, by scholars."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three words, three routes out of one Latin noun. Rueda is what centuries of speakers did to it. Rotativo is what a writer did to it in one step, keeping the o intact because it never passed through anybody's mouth on the way."
+            },
+            {
+              "kind": "speech",
+              "text": "That difference — worn down by speech, or lifted whole from a book — is the single most useful thing to notice about Spanish vocabulary, and here you can see both outcomes of it side by side."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rotating shift",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rotating shift]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cleaning goes round the neighbours",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cleaning goes round the neighbours]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why rueda has ue and rotativo does not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *rueda* has *ue* and *rotativo* does not]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Rotating? (Rotativo.) The verb? (Rotar.) What does -ivo name — an action happening, or a habit? (A habit or a capacity.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C453-consultar",
+      "sequence": 12000,
+      "title": "consultar — look it up",
+      "headword": "consultar",
+      "romanization": "consultar",
+      "gloss": "to check, to look up, to consult — asking a document rather than a person",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66ccf65534d6ff0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say revisar and el documento. Both are about paper, and what you do to it differs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: consultar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "consultar — to look up, to check, to consult."
+            },
+            {
+              "kind": "speech",
+              "text": "Consulte el horario — check the timetable. Lo consulto y te digo — I'll look into it and get back to you. Consultar con el jefe — to check with the boss."
+            },
+            {
+              "kind": "speech",
+              "text": "Two nouns come with it: la consulta, which is both the query and a doctor's surgery, and el consultorio, the consulting room."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: consultar, revisar, mirar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three verbs that all come out as \"check\" in English, now separated by what you are after:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you want",
+                "the verb"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what you want: a fact you do not have. the verb: consultar.",
+                "what you want: faults in something you do have. the verb: revisar.",
+                "what you want: to aim your eyes at it. the verb: mirar."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Consulto el horario — I do not know the time and the timetable does. Reviso el horario — I am checking the timetable for mistakes, which is a different errand entirely. Miro el horario — my eyes are on it, and the sentence has said nothing about why."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the preposition: you consultar a document directly, but consultar con a person. The con marks that the other party can answer back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin consultare, the repeated form of consulere — to take counsel, to deliberate."
+            },
+            {
+              "kind": "speech",
+              "text": "The Roman consul is the same root: the officer who takes counsel for the state. And el consejo — advice, and a council — came down the spoken road from consilium, a close relation."
+            },
+            {
+              "kind": "speech",
+              "text": "So consultar and el consejo are family, and the pair shows the split this chapter keeps meeting: consejo is worn smooth by centuries of speech, consultar was lifted from Latin by clerks with the l and the t still in place."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "check the timetable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: check the timetable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I'll check with the boss and tell you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I'll check with the boss and tell you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which preposition goes before a person",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which preposition goes before a person]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To look up? (Consultar.) To check for faults? (Revisar.) Which Roman officer shares the root? (The consul — one who takes counsel.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R453-repaso-limpieza",
+      "sequence": 12010,
+      "title": "(la limpieza, la instalación, rotativo, consultar) — from cold",
+      "headword": "(la limpieza, la instalación, rotativo, consultar)",
+      "romanization": "(la limpieza, la instalación, rotativo, consultar)",
+      "gloss": "cold retrieval of the four, and the two roads a Latin word can take into Spanish",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:daa3a62111763b3d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all four: the cleaning, the installation, rotating, to look up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the same Latin word, twice, differently",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two pairs in this chapter show the single most useful fact about Spanish vocabulary: a Latin word can arrive twice, once through speech and once through books, and the two arrivals look nothing alike."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "worn down by speech",
+                "lifted from the page"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "worn down by speech: la rueda. lifted from the page: rotativo.",
+                "worn down by speech: el consejo. lifted from the page: consultar."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The left-hand column went through hundreds of years of mouths: vowels broke, consonants softened, syllables fell out. The right-hand column was copied out by a clerk who could read Latin, so it kept its shape."
+            },
+            {
+              "kind": "speech",
+              "text": "The practical payoff: when a Spanish word looks more like its Latin or English cousin, it is usually the later, bookish arrival — and it will belong to writing, forms and notices rather than to the kitchen. That is a register clue you can read straight off the spelling."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the four noun-makers, complete",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "ending",
+                "example",
+                "gender"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "ending: -anza. example: la mudanza. gender: feminine.",
+                "ending: -miento. example: el seguimiento. gender: masculine.",
+                "ending: -eza. example: la limpieza. gender: feminine.",
+                "ending: -ción. example: la instalación. gender: feminine."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three feminine, one masculine. Which ending a word takes has to be met word by word; the gender never does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cleaning shift is on a rota",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cleaning shift is on a rota]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "check the timetable and tell me",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: check the timetable and tell me]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of rueda and rotativo came through speech",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of *rueda* and *rotativo* came through speech]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All four again, in Spanish, without looking. Then one sentence putting somebody on a cleaning rota."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C453-sintesis-limpieza",
+      "sequence": 12020,
+      "title": "(el cuadro de turnos) — read it, then do it yourself",
+      "headword": "(el cuadro de turnos)",
+      "romanization": "(el cuadro de turnos)",
+      "gloss": "the payoff — read the rota taped up in the entrance hall, then write one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d88aae62badb2d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la limpieza and rotativo. The notice below puts them in the same line."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A sheet taped inside the entrance hall. Read it, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "TURNOS DE LIMPIEZA — ESCALERA B."
+            },
+            {
+              "kind": "speech",
+              "text": "La limpieza del portal es rotativa, una semana por vivienda."
+            },
+            {
+              "kind": "speech",
+              "text": "Esta semana: 3º izquierda. La próxima: 3º derecha."
+            },
+            {
+              "kind": "speech",
+              "text": "No se limpia la instalación de la caldera. De eso se encarga la empresa."
+            },
+            {
+              "kind": "speech",
+              "text": "Para cambiar de semana, consulten el cuadro antes de escribir en él."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whose turn it is this week and whose it is next",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whose turn it is this week and whose it is next]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one thing the neighbours do not have to clean",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one thing the neighbours do not have to clean]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you must do before changing your week",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you must do before changing your week]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "La instalación de la caldera is the noun in its second sense — not the act of fitting the boiler, which happened years ago, but the pipes and tank it left behind. Nothing in the sentence announces which reading is meant; no se limpia settles it, because you cannot clean an act."
+            },
+            {
+              "kind": "speech",
+              "text": "Rotativa agrees with la limpieza, and it is doing the work of a whole English clause: \"goes round the flats in turn\". One adjective, because Spanish had a word for the wheel and built on it."
+            },
+            {
+              "kind": "speech",
+              "text": "Then consulten: ustedes, plural and formal, the register of a notice addressed to every household at once. And se encarga, once again the se that lets a sentence say what happens without naming who."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Four lines for a stairwell notice: say the cleaning is on a rota, say whose week it is, say the boiler installation is not included, and tell people to check the sheet first."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did rotativa agree with la limpieza, and did you use the ustedes command?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

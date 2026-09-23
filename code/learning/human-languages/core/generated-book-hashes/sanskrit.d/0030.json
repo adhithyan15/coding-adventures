@@ -1,13 +1,14 @@
 {
   "language": "sanskrit",
   "chapter": 30,
-  "sourceHash": "fnv1a64:69fea4fa7bc0a91f",
+  "sourceHash": "fnv1a64:9243dde4eedbffae",
   "lessonIds": [
     "SA-C30-door",
     "SA-C30-seat",
     "SA-C30-flower",
     "SA-C30-garland",
-    "SA-C30-anjali"
+    "SA-C30-anjali",
+    "SA-R30-second-pass-from-the-door-to-the-promise"
   ],
   "tex": "sanskrit/book/chapters/ch30-welcoming-a-guest.tex"
 }

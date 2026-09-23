@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-NP-03",
+  "category": "The noun phrase",
+  "label": "subject-verb agreement as a stated rule",
+  "probe": [
+    "MR-GRAMMAR-PRESENT-GENDER"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SN-03"
+  ]
+}

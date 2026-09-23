@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C431-devolver",
+    "language": "spanish",
+    "chapter": 431,
+    "sequence": 10450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:084bcebf87cf30c5"
+  },
+  "findings": []
+}

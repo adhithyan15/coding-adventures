@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F2-02",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "give an opinion with malaa vaatta",
+  "probe": [
+    "MR-LEX-VATNE",
+    "MR-GRAMMAR-DATIVE-FEELING"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F2-02",
+    "A1-F2-11"
+  ]
+}

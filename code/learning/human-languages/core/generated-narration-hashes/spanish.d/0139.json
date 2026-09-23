@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 139,
-  "sourceHash": "fnv1a64:c6c1426b7777b01b",
+  "sourceHash": "fnv1a64:46de865f4d2b996b",
   "lessonIds": [
     "ES-C22-negro-blanco",
     "ES-C22-blanco-germanico",
@@ -13,6 +13,6 @@
   "text": "spanish/narration/ch139.txt",
   "json": "spanish/narration/ch139.json",
   "textHash": "fnv1a64:3d6e2ad189a4f282",
-  "jsonHash": "fnv1a64:abc4691aec31dffa",
+  "jsonHash": "fnv1a64:c356bcd69a233a26",
   "findings": []
 }

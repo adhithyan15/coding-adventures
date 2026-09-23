@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-OR-19",
+  "category": "Devanagari letters and signs",
+  "label": "virama, and the principle that two consonants join when the inherent vowel goes",
+  "probe": [
+    "MR-SCRIPT-VIRAMA-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-07"
+  ]
+}

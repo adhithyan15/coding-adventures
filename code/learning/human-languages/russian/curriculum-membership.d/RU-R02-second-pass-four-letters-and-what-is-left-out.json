@@ -1,0 +1,11 @@
+{
+  "id": "RU-R02-second-pass-four-letters-and-what-is-left-out",
+  "pathSegment": "RU-PATH-006",
+  "pathOrder": 10,
+  "extensions": [
+    {
+      "id": "RU-EXT-006-CONSOLIDATION",
+      "order": 3
+    }
+  ]
+}

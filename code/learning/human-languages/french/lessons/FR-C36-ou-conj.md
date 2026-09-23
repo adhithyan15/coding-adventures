@@ -10,7 +10,7 @@ gloss: "or — the same three letters as the question word for where, kept apart
 concept_tag: FR-CONNECT-OU
 prerequisites: [FR-C36-et, FR-C32-ou]
 sounds: [vowel-ou, accent-marks]
-roots: [latin-aut]
+roots: [aut-latin]
 etymology_hook: "ou is Latin aut and ou is Latin ubi -- two unrelated words that fell together in French, and the grave accent is the whole of what keeps them apart on the page"
 duration:
   max_seconds: 220

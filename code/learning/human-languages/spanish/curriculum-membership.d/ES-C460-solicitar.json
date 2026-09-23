@@ -1,0 +1,11 @@
+{
+  "id": "ES-C460-solicitar",
+  "pathSegment": "ES-PATH-460-PEDIR",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-460-PEDIR",
+      "order": 1
+    }
+  ]
+}

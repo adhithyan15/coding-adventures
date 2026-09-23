@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R442-repaso-gestion",
+    "language": "spanish",
+    "chapter": 442,
+    "sequence": 11260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b98f34fb50616632"
+  },
+  "findings": []
+}

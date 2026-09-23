@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-435-PAPELES",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-435-PAPELES"
+  ],
+  "after": []
+}

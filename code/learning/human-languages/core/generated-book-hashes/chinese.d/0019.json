@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 19,
-  "sourceHash": "fnv1a64:6081a7542c45b80e",
+  "sourceHash": "fnv1a64:c46b4c2a141ff1d4",
   "lessonIds": [
     "ZH-C19-hear-ma",
     "ZH-W19-ma-observe",
@@ -18,7 +18,8 @@
     "ZH-R19-ma-three-r2",
     "ZH-R19-listening-three",
     "ZH-R19-reading-three",
-    "ZH-C19-practice"
+    "ZH-C19-practice",
+    "ZH-C19-second-pass-from-cold"
   ],
   "tex": "chinese/book/chapters/ch19-asking.tex"
 }

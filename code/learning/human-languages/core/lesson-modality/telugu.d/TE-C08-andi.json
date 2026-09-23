@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C08-andi",
+    "language": "telugu",
+    "chapter": 8,
+    "sequence": 352,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6108860e63ff1a02"
+  },
+  "findings": []
+}

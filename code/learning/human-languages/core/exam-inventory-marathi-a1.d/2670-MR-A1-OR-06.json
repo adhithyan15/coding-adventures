@@ -1,0 +1,19 @@
+{
+  "id": "MR-A1-OR-06",
+  "category": "Devanagari letters and signs",
+  "label": "the dental row ta tha da dha na",
+  "probe": [
+    "MR-SCRIPT-TA-01",
+    "MR-SCRIPT-THA-01",
+    "MR-SCRIPT-DA-01",
+    "MR-SCRIPT-DHA-01",
+    "MR-SCRIPT-NA-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-03"
+  ]
+}

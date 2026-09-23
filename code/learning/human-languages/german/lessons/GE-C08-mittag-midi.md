@@ -10,7 +10,7 @@ gloss: German and French mean the same thing by noon — but German built it and
 concept_tag: GE-ETYMON-MITTAG
 prerequisites: [GE-C08-mittag]
 sounds: []
-roots: [germanic-medja, latin-medius]
+roots: [germanic-medja, medius-latin]
 etymology_hook: "French midi is Latin medius diēs, 'middle day', and German Mittag is Mitte plus Tag — the very same thought assembled twice, once from Latin parts and once from Germanic ones"
 duration:
   max_seconds: 170

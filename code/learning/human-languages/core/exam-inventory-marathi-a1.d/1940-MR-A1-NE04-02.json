@@ -1,0 +1,13 @@
+{
+  "id": "MR-A1-NE04-02",
+  "category": "Personal relationships",
+  "label": "the immediate family: mother, father, son, daughter, husband, wife",
+  "probe": null,
+  "note": "MARATHI-SPECIFIC SPLIT of the Spanish family point, because the shape of the gap is the finding: siblings and 'family' are taught and not one PARENT is. 'Tell me about your family' is the standard A1 interview opener and it cannot currently be answered.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

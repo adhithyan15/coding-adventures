@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R444-repaso-casa",
+    "language": "spanish",
+    "chapter": 444,
+    "sequence": 11400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d3dd8bcc9f2a155"
+  },
+  "findings": []
+}

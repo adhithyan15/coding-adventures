@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-454-CORTE",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-454-CORTE"
+  ],
+  "after": []
+}

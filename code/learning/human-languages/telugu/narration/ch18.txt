@@ -1,8 +1,8 @@
 Telugu, chapter 18: Telling Time.
-3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+4 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 గంట (ganṭa) — matching Kannada and Hindi's "bell" word exactly.
 
 Warm-up.
@@ -33,7 +33,7 @@ Wrap-up Recall.
 What Sanskrit word do గంట, Kannada's gaṇṭe, and Hindi's ghanṭā all share? (घण्टा, ghaṇṭā, "bell.") Which Dravidian language most likely does NOT use this Sanskrit word for "hour"? (Tamil — most likely a native Dravidian word instead.) Does Malayalam's cognate word skip Sanskrit entirely too? (No — it's Sanskrit-derived too, per its own dictionaries, just from a different Sanskrit word, maṇi, "gem.") What happens to ganṭa for "two o'clock"? (It pluralizes to ganṭalu.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 ళ (ḷa) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ళ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -72,7 +72,7 @@ Which character is this — ళ? What sound does it carry? (ḷa.) Name one word
 One more, from much earlier: ◌ూ — what does it do?
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 ఢ (ḍha) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ఢ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -108,3 +108,33 @@ Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — ఢ? What sound does it carry, and which plain letter is it built on? (ḍha, built on డ — the curled-back d, with breath added.)
 One more, from much earlier: చ — what does it do?
+
+
+Lesson 4 of 4.
+శ, ఫ — two letters, one reason.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: both are here to keep a difference visible and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+Without looking back: name the two days of the week that open on the same letter, and say which letter it is.
+
+Script: both are here to keep a difference visible.
+శ, ఫ.
+These two arrived chapters apart and for the same reason. Each is the shape Telugu spends so that a difference you can hear is a difference you can see.
+[a table of 2 rows, read aloud]
+letter: శ śa. what it splits off: a third s, beside స and its curled neighbour.
+letter: ఫ pha. what it splits off: ప with the breath let out after it.
+A script that skipped either one would still be readable — the reader would work the sound out from the word. Telugu declines to make the reader do that.
+
+Guided Practice.
+[pause 1 second]
+[your turn — look: at శుక్రవారం and శనివారం, and put a finger on the shared letter]
+[pause 8 seconds for the answer]
+[your turn — say: ప, then ఫ, with a hand in front of your mouth — feel which one moves it]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: each of the two once, saying its sound]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which letter opens both Friday and Saturday? (శ.) What does ఫ do to ప? (Lets the breath out after it.) And what do the two letters have in common? (Each exists so a heard difference is also a written one.)

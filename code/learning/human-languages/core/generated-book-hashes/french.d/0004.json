@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 4,
-  "sourceHash": "fnv1a64:938aa4d1eb35dada",
+  "sourceHash": "fnv1a64:132575aefb9f07bd",
   "lessonIds": [
     "FR-C04-au-revoir",
     "FR-C04-a-plus-tard",
@@ -10,7 +10,9 @@
     "FR-C04-practice",
     "FR-W01-accents",
     "FR-W02-cedille",
-    "FR-W03-trema"
+    "FR-W03-trema",
+    "FR-R05-second-pass-courtesy-and-farewells",
+    "FR-R05-second-pass-three-marks"
   ],
   "tex": "french/book/chapters/ch04-farewells.tex"
 }

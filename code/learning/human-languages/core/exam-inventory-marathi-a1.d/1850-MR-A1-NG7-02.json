@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NG7-02",
+  "category": "Mental notions",
+  "label": "verbal expression: speaking and writing",
+  "probe": [
+    "MR-LEX-MHANNE",
+    "MR-LEX-SANGNE",
+    "MR-LEX-LIHINE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-NG7-02"
+  ]
+}

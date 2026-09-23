@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-F2-01",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "ask for an opinion by handing the turn back",
+  "probe": null,
+  "note": "Untaught, and it is what a role-play turn is made of.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-F2-01"
+  ]
+}

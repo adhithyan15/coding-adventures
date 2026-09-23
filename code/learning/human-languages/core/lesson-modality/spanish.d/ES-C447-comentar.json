@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C447-comentar",
+    "language": "spanish",
+    "chapter": 447,
+    "sequence": 11570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:093bb3bbe0d82edc"
+  },
+  "findings": []
+}

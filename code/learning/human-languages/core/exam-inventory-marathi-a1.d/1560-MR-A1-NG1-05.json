@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NG1-05",
+  "category": "Existential notions",
+  "label": "certainty and uncertainty",
+  "probe": [
+    "MR-JOIN-KII",
+    "MR-LEX-VATNE"
+  ],
+  "note": "Closed by MR-C35-kii (chapter 35). The uncertain half this note said had no exponent is malaa vaaTta kii ... -- hedging an assertion by putting it under the seeming verb. The certain half remains plain assertion (MR-A1-F2-09).",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-NG1-05"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-448-MUDANZA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-448-MUDANZA"
+  ],
+  "after": []
+}

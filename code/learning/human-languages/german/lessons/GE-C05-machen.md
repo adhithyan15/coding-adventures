@@ -10,7 +10,7 @@ gloss: to make, to do — and it is just English make
 concept_tag: VERB-DO-MAKE
 prerequisites: [GE-C01-gut, GE-C01-nacht, GE-C05-verbstamm]
 sounds: [ch-ach, vowel-a-german]
-roots: [makon-germanic]
+roots: [germanic-makon]
 etymology_hook: "machen IS English make: the k became the ach rasp by the High German shift, the same shift that turned ik into ich"
 duration:
   max_seconds: 210

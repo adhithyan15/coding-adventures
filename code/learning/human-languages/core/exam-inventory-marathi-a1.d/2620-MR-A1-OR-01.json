@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-OR-01",
+  "category": "Devanagari letters and signs",
+  "label": "the akshara principle: a consonant letter carries an inherent a, and a matra replaces it",
+  "probe": [
+    "MR-SCRIPT-KA-01",
+    "MR-SCRIPT-A-INDEPENDENT-01",
+    "MR-SCRIPT-O-MATRA-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-01",
+    "A1-O1-07"
+  ]
+}

@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Standing Vowels",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2502223c98151612",
+  "sourceHash": "fnv1a64:33820603cce68498",
   "lessons": [
     {
       "id": "MR-W65-ii-independent",
@@ -750,6 +750,146 @@
                 "correct": "Four letters, and a word can now begin with any of them.",
                 "incorrect": "Take them one at a time, each as the standing form of a sign you already draw."
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R65-second-pass-pha-danda-au",
+      "sequence": 2685,
+      "title": "फ औ । (pha, au, daṇḍa) — a sound that moved, a vowel that stands, a stroke that stops",
+      "headword": "फ औ ।",
+      "romanization": "pha, au, daṇḍa",
+      "gloss": "second pass over a letter whose sound drifted, a standing vowel, and the stroke that ends a sentence",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:fdbea54967f9a6a2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script: three marks, three different kinds of fact",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: three marks, three different kinds of fact and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The aspirated partner of प. Say its name, then say what its sound has done that the other aspirated letters have not."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: three marks, three different kinds of fact",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "what it is"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "फ. what it is: the gap in the lip row — and the one letter whose sound has drifted.",
+                "औ. what it is: the standing au, last of the vowels that can begin a word alone.",
+                "।. what it is: the upright stroke that ends a sentence, now largely replaced by a full stop."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three different kinds of fact sit in that column, which is why they are worth holding together rather than as three isolated shapes."
+            },
+            {
+              "kind": "speech",
+              "text": "फ is a fact about speech: the letter records an aspirated p, and the sound modern speakers make has moved away from it. औ (au) is a fact about position: a vowel needs its own standing letter when nothing carries it. । is a fact about convention: a mark that is still correct and is quietly losing ground to an imported one."
+            },
+            {
+              "kind": "speech",
+              "text": "Drift, position, convention. A script old enough to have a history carries all three at once, and none of them is a rule about pronunciation."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "प, then फ, and note which of the two your mouth changes for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **प**, then **फ**, and note which of the two your mouth changes for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at औ (au) and say why it is a whole letter rather than a sign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **औ** and say why it is a whole letter rather than a sign]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at । and say what a modern page is likely to print instead",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **।** and say what a modern page is likely to print instead]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "each of the three once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: each of the three once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the three is a fact about a sound that moved? (फ.) When does a vowel need a standing letter? (When no consonant is carrying it.) What does । do, and what is replacing it? (Ends a sentence; the full stop.) And what do the three have in common? (Nothing — drift, position and convention are three different kinds of fact, which is the point.)"
             }
           ]
         }

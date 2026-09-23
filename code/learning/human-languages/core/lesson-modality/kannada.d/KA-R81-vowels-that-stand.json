@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "KA-R81-vowels-that-stand",
+    "language": "kannada",
+    "chapter": 81,
+    "sequence": 2970,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed9e3f9069b9cb32",
+    "detachableSegments": [
+      "Script: the same vowel, two shapes"
+    ]
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Face, Part Two",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:81fc1e9404252ceb",
+  "sourceHash": "fnv1a64:f8e99dc31bdf76b9",
   "lessons": [
     {
       "id": "SA-C13-nasika",
@@ -513,6 +513,105 @@
             {
               "kind": "speech",
               "text": "Name three languages, besides English, whose word for heart shares हृदयम् (hṛdayam)'s root. (Any three of Latin, Greek, Italian, Portuguese, Russian.) Which Bengali form of \"heart\" is everyday, and which survives only in poetry? (hridoy, everyday; hiya, poetry.) What gender has run through nearly this entire chapter's nouns? (Neuter.) And what was the very first word of this chapter? (Pānīyam, water.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R13-second-pass-five-parts-three-kinds-of-ancestry",
+      "sequence": 595,
+      "title": "Five parts, and three different kinds of ancestry",
+      "headword": "अक्षि · कर्णः · मुखम् · नासिका · हृदयम्",
+      "romanization": "akṣi · karṇaḥ · mukham · nāsikā · hṛdayam",
+      "gloss": "second pass over the five body words, sorted by how secure their ancestry is rather than by where they sit on a body",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe8cc53ed6dcfec0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ear, nose, heart. Say all three before you read on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "cognates",
+          "title": "Across the family",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five words, and they do not sort into one story. Sorted by how much anyone can actually claim about where they came from:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "part",
+                "how secure the ancestry is"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "word: हृदयम् hṛdayam. part: heart. how secure the ancestry is: the most secure the book has shown.",
+                "word: अक्षि akṣi. part: eye. how secure the ancestry is: unbroken, and visible in English eye.",
+                "word: नासिका nāsikā. part: nose. how secure the ancestry is: kin to two modern words, parent of neither.",
+                "word: मुखम् mukham. part: mouth, face. how secure the ancestry is: two families claim it, unsettled.",
+                "word: कर्णः karṇaḥ. part: ear. how secure the ancestry is: never settled, even by Sanskrit itself."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The list runs from a word whose descent is traceable step by step to a word nobody has been able to place at all. Both ends of it are ordinary vocabulary a learner has to know; the difference between them is entirely a matter of what the evidence supports."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kin is not descent. Nāsikā has relatives in living languages and is the ancestor of none of them — they and it come from the same older word. A family tree is not a chain, and cousin is the commonest relation in it."
+            },
+            {
+              "kind": "speech",
+              "text": "The endings sort the five a second way, cutting across the first. Three are neuter; karṇaḥ takes the masculine visarga; nāsikā ends in a long -ā, the shape most feminine nouns in this book take. Gender here is a property of the word and not of the thing — a heart is neuter, an ear is masculine, and no fact about bodies explains it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the five has the securest ancestry, and which has none anyone agrees on? (हृदयम् (hṛdayam); कर्णः.) Is nāsikā the parent of its modern look-alikes, or their cousin? (Cousin.)"
             }
           ]
         }

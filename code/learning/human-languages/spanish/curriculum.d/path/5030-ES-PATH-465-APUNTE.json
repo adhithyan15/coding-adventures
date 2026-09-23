@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-465-APUNTE",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-465-APUNTE"
+  ],
+  "after": []
+}

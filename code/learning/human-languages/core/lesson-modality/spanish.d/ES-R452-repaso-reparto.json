@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R452-repaso-reparto",
+    "language": "spanish",
+    "chapter": 452,
+    "sequence": 11950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e083aeddecbb545"
+  },
+  "findings": []
+}

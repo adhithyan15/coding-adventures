@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-DET-01",
+  "category": "Determiners",
+  "label": "how a specific known thing is marked when it is marked at all: Marathi has no article",
+  "probe": null,
+  "note": "SPINE-DEFINITE-REFERENCE is an A1 spine node and the track omits its only concept, GRAMMAR-THE. The Spanish points on the definite and indefinite articles and their contractions do not transfer -- Marathi has no article system -- but the DEMAND behind the bare-noun point does: a reader must know that a bare Marathi noun can be either definite or indefinite and that context decides.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-ART-04"
+  ]
+}

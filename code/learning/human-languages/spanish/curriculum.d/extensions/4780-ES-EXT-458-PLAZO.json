@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-458-PLAZO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with a deadline: read the window of dates, hand a form in the right way, and understand that nothing is accepted once the window shuts.",
+  "prerequisites": [
+    "ES-EXT-457-GUARDIA"
+  ]
+}

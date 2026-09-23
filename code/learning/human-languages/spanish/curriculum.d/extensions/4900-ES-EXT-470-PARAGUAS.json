@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-470-PARAGUAS",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deal with something I have lost: read a message describing a mislaid object by colour and by the part you hold, say that I cannot find it anywhere, and ask to be told rather than ask anyone to go looking.",
+  "prerequisites": [
+    "ES-EXT-469-OFICINA"
+  ]
+}

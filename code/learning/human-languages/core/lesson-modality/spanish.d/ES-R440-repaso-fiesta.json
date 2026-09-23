@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R440-repaso-fiesta",
+    "language": "spanish",
+    "chapter": 440,
+    "sequence": 11120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4580c70b02966fcb"
+  },
+  "findings": []
+}

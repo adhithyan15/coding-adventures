@@ -10,7 +10,7 @@ gloss: the strong singular preterite of estar — estuve, estuviste, estuvo
 concept_tag: ES-PRETERITE-ESTAR-STRONG
 prerequisites: [ES-C15-hacer-preterite, ES-C04-estar]
 sounds: [stress-stem]
-roots: [latin-stare, analogical-uv]
+roots: [stare-latin, analogical-uv]
 etymology_hook: "estuve belongs to an analogically reshaped -uv- strong-preterite family; it should not be treated as a direct wearing-down of Latin stetī"
 duration:
   max_seconds: 290

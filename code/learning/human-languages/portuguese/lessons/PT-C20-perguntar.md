@@ -10,7 +10,7 @@ gloss: "to ask a question — and why it is not the verb for asking for a coffee
 concept_tag: VERB-ASK
 prerequisites: [PT-C20-tomar-pegar, PT-C18-dizer]
 sounds: [pr-cluster, final-r]
-roots: [latin-percontari]
+roots: [percontari-latin]
 etymology_hook: "perguntar ← percontārī 'to inquire' = per- ('through') + contus ('a punting pole'): to sound the depth of water with a pole. Its neighbour pedir ('to ask FOR') ← petere → petition, appetite, compete, impetus, perpetual"
 duration:
   max_seconds: 273

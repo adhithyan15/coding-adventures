@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "ZH-C11-second-pass-character-and-word",
+    "language": "chinese",
+    "chapter": 11,
+    "sequence": 690,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87caf71b1717adb8",
+    "detachableSegments": [
+      "Script: the component that carries a sound"
+    ]
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C08-andi",
+  "pathSegment": "TE-PATH-013",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-013-POLITENESS",
+      "order": 0
+    }
+  ]
+}

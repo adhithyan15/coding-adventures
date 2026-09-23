@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-V-01",
+  "category": "The verb",
+  "label": "the present habitual: the regular paradigm, all persons",
+  "probe": null,
+  "note": "Only the 1SG masculine and feminine forms carry atoms (MR-PHRASE-YETO-YETE-01, MR-GRAMMAR-PRESENT-GENDER). One 2PL copula form, aahaat, sits inside schema-v1 MR-C03-tumhi-kase-aahat. A candidate can say what HE does and nothing about anyone else.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-V-01"
+  ]
+}

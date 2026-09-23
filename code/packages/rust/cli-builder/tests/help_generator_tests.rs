@@ -246,6 +246,23 @@ fn test_help_shows_boolean_flag_without_value() {
     assert!(help.contains("reverse"), ":\n{}", help);
 }
 
+#[test]
+fn test_help_shows_long_aliases_in_declared_order() {
+    let json = r#"{
+        "cli_builder_spec_version":"1.0","name":"tool","description":"tool",
+        "flags":[{
+            "id":"define","short":"d","long":"define",
+            "long_aliases":["D","define-value"],"description":"Define a value",
+            "type":"string","value_name":"NAME=VALUE"
+        }]
+    }"#;
+    let spec = load_spec_from_str(json).unwrap();
+    let help = generate_root_help(&spec);
+    let signature = "-d, --define <NAME=VALUE>, --D <NAME=VALUE>, --define-value <NAME=VALUE>";
+    assert!(help.contains(signature), "expected deterministic alias signature:\n{help}");
+    assert_eq!(help.matches("--D <NAME=VALUE>").count(), 1);
+}
+
 // ---------------------------------------------------------------------------
 // Argument formatting
 // ---------------------------------------------------------------------------

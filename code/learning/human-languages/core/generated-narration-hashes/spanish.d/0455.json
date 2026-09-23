@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:aa56fa986fc5b013",
+  "lessonIds": [
+    "ES-C455-pintar",
+    "ES-C455-dormitorio",
+    "ES-C455-claro",
+    "ES-C455-tender",
+    "ES-C455-meter",
+    "ES-R455-repaso-cuarto",
+    "ES-C455-sintesis-cuarto"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 4,
+  "text": "spanish/narration/ch455.txt",
+  "json": "spanish/narration/ch455.json",
+  "textHash": "fnv1a64:301f60f9bcf3a472",
+  "jsonHash": "fnv1a64:aac1a2652f985e32",
+  "findings": []
+}

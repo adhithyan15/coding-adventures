@@ -1,19 +1,20 @@
 {
   "language": "latin",
   "chapter": 47,
-  "sourceHash": "fnv1a64:d676959c2c77b678",
+  "sourceHash": "fnv1a64:3bd3e9bce8caabec",
   "lessonIds": [
     "LA-C47-sal",
     "LA-C47-mel",
     "LA-C47-lac",
     "LA-C47-ovum",
-    "LA-C47-piscis"
+    "LA-C47-piscis",
+    "LA-C47-second-pass-honest-gaps"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
   "text": "latin/narration/ch47.txt",
   "json": "latin/narration/ch47.json",
-  "textHash": "fnv1a64:78a94fce7ac76d67",
-  "jsonHash": "fnv1a64:51d00616172c90a9",
+  "textHash": "fnv1a64:a38e5ac53ebb30a8",
+  "jsonHash": "fnv1a64:ec59217554b6ea1d",
   "findings": []
 }

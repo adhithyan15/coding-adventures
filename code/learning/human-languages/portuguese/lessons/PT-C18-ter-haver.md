@@ -10,7 +10,7 @@ gloss: "to have, and there is"
 concept_tag: VERB-HAVE
 prerequisites: [PT-C18-ser-estar, PT-C15-tenho-falado]
 sounds: [nasal-em, circumflex-tem]
-roots: [latin-tenere, latin-habere]
+roots: [tenere-latin, habere-latin]
 etymology_hook: "haver ← habēre survives in há 'there is', while ter does the everyday work of 'have'"
 duration:
   max_seconds: 150

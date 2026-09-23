@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C444-calefaccion",
+    "language": "spanish",
+    "chapter": 444,
+    "sequence": 11350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bce9e208e25bb315"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C461-donar",
+    "language": "spanish",
+    "chapter": 461,
+    "sequence": 12430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88ce34c205c2a1d7"
+  },
+  "findings": []
+}

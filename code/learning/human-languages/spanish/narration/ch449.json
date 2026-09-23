@@ -1,0 +1,1122 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 449,
+  "title": "El taller",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c4f7787ce489f4ab",
+  "lessons": [
+    {
+      "id": "ES-C449-arreglar",
+      "sequence": 11690,
+      "title": "arreglar — putting it right",
+      "headword": "arreglar",
+      "romanization": "arreglar",
+      "gloss": "to fix, to sort out — putting a thing back to the straight edge it came off",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a20e49b914a02f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say reparar and estropeado. One undoes the other."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: arreglar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "arreglar — to fix, to mend, to sort out."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Me puedes arreglar la bici? — can you fix my bike for me? Han arreglado el ascensor — they've fixed the lift. Ya está arreglado — it's sorted now."
+            },
+            {
+              "kind": "speech",
+              "text": "And beyond machinery: arreglar los papeles — sort the paperwork out. Arreglar una habitación — tidy a room. Arreglarse — get yourself ready to go out."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: arreglar and reparar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both mean to fix, and a Spanish speaker reaches for them differently:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "where it sits"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: arreglar. where it sits: everyday speech, and things that are not machines.",
+                "word: reparar. where it sits: the workshop, the invoice, the written notice."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "He arreglado la silla is what you tell a friend. Reparación de calzado is what the shop window says. You can arreglar an argument or a haircut; reparar neither."
+            },
+            {
+              "kind": "speech",
+              "text": "Where the object is a broken machine, the two overlap and either is correct. Take arreglar as your default and you will be right far more often."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Break it as a-rregl-ar, and the middle is regla — a ruler, a rule — from Latin regula, the carpenter's straight edge."
+            },
+            {
+              "kind": "speech",
+              "text": "So to arreglar something is to bring it back to the straight edge: the plank is warped, you true it. You met the same regula in regular. English took it too, in regulate, rule and ruler, and kept the tool and the law in one word as Spanish does."
+            },
+            {
+              "kind": "speech",
+              "text": "The rr is where the a- meets the r- of regla. Spanish doubles it and rolls it, and the doubling is the only trace left of the prefix."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "can you fix my bike?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: can you fix my bike?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it's sorted now",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it's sorted now]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the two verbs belongs on a shop sign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the two verbs belongs on a shop sign]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To fix? (Arreglar.) What tool is hiding inside it? (La regla, the straight edge.) What does arreglarse mean about a person? (Getting ready to go out.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C449-freno",
+      "sequence": 11700,
+      "title": "el freno — what stops you",
+      "headword": "el freno",
+      "romanization": "el freno",
+      "gloss": "the brake — named after the bit in a horse's mouth, and still doing that job",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6619ee864c61dfd0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la bicicleta and arreglar. Name the part most often needing the second."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el freno",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el freno — the brake."
+            },
+            {
+              "kind": "speech",
+              "text": "Los frenos no van — the brakes aren't working. El freno de mano — the handbrake. Frenar — to brake: frena antes de la curva, brake before the bend."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish uses the plural far more than English does. A bicycle has frenos, and asking about el freno on a bike would sound as though you knew which one was at fault."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the noun and the verb in one step",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el freno gives frenar by adding nothing but -ar, and this pair is one instance of a pattern you can lean on:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "noun",
+                "verb from it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "noun: el freno. verb from it: frenar — to brake.",
+                "noun: la planta. verb from it: plantar — to plant.",
+                "noun: el arreglo. verb from it: arreglar — to fix."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Note the third row runs backwards from the other two: el arreglo is the noun built from the verb, not the verb built from the noun. Spanish makes these in both directions and the ending alone will not tell you which came first — a question for a dictionary, not for a rule."
+            },
+            {
+              "kind": "speech",
+              "text": "What you can rely on is the shape: meeting a noun, try -ar on it; meeting an -ar verb, try cutting it back to a noun. You will be right often enough to make it worth the guess."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin frenum, the bit — the metal bar in a horse's mouth that the reins pull on. That is the oldest brake there is, and the word moved onto carts, then bicycles, then cars, without ever changing its job."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the same word in the medical frenulum, the small fold of tissue under your tongue, so called because it holds the tongue back. Spanish keeps the sense alive too: poner freno a algo — to put a stop to something."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the brakes aren't working",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the brakes aren't working]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "can you fix the brakes?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: can you fix the brakes?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the verb that goes with el freno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the verb that goes with *el freno*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The brake? (El freno.) On a bike, singular or plural? (Plural — los frenos.) What was a frenum originally? (The bit in a horse's mouth.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C449-rueda",
+      "sequence": 11710,
+      "title": "la rueda — the wheel",
+      "headword": "la rueda",
+      "romanization": "la rueda",
+      "gloss": "the wheel — and the word you have been saying inside alrededor all along",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03dfc8f44346b65e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say alrededor and la bicicleta. There is a wheel inside one of those words, and it is not the obvious one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la rueda",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la rueda — the wheel, and on a car the tyre as well."
+            },
+            {
+              "kind": "speech",
+              "text": "La rueda de atrás — the back wheel. Se me ha pinchado una rueda — I've got a puncture. La rueda de repuesto — the spare."
+            },
+            {
+              "kind": "speech",
+              "text": "A bicycle has dos ruedas, and Spanish will name a vehicle by counting them: un vehículo de dos ruedas."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the o that breaks in two",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin rota has an o. Spanish has ue. That change is everywhere once you look for it, and it happens under one condition — stress:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "unstressed o",
+                "stressed, so ue"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "unstressed o: rodar — to roll. stressed, so ue: la rueda.",
+                "unstressed o: poder — to be able. stressed, so ue: puedo.",
+                "unstressed o: volver — to return. stressed, so ue: vuelvo."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Say rueda and rodar one after the other and you can hear the same word twice. The vowel splits under the weight of the stress and closes up again when the stress moves off."
+            },
+            {
+              "kind": "speech",
+              "text": "This is why so many Spanish verbs look irregular and are not. They are one vowel obeying one condition."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin rota, wheel. And here is the payoff on a word you already use daily."
+            },
+            {
+              "kind": "speech",
+              "text": "Alrededor is al + rededor, and rededor comes from Latin retrō, backwards — pulled sideways by rota, the wheel. That is the careful version and it is worth keeping careful: rota is not where the word started, it is what bent it on the way. Both ideas ended up inside it, which is why something alrededor is behind you as well as in front."
+            },
+            {
+              "kind": "speech",
+              "text": "The wheel half is generous. A rotunda is a round building, a rotation turns, Spanish keeps rotonda for the roundabout you drive round, and la rodilla — the knee — is rotella, a little wheel. A knee and the space around you, named by the same rolling."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the back wheel and the spare wheel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the back wheel and the spare wheel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the brakes and the wheel need fixing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the brakes and the wheel need fixing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what alrededor has to do with rueda",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *alrededor* has to do with *rueda*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The wheel? (La rueda.) Why ue and not o? (The stress falls on it.) What is the unstressed verb alongside it? (Rodar, to roll.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C449-taladro",
+      "sequence": 11720,
+      "title": "el taladro — the drill",
+      "headword": "el taladro",
+      "romanization": "el taladro",
+      "gloss": "the drill — the loudest thing a neighbour owns, and a word worth knowing before they use it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:279efcf7ef3b6497",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la mano and la madera. One holds the tool, the other takes the hole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el taladro",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el taladro — the drill."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Me dejas el taladro? — can you lend me the drill? Taladrar — to drill: hay que taladrar la pared, we need to drill the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "The word covers the machine and, in a workshop, the bit as well. Un taladro para madera is a wood bit; un taladro sin cable is a cordless drill."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: lending, in Spanish",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Asking to borrow a tool is where two verbs get tangled, because Spanish has no verb for borrow at all:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you want",
+                "what Spanish says"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you want: lend me the drill. what Spanish says: ¿me dejas el taladro?",
+                "what you want: can I borrow it? what Spanish says: ¿me lo prestas?"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both put the lender in the subject position. There is no sentence shaped like I borrow the drill from you; you turn it round and ask the other person to do the lending. Dejar is the everyday one and prestar the slightly more formal."
+            },
+            {
+              "kind": "speech",
+              "text": "Hand the tool back with aquí tienes and you have the whole exchange."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin taratrum, a borer — itself taken from Gaulish, the Celtic language spoken in France before Latin arrived. The Romans met a better tool than their own and kept the name with it."
+            },
+            {
+              "kind": "speech",
+              "text": "From taratrum to taladro an r turned into an l, and notice that taratrum has no l to begin with. The word had two r's, which is awkward, so one of them gave way — a repeated sound in one short word is unstable, and changing one of the pair is the easiest repair."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not what happened to milagro and peligro. Those came from miraculum and periculum, which did have both letters, and the two traded places. Two different habits, worth telling apart."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "can you lend me the drill?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: can you lend me the drill?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "we have to drill the wall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: we have to drill the wall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why milagro and taladro are the same kind of case",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *milagro* and *taladro* are the same kind of case]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The drill? (El taladro.) To drill? (Taladrar.) How do you ask to borrow something? (By asking the other person to lend it — ¿me dejas…?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C449-acercar",
+      "sequence": 11730,
+      "title": "acercar — pass it here",
+      "headword": "acercar",
+      "romanization": "acercar",
+      "gloss": "to pass, to bring closer — the same verb as acercarse with the -se taken off",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b47856f45fdecb6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say cerca and acercarse. Now take the -se off the second one and see what is left."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: acercar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "acercar — to bring something closer, and so, constantly, to pass."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Me acercas el taladro? — can you pass me the drill? Acerca la silla — pull your chair up. Te acerco a la estación — I'll run you to the station."
+            },
+            {
+              "kind": "speech",
+              "text": "That last one is worth keeping. Offering somebody a lift in Spanish is offering to acercar them: you are bringing them nearer to where they are going."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one verb, two directions",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already own the -se version. Here they are side by side:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "form",
+                "who moves"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "form: acercarse. who moves: the subject — me acerco a la puerta.",
+                "form: acercar. who moves: something else — acerco la silla."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Without the -se, the verb needs an object; the thing that comes closer is whatever you name. With the -se, the subject is the thing that comes closer. That is the same switch you saw in mudar and mudarse, and it runs through hundreds of Spanish verbs."
+            },
+            {
+              "kind": "speech",
+              "text": "So in a workshop, acércate means come over here, and acércamelo means send it over here. One syllable apart, and two different people doing the moving."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "a-cerc-ar: the prefix a- meaning towards, the cerca you already say, and the -ar of an ordinary verb. The middle is Latin circa, around, and its ring is still visible in círculo and in English circle and circa."
+            },
+            {
+              "kind": "speech",
+              "text": "The road from \"around\" to \"near\" is short: things arranged around you are the things close to you. Spanish turned the circle into a distance, then built a verb on it, and the verb now does the job of the English pass, pull up and give a lift all at once."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "can you pass me the drill?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: can you pass me the drill?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pull your chair up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pull your chair up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I'll run you to the station",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I'll run you to the station]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pass me the drill? (¿Me acercas el taladro?) Who moves with acercarse? (The subject.) What does te acerco a la estación offer? (A lift.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R449-repaso-taller",
+      "sequence": 11740,
+      "title": "(arreglar, el freno, la rueda, el taladro, acercar) — from cold",
+      "headword": "(arreglar, el freno, la rueda, el taladro, acercar)",
+      "romanization": "(arreglar, el freno, la rueda, el taladro, acercar)",
+      "gloss": "cold retrieval of the five, and the noun-to-verb move that made three of them cheap",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:ef26b4e8d9b44806",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all five: to fix, the brake, the wheel, the drill, to pass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: each noun brought a verb with it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three of these five came in pairs, and the second half of each pair cost you nothing:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the noun",
+                "its verb"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the noun: el freno. its verb: frenar — to brake.",
+                "the noun: la rueda. its verb: rodar — to roll.",
+                "the noun: el taladro. its verb: taladrar — to drill."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Note that rodar does not keep the ue. The ue appears only where the stress lands on it, so the noun has it and the infinitive does not. If you try to say ruedar you will be corrected; if you say rueda and rodamos you will not."
+            },
+            {
+              "kind": "speech",
+              "text": "That one condition — stress — accounts for most of what looks irregular in Spanish verbs, and you now have a noun that shows it standing still."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the -se you keep meeting",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three verbs in two chapters have turned on the same small word:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "without -se",
+                "with -se"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "without -se: mudar — change a thing. with -se: mudarse — move house.",
+                "without -se: acercar — bring it closer. with -se: acercarse — come closer.",
+                "without -se: arreglar — fix a thing. with -se: arreglarse — get ready."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read the right-hand column and one thing is constant: the subject is on the receiving end. Read the left and the verb is reaching out to an object. When you meet a new verb in both shapes, that question sorts them before you look anything up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the brakes aren't working and the back wheel is loose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the brakes aren't working and the back wheel is loose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "can you fix it today?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: can you fix it today?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the verbs belonging to freno, rueda and taladro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the verbs belonging to *freno*, *rueda* and *taladro*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All five again, in Spanish, without looking. Then one sentence that puts a tool in somebody's hand."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C449-sintesis-taller",
+      "sequence": 11750,
+      "title": "(dejar la bici en el taller) — read it, then do it yourself",
+      "headword": "(dejar la bici en el taller)",
+      "romanization": "(dejar la bici en el taller)",
+      "gloss": "the payoff — read what the repair shop wrote on the ticket, then write your own",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:2c267759fdceb85e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say arreglar and el freno. Both are on the slip below."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The slip handed back across the counter. Read it, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Taller de bicicletas — resguardo."
+            },
+            {
+              "kind": "speech",
+              "text": "Bicicleta azul, sin cesta. Entra el martes."
+            },
+            {
+              "kind": "speech",
+              "text": "Los frenos de atrás no van. Se cambian."
+            },
+            {
+              "kind": "speech",
+              "text": "La rueda delantera está bien; solo hay que apretarla."
+            },
+            {
+              "kind": "speech",
+              "text": "Presupuesto: 24 €. Se arregla para el jueves."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which part is being replaced and which is only being tightened",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which part is being replaced and which is only being tightened]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it will cost and when it will be ready",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it will cost and when it will be ready]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what day the bike went in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what day the bike went in]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at se cambian and se arregla. Neither says who does the work, and on a repair slip that is the point: the shop is not the subject of a sentence, the job is. Spanish gets there with se plus the verb, and the verb agrees with the thing being done — frenos is plural so cambian is plural, la bicicleta is singular so arregla is singular."
+            },
+            {
+              "kind": "speech",
+              "text": "English reaches for the passive here: the brakes are being changed. Spanish reaches for se. Once you notice it you will see it on every notice and every menu: se alquila, se vende, se ruega."
+            },
+            {
+              "kind": "speech",
+              "text": "And solo hay que apretarla does the same job a third way — no subject at all, only a thing that must be done."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Four lines handing a bike over: say what is wrong with the brakes, say the front wheel is fine, ask whether they can fix it by Friday, and ask them to pass you the drill so you can do one part yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did you use se for the work being done, and did the verb agree with the part rather than with the shop?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

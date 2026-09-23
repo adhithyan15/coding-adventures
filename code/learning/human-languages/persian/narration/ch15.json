@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Nine Letters, and the Words You Already Knew",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d3dd704bac36aaa3",
+  "sourceHash": "fnv1a64:6452bd0337afb460",
   "lessons": [
     {
       "id": "FA-W15-alef",
@@ -1500,6 +1500,141 @@
                 "correct": "You cannot reliably sound it out — which is why hearing and reading grow together here.",
                 "incorrect": "You cannot reliably SOUND IT OUT; the short vowels are not on the page."
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C15-second-pass-spellable",
+      "sequence": 695,
+      "title": "ممنون, زن, دوست — three words the letters have caught up with",
+      "headword": "ممنون · زن · دوست",
+      "romanization": "mamnun · zan · dust",
+      "gloss": "three words you already say, now spellable letter by letter from the ones this chapter taught",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f26cbbb1e3c050d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word you have used for thank you since the first page. You have had it in your mouth far longer than you have had it on the page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the letters have caught up with the words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three words you already say, now taken apart with letters you can name:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "",
+                "its letters"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "word: ممنون mamnun, thank you. its letters: م (mim), م (mim), ن, و (vâv), ن.",
+                "word: زن zan, woman. its letters: ز, ن.",
+                "word: دوست dust, friend. its letters: د, و (vâv), س (sin), ت."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Look at what is not there. Mamnun has an a you say and no a you read, because Persian leaves the short vowels off the page — the rule you were told on the very first word, now visible in a word you can spell. Dust has the opposite: the و (vâv) is written, because a long u earns a letter."
+            },
+            {
+              "kind": "speech",
+              "text": "Short vowels are heard and not written; long ones are both. That single sentence is most of what makes Persian readable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ممنون and name each letter from the right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ممنون** and name each letter from the right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zan — woman; then name its two letters",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **zan** — woman; then name its two letters]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dust — friend; then say which of its four letters is the long u",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **dust** — friend; then say which of its four letters is the long *u*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mamnun — and say where the a you hear has gone on the page",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **mamnun** — and say where the *a* you hear has gone on the page]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word means thank you, and which vowel of it is unwritten? (ممنون — the short a.) Which two letters spell woman? (ز ن.) Which letter of دوست carries the long u? (و (vâv).) And what is the rule the three words share? (Short vowels are not written; long ones are.)"
             }
           ]
         }

@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-ADV-02",
+  "category": "Adverbs",
+  "label": "time deictics: aataa, aaj, udyaa, kaal",
+  "probe": null,
+  "note": "udyaa appears inside two fixed farewells -- MR-C04-udya-bhetu (schema-v1) and MR-A1-MESSAGE-LINE-SEE-TOMORROW -- and never as a time word a learner could reuse. aataa, aaj and kaal do not appear at all.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-ADV-02",
+    "A1-NG4-02"
+  ]
+}

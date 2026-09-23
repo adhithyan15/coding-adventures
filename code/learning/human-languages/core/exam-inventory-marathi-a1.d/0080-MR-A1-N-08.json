@@ -1,0 +1,13 @@
+{
+  "id": "MR-A1-N-08",
+  "category": "The noun",
+  "label": "the -ne verbal noun: an infinitive that is also a neuter noun",
+  "probe": [
+    "MR-GRAMMAR-NE-NEUTER-NOUN"
+  ],
+  "anchorIds": [
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

@@ -10,7 +10,7 @@ gloss: "to wait"
 concept_tag: VERB-WAIT
 prerequisites: [PT-C21-conseguir, PT-C19-escrever]
 sounds: [open-e, prop-e]
-roots: [latin-sperare]
+roots: [sperare-latin]
 etymology_hook: "esperar ← spērāre 'to hope'; Portuguese later extended it to waiting"
 duration:
   max_seconds: 145

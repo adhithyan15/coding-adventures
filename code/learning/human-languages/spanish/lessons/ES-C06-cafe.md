@@ -10,7 +10,7 @@ gloss: coffee / a café — one useful noun before the polite request that follo
 concept_tag: ES-WORD-CAFE
 prerequisites: [ES-C05-practice]
 sounds: [accent-acute, stress-final]
-roots: [qahwah-arabic, kahve-turkish, caffè-italian]
+roots: [qahwah-arabic, turkish-kahve, caffè-italian]
 etymology_hook: "café came through Italian caffè and Turkish kahve from Arabic qahwah; English coffee reached the same family by a different European route"
 duration:
   max_seconds: 180

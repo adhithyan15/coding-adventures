@@ -1,0 +1,11 @@
+{
+  "id": "ES-C450-cesped",
+  "pathSegment": "ES-PATH-450-SUELO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-450-SUELO",
+      "order": 3
+    }
+  ]
+}

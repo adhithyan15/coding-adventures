@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C111-vannittu",
+    "language": "malayalam",
+    "chapter": 111,
+    "sequence": 4100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd3cc69c2efdf108"
+  },
+  "findings": []
+}

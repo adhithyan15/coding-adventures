@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "RU-R02-second-pass-four-letters-and-what-is-left-out",
+    "language": "russian",
+    "chapter": 2,
+    "sequence": 135,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8027b800bf412102",
+    "detachableSegments": [
+      "Script: two that lie, two that are only new"
+    ]
+  },
+  "findings": []
+}

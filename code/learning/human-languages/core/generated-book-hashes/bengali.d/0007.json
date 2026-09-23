@@ -1,13 +1,14 @@
 {
   "language": "bengali",
   "chapter": 7,
-  "sourceHash": "fnv1a64:1078673f65f71e16",
+  "sourceHash": "fnv1a64:9b72c30ab271dbe8",
   "lessonIds": [
     "BN-C04-abar",
     "BN-C04-dekha-hobe",
     "BN-C04-abar-dekha-hobe",
     "BN-C04-kal-dekha-hobe",
-    "BN-C04-practice"
+    "BN-C04-practice",
+    "BN-R08-second-pass-four-exchanges"
   ],
   "tex": "bengali/book/chapters/ch07-farewells.tex"
 }

@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-448-MUDANZA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can hand a flat over and take one on: say when I am moving, call the day hard, and tell somebody which things are out of order and which are actually in pieces.",
+  "prerequisites": [
+    "ES-EXT-447-JUICIO"
+  ]
+}

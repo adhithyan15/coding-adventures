@@ -1,8 +1,8 @@
 German, chapter 42: Friend and Family.
-3 lessons. All 3 can be done entirely by ear.
+4 lessons. All 4 can be done entirely by ear.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 der Freund — a word that was already a compliment.
 
 Warm-up.
@@ -34,7 +34,7 @@ Wrap-up Recall.
 Give "friend" with its article. (Der Freund.) What part of speech did Freund start out as? (A verb — a frozen present participle of "to love.") Which greeting phrase shares its root? (Freut mich.) Which day of the week carries the same PIE root one step further? (Freitag / Friday, from the goddess Frigg.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 die Freundin — one suffix, and the fox that kept it in English.
 
 Warm-up.
@@ -67,7 +67,7 @@ Wrap-up Recall.
 Give "friend (female)" with its article. (Die Freundin.) What suffix builds it from Freund, and what does that suffix do generally? (-in — it makes the feminine of a person-noun.) Is -in borrowed or native? (Native — English inherited it too.) Name the one English word that still shows it. (Vixen.)
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 die Familie — the word that gathers Eltern and Geschwister.
 
 Warm-up.
@@ -100,3 +100,43 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Give "family" with its article. (Die Familie.) Is it native or borrowed? (Borrowed — Latin familia, "household.") What did familia first mean, before "relatives"? (Household — kin to famulus, "servant.") Which two words from this chapter are native instead? (Freund and Freundin.)
+
+
+Lesson 4 of 4.
+Nine sounds, said without looking at what they mean — nine words from the first meeting, said for their sound alone, because the spelling does not predict any of them.
+
+Warm-up.
+[pause 3 seconds]
+gut and du. Same vowel, held long in both. Say them, then say what an English speaker's mouth wants to do to that vowel instead.
+
+Guided Practice: nine, for sound only.
+[pause 1 second]
+You know what all of these mean. This time say them for the noise alone.
+[your turn — say: gut — one long u, no glide after it]
+[pause 8 seconds for the answer]
+[your turn — say: du, then Sie — the second is a long ee with an initial z]
+[pause 8 seconds for the answer]
+[your turn — say: heißen — ei is the English word eye, and the ß keeps it long]
+[pause 8 seconds for the answer]
+[your turn — say: freut mich — eu is the English oy, nothing like the letters]
+[pause 8 seconds for the answer]
+[your turn — say: danke — the final -e is weak, never -ay]
+[pause 8 seconds for the answer]
+[your turn — say: bitte — short i, and the same weak ending]
+[pause 8 seconds for the answer]
+[your turn — say: sehen — the h is silent and only marks the long e]
+[pause 8 seconds for the answer]
+[your turn — say: auf — au is ow, and the f is a clean stop]
+[pause 8 seconds for the answer]
+
+Why it's said this way.
+Three of the nine share one habit, and it is the habit that makes German spelling honest once you know it:
+[a table of 3 rows, read aloud]
+written: ei in heißen. said: eye. what the extra letter is doing: a pair naming one sound, not two.
+written: eu in freut. said: oy. what the extra letter is doing: the same, and neither letter is a clue.
+written: h in sehen. said: silent. what the extra letter is doing: length, not a sound of its own.
+German spelling is far more regular than English spelling — but regular is not the same as obvious. Each of these is a fixed rule you can rely on everywhere, and none of them can be guessed from the letters by someone reading English habits into them.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is the h in sehen doing? (Marking the vowel long — it is silent.) What does eu sound like? (oy.) And of the nine words above, which one is capitalised mid-sentence, and why? (Sie — the formal you, capitalised to tell it from sie, she or they.)

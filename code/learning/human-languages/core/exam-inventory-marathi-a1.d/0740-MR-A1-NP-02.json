@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NP-02",
+  "category": "The noun phrase",
+  "label": "agreement inside the noun phrase",
+  "probe": [
+    "MR-A1-FORM-AGREEMENT-FEMININE",
+    "MR-A1-FORM-AGREEMENT-NEUTER",
+    "MR-A1-FORM-POSSESSIVE-NEUTER"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SN-02"
+  ]
+}

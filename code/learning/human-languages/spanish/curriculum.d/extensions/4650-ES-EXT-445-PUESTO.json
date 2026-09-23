@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-445-PUESTO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a job advert and say what the work asks of me: what it demands, what I am answerable for, what I would be teaching, and when the person I am replacing leaves.",
+  "prerequisites": [
+    "ES-EXT-444-CASA"
+  ]
+}

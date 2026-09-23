@@ -1,0 +1,1318 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 471,
+  "title": "El curso de cocina",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:38b513f93e2b62ad",
+  "lessons": [
+    {
+      "id": "ES-C471-demasiado",
+      "sequence": 12990,
+      "title": "demasiado — too much",
+      "headword": "demasiado",
+      "romanization": "demasiado",
+      "gloss": "too much, too — the top of the degree scale bastante taught, and the member that was missing from it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f99baf46d5ebfeb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say bastante and poco. You have a scale with a bottom and a middle. Today it gets its top."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: demasiado",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "demasiado — too much, too many, too."
+            },
+            {
+              "kind": "speech",
+              "text": "El curso era demasiado difícil para mí."
+            },
+            {
+              "kind": "speech",
+              "text": "Before an adjective it does not change: demasiado difícil, demasiado avanzada. Before a noun it agrees like any adjective: demasiada gente, demasiados libros."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the word that says it went past the point",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Bastante built you a scale of degree. This is the member above the top of it, and the step matters."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the word",
+                "where on the scale"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the word: poco. where on the scale: below what is wanted.",
+                "the word: bastante. where on the scale: enough — the point itself.",
+                "the word: demasiado. where on the scale: past the point."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Muy difícil is a judgement about the thing. Demasiado difícil is a judgement about a fit: too hard for something, usually for you. That is why it so often arrives with para — demasiado avanzado para mí."
+            },
+            {
+              "kind": "speech",
+              "text": "English blurs this, because too and very sit close together in speech. Spanish does not: say muy when you mean intense, and demasiado when you mean it has gone past what works."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Underneath is de más — of more, in excess — which became demasía, an excess, and then this adjective. The más in it is the más you already use, from Latin magis, more."
+            },
+            {
+              "kind": "speech",
+              "text": "So the word is built out of an admission: there is more here than the situation has room for. Not more than exists, more than fits."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep that and the grammar follows. Demasiado always implies a measure it has overrun, even when nobody says what the measure was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it was too difficult for me",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it was too difficult for me]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between muy difícil and demasiado difícil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between *muy difícil* and *demasiado difícil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "too many books, with the agreement",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: too many books, with the agreement]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Too much? (Demasiado.) Which taught word is inside it? (Más.) Does it mean very? (No — past the point that fits.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C471-nivel",
+      "sequence": 13000,
+      "title": "el nivel — the level",
+      "headword": "el nivel",
+      "romanization": "el nivel",
+      "gloss": "the level — a cousin of el litro through Latin libra, the balance, because a level is a little pair of scales",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4dfd6e5346b5fc85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el curso and demasiado. A class has one of these, and when it is wrong the second word is how you say so."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el nivel",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el nivel — the level."
+            },
+            {
+              "kind": "speech",
+              "text": "El nivel era demasiado alto para ella."
+            },
+            {
+              "kind": "speech",
+              "text": "Nivel is what a class, a language exam or a game has. ¿Qué nivel tienes? is the ordinary way to ask how far along somebody is. Note the stress: ni-VEL, on the end, and the plural is los niveles."
+            },
+            {
+              "kind": "speech",
+              "text": "It is also a level in the physical sense — a floor of a building, the surface of water, the tool a builder uses."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the phrase the question will use",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two ways of saying the same complaint, and you need to recognise both."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "about the class",
+                "about its level"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "about the class: el curso era demasiado avanzado. about its level: el nivel era demasiado alto."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A speaker will usually say the first. Somebody reporting it afterwards — a summary, a question, an exam option — will often reach for the second, because nivel lets you talk about the difficulty without naming the class again."
+            },
+            {
+              "kind": "speech",
+              "text": "Alto and bajo are what nivel takes, not grande or mucho. A level is a height."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "El litro already told you about Latin libra, the balance — hiding in lb, in Libra the scales in the sky, in deliberate and equilibrium."
+            },
+            {
+              "kind": "speech",
+              "text": "Nivel is the same word, made small. Latin libella is a little libra, a builder's level: a tiny balance that tells you when a surface is true. It reached Spanish through French, and on the way the first l turned into an n — livel became nivel — because two l sounds so close together pull apart."
+            },
+            {
+              "kind": "speech",
+              "text": "English took libella too, without that swap, and got level."
+            },
+            {
+              "kind": "speech",
+              "text": "So nivel and litro are cousins, and a level is not a measure of height so much as an instrument for finding balance."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the level was too high for her",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the level was too high for her]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask somebody what level they have",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask somebody what level they have]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which taught word nivel is a cousin of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which taught word *nivel* is a cousin of]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The level? (El nivel.) Plural? (Los niveles.) What Latin word is underneath? (Libra, the balance — libella, a little one.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C471-avanzado",
+      "sequence": 13010,
+      "title": "avanzado — advanced",
+      "headword": "avanzado",
+      "romanization": "avanzado",
+      "gloss": "advanced — a participle used as an adjective, and a cousin of antes, because to advance is to move to the front",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f757eed2a841a98e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el curso and antes. The second is hiding inside today's word, and you would not guess it from the outside."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: avanzado",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "avanzado — advanced."
+            },
+            {
+              "kind": "speech",
+              "text": "El curso de los lunes era demasiado avanzado para mí."
+            },
+            {
+              "kind": "speech",
+              "text": "Un nivel avanzado, un grupo avanzado: it describes the class, not the person. For the person you say tiene un nivel avanzado."
+            },
+            {
+              "kind": "speech",
+              "text": "It agrees like any adjective — avanzada, avanzados, avanzadas."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a participle doing an adjective's work",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Avanzado is the past participle of avanzar, to advance, standing in as an adjective. Spanish does this constantly, and you have seen it before:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the participle",
+                "what it describes"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the participle: invitado. what it describes: the one who was invited.",
+                "the participle: avanzado. what it describes: the one that has moved ahead."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "El invitado made the point first — Spanish names a person by what was done to them. Here the same move names a course by how far it has got."
+            },
+            {
+              "kind": "speech",
+              "text": "So a curso avanzado is not a course that is difficult in itself. It is one that has already travelled, and expects you to have travelled with it. That distinction is the whole reason the woman in the recording changed groups."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Avanzar is Latin ab ante — from in front — which became abantiare and then the Spanish verb. The ante in it is the same ante you already hold in antes."
+            },
+            {
+              "kind": "speech",
+              "text": "To advance is to put yourself in front. Not faster; further along."
+            },
+            {
+              "kind": "speech",
+              "text": "One thing worth knowing about the English. Advance has a d that does not belong to it: the word arrived as avancer, and English later added the d on the mistaken assumption that the av- was a worn-down Latin ad-. It was not. Spanish never made that mistake, which is why avanzar has no d and never did."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Monday course was too advanced for me",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Monday course was too advanced for me]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which taught word is hiding inside avanzar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which taught word is hiding inside *avanzar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why English advance has a d and Spanish has none",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why English *advance* has a d and Spanish has none]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Advanced? (Avanzado.) What is it the participle of? (Avanzar.) What two Latin words are inside it? (Ab ante — from in front.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C471-principiante",
+      "sequence": 13020,
+      "title": "el principiante — the beginner",
+      "headword": "el principiante",
+      "romanization": "el principiante",
+      "gloss": "the beginner — el principio plus the -ante ending el estudiante already taught you to build with",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7261dabcb7626ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el principio. Say el estudiante. One gives today's word its meaning and the other gives it its ending — try it before reading on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el principiante",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el principiante — the beginner."
+            },
+            {
+              "kind": "speech",
+              "text": "Ahora voy con los principiantes y disfruto mucho más."
+            },
+            {
+              "kind": "speech",
+              "text": "La principiante for a woman. It is the natural opposite of what you learned a moment ago:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the class",
+                "the person in it"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "the class: un curso avanzado. the person in it: un principiante."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: you could have built this one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "El estudiante gave you the rule outright: verb plus -ante names the person doing it. Estudiar, cut the -ar, add -ante."
+            },
+            {
+              "kind": "speech",
+              "text": "Here it is again, one step further back. From el principio, the beginning, Spanish makes the verb principiar, to begin. Take that, cut the -ar, add -ante:"
+            },
+            {
+              "kind": "speech",
+              "text": "principiar becomes principiante."
+            },
+            {
+              "kind": "speech",
+              "text": "The one who is beginning. The ending has not changed its job since chapter nine; the only new thing is the verb it is sitting on."
+            },
+            {
+              "kind": "speech",
+              "text": "English wore the same ending down to -ant, which is why participant, assistant and inhabitant all name the doer too."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "El principio already traced this for you: Latin principium, from princeps, the one who takes first place — the same first-taking inside English prince, principal and principle."
+            },
+            {
+              "kind": "speech",
+              "text": "So a principiante is not somebody who is bad at the thing. The word says only that they are at the start of it. Spanish has kept that neutral, and so should you when you use it about yourself."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "now I go with the beginners",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: now I go with the beginners]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "build the word from principiar out loud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: build the word from *principiar* out loud]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the opposite of un curso avanzado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the opposite of *un curso avanzado*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The beginner? (El principiante.) What does -ante add? (The one who does it.) Does the word say they are bad at it? (No — only that they are at the start.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C471-sencillo",
+      "sequence": 13030,
+      "title": "sencillo — simple",
+      "headword": "sencillo",
+      "romanization": "sencillo",
+      "gloss": "simple, plain — few parts rather than little effort, which is what separates it from fácil",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a89d8ae62244bc41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say difícil. Say el principiante. Today's word is what a beginner's class is full of, and it is not the opposite of the first one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sencillo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sencillo — simple, plain, straightforward."
+            },
+            {
+              "kind": "speech",
+              "text": "Hacemos cosas sencillas, pero las hacemos bien."
+            },
+            {
+              "kind": "speech",
+              "text": "Una comida sencilla — a plain meal. Un billete sencillo — a one-way ticket, where the word means single rather than easy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: sencillo is not fácil",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English lets simple and easy stand in for each other. Spanish keeps them apart, and the line runs between parts and effort."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the word",
+                "what it measures"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the word: sencillo. what it measures: how few parts it has.",
+                "the word: fácil. what it measures: how little effort it costs."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A dish with three ingredients is sencillo. A dish you can cook half asleep is fácil. They often overlap and they are not the same claim — climbing a staircase is sencillo and not remotely fácil."
+            },
+            {
+              "kind": "speech",
+              "text": "So hacemos cosas sencillas, pero las hacemos bien is not modest about the effort. It says the things have few parts, and then insists the execution is good. Hear it as easy and you lose the point the speaker is making."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin singulus, one at a time, single — through a late form singellus. English took the same root for single, singular and singly."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why un billete sencillo means a single: the word's oldest sense is one, not easy. Something sencillo is made of one thing, or nearly."
+            },
+            {
+              "kind": "speech",
+              "text": "The -illo on the end is not doing what it usually does. Elsewhere it makes things small — but here it was already fused into the Latin, and there is no word senci underneath for it to shrink."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "we do simple things, but we do them well",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: we do simple things, but we do them well]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between sencillo and fácil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between *sencillo* and *fácil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what un billete sencillo is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *un billete sencillo* is]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Simple? (Sencillo.) Does it mean easy? (No — few parts, not little effort.) What Latin word is underneath? (Singulus — one at a time.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C471-perderse",
+      "sequence": 13040,
+      "title": "perderse — to get lost",
+      "headword": "perderse",
+      "romanization": "perderse",
+      "gloss": "to get lost — the reflexive equivocarse already grouped it with, and in a class it is the thread you lose, not the way",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0340801548d934b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say perder. Say equivocarse. You have had both, and the second one already told you what happens when you put -se on the first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: perderse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "perderse — to get lost."
+            },
+            {
+              "kind": "speech",
+              "text": "Todos habían hecho cursos antes y yo me perdía."
+            },
+            {
+              "kind": "speech",
+              "text": "Note what is lost there. Not the way — the thread. In a class, in a film, in a conversation, me pierdo is I lose track, and it is the most useful sense the verb has for you."
+            },
+            {
+              "kind": "speech",
+              "text": "Me he perdido — I've got lost, or I've lost the thread. No te pierdas — don't get lost, and also don't miss it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the family you were told to notice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Equivocarse named this verb explicitly, in a group worth recalling whole:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "plain",
+                "reflexive"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "plain: perder — to lose a thing. reflexive: perderse — to get lost.",
+                "plain: olvidar — to forget a thing. reflexive: olvidarse — it slips your mind."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The reflexive marks something that befalls you rather than something you do to an object. Perder el paraguas is an act with a victim. Perderse has no object at all: the losing happens to you."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why me perdía is not an admission of carelessness. It reports a state she was in, which is exactly why it is the honest thing to say about a class that had moved on without her."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin perdere: per- plus dare, to give — to give away thoroughly, to hand something over for good."
+            },
+            {
+              "kind": "speech",
+              "text": "That per- is the thorough one, the same intensifier inside perfect (thoroughly made) and perturb. So losing, in Latin, is a kind of extreme giving: the thing goes and does not come back."
+            },
+            {
+              "kind": "speech",
+              "text": "English perdition is the same word, kept for the most complete loss there is."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "everyone had done courses before and I kept losing the thread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: everyone had done courses before and I kept losing the thread]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between perder and perderse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between *perder* and *perderse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what per- adds to dare",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *per-* adds to *dare*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To get lost? (Perderse.) In a class, what do you lose? (The thread.) Why the -se? (It happens to you, not to an object.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R471-repaso-curso",
+      "sequence": 13050,
+      "title": "(demasiado, el nivel, avanzado, el principiante, sencillo, perderse) — from cold",
+      "headword": "(demasiado, el nivel, avanzado, el principiante, sencillo, perderse)",
+      "romanization": "(demasiado, el nivel, avanzado, el principiante, sencillo, perderse)",
+      "gloss": "cold retrieval of the six, and three endings you already knew how to read",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3c2ee620eb94054",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six words, no prompts. How far past the point it was, what it was too high a one of, what the hard class was, who is in the other one, what they cook there, and what kept happening to you in the first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the six, cold",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "Spanish"
+              ],
+              "columns": 2,
+              "rowCount": 6,
+              "utterances": [
+                "English: too much. Spanish: demasiado.",
+                "English: the level. Spanish: el nivel.",
+                "English: advanced. Spanish: avanzado.",
+                "English: the beginner. Spanish: el principiante.",
+                "English: simple. Spanish: sencillo.",
+                "English: to get lost. Spanish: perderse."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: three endings, all of them already yours",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Not one ending in this chapter is new. Each was taught somewhere else and is here doing its ordinary job."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the ending",
+                "what it does"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the ending: -ado. what it does: a participle used as an adjective.",
+                "the ending: -ante. what it does: the one who does it.",
+                "the ending: -se. what it does: it happens to you."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "El invitado gave the first, el estudiante the second, equivocarse the third. So three of these six words were readable before you were told, and the chapter's real work was elsewhere: knowing which sense each carries, and filling two holes the scale had left."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The words, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four of the six hide a word you already hold."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "underneath"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: demasiado. underneath: de más — the más you know.",
+                "word: avanzado. underneath: ab ante — the antes you know.",
+                "word: principiante. underneath: principium — the principio you know."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "And el nivel is Latin libella, a little libra — so it is a cousin of el litro, which carried that balance for you already."
+            },
+            {
+              "kind": "speech",
+              "text": "Sencillo is Latin singulus, one at a time — English single. And perderse is per- plus dare, to give away thoroughly, which English kept in perdition."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Monday class was too advanced and I kept losing the thread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Monday class was too advanced and I kept losing the thread]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "now I go with the beginners and we do simple things",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: now I go with the beginners and we do simple things]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the six means few parts rather than little effort",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the six means few parts rather than little effort]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Too much? (Demasiado.) The level? (El nivel.) Advanced? (Avanzado.) The beginner? (El principiante.) Simple? (Sencillo.) To get lost? (Perderse.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C471-sintesis-curso",
+      "sequence": 13060,
+      "title": "(el curso de cocina) — follow it, then say your own",
+      "headword": "(el curso de cocina)",
+      "romanization": "(el curso de cocina)",
+      "gloss": "the payoff — follow two friends talking about a class that was too hard, then say the same thing about one of your own",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05955340fff0ae07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say avanzado and perderse. The first explains the second in everything below."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading: two friends, one question",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "— ¿Qué tal el curso de cocina? ¿Sigues yendo? — Sí, pero he cambiado de grupo. El de los lunes era demasiado avanzado para mí; todos habían hecho cursos antes y yo me perdía. — ¿Y ahora? — Ahora voy los miércoles con los principiantes y disfruto mucho más. Hacemos cosas sencillas, pero las hacemos bien."
+            },
+            {
+              "kind": "speech",
+              "text": "El de los lunes. The noun grupo is dropped and el carries it — the same move the printer notice made with la de la tercera planta."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: she never says the class was bad",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every word of the complaint is about fit, not quality."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what she says",
+                "what she does not say"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what she says: demasiado avanzado para mí. what she does not say: that the class was bad.",
+                "what she says: yo me perdía. what she does not say: that the teacher was bad."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Para mí puts the mismatch between the class and her; me perdía reports a state rather than blaming anyone; and sencillas, pero las hacemos bien refuses the obvious conclusion."
+            },
+            {
+              "kind": "speech",
+              "text": "Now read it the way somebody else would report it:"
+            },
+            {
+              "kind": "speech",
+              "text": "El nivel era demasiado alto para ella."
+            },
+            {
+              "kind": "speech",
+              "text": "Not a word of that is in what she said, and it is what she meant. She talks about the class; a summary talks about its nivel. Move between the two, because the person asking what happened will use the second."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish gives you a way to leave something that is not working without criticising it, and an exam will ask you to hear the difference between it did not suit me and it was no good."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say why she changed groups, using para mí the way she does."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say it about something of your own — a class, a book, a game. Name what was too advanced, say you lost the thread, and say what you do now instead. Keep the blame out of it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why did she change? (Era demasiado avanzado para ella.) What happened to her in class? (Se perdía.) Who is she with now? (Los principiantes.) Are the new dishes worse? (No — sencillas, pero bien hechas.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

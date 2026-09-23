@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C458-sintesis-plazo",
+    "language": "spanish",
+    "chapter": 458,
+    "sequence": 12320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de69e09f001ab25b"
+  },
+  "findings": []
+}

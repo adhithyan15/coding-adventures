@@ -1,0 +1,11 @@
+{
+  "id": "PT-C28-second-pass-finished-or-ongoing",
+  "pathSegment": "PT-PATH-032",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PT-EXT-035-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

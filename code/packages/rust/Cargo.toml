@@ -255,6 +255,7 @@ members = [
     "jvm-class-file",
     "jvm-simulator",
     "lexer",
+    "source-preprocessor",
     "language-core",
     "lisp-compiler",
     "lisp-lexer",
@@ -570,6 +571,11 @@ members = [
     "oct-parser",
     "oct-type-checker",
     "oct-iir-compiler",
+    # MacroOct (PREP01 slice 1) — Oct plus a preprocessor. Deliberately no
+    # `macrooct-parser` or `macrooct-type-checker`: after preprocessing the
+    # stream is pure Oct, so both are Oct's, unchanged.
+    "macrooct-lexer",
+    "macrooct-iir-compiler",
     "affine2d",
     "algol-lexer",
     "algol-parser",
@@ -773,6 +779,7 @@ members = [
     "x509-subject-alt-name",
     "x509-serial-number",
     "x509-certificate-version",
+    "x509-name",
     "tls-server-identity",
     "tls-platform",
     "dns-message",
@@ -1240,4 +1247,5 @@ members = [
   "cdc6600-gatelevel",
   "pdp11-simulator",
   "pdp11-gatelevel",
+  "pdp8-simulator",
 ]

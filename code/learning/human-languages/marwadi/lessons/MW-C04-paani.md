@@ -11,7 +11,7 @@ gloss: water
 concept_tag: NOUN-WATER
 prerequisites: [MW-W04-ii-matra]
 sounds: [unaspirated-p, long-aa, retroflex-n, long-ii]
-roots: [SANSKRIT-PA-DRINK]
+roots: [sanskrit-pa-drink]
 etymology_hook: Marwadi पाणी continues an old Indo-Aryan family descending from Sanskrit पानीय, something for drinking.
 duration:
   max_seconds: 180

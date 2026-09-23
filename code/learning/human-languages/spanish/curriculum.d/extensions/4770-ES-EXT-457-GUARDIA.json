@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-457-GUARDIA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can get a medicine that is not in stock: ask for it by the word on the box, ask them to order it in, find out when it arrives, and find the chemist that is open tonight.",
+  "prerequisites": [
+    "ES-EXT-456-CUENTA"
+  ]
+}

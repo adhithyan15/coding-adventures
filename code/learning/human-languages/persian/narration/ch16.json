@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "One to Five, and the Words English Already Says",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:d185c9fee5fb9083",
+  "sourceHash": "fnv1a64:8fa370d70f3fc0a6",
   "lessons": [
     {
       "id": "FA-C16-yek",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff4bca2395d98de4",
+      "sourceHash": "fnv1a64:1f8e565c8547f07f",
       "notice": null,
       "blocks": [
         {
@@ -288,7 +288,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:071f52fd5b9894f0",
+      "sourceHash": "fnv1a64:d7e046103aeeddab",
       "notice": null,
       "blocks": [
         {
@@ -436,7 +436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:244aa47025b12a04",
+      "sourceHash": "fnv1a64:083bf555afbb35f3",
       "notice": null,
       "blocks": [
         {
@@ -575,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d760799178bb846",
+      "sourceHash": "fnv1a64:4f60c4c707197319",
       "notice": null,
       "blocks": [
         {
@@ -794,6 +794,147 @@
                 "correct": "Retrieved out of sequence, which is how a price arrives.",
                 "incorrect": "panj, chahâr, se, do, yek."
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C16-second-pass-counting-people",
+      "sequence": 755,
+      "title": "یک دوست (yek dust) — counting the people you can name",
+      "headword": "یک دوست",
+      "romanization": "yek dust",
+      "gloss": "the people words again, counted — and the friend who is \"the one chosen\"",
+      "script": "perso-arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:f8d8f52046e4d16e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two person words, from memory: the one for woman, and the one for friend. Neither is a family role, which is what made them worth learning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: numbers go in front, and nothing else changes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put a number you now have in front of a person word you now have:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "یک دوست yek dust, one friend.",
+                "دو دوست do dust, two friends.",
+                "سه زن se zan, three women."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read the middle column down and notice what stays still. دوست does not change between one friend and two, and neither does زن. Persian does not reach for a plural ending once a number has already said how many — the number has done that job, so the noun does not repeat it."
+            },
+            {
+              "kind": "speech",
+              "text": "دوست is also the one to hold on to. It goes back to a root meaning to choose, so a friend in Persian is the one chosen — and the same root gave English choose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one friend, then two friends — the noun does not move",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one friend, then two friends — the noun does not move]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "three women",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: three women]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dust — and what a friend is, literally",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **dust** — and what a friend is, literally]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "yek, do, se in front of dust, one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN: **yek, do, se** in front of **dust**, one after the other]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you say two friends? (دو دوست do dust — the noun is unchanged.) Why is there no plural ending? (The number already said how many.) What does دوست mean literally? (The one chosen.) And which English word shares its root? (Choose.)"
             }
           ]
         }

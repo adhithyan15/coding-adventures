@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:21e475398d751b79",
+  "sourceHash": "fnv1a64:83be714a9beb7ef0",
   "lessons": [
     {
       "id": "SA-C06-numbers-1-5",
@@ -683,6 +683,110 @@
             {
               "kind": "speech",
               "text": "What does Punjab mean? (“Five waters.”) Is Persian panj borrowed from Sanskrit? (No: it is an Iranian cousin.) Which Greek form hides in pentagon? (Pente.) What caution belongs with the drink punch? (The five-ingredients derivation is common, but puncheon is a rival account.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R06-second-pass-where-the-words-came-from",
+      "sequence": 335,
+      "title": "नमस्कारः (namaskāraḥ) — the ending you can hear, and four claims you were told once",
+      "headword": "नमस्कारः",
+      "romanization": "namaskāraḥ",
+      "gloss": "second pass over the four claims about where these words come from, and the ending that marks a masculine singular",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:3f22fed70fd4d479",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the longer of the two greetings. Then say what its last breath — the soft -ḥ — is telling you about the word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Namaskāraḥ ends on a visarga, and a visarga on a noun like this one is not decoration: it marks the masculine singular. You have been hearing it since your first pair of greetings without being asked to notice it twice."
+            },
+            {
+              "kind": "speech",
+              "text": "The numbers in front of you now make the point differently. Pañca has no visarga; namaskāraḥ does. One is a bare stem, the other is a word doing a job in a sentence. Sanskrit tells you which by the ending, not by the position."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "cognates",
+          "title": "Across the family",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four historical claims have gone past you, one at a time, each at the end of a chapter. Set against each other they stop being trivia and become one argument:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the claim",
+                "what it rests on"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "the claim: a judge in Calcutta announced in 1786 that Sanskrit, Greek and Latin came from a common source. what it rests on: he was comparing verbs and grammar, not lists of similar-sounding words.",
+                "the claim: the words of the naming exchange are traceable to that same source. what it rests on: nāma, mama, tvam, kim all have cousins west of India.",
+                "the claim: the wellbeing words have roots reaching east and west alike. what it rests on: the root is the unit that travels, not the finished word.",
+                "the claim: the leave-taking words are built from roots you can already name. what it rests on: punar-darśanāya is again plus for seeing."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read the right-hand column downward. Every one of the four is an argument from roots and endings, which is the same evidence the numbers in this chapter rest on. That is why the claim about Sanskrit and Latin is a claim about grammar and not about vocabulary."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What kind of evidence did the 1786 announcement rest on — matching words, or matching grammar? (Grammar.) What does the visarga on namaskāraḥ mark? (Masculine singular.)"
             }
           ]
         }

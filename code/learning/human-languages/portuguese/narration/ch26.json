@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "The Body, Asking How You Are",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e202d23b83f85009",
+  "sourceHash": "fnv1a64:303e00188ed3114e",
   "lessons": [
     {
       "id": "PT-C26-olho",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:331d9cb5d982f5eb",
+      "sourceHash": "fnv1a64:c8db3eabae831211",
       "notice": null,
       "blocks": [
         {
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbefeba3acaf1152",
+      "sourceHash": "fnv1a64:3b1b577228ecbad4",
       "notice": null,
       "blocks": [
         {
@@ -285,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:590fab9e3290356b",
+      "sourceHash": "fnv1a64:088f2e762e11e7c7",
       "notice": null,
       "blocks": [
         {

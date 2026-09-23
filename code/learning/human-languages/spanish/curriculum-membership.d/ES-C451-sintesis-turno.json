@@ -1,0 +1,11 @@
+{
+  "id": "ES-C451-sintesis-turno",
+  "pathSegment": "ES-PATH-451-TURNO",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ES-EXT-451-TURNO",
+      "order": 7
+    }
+  ]
+}

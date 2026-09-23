@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 141,
-  "sourceHash": "fnv1a64:cb97a9cf944272c8",
+  "sourceHash": "fnv1a64:d1fb6325e38daeb6",
   "lessonIds": [
     "ES-C24-cabeza",
     "ES-C24-mano"
@@ -11,6 +11,6 @@
   "text": "spanish/narration/ch141.txt",
   "json": "spanish/narration/ch141.json",
   "textHash": "fnv1a64:70a934a7ef2952bd",
-  "jsonHash": "fnv1a64:2923d3615fcb7e42",
+  "jsonHash": "fnv1a64:c776b16969bf8584",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 167,
-  "sourceHash": "fnv1a64:664663cf306efa82",
+  "sourceHash": "fnv1a64:e1fe80a0b3b130b4",
   "lessonIds": [
     "ES-C38-luego",
     "ES-C38-porque",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch167.txt",
   "json": "spanish/narration/ch167.json",
   "textHash": "fnv1a64:516b4fe0f3d164e4",
-  "jsonHash": "fnv1a64:d15467c02263cba4",
+  "jsonHash": "fnv1a64:318361fb50766a22",
   "findings": []
 }

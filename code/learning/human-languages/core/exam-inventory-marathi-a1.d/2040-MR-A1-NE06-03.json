@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE06-03",
+  "category": "Education",
+  "label": "the school day: timetable and term",
+  "probe": null,
+  "note": "Untaught; blocked behind the clock and the calendar.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE06-03"
+  ]
+}

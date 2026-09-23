@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C433-sintesis-llave",
+    "language": "spanish",
+    "chapter": 433,
+    "sequence": 10640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38d9a256ee5cd341"
+  },
+  "findings": []
+}

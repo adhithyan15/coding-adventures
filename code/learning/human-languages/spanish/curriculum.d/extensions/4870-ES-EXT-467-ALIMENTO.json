@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-467-ALIMENTO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a monthly production sheet on a community garden's door: understand what was produced, who it fed, what the target was, and why a notice writes 'no fue suficiente' where a person would say 'no fue bastante'.",
+  "prerequisites": [
+    "ES-EXT-466-INFORME"
+  ]
+}

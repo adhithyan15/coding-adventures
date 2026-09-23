@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-QU-06",
+  "category": "Quantifiers",
+  "label": "sufficiency: puresaa, baraach",
+  "probe": [
+    "MR-LEX-PURESA",
+    "MR-LEX-BARACH"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-Q-04"
+  ]
+}

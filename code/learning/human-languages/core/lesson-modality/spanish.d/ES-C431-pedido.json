@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C431-pedido",
+    "language": "spanish",
+    "chapter": 431,
+    "sequence": 10440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:011d571d9b007634"
+  },
+  "findings": []
+}

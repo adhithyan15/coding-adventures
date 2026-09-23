@@ -1,0 +1,1002 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 434,
+  "title": "El Taller Y La Máquina",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:13ff0583c0607bdf",
+  "lessons": [
+    {
+      "id": "ES-C434-taller",
+      "sequence": 10650,
+      "title": "el taller — where things get mended",
+      "headword": "el taller",
+      "romanization": "el taller",
+      "gloss": "the workshop — where a thing goes to be mended, and also the name of a short course",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad1be20ae90fd331",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el coche. Say el trabajo. The car has stopped working. Name the place it goes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el taller",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el taller — the workshop, the garage in the sense of repair shop."
+            },
+            {
+              "kind": "speech",
+              "text": "Careful with that English word: el garaje is where you park; el taller is where it gets fixed. English uses garage for both and Spanish does not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el taller also means a workshop in the other sense — a short practical class. Un taller de cocina, un taller de reparación de bicicletas."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the phrase",
+                "what it is"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the phrase: llevar el coche al taller. what it is: the repair shop.",
+                "the phrase: un taller de cocina. what it is: a hands-on class."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The two meanings share a core that English keeps as well: a place where people work with their hands, rather than sit and listen. If a notice offers you a taller, expect to do something, not to watch."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el taller",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el taller*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I am taking the car to the workshop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I am taking the car to the workshop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between el taller and el garaje",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between *el taller* and *el garaje*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where the car is repaired? (el taller.) Where it is parked? (el garaje.) What else can a taller be? (A hands-on class.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C434-maquina",
+      "sequence": 10660,
+      "title": "la máquina — the word above the others",
+      "headword": "la máquina",
+      "romanization": "la máquina",
+      "gloss": "the machine — the general word under all the particular ones you already hold",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55b2ac82b2580d6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la lavadora. Say el ordenador. You can name particular machines. Name the kind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la máquina",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la máquina — the machine."
+            },
+            {
+              "kind": "speech",
+              "text": "Stressed on the first syllable, MÁ-qui-na, and the written accent marks it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Notice what el ordenador is: ordenar plus the doer-ending, the thing that orders. Spanish named the computer after what it does, where English named it after counting."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "the computer is"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "language: Spanish. the computer is: the orderer.",
+                "language: English. the computer is: the counter."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "la máquina sits above all of these as the general term, and it is the word you need for the ones with no special name: la máquina de hacer pan, la máquina del billete. When you do not know an appliance's name, la máquina de plus what it does will be understood every time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la máquina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la máquina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the washing machine is a machine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the washing machine is a machine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the machine for making bread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the machine for making bread]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The machine? (la máquina.) What does ordenador literally name? (The one that orders.) Which syllable is stressed in máquina? (The first.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C434-pieza",
+      "sequence": 10670,
+      "title": "la pieza — the part that is missing",
+      "headword": "la pieza",
+      "romanization": "la pieza",
+      "gloss": "the part — what is missing when a thing does not work, and what a repair replaces",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d102e42762a7672",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la máquina and el taller. The machine is in the workshop and one small thing is wrong with it. Name that thing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la pieza",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la pieza — the part, the piece, the component."
+            },
+            {
+              "kind": "speech",
+              "text": "Falta una pieza — a part is missing. Era una pieza pequeña — it was a small part. Both are what a repair shop says to you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la pieza is wider than English part. It also names a room in some regions, and a piece of music almost everywhere."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the phrase",
+                "what it means"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "una pieza de la lavadora means a component.",
+                "una pieza de Mozart means a piece of music."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "A word that covers several English words is not being vague. It is naming something English happens to split: a discrete thing that belongs to a larger whole. Hold that idea and all three uses follow from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la pieza",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la pieza*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a part is missing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a part is missing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it was a small part",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it was a small part]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The part? (la pieza.) A part is missing? (Falta una pieza.) What else can a pieza be? (A piece of music.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C434-bateria",
+      "sequence": 10680,
+      "title": "la batería — the ending that is not one",
+      "headword": "la batería",
+      "romanization": "la batería",
+      "gloss": "the battery — a word that looks built and is not, at least not in this language",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83bbc6fe66018a56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la tubería. You learned that -ería collects. Here is a word that ends the same way. Guess what it collects, then read on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la batería",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la batería — the battery. The one in a car, a phone, a torch."
+            },
+            {
+              "kind": "speech",
+              "text": "It also names a drum kit, which is the same idea of a set of things acting together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here the guess fails, and it is worth knowing why."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no Spanish word bate that batería collects. The word arrived whole from French batterie, where it had been built from battre, to beat — a battery of guns, a set of things striking together."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "where the building happened"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: la tubería. where the building happened: in Spanish, from tubo.",
+                "word: la estantería. where the building happened: in Spanish, from estante.",
+                "word: la batería. where the building happened: in French, from battre."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So the resemblance is real but it is inherited, not made here. That is the honest shape of the rule you have been building for three chapters: look for the join, and accept that sometimes the join happened in another language and the pieces never entered this one."
+            },
+            {
+              "kind": "speech",
+              "text": "A guess that fails costs you nothing. Not guessing costs you every word you could have read."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la batería",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la batería*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the car battery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the car battery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why tubería comes apart and batería does not",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *tubería* comes apart and *batería* does not]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The battery? (la batería.) Is there a Spanish word bate under it? (No.) Where was it built? (In French.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C434-cargador",
+      "sequence": 10690,
+      "title": "el cargador — the one that loads",
+      "headword": "el cargador",
+      "romanization": "el cargador",
+      "gloss": "the charger — the doer-ending a fourth time, on a verb worth having in its own right",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee4532babaad89a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el móvil. Say la batería. The battery is empty. Name the thing you plug in — and try the ending before you are told."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el cargador",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el cargador — the charger."
+            },
+            {
+              "kind": "speech",
+              "text": "cargar — to load, to charge. cargar el móvil is to charge the phone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Fourth time for -dor, and by now it should arrive before the lesson does:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "the doer"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "verb: proveer. the doer: el proveedor.",
+                "verb: lavar. the doer: la lavadora.",
+                "verb: contar. the doer: el contador.",
+                "verb: cargar. the doer: el cargador."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "cargar is worth more than the charger. It means to load, and it reaches much further than electricity: cargar el coche is to load the car, la carga is the load itself, and no se cobra from earlier meets it in hacerse cargo de — to take charge of something."
+            },
+            {
+              "kind": "speech",
+              "text": "The same verb also turns up wherever a shop charges you, which is why cobrar and cargar feel adjacent without being the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el cargador",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el cargador*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have to charge the phone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have to charge the phone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the battery is empty and I have no charger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the battery is empty and I have no charger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four doer-words you now hold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four doer-words you now hold]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The charger? (el cargador.) The verb? (cargar.) What does it mean beyond electricity? (To load.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R434-repaso-maquina",
+      "sequence": 10700,
+      "title": "(taller, máquina, pieza, batería, cargador) — from cold",
+      "headword": "(taller, máquina, pieza, batería, cargador)",
+      "romanization": "(taller, máquina, pieza, batería, cargador)",
+      "gloss": "cold retrieval of the five, and of the guess that was right four times and wrong once",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbe02bac75c49269",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say the workshop, the machine and the charger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the guess, and the one that failed",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "comes apart?"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: el cargador. comes apart?: yes — cargar + -dor.",
+                "word: la batería. comes apart?: no — built in French, not here."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Four chapters have now handed you -dor, -ería and -ero, and batería is the first word that wore an ending and did not come apart. Do not read that as a warning against guessing. A guess that fails costs nothing; not guessing costs every word you could have read without help."
+            },
+            {
+              "kind": "speech",
+              "text": "el taller and el garaje are the pair to keep straight: English calls both garage, Spanish does not. You park in one and your car is repaired in the other."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You could name machines and could not say anything about one that had stopped. La lavadora and el ordenador were yours; the place they go, the general word for the kind, the part that is missing, the battery that is flat and the charger you lent somebody were not."
+            },
+            {
+              "kind": "speech",
+              "text": "That is most of what a person actually says about a device — and almost none of it is in a beginner's dialogue, because beginners' dialogues are about things that work."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five words",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five words]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the battery is flat and I have no charger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the battery is flat and I have no charger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the car is at the workshop because a part is missing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the car is at the workshop because a part is missing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the five did not come apart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the five did not come apart]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The part? (la pieza.) Where the car is repaired? (el taller.) The charger? (el cargador.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C434-sintesis-averia",
+      "sequence": 10710,
+      "title": "(una avería) — the message the shop leaves you",
+      "headword": "(una avería)",
+      "romanization": "(una avería)",
+      "gloss": "the payoff — take a telephone message about a repair and say the same thing back",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:99bd444c3e75073d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la pieza and la lavadora. The message you are about to hear contains both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read it once, as though hearing it on the telephone, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Buenas tardes, llamo del taller. Su lavadora ya está reparada: era una pieza pequeña, así que no le vamos a cobrar la mano de obra. Podemos llevársela el miércoles por la mañana."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what was wrong with it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what was wrong with it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whether you are being charged for the labour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whether you are being charged for the labour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "when they can bring it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: when they can bring it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the other direction. Say aloud, as if leaving the message yourself:"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the machine does not work and I think a part is missing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the machine does not work and I think a part is missing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I am taking it to the workshop on Monday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I am taking it to the workshop on Monday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have lent my charger and I need it back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have lent my charger and I need it back]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four chapters ago none of this was sayable, and the grammar has not changed once. Every sentence above uses tenses you already had. What was missing was never structure — it was the nouns that ordinary life is actually about."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who is calling? (el taller.) What was wrong? (una pieza pequeña.) What do you need back? (el cargador.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

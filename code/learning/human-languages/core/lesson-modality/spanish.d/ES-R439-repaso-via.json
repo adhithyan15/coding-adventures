@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R439-repaso-via",
+    "language": "spanish",
+    "chapter": 439,
+    "sequence": 11050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f0679e08a63d215"
+  },
+  "findings": []
+}

@@ -10,7 +10,7 @@ gloss: "to say — and the Latin verb that also produced the judge"
 concept_tag: VERB-SAY
 prerequisites: [PT-C18-vir, PT-C02-como]
 sounds: [z-voiced, final-r]
-roots: [latin-dicere]
+roots: [dicere-latin]
 etymology_hook: "dizer ← dīcere 'to say, to point out': dictate, diction, dictionary, verdict (vērum dictum), predict, contradict, edict, benediction, addict, indicate, index — and iūdex 'he who speaks the law' → judge, judicial, prejudice"
 duration:
   max_seconds: 247

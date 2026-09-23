@@ -1,0 +1,11 @@
+{
+  "id": "TE-C10-second-pass-farewells",
+  "pathSegment": "TE-PATH-014",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-014-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

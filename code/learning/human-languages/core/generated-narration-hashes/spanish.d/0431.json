@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:aef67048d3858d5e",
+  "lessonIds": [
+    "ES-C431-pedido",
+    "ES-C431-devolver",
+    "ES-C431-retraso",
+    "ES-C431-proveedor",
+    "ES-C431-cobrar",
+    "ES-R431-repaso-pedido",
+    "ES-C431-sintesis-reclamacion"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch431.txt",
+  "json": "spanish/narration/ch431.json",
+  "textHash": "fnv1a64:693883a0c1e655db",
+  "jsonHash": "fnv1a64:4cb949200659c528",
+  "findings": []
+}

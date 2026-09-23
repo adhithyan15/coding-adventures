@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-PRON-05",
+  "category": "Pronouns",
+  "label": "the relative jo/jii/je with its correlative",
+  "probe": null,
+  "note": "Untaught. Marathi's relative is correlative rather than post-nominal, so the Spanish point transfers as a demand and not as a shape.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-PRON-05"
+  ]
+}

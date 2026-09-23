@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE06-01",
+  "category": "Education",
+  "label": "educational institutions",
+  "probe": null,
+  "note": "Untaught; shaalaa has no atom.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE06-01"
+  ]
+}

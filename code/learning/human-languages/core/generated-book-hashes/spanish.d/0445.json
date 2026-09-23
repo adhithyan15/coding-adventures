@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:062b42c201215a02",
+  "lessonIds": [
+    "ES-C445-jubilarse",
+    "ES-C445-responsabilidad",
+    "ES-C445-exigente",
+    "ES-C445-ensenar",
+    "ES-C445-repetir",
+    "ES-R445-repaso-puesto",
+    "ES-C445-sintesis-puesto"
+  ],
+  "tex": "spanish/book/chapters/ch445-puesto.tex"
+}

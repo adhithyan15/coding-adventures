@@ -74,8 +74,13 @@ export interface TrackLevelCoverage {
   /**
    * The highest level this track has any lesson at.
    *
-   * This is the "how far is this track from Advanced" number, and today it is `A1` or
-   * `pre-A1` for every track in the corpus — nothing has reached A2.
+   * This is the "how far is this track from Advanced" number. It said "today it is `A1`
+   * or `pre-A1` for every track — nothing has reached A2" for a long time after that
+   * stopped being so; measured while closing HL-C417, 21 of 23 tracks reach A2 and
+   * Spanish reaches C2. The stale sentence is recorded rather than silently swapped
+   * because it is the exact failure this module's header warns about — a fact copied
+   * into prose goes stale where a derived one cannot — and it went stale in the one
+   * place that says so.
    */
   reach: CefrLevel | null;
 }

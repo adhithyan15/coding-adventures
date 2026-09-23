@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:e8b8f5ee4b4c2c82",
+  "lessonIds": [
+    "ES-C459-seccion",
+    "ES-C459-inventario",
+    "ES-C459-habitual",
+    "ES-R459-repaso-stock",
+    "ES-C459-sintesis-stock"
+  ],
+  "tex": "spanish/book/chapters/ch459-stock.tex"
+}

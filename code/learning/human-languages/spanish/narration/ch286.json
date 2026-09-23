@@ -4,7 +4,7 @@
   "chapter": 286,
   "title": "Where It Hurts --- Eye, Mouth, Throat, Pain, Fever",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:877f6d8c9d4dd131",
+  "sourceHash": "fnv1a64:bdd9dec3f6358d06",
   "lessons": [
     {
       "id": "ES-C286-ojo",
@@ -487,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b812b043327a3224",
+      "sourceHash": "fnv1a64:69df91bb3ecf00a4",
       "notice": null,
       "blocks": [
         {

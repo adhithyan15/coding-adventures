@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C445-sintesis-puesto",
+    "language": "spanish",
+    "chapter": 445,
+    "sequence": 11480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2c685216f8282f0"
+  },
+  "findings": []
+}

@@ -10,7 +10,7 @@ gloss: "to like, to love — the verb that will not let go of its preposition"
 concept_tag: VERB-LIKE-LOVE
 prerequisites: [PT-C20-ajudar, PT-C18-saber-conhecer]
 sounds: [open-o, final-r]
-roots: [latin-gustare]
+roots: [gustare-latin]
 etymology_hook: "gostar ← gustāre 'to TASTE' → gusto, gustatory, degustation, disgust (dis- + gustus, a bad taste) — the second Portuguese verb that stopped tasting, after saber ← sapere; and gustāre DE, taking a taste OF a thing, is why the de never leaves"
 duration:
   max_seconds: 285

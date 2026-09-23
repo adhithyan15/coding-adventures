@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-CO-02",
+  "category": "Coordination",
+  "label": "negative coordination: naa ... naa",
+  "probe": [
+    "MR-JOIN-NAA-NAA"
+  ],
+  "note": "Closed by MR-C31-naa-naa (chapter 31). The doubled naa is taught as a shape that must be said twice; saying it once is explicitly named as an unfinished sentence.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-CO-02"
+  ]
+}

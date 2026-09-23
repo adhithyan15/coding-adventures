@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C436-companero",
+    "language": "spanish",
+    "chapter": 436,
+    "sequence": 10790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a84d5a67ff02f21"
+  },
+  "findings": []
+}

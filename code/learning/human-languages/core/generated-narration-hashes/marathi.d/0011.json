@@ -1,20 +1,21 @@
 {
   "language": "marathi",
   "chapter": 11,
-  "sourceHash": "fnv1a64:2f5cee2e44a107d6",
+  "sourceHash": "fnv1a64:9dbdac61e89a479e",
   "lessonIds": [
     "MR-C04-punha",
     "MR-C04-bhetu",
     "MR-C04-punha-bhetu",
     "MR-C04-udya-bhetu",
     "MR-C04-kalji-ghya",
-    "MR-C04-practice"
+    "MR-C04-practice",
+    "MR-R11-second-pass-the-verb-carries-it"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 3,
   "drivablePrefix": 0,
   "text": "marathi/narration/ch11.txt",
   "json": "marathi/narration/ch11.json",
-  "textHash": "fnv1a64:8265e1389b2cbcc3",
-  "jsonHash": "fnv1a64:7e9ee638ab8c5f7a",
+  "textHash": "fnv1a64:920e369ae6514943",
+  "jsonHash": "fnv1a64:ec82f1e6cfebd568",
   "findings": []
 }

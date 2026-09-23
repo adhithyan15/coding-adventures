@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-454-CORTE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a road or rail closure: read the barrier notice, understand a delay announcement, say what caused it and what is running instead.",
+  "prerequisites": [
+    "ES-EXT-453-LIMPIEZA"
+  ]
+}

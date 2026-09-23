@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:0236ee856d57d4d3",
+  "lessonIds": [
+    "ES-C432-lavadora",
+    "ES-C432-contador",
+    "ES-C432-estanteria",
+    "ES-C432-tuberia",
+    "ES-C432-sofa",
+    "ES-R432-repaso-casa",
+    "ES-C432-sintesis-aviso"
+  ],
+  "tex": "spanish/book/chapters/ch432-casa-dentro.tex"
+}

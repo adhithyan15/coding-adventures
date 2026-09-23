@@ -2574,6 +2574,20 @@ jobs:
           cmake -S "$navigation_split_output/qt" -B "$navigation_split_output/qt/build" -DCMAKE_BUILD_TYPE=Release
           cmake --build "$navigation_split_output/qt/build" --config Release --parallel
 
+          # #15833 -- and now measure it, because none of the above could.
+          #
+          # The greps and the cmake build all passed for months against a
+          # split that laid out to 0 x 0 and drew nothing at any window size:
+          # `Layout.fillWidth` is inert outside a Layout, QML warns about it
+          # in silence, and a component that measures nothing still compiles
+          # perfectly. This loads the generated QML at a known window size and
+          # asserts the split fills it and the detail area is real.
+          cp code/scripts/qt-navigation-split-render-check.qml "$navigation_split_output/qt/"
+          (
+            cd "$navigation_split_output/qt"
+            QT_QPA_PLATFORM=offscreen qml qt-navigation-split-render-check.qml
+          )
+
           # qt_main_with_startup_states (this PR) made every native-complete Qt
           # shell keep a missing/failed runtime visible in the window and
           # retryable instead of exiting, so RatingControls no longer exits

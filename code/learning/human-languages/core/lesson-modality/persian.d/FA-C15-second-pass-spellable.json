@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C15-second-pass-spellable",
+    "language": "persian",
+    "chapter": 15,
+    "sequence": 695,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f26cbbb1e3c050d7"
+  },
+  "findings": []
+}

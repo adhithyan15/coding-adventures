@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 5,
-  "sourceHash": "fnv1a64:b7da7fb1c7fff8af",
+  "sourceHash": "fnv1a64:b83cf4961f40703d",
   "lessonIds": [
     "PA-C05-bolna",
     "PA-C05-panjabi",
@@ -17,6 +17,6 @@
   "text": "punjabi/narration/ch05.txt",
   "json": "punjabi/narration/ch05.json",
   "textHash": "fnv1a64:3a290cbc8d8063ee",
-  "jsonHash": "fnv1a64:fd29d755399ab57b",
+  "jsonHash": "fnv1a64:8d0457c04d130a22",
   "findings": []
 }

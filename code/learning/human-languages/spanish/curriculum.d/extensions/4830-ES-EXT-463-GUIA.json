@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-463-GUIA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can arrange or join an organised outing: say who is putting it on, that a guide is coming, and ask whether an early start matters to anyone.",
+  "prerequisites": [
+    "ES-EXT-462-JEFE"
+  ]
+}

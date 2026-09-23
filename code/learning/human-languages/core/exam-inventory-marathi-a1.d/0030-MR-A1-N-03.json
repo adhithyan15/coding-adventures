@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-N-03",
+  "category": "The noun",
+  "label": "gender: three genders, inherent and unpredictable from meaning",
+  "probe": [
+    "MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER",
+    "MR-GRAMMAR-KUTUMB-NEUTER"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-N-03"
+  ]
+}

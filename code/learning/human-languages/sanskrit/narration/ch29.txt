@@ -1,8 +1,8 @@
 Sanskrit, chapter 29: Courtesy Words.
-5 lessons. All 5 can be done entirely by ear.
+6 lessons. You can do the first 5 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 कृपया (kṛpayā) — please.
 
 Warm-up.
@@ -33,7 +33,7 @@ Wrap-up Recall.
 What does कृपया (kṛpayā) mean? ("please".) Say it once more.
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 क्षम्यताम् (kṣamyatām) — pardon me; let it be forgiven.
 
 Warm-up.
@@ -64,7 +64,7 @@ Wrap-up Recall.
 What does क्षम्यताम् (kṣamyatām) mean? ("pardon me; let it be forgiven".) Say it once more.
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 प्रणामः (praṇāmaḥ) — a bow, a respectful salutation.
 
 Warm-up.
@@ -95,7 +95,7 @@ Wrap-up Recall.
 What does प्रणामः (praṇāmaḥ) mean? ("a bow, a respectful salutation".) Say it once more.
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 उपकारः (upakāraḥ) — a favour, a good turn.
 
 Warm-up.
@@ -126,7 +126,7 @@ Wrap-up Recall.
 What does उपकारः (upakāraḥ) mean? ("a favour, a good turn".) Say it once more.
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 धन्यः (dhanyaḥ) — fortunate, blessed.
 
 Warm-up.
@@ -155,3 +155,35 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does धन्यः (dhanyaḥ) mean? ("fortunate, blessed".) Say it once more.
+
+
+Lesson 6 of 6.
+धन्यः (dhanyaḥ) — the ending you can see, and the argument underneath it.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: two marks, read inside words you already say until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+Three of this chapter's words end on the same soft breath — praṇāmaḥ, upakāraḥ, dhanyaḥ. Say what that breath marks. Then say which of the three names the bow you have been making since your first greeting.
+
+Script: two marks, read inside words you already say.
+[pause 1 second]
+Cold, with nothing to help you but the shapes.
+[your turn — read: वैद्यः — name the double stroke above the top bar, and say what it replaced]
+[pause 8 seconds for the answer]
+[your turn — read: इदानीम् — name its opening letter, and say why that vowel is full-size here]
+[pause 8 seconds for the answer]
+One of the two is a sign that cannot stand alone and replaces the a inside a consonant. The other is the full-size letter a vowel wears when it opens a word and has nothing to lean on. Same vowel sound, two jobs, two shapes.
+
+Why it's said this way.
+Every claim this book has made about where a word came from has used the same move: cut the word at its seam, and compare the pieces.
+[a table of 4 rows, read aloud]
+the claim: Sanskrit, Greek and Latin share a source. the seam it cuts on: verb endings, not vocabulary lists.
+the claim: the naming words have cousins west of India. the seam it cuts on: nāma, mama, tvam, kim.
+the claim: the wellbeing words reach east and west alike. the seam it cuts on: the root travels; the finished word does not.
+the claim: leave-taking is built from parts you can name. the seam it cuts on: again plus for seeing.
+Hṛdayam is the cleanest case the book owns, and praṇāmaḥ is this chapter's: pra plus the same nam that bows in the greeting. A word you can take apart is a word you can trace. A word you cannot take apart — like the ear — stays unplaced no matter how ordinary it is.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does the visarga on dhanyaḥ mark? (Masculine singular.) Is thanking a close friend in Sanskrit warm, or distancing? (Distancing.) What kind of evidence did the 1786 claim rest on? (Grammar.)

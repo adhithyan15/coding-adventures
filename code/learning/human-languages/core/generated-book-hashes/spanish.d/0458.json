@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:b12319feaab8f593",
+  "lessonIds": [
+    "ES-C458-plazo",
+    "ES-C458-entregar",
+    "ES-C458-admitir",
+    "ES-R458-repaso-plazo",
+    "ES-C458-sintesis-plazo"
+  ],
+  "tex": "spanish/book/chapters/ch458-plazo.tex"
+}

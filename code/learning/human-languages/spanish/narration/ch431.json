@@ -1,0 +1,1037 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 431,
+  "title": "El Pedido Y La Devolución",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:aef67048d3858d5e",
+  "lessons": [
+    {
+      "id": "ES-C431-pedido",
+      "sequence": 10440,
+      "title": "el pedido — what you asked for",
+      "headword": "el pedido",
+      "romanization": "el pedido",
+      "gloss": "the order — the thing you have asked a shop to send, named from the verb for asking",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:011d571d9b007634",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say comprar and la tienda. Now say the thing itself — the parcel that has not arrived yet — and see whether you have a word for it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el pedido",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pedido — the order."
+            },
+            {
+              "kind": "speech",
+              "text": "Not the act of ordering: the thing ordered. The box on its way to you, the line on the restaurant's docket, the number you quote on the phone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pedido is the past participle of pedir, to ask for, used as a noun. What was asked for. Spanish does this constantly, and once you see it you will see it everywhere:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "the noun made from it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "verb: pedir. the noun made from it: el pedido.",
+                "verb: llamar. the noun made from it: la llamada.",
+                "verb: entrar. the noun made from it: la entrada."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "You already hold la entrada for a ticket. It is the entered thing by the same move. A participle that hardens into a noun is one of the cheapest ways this language makes new words, and it costs you no new ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pedido",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pedido*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I bought it in the shop, and the order has not arrived",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I bought it in the shop, and the order has not arrived]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which verb el pedido was made from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which verb *el pedido* was made from]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The order? (el pedido.) From which verb? (pedir.) Does it mean the asking or the thing asked for? (The thing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C431-devolver",
+      "sequence": 10450,
+      "title": "devolver — to turn it back",
+      "headword": "devolver",
+      "romanization": "devolver",
+      "gloss": "to give back — the verb every shop notice and every borrowed object needs, and the one this level asks for most",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:084bcebf87cf30c5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el pedido. Say pagar. The order came, you paid, and it is the wrong size. Say what you do next."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: devolver",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "devolver — to give back, to return a thing."
+            },
+            {
+              "kind": "speech",
+              "text": "A thing, not a place. You devolver a jumper, a book, a borrowed charger. For going back somewhere yourself, Spanish uses volver on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "de- back, plus volver, to turn. To turn a thing back."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole word, and it tells you the grammar too: devolver turns exactly like volver, which you already say. The o becomes ue when the stress lands on it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "form",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "form: yo devuelvo, I give back.",
+                "form: nosotros devolvemos, we give back."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The stress moves off the o in devolvemos, and the ue goes with it. This is the same pattern as poder / puedo and dormir / duermo; learning it once buys you a whole family of verbs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the two ways back",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "you mean",
+                "you say"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "you mean: I return the order. you say: devuelvo el pedido.",
+                "you mean: I return home. you say: vuelvo a casa."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English uses return for both and lets context sort it out. Spanish splits them, and the split is not a nuisance — it is the prefix doing exactly what it says."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "devolver",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *devolver*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I want to return the order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I want to return the order]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I paid and now I am returning it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I paid and now I am returning it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between devuelvo and vuelvo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between *devuelvo* and *vuelvo*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To give a thing back? (devolver.) And to go back yourself? (volver.) What does the de- add? (Back.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C431-retraso",
+      "sequence": 10460,
+      "title": "el retraso — put further behind",
+      "headword": "el retraso",
+      "romanization": "el retraso",
+      "gloss": "the delay — the word a station announcement, a courier and an apology all reach for",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d6fa6e77c8d2126",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el pedido. Say devolver. The order is not late enough to return yet — it is only late. Say that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el retraso",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el retraso — the delay."
+            },
+            {
+              "kind": "speech",
+              "text": "con retraso — late, running behind. That is the phrase you will hear on a platform: el tren sale con veinte minutos de retraso."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "re- again, plus tras, behind. Something put further behind than it should be."
+            },
+            {
+              "kind": "speech",
+              "text": "tras is worth a moment on its own, because it is hiding in words you will meet all week:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the behind in it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: detrás. the behind in it: behind, in place.",
+                "word: atrasar. the behind in it: to put back.",
+                "word: el retraso. the behind in it: the being-behind."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish also has tardar, to take time, from a different Latin word for slow. Two families, one idea, and a speaker picks whichever fits: a train lleva retraso, a journey tarda two hours."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el retraso",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el retraso*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the order is arriving late",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the order is arriving late]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the train leaves with twenty minutes' delay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the train leaves with twenty minutes' delay]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The delay? (el retraso.) Running late? (con retraso.) What does tras mean on its own? (Behind.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C431-proveedor",
+      "sequence": 10470,
+      "title": "el proveedor — the one further up the line",
+      "headword": "el proveedor",
+      "romanization": "el proveedor",
+      "gloss": "the supplier — the third party a shop blames when your order is late, and the reason this word turns up in complaints",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95331dac2d514f08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la tienda. Say el retraso. The shop says the delay is not their fault. Whose, then?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el proveedor",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el proveedor — the supplier."
+            },
+            {
+              "kind": "speech",
+              "text": "The company that supplies the shop. You rarely deal with one; you hear about one when something has gone wrong: un problema con nuestro proveedor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "proveer, to provide, plus -dor, the ending that makes a doer."
+            },
+            {
+              "kind": "speech",
+              "text": "That ending is worth more to you than this one word, because it is completely regular and it turns verbs you already hold into people and machines:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "the doer"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "verb: proveer. the doer: el proveedor.",
+                "verb: trabajar. the doer: el trabajador.",
+                "verb: vender. the doer: el vendedor."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Once you notice -dor, a long unfamiliar noun often decomposes into a verb you know plus the one who does it. That is a reading strategy, not a word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el proveedor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el proveedor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "there is a problem with the supplier",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: there is a problem with the supplier]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the doer-word made from trabajar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the doer-word made from *trabajar*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The supplier? (el proveedor.) What does -dor add? (The one who does it.) From which verb? (proveer.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C431-cobrar",
+      "sequence": 10480,
+      "title": "cobrar — the other end of paying",
+      "headword": "cobrar",
+      "romanization": "cobrar",
+      "gloss": "to charge, to be paid — the other side of pagar, and the verb that decides who owes whom",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6dd62b4a51787151",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say pagar. Say el dinero. You have had both a long time. Now say what the shop does, from its own side of the counter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cobrar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cobrar — to charge somebody, to collect money, to get paid."
+            },
+            {
+              "kind": "speech",
+              "text": "One verb for all three, and which one it means depends on who is speaking."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: who is on each end",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pagar and cobrar are the same transaction from opposite sides:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "who",
+                "verb"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "who: the customer. verb: paga.",
+                "who: the shop. verb: cobra."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So me cobraron treinta euros — they charged me thirty. And cobro el viernes — I get paid on Friday, said by somebody with a job. English needs three different verbs (charge, collect, get paid) where Spanish holds one, and the one holds because the money is always moving toward the speaker."
+            },
+            {
+              "kind": "speech",
+              "text": "That is also why no se cobra nada on a shop notice means nothing will be charged to you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cobrar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cobrar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I pay and the shop charges",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I pay and the shop charges]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "they charged me thirty euros",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: they charged me thirty euros]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I get paid on Friday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I get paid on Friday]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The customer does what? (paga.) And the shop? (cobra.) What does no se cobra nada tell you? (You will not be charged.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R431-repaso-pedido",
+      "sequence": 10490,
+      "title": "(pedido, devolver, retraso, proveedor, cobrar) — from cold",
+      "headword": "(pedido, devolver, retraso, proveedor, cobrar)",
+      "romanization": "(pedido, devolver, retraso, proveedor, cobrar)",
+      "gloss": "cold retrieval of the five words, and of the two endings that made three of them",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee3663b01afb9eb6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say the order, to give back and the delay."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: three of the five were built, not learned",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "made from",
+                "by"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "word: el pedido. made from: pedir. by: a participle used as a noun.",
+                "word: el proveedor. made from: proveer. by: the doer-ending -dor.",
+                "word: devolver. made from: volver. by: the prefix de-, back."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three of this chapter's five words are a piece you already had plus one move. Do not read a rule into it — plenty of Spanish words are simple and whole. What is worth carrying is the habit of looking for the join before deciding a long word is new."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You could buy things and pay for them, and you could not say what happens when it goes wrong. Comprar, pagar, la tienda and el dinero have been yours for a long time, and between them they cover only the half of a transaction where everybody is content."
+            },
+            {
+              "kind": "speech",
+              "text": "This chapter adds the other half: the thing itself (el pedido), it arriving late (el retraso), whose fault the shop says that is (el proveedor), sending it back (devolver) and what you are or are not charged (cobrar)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five words",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five words]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which three were built from a piece you already had",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which three were built from a piece you already had]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the customer pays and the shop...",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the customer pays and the shop ...]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the order is arriving late and I want to return it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the order is arriving late and I want to return it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To give a thing back? (devolver.) The one who supplies the shop? (el proveedor.) The shop's side of pagar? (cobrar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C431-sintesis-reclamacion",
+      "sequence": 10500,
+      "title": "(una reclamación) — the whole transaction, gone wrong",
+      "headword": "(una reclamación)",
+      "romanization": "(una reclamación)",
+      "gloss": "the payoff — read a delay notice and complain about an order, using every word the chapter added",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abf05b119bb60f82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You are about to read a real notice of the kind a shop sends. Before you do, say el pedido and el retraso once each."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read it once without stopping, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Estimado cliente: su pedido número 3182 sufrirá un retraso de tres días por un problema con nuestro proveedor. No se le cobrará el envío."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how many days late it is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how many days late it is]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whose problem the shop says it is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whose problem the shop says it is]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "whether you will be charged for delivery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: whether you will be charged for delivery]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the other direction. Say aloud, as if on the telephone:"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "my order is arriving with a delay of three days",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: my order is arriving with a delay of three days]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I paid on Monday and nobody has charged me for the delivery",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I paid on Monday and nobody has charged me for the delivery]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "if it does not arrive this week I want to return it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: if it does not arrive this week I want to return it]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four sentences ago you could not have said any of that. The transaction you could describe stopped at the moment of paying; it now runs all the way to the complaint."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your order? (mi pedido.) With a delay? (con retraso.) And if you want to send it back? (devolver.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

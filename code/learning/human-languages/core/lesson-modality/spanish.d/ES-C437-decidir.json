@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C437-decidir",
+    "language": "spanish",
+    "chapter": 437,
+    "sequence": 10860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d87d39b5c5a6dbb6"
+  },
+  "findings": []
+}

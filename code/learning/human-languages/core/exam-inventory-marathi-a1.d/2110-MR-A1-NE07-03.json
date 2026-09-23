@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-NE07-03",
+  "category": "Work",
+  "label": "working activity",
+  "probe": [
+    "MR-LEX-KARNE",
+    "MR-LEX-RAHNE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE07-03"
+  ]
+}

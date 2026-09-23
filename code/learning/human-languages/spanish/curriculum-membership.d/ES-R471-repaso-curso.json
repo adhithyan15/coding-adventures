@@ -1,0 +1,11 @@
+{
+  "id": "ES-R471-repaso-curso",
+  "pathSegment": "ES-PATH-471-CURSO",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-471-CURSO",
+      "order": 6
+    }
+  ]
+}

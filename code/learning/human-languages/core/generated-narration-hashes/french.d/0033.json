@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 33,
-  "sourceHash": "fnv1a64:647920597b5339b3",
+  "sourceHash": "fnv1a64:e00873c602c9ffba",
   "lessonIds": [
     "FR-C29-ami",
     "FR-C29-famille",
@@ -13,6 +13,6 @@
   "text": "french/narration/ch33.txt",
   "json": "french/narration/ch33.json",
   "textHash": "fnv1a64:ffa4c9de2bf84817",
-  "jsonHash": "fnv1a64:1bbdf131073b57c8",
+  "jsonHash": "fnv1a64:be90375b367fe11a",
   "findings": []
 }

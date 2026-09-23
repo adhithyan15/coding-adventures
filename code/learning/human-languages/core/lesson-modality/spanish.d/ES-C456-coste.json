@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C456-coste",
+    "language": "spanish",
+    "chapter": 456,
+    "sequence": 12190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94aa5865a4ce7b92"
+  },
+  "findings": []
+}

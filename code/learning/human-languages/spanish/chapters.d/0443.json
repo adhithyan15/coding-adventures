@@ -1,0 +1,22 @@
+{
+  "chapter": 443,
+  "title": "El Animo",
+  "label": "ch:es-animo",
+  "canDo": "I can say what is going on inside me: what hurts, what I care about, what I am struggling to do, and what I wish I had not done.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C443-sintesis-animo",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C443-ANIMO-01",
+      "ES-LEX-C443-ANIMO-02",
+      "ES-LEX-C443-ANIMO-03",
+      "ES-LEX-C443-ANIMO-04",
+      "ES-LEX-C443-ANIMO-05"
+    ],
+    "note": "Wordlist derived from the A2 mock audit by the solo-blocker rule described on chapter 440. THE CHAPTER TEACHES NO NEW GRAMMAR, AND THAT IS THE DESIGN: five words are handed to two machines the learner already owns. The thing-is-the-subject machine from gustar (chapter 35) takes doler and interesar -- 'me duele la cabeza', 'me interesan los cursos', where the verb agrees with the body part or the courses and never with the person, which is the commonest English-speaker error because English puts the person in charge. The reflexive from equivocarse (437) takes acercarse, concentrarse and arrepentirse, and 'se acerca la fecha' extends it: nobody moves the date, so the reflexive marks NO AGENT NAMED rather than did-it-to-itself. interesar is the verb behind ES-C398-interesante, which the learner already has -- the same free move as concierto -> concertar in 442. THE PIVOT IS ARREPENTIRSE, the sharpest trap in the tranche: it looks like a- + re- + sentir and is a- + re- + paenitere, AND IT CONJUGATES LIKE SENTIR (me arrepiento, nos arrepentimos), so the form misleads and the behaviour agrees with the form. Both are accidents of shape -- any verb with a stressed stem e breaks that way, related or not. Harder than 438's reir, where taking re- off left nothing; here it leaves pentir, which stands on nothing, and the only reason to think otherwise is the resemblance. A resemblance is not evidence."
+  }
+}

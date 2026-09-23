@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0d5ad780f729e409",
+  "sourceHash": "fnv1a64:ca7189043eabb591",
   "lessons": [
     {
       "id": "PT-C13-preto-branco",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea941f2d7ab5cd0b",
+      "sourceHash": "fnv1a64:42bf7011604f52df",
       "notice": null,
       "blocks": [
         {

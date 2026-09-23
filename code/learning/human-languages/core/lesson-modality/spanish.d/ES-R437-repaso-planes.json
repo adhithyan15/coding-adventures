@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R437-repaso-planes",
+    "language": "spanish",
+    "chapter": 437,
+    "sequence": 10910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2571e1716a07a58"
+  },
+  "findings": []
+}

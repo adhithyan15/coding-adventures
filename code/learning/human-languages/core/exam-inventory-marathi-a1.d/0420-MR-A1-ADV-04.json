@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-ADV-04",
+  "category": "Adverbs",
+  "label": "manner adverbs: baraM and its opposite",
+  "probe": [
+    "MR-LEX-BARAM-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-ADV-04"
+  ]
+}

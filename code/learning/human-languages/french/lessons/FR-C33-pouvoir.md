@@ -10,7 +10,7 @@ gloss: "can — the verb that turns a demand into a request"
 concept_tag: VERB-CAN
 prerequisites: [FR-C33-vouloir]
 sounds: []
-roots: [latin-potere]
+roots: [potere-latin]
 etymology_hook: "pouvoir is how French asks somebody else to do something, which is why it matters more to a beginner than its dictionary gloss 'to be able' suggests."
 duration:
   max_seconds: 240

@@ -1,0 +1,22 @@
+{
+  "chapter": 449,
+  "title": "El taller",
+  "label": "ch:es-taller",
+  "canDo": "I can leave a bike at a repair shop and understand the slip that comes back: say which part has failed, ask whether it can be fixed by a given day, and ask somebody to pass me a tool.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C449-sintesis-taller",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C449-TALLER-01",
+      "ES-LEX-C449-TALLER-02",
+      "ES-LEX-C449-TALLER-03",
+      "ES-LEX-C449-TALLER-04",
+      "ES-LEX-C449-TALLER-05"
+    ],
+    "note": "THREE OF THE FIVE WORDS JOIN ROOT SLUGS THE TRACK ALREADY CARRIES, which is the point of the chapter: arreglar joins regula-latin with regular, so a-rregl-ar is putting a thing back to the carpenter's straight edge and the doubled rr is the only trace the prefix left; rueda joins rota-latin with alrededor -- CAREFULLY: rededor is Latin RETRO, backwards, PULLED SIDEWAYS by rota, which is what ES-C347-alrededor already says and what this lesson must not flatten into 'alrededor comes from rota'; acercar joins circa-latin with cerca and acercarse. THE STRESSED-VOWEL BREAK IS THE CHAPTER'S GRAMMAR SPINE: rota gives rueda because the stress lands on the o, and rodar keeps the plain o because it does not -- one condition that accounts for puedo/poder, vuelvo/volver and most of what looks irregular in Spanish verbs. The repaso makes the same point standing still, with a noun rather than a conjugation. Three of the five nouns hand over a verb for free (frenar, rodar, taladrar), and the -ar move runs in both directions -- el arreglo is built FROM arreglar, not the other way -- so the shape is a good guess and never a rule. arreglar vs reparar is register, not meaning: arreglar in speech and for things that are not machines, reparar on the shop sign and the invoice; arreglar is the safer default and arreglarse means getting ready to go out. taladro is one of the few Gaulish words in Spanish, from taratrum, and its l is DISSIMILATION rather than metathesis -- taratrum has no l to swap, it had two r's and one gave way; milagro from miraculum and peligro from periculum are the metathesis cases, where both letters were already present and genuinely traded places, and the chapter tells the two habits apart rather than merging them. Spanish has no verb for 'borrow': you ask the lender to lend, with dejar or the more formal prestar. The sintesis reads a repair slip and turns on impersonal se -- se cambian agrees with frenos, se arregla with la bicicleta -- which is where Spanish goes when English reaches for the passive."
+  }
+}

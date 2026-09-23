@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-453-LIMPIEZA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read the rota taped up in a stairwell: say whose week it is, say what is and is not included, and check the sheet before changing anything.",
+  "prerequisites": [
+    "ES-EXT-452-REPARTO"
+  ]
+}

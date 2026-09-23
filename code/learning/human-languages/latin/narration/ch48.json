@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Nescio, Male, Malus, Sed, Aut",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2e57cd580badc2da",
+  "sourceHash": "fnv1a64:6d91fd9228f97082",
   "lessons": [
     {
       "id": "LA-C48-nescio",
@@ -379,6 +379,131 @@
             {
               "kind": "speech",
               "text": "What is the opposite of bene? (Male.) What two Latin words are inside dismal? (Diēs malī — bad days.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C48-second-pass-three-closings",
+      "sequence": 1165,
+      "title": "focus, mare, somnus — hearth, sea, sleep",
+      "headword": "focus · mare · somnus",
+      "romanization": "focus · mare · somnus",
+      "gloss": "second pass over the three words that closed three chapters — hearth, sea, sleep",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0964392431c6bb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words, one from the end of each of the last three chapters: the hearth, the sea, and sleep. Say all three before reading on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: each one is a shelf of English",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Latin",
+                "what it named",
+                "what English took"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "Latin: focus. what it named: the hearth. what English took: focus — the point a lens gathers to.",
+                "Latin: mare. what it named: the sea. what English took: marine, maritime, mariner, submarine.",
+                "Latin: somnus. what it named: sleep. what English took: insomnia, somnolent."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "focus is the odd one. English did not borrow the fireplace; it borrowed the idea of the one point a house is arranged around and handed it to optics. Meanwhile spoken Latin took the other road and let focus drift from the fireplace to the fire itself, which is where the Romance words for fire come from."
+            },
+            {
+              "kind": "speech",
+              "text": "mare and terra together make mediterrāneum, the sea in the middle of the earth — two words you hold explaining a name most people never read. And somnus goes back to a root that reached Sanskrit svapna and Old English sweven, a word for a dream that Chaucer still used."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three words, then their three meanings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three words, then their three meanings]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what focus named first, and what it names now",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *focus* named first, and what it names now]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two words inside mediterrāneum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two words inside *mediterrāneum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "two English words built on somnus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: two English words built on *somnus*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did focus name in a Roman house? (The hearth.) Which two words make mediterrāneum? (Mare and terra.) What does somnus mean, and which English word denies it? (Sleep — insomnia.) And which of the three drifted, in speech, to mean fire? (Focus.)"
             }
           ]
         }

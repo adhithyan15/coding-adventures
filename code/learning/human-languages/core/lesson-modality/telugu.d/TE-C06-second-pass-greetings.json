@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C06-second-pass-greetings",
+    "language": "telugu",
+    "chapter": 6,
+    "sequence": 325,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5adbc8594c86a9e"
+  },
+  "findings": []
+}

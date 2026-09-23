@@ -1,0 +1,11 @@
+{
+  "id": "ES-C455-claro",
+  "pathSegment": "ES-PATH-455-CUARTO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-455-CUARTO",
+      "order": 2
+    }
+  ]
+}

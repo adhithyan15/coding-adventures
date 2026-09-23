@@ -1,0 +1,21 @@
+{
+  "chapter": 453,
+  "title": "El turno",
+  "label": "ch:es-limpieza",
+  "canDo": "I can read the rota taped up in a stairwell: say whose week it is, say what is and is not included, and check the sheet before changing anything.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C453-sintesis-limpieza",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C453-LIMPIEZA-01",
+      "ES-LEX-C453-LIMPIEZA-02",
+      "ES-LEX-C453-LIMPIEZA-03",
+      "ES-LEX-C453-LIMPIEZA-04"
+    ],
+    "note": "THIS CHAPTER CLOSES THE SUFFIX ARC AND STATES IT AS A SET: -anza (mudanza, ch448), -miento (seguimiento, ch452), -eza (limpieza) and -ción (instalación). Three feminine, ONE masculine, and -miento is the exception worth remembering; which ending a given verb takes is NOT predictable (limpieza and not limpiamiento, seguimiento and not seguianza) and no rule is waiting to be found -- the gender is the reliable half, and that is most of what the reader needed. -eza attaches to ADJECTIVES rather than verbs (limpio/limpieza, triste/tristeza, pobre/pobreza). -ción names the ACT and then drifts onto the RESULT, which is why la instalación is both the fitting and the wiring, and nothing announces which reading is meant -- 'no se limpia' settles it in the payoff, because you cannot clean an act. THE CHAPTER'S REAL FINDING IS THE TWO ROADS: a Latin word can arrive TWICE, once worn down by speech and once lifted whole from a book, and the two arrivals look nothing alike -- la rueda against rotativo, el consejo against consultar. The practical payoff is a REGISTER CLUE READABLE OFF THE SPELLING: when a Spanish word looks MORE like its Latin or English cousin, it is the later bookish arrival and will belong to writing, forms and notices rather than to the kitchen. rotativo is the third word in the track off rota-latin after la rueda and alrededor, and the three show three different routes out of one Latin noun. -ivo names a HABIT OR CAPACITY, not an action in progress: un turno rotativo is not rotating right now, it is a shift of the rotating kind. consultar/revisar/mirar are separated by what you are after: a fact you do not have, faults in something you do, or nothing stated at all; and consultar takes CON only before a person, because the con marks that the other party can answer back."
+  }
+}

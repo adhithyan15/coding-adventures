@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:75e9c56600c988bb",
+  "lessonIds": [
+    "ES-C455-pintar",
+    "ES-C455-dormitorio",
+    "ES-C455-claro",
+    "ES-C455-tender",
+    "ES-C455-meter",
+    "ES-R455-repaso-cuarto",
+    "ES-C455-sintesis-cuarto"
+  ],
+  "tex": "spanish/book/chapters/ch455-cuarto.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C438-reir",
+    "language": "spanish",
+    "chapter": 438,
+    "sequence": 10970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f85b2332ae87f5e1"
+  },
+  "findings": []
+}

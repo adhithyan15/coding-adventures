@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "One Tea, Please",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:5d50e8e2579facb5",
+  "sourceHash": "fnv1a64:e0940041117928e4",
   "lessons": [
     {
       "id": "HI-C37-chai",
@@ -181,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfdb5b4b254ff2d6",
+      "sourceHash": "fnv1a64:6d89cc6eeb15f046",
       "notice": null,
       "blocks": [
         {

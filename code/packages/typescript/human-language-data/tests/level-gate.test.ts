@@ -304,6 +304,113 @@ describe("the first rung anybody actually climbed", () => {
     expect(line).not.toContain("1 tracks");
   });
 
+  it("prints EVERY blocker of every track, because §3.1 is a conjunction", () => {
+    // HL-C427. This block used to render one blocker per track, picked with
+    // `sort((a, b) => b.shortfall - a.shortfall)[0]`. Shortfalls are in each
+    // criterion's own units and the units differ by two orders of magnitude, so
+    // `vocabulary` (headwords, 79-257) beat `verb-vocabulary` (verbs, 1-29) and
+    // `atom-budget` (lessons, 1-5) on every track, every time. Those two
+    // criteria were not occasionally hidden; they were unprintable, and neither
+    // had ever appeared in a plan.
+    //
+    // The old version of this test asserted criterion groups were contiguous and
+    // that shortfall ascended within a group -- both true of a renderer that
+    // shows one blocker, and both satisfiable while 41 of the corpus's 64
+    // blockers went unmentioned. It even stated the unit rule in its own comment
+    // while the code one line from the sort it was guarding broke it.
+    //
+    // So the assertion is now SET EQUALITY against the gate, per track. A
+    // regression to a single "worst" blocker fails on the first track that has
+    // two, which today is twenty-one of twenty-three.
+    const gate = realReport().levelGate!;
+    const rendered = renderCurriculumGapReport(realReport());
+    const lines = rendered.split(/\r?\n/);
+    const start = lines.findIndex((l) => l.startsWith("per-track ladder"));
+    expect(start).toBeGreaterThan(-1);
+    const rows = lines.slice(start + 1).filter((l) => l.startsWith("  ") && l.includes("touches "));
+
+    // EVERY track, not a top-5 slice. The vocabulary line two above this one
+    // prints only five, which is what made a script necessary to see the rest.
+    expect(rows).toHaveLength(gate.tracks.length);
+
+    // Parse each row back out of the RENDERED text rather than re-deriving from
+    // the gate, which would pass even if the renderer dropped everything.
+    const rowFor = (language: string): string => {
+      const row = rows.find((r) => r.trimStart().startsWith(`${language} `));
+      expect(row, `no ladder row for ${language}`).toBeDefined();
+      return row!;
+    };
+    const parseBlockers = (row: string): { criterion: string; shortfall: number }[] => {
+      const tail = row.slice(row.lastIndexOf("—") + 1).trim();
+      if (tail === "no blocker — ladder complete" || tail.startsWith("no blocker")) return [];
+      const body = tail.replace(/^\d+ blockers?: /, "");
+      expect(body, `unparsed ladder tail: ${tail}`).not.toBe(tail);
+      return body.split(", ").map((part) => {
+        const m = /^([a-z-]+) (\d+)$/.exec(part);
+        expect(m, `unparsed blocker '${part}'`).not.toBeNull();
+        return { criterion: m![1]!, shortfall: Number(m![2]) };
+      });
+    };
+
+    let multiBlockerTracks = 0;
+    let renderedBlockers = 0;
+    for (const track of gate.tracks) {
+      const row = rowFor(track.language);
+      const shown = parseBlockers(row);
+      renderedBlockers += shown.length;
+      if (track.blockers.length > 1) multiBlockerTracks += 1;
+      // Set equality, criterion AND shortfall, in both directions.
+      expect(
+        [...shown].sort((a, b) => a.criterion.localeCompare(b.criterion)),
+        `${track.language} ladder row does not list exactly its blockers`,
+      ).toEqual(
+        [...track.blockers]
+          .map((b) => ({ criterion: b.criterion, shortfall: b.shortfall }))
+          .sort((a, b) => a.criterion.localeCompare(b.criterion)),
+      );
+      // The count in the prose has to agree with the list after it, or the row
+      // reads as authoritative while being wrong.
+      if (shown.length > 0) {
+        expect(row, `${track.language} blocker count disagrees with its list`).toContain(
+          `${shown.length} blocker${shown.length === 1 ? "" : "s"}: `,
+        );
+      }
+    }
+
+    // ANTI-VACUITY, and it is the whole point: a corpus where every track had
+    // exactly one blocker would satisfy every assertion above against the old
+    // renderer too.
+    expect(multiBlockerTracks).toBeGreaterThan(1);
+    expect(renderedBlockers).toBeGreaterThan(gate.tracks.length);
+
+    // The ordering claim: fewest criteria left first. Unit-free, unlike any
+    // ordering over the shortfall numbers themselves.
+    const counts = rows.map((r) => parseBlockers(r).length);
+    expect([...counts].sort((a, b) => a - b)).toEqual(counts);
+  });
+
+  it("scopes each row's vocabulary to at-or-below the level in progress", () => {
+    // The two-numbers lesson (HL-C195), applied to the new rows. `vocabulary`
+    // on the track is the TOTAL headword count; the criterion counts only
+    // headwords at or below the level being worked on. Printing the total here
+    // would show a track as nearly done while its blocker said otherwise --
+    // Spanish read "227/300" while the blocker said 48.
+    const gate = realReport().levelGate!;
+    const spanish = gate.tracks.find((t) => t.language === "spanish")!;
+    const blocker = spanish.blockers.find((b) => b.criterion === "vocabulary");
+    const rendered = renderCurriculumGapReport(realReport());
+    const row = rendered
+      .split(/\r?\n/)
+      .find((l) => l.trimStart().startsWith("spanish ") && l.includes("touches "))!;
+    expect(row).toBeDefined();
+    if (blocker) {
+      const target = gate.vocabularyTargets[spanish.inProgressAt ?? "C2"];
+      expect(row).toContain(`vocabulary ${target - blocker.shortfall}/${target}`);
+      // And it is NOT the track total, which is the number that misled before.
+      expect(row).not.toContain(`vocabulary ${spanish.vocabulary}/${target}`);
+    }
+  });
+
   it("does not print the word ATTAINED, because §3.1 measures a corpus", () => {
     // The vocabulary-of-attainment fix. Every §3.1 criterion counts something
     // about the BOOK — headwords, verbs, spine nodes, reinforcement windows,

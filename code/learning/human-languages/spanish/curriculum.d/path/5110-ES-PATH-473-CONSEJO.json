@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-473-CONSEJO",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-473-CONSEJO"
+  ],
+  "after": []
+}

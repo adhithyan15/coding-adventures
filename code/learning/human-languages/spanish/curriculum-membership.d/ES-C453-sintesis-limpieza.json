@@ -1,0 +1,11 @@
+{
+  "id": "ES-C453-sintesis-limpieza",
+  "pathSegment": "ES-PATH-453-LIMPIEZA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-453-LIMPIEZA",
+      "order": 5
+    }
+  ]
+}

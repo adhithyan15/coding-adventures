@@ -1,0 +1,21 @@
+{
+  "id": "MR-A1-OR-13",
+  "category": "Devanagari letters and signs",
+  "label": "the vowel signs aa i ii u uu e o",
+  "probe": [
+    "MR-SCRIPT-AA-MATRA-01",
+    "MR-SCRIPT-I-MATRA-01",
+    "MR-SCRIPT-II-MATRA-01",
+    "MR-SCRIPT-U-MATRA-01",
+    "MR-SCRIPT-UU-MATRA-01",
+    "MR-SCRIPT-E-MATRA-01",
+    "MR-SCRIPT-O-MATRA-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-02"
+  ]
+}

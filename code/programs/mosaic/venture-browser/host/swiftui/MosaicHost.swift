@@ -1743,7 +1743,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
   private func nativeToolbarControlPoint(identifier: String) -> (NSPoint, NSWindow)? {
     let identifiers = [
       "back-button", "forward-button", "home-button", "reload-button", "stop-button",
-      "bookmark-button", "bookmarks-button",
+      "bookmark-button", "bookmarks-button", "history-button",
     ]
     guard let controlIndex = identifiers.firstIndex(of: identifier) else { return nil }
     var visited = Set<ObjectIdentifier>()
@@ -1821,6 +1821,7 @@ final class MosaicHost: NSObject, MosaicHostBridgeObject {
     case "stop-button": return ["Stop"]
     case "bookmark-button": return ["Bookmark", "Remove Bookmark"]
     case "bookmarks-button": return ["Bookmarks (0)", "Bookmarks (1)"]
+    case "history-button": return ["History (0)", "History (1)", "History (2)"]
     case "bookmarks-close-button": return ["Close"]
     case "copy-address-button": return ["Copy", "Copy Address"]
     case "open-page-button": return ["New Window", "Open in New Window"]

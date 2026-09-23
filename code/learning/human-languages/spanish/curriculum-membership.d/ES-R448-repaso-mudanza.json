@@ -1,0 +1,11 @@
+{
+  "id": "ES-R448-repaso-mudanza",
+  "pathSegment": "ES-PATH-448-MUDANZA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-448-MUDANZA",
+      "order": 5
+    }
+  ]
+}

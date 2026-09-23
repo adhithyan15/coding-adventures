@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C451-mostrar",
+    "language": "spanish",
+    "chapter": 451,
+    "sequence": 11860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a93c236f020e187e"
+  },
+  "findings": []
+}

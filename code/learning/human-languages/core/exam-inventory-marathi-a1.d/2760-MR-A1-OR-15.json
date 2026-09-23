@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-OR-15",
+  "category": "Devanagari letters and signs",
+  "label": "the vocalic r sign, read ru in Marathi",
+  "probe": [
+    "MR-SCRIPT-RU-MATRA-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-02"
+  ]
+}

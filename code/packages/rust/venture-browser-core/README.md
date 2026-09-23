@@ -143,6 +143,11 @@ Those snapshots are keyed by stable history-entry identity rather than URL, so
 repeated visits restore independent public form and custom-element state. The
 same bounded entry snapshot restores the shared logical scroll offset before
 native/web hosts repaint, including fetch-free fragment traversal.
+Browser chrome exposes that same identity model as an ordered Session History
+catalog. Opening and browsing the panel never navigates; Open moves directly to
+the selected stable entry through the existing restoration transaction without
+allocating a new visit. Generated hosts only render the projected address and
+position and forward semantic catalog events.
 The session exposes dirty/default state, grouped autofill descriptors, explicit
 public-versus-credential transactions, and ordered mutation events. Passwords
 are excluded from public snapshots and autofill, file payloads are never

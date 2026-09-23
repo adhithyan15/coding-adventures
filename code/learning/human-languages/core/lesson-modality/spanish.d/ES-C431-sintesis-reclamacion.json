@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C431-sintesis-reclamacion",
+    "language": "spanish",
+    "chapter": 431,
+    "sequence": 10500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abf05b119bb60f82"
+  },
+  "findings": []
+}

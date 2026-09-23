@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C472-sintesis-encuesta",
+    "language": "spanish",
+    "chapter": 472,
+    "sequence": 13130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57e93facb4847d14"
+  },
+  "findings": []
+}

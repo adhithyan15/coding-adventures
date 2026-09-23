@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-460-PEDIR",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-460-PEDIR"
+  ],
+  "after": []
+}

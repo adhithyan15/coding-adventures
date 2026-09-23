@@ -10,7 +10,7 @@ gloss: the head — Spanish KEPT Latin's real word, unlike French, which replace
 concept_tag: ES-BODY-HEAD
 prerequisites: [ES-C23-hermano-hermana, ES-C23-hermano-hache]
 sounds: [z-as-th-or-s, feminine-a-ending]
-roots: [latin-caput]
+roots: [caput-latin]
 etymology_hook: "cabeza IS Latin caput (via capitia) — English captain/capital/decapitate too — where French tête abandoned caput entirely for testa, slang for 'pot'"
 duration:
   max_seconds: 240

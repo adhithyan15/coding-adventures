@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-ADJ-01",
+  "category": "The adjective",
+  "label": "qualifying adjectives in attributive and predicative use",
+  "probe": [
+    "MR-GRAMMAR-ADJ-AGREEMENT",
+    "MR-GRAMMAR-ADJ-PRENOMINAL",
+    "MR-LEX-MOTHA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-01"
+  ]
+}

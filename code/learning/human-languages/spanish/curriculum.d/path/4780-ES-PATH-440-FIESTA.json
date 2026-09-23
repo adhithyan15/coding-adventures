@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-440-FIESTA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-440-FIESTA"
+  ],
+  "after": []
+}

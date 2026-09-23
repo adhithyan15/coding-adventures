@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C434-pieza",
+    "language": "spanish",
+    "chapter": 434,
+    "sequence": 10670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d102e42762a7672"
+  },
+  "findings": []
+}

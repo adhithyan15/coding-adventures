@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C439-cerrado",
+    "language": "spanish",
+    "chapter": 439,
+    "sequence": 11020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28918ed9358a067d"
+  },
+  "findings": []
+}

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 12,
-  "sourceHash": "fnv1a64:f74aed23f376e855",
+  "sourceHash": "fnv1a64:cd58d0a0afc1f10b",
   "lessonIds": [
     "GE-C08-uhr",
     "GE-C08-uhr-hora",
@@ -19,6 +19,6 @@
   "text": "german/narration/ch12.txt",
   "json": "german/narration/ch12.json",
   "textHash": "fnv1a64:a727a3576670d118",
-  "jsonHash": "fnv1a64:2b302fa1cfb8b0ea",
+  "jsonHash": "fnv1a64:32c32de3162e101c",
   "findings": []
 }

@@ -10,7 +10,7 @@ gloss: "to have to"
 concept_tag: PT-OBLIGATION-HAVE-TO
 prerequisites: [PT-C18-ter-haver, PT-C05-falar]
 sounds: [circumflex-tem]
-roots: [latin-tenere]
+roots: [tenere-latin]
 etymology_hook: "ter 'have' extends naturally into ter que 'have to'"
 duration:
   max_seconds: 135

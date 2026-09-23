@@ -1,0 +1,20 @@
+{
+  "chapter": 459,
+  "title": "El inventario",
+  "label": "ch:es-stock",
+  "canDo": "I can read a shop door that is shut for the morning: why it is closed, when it opens, which part stays open, and when the usual hours come back.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C459-sintesis-stock",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C459-STOCK-01",
+      "ES-LEX-C459-STOCK-02",
+      "ES-LEX-C459-STOCK-03"
+    ],
+    "note": "TWO OF THE COMMONEST VERBS IN SPANISH ARE HIDING IN TWO DULL OFFICE WORDS, and that is the chapter. EL INVENTARIO is in + VENIRE, to come upon and so to FIND -- an inventory is A LIST OF WHAT WAS FOUND, which is exactly what a stocktake produces: somebody walks the shelves and writes down what is actually there rather than what the records claim. The same invenire gave INVENTAR, to invent, which is the identical idea from the other side, so Spanish and English both treat discovery and invention as one act. HABITUAL is habēre by way of habitus, 'the way one holds oneself' -- and habēre is the HABER of he hablado, worn down by centuries into an auxiliary so small it barely looks like a word; a habit is something you HOLD, which is why English says you HAVE a habit, and el hábito is both a habit and a monk's robe. Set 'he hablado' beside 'habitual' and the two roads are visible in one line. la sección is SECARE, to cut, so a section is a CUT PIECE and the family is full of cutting -- el insecto is an animal cut into segments. LA SIERRA is deliberately kept OUT of the family because it looks as though it belongs and does not -- it is Latin serra, unrelated to secare, though the saw-teeth picture of a mountain ridge is right. cortar is likewise NOT a relative (curtus, shortened), so Spanish kept both the everyday cutting and the bookish dividing. sección implies a DIVIDING HAND where la parte does not. THE NOTICE FRAMES ARE COLLECTED HERE: cerrado por + bare noun, fuera de + bare noun, por + bare noun as a cause -- no article after any of them, and a reader who can see the frame can read an unfamiliar notice by filling in one word. The payoff also drills agreement across a distracting noun: 'la sección de deportes permanece abierta' is feminine because Spanish agrees with the HEAD noun, not the nearest one."
+  }
+}

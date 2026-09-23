@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE04-04",
+  "category": "Personal relationships",
+  "label": "celebrations and family, social and religious occasions",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE04-03"
+  ]
+}

@@ -14,7 +14,7 @@ romanization: "sir"
 concept_tag: HI-BODY-HEAD
 prerequisites: [HI-C12-bhaai-bahin]
 sounds: [devanagari-short-i, retroflex-vs-dental]
-roots: [shiras-sanskrit]
+roots: [sanskrit-shiras]
 etymology_hook: "सिर sir comes from Sanskrit शिरस् śiras, 'head' — worn down over centuries of everyday use, the same word behind the Sanskrit medical/anatomical term shirsha-related vocabulary still used today"
 duration:
   max_seconds: 180

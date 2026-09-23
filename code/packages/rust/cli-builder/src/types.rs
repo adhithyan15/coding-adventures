@@ -117,6 +117,13 @@ pub struct FlagDef {
     #[serde(default)]
     pub long: Option<String>,
 
+    /// Additional long spellings without the `--` prefix.
+    ///
+    /// Aliases resolve to this flag's canonical `id`; they do not create
+    /// duplicate entries in parse results or constraint evaluation.
+    #[serde(default)]
+    pub long_aliases: Vec<String>,
+
     /// Multi-character single-dash name (e.g. `"classpath"` → `-classpath`).
     #[serde(default)]
     pub single_dash_long: Option<String>,
@@ -180,6 +187,14 @@ pub struct FlagDef {
     /// Only valid for `type: "enum"` flags.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub default_when_present: Option<String>,
+}
+
+impl FlagDef {
+    /// Return whether `name` is the canonical long spelling or one of its aliases.
+    pub fn matches_long(&self, name: &str) -> bool {
+        self.long.as_deref() == Some(name)
+            || self.long_aliases.iter().any(|alias| alias == name)
+    }
 }
 
 /// A positional argument definition (§2.3).

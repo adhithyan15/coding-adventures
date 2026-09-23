@@ -1,0 +1,1035 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 470,
+  "title": "Un paraguas azul",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:87f0fccf43ba053d",
+  "lessons": [
+    {
+      "id": "ES-C470-paraguas",
+      "sequence": 12930,
+      "title": "el paraguas — the umbrella",
+      "headword": "el paraguas",
+      "romanization": "el paraguas",
+      "gloss": "the umbrella — the para- of la parada, fused to a plural noun the way cumpleaños was, and invariable for the reason el análisis gave",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:e393fe6ad43e30c2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la parada and el cumpleaños. One lends this word its first half, the other lends it its shape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el paraguas",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el paraguas — the umbrella."
+            },
+            {
+              "kind": "speech",
+              "text": "Me he dejado el paraguas en el ascensor."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at it before you are told anything: para plus aguas. A verb and a plural noun fused into one word, which is the move el cumpleaños taught you — cumple plus años, a sentence that hardened."
+            },
+            {
+              "kind": "speech",
+              "text": "And like cumpleaños, it wears a plural -s and is singular: el paraguas, one umbrella."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the plural that does not move",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "So what is the plural? Nothing changes."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "one",
+                "more than one"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "one: el paraguas. more than one: los paraguas."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "This is not a quirk of this word. El análisis gave you the rule: a word already ending in s, with its stress somewhere other than the last syllable, takes no plural ending. El lunes / los lunes works the same way."
+            },
+            {
+              "kind": "speech",
+              "text": "The article is doing all the counting. Drop it and the sentence cannot tell you how many umbrellas there are."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The para- is the one la parada already unpacked: Latin parare, to make ready — and parada reminded you it is not the Greek para- of parallel. A parasol is made ready against the sun, a parachute against a fall. A paraguas is made ready against the waters."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is worth a second look, because English named the same object from the opposite direction:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "what the word notices"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "language: Spanish paraguas. what the word notices: the water it keeps off.",
+                "language: English umbrella. what the word notices: the shade it makes."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Umbrella is Latin umbra, a shadow, with a diminutive on it — a little shade, and English took it from Italian. So one language named the object for the shade it casts and the other for the water it turns away, and both are describing the same thing held over the same head."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I have left the umbrella in the lift",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I have left the umbrella in the lift]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the plural of el paraguas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the plural of *el paraguas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what parare means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *parare* means]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The umbrella? (El paraguas.) And two of them? (Los paraguas — the word does not change.) What is it made ready against? (The waters.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C470-mango",
+      "sequence": 12940,
+      "title": "el mango — the handle",
+      "headword": "el mango",
+      "romanization": "el mango",
+      "gloss": "the handle — a cousin of la mano, and a homonym of the fruit in the way la cola taught",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0a77f76eabb0717",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la mano and el paraguas. This word is a relative of the first and a part of the second."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el mango",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el mango — the handle."
+            },
+            {
+              "kind": "speech",
+              "text": "Un paraguas azul, con el mango de madera."
+            },
+            {
+              "kind": "speech",
+              "text": "The handle of a knife, a pan, a door, an umbrella: whatever part of a thing is built for the hand."
+            },
+            {
+              "kind": "speech",
+              "text": "Which is what the word says. It is a cousin of la mano, and once you hear that, you will not need to store it separately."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two mangos, and only one of them grows",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "There is a second mango in Spanish, and it is a completely different word that happens to be spelled the same. This is the situation la cola prepared you for."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the word",
+                "where it comes from"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the word: el mango — handle. where it comes from: Latin manus, the hand.",
+                "the word: el mango — the fruit. where it comes from: Portuguese manga, from Malay."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The Academy traces the fruit through Portuguese manga to Malay mangga; behind that stands a Dravidian word, Tamil māṅkāy. It travelled by ship and the handle did not. Nothing connects them but the spelling."
+            },
+            {
+              "kind": "speech",
+              "text": "Context settles it every time, so this is not a hazard — it is a reminder that same letters and same word are different claims."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin manus, the hand — the root la mano already gave you, along with manual, manufacture and maintain."
+            },
+            {
+              "kind": "speech",
+              "text": "A mango is the hand-part. Spanish built it on a late Latin form of that root and let the meaning settle on the graspable end of a thing."
+            },
+            {
+              "kind": "speech",
+              "text": "English does not have this word, so it has nothing to lend you here. What it does have is manual, manuscript, manacle — all of them hands. Put mango beside them and it stops looking like a fruit."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a blue umbrella with a wooden handle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a blue umbrella with a wooden handle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two mangos, and where each comes from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two mangos, and where each comes from]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which Latin word is behind the handle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which Latin word is behind the handle]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The handle? (El mango.) Which body part is inside it? (La mano — Latin manus.) And the fruit? (A different word entirely.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C470-encontrar",
+      "sequence": 12950,
+      "title": "encontrar — to find",
+      "headword": "encontrar",
+      "romanization": "encontrar",
+      "gloss": "to find — literally to come up against, and the o that breaks into ue exactly as mostrar's does",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e40aa41415d47f31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say buscar. You have had the looking for a long time. Say el mango. You still have no word for the moment the looking succeeds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: encontrar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "encontrar — to find."
+            },
+            {
+              "kind": "speech",
+              "text": "No lo encuentro por ninguna parte."
+            },
+            {
+              "kind": "speech",
+              "text": "Buscar and encontrar are the two halves of one search, and Spanish keeps them strictly apart:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you do",
+                "what happens"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you do: buscar — look for. what happens: the effort.",
+                "what you do: encontrar — find. what happens: the result."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Busco mi paraguas is work in progress. He encontrado mi paraguas is over. You can buscar all afternoon and never encontrar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the o that breaks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You wrote encuentro above, not encontro. That is mostrar's rule arriving again, unchanged: push the stress back onto the stem and the o breaks into ue."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "stress on the stem",
+                "stress on the ending"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "stress on the stem: encuentro, encuentras. stress on the ending: encontramos.",
+                "stress on the stem: encuentra, encuentran. stress on the ending: encontráis."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The infinitive keeps its o because the stress is on the ending there — encon-TRAR. Nothing about the verb is irregular once you know where the weight falls."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "en- plus contra: to come up against something."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole picture, and it is more honest than the English word. Find says nothing about how. Encontrar says you went along and the thing was in your way."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the same word by a different road: encounter, borrowed from French, is in plus contra exactly. To encounter somebody is to come against them — which is why an encounter can be a meeting or a fight, and un encuentro in Spanish is both as well."
+            },
+            {
+              "kind": "speech",
+              "text": "So encontrarse con alguien is to run into somebody. The contra has not gone anywhere."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I can't find it anywhere",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I can't find it anywhere]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I am looking for it, and I have not found it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I am looking for it, and I have not found it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what contra is doing inside the word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *contra* is doing inside the word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To find? (Encontrar.) I find? (Encuentro — the stress moved onto the stem.) What is contra doing there? (The thing came up against you.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C470-avisar",
+      "sequence": 12960,
+      "title": "avisar — to let know",
+      "headword": "avisar",
+      "romanization": "avisar",
+      "gloss": "to let know — the verb el aviso was named from, handed over now, and it shows rather than orders",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:472844a73faa2143",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el aviso. Say encontrar. If somebody finds the thing, this is what you want them to do next."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: avisar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "avisar — to let know, to notify."
+            },
+            {
+              "kind": "speech",
+              "text": "Si lo habéis visto, avisadme, por favor."
+            },
+            {
+              "kind": "speech",
+              "text": "You have met this verb once already without being given it. El aviso named it in passing — \"behind it is the verb avisar, to notify\" — and then went back to the noun. Here it is as yours."
+            },
+            {
+              "kind": "speech",
+              "text": "Avísame — let me know. Avisar a alguien — to tell somebody. Avisar de algo — to give notice of something."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: it shows, it does not order",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "El aviso made a point that the verb inherits whole: an aviso is not an instruction but a making-visible. Somebody puts a thing where you can see it, and what you do next is yours."
+            },
+            {
+              "kind": "speech",
+              "text": "So avisar is the weakest of the telling verbs, and that is its use."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "you want",
+                "you say"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "you want: somebody to know, no more. you say: avisar.",
+                "you want: somebody to do it. you say: decir that they must."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Avísame si lo encuentras asks for information and nothing else. It is what you say about a paraguas you left behind: you are not giving an order to a neighbour, you are asking to be shown something."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "El aviso already traced this: Latin ad vīsum, toward what has been seen, on vidēre, to see. There is nothing to add to the derivation, so take instead the thing it predicts."
+            },
+            {
+              "kind": "speech",
+              "text": "Every relative of avisar is about seeing, not speaking:"
+            },
+            {
+              "kind": "speech",
+              "text": "English advise is the same formation — to put something in somebody's view;"
+            },
+            {
+              "kind": "speech",
+              "text": "advice is what you were shown;"
+            },
+            {
+              "kind": "speech",
+              "text": "evident, vision, provide, survey are all seeings."
+            },
+            {
+              "kind": "speech",
+              "text": "A word for telling, built entirely out of sight. That is why avisar feels lighter than it looks: nobody in it is talking."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "let me know if you find it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: let me know if you find it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I left it in the lift; tell me if you have seen it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I left it in the lift; tell me if you have seen it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which Latin verb is underneath",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which Latin verb is underneath]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To let know? (Avisar.) Let me know? (Avísame.) Is it an order? (No — it makes something visible.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R470-repaso-paraguas",
+      "sequence": 12970,
+      "title": "(el paraguas, el mango, encontrar, avisar) — from cold",
+      "headword": "(el paraguas, el mango, encontrar, avisar)",
+      "romanization": "(el paraguas, el mango, encontrar, avisar)",
+      "gloss": "cold retrieval of the four, and a search that needed two verbs where English uses one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b0ac331b6ab2101",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four words, no prompts. The thing you left behind, the part of it you would describe, what you cannot do, and what you want the finder to do."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the four, cold",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "English",
+                "Spanish"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "English: the umbrella. Spanish: el paraguas.",
+                "English: the handle. Spanish: el mango.",
+                "English: to find. Spanish: encontrar.",
+                "English: to let know. Spanish: avisar."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one English verb, two Spanish ones",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English says look for it and tell me. Spanish makes you choose twice, and the choices are not the ones you would guess."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the English",
+                "what Spanish splits it into"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the English: look / find. what Spanish splits it into: buscar is the effort, encontrar the result.",
+                "the English: tell. what Spanish splits it into: avisar shows; decir says."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Avísame si lo encuentras holds both splits in five words: let me know — not order me, not explain to me — if the search actually lands."
+            },
+            {
+              "kind": "speech",
+              "text": "That sentence is the whole chapter, and you could not have built it a lesson ago."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The words, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three of the four are older than they look, and each keeps a picture inside."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the picture"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: el paraguas. the picture: made ready against the waters.",
+                "word: el mango. the picture: the part built for the hand.",
+                "word: encontrar. the picture: to come up against a thing."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Avisar is the fourth, and its picture is seeing rather than telling — which is what made it the gentle verb in the lens above."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a blue umbrella with a wooden handle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a blue umbrella with a wooden handle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I can't find it anywhere, let me know if you see it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I can't find it anywhere, let me know if you see it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the four is about seeing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the four is about seeing]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The umbrella? (El paraguas.) The handle? (El mango.) To find? (Encontrar.) To let know? (Avisar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C470-sintesis-paraguas",
+      "sequence": 12980,
+      "title": "(el mensaje del vecino) — read it, then answer",
+      "headword": "(el mensaje del vecino)",
+      "romanization": "(el mensaje del vecino)",
+      "gloss": "the payoff — read a message to the building group, then answer it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8381749f84ad0907",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el paraguas and avisar. One is lost and the other is what the message is asking for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading: the message",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To the building group, this morning:"
+            },
+            {
+              "kind": "speech",
+              "text": "Hola, ¿sois vosotros los del piso doce? Me he dejado un paraguas azul, con el mango de madera, en el ascensor esta mañana y ya no lo encuentro por ninguna parte. Si lo habéis visto, avisadme, por favor."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things to notice before you answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Azul, de madera. The colour is the umbrella's and the wood is the handle's. Spanish hangs each description on the noun it belongs to, and de madera is how you say what a thing is made of."
+            },
+            {
+              "kind": "speech",
+              "text": "Por ninguna parte. The stacking is no … nada's rule, unchanged: no in front of the verb and the negative word after it, both required. What is new is only the phrase. Ninguna parte joins nada, nadie and nunca as a negative word, and it is two words rather than one."
+            },
+            {
+              "kind": "speech",
+              "text": "The trap is the English. No lo encuentro por ninguna parte comes out as I can't find it anywhere, which looks positive — so the pull is to reach for en cualquier parte. Spanish keeps the negative on both halves."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: what the message is actually asking",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the last sentence again. It does not ask anyone to look."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what it says",
+                "what it does not say"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "what it says: si lo habéis visto. what it does not say: buscadlo."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The writer is asking to be told about something that may already have happened, not asking the building to start a search. That is avisar doing exactly the work it was built for, and it is the polite shape of this kind of message: you ask for information, not labour."
+            },
+            {
+              "kind": "speech",
+              "text": "Answer in the same register."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say what was lost, where, and what it looks like — colour and handle both."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now answer the message twice. First: you have seen it, and you say where. Then: you have not, and you offer to let them know if it turns up."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is lost? (Un paraguas azul con el mango de madera.) What can the writer not do? (Encontrarlo.) What are they asking for? (Que les avisen — to be told.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

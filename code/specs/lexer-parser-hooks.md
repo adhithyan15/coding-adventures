@@ -44,6 +44,54 @@ Source Text
   Compiler
 ```
 
+### Amendment (PREP01): `#include` does not belong at `pre_tokenize`
+
+The diagram above lists "C #include" under `pre_tokenize` and "C #define
+expansion" / "#ifdef conditional compilation" under `post_tokenize`. **For C
+that split is incorrect**, and `PREP01-generic-source-preprocessor.md` §3
+supersedes it.
+
+Inclusion and conditional compilation are mutually dependent: an `#if` decides
+whether an `#include` happens at all, and the included file `#define`s symbols
+that later `#if` directives test. A text-level include pass running before the
+token-level conditional pass would include files it should have skipped, and
+would not have the included macros available in time. C is defined as a single
+ordered traversal in which inclusion, conditional selection and macro
+definition interleave.
+
+So for a preprocessed language:
+
+- `pre_tokenize` carries **line splicing only** (plus COBOL's column strip) —
+  the genuinely context-free text transforms.
+- `post_tokenize` carries the **whole preprocessor as one pass**, which resolves
+  includes itself and re-lexes included files through the language's own lexer.
+
+The hook **API in this document is unchanged**, and no existing registration
+breaks. Only the recommended *placement* of the inclusion step changes.
+
+### The preprocessor hook is stateful, and Principle 1 does not cover it
+
+The engine is constructed with its configuration and hands out a closure of the
+required `list[Token] → list[Token]` shape. That is the right *signature*, but
+it is **not** a pure function in the sense of Design Principle 1 above ("No
+side effects. No state."): it performs filesystem I/O to resolve includes, and
+it carries a macro table, an include stack and its resource counters.
+
+Principle 1 remains correct for the transforms it was written for. A
+preprocessor is the documented exception, and it carries extra obligations in
+exchange (see `PREP01-generic-source-preprocessor.md` §3):
+
+- It must be the **last** `post_tokenize` hook in the chain. It returns a
+  positional source map alongside the tokens, so a later hook that reorders or
+  synthesises tokens would silently misattribute every diagnostic's location.
+- Its closure is **single-use per translation unit**. It resets its macro
+  table, include stack and counters at the start of each invocation, or refuses
+  a second one — otherwise a reused lexer leaks macro definitions between
+  translation units.
+- Its source map is retrieved through an **explicit per-invocation accessor**,
+  never through ambient shared state, because this signature has no channel to
+  return it.
+
 ## Design Principles
 
 ### 1. Transforms are pure functions

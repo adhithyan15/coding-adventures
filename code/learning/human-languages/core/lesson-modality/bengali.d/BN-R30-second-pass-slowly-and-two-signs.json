@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R30-second-pass-slowly-and-two-signs",
+    "language": "bengali",
+    "chapter": 30,
+    "sequence": 1575,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f945c59a4a2598e6"
+  },
+  "findings": []
+}

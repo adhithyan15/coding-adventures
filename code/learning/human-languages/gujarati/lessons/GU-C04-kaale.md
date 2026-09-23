@@ -11,7 +11,7 @@ gloss: see you tomorrow (and the કાલ puzzle)
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [GU-C04-malishun]
 sounds: [long-aa, e-sign]
-roots: [kaala-time-sanskrit]
+roots: [sanskrit-kaala-time]
 duration:
   max_seconds: 240
 requires:

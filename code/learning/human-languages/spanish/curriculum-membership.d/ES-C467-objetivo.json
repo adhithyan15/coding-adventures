@@ -1,0 +1,11 @@
+{
+  "id": "ES-C467-objetivo",
+  "pathSegment": "ES-PATH-467-ALIMENTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-467-ALIMENTO",
+      "order": 3
+    }
+  ]
+}

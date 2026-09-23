@@ -3,8 +3,8 @@
   "language": "german",
   "chapter": 42,
   "title": "Friend and Family",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:895319f5430dd284",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:78e65a0bbf811d6f",
   "lessons": [
     {
       "id": "GE-C29-freund",
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f87578f3e545af5",
+      "sourceHash": "fnv1a64:82f145912569dcf9",
       "notice": null,
       "blocks": [
         {
@@ -418,6 +418,177 @@
             {
               "kind": "speech",
               "text": "Give \"family\" with its article. (Die Familie.) Is it native or borrowed? (Borrowed — Latin familia, \"household.\") What did familia first mean, before \"relatives\"? (Household — kin to famulus, \"servant.\") Which two words from this chapter are native instead? (Freund and Freundin.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R29-neun-laute",
+      "sequence": 971,
+      "title": "Nine sounds, said without looking at what they mean",
+      "headword": "gut · du · Sie · heißen · freut mich · danke · bitte · sehen · auf",
+      "romanization": "gut · du · Sie · heißen · freut mich · danke · bitte · sehen · auf",
+      "gloss": "nine words from the first meeting, said for their sound alone, because the spelling does not predict any of them",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d546d8d5f2c4f05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "gut and du. Same vowel, held long in both. Say them, then say what an English speaker's mouth wants to do to that vowel instead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: nine, for sound only",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know what all of these mean. This time say them for the noise alone."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gut — one long u, no glide after it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gut* — one long **u**, no glide after it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "du, then Sie — the second is a long ee with an initial z",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *du*, then *Sie* — the second is a long **ee** with an initial **z**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heißen — ei is the English word eye, and the ß keeps it long",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *heißen* — **ei** is the English word *eye*, and the **ß** keeps it long]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "freut mich — eu is the English oy, nothing like the letters",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *freut mich* — **eu** is the English *oy*, nothing like the letters]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "danke — the final -e is weak, never -ay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *danke* — the final **-e** is weak, never *-ay*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bitte — short i, and the same weak ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bitte* — short **i**, and the same weak ending]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sehen — the h is silent and only marks the long e",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sehen* — the **h** is silent and only marks the long **e**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "auf — au is ow, and the f is a clean stop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *auf* — **au** is *ow*, and the **f** is a clean stop]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three of the nine share one habit, and it is the habit that makes German spelling honest once you know it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "written",
+                "said",
+                "what the extra letter is doing"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "written: ei in heißen. said: eye. what the extra letter is doing: a pair naming one sound, not two.",
+                "written: eu in freut. said: oy. what the extra letter is doing: the same, and neither letter is a clue.",
+                "written: h in sehen. said: silent. what the extra letter is doing: length, not a sound of its own."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "German spelling is far more regular than English spelling — but regular is not the same as obvious. Each of these is a fixed rule you can rely on everywhere, and none of them can be guessed from the letters by someone reading English habits into them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is the h in sehen doing? (Marking the vowel long — it is silent.) What does eu sound like? (oy.) And of the nine words above, which one is capitalised mid-sentence, and why? (Sie — the formal you, capitalised to tell it from sie, she or they.)"
             }
           ]
         }

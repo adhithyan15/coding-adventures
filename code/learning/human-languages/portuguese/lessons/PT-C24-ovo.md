@@ -10,7 +10,7 @@ gloss: egg — three letters, unchanged for two thousand years
 concept_tag: PT-FOOD-EGG
 prerequisites: [PT-C24-queijo]
 sounds: [o-open-closed]
-roots: [latin-ovum]
+roots: [ovum-latin]
 etymology_hook: "ovo ← Latin ovum, barely worn down at all in two thousand years — the plural ovos even keeps ovum's own -a-turned-o pattern visible; English kept the learned shape whole in oval, ovum, ovary"
 duration:
   max_seconds: 195

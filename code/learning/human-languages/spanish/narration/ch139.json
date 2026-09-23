@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "Black, White, Red, and Blue",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:c6c1426b7777b01b",
+  "sourceHash": "fnv1a64:46de865f4d2b996b",
   "lessons": [
     {
       "id": "ES-C22-negro-blanco",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b94b887b6940842",
+      "sourceHash": "fnv1a64:3cab9f27d16b1c9e",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0763511e8394997d",
+      "sourceHash": "fnv1a64:0babd2b5297db20d",
       "notice": null,
       "blocks": [
         {

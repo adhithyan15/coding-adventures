@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-456-CUENTA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can order from a set menu and then read the bill: name a first course, tell a price from a charge, query something that was added, and ask whether they take cards.",
+  "prerequisites": [
+    "ES-EXT-455-CUARTO"
+  ]
+}

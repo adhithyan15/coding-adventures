@@ -1,0 +1,21 @@
+{
+  "chapter": 452,
+  "title": "El reparto",
+  "label": "ch:es-reparto",
+  "canDo": "I can deal with a delivery: read the card left through the door, say where the parcel has gone, quote a tracking number, and ask for a time that suits me.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C452-sintesis-reparto",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C452-REPARTO-01",
+      "ES-LEX-C452-REPARTO-02",
+      "ES-LEX-C452-REPARTO-03",
+      "ES-LEX-C452-REPARTO-04"
+    ],
+    "note": "Scene-grouped wordlist, and the scene was chosen because its four words finish two whole exam rows. LA RUTA JOINS rumpere-latin WITH romper AND roto: Latin VIA RUPTA is a BROKEN way, a road forced through what stood in it -- trees felled, rock broken -- and Latin then dropped the via and kept the adjective, so a word meaning 'broken' came to mean 'route'. A smashed plate and a mountain pass are one word applied to two obstacles, and English rout (an army broken open) and ROUTINE (a way so worn you no longer choose it) are the same participle again. ruta/camino/calle are sorted by what each names: the street with the houses, the path underfoot, the PLAN of where to go -- la ruta pasa por tres pueblos is a fact about the plan and not about any surface. cómodo joins modus-latin with EL MODO: com + modus, 'with measure', a thing the right size for its purpose, and from 'fits' to 'does not chafe' is a short walk; it covers comfort AND convenience where English needs two words, and the false friend runs ONE WAY ONLY -- commodious is not cómodo, a roomy flat is amplio. seguimiento is seguir plus the -miento of entrenamiento, so the reader can build it before meeting it; sequi also hides inside ENSEGUIDA, 'in following'. el almacén is the only word from outside the family: Arabic al-makhzan with the ARTICLE STILL ATTACHED, so el almacén is strictly 'the the-storehouse' -- the al- that marks hundreds of Spanish words (almohada, alcalde, alfombra, azúcar, aceite), and English MAGAZINE is the same Arabic word by way of French. The accent lesson is the chapter's grammar spine and it is a correction to a rule rather than a property of a word: almacén needs the mark and almacenes does not, while examen runs the opposite way for the identical reason."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-459-STOCK",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read a shop door that is shut for the morning: why it is closed, when it opens, which part stays open, and when the usual hours come back.",
+  "prerequisites": [
+    "ES-EXT-458-PLAZO"
+  ]
+}

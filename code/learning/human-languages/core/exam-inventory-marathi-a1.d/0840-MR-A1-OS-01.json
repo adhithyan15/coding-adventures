@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-OS-01",
+  "category": "The simple sentence",
+  "label": "declaratives, affirmative and negative",
+  "probe": [
+    "MR-GRAMMAR-NEGATE-NAHI"
+  ],
+  "note": "Closed by MR-C32-nahi-verb (chapter 32), which realizes VERB-NEGATE on SPINE-NEGATE-AND-ASK. Affirmative declaratives were already taught; only the negation was missing, so one atom closes the point.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-OS-01"
+  ]
+}

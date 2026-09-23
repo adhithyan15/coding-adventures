@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R471-repaso-curso",
+    "language": "spanish",
+    "chapter": 471,
+    "sequence": 13050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3c2ee620eb94054"
+  },
+  "findings": []
+}

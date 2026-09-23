@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "FR-R35-second-pass-marks-from-cold",
+    "language": "french",
+    "chapter": 35,
+    "sequence": 1125,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d4e1d76dbb94afa",
+    "detachableSegments": [
+      "Script: the three marks, thirty chapters later"
+    ]
+  },
+  "findings": []
+}

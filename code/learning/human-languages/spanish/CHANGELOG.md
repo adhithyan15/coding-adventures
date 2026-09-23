@@ -1,5 +1,2073 @@
 # Changelog
 
+## HL-C417 — the A2 chapters now stand on an A2 rung
+
+```
+A1 audit lessonCount   1303 -> 1022
+A1 audit taughtForms   2232 -> 1721
+A1 audit objectiveFailed  0 -> 0
+A2 audit                     unchanged
+```
+
+Forty-four chapters whose wordlists were **derived from a DELE A2 paper** were
+being counted inside the A1 cut-off, because the only reading rung the ladder
+had was `SPINE-READ-SIGNS-AND-NOTICES`, stage **A1**. The TEXT strand ran A1 ->
+B1 with nothing in between, so an A2 reading chapter had nowhere to stand.
+
+`SPINE-READ-PRACTICAL-TEXTS` fills that gap — TEXT, **A2**, prerequisite
+`SPINE-READ-SIGNS-AND-NOTICES`, `core: false`. Chapters **431-474** moved onto
+it; **424-430** did not, because 424-426 teach reading mechanics and 428-430
+close enumerated A1 syllabus points.
+
+## The two numbers that make this a fix rather than a rearrangement
+
+The A1 gate returned to **exactly** the counts `HL-C417` recorded before the
+first tranche landed — 1022 lessons and 1721 forms — and `objectiveFailed`
+stayed **0** throughout. No A1 criterion was resting on the A2 material that
+has now been taken away from it.
+
+The A2 audit did not move at all. `lessonsUpToLevel("A2")` includes everything
+at or below A2, so the A2 book still holds every one of these chapters. Only
+the A1 book lost them, which is the point.
+
+## No learner-facing text changed
+
+The 44 regenerated chapter `.tex` files differ by one line each — the
+canonical-source hash — because the lessons' `spine_node` frontmatter changed.
+The chapters read exactly as before.
+
+## An empty concepts list, deliberately
+
+The new node follows `SPINE-DESCRIBE-QUALITIES` in carrying no canonical
+concepts. A concept is a claim on all 23 tracks and this rung is justified
+today by one track's exam evidence; `CONNECTED-READING` is also already owned
+by the A1 node, and a concept may own exactly one. Twenty-two tracks therefore
+write `{"omits": [], "relocates": {}}` and are asked for nothing.
+
+## A stale comment, corrected rather than swapped
+
+`levels.ts` said "today it is A1 or pre-A1 for every track in the corpus —
+nothing has reached A2". Measured: **21 of 23 tracks reach A2 and Spanish
+reaches C2**. That sentence sits in the module whose header warns that a fact
+copied into prose goes stale where a derived one cannot, so it is corrected in
+place with what it used to claim left visible.
+
+## Chapter 474 — the last authorable A2 vocabulary chapter
+
+```
+A2 objectiveFailed          6 -> 6   (unchanged, third chapter running)
+A2 missingObjectiveLexemes  6 -> 4
+```
+
+Four words, two lexemes, **zero items** — and after this one there is nothing
+left to author.
+
+| chapter | scene | words |
+|---|---|---|
+| 474 PAGO | a training course the employer part-pays | invitar, el importe, descontar, el golpe |
+
+## The programme stops here
+
+Every lexeme still on the missing list is **already taught**:
+
+| lexeme | taught at | blocked by |
+|---|---|---|
+| creer | `ES-C41-creer` | B1 via `SPINE-GIVE-REASONS` — `HL-C418` |
+| explicar | `ES-C41-explicar` | B1 via `SPINE-GIVE-REASONS` — `HL-C418` |
+| problema | `ES-C268-problema` | misfiled on a B1 travel node — `HL-C420` |
+| responder | `ES-C40-contestar` | taught but never a headword — `HL-C422` |
+
+Writing a lesson for any of them is the duplication `HL-C418` forbids. These
+four are **decisions, not vocabulary work**, and the programme stops rather
+than moving the number dishonestly.
+
+## The HL-C421 check found two more — its fifth consecutive hit
+
+Item 43 is a **matching** task, so the *statement* is the text to read, not an
+option set:
+
+> Pensaba que había que pagar el **importe** completo de una vez.
+
+against a passage reading *"te lo descuentan en doce meses, no **de golpe**."*
+
+Neither `importe` nor `golpe` is in the requires row, and both had zero hits
+corpus-wide — *importe*'s three greps were the **English** word *imported*.
+
+**`de golpe` is load-bearing.** It is what the statement's *de una vez* has to
+be matched against, so without it the item is closed even to a reader who
+understood every sentence. The synthesis teaches that pairing and names the
+general rule: a matching task rewards **paraphrase**, so the words worth
+learning are the ones that come in pairs.
+
+## Three of the four came out of words the book already held
+
+- **`invitar`** — `ES-C282-invitado` already names it outright. Hand-over, the
+  move used for *lectura*, *avisar* and *llamada*.
+- **`el importe`** — `ES-C463-importar` teaches *importar* as *to matter* and
+  notes the literal import sense, so this is its **third** job. All three are
+  shown together, joined by *in-* + *portare*: goods carried in are imports, a
+  thing that carries weight matters, and what a bill carries in is its
+  *importe*.
+- **`descontar`** — *contar* with *des-*.
+
+**The `des-` nuance is already owned.** `ES-C315-descanso` owns *des-* as an
+undoing; `ES-C444-cubrir` owns the harder half — *"Compare disfrutar, where the
+prefix did not reverse at all. Same shape, two behaviours."* So *descontar*
+cites cubrir's table and places itself in the reversing camp explicitly.
+
+## Cousin links
+
+`importe` takes `importare-latin`, already held by **both** `ES-C398-importante`
+and `ES-C463-importar`; `descontar` takes `computare-latin` from
+`ES-C38-contar`. Only `invitare-latin` and `colaphus-latin` are newly minted.
+
+*Golpe* is the one outsider and earns it: Latin *colaphus* from Greek
+*kólaphos*, a box on the ear, worn down by losing its middle syllable and
+softening c to g. English kept the same blow intact in **coup** — so *golpe de
+estado* and *coup d'état* are the same two words said twice, and *estado* was
+taught one chapter earlier.
+
+## The root-slug guard caught a cousin I had missed
+
+`golpe` was drafted with a newly minted `colaphus-latin`. `generate:root-slug-splits`
+rejected it:
+
+```
+colaphus-latin / latin-colaphus
+```
+
+The corpus already held the etymon — in the **French** track. `FR-C40-beaucoup`
+carries `latin-colaphus`, because *beaucoup* is *beau* + *coup*, "a beautiful
+blow". My grep had looked for *colpus*, not *colaphus*, so I missed it.
+
+Corrected to `latin-colaphus`, which makes Spanish *golpe* a genuine cousin of
+French *beaucoup* — and the lesson now says so, because it is a better fact
+than the one it replaced: the same punch gives Spanish its *golpe* and French
+its word for plenty.
+
+Worth recording that **preflight's `--new-roots` is an assertion, not a
+verification**. It accepted `colaphus-latin` because I told it the slug was
+new. Only the corpus-wide split check knows whether it actually is.
+
+## Caught in my own draft, fourth consecutive chapter
+
+The token sweep found *el importe de la **matrícula***. `matrícula` has zero
+corpus hits. Replaced with *el importe del curso* — and that first replacement
+tripped the standalone-book check on the phrase *"the course"*, the same rule
+chapter 471 hit, so the gloss became *the fee for a class*.
+
+## Verification
+
+Preflight 6/6. Both suites. Digest control by reconstruction — a clean worktree
+at `origin/main` (2245f54d77) reproduced `6d6ea3c0…` and 7479 byte for byte,
+and `ES-PATH-474-PAGO` holds exactly the six lessons the count moved by
+(7479 → 7485).
+
+## Chapter 473 — the question's verb is not the passage's verb
+
+```
+A2 objectiveFailed          6 -> 6   (unchanged, as in 472)
+A2 missingObjectiveLexemes  8 -> 6
+```
+
+Three words, two lexemes, **zero items** — blocked the same way 472 was.
+
+| chapter | scene | words |
+|---|---|---|
+| 473 CONSEJO | the librarian's advice to anyone copying the scheme | aconsejar, recomendar, el estado |
+
+## Why it clears nothing
+
+The row for mock 2 item 25 is `recomendar, empezar, estado, explicar, norma`.
+After this chapter the item is blocked by **`explicar` alone** — taught at
+`ES-C41-explicar`, but deriving to B1 through `SPINE-GIVE-REASONS`
+(`HL-C418`). Teaching it again is the duplication that entry forbids.
+
+## The HL-C421 check found the stem verb again
+
+The stem reads *"¿Qué **aconseja** Pardo a otras bibliotecas?"* — and
+`aconsejar` had **zero hits corpus-wide**. That is the **second consecutive
+item** whose question verb the book does not teach, after `surgir` in 472. The
+stem-and-options check is now the most productive step in the pre-check.
+
+The same sweep confirmed *compañero*, *todavía*, *simpático*, *ayudar*, *traer*
+and *poco* are all taught, so nothing else in those stems is missing.
+
+## The chapter's own point is the verb swap
+
+The passage says *le **recomienda** empezar…*; the question asks *¿qué
+**aconseja**…?* An exam does that deliberately — it tests the **meaning**
+rather than the word. So the synthesis teaches the swap itself, and the two
+verbs are taught as one idea with two surfaces, with the lean named:
+*aconsejar* toward what would be wise for you, *recomendar* toward what is good
+of its kind.
+
+## Three rules already owned, all cited
+
+**`ES-C443-acercarse` owns the `a-` + word + `-ar` formation** in as many
+words — *"the pattern is a- plus a word plus -ar, meaning to make it that"* —
+with *acercar*, *alejar*, *aclarar*. The draft was re-teaching it with its own
+table. It now cites acercarse and adds what is genuinely new: those examples
+are all built on **prepositions or adjectives**, while *aconsejar* and
+*acompañar* are built on **nouns**, and with a noun the sense shifts from *make
+it that* to *supply that*.
+
+`ES-C34-pensar` owns e→ie, so *recomendar* cites it and notes that only the
+**second** e breaks. `ES-C431-pedido` owns the participle-noun.
+
+## An overclaim caught by the fact-check, in my own draft
+
+*Estado* was filed beside *el pedido* and *la llamada* as a participle hardened
+into a noun. **That is wrong.** *El estado* was borrowed from Latin *status* as
+a noun already, and only *looks* like *estar*'s participle because both descend
+from *stare*. The lesson now says so — *"the shape coincides; the route does
+not"* — and tells the learner to file it with the family for memory while not
+believing they derived it. The repaso carried the same error and was corrected
+with it.
+
+## A method flaw found and filed
+
+This container starts with **`LC_ALL` and `LANG` unset**, so grep runs in the C
+locale and `.` matches **one byte**. In UTF-8 the ñ in *acompañar* is two, so
+
+```sh
+grep -rln "^headword:.*acompa.ar" *.md   # 0 hits
+```
+
+returned zero for a word the corpus teaches with a full lesson
+(`ES-C446-acompanar`). A false zero in the pre-check is expensive — it is
+exactly how a duplicate lesson gets written.
+
+Worse, the failure is inconsistent: `compa.ero` returned four files because
+lesson **ids** use ASCII spellings, so the pattern matched `companero` in an id
+while missing *compañero* in prose. Filed in `lessons.d/`: type the accented
+character, and confirm any zero a second way. Verified afterwards that **no**
+word declared absent in chapters 468–472 is accented, so no earlier conclusion
+rests on the flaw.
+
+## What is left
+
+Six lexemes, of which **four are already taught** and blocked only by how the
+audit measures — *creer*, *explicar*, *problema* (`HL-C418`, `HL-C420`) and
+*responder* (`HL-C422`). Only **`descontar`** and **`invitar`** are genuinely
+untaught, so one more chapter exhausts the authorable A2 gap entirely.
+
+## Verification
+
+Preflight 5/5. Both suites. Digest control by reconstruction — a clean worktree
+at `origin/main` (f83309736e) reproduced `dc9be5f8…` and 7474 byte for byte,
+and `ES-PATH-473-CONSEJO` holds exactly the five lessons the count moved by
+(7474 → 7479).
+
+## Chapter 472 — the first chapter that clears no item, on purpose
+
+```
+A2 objectiveFailed          6 -> 6   (unchanged)
+A2 missingObjectiveLexemes  11 -> 8
+```
+
+Five words, three lexemes, **zero items**.
+
+| chapter | scene | words |
+|---|---|---|
+| 472 ENCUESTA | a library that lends objects, not only books | usuario, encuesta, surgir, lectura, copiar |
+
+## Why it clears nothing
+
+The row for mock 2 item 21 is `encuesta, preguntar, usuario, responder,
+lectura`. After this chapter the item is blocked by **`responder` alone** — and
+`responder` is already taught.
+
+`ES-C40-contestar` introduces **`ES-LEX-RESPONDER-06`**, with a section headed
+*"Grammar Lens: contestar and responder"*, the *re-* + *spondēre* derivation, a
+contrast table, and the note that *la respuesta* comes from *responder*. The
+audit cannot see it, because the taught set is built from
+`lesson.realization.headword` only and never reads `introduces.knowledge`.
+
+Writing a second `responder` lesson would clear the row and would be exactly
+the duplication `HL-C418` forbids. So it was not written. Filed as **HL-C422**;
+the repair is a `citationFormCredits` entry or teaching the audit to read
+`introduces`, and both move the headline number, so both want their own branch.
+
+**A tranche that closes real gaps and moves no item is the honest reading of
+that situation**, and it is recorded in the test pin rather than smoothed over.
+
+## The HL-C421 check is now standard, and it found the stem verb
+
+The row covers only the passage, so the stem and all three options were read
+and grepped. **`surgir` is the stem's own verb** — *"La idea **surgió**…"* —
+with zero hits corpus-wide. Without it the question cannot be parsed at all.
+
+`copiar` (option c) was also absent, and is taught here because the passage
+uses it too (*han copiado el sistema*). `propuesta` (option a) is absent and is
+**left**, noted: *ayuntamiento* in the same option is itself only glossed once,
+so that option needs two words and is a distractor.
+
+## The sibling check caught lectura
+
+`ES-C441-factura` already **prints the row** `| leer, to read | lectura, a
+reading |` in its own `-ura` table, and its gloss names *lectura* outright. So
+*lectura* is handed over rather than introduced — the move *imprimir* made with
+*impreso* and *avisar* with *aviso* — and the `-ura` rule is cited, not
+re-taught. `ES-C465-temperatura` already cites *factura* for the same ending, so
+that chain was left intact.
+
+**A second sense worth naming.** The book has been using *lectura* to mean an
+**interpretation** since `ES-C66-hablo-dos-lecturas` (*"the two readings of
+como"*) — but only inside ids and activity metadata, never in prose. Same
+situation as `grado` in chapter 468. So the lesson does not say *"the word you
+already had"*; it says the learner has been **doing** *lecturas* without having
+the word.
+
+## Cousin links
+
+| word | roots | cousin of |
+|---|---|---|
+| usuario | `usare-latin` | *usar* |
+| lectura | `legere-latin` | *leer* |
+| encuesta | `quaerere-latin` | **querer** |
+
+That last is the find worth keeping: *encuesta* is *inquisita* from
+*inquirere*, **in-** plus *quaerere*, to seek — and Spanish *querer* **is** that
+*quaerere*. Wanting and asking are one Latin verb.
+
+Only `surgere-latin` and `copia-latin` are newly minted.
+
+## Two distinctions the item turns on
+
+**Usuario is not cliente.** A shop has *clientes* because something is sold; a
+service has *usuarios* because something is accessed. `ES-C406-cliente` is
+taught, so the contrast is built on held material.
+
+**Copiar changes meaning with *a*.** *Copiar el sistema* reproduces a thing;
+*copiar **a** otra biblioteca* imitates whoever did it. The exam's own
+distractor for this item is *de copiar otra biblioteca* — which reverses the
+direction the text states — and the synthesis names that trap.
+
+## Caught in my own draft, for the third consecutive chapter
+
+The token sweep found *copiar un **archivo***. `archivo` has zero corpus hits.
+Replaced with *copiar un documento*, taught in `ES-C406-documento` — the same
+chapter as `ES-C406-cliente`, which this chapter already leans on.
+
+## Verification
+
+Preflight 7/7. Both suites. Digest control by reconstruction — a clean worktree
+at `origin/main` (524d393136) reproduced `1218403f…` and 7467 byte for byte,
+and `ES-PATH-472-ENCUESTA` holds exactly the seven lessons the count moved by
+(7467 → 7474).
+
+## Chapter 471 — the first chapter to teach more words than its row names
+
+```
+A2 objectiveFailed          7 -> 6
+A2 missingObjectiveLexemes  15 -> 11
+```
+
+Six words, one item. Fifteenth consecutive exact prediction on the item, and
+the **first tranche where the lexeme arithmetic deliberately does not match**.
+
+| chapter | scene | words |
+|---|---|---|
+| 471 CURSO | a cooking class that was too advanced | demasiado, nivel, avanzado, principiante, sencillo, perderse |
+
+## Why six and not four
+
+The audit's row for mock 1 item 31 is `curso, grupo, avanzado, perderse,
+principiante, sencillo` — every one of them a word of the **audio passage**.
+The question's correct option reads:
+
+> b) el **nivel** era **demasiado** alto para ella.
+
+Both `nivel` and `demasiado` have **zero substring hits** anywhere in
+`spanish/lessons/` or `spanish/units/`. So the four ranked words clear the row
+while leaving the item unanswerable: a candidate who understood every word of
+the dialogue still cannot read option (b).
+
+Teaching six makes the item genuinely answerable. It moves
+`missingObjectiveLexemes` by the same four either way — the two extra words
+were never on that list, because nothing puts option text on it — so this is
+not number-chasing. It is the opposite: the number would have looked identical
+had the chapter done the lesser thing.
+
+Filed as `BACKLOG.d` **HL-C421**. This chapter acts on it for one item; fixing
+the rows corpus-wide moves the headline number and wants its own branch.
+
+**The finding grew while the chapter was being written.** HL-C421 was filed on
+`nivel` alone. `demasiado` was caught later, by the token sweep, **in my own
+draft prose** — `ES-C471-avanzado` had written *un nivel avanzado* and the
+synthesis had used *demasiado* as though both were already known. Two
+instances in one item, not one.
+
+## Five rules already owned, all cited rather than re-taught
+
+- **`ES-C437-equivocarse`** *and* `ES-R437-repaso-planes` both name `perderse`
+  outright, in the reflexive-of-misfortune family with *caerse* and
+  *olvidarse*. So only the **sense** is new: in a class you lose the *thread*,
+  not the way.
+- **`ES-C09-estudiante`** owns `-ante` — *"Verb plus -ante = the person doing
+  it"* — so `principiante` is built in the lesson from *principio* via
+  *principiar*.
+- **`ES-C282-invitado`** owns the participle-used-as-adjective move, which
+  `avanzado` cites.
+- **`ES-C60-bastante`** introduces `ES-GRAMMAR-DEGREE-SCALE`, so `demasiado`
+  arrives as the missing member *above* a scale the corpus already had: *poco*
+  below the point, *bastante* at it, **demasiado** past it.
+- **`ES-C359-litro`** already owns `libra-latin`, with *lb*, *Libra*,
+  *deliberate* and *equilibrium*. So `nivel` takes the same slug and is a
+  **cousin of *el litro***: *libella* is a little *libra*, and the *l* → *n*
+  swap through French is named rather than glossed over.
+
+## Cousin links chosen so the join key earns its keep
+
+| word | roots | cousin of |
+|---|---|---|
+| demasiado | `magis` | *más* |
+| nivel | `libra-latin` | *litro* |
+| avanzado | `ante-latin` | *antes* |
+
+`principiante` takes `principium-latin` from *el principio*, `perderse` keeps
+`perdere-latin` from *perder*. Only `singulus-latin` is newly minted.
+
+## Sencillo is not fácil
+
+*Sencillo* measures how few **parts** a thing has; *fácil* how little
+**effort** it costs. Climbing a staircase is *sencillo* and not remotely
+*fácil*. This matters for the item: *hacemos cosas sencillas, pero las hacemos
+bien* is not modesty about effort — it says the things have few parts and then
+insists the execution is good.
+
+The `-illo` is **not** a diminutive here. It was fused in Latin *singellus*
+and there is no *senci* underneath, and the lesson says so rather than letting
+the ending mislead.
+
+## Two preflight failures fixed properly rather than by deletion
+
+`sencillo` and `perderse` each named an atom in `practises` that no body block
+assessed. `sencillo`'s prerequisite moved from `ES-C417-curso` to
+`ES-C398-facil`, whose atom the Grammar Lens genuinely assesses and whose
+lesson it links to. `perderse` keeps `ES-C471-sencillo` as an **ordering**
+prerequisite without requiring its atom — prerequisites establish sequence,
+`requires` establishes atom dependency.
+
+The synthesis then tripped the duration ceiling at 302s, and the **prose was
+tightened rather than the budget raised**.
+
+## Verification
+
+Preflight 8/8. Both suites. Digest control by reconstruction — a clean
+worktree at `origin/main` (2eac85f55a) reproduced `ac4c49e1…` and 7459 byte
+for byte, and `ES-PATH-471-CURSO` holds exactly the eight lessons the count
+moved by (7459 → 7467).
+
+## Chapter 470 — five rules the corpus already owned, and one that improved the chapter
+
+```
+A2 objectiveFailed          8 -> 7
+A2 missingObjectiveLexemes  19 -> 15
+```
+
+Four words, one item, 4.00. Fourteenth consecutive exact prediction.
+
+| chapter | scene | words |
+|---|---|---|
+| 470 PARAGUAS | a message to the building group about a mislaid umbrella | paraguas, mango, encontrar, avisar |
+
+## The rule filed in 469 is what this chapter was written for
+
+Run `ls ES-C<ch>-*.md` on every chapter you cite, not only your own. It caught
+**five** duplications here before anything was committed.
+
+**`ES-C330-parada` already owns the whole `para-` family.** Its text reads:
+*"A **parasol** is made ready against the sun, and a **parachute** ready
+against a fall — that para- is the Romance parare, and not the Greek para-
+meaning beside that sits in parallel and parable."* The draft gloss for
+*paraguas* was *para* ("stops") plus *aguas* — which would have contradicted a
+merged lesson outright, because *parare* is **to make ready**. Cited, and
+`roots: [parare-latin]` makes the two cousins.
+
+**`ES-C440-cumpleanos` owns the compound** that looks plural and is singular —
+*"the -s you can hear is the plural of años trapped inside a word that is now
+singular… not an exception to be memorised; it is a sentence that hardened."*
+
+**`ES-C447-analisis` already names *el paraguas*** as its worked example of the
+invariable plural.
+
+**`ES-C451-cola` owns the homonym table**, which is the shape *mango* (handle,
+from *manus*) against *mango* (the fruit, through Portuguese *manga*) needs.
+
+**`ES-C267-no-nada` owns double negation in full**, including the rule that a
+negative word after the verb still requires *no* in front. The synthesis was
+restating it for *por ninguna parte*. Now cited, with the claim narrowed to
+what is genuinely new: *ninguna parte* joins *nada*, *nadie* and *nunca*, it is
+two words rather than one, and the trap is that English renders it with the
+**positive-looking** *anywhere*, pulling a learner toward *en cualquier parte*.
+
+## The same pass improved the chapter rather than only correcting it
+
+`ls ES-C383-*.md` turned up **`ES-C383-dejar`** beside `ES-C383-buscar`, and
+the exam message opens *"me he **dejado** un paraguas."* So the chapter has a
+four-verb arc with three verbs already held:
+
+| step | verb | state |
+|---|---|---|
+| left it behind | dejar | taught |
+| looking for it | buscar | taught |
+| cannot find it | **encontrar** | new |
+| let me know | **avisar** | new |
+
+*Encontrar* therefore arrives as the missing piece of a sequence rather than as
+a bare word, and *buscar* / *encontrar* is taught as the effort-versus-result
+split English collapses into one verb.
+
+`ES-C451-mostrar`, not the far-off `ES-C11-stem-changes`, is the `o` → `ue`
+owner to cite: it is recent, prints the full stress table, and already names
+*la rueda* as the earlier sighting.
+
+## Avisar is handed over, not introduced
+
+`ES-C332-aviso` already glosses it — *"behind it is the verb avisar, to
+notify"* — and `ES-C459-habitual` uses it again. Same move *imprimir* made with
+*el impreso* in 469. `roots: [latin-videre]`, the **prefix-form** slug aviso
+holds, which is the thing chapter 466 got wrong.
+
+The *ad visum* derivation belongs to *aviso* and is not repeated. What this
+lesson adds is what that derivation predicts: *avisar* is the weakest of the
+telling verbs because it makes visible rather than orders — which is exactly
+why the message says *si lo habéis visto, avisadme* and not *buscadlo*. It asks
+for information, not labour.
+
+## Safety, and one loose claim tightened
+
+The exam message contains *o lo ha cogido alguien*. `ES-C35-tomar` warns that
+*coger* is coarse slang across much of Latin America, so that clause is
+**dropped** from the synthesis quote rather than put in a `variety: general`
+learner's mouth. Verified by grep that no lesson here contains *coger* in any
+form.
+
+A draft said the Italians named the umbrella *"for sunshine"*. *Umbra* is a
+**shadow**, so the contrast is shade against water, and the sentence now says
+so.
+
+## What is left
+
+Two clean four-word rows remain. The other five all turn on `explicar`, `creer`
+or `problema` — all three **already taught**, and excluded only because their
+spine node derives above A2. See `BACKLOG.d` `HL-C418` and `HL-C420`; do not
+teach them a second time.
+
+## Verification
+
+Preflight 6/6. **Both** suites this time: vitest green, and the Python metadata
+contracts (`lessons.py validate`, `test_lessons.py`) that chapter 469 shipped
+without running. Digest control by reconstruction — a clean worktree at
+`origin/main` (f3a7bed89d) reproduced `7248b982…` and 7453 byte for byte, and
+`ES-PATH-470-PARAGUAS` holds exactly the six lessons the count moved by
+(7453 → 7459).
+
+## Chapter 469 — three words the corpus already owned, found before print
+
+```
+A2 objectiveFailed          9 -> 8
+A2 missingObjectiveLexemes  23 -> 19
+```
+
+Four words, one item, 4.00. Thirteenth consecutive exact prediction.
+
+| chapter | scene | words |
+|---|---|---|
+| 469 OFICINA | a printer out of service, and a colleague who cannot get online | imprimir, impresora, conectar, llamada |
+
+## The sibling check now has to run on the lessons you cite, not just your own
+
+That is this chapter's lesson, and it caught three separate duplications that
+a grep of the headwords alone would have missed. The headword grep found
+`ES-C432-lavadora`; running `ls ES-C432-*.md` on top of it found
+`ES-C432-contador`, which no headword in this chapter would ever have
+surfaced.
+
+**`ES-C432-lavadora` already owns `-dora` for machines** — with the exact
+`secadora` / `calculadora` table the `impresora` draft had rebuilt from
+scratch. It is now cited, and `impresora` teaches the thing `lavadora` cannot:
+*imprimir* yields both a person and a machine, so **el impresor** and **la
+impresora** are told apart by the article alone.
+
+**`ES-C432-contador` already owns "the ending does not decide the article"** —
+*"this one is masculine where the washing machine was feminine, and nothing
+about the ending decides that."* The draft was staging that as new. It is now
+treated as settled, and the chapter's claim narrowed to what is genuinely
+left: with *lavadora* and *contador* the article is a fact to memorise; here
+it is a **choice that carries the meaning**.
+
+**`ES-C431-pedido`'s table already prints `| llamar | la llamada |`**, and
+`ES-C439-cortar` already uses *se ha cortado la llamada*. So `la llamada` is
+handed over rather than introduced — the same move `imprimir` makes with *el
+impreso*, which `ES-C406-impreso` had glossed fourteen chapters earlier.
+
+## Untaught words presented as known
+
+Two drafts did this, and both were caught by word-boundary greps that returned
+only the draft file itself.
+
+`conectar` had a Grammar Lens contrasting **conectar / encender / enchufar**.
+None of *encender*, *enchufe* or *enchufar* is taught anywhere in the corpus.
+The lens was rebuilt on **conectar vs conectarse**, which is real, useful, and
+made of material the learner holds.
+
+`imprimir` opened with *pulse el botón verde*. The corpus does not teach
+*pulsar* — `ES-C388-empujar` mentions only Latin *pulsare* and English
+*pulse* — and it is an *usted* imperative besides. Also dropped: *el cable*,
+*la red* and *quedarse sin tinta*, none of them taught.
+
+## An invented atom id, and a lesson contradicting its own prerequisite
+
+`conectar` required `ES-LEX-C393-TECH-01`, which exists nowhere.
+`ES-C393-ordenador` introduces `ES-LEX-ORDENADOR`. The prerequisite moved to
+`ES-C393-internet` so that *internet* is genuinely reviewed by *conectarse a
+internet*; *ordenador* stays in the closure as *internet*'s own prerequisite.
+
+The `impresora` draft explained *el ordenador*'s masculine gender as a dropped
+Spanish noun. `ES-C393-ordenador` teaches that the computing sense came from
+**French *ordinateur***. The row was removed rather than patched.
+
+## Conectar is not an inherited word, and that is the better story
+
+The Academy's dictionary derives **conectar** from English *to connect*,
+itself built on Latin *conectere* (*con-* plus *nectere*, to tie). The draft
+had it sitting in Spanish since Rome, waiting for wires.
+
+Chapter 393 had already given the learner two other routes. So the repaso
+makes the three-way the chapter's point:
+
+| word | how it got here |
+|---|---|
+| el ordenador | an old Spanish word that borrowed a **meaning** from French |
+| internet | an English word borrowed **whole**, only the beat changed |
+| conectar | an English word borrowed as a **shape**, its pieces Latin |
+
+## Etymology ownership respected
+
+`ES-C03-llamar` (sequence 140) owns *clamare* **and** the *cl-* → *ll-* sound
+law, with *exclaim*, *proclaim*, *acclaim* and *clamor*. So `llamada` cites it
+and adds only what it did not say: a *llamada* is still literally a
+crying-out, which is why **una llamada de atención** is a warning and not a
+phone call at all. `roots: [clamare]`, the bare slug `ES-C03-llamar` holds, so
+the two are cousins.
+
+`imprimir` and `impresora` take `impressus-latin`, the slug `ES-C406-impreso`
+holds, keeping the verb and its participle joined.
+
+## Half a rule, stated as half a rule
+
+`ES-C49-participio` owns `-ado` / `-ido`, so `llamada` cites it rather than
+claiming it. What is new is the honest negative: **the vowel is predictable
+and the article is not.** *El pedido* is masculine, *la llamada* and *la
+entrada* feminine, and nothing in *pedir*, *llamar* or *entrar* says which.
+
+`ES-C49-participios-irregulares` does **not** list *impreso*, so `imprimir`
+adding it to *hecho* / *dicho* / *visto* / *puesto*, and to the later
+*cubierto* and *roto*, is new — and is cited to that lesson rather than
+presented as this chapter's discovery.
+
+## A pre-existing defect, logged rather than fixed here
+
+`ES-C432-lavadora`'s wrap-up asks where the `-dor` ending was first met and
+answers *"on the supplier"* — `ES-C431-proveedor`, sequence 10470.
+`ES-C297-tenedor`, sequence 3990, teaches `-dor` as *"the ending that names
+whoever or whatever does the thing"*, with *comedor* and *mirador*.
+*Proveedor* is the second teaching, not the first. Out of scope for this
+chapter; recorded so it is not lost.
+
+## Verification
+
+Preflight 6/6. Full suite green: 173 files, 2,225 tests. Digest control by
+reconstruction — a clean worktree at `origin/main` (4e5939c6db) reproduced
+`e1344996…` and 7447 byte for byte, and `ES-PATH-469-OFICINA` holds exactly
+the six lessons the count moved by (7447 → 7453).
+
+## Chapter 468 — the wardrobe reopened, and a slang hazard caught before print
+
+```
+A2 objectiveFailed          10 -> 9
+A2 missingObjectiveLexemes  27 -> 23
+```
+
+Four words, one item, 4.00. Twelfth consecutive exact prediction.
+
+| chapter | scene | words |
+|---|---|---|
+| 468 ABRIGO | a bus-stop screen at two degrees | chaqueta, grado, abrigo, bufanda |
+
+## The sibling check, run properly, gave the chapter its premise
+
+Chapter 467's lesson was that a rule written in a plan file is a note, not a
+step — the sibling read has to produce output. Run that way here, `ls
+ES-C430-*.md` and opening each turned up two things invisible from
+`ES-C430-jersey` alone:
+
+**`ES-C430-repaso-piezas` declares the wardrobe closed** — *"the wardrobe,
+complete… the list an exam works from is now covered end to end."* Rather than
+quietly reopening it, that became the chapter's premise: the A1 list was
+complete for A1, which asks you to **describe** what you are wearing. A2 asks
+you to **decide**, and deciding needs a number.
+
+**A header error not to inherit.** `ES-C430-jersey` heads a table *"clothing
+words that name a place"* and puts `la chaqueta | a French peasant named
+Jacques` in it. Jacques is a person.
+
+## What the fact-check then caught, before anything was committed
+
+Twenty-seven findings. The three that mattered most:
+
+**`ES-C60-` is a legacy module id, not a chapter number.** The draft said *"the
+scale you have had since chapter sixty"*; `ES-C60-repaso-grado` is
+`chapter: 229`. Filed in `lessons.d/` — a chapter number is only ever read from
+the `chapter:` field, never off an id.
+
+**The word *grado* had never appeared in corpus prose at all.** Every prior hit
+is inside an identifier. So "the word you already had under another job" was
+false; the lesson now says the review carries this word in its filename and
+never once showed it.
+
+**`roots: []` does not mean what the draft claimed.** It taught the empty root
+list as a positive signal meaning "somebody looked and the answer is unknown".
+526 of 1,476 Spanish lessons carry `roots: []`, and 332 of those give a settled
+etymology in the prose anyway — including this chapter's own prerequisite
+`ES-C300-piel`. `lessons.d/` had already recorded that the ledger is opt-in
+metadata and a lower bound. The rule about leaving an origin *open* belongs to
+`ES-C450-patio`, which is now the prerequisite and the citation, with
+`el gorro` — winter headwear, origin also uncertain — as the nearest precedent.
+
+## A safety fix that matters more than any of them
+
+The draft put bare **coger** in the learner's mouth twice, in `variety:
+general` lessons. `ES-C35-tomar` exists partly to warn that *coger* is coarse
+slang across much of Latin America. These would have been the first sentences
+in the corpus to teach it unmarked. Now *llévate*.
+
+The same hazard applies to the headword: **chaqueta** carries a vulgar second
+sense in Mexico and much of Central America. A `variety: general` lesson
+teaching it bare repeats the *coger* mistake on the word the chapter is named
+after. It now carries a regional table — *saco*, *campera*, *chamarra* — and
+the wrap-up drills it.
+
+## Smaller corrections
+
+*Al abrigo de* means *in the shelter of* — the draft's gloss inverted it
+against its own table. *Un abrigo de rocas* became *un abrigo rocoso*, since
+`de` + material reads as what a garment is made of. *Apricus* means open to the
+sun; the shelter sense is the **Spanish** development, which is the etymology's
+best observation and the draft had smuggled it into the Latin. *Ir de grado*
+became *de buen grado*. English took *jack* and *jacket*, not "jacket and
+jaquette". *Estuviste malo* became *estuviste enfermo* — the corpus teaches
+*malo* as **bad** only, so a learner would have decoded "you were bad last
+week". The causal *que* is genuinely new and is now introduced where it first
+appears rather than called "the same *que*".
+
+## Where the floor is
+
+Four authorable rows left, 16 words. Five more turn on `explicar`, `creer` or
+`problema` and wait on `HL-C418`.
+
+## Chapter 467 — the first chapter reviewed before it was pushed
+
+```
+A2 objectiveFailed          11 -> 10
+A2 missingObjectiveLexemes  31 -> 27
+```
+
+Four words, one item, 4.00. Eleventh consecutive exact prediction.
+
+| chapter | scene | words |
+|---|---|---|
+| 467 ALIMENTO | a community garden's monthly sheet | producir, suficiente, alimentar, objetivo |
+
+## The order changed, and it paid immediately
+
+Chapters 465 and 466 each pushed first and corrected after, which cancelled
+the 20-40 minute books build mid-flight and produced a spurious gate failure
+both times. This chapter ran the fact-check **before** committing. Twenty-two
+findings came back against six lessons, and none of them ever reached a
+branch.
+
+## Three of those were merge-blocking
+
+**`objetivo` had the contrast backwards, and the corpus said so beside the
+lesson it cited.** The draft taught that *el objeto* "sits in front of you"
+while *el objetivo* "is the thing you are throwing at" — but
+`ES-C345-repaso-persona-objeto`, sitting next to the owner the lesson cited,
+already says the object of a verb *is* "the thing the action is thrown at".
+The claim is independently false too: *obiectivus* is an adjective formed
+**on** *obiectum*, and `-ivo` names a habit rather than reversing a direction.
+The draft's own closing line disproved it — an **objective lens** is named for
+facing the object. Now: the throw does not turn round; what narrowed is *why*
+the thing is placed there.
+
+**`suficiente` handed back the misreading that `bastante`'s lesson exists to
+prevent.** The draft claimed *bastante* is ambiguous between "enough" and
+"quite a lot". `ES-C60-bastante` spends a whole lesson inoculating against
+exactly that: *"So bastante does not mean a lot. It means enough."* The real
+difference is that *bastante* has an adverbial second job — *bastante caro* is
+**fairly** expensive — while *suficiente* names a requirement and has no scale
+reading. And both can say there is not enough: *no hay bastante* is the
+everyday phrasing, *no hay suficiente* the formal one. The draft had made that
+a difference in meaning; it is a difference in register.
+
+**`producir` was called "the third `-ducir` verb".** It is the second — only
+*reducir* precedes it. That is the same miscount already written up in the
+`HL-C419` backlog note, where *admitir* was called the third word off
+*mittere* and was the fourth.
+
+## What else went
+
+The draft flattened `ES-C462-reducir`'s own warning that the `-zc-` class
+splits (*conocer* keeps the **z** and not the **j** past); said `-mento`
+"names the means" when `ES-C457-medicamento` makes a **register** point;
+claimed *alere* "did not mean to feed" when nourishing is its primary sense;
+put the noun-before-verb derivation in Spanish when it happened in Latin; and
+mis-cut *ali-mento* as *alimen-to*. The garden sheet used Peninsular *patata*
+unglossed, an untaught and tense-ambiguous *sembramos*, and *el parte* — a
+masculine homograph of the taught *la parte*, never explained.
+
+## One thing deliberately left undone
+
+*Altus* really is the old participle of *alere*, so *alto* belongs to this
+family. `ES-C365-alto` carries its own `altus-latin` slug, and asserting the
+link in prose would claim a family the slugs do not encode — the exact thing
+`cousins.ts` exists to prevent. It needs a slug decision, not a sentence.
+
+## Where the floor is
+
+Five authorable rows left, 20 words at four apiece. Five more turn on
+`explicar`, `creer` or `problema` and wait on `HL-C418`.
+
+## Chapter 466 — a chapter whose endings were all already owned
+
+```
+A2 objectiveFailed          12 -> 11
+A2 missingObjectiveLexemes  35 -> 31
+```
+
+Four words, one item, 4.00 again — the floor holding exactly where 464
+predicted it. Tenth consecutive exact prediction.
+
+| chapter | scene | words |
+|---|---|---|
+| 466 INFORME | a letter home from the head | director, visible, comportamiento, discutir |
+
+## The pre-check, run the way 465 said to
+
+Chapter 465's lesson was that a non-zero grep hit is a **file to open**, not a
+number to weigh, and that follow-up should run **ascending** by hit count —
+because many hits are usually incidental prose while one or two hits on a
+content word are usually the lesson that taught it. Applied here, that rule
+paid three times, and the smallest number on the list was again the most
+important:
+
+| word | hits | what opening it found |
+|---|---|---|
+| director | 2 | `ES-C421-actor` owns `-tor` **and prints `dirigere → director` in its own table** |
+| visible | 78 | all English prose — but its ending is owned twice over |
+| comportamiento | 0 | clean |
+| discutir | 0 | clean |
+
+**The plan for this chapter was wrong about `visible`.** It recorded that
+`-ible` had no owner and could be introduced as new. That came from grepping
+only the bolded form `**-ible**`. In fact `-able` and `-ible` are one Latin
+`-bilis`: `ES-C283-amable` introduces it and `ES-C423-sociable` teaches it with
+a shape table and the wrap-up *"Does -able change for a woman? No."* So the
+genuinely new content is much narrower than planned — the `-ible` **spelling**,
+and the **direction** the ending points.
+
+That turned out to be the better lesson anyway. *Sociable* describes a person
+who **does** the mixing; *visible* describes a thing that has the seeing **done
+to it**. One ending, two directions, and only the verb's sense tells you which.
+
+**A root-slug trap, caught by reading rather than by the guard.** The family
+slug is `latin-videre` — the prefix form, which `ES-C332-aviso` already
+carries. Writing the instinctive `videre-latin` would have split the cousins
+family silently, since that join is exact string equality. This is the same
+shape split `HL-C419`'s guard exists to catch, avoided before it was made.
+
+## The four
+
+**el director** is the chapter's clearest case of citing rather than teaching.
+Both halves were handed over in earlier chapters: `ES-C421-actor` gave the
+`-tor` ending and printed this very word in its table, and `ES-C446-directo`
+gave *dirigere*, to set straight. So a *director* is the one who **aims** the
+thing — not the one who shouts.
+
+**el comportamiento** is *com-* plus *portare*: carrying yourself, exactly as
+English *conduct* is *con-* plus *ducere*, leading yourself. It keeps clear of
+*porta*, a gate — the separation `ES-C463-importar` had to be corrected into
+last tranche. Its `-miento` sits on a reflexive verb and quietly drops the
+*se*, which is why a school letter says *el comportamiento*, a fact about
+conduct, where a parent says *se porta mal*, an accusation about a child.
+
+**discutir** is *dis-* plus *quatere*, to shake apart. Discussing a topic and
+arguing with a person are one act at two temperatures. English kept the violent
+end in *concussion*.
+
+## What the payoff tests
+
+The letter home says *me gustaría discutir con ustedes* — and the news in it is
+**good**. A reader who has only the rule "a person after *con* means argue"
+will read an invitation as a summons. The preposition leans; the content
+decides. That misreading is the comprehension the chapter is for.
+
+## What is left
+
+Six authorable rows, all but one in mock 1 — 24 words at four apiece, no
+overlap. Five rows still turn on `explicar`, `creer` or `problema` and wait on
+the `HL-C418` mapping decision.
+
+## Chapter 465 — the floor arrives exactly where it was predicted
+
+```
+A2 objectiveFailed          13 -> 12
+A2 missingObjectiveLexemes  39 -> 35
+```
+
+Four words, one item, **4.00 per item**. Set against 2.44 / 2.12 / 2.80 / 3.00
+for tranches 4a-4d, that looks like a collapse, and it is not. Chapter 464's
+entry predicted this number: the eight authorable rows left each needed four
+words and shared none of them, so 4.00 is simply the rate now, and no scene
+grouping or tie-break beats it. Predicting a worse number and then hitting it
+is the ninth exact prediction in a row.
+
+| chapter | scene | words |
+|---|---|---|
+| 465 APUNTE | a shared weather notebook | cuaderno, anotar, temperatura, lluvia |
+
+## One chapter, not four
+
+4d ran twenty-five lessons and its review found **twenty authoring errors** in
+them. The unit of work is now sized to what a review pass can actually check,
+so 465 ships alone and 466-468 follow separately.
+
+That review also produced the change that shaped this chapter. For three
+tranches every error had been found in a file listed in the new lesson's own
+`prerequisites:`, so the check was bounded to those three to five files. 4d
+broke it: the stem-change rule is owned by chapter 11, `-ista` by chapter 9,
+the *porta*/*portāre* split by chapter 279, and none is a prerequisite of the
+lesson that got it wrong. Claims about a **word** live in the prerequisite
+closure; claims about a **rule** live wherever the rule was introduced.
+
+So before writing a line of 465, all sixteen words of 465-468 were grepped
+against the corpus. Five turned out to be sitting inside somebody else's rule
+already:
+
+| word | already appears in | as |
+|---|---|---|
+| lluvia | `ES-C316-llanto` | the worked example: *"Latin pluvia is la lluvia"* |
+| director | `ES-C421-actor` | a row in the `-tor` agent table |
+| chaqueta | `ES-C430-jersey` | a row giving its Jacques etymology |
+
+`ES-C30-llueve` owns the whole `cl-`/`fl-`/`pl-` → `ll-` rule. So *la lluvia*
+does not teach that rule and does not pretend the word is new. It says out loud
+that the learner was handed it twice before needing it — once as *pluere* under
+*llueve*, once as the example under *el llanto* — and joins `pluere-latin`
+rather than minting `pluvia-latin`. A 4d-style lesson would have introduced the
+sound change as a discovery, 435 chapters after it was taught.
+
+## The other three
+
+**el cuaderno** has a number inside it. Latin *quaternus*, off *quattuor*, is a
+sheet folded once into four pages, and a stack of those was the cheapest book
+anybody could make — the object named for how it was folded. Joins
+`quattuor-latin` with *cuatro* and *cuarto*; English kept the count plainer in
+*quire*. Its *ua* does **not** break, and the lesson uses that: a vowel is only
+a candidate for breaking if it is stressed *and* came from a short Latin **e**
+or **o**, so this is the counter-case to the stem-change rule rather than an
+instance of it.
+
+**anotar** is the chapter's real grammar. It is not *apuntar*, and the
+difference is what the writing is for — *apuntar* is *punctum*, the pen
+touching down once, a scrap in a pocket; *anotar* is *nota*, a mark made to be
+read, a line somebody else will open later. A doctor *apunta* while you talk
+and *anota* in your file afterwards. The etymologies say the same thing as the
+usage, which is rare enough to point out. `ES-C429-nota`, a prerequisite,
+already gave *notar* — so the lesson cites it rather than re-deriving it.
+
+**la temperatura** is not about heat. Latin *temperare* is *to mix in the right
+proportion*, which is why tempered steel, a temperate climate, a person's
+temper and tempera paint are one family. Its `-ura` is the deverbal kind
+`ES-C441-factura` already taught — the thing an action produces, verb hiding
+inside — and the adjective family (*alto*/*altura*) is introduced as the ending's
+**second** job, not its first, because *factura* set that order.
+
+## What is left
+
+Seven authorable rows, six of them in mock 1. Twenty-eight words at four
+apiece, no overlap. Five further rows turn on `explicar`, `creer` or `problema`
+and are blocked on the `HL-C418` mapping decision, which is a shared-ladder
+change across twenty-three tracks. Taken singly those three are not equal:
+`problema` clears a row alone and so does `explicar`; `creer` clears nothing,
+because its only row also wants `descontar`.
+
+## Chapters 460-464 — the floor holds, and then rises
+
+Fifteen headwords across five chapters, every one teaching exactly three words.
+
+```
+A2 objectiveFailed          18 -> 13
+A2 missingObjectiveLexemes  54 -> 39
+```
+
+Predicted from the audit before anything was wired and reproduced exactly.
+**Eight tranches, eight exact predictions.**
+
+| tranche | words | items | words per item |
+|---|---|---|---|
+| 4b (452-455) | 17 | 8 | 2.12 |
+| 4c (456-459) | 14 | 5 | 2.80 |
+| **4d (460-464)** | **15** | **5** | **3.00** |
+
+Every scene still available was measured before authoring, and the five chosen
+all came out at **exactly 3.00**. There was no cheaper grouping to find, and
+saying so is the whole point of measuring first.
+
+## The floor has now risen to 4.00
+
+This is the finding, and it changes what the next tranche costs.
+
+Thirteen rows remain. **Five touch `explicar`, `creer` or `problema`.** The
+other eight each need **four** words — and they share none, so the remaining
+authorable work is exactly **32 words for 8 items, flat at 4.00**.
+
+| what is left | rows | words | rate |
+|---|---|---|---|
+| waiting on the three B1-mapped words | 5 | 7 | — |
+| everything else | 8 | 32 | **4.00** |
+
+Tranche 4e would therefore be a third more expensive per item than this one,
+and the gap to the mapping decision widens again. Crediting all three takes 13
+→ **11**, for zero lessons. Taken one at a time the three are not equal:
+`problema` clears a row by itself, and so does `explicar` — each is the sole
+blocker on one item. `creer` clears nothing alone; its only row also wants
+`descontar`. So the decision buys two rows outright and leaves the third
+waiting on a word nobody has written yet. `HL-C418`.
+
+(An earlier draft of this entry had that backwards, saying `explicar` could not
+move by itself. It can; `creer` is the immobile one. The 5 / 8 / 32 / 4.00
+figures above are unaffected.)
+
+## The five chapters
+
+| chapter | scene | words |
+|---|---|---|
+| 460 | the tool library | la herramienta, solicitar, la espera |
+| 461 | the collection appeal | donar, peligroso, rechazar |
+| 462 | the workplace | reducir, decidirse, el jefe |
+| 463 | the organised outing | organizar, el guía, importar |
+| 464 | the missed appointment | recordar, el dentista, fallar |
+
+## Two prefix families, three chapters apart
+
+`rechazar` joins `capere-latin` with **`aceptar`**, taught five chapters
+earlier. *Ad-* + *capere* takes a thing **towards** you; *re-* + *captiare*
+drives it **back**. One Latin verb of taking, pointed two ways.
+
+That is the second such family in three chapters, after *meter* / *el permiso*
+/ *permitir* / *admitir* off *mittere* — and it is now a rule a reader can use:
+**when a Spanish verb starts with `a-`, `re-`, `per-`, `ad-` or `des-`, the
+part after it is usually a word you can already find.**
+
+The same *captiare* gave *cazar*, French *chasser*, and English **chase** and
+**catch**. Rejecting something is chasing it back the way it came.
+
+## El jefe and la cabeza are one Latin noun, by way of France
+
+The two-roads pattern again, but through a **third** language this time.
+*Caput* wore down through Spanish speech into **la cabeza**; it was borrowed
+from French *chef*, centuries later, as **el jefe**. *Rueda*/*rotativo* and
+*consejo*/*consultar* were both Latin-to-Spanish — this one detoured, which is
+why it resembles neither. A boss is literally a head, and *chief*, *chef* and
+*jefe* are one word in three languages.
+
+### The join key forced a choice, and the new guard watched it
+
+`caput` is one of the 31 etymons the corpus spells more than one way:
+`caput-latin` (on *acabar*) against `latin-caput` (on *la cabeza* and three
+others). Nothing in CI catches a wrong pick — the guard shipped last night only
+refuses a **new** spelling.
+
+The rule applied was **match the etymon's existing majority**, because that is
+what actually joins: `latin-caput` puts *el jefe* next to *la cabeza*, which is
+the cousin a reader wants. `check:root-slug-splits` confirms no new split.
+
+## Perdón turns out to be about giving
+
+`donar` is the verb inside **perdón**, learned in the first weeks as the thing
+you say when you bump into someone. *Per-* + *donare* is **to give
+thoroughly** — forgiving is handing the offence over rather than keeping it —
+and English *for-give* is built identically, so *pardon* and *forgive* are the
+same idea twice.
+
+`recordar` does the same trick with the body: *re-* + **cor**, the **heart**,
+because Latin located memory there rather than in the head. Remembering is
+running a thing back past your heart, and English *record* is a thing committed
+to memory.
+
+All three of chapter 464's words were already in the reader's vocabulary as
+roots — *cor* in *el corazón*, *dentem* in *el diente*, *fallere* in *falso*.
+At nine hundred headwords that is the ordinary case rather than a happy
+accident.
+
+## A fourth roots: [] corrected
+
+`ES-C437-decidir` carried `roots: []` while its own gloss already read *"to cut
+a question off"*. The etymology was known and the list was simply never filled,
+so `caedere-latin` is a **correction rather than a guess** — the fourth of
+these after *prestar*, *dolor* and *jubilado*, and found the same way: by
+needing the join for a new word, here `decidirse`.
+
+## Numbers
+
+| metric | before → after |
+|---|---|
+| A2 `objectiveFailed` | 18 → 13 |
+| A2 `missingObjectiveLexemes` | 54 → 39 |
+| mock 1 reading / listening | 21 / 18 → 21 / 19 |
+| mock 2 reading / listening | 19 / 24 → 22 / 25 |
+| curriculum graph lessons | 7398 → 7423 |
+| new lessons | 25 |
+| new headwords | 15 |
+
+**Mock 2 is down to three failing items.** It lost four rows to mock 1's one,
+and the two papers are now diverging sharply — what remains is concentrated in
+mock 1, which is itself information for whoever writes the next mock pair.
+
+## Verification
+
+`human-language-data` full suite; all **fourteen** `check:*` gates, including
+`check:root-slug-splits` running for the first time against new authoring — it
+passes, so the five new root slugs introduced no split and the two split-etymon
+choices used spellings already in the corpus.
+
+Digest attributed by **reconstruction**: `origin/main` was loaded in a clean
+`git worktree` and reproduced `d9c5f163…` and 7398 byte for byte. Five segments
+of five lessons each: 25, and the count moved by exactly 25.
+
+## What this does not claim
+
+Five more exam items are now supported by the book's own vocabulary. No item
+has been graded against a reader. **Thirteen objective items still fail**, and
+until that reaches zero the A2 book cannot be said to prepare anybody to sit
+the paper.
+
+## Chapters 456-459 — the last cheap row, and the floor underneath
+
+Fourteen headwords across four chapters.
+
+```
+A2 objectiveFailed          23 -> 18
+A2 missingObjectiveLexemes  68 -> 54
+```
+
+Predicted from the audit before anything was wired and reproduced exactly.
+**Seven tranches, seven exact predictions.**
+
+| tranche | words | items | words per item |
+|---|---|---|---|
+| 4a (448-451) | 22 | 9 | 2.44 |
+| 4b (452-455) | 17 | 8 | 2.12 |
+| **4c (456-459)** | **14** | **5** | **2.80** |
+
+## The rate went up, and that was not avoidable
+
+Before authoring anything, every coherent scene still available was measured.
+**All but one came out at exactly 3.00 words per item.**
+
+The exception was `La cuenta` at 2.50, because it holds the **last unblocked
+two-word row** in either mock. So 4c took that scene first and then three
+3.00 scenes, and no grouping available could have done better.
+
+4b's 2.12 came from a tie-break — group the cheap rows — and that tie-break is
+now spent. **From here the floor is 3.00.**
+
+## Except that it is not, and the reason is not authoring
+
+Five of the eighteen remaining rows are waiting on `explicar`, `creer` or
+`problema`. All three are **already taught**. All three sit above the A2
+book's ceiling because of the spine node their path segment names.
+
+| credited | objectiveFailed | rows left needing one word |
+|---|---|---|
+| nothing (today) | 18 | — |
+| `problema` + `creer` — both can move | 17 | descontar |
+| all three — needs `SPINE-GIVE-REASONS` at A2 | **16** | descontar, invitar |
+
+Zero new lessons. When this was first measured it was worth 40 → 39; it is now
+worth more than a chapter of authoring, and it will keep growing as everything
+around it gets taught. `explicar` still cannot move alone — it requires atoms
+from three B1 lessons and introduces the reason-chain grammar atom itself — so
+this is a decision about the ladder, not a mapping tidy-up. Filed as
+`HL-C418`, left for that decision.
+
+## The four chapters
+
+| chapter | scene | words |
+|---|---|---|
+| 456 | the bill | ensalada, cargo, aceptar, coste, agencia |
+| 457 | the duty chemist | medicamento, encargar, guardia |
+| 458 | the deadline | plazo, entregar, admitir |
+| 459 | the stocktake | sección, inventario, habitual |
+
+Three of the four teach only **three** headwords and run five lessons rather
+than seven. The scenes left are small; the chapters are not padded.
+
+## Eleven of fourteen landed on roots the track already carried
+
+| new word | joins | what becomes visible |
+|---|---|---|
+| el cargo, encargar | `carrus-latin` with *el carrito* | a charge is a **load on a cart** |
+| el coste | `constare-latin` with *costar* | *con-stare*, where the reckoning stands still |
+| la agencia | `agere-latin` with *la agenda* | a diary and a travel agent, one verb |
+| el inventario | `venire-latin` with *venir* | *in-venire* — **a list of what was found** |
+| habitual | `habere-latin` with *haber* | a habit is a thing you **hold** |
+| el plazo | `placere-latin` with *el placer* | *placitum*, **a thing agreed** |
+| admitir | `mittere-latin` with *meter*, *el permiso* | third word off one verb |
+| la guardia | `wardon-germanic` with *guardar* | Germanic *wardōn*, to watch over |
+| la ensalada | `sal-latin` with *la sal* | the **salted** thing |
+| aceptar | new slug `capere-latin` | but *capere* was already taught, in *el principio* |
+
+**`el inventario` and `habitual` are the two worth stopping on**, because they
+hide the commonest verbs in the language inside the dullest words in the
+chapter. An inventory is *in-venire*, a list of what was **come upon** — which
+is exactly what a stocktake produces: what is actually on the shelves, not
+what the records claim. And *habitual* is *habēre*, the **haber** of *he
+hablado*, worn down by centuries into an auxiliary so small it barely looks
+like a word. Set `he hablado` beside `habitual` and the two roads are visible
+in a single line.
+
+**`encargar` is the longest chain in the corpus so far**: *carrus* the cart →
+`el carrito` (444) → `el cargo`, a load put on a bill (456) → `encargar`, a
+**task loaded onto somebody** (457). Four chapters apart, one picture
+throughout — and it explains *encargarse de* and *el encargado* for free.
+
+## A choice the join key forced, and it should not have
+
+`habitual` descends from *habēre*. The Spanish track spells that etymon **two
+ways**: `habere` (on *hablaré*) and `habere-latin` (on *deber*, *he hablado*,
+*haber*). The cousins join is exact string equality, so picking one silently
+joins or splits the panel, and **nothing in CI catches the wrong choice**.
+
+I took `habere-latin`, the majority spelling, and the join is right. A census
+over the track's own `roots:` fields — stripping the language suffix and
+prefix, nothing else — finds **31 etymon cores spelled more than one way**, of
+which **29 are pure shape splits** (same language, different slug shape) and 2
+are cross-language pairs. A first pass said 36; that number came from a looser
+normaliser and is withdrawn.
+
+| etymon | spellings | what fails to join |
+|---|---|---|
+| stare | `stare`, `stare-latin`, `latin-stare` | *está* / *estar* / *estuve* — three ways |
+| sperare | `sperare`, `sperare-latin` | *espero viajar* / *esperar* |
+| caput | `caput-latin`, `latin-caput` | *acabar* / *la cabeza* |
+| bursa | `bursa-greek`, `bursa-latin` | ***el bolso* / *la bolsa*** |
+
+The **bursa** pair is the sharpest and is not an artefact of the census: Greek
+*byrsa* entered Latin as *bursa*, and **both** Spanish words descend from the
+Latin. Tagging one `-greek` and one `-latin` separates two words that are
+plainly cousins.
+
+**And the census undercounts**, which the security review found by catching an
+error of mine. `ES-C458-admitir` claimed to be the **third** corpus word off
+*mittere*, after *meter* and *el permiso*. It is the **fourth**: `ES-C405-permitir`
+has been teaching *mittere* since chapter 405. I missed it because that lesson
+carries the slug `permittere-latin` while the others carry `mittere-latin` — so
+a census keyed on the slug **cannot see the relationship at all**, and 31 is a
+floor rather than a count.
+
+`HL-C419` proposed a `check:root-slug-splits` guard for exactly this. It has
+stopped being a cleanup: four of this tranche's own candidates landed on split
+etymons, one of them made me miscount a family in a published lesson, and the
+next tranche will hit more.
+
+## Numbers
+
+| metric | before → after |
+|---|---|
+| A2 `objectiveFailed` | 23 → 18 |
+| A2 `missingObjectiveLexemes` | 68 → 54 |
+| mock 1 reading / listening passes | 21 / 15 → 21 / 18 |
+| mock 2 reading / listening passes | 19 / 22 → 19 / 24 |
+| curriculum graph lessons | 7376 → 7398 |
+| new lessons | 22 |
+| new headwords | 14 |
+
+**Neither reading count moved, and that is exactly right**: all five cleared
+rows are paper-2 rows. Mock 1 lost three listening rows and mock 2 lost two.
+Every delta is accounted for by a named row.
+
+## Verification
+
+`human-language-data` full suite; all thirteen `check:*` gates;
+`check-book-compile.sh spanish` under XeLaTeX with
+`scan_latex_log_warnings.py --baseline` afterwards.
+
+Digest attributed by **reconstruction**: `origin/main` was loaded in a clean
+`git worktree` and reproduced `4a741b89…` and 7376 byte for byte. The four new
+segments hold 7 + 5 + 5 + 5 = 22 lessons and the count moved by exactly 22.
+
+The pre-flight caught "using the course phrase" in a chapter about **menu
+courses** — where the word is entirely legitimate three lines earlier. That is
+the third instance of the standalone-book rule and the first where the offending
+phrase was about food.
+
+## Eight findings from the security review
+
+Security passed. The factual pass found eight, and **three are the same failure
+mode as the last two tranches: a lesson asserting something its own
+prerequisite contradicts.**
+
+- `ES-C456-ensalada` told the story that Roman soldiers were paid in salt.
+  `ES-C361-sal` — **a listed prerequisite of that very lesson** — says the tale
+  is "an eighteenth-century invention with no ancient source behind it".
+  *salārium* < *sal* is all that may be claimed, and now all that is.
+- `ES-C457-medicamento` argued that "healing was named after careful measuring",
+  citing a doctor measuring a dose. `ES-C394-medico`, also a prerequisite, names
+  that exact inference as circular and forbids it. Reduced to the cognacy claim.
+- `ES-R456-repaso-cuenta` said `aceptar` was the one word with no relative in
+  the reader's vocabulary. `ES-C348-principio` already teaches *capere*, inside
+  *princeps*, "the one who takes first place". Every word in the chapter had a
+  relative waiting.
+
+**The rule is the same one, for the third tranche running: before writing that
+the corpus has not said something, read the lesson that would have said it.**
+What is new is that all three falsifiers were *listed prerequisites* — the
+check is not "search the corpus", it is "read the files this lesson already
+names".
+
+Three more corrections of fact:
+
+- English **cargo** came straight from Spanish in the seventeenth century, not
+  through French. Only *charge* took the French road.
+- **la sierra** is Latin *serra* and is **not** in the *secare* family. The
+  saw-teeth picture of a mountain ridge is right; the etymology was not. It is
+  now explicitly marked as a look-alike kept outside the family.
+- `ES-C458-admitir` miscounted the *mittere* family (above).
+
+And two grammar over-reaches:
+
+- `ES-C456-agencia` generalised to "if a Spanish abstract noun does not end in
+  *-miento*, expect feminine". **Its own chapter teaches *el coste* and *el
+  cargo*.** Pulled back to the suffix-scoped claim, which is what
+  `ES-C453-limpieza` had already stated correctly.
+- `ES-C457-sintesis-guardia` called *fuera de ese horario* an instance of
+  *fuera de* + bare noun. It has a determiner. Now used to draw the contrast
+  instead: the fixed phrase takes nothing, the pointing one needs *ese*.
+
+## What this does not claim
+
+Five more exam items are now supported by the book's own vocabulary. No item
+has been graded against a reader. **Eighteen objective items still fail**, and
+until that reaches zero the A2 book cannot be said to prepare anybody to sit
+the paper.
+
+## Chapters 452-455 — the tie-break, used deliberately
+
+Seventeen headwords across four chapters, and a better rate than the tranche
+before it.
+
+```
+A2 objectiveFailed          31 -> 23
+A2 missingObjectiveLexemes  85 -> 68
+```
+
+Predicted from the audit before anything was wired and reproduced exactly.
+Six tranches, six exact predictions.
+
+| tranche | words | items cleared | words per item |
+|---|---|---|---|
+| 3b (444-447) | 19 | 19 | 1.00 |
+| 4a (448-451) | 22 | 9 | 2.44 |
+| **4b (452-455)** | **17** | **8** | **2.12** |
+
+## The improvement is not a better ranking
+
+There is no ranking left — only `explicar` appears in more than one failing
+row, and a greedy set cover over the remainder is flat. What 4b does is use
+the **tie-break** on purpose.
+
+When every word costs the same, the only lever is *which rows a scene happens
+to complete*. So this tranche goes after the **cheapest remaining rows** — seven
+two-word rows and one three-word row, which is why chapter 455 carries five
+headwords rather than four — grouped into four scenes, so **every chapter
+finishes exactly two rows on its own**:
+
+| chapter | scene | words | rows |
+|---|---|---|---|
+| 452 | the delivery round | almacén, la ruta, el seguimiento, cómodo | 2 |
+| 453 | the shift | limpieza, instalación, rotativo, consultar | 2 |
+| 454 | the closed road | la obra, la vía, el accidente, el servicio | 2 |
+| 455 | the room | pintar, dormitorio, claro, tender, meter | 2 |
+
+That is the whole method now: pick the cheapest rows, then find the scene that
+holds them. It will keep working until the cheap rows run out.
+
+## Thirteen of seventeen words landed on roots the track already carried
+
+The highest free-join rate of any tranche, and it was designed that way —
+candidates were checked against the corpus's own `roots:` fields before the
+scenes were fixed.
+
+| new word | joins | what becomes visible |
+|---|---|---|
+| la ruta | `rumpere-latin` with *romper*, *roto* | *via rupta* — a **broken** way |
+| el accidente | `cadere-latin` with *la ocasión* | one falls **upon** you, one falls **to** you |
+| tender | `tendere-latin` with *la tienda* | a shop is a **stretched** awning |
+| meter | `mittere-latin` with *el permiso* | *per-missus*, sent through |
+| la obra | `opus-latin` with *la oficina* | *opus* + *facere*, the place work is done |
+| la vía | `via-latin` with *todavía* | *toda vía* — **all the way** |
+| rotativo | `rota-latin` with *la rueda*, *alrededor* | third route out of one Latin noun |
+| cómodo | `modus-latin` with *el modo* | *com* + *modus*, "with measure" |
+| claro | `clarus` with *sí, claro* | the adjective behind the phrase |
+
+**`la ruta` is the one that pays best**, because chapter 448 taught *roto* four
+chapters earlier. A *ruta* is Latin *via rupta*, a **broken** way — a road
+forced through what stood in it. Latin dropped the *via* and kept the
+adjective, so a word meaning "broken" came to mean "route". A smashed plate
+and a mountain pass are the same word applied to two different obstacles, and
+English *rout* and *routine* are that participle again.
+
+**`todavía` is the sharpest.** It is among the commonest words in the language,
+the reader has used it for a hundred chapters, and *toda vía* — "all the way" —
+had a Roman road sitting inside it the whole time.
+
+## The fourth free chain, and the strongest
+
+`ES-C455-claro`. `ES-C272-si-claro` taught **sí, claro** early as a fixed way
+of agreeing *and* glossed it as Latin *clarus*, bright. What it never did was
+point the word at a colour or a room — and that is the part this chapter adds.
+Agreeing by saying "clear!" is how Spanish arrives at "of course".
+
+| what you already said | the word inside it |
+|---|---|
+| *interesante* | interesar |
+| *mira* | mirar |
+| *el punto* | apuntar |
+| ***sí, claro*** | **claro** |
+
+This is the strongest instance because *sí, claro* is among the first things
+anybody learns to say. The reader has had the adjective in their mouth since
+the first weeks and has never once used it of a wall, because agreeing with
+somebody asks nothing of the colour sense.
+
+## Two arcs close
+
+**The suffix arc**, stated as a set in chapter 453:
+
+| ending | example | gender |
+|---|---|---|
+| -anza | la mudanza (448) | feminine |
+| -miento | el seguimiento (452) | masculine |
+| -eza | la limpieza (453) | feminine |
+| -ción | la instalación (453) | feminine |
+
+Three feminine, one masculine. Which ending a verb takes is **not**
+predictable and no rule is waiting to be found; the gender always is, and that
+is most of what a reader needs.
+
+**The stressed-vowel arc**, closed in chapter 455 where it started.
+`ES-C36-dormir` introduced `ES-GRAMMAR-STEM-O-UE-06` for *duermo* in the first
+weeks of the book. *Dormitorio* keeps the plain **o** because the stress lands
+three syllables along — so one chapter now holds the noun (*rueda*), the
+conjugations (*muestro*, *tiendo*) and the original grammar atom together, and
+the reader can see that nothing was ever irregular. One vowel, one condition.
+
+## The finding worth keeping: a Latin word can arrive twice
+
+Chapter 453's real content. The same Latin word can reach Spanish **through
+speech** and **through books**, and the two arrivals look nothing alike:
+
+| worn down by speech | lifted from the page |
+|---|---|
+| la r**ue**da | r**o**tativo |
+| el cons**ejo** | cons**ultar** |
+
+The practical payoff is a **register clue readable straight off the spelling**:
+when a Spanish word looks *more* like its Latin or English cousin, it is the
+later, bookish arrival — and it will belong to forms, notices and writing
+rather than to the kitchen.
+
+## Numbers
+
+| metric | before → after |
+|---|---|
+| A2 `objectiveFailed` | 31 → 23 |
+| A2 `missingObjectiveLexemes` | 85 → 68 |
+| mock 1 reading / listening passes | 20 / 14 → 21 / 15 |
+| mock 2 reading / listening passes | 16 / 19 → 19 / 22 |
+| curriculum graph lessons | 7351 → 7376 |
+| new lessons | 25 |
+| new headwords | 17 |
+
+Every one of the eight pass-count deltas is accounted for by a named cleared
+row — mock 1 lost one reading row and one listening row, mock 2 lost three and
+three. That check is worth running: a pass count that rose *without* a cleared
+row to explain it would mean the audit had changed rather than the corpus.
+
+## Six findings from the security review, all in my prose
+
+The review passed on security and then, as last tranche, caught factual
+errors. Two were the same class as the one it caught before — **a claim about
+what the corpus has withheld, falsified by the corpus**:
+
+- `ES-C455-tender` said the reader had been buying things in a *stretched*
+  thing "without being told". `ES-C311-tienda` tells them exactly that, in its
+  own gloss. The chapter's real contribution is the **verb** the noun was
+  named from, and it now says so.
+- `ES-C455-claro` said "nobody told you that *claro* was an adjective".
+  `ES-C272-si-claro` glosses it as *clarus*, "bright, clear". Narrowed to what
+  is actually new: the colour sense, and pointing it at a room.
+
+The rule both violations break is the same one: **before writing that the
+corpus has not said something, read the lesson that would have said it.**
+
+Three etymological corrections:
+
+- *pintoresco* / *picturesque* come from Italian *pittoresco*, built on
+  *pittore*, "painter" — squarely the painting side. I had them arriving "by
+  way of the prick rather than the colour", which is wrong.
+- *pingere* meaning "embroider" was stated as an **earlier** sense than
+  "paint". It ran alongside it; the genuinely older layer is a word for
+  pricking or cutting a mark. Corrected, including the quiz answer that
+  repeated it.
+- `ES-C454-accidente` contrasted *ad-* "towards" with an *ocasión* that falls
+  "to" you. The prefix in *occāsiō* is *ob-*, "down, against" — which
+  `ES-C356-ocasion` states correctly. The mnemonic was dressed as a prefix
+  fact; it is now back to being a picture.
+
+And one variety problem: `recién` attaches only to participles **in Spain**.
+Much of Latin America uses it as a plain adverb of time — *recién llegué*,
+*recién ayer*. The lesson is tagged `variety: general`, so it now says both.
+
+## Verification
+
+`human-language-data` full suite; all thirteen `check:*` gates;
+`check-book-compile.sh spanish` under XeLaTeX with
+`scan_latex_log_warnings.py --baseline` afterwards.
+
+Digest attributed by **reconstruction**: `origin/main` was loaded in a clean
+`git worktree` and reproduced `37016337…` and 7351 byte for byte. The four new
+segments hold 6 + 6 + 6 + 7 = 25 lessons and the count moved by exactly 25.
+
+My pre-flight gained the standalone-book patterns this tranche, after catching
+"the whole course of your Spanish" in a draft. That phrase matches the gate's
+own regex and would have failed CI; it is the third time authored prose has
+tripped that rule, and the first time it was caught before pushing.
+
+## What this does not claim
+
+Eight more exam items are now supported by the book's own vocabulary. No item
+has been graded against a reader. **Twenty-three objective items still fail**,
+and until that reaches zero the A2 book cannot be said to prepare anybody to
+sit the paper.
+
+## Chapters 448-451 — the ranking runs out, and scenes replace it
+
+Twenty-two headwords across four chapters, chosen by situation rather than by
+rank, because ranking no longer discriminates.
+
+```
+A2 objectiveFailed          40 -> 31
+A2 missingObjectiveLexemes 107 -> 85
+```
+
+Both numbers were predicted from the audit before anything was wired and
+reproduced exactly by the generator. Five tranches, five exact predictions.
+
+| tranche | words | items cleared |
+|---|---|---|
+| 1 (431-436) | 30 | 5 |
+| 2 (437-439) | 15 | 9 |
+| 3a (440-443) | 20 | 20 |
+| 3b (444-447) | 19 | 19 |
+| **4a (448-451)** | **22** | **9** |
+
+## The falling yield is the finding, not a regression
+
+Tranches 1-2 ranked lexemes by how often they appeared across failing exam
+rows. That stopped discriminating when 145 of 146 remaining lexemes appeared in
+exactly one row. Tranche 3 then ranked by how close each row was to being
+unblocked and taught only words that were the sole survivor in their row — one
+word, one item, both halves. That rule took the failing count from 79 to 40 and
+left **two** solo blockers where there had been forty-one.
+
+There is no third rule, and this was measured rather than assumed. A greedy set
+cover over the forty remaining rows comes out **flat at roughly 2.7 words per
+item** all the way from five words to a hundred and seven, because only one
+lexeme — *explicar* — still appears in more than one row. The other hundred and
+six appear exactly once, so set cover degenerates into "teach them all" and
+every ordering costs the same.
+
+**That is the ranking having finished its job.** The cheap wins were taken in
+tranches 1-3, and what remains is a uniformly priced tail. So the grouping rule
+is now scene coherence, with a tie-break: among equally priced scenes, prefer
+the ones whose words happen to finish whole rows. Twenty-two words for nine
+items is 2.4 words per item, which is the flat rate the set cover predicted.
+
+## The two words that are left are not authoring work
+
+*explicar* and *problema* are the only remaining solo blockers, and both are
+**already headwords**. Their path segments name spine nodes that sit at B1, so a
+reader who has finished the A2 book has not met them.
+
+That is a mapping question, filed as `HL-C418`, and the shard's first version
+was wrong: it recommended re-levelling all three candidates. Reading
+`ES-C41-explicar` rather than its index entry showed that *explicar* requires
+atoms from three B1 lessons — *deber*, *así que*, *creer* — and **cannot move**
+without dragging the reasoning chain down with it. The correction is appended in
+place in the shard.
+
+## The four chapters
+
+| chapter | scene | words |
+|---|---|---|
+| 448 | a house move | mudarse, la mudanza, duro, estropear / estropeado, roto |
+| 449 | a bike workshop | arreglar, el freno, la rueda, el taladro, acercar |
+| 450 | the ground outside | el patio, la hierba, la piedra, el césped, el entrenamiento |
+| 451 | a service counter | la cola, apuntar, el carné, mostrar, el ticket, revisar |
+
+Chapter 451 carries six words rather than five because the counter scene
+finished three exam rows at once, and splitting it would have separated *el
+carné* from *el ticket*, which the chapter exists to contrast.
+
+Chapter 448 carries six lexemes in five lessons. `ES-C448-estropear` uses the
+slash headword **estropear / estropeado**, and the audit splits a headword on
+`/ `, so both are credited. That is the honest reading rather than a trick: the
+participle-adjective is the form on the lift door, and a lesson that teaches the
+verb without it would be teaching the rarer half.
+
+## Two pairs English cannot help you with
+
+**roto against estropeado** is chapter 448's spine. Both translate as "broken".
+*Roto* is *romper*'s participle and says the thing came apart; *estropeado* says
+it stopped working, whether or not anything came apart.
+
+| the situation | the word |
+|---|---|
+| lift stuck between floors | estropeado |
+| window with a hole in it | roto |
+| milk that has gone off | estropeado |
+
+The milk is the case that earns the chapter. Nothing in a carton can come apart,
+so *roto* is not available — and English offers no guidance at all, since it
+would say neither "broken milk" nor "out-of-order milk".
+
+**hierba against césped** is chapter 450's, and it fails in the harder
+direction: English "grass" is wide enough to cover both, so nothing in the
+reader's own language warns that a choice is waiting. *Hierba* is the plant;
+*césped* is the maintained surface. Grass between paving stones is *hierba* and
+could not be *césped*; a mown lawn is *césped* though it is made of *hierba*.
+The chapter's payoff notice uses each once, four lines apart, and
+*se está replantando* confirms the sort — you replant the living thing, then mow
+it into a surface.
+
+*patio* against *jardín* fails the same way, and for the same reason.
+
+## Three root slugs the track already carried
+
+The chapters were built to land on slugs already in the corpus, so the cousin
+panels join rather than start over.
+
+| new word | joins | what becomes visible |
+|---|---|---|
+| la rueda | `rota-latin` with *alrededor* | *retro* bent sideways by the wheel |
+| arreglar | `regula-latin` with *regular* | a-rregl-ar is back to the straight edge |
+| revisar | `latin-videre` with *ver*, *el aviso* | three words, one Latin verb, three depths |
+| el entrenamiento | `train-french` with *el tren* | *entraîner*, to drag along behind you |
+| estropear | `turpis-latin` with *torpe* | one Latin word for "shameful", two landings |
+| apuntar | `pungere-latin` with *el punto* | every sense is putting a point on something |
+| acercar | `circa-latin` with *cerca*, *acercarse* | the transitive twin |
+| duro | `durare` with *durante* | what resists is what lasts |
+
+*estropear* is the one worth dwelling on. It reaches Spanish through Italian
+*stroppiare* from Latin **turpis**, shameful — so it is a cousin of *torpe*,
+introduced one chapter earlier. The same Latin word landed as "wreck a thing" in
+one branch and as the near-apology you make over a spilled glass in the other.
+Chapter 447 asserted that a root tells you where a word came from and never how
+hard it lands today; chapter 448 demonstrates it.
+
+*revisar* is the cheapest of the eight. *Ver* is *videre* worn down to two
+letters and *el aviso* hides it in the middle, so neither looks like Latin until
+the third member arrives and makes the family visible.
+
+`alrededor` is the one that needed care rather than enthusiasm. The join to
+`rota-latin` is real — `ES-C347-alrededor` carries that slug — but that lesson
+is precise about it: *rededor* is Latin *retrō*, backwards, **pulled sideways
+by** *rota*. A first draft of `ES-C449-rueda` flattened this to "*rededor*
+traces back to the same *rota*", which is both wrong and a contradiction of a
+lesson the reader met a hundred chapters earlier. The security review caught
+it. **A cousin slug licenses the join, not the sentence**: sharing a root slug
+says two words touch the same etymon somewhere, never that one descends from
+it cleanly.
+
+## One deliberate empty root list
+
+`ES-C450-patio` carries `roots: []`, and the lesson says why in its own text.
+The origin is genuinely unsettled: Occitan *pati* by way of Latin *pactum* is
+the best-supported account, Latin *patere* fits the meaning better and the sound
+worse, and neither has settled it.
+
+**An empty root list in this material is a claim, not a gap.** It asserts that
+nobody has resolved the etymology, and the value of asserting it is that a
+listed root can then be trusted. Three empty lists were filled in during the
+previous tranche precisely because nobody had looked; this one stays empty
+because somebody did.
+
+## One sound change, seen from four angles
+
+Three of chapter 450's words and two of chapter 449's are the same Latin vowel
+break caught at different moments, and the chapters are sequenced to make that
+visible rather than to assert it.
+
+| Latin | Spanish | what broke |
+|---|---|---|
+| rota | la r**ue**da | stressed o |
+| petra | la p**ie**dra | stressed e |
+| herba | la h**ie**rba | stressed e |
+
+The condition is stress and nothing else: *rueda* has the diphthong and
+*rodamos* does not, *piedra* has it and *petrificar* does not, and
+*entrenamiento* keeps its plain **e** because the stress lands three syllables
+later. `ES-C451-mostrar` then shows the same break inside a conjugation —
+*muestro* against *mostramos* — so a reader meets it once in a noun and once in
+a verb and can see that most of what looks irregular in Spanish verbs is one
+vowel obeying one condition.
+
+## Numbers
+
+| metric | before → after |
+|---|---|
+| A2 `objectiveFailed` | 40 → 31 |
+| A2 `missingObjectiveLexemes` | 107 → 85 |
+| mock 1 reading / listening passes | 19 / 14 → 20 / 14 |
+| mock 2 reading / listening passes | 13 / 14 → 16 / 19 |
+| curriculum graph lessons | 7322 → 7351 |
+| new lessons | 29 |
+| new headwords | 22 |
+
+The per-mock split moves unevenly because a tranche clears whole rows rather
+than a fixed share of each paper. Of the nine rows cleared, five were in mock
+2's listening paper and three in its reading paper; mock 1 lost one.
+
+## Verification
+
+`human-language-data` full suite (2204 passed); all thirteen `check:*` gates;
+`check-book-compile.sh spanish` under XeLaTeX, followed by
+`scan_latex_log_warnings.py` **with** `--baseline` — the flag whose omission let
+an underfull box through in an earlier tranche, because an unseeded scan exits
+zero having compared nothing.
+
+The curriculum digest was attributed by **reconstruction**: `origin/main` was
+loaded in a clean `git worktree` and reproduced the previous digest and count
+byte for byte, so nothing outside the four new path segments moved. Those
+segments hold 7 + 7 + 7 + 8 = 29 lessons, and the corpus-wide count moved by
+exactly 29.
+
+## What this does not claim
+
+Nine more exam items are now supported by the book's own vocabulary. No item has
+been graded against a reader. **Thirty-one objective items still fail**, and
+until that reaches zero the A2 book cannot be said to prepare anybody to sit the
+paper.
+
+## Chapters 444-447 — tranche 3 completed, and the limit of etymology
+
+Nineteen headwords, and the rule that replaced the exhausted one holds for a
+second half.
+
+```
+A2 objectiveFailed          59 -> 40
+A2 missingObjectiveLexemes 126 -> 107
+```
+
+Nineteen words, nineteen items. Both numbers were predicted from the audit
+before anything was wired and reproduced exactly. The four tranches now read:
+
+| tranche | words | items cleared |
+|---|---|---|
+| 1 (431-436) | 30 | 5 |
+| 2 (437-439) | 15 | 9 |
+| 3a (440-443) | 20 | 20 |
+| 3b (444-447) | 19 | 19 |
+
+The break between the second row and the third is the selection rule changing
+from *how often a lexeme appears* to *how close its item is to being unblocked*.
+
+### The four chapters
+
+**444 La casa por fuera** sets three things a word can do on its way into
+Spanish side by side. **madera** arrived **twice** — *materia* is the learned
+twin, the tranche's third doublet after *nadar*/*natación* and *hacer*/*factura*
+— and *māteria* meant **timber** before it meant matter, from *māter*, the
+mothering trunk that puts out branches. So the abstract sense came second:
+matter was named after wood. **planta** arrived **once and spread**: sole of the
+foot, then the cutting pressed in by the heel, then the floor plan you stand on,
+and English *plan* is the same word again. **carrito** is neither — *carro* came
+in, and Spanish grew **-ito** on it centuries later.
+
+**cubierto** is a third irregular participle, joining *abierto* and answering
+*cerrado*. They break together **because they rhyme** in *-brir*, so the
+irregulars come in small families and one member gives you the rest. It also
+supplies the clean counterexample to *disfrutar*: **des-** in *descubrir* really
+does reverse — cover, un-cover, discover — where *dis-* did not. Same shape, two
+behaviours.
+
+**445 El puesto** shows that a root you own predicts how a new word *behaves*.
+**responsabilidad** shares *spondēre* with **el esposo** — a spouse is the one
+promised, and to be *responsable* is to be able to promise back. **repetir**
+shares *petere* with **el pedido**, and that one pays mechanically: *pedir* goes
+*pido/pides/pide* and *repetir* goes *repito/repites/repite*, the same **e→i**
+break, because they are one Latin verb with and without a prefix. Nobody has to
+teach the conjugation separately.
+
+**446 Mirar y moverse** teaches five words of which **not one was learned from
+nothing** — *mirar* from *mira*, *acompañar* from *compañero*, *directo* from
+*recto*, *partido* from *la parte*. **mira** is the sharpest: the corpus taught
+it only as a discourse marker, so the reader has been giving an imperative for
+chapters without being told which verb it came from. That is the third free
+chain of its kind, after *interesante* → *interesar* and *el concierto* →
+*concertar*.
+
+**447 Juzgar** closes the tranche with the honest counterweight to eight chapters
+of etymology paying off. *análisis* (loosening the knots apart) and *urgencia*
+(something pressing on you) behave as their roots suggest. **torpe does not**:
+*turpis* meant **shameful**, a heavy accusation, and *torpe* is now what you call
+yourself after knocking a glass over — nearly an apology.
+
+> A root tells you where a word came from and never how hard it lands today.
+
+Meanings soften, and they harden. Etymology guides shape, not tone.
+
+### Two register distinctions, and two pressures
+
+**ver** is the eyes receiving and **mirar** is the eyes aimed: *veo el mar*
+whether or not I meant to, *miro el mar* on purpose. **mover** is something you
+could push with your hands; **trasladar** is an address changing. Both are
+register rather than grammar, and getting them backwards is the kind of mistake
+that is understood and still sounds wrong.
+
+**la prisa** carries *premere* and **la urgencia** is *urgēre* — two Latin words
+for pressing, running opposite ways. *Tengo prisa* puts it on you; *es urgente*
+puts it on the matter. You can have *prisa* about something not *urgente* at all.
+
+### Grammar that pays beyond its chapter
+
+**-ito**'s first job is not size: *momentito* is not a shorter moment, it softens
+the request. A noun ending in unstressed **-is** is invariable in the plural —
+*el/los análisis* — because a word already ending in *s* without final stress
+takes no plural ending; contrast *los exámenes*, which changes **and** gains an
+accent to hold the stress. And every **-mente** adverb is a fossil of *mentem*,
+feminine because *mens* was, which is why it is *rápidamente* and never
+*rápidomente*.
+
+### A third empty `roots:` corrected
+
+`ES-C435-jubilado` carried `roots: []`, but *jubilar* < *iubilāre* is not
+unsettled — and the verb means **to shout for joy**, so *el jubilado* is
+underneath *the one who has been cheered off*. It now carries `iubilare-latin`
+and joins *jubilarse*. That is three found by this rule (*prestar*, *dolor*,
+*jubilado*); all three were empty because nobody had looked, not because the
+origin was unknown.
+
+## Chapters 440-443 — the selection rule that replaces the exhausted one
+
+Twenty headwords, and for the first time **the item count moved as far as the
+word count**.
+
+```
+A2 objectiveFailed          79 -> 59
+A2 missingObjectiveLexemes 146 -> 126
+```
+
+Twenty words, twenty items cleared. The two tranches before this one bought 5
+items with 30 words and 9 items with 15. The difference is not effort; it is the
+ranking.
+
+### Why the old rule stopped working, and what replaced it
+
+Tranches 1-2 taught the lexemes appearing in **two or more** failing items, on
+the reasoning that each buys down more items per word. After 45 headwords that
+rule was spent: **145 of the 146 lexemes still missing appeared in exactly one
+item**, and the single exception was already taught above the A2 ceiling. Ranking
+by frequency had become ranking by nothing.
+
+The replacement comes from the pass condition. An item is red until **every**
+lexeme in its row is taught, so what matters is not how often a word appears but
+**how close its item already is to being unblocked**:
+
+| shape of the failing row | items |
+|---|---|
+| blocked by exactly ONE missing word | 41 of 79 |
+| blocked by exactly TWO | 16 |
+| three or more | 22 |
+
+Thirty-nine of the 41 were teachable, and each clears a whole item by itself.
+These four chapters take twenty of them. The movement was predicted from the
+audit before anything was wired, and the generator reproduced **59 and 126
+exactly**.
+
+### The four chapters
+
+**440 La fiesta** adds a third way a word hides its pieces. *boda* is a Latin
+**neuter plural** — *vōta*, the vows — read as a feminine singular once Spanish
+lost the neuter, the same move that gave *la hoja* from *folia*. The pieces are
+invisible from modern Spanish alone. *cumpleaños* is a whole phrase fused, and
+recoverable: say it slowly and *cumple* and *años* come apart in your mouth.
+
+Then *disfrutar* **corrects chapter 438 rather than repeating it**. 438 taught a
+piece-test: take the piece off and see whether the rest stands. *dis-* comes off
+*frutar* cleanly, so the join is real — and it does not mean what *des-* means in
+*descansar*. The test tells you **whether** there is a join. It never tells you
+what the join means.
+
+**441 El contrato** finds that paperwork is a set of physical acts. *contrato*
+pulls the two sides together (*trahere*), *firmar* makes the result solid
+(*firmus*), *fijo* drives it in (*fīgere*). Draw, harden, fasten. *fijo* answers
+439's *cerrado*: one is a participle you still feel as one, the other finished
+becoming a plain adjective centuries ago — and *fijar* was built backwards from
+it.
+
+**442 La gestión** is the institution half of A2 reading, and two of its words
+were already half-owned. *ES-C413-concierto* carries `concertare-latin`, so
+**concertar una cita and un concierto are the same word**: *con-* plus *certāre*,
+to fight it out, with the sense sliding from contending against to striving
+together. And *administración* takes the existing `magis-minus-latin`, because
+*minister* is built on *minus* — the lesser one, who serves — against *magister*
+on *magis*, behind *el maestro*. The learner already owns half that pair outright
+in **menos**.
+
+*pantalla* does not come apart and its origin is unsettled, so the chapter
+teaches the other route: follow the **meanings**. A shade in front of a flame,
+then a projector, then a lit device. One idea moved three times.
+
+**443 El ánimo** teaches no new grammar, and that is the design. Five words are
+handed to two machines the reader already owns — the thing-is-the-subject machine
+from *gustar* (*me duele la cabeza*, where the verb agrees with the head) and the
+reflexive from *equivocarse*. The fifth verb on a pattern costs almost nothing
+where the first cost a lesson.
+
+Its pivot, **arrepentirse**, is the sharpest trap in the tranche. It looks like
+*a-* + *re-* + *sentir* and is *a-* + *re-* + *paenitēre*, **and it conjugates
+like *sentir* too** — *me arrepiento*, *nos arrepentimos*. The form misleads and
+the behaviour agrees with the form, both by accident of shape. Harder than 438's
+*reír*, where taking the prefix off left nothing: here it leaves *pentir*, which
+stands on nothing, and the only reason to think otherwise is the resemblance. A
+resemblance is not evidence.
+
+### Two `roots: []` corrected
+
+`ES-C436-prestar` and `ES-C286-dolor` both carried an empty roots list, but
+neither origin is unsettled — *dolor*'s own etymology hook already named
+*dolēre*. They now carry `praestare-latin` and `dolere-latin`, joining
+*el préstamo* and *doler*. **An empty roots list has to mean "genuinely
+unrecoverable"** — which is what *andén*, *tirar* and *pantalla* carry — or the
+marker stops carrying information.
+
+### What the gates caught
+
+Twelve standalone-book offenders, all the phrase *"the course"* or *"this
+course"*. Some were genuine self-reference; the rest were the English gloss of
+*el curso*, which reads in a printed volume as a pointer to the book the reader
+is holding. The examples now use *la clase*.
+
+## Chapters 431-439 — the A2 vocabulary tranches, and the wordlist the exam chose
+
+Nine chapters, **forty-five headwords**, and none of them picked by theme. The
+A2 book-bounded audit names the lexemes the two DELE A2 mock papers need and the
+corpus does not teach; the list is the wordlist, and the audit number is the
+progress metric.
+
+```
+A2 objectiveFailed          93 -> 88 -> 79
+A2 missingObjectiveLexemes 191 -> 161 -> 146
+```
+
+Spanish now teaches **872 distinct headwords at or below A2**, against the
+1,200 the level asks for, and remains at **attained A1** — the tranches added
+vocabulary without regressing any coverage criterion.
+
+Both drops are exact: thirty headwords removed thirty lexemes, then fifteen
+removed fifteen. That arithmetic is the evidence. A word the corpus already
+taught under another name would have made the drop smaller, so a clean
+subtraction proves every word was genuinely absent.
+
+**Choosing by theme was tried first and discarded.** Thirty-five thematic
+candidates were drafted and **twenty-seven of them were already taught** — 77%
+waste, because at eight hundred headwords the obvious concrete domains are
+saturated. Deriving the list from the audit wastes nothing, and it is the only
+selection rule here that does not depend on anyone's judgement.
+
+### The chapters carry a morphology spine, not a wordlist
+
+| ch | what it adds | the word that does **not** come apart |
+|---|---|---|
+| 431-435 | -dor, -ería, -ero, -ción, -encia | sofá, garaje, batería, currículum |
+| 436-437 | the reflexive that marks what befalls you | grupo |
+| 438 | the prefix test | **reír** |
+| 439 | three signs English calls "closed" | **andén**, **tirar** |
+
+**438 is the mirror of 434.** *batería* wears an **ending** it never earned,
+because the derivation happened in French and the pieces never entered Spanish.
+*reír* wears a **prefix** it never had: it looks like *re-* plus *ír* and is
+neither — the whole word is Latin *rīdēre*, and the accent on the **í** is
+physical evidence of the **d** that fell out between the vowels. The test the
+chapter teaches is one second long: take the piece off and see whether the rest
+of the word still stands. *poli-* comes off *deportivo* and it stands. *des-*
+comes off *cansar* and it stands. *re-* comes off *reír* and nothing is left.
+
+**438 also adds a doublet.** *natāre* reached Spanish twice — worn down into
+**nadar** by a thousand years of mouths, and lifted off the page intact as
+**la natación** centuries later. Both are alive, and the learned twin is the one
+on the timetable.
+
+**439 separates three signs English collapses into one word.** *CERRADO* is shut
+for now and will reopen. *CORTADA* means the route is severed, so go round.
+*TRASLADADO* means it is open somewhere else and there is an address underneath.
+Reading the wrong one costs a learner an afternoon on a pavement. The chapter
+closes with *TIRAR* on a glass door, which means **pull**, not throw, and
+catches every English speaker exactly once.
+
+### It also teaches where etymology stops
+
+**el andén** and **tirar** carry `roots: []` because their origin is genuinely
+unsettled — the walking-verb guess for *andén* does not survive the endings, and
+*tirar*'s Germanic and onomatopoeic proposals are both unagreed. The lessons say
+so. Every other word in these nine chapters comes apart; two do not, and any
+book that produces an etymology for every word is inventing some of them.
+
+### Two findings the gates produced
+
+**Adding vocabulary can LOWER a track's attained level.** Tranche 1 dropped
+Spanish from attained **A1 to pre-A1** on the `reinforcement` criterion: two
+atoms were revisited fewer than twice, because a payoff built around one
+realistic scenario typically reaches four of five words and nothing warns you.
+The five-words-plus-repaso-plus-payoff template does not guarantee two revisits.
+Both were given a genuine second outing rather than padded metadata. Tranche 2
+was built with the revisit count verified **before** wiring, and every atom in
+437-439 has two or three.
+
+**A level is derived from the spine node, never authored.** An earlier note in
+these chapter shards claimed the extension's `stage` decides what level a lesson
+counts at. It does not, and the note has been corrected. `SPINE-READ-SIGNS-AND-NOTICES`
+is `stage: A1`, so these chapters are A1 regardless of their `stage: A2`. They
+still count toward the A2 audit, because `lessonsUpToLevel("A2")` includes
+everything at or below A2. Filed as `HL-C417`, which proposes an A2 TEXT-strand
+node to move them to.
+
+### The one high-value word deliberately not taught
+
+**explicar** now carries three failing items, more than anything else left — and
+it is **already a headword**, in `ES-C41-explicar`, whose path segment names
+`SPINE-GIVE-REASONS` at **B1**. The audit is book-bounded, so a reader who has
+finished the A2 book genuinely has not met it; teaching it again would be
+duplication that moved the number for the wrong reason. Same for *creer* and
+*problema*. Filed as `HL-C418`.
+
 ## Chapter 418 — connected composition, and the full writing ramp
 
 One lesson, and Spanish becomes the **first track in the corpus to prove every

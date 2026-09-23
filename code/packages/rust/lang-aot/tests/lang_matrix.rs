@@ -1276,6 +1276,254 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("42"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
     },
+    // ───────────────────────────────────────────────────────────────────────
+    // MacroOct — Oct, plus a preprocessor, and nothing else (PREP01 slice 1).
+    // ───────────────────────────────────────────────────────────────────────
+    //
+    // These rows are unlike every other block in this file, and the difference
+    // is the point. Each one is **not** proving a new language feature: it is
+    // proving that a preprocessed program is the SAME program. A preprocessor
+    // runs before the parser, so by the time IIR exists there is nothing left
+    // of it to know — no backend learned anything, no lowering pass changed,
+    // and `macrooct-iir-compiler` hands Oct's own untouched `compile_ast` a
+    // pure Oct token stream.
+    //
+    // That claim is checked directly rather than inferred from the output:
+    // `macrooct_rows_lower_to_iir_identical_to_hand_expanded_oct` pairs every
+    // row below with the Oct source a human would write to mean the same
+    // thing, compiles both, and asserts the two IIR modules match. The eight
+    // backend cells then answer the *other* question — that the selected
+    // program really runs everywhere — and together they are much stronger
+    // than either alone.
+    //
+    // Note the physical newlines (`\n`) instead of this file's usual trailing
+    // backslash continuations. That is required, not stylistic: a backslash
+    // continuation in a Rust string literal strips the newline, which would
+    // put the whole program on one source line — and the preprocessor is
+    // line-oriented, so every directive would swallow the code after it.
+    //
+    // No `@include` row. `compile_source_to_iir` takes a source *string*,
+    // which has no directory for a relative include to resolve against, so
+    // includes are unreachable through this harness by construction. They are
+    // covered where the filesystem is: `source-preprocessor`'s own engine and
+    // `RootedFs` tests, and `macrooct-iir-compiler`'s `iir_identity.rs`, which
+    // runs five include shapes through the same identical-IIR oracle.
+
+    // MacroOct — `@if`/`@else`/`@end`, TAKEN branch. Prints 42; the untaken
+    // branch prints 7, so a preprocessor that emitted both (or the wrong one)
+    // is immediately visible in stdout rather than needing IIR inspection.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 1\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — the same program with the condition flipped, so the `@else`
+    // branch is the one that survives. The pair matters: a preprocessor that
+    // always kept the first branch would pass the row above and fail here.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 0\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        expect: Expect::Stdout("7"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — a real comparison in the controlling expression, the shape
+    // PREP01's own worked example uses (`@if LED_PORT == 1`). The dialect's
+    // evaluator has to agree with Oct's own precedence here or a program
+    // selects the branch its author read as the other one.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 1 == 1\nfn main() { out(1, 200); }\n@else\nfn main() { out(0, 200); }\n@end\n",
+        expect: Expect::Stdout("200"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — `&&` and `!=` in one condition. Proves the conditional
+    // evaluator's precedence layering end to end: `1 == 1 && 2 != 3` must
+    // group as `(1 == 1) && (2 != 3)`, not `1 == (1 && 2) != 3`.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 1 == 1 && 2 != 3\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — an undefined name is 0, which is C's rule too. Printing 42
+    // (the `LED_PORT == 0` branch) is the observable proof.
+    //
+    // This row is the NEGATIVE control for VM-068: a name that no macro
+    // defines must still read as 0 after expansion runs. Its partner below
+    // is the positive one.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if LED_PORT == 0\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — VM-068, the POSITIVE control: a DEFINED name drives the
+    // branch. Printing 42 requires `LED_PORT` to have been macro-expanded
+    // to `1` before the condition was evaluated.
+    //
+    // Found broken during slice 2 and fixed in the engine. Before the fix a
+    // defined name still read as 0, so this program took the `@else` branch
+    // and printed 7 — it compiled, and compiled to the wrong thing. PREP01
+    // §7's own worked example is this exact shape, so the spec's canonical
+    // illustration was silently wrong until the fix.
+    //
+    // The two rows together are what make this checkable: either alone can
+    // be satisfied by a broken implementation (always-0 passes the first,
+    // always-truthy passes the second).
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@define LED_PORT 1
+@if LED_PORT == 1
+fn main() { out(1, 42); }
+@else
+fn main() { out(1, 7); }
+@end
+",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — NESTED conditionals: the inner `@else` inside a taken outer
+    // group. The engine tracks nesting on an explicit stack, and a group
+    // inside a skipped group is never even evaluated — so a nesting bug would
+    // most likely surface as the wrong branch here rather than as a crash.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 1\n@if 0\nfn main() { out(1, 7); }\n@else\nfn main() { out(1, 42); }\n@end\n@end\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — a group with no `@else`, dropping a whole FUNCTION. If the
+    // skipped `fn unused` survived, Oct would still compile it and `main`
+    // would still print 42 — so this row is paired with the IIR-identity
+    // oracle, where a leaked function shows up as an extra `IIRFunction` even
+    // though stdout looks right. A row whose stdout cannot distinguish the bug
+    // is exactly why the identity test exists.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 0\nfn unused() -> u8 { return 7; }\n@end\nfn main() { out(1, 42); }\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — directives wrapped around Oct's u8 WRAP (`200 + 100` = 44,
+    // LANG-FULL O2). Deliberately a semantic behaviour the preprocessor knows
+    // nothing about: if preprocessing perturbed the token stream at all — a
+    // dropped token, a shifted type hint — the wrap is where it would show,
+    // because an unmasked add prints 300 rather than 44.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 1\nfn main() { out(1, 200 + 100); }\n@end\n",
+        expect: Expect::Stdout("44"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — a multi-function program selected as a unit, with a `static`
+    // module global, a call across functions, and a `while` loop inside the
+    // taken branch. The longest MacroOct row, and the one that proves a
+    // conditional can wrap real structure rather than a one-liner: 250 + 10×3
+    // wraps to 24.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "static counter: u8 = 250;\n@if 1\nfn bump() { counter = counter + 10; }\n@end\n\
+fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }\n",
+        expect: Expect::Stdout("24"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+
+    // ── PREP01 slice 2: `@define` ──────────────────────────────────────────
+    //
+    // The rows above only ever asked the preprocessor to DELETE text. These
+    // ask it to synthesise text: every token below that Oct's parser sees came
+    // out of `macros::expand`, assembled from a macro body and a set of
+    // arguments. The failure modes are correspondingly different — a
+    // conditional bug drops a branch and is loud, while an expansion bug
+    // produces a program that still compiles and prints something plausible.
+    //
+    // So each row's *expected stdout* is chosen to be a value the unexpanded
+    // or mis-expanded program could not produce, and each is additionally
+    // paired in MACROOCT_EXPANSIONS with the textual hand-expansion a reader
+    // would perform (`21 + 21`, never `42`) so the identity oracle cannot be
+    // satisfied by a backend that folds constants.
+
+    // MacroOct — object-like `@define`, the shape PREP01's own worked example
+    // uses (`@define LED_PORT 1` / `out(LED_PORT, 200)`). Two macros, both
+    // used, one in each argument position, so a substitution that fired only
+    // in the first would print to the wrong port and produce no stdout at all.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@define LED_PORT 1\n@define LEVEL 200\nfn main() { out(LED_PORT, LEVEL); }\n",
+        expect: Expect::Stdout("200"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — function-like `@define` with one parameter used TWICE in the
+    // body. Substitution is per-occurrence: an expander that substituted once
+    // and reused would print 21, and one that dropped the argument would not
+    // compile at all.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@define DOUBLE(x) x + x\nfn main() { out(1, DOUBLE(21)); }\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — two parameters, with a macro invocation INSIDE one of the
+    // arguments. That is argument pre-expansion, the half of Prosser's
+    // algorithm that changes observable output rather than merely terminating:
+    // `ONE` must be expanded before it is substituted into `ADD`'s body, or
+    // `ONE` reaches Oct's parser as an undefined name.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@define ONE 1\n@define ADD(a, b) a + b\nfn main() { out(1, ADD(41, ONE)); }\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — the two termination cases in one program, over Oct's u8 wrap.
+    //
+    //   `@define counter counter`  SELF-REFERENTIAL. A naive expander loops
+    //                              here forever; the hide sets expand it once
+    //                              and leave the Oct global standing.
+    //   `bump` used bare           a function-like name NOT followed by `(` is
+    //                              not an invocation, so `static bump` … would
+    //                              be untouched. (Here `bump(counter)` IS a
+    //                              call, and `counter` inside it is the
+    //                              self-referential macro being pre-expanded.)
+    //
+    // 250 + 10 wraps to 4, so a wrap that went missing prints 260 and a macro
+    // that failed to expand does not compile.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@define counter counter\n@define bump(x) x + 10\nstatic counter: u8 = 250;\n\
+fn main() { counter = bump(counter); out(1, counter); }\n",
+        expect: Expect::Stdout("4"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+    // MacroOct — `@define` inside a conditional, which is where the two
+    // features meet. The engine must treat a definition in a SKIPPED group as
+    // inert: if it did not, `VALUE` would be 7 here, because the skipped
+    // definition comes second and the last one wins. `@if 0` is where hostile
+    // input hides, so a directive that acted inside one is the worst possible
+    // leak — and stdout distinguishes the two answers directly.
+    Prog {
+        lang: Language::MacroOct,
+        ext: "macrooct",
+        src: "@if 1\n@define VALUE 42\n@else\n@define VALUE 7\n@end\n\
+fn main() { out(1, VALUE); }\n",
+        expect: Expect::Stdout("42"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit, Beam],
+    },
+
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {
         lang: Language::Algol60,
@@ -2954,6 +3202,15 @@ const PROGRAMS: &[Prog] = &[
         lang: Language::Algol60,
         ext: "alg",
         src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := false; for i := i + 1 while i <= n do begin n := n - delta; delta := if choose then n else n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
+        expect: Expect::Stdout("3.251.50.25"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
+    // ALGOL 60 — an unchanged exact ordinary local may select statement
+    // branches containing the writes in a cross-assigned recurrence cycle.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin integer i, n, delta; boolean choose; i := 0; n := 4; delta := 2; choose := false; for i := i + 1 while i <= n do begin n := n - delta; if choose then delta := n else delta := n - 1 end; print(i + 0.25); print(n + 0.5); print(delta + 0.25) end",
         expect: Expect::Stdout("3.251.50.25"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
@@ -9766,6 +10023,15 @@ fn feature_coverage_doc_counts_match_programs_source() {
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 51, 408),
         (Language::Oct, 12, 96),
+        // MacroOct: 9 rows at PREP01 slice 1 (`@include`/`@if`/`@else`/`@end`),
+        // plus slice 2's five `@define` rows — object-like, function-like with
+        // an argument used twice, argument pre-expansion, the self-referential
+        // and bare-function-like-name termination pair, and a definition inside
+        // a conditional. Oct's own tuple above is deliberately unchanged, in
+        // both slices: PREP01 holds Oct fixed as the reference MacroOct is
+        // checked against, so a slice that moved it would have invalidated its
+        // own oracle.
+        (Language::MacroOct, 15, 120),
         (Language::FlowMatic, 8, 64),
         (Language::Cobol60, 59, 472),
     ];
@@ -9794,6 +10060,237 @@ fn feature_coverage_doc_counts_match_programs_source() {
              LANG-VM-FEATURE-COVERAGE.md"
         );
     }
+}
+
+/// Every MacroOct row above, paired with the Oct source a human would write to
+/// mean the same thing.
+///
+/// Hand-expanded by a reader, never generated by the preprocessor. If the
+/// right-hand side were produced by the code under test, the oracle below
+/// would be comparing the implementation against itself and could not fail.
+const MACROOCT_EXPANSIONS: &[(&str, &str)] = &[
+    // VM-068's positive control: the defined name must reach the condition.
+    // Its twin is the taken branch, so a regression that stopped expanding
+    // conditions would produce `out(1, 7)` and fail identity here as well as
+    // on the eight backends.
+    (
+        "@define LED_PORT 1
+@if LED_PORT == 1
+fn main() { out(1, 42); }
+@else
+fn main() { out(1, 7); }
+@end
+",
+        "fn main() { out(1, 42); }
+",
+    ),
+    (
+        "@if 1\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        "fn main() { out(1, 42); }\n",
+    ),
+    (
+        "@if 0\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        "fn main() { out(1, 7); }\n",
+    ),
+    (
+        "@if 1 == 1\nfn main() { out(1, 200); }\n@else\nfn main() { out(0, 200); }\n@end\n",
+        "fn main() { out(1, 200); }\n",
+    ),
+    (
+        "@if 1 == 1 && 2 != 3\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        "fn main() { out(1, 42); }\n",
+    ),
+    (
+        "@if LED_PORT == 0\nfn main() { out(1, 42); }\n@else\nfn main() { out(1, 7); }\n@end\n",
+        "fn main() { out(1, 42); }\n",
+    ),
+    (
+        "@if 1\n@if 0\nfn main() { out(1, 7); }\n@else\nfn main() { out(1, 42); }\n@end\n@end\n",
+        "fn main() { out(1, 42); }\n",
+    ),
+    (
+        "@if 0\nfn unused() -> u8 { return 7; }\n@end\nfn main() { out(1, 42); }\n",
+        "fn main() { out(1, 42); }\n",
+    ),
+    (
+        "@if 1\nfn main() { out(1, 200 + 100); }\n@end\n",
+        "fn main() { out(1, 200 + 100); }\n",
+    ),
+    (
+        "static counter: u8 = 250;\n@if 1\nfn bump() { counter = counter + 10; }\n@end\n\
+fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }\n",
+        "static counter: u8 = 250;\nfn bump() { counter = counter + 10; }\n\
+fn main() { let i: u8 = 0; while i < 3 { bump(); i = i + 1; } out(1, counter); }\n",
+    ),
+
+    // PREP01 slice 2 — `@define`. Each right-hand side is the TEXTUAL
+    // expansion, deliberately: writing `42` where the expansion is `21 + 21`
+    // would let a constant-folding frontend satisfy the oracle no matter what
+    // the macro expander did, which is the one way this comparison could be
+    // made vacuous.
+    (
+        "@define LED_PORT 1\n@define LEVEL 200\nfn main() { out(LED_PORT, LEVEL); }\n",
+        "fn main() { out(1, 200); }\n",
+    ),
+    (
+        "@define DOUBLE(x) x + x\nfn main() { out(1, DOUBLE(21)); }\n",
+        "fn main() { out(1, 21 + 21); }\n",
+    ),
+    (
+        "@define ONE 1\n@define ADD(a, b) a + b\nfn main() { out(1, ADD(41, ONE)); }\n",
+        "fn main() { out(1, 41 + 1); }\n",
+    ),
+    (
+        "@define counter counter\n@define bump(x) x + 10\nstatic counter: u8 = 250;\n\
+fn main() { counter = bump(counter); out(1, counter); }\n",
+        "static counter: u8 = 250;\nfn main() { counter = counter + 10; out(1, counter); }\n",
+    ),
+    (
+        "@if 1\n@define VALUE 42\n@else\n@define VALUE 7\n@end\n\
+fn main() { out(1, VALUE); }\n",
+        "fn main() { out(1, 42); }\n",
+    ),
+];
+
+/// **PREP01 slice 1's acceptance criterion, stated over this corpus.**
+///
+/// A preprocessor is backend-agnostic by construction: it rewrites a token
+/// stream and gets out of the way. So a MacroOct program must lower to **the
+/// same IIR** as its hand-expanded equivalent — and because MacroOct is a
+/// dialect of Oct, that equivalent is a *valid Oct program*, compiled by Oct's
+/// own untouched frontend through the `Language::Oct` arm of the very same
+/// dispatch function.
+///
+/// This is strictly stronger than the eight backend cells those rows declare.
+/// The cells prove the selected program behaves; this proves the preprocessor
+/// contributed *nothing beyond selecting text*, from which every backend
+/// result follows for free. Some bugs are only visible here: the
+/// dropped-`fn unused` row prints `42` whether or not the skipped function
+/// leaked into the module, so stdout cannot distinguish the failure and an
+/// extra `IIRFunction` is the only evidence there is.
+///
+/// ## What is compared, and what is excluded
+///
+/// Everything, via `{:#?}`, except `IIRFunction::source_map`. `IIRModule` does
+/// not derive `PartialEq`, and a hand-written field-by-field comparison would
+/// silently stop covering any field added later — the exact failure this
+/// oracle exists to catch — whereas `Debug` picks up a new field the day it is
+/// added.
+///
+/// `source_map` is per-instruction *provenance*: the line and column each
+/// instruction came from. The two programs are different text — the MacroOct
+/// one has extra lines, because `@if`, `@else` and `@end` occupy lines of
+/// their own — so their instructions genuinely do come from different lines,
+/// and demanding equality there would be demanding that a preprocessor not
+/// preprocess. That exclusion is not a loophole left open: it is measured in
+/// `macrooct-iir-compiler/tests/iir_identity.rs`, which aligns two sources'
+/// line numbers by padding and then compares the full `{:#?}` *including*
+/// provenance. The lockstep length invariant is still asserted below, so
+/// "excluded from the comparison" never means "unchecked".
+#[test]
+fn macrooct_rows_lower_to_iir_identical_to_hand_expanded_oct() {
+    fn without_provenance(module: &interpreter_ir::IIRModule) -> String {
+        let mut module = module.clone();
+        for f in &mut module.functions {
+            f.source_map.clear();
+        }
+        format!("{module:#?}")
+    }
+
+    let rows: Vec<&Prog> =
+        PROGRAMS.iter().filter(|p| p.lang == Language::MacroOct).collect();
+    assert!(!rows.is_empty(), "the MacroOct rows disappeared from PROGRAMS");
+    assert_eq!(
+        rows.len(),
+        MACROOCT_EXPANSIONS.len(),
+        "every MacroOct row needs a hand-expanded Oct twin in MACROOCT_EXPANSIONS — \
+         a row without one would be running on eight backends while proving nothing \
+         about whether it is still the same program"
+    );
+
+    for row in rows {
+        let (_, oct_src) = MACROOCT_EXPANSIONS
+            .iter()
+            .find(|(macrooct_src, _)| *macrooct_src == row.src)
+            .unwrap_or_else(|| {
+                panic!(
+                    "no hand-expanded Oct twin for this MacroOct row; add one to \
+                     MACROOCT_EXPANSIONS:\n{:?}",
+                    row.src
+                )
+            });
+
+        let from_macrooct =
+            lang_aot::compile_source_to_iir(Language::MacroOct, row.src, "identity")
+                .unwrap_or_else(|e| panic!("MacroOct failed to compile: {e:?}\n{:?}", row.src));
+        let from_oct = lang_aot::compile_source_to_iir(Language::Oct, oct_src, "identity")
+            .unwrap_or_else(|e| {
+                panic!("the hand-expanded Oct twin failed to compile: {e:?}\n{oct_src:?}")
+            });
+
+        assert_eq!(
+            without_provenance(&from_macrooct),
+            without_provenance(&from_oct),
+            "PREP01 slice 1's acceptance criterion failed.\n\
+             This MacroOct program did NOT lower to the same IIR as its hand-expanded \
+             Oct equivalent, which means the preprocessor contributed something beyond \
+             selecting source text.\n  MacroOct: {:?}\n  Oct:      {oct_src:?}",
+            row.src
+        );
+
+        // The lockstep invariant `IIRFunction::source_map` documents — one
+        // entry per instruction — checked even though provenance is excluded
+        // from the comparison above.
+        for (m, o) in from_macrooct.functions.iter().zip(from_oct.functions.iter()) {
+            assert_eq!(
+                m.source_map.len(),
+                m.instructions.len(),
+                "MacroOct's `{}` broke the source_map/instructions lockstep",
+                m.name
+            );
+            assert_eq!(
+                m.source_map.len(),
+                o.source_map.len(),
+                "`{}` has a different number of source positions than Oct's",
+                m.name
+            );
+        }
+    }
+}
+
+/// A MacroOct program with no directives at all must be the same compilation
+/// as the identical Oct program — provenance included, because with no
+/// directives there is no line shift to excuse.
+///
+/// The degenerate case, and the one that catches the crudest regression there
+/// is: a preprocessor that mangles a stream it should have passed through
+/// untouched. It reuses the existing Oct corpus as its input rather than
+/// inventing programs, so it grows automatically as Oct's rows do.
+#[test]
+fn macrooct_compiles_every_oct_corpus_row_byte_identically() {
+    let mut checked = 0usize;
+    for program in PROGRAMS.iter().filter(|p| p.lang == Language::Oct) {
+        let as_macrooct =
+            lang_aot::compile_source_to_iir(Language::MacroOct, program.src, "identity")
+                .unwrap_or_else(|e| {
+                    panic!(
+                        "every Oct program is also a MacroOct program, but this one \
+                         failed: {e:?}\n{:?}",
+                        program.src
+                    )
+                });
+        let as_oct = lang_aot::compile_source_to_iir(Language::Oct, program.src, "identity")
+            .expect("the Oct corpus compiles as Oct");
+        assert_eq!(
+            format!("{as_macrooct:#?}"),
+            format!("{as_oct:#?}"),
+            "MacroOct perturbed a directive-free program. Source:\n{:?}",
+            program.src
+        );
+        checked += 1;
+    }
+    assert!(checked >= 12, "the Oct corpus shrank unexpectedly ({checked} rows)");
+    eprintln!("MacroOct: {checked} directive-free Oct programs compiled byte-identically");
 }
 
 #[test]
@@ -14130,6 +14627,31 @@ fn algol_stable_selected_recurrence_cycles_run_on_every_available_standard_backe
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the stable-selected recurrence cycle did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_stable_statement_recurrence_cycles_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("if choose then delta := n else delta := n - 1")
+        })
+        .expect("the stable statement recurrence-cycle program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the stable statement recurrence cycle did not run"
             );
             continue;
         };

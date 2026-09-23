@@ -1,0 +1,939 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 447,
+  "title": "Juzgar",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:20783ff4b661461d",
+  "lessons": [
+    {
+      "id": "ES-C447-analisis",
+      "sequence": 11560,
+      "title": "el análisis — loosened apart",
+      "headword": "el análisis",
+      "romanization": "el análisis",
+      "gloss": "the test, the analysis — a loosening-apart, and a noun that never changes for plural",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c62186577879b61f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la sangre, el médico and el examen. The doctor wants to know what is in your blood. Name what he orders."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el análisis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el análisis — the analysis, and in a clinic the test."
+            },
+            {
+              "kind": "speech",
+              "text": "Un análisis de sangre — a blood test. Me han hecho unos análisis — they have run some tests on me. Los resultados del análisis — the test results."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the word on the form, and it is worth having before a waiting room rather than during one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a noun that does not change",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el análisis and los análisis are spelled identically. Only the article tells you how many."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish does this to every noun ending in unstressed -is:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "one",
+                "more than one"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "one: el análisis. more than one: los análisis.",
+                "one: la crisis. more than one: las crisis.",
+                "one: el paréntesis. more than one: los paréntesis."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The reason is a rule you can use elsewhere: a word already ending in s, when its stress is not on the last syllable, takes no plural ending. The same applies to el lunes / los lunes and el paraguas / los paraguas."
+            },
+            {
+              "kind": "speech",
+              "text": "Contrast el examen, which does change — los exámenes — and gains a written accent when it does, because the stress must stay where it was."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Greek análysis: ana- up, through, plus lýein, to loosen."
+            },
+            {
+              "kind": "speech",
+              "text": "To analyse something is to loosen it apart — to undo the knots and see what the pieces are. That is a physical picture, and it is exactly what a blood test does to blood."
+            },
+            {
+              "kind": "speech",
+              "text": "The same lýein is in paralysis, a loosening of the body's control, and in catalyst, which loosens a reaction. Its opposite in Greek was synthesis, a putting-together — which is what a Spanish lesson's last section is called."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el análisis, then los análisis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el análisis*, then *los análisis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the doctor has ordered a blood test",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the doctor has ordered a blood test]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the two Greek pieces mean",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the two Greek pieces mean]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A blood test? (Un análisis de sangre.) What is the plural? (Los análisis — unchanged.) What does lýein mean? (To loosen.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C447-comentar",
+      "sequence": 11570,
+      "title": "comentar — minding it over, together",
+      "headword": "comentar",
+      "romanization": "comentar",
+      "gloss": "to comment, to mention — to turn a thing over in the mind, together",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:093bb3bbe0d82edc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say pensar. Say el análisis. Thinking is done alone. Name what you do when you think about something out loud, with somebody."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: comentar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comentar — to comment on, and very often no more than to mention."
+            },
+            {
+              "kind": "speech",
+              "text": "Me comentó que se jubila — he mentioned to me that he is retiring. ¿Lo comentamos mañana? — shall we talk it over tomorrow? Sin comentarios — no comment."
+            },
+            {
+              "kind": "speech",
+              "text": "That middle sense is the one to take. In everyday Spanish comentar is much closer to mention or talk over than to the English comment, which sounds like a verdict. A Spanish speaker comenta things all day without passing judgement on any of them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin com- together, plus mens, mentem — the mind."
+            },
+            {
+              "kind": "speech",
+              "text": "To comentar is to mind something over with somebody. The mind is sitting inside the word, and it is the same mentem behind la mente, mental, and the ending -mente that turns a Spanish adjective into an adverb: rápidamente is, at root, with a rapid mind."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the mind in it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: comentar. the mind in it: to turn over together.",
+                "word: la mente. the mind in it: the mind itself.",
+                "word: rápidamente. the mind in it: with a rapid mind."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That last row is worth keeping. Every Spanish adverb in -mente is a fossil of the word for mind, agreeing in the feminine because mens was a feminine noun — which is why it is rápidamente and never rápidomente."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "comentar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *comentar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "he mentioned to me that the test results are back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: he mentioned to me that the test results are back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why every -mente adverb takes the feminine adjective",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why every **-mente** adverb takes the feminine adjective]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To mention? (Comentar.) What is inside the word? (Mentem, the mind.) Why rápidamente and not rápidomente? (Mens was feminine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C447-urgencia",
+      "sequence": 11580,
+      "title": "la urgencia — something pressing on you",
+      "headword": "la urgencia",
+      "romanization": "la urgencia",
+      "gloss": "urgency — a pressing, and in the plural the sign over the hospital door",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68622d933d496853",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la prisa and el hospital. Say comentar. Being in a hurry is your own business. Name the kind of hurry a hospital has a door for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la urgencia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la urgencia — urgency, an emergency."
+            },
+            {
+              "kind": "speech",
+              "text": "Las urgencias, in the plural, is the emergency department. The sign over the door of a Spanish hospital says URGENCIAS, and ir a urgencias is to go to A&E."
+            },
+            {
+              "kind": "speech",
+              "text": "The adjective is urgente: es urgente — it is urgent. On an envelope or an email subject line, URGENTE does the same work it does in English."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin urgēre, to press, to push hard. An urgency is something pressing on you, and English says the same thing when it calls a matter pressing."
+            },
+            {
+              "kind": "speech",
+              "text": "And you already have a second Latin word for pressing. La prisa is from premere, also to press — the root of English press itself."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what presses"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: la prisa. what presses: premere — you are pressed for time.",
+                "word: la urgencia. what presses: urgēre — the thing presses on you."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The difference is which way the pressure runs. Tengo prisa puts it on you: I am in a hurry. Es urgente puts it on the matter: the thing itself is pushing. You can have prisa about something that is not urgente at all, and a genuinely urgente matter can find you with no prisa whatever."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ending is one you have met. -encia turns a verb into the state of doing it, the way experiencia did in the chapter on paperwork."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "the state"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "verb: urgir. the state: la urgencia.",
+                "verb: existir. the state: la existencia.",
+                "verb: preferir. the state: la preferencia."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "So an unfamiliar noun in -encia will nearly always be hiding a verb, and the noun names the condition of that verb happening. That is two endings now — -ción for the act and -encia for the state — and between them they cover a large share of the abstract nouns on any Spanish form."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la urgencia, then urgente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la urgencia*, then *urgente*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "we had to go to A&E",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: we had to go to A&E]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the difference between tengo prisa and es urgente",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the difference between *tengo prisa* and *es urgente*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Urgency? (La urgencia.) The sign over the hospital door? (URGENCIAS.) What does urgēre mean? (To press.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C447-torpe",
+      "sequence": 11590,
+      "title": "torpe — from shameful to clumsy",
+      "headword": "torpe",
+      "romanization": "torpe",
+      "gloss": "clumsy — a word that meant shameful, and moved from how you look to what you can do",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e682fa026984e7fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say feo. Say la urgencia. Feo judges how a thing looks. Name the word that judges how a person moves."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: torpe",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "torpe — clumsy, awkward, and of a person's mind, slow."
+            },
+            {
+              "kind": "speech",
+              "text": "Soy muy torpe con las manos — I am very clumsy with my hands. Perdona, qué torpe — sorry, how clumsy of me, which is what you say after knocking something over."
+            },
+            {
+              "kind": "speech",
+              "text": "It does not change for gender: un niño torpe, una niña torpe. The noun is la torpeza, clumsiness — and also a blunder: fue una torpeza decir eso."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin turpis meant ugly, foul, shameful — a heavy word, used of disgraceful conduct rather than of somebody who drops things."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish kept the shape and moved the meaning from how you look to how you act, and softened it on the way. Turpis was an accusation; torpe is close to an apology."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the word",
+                "what it judges"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the word: feo. what it judges: how a thing looks.",
+                "the word: torpe. what it judges: how a person manages."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both are from Latin words for ugliness — feo from foedus, torpe from turpis — and only one of them is still about appearance. English took turpis too, in turpitude, which kept the original severity and is now used almost nowhere."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That softening is the useful part."
+            },
+            {
+              "kind": "speech",
+              "text": "Torpe is not an insult in ordinary Spanish. It is what people call themselves after a small mistake, and calling yourself torpe is a way of apologising without making the moment larger. Said of somebody else it is mild — closer to butterfingers than to any real charge."
+            },
+            {
+              "kind": "speech",
+              "text": "A word whose ancestor was severe and whose descendant is gentle is worth noticing, because the direction is not guaranteed. The reverse happens too. If you learn a word from its etymology alone you will pitch it wrong about half the time, so the root tells you where a word came from and never how hard it lands today."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "torpe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *torpe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sorry, how clumsy of me",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sorry, how clumsy of me]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what turpis meant, and how hard torpe lands now",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *turpis* meant, and how hard *torpe* lands now]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Clumsy? (Torpe.) What did turpis mean? (Ugly, shameful.) Is torpe an insult? (No — it is nearly an apology.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R447-repaso-juicio",
+      "sequence": 11600,
+      "title": "(análisis, comentar, urgencia, torpe) — from cold",
+      "headword": "(análisis, comentar, urgencia, torpe)",
+      "romanization": "(análisis, comentar, urgencia, torpe)",
+      "gloss": "cold retrieval of the four, and the limit of what a root can tell you",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22eba17268af57ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all four: the test, to mention, the emergency, clumsy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: what a root tells you, and what it does not",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three of these four are physical acts underneath, and knowing that helps."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the act"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: análisis. the act: loosening the knots apart.",
+                "word: urgencia. the act: something pressing on you.",
+                "word: torpe. the act: — see below."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Análisis and urgencia behave the way their roots suggest. Torpe does not. Turpis meant shameful, a heavy accusation, and torpe is now what you call yourself after knocking a glass over — nearly an apology."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the limit, and it is worth stating plainly: a root tells you where a word came from and never how hard it lands today. Meanings soften, and they harden too. Etymology is a hook for remembering and a guide to shape; it is not a guide to tone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the doctor ordered a blood test",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the doctor ordered a blood test]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "he mentioned that it was urgent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: he mentioned that it was urgent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el análisis and los análisis, and what tells them apart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el análisis* and *los análisis*, and what tells them apart]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now follow a clinic from the door to the results — which door to go to when it is serious, what the doctor has ordered, what somebody mentioned to you about it, and how to apologise for dropping the form."
+            },
+            {
+              "kind": "speech",
+              "text": "Two endings close the set you have been collecting. -encia names the state of a verb happening, as -ción names the act. Between them they cover most of the abstract nouns on a Spanish form, and both have a verb inside worth looking for."
+            },
+            {
+              "kind": "speech",
+              "text": "And one plural rule: a noun ending in unstressed -is does not change. El análisis, los análisis; la crisis, las crisis. Only the article moves."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The emergency department? (Urgencias.) A blood test? (Un análisis de sangre.) Clumsy? (Torpe.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C447-sintesis-juicio",
+      "sequence": 11610,
+      "title": "(un mensaje desde urgencias) — read it, then do it yourself",
+      "headword": "(un mensaje desde urgencias)",
+      "romanization": "(un mensaje desde urgencias)",
+      "gloss": "the payoff — read a message from a hospital waiting room and the reply, then write your own",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8c901900de48d0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say urgencias and torpe. One of them is where the writer is, and the other is how she explains getting there."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read both, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "1 — de Lucía."
+            },
+            {
+              "kind": "speech",
+              "text": "Estoy en urgencias, pero no es grave. Me caí bajando del autobús, soy una torpe. Me han hecho un análisis y una radiografía y estoy esperando."
+            },
+            {
+              "kind": "speech",
+              "text": "2 — la respuesta."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Quieres que me acerque? Me comentó tu hermana que hoy librabas, así que no me pilla lejos. Dime algo cuando tengas los resultados."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where Lucía is, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where Lucía is, and why]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what has been done to her so far",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what has been done to her so far]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the second person offers, and how she knew",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the second person offers, and how she knew]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two things in that exchange do more work than they look like."
+            },
+            {
+              "kind": "speech",
+              "text": "Pero no es grave, in the first line, before any of the detail. A Spanish message from a hospital almost always leads with the reassurance, because the word urgencias lands hard and the writer is defusing it immediately. Putting that clause last would read as burying it."
+            },
+            {
+              "kind": "speech",
+              "text": "And me comentó tu hermana: not me dijo, not me contó. Comentar is the mildest of the three — it says the sister mentioned it in passing, with no weight on it, which is exactly the right temperature for explaining how you happen to know somebody's day off. Choosing me dijo would sound like she was told on purpose."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the difference between having the words and using them. Both writers pick the softest option available, twice each, and the message reads as calm because of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Four sentences from a waiting room: say where you are, say it is not serious, say what test they have done, and say somebody mentioned they might come."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did you put the reassurance before the detail?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

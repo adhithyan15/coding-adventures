@@ -2,6 +2,9 @@
   "id": "TE-PATH-013",
   "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
   "before": [],
-  "inline": [],
+  "inline": [
+    "TE-EXT-013-POLITENESS",
+    "TE-EXT-013-CONSOLIDATION"
+  ],
   "after": []
 }

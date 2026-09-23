@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Regenerated the repository source-input boundary projection to pick up the
+  `forme-deploy-runner-fs-adapter` and `forme-deploy-runner-github-pages-adapter`
+  TypeScript roots (added on main without regenerating this checked
+  projection, which broke the neutral conformance test). Digest updated to
+  `c36bb88a03fa6bd7585e22139f59f4c64e1f8547dbe64bad234483cc2a7b4566`.
+
 - Added the two exact registered TypeScript site roots and their 13 reviewed
   authored inputs to the generated source-input projection and neutral tests.
   Repository-aware hashing preserves legacy `unknown/*` graph identities while

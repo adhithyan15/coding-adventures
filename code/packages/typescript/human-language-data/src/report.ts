@@ -815,6 +815,105 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
           `  ^ these five criteria measure the CORPUS — headwords, verbs, spine nodes, ` +
             `reinforcement windows, writing stages. None measures a learner. No track has had a ` +
             `single exam item scored against it, so no line above claims a reader can pass anything.`,
+          // EVERY TRACK, NEAREST THE NEXT RUNG FIRST — and the reason it is a
+          // table rather than another summary line is that the summary above is
+          // true and useless for deciding what to do next. "23 track(s) touch a
+          // level whose coverage is not complete" names no track, no criterion
+          // and no distance, so the only way to act on it was to write a script.
+          //
+          // This is the whole backlog, derived. The gate already computes a
+          // blocker per track with a shortfall in the criterion's own units; all
+          // that was missing was printing it.
+          //
+          // GROUPED BY CRITERION, then sorted by shortfall ascending WITHIN a
+          // group -- because "in the criterion's own units" means shortfalls
+          // are NOT comparable across criteria. A first version sorted on the
+          // bare number, and the claim written beside it ("the row order is the
+          // priority order") was false the moment two criteria appeared: a
+          // track blocked by `spine-nodes short 1` would sort above one needing
+          // 79 headwords, while being the single track that authoring lessons
+          // cannot advance at all. Every row happens to be vocabulary-blocked
+          // today, so nothing would have caught it.
+          //
+          // That ordering is not decoration. When this was first printed it
+          // showed telugu 79 and tamil 92 short of pre-A1 — the two tracks
+          // nearest the first structurally complete level any non-pilot track
+          // would reach — while recent effort had gone to malayalam (128) and
+          // hindi (101). A count that hides which track is closest is how that
+          // happens.
+          "",
+          // WHY EVERY BLOCKER, AND NOT THE WORST ONE (HL-C427)
+          //
+          // This printed ONE blocker per track, chosen by
+          // `sort((a, b) => b.shortfall - a.shortfall)[0]` and called the worst.
+          // Shortfalls are in each criterion\'s own units, and the units differ by
+          // two orders of magnitude: vocabulary counts headwords (79-257),
+          // reinforcement counts atoms (13-78), verb-vocabulary counts verbs
+          // (1-29), atom-budget counts lessons (1-5), spine-nodes counts nodes (1).
+          //
+          // So `vocabulary` won for all 23 tracks, every time, and
+          // `verb-vocabulary` and `atom-budget` could NEVER be shown. They were not
+          // occasionally hidden -- they were structurally unprintable, and neither
+          // has ever appeared in a plan. Measured when this was fixed: the gate
+          // holds 64 blockers across 23 tracks (vocabulary 23, verb-vocabulary 16,
+          // reinforcement 15, atom-budget 8, spine-nodes 2) and this ladder showed
+          // 23 of them.
+          //
+          // §3.1 is a CONJUNCTION, so showing the first failing criterion presents
+          // a necessary condition as if it were sufficient. Every per-track
+          // estimate taken from the old ladder -- "telugu is 79 words from pre-A1"
+          // among them -- was a lower bound on a number nobody had seen.
+          //
+          // The irony is that the unit rule was already known here: the test for
+          // this block says a first version "would have ranked a track needing one
+          // spine node above one needing 79 headwords". The guard was applied to
+          // the row ORDERING and not to the SELECTION, one line apart.
+          //
+          // Grouping by criterion had to go with it: a track with four blockers
+          // cannot sit in one group. Rows now order by HOW MANY criteria are left,
+          // which is unit-free and is the honest reading of "nearest".
+          "per-track ladder (HL09 §3.1), fewest criteria left first, " +
+            "every blocker listed because §3.1 is a conjunction " +
+            "(shortfalls are in each criterion's own units and never compare across criteria):",
+          ...[...report.levelGate.tracks]
+            .map((track) => {
+              const next = track.inProgressAt ?? "C2";
+              const target = report.levelGate!.vocabularyTargets[next];
+              const vocabulary = track.blockers.find((b) => b.criterion === "vocabulary");
+              // The AT-OR-BELOW count, not the track total, for the reason the
+              // vocabulary line above already gives: the total is context and
+              // the scoped number is the one to author against. A track with no
+              // vocabulary blocker is not short, so its scoped count is its
+              // target.
+              const scoped = vocabulary ? target - vocabulary.shortfall : target;
+              // Sorted by criterion NAME, not by shortfall: the numbers are in
+              // different units, so any ordering among them would be the same
+              // mistake this block exists to correct.
+              const blockers = [...track.blockers].sort((a, b) =>
+                a.criterion.localeCompare(b.criterion),
+              );
+              return { track, next, target, scoped, blockers };
+            })
+            .sort(
+              (a, b) =>
+                // A track with no blocker has cleared C2; zero sorts first, which
+                // is correct here -- it has the fewest criteria left of anyone.
+                a.blockers.length - b.blockers.length ||
+                a.track.language.localeCompare(b.track.language),
+            )
+            .map(({ track, next, target, scoped, blockers }) => {
+              const complete = track.attained ?? "none";
+              const summary =
+                blockers.length === 0
+                  ? "no blocker — ladder complete"
+                  : `${blockers.length} blocker${blockers.length === 1 ? "" : "s"}: ` +
+                    blockers.map((b) => `${b.criterion} ${b.shortfall}`).join(", ");
+              return (
+                `  ${track.language.padEnd(11)} touches ${String(track.touches ?? "-").padEnd(6)} ` +
+                `complete ${complete.padEnd(6)} working ${next.padEnd(6)} ` +
+                `vocabulary ${scoped}/${target} — ${summary}`
+              );
+            }),
         ]
       : []),
     ...(report.chapters

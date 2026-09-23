@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:676513caf618498c",
+  "lessonIds": [
+    "ES-C446-mirar",
+    "ES-C446-mover",
+    "ES-C446-acompanar",
+    "ES-C446-directo",
+    "ES-C446-partido",
+    "ES-R446-repaso-mover",
+    "ES-C446-sintesis-mover"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch446.txt",
+  "json": "spanish/narration/ch446.json",
+  "textHash": "fnv1a64:7744728746a3b9a7",
+  "jsonHash": "fnv1a64:868e838b29fd1210",
+  "findings": []
+}

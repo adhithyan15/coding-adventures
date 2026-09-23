@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C462-jefe",
+    "language": "spanish",
+    "chapter": 462,
+    "sequence": 12500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07c5383023ae0985"
+  },
+  "findings": []
+}

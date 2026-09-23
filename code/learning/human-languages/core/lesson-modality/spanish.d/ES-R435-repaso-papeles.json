@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R435-repaso-papeles",
+    "language": "spanish",
+    "chapter": 435,
+    "sequence": 10770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e702de15bd516c5"
+  },
+  "findings": []
+}

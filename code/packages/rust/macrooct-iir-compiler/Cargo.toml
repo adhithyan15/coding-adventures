@@ -1,0 +1,30 @@
+[package]
+name = "coding-adventures-macrooct-iir-compiler"
+version = "0.2.0"
+edition = "2021"
+description = "MacroOct frontend for the LANG VM AOT chain (PREP01 slices 1-2) — composes the generic source-preprocessor engine with Oct's UNCHANGED parser grammar, type checker and IIR lowering, so a MacroOct program lowers to IIR identical to its hand-expanded Oct equivalent."
+
+[dependencies]
+# The preprocessor half.
+coding-adventures-source-preprocessor = { path = "../source-preprocessor" }
+coding-adventures-macrooct-lexer      = { path = "../macrooct-lexer" }
+lexer                                 = { path = "../lexer" }
+
+# The Oct half — all of it reused unchanged, which is the architectural claim
+# this crate exists to test. Note the absence of any `macrooct-parser` or
+# `macrooct-type-checker`: after preprocessing the stream is pure Oct.
+parser           = { path = "../parser" }
+grammar-tools    = { path = "../grammar-tools" }
+oct-type-checker = { path = "../oct-type-checker" }
+oct-iir-compiler = { path = "../oct-iir-compiler" }
+interpreter-ir   = { path = "../interpreter-ir" }
+
+# Oct's parser, used directly: create_oct_parser_from_tokens gives us Oct's
+# own compiled grammar AND its MAX_RULE_DEPTH guard, so neither can drift.
+coding-adventures-oct-parser = { path = "../oct-parser" }
+
+[dev-dependencies]
+# tests/iir_identity.rs compiles the same program twice — once as MacroOct,
+# once as hand-expanded Oct — and compares the two IIR modules. That oracle is
+# the whole point of the slice, so Oct's own frontend is a test dependency of
+# this crate's most important test.

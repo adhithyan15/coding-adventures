@@ -1,9 +1,10 @@
 {
   "language": "telugu",
   "chapter": 40,
-  "sourceHash": "fnv1a64:5bf20f0e6d3e2546",
+  "sourceHash": "fnv1a64:551be5bce32dcb3a",
   "lessonIds": [
-    "TE-C40-bhojanam"
+    "TE-C40-bhojanam",
+    "TE-C40-second-pass-meal"
   ],
   "tex": "telugu/book/chapters/ch40-a-meal.tex"
 }

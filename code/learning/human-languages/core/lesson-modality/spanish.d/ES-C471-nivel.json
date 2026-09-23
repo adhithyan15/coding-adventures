@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C471-nivel",
+    "language": "spanish",
+    "chapter": 471,
+    "sequence": 13000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4dfd6e5346b5fc85"
+  },
+  "findings": []
+}

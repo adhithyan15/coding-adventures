@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The People You'd Introduce",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cba29f2a43009ac3",
+  "sourceHash": "fnv1a64:d7d75167828b783d",
   "lessons": [
     {
       "id": "SA-C11-mitram",
@@ -1021,6 +1021,191 @@
             {
               "kind": "speech",
               "text": "Which character is this — ए? What sound does it carry? (e.) Name one word you already say that contains it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R11-second-pass-the-whole-first-meeting",
+      "sequence": 545,
+      "title": "तव नाम किम्? (tava nāma kim?) — and the reason you might not say it that way",
+      "headword": "तव नाम किम्?",
+      "romanization": "tava nāma kim?",
+      "gloss": "second pass over a first meeting — four courtesies, two words for you, and the question that chooses between them",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbd0c2c57153e0a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words for you. Say the familiar one. Then say the one you would use on meeting a stranger, and say what is strange about it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Six turns, and the only thing that moves is how much respect is in the air."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the familiar question — tava nāma kim?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the familiar question — *tava nāma kim?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same question to someone you have not met — bhavataḥ nāma kim?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same question to someone you have not met — *bhavataḥ nāma kim?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the answer, with your own name in it — mama nāma … asti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the answer, with your own name in it — *mama nāma … asti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agree that you understood — ām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: agree that you understood — *ām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "that meeting them is a joy — ānandaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: that meeting them is a joy — *ānandaḥ*]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Bhavān is not a second-person word wearing a polite coat. It is a third-person word — your honour — and it drags the whole sentence with it: the verb turns third-person, and tava becomes bhavataḥ."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth holding beside the way you already know a language to do this:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "familiar",
+                "respectful"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "the word for you. familiar: tvam. respectful: bhavān.",
+                "grammatical person. familiar: second. respectful: third.",
+                "your, in the question. familiar: tava. respectful: bhavataḥ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Making respect out of the third person is a different device from making it out of the plural. Both end in the same place — you avoid pointing straight at the person — and only one of them changes the verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "cognates",
+          "title": "Across the family",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four things the greetings carry that no translation of them carries:"
+            },
+            {
+              "kind": "speech",
+              "text": "the greeting is a bow — the hands come together, and the word says so."
+            },
+            {
+              "kind": "speech",
+              "text": "thanks is spoken rarely between intimates, because it puts distance in."
+            },
+            {
+              "kind": "speech",
+              "text": "welcoming someone in is a duty owed to a guest, not a pleasantry."
+            },
+            {
+              "kind": "speech",
+              "text": "ām agrees; it does not merely acknowledge that you heard."
+            },
+            {
+              "kind": "speech",
+              "text": "Each of these is about what the word does between two people. Say the wrong one at the wrong moment and the grammar stays perfect."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which grammatical person does bhavān take? (Third.) Between close friends, is thanking a warm thing to do or a distancing one? (Distancing.)"
             }
           ]
         }

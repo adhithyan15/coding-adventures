@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 74,
-  "sourceHash": "fnv1a64:a0cb2f4e5aba79ad",
+  "sourceHash": "fnv1a64:48543cb1a53396f6",
   "lessonIds": [
     "TE-C74-and",
     "TE-C74-but",
@@ -14,6 +14,6 @@
   "text": "telugu/narration/ch74.txt",
   "json": "telugu/narration/ch74.json",
   "textHash": "fnv1a64:f39d2b818994cecb",
-  "jsonHash": "fnv1a64:26a70cd270f3f3d5",
+  "jsonHash": "fnv1a64:bbdb71c1c3fd32a8",
   "findings": []
 }

@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { lessonsUpToLevel } from "./levels.js";
 import { defaultCurriculumRoot, loadEverything } from "./loader.js";
+import { LINE_TERMINATORS, reportableFilename } from "./constants.js";
 
 export const SPANISH_A1_MOCK_AUDIT = "spanish/mocks/a1/book-bounded-audit.json";
 
@@ -17,15 +18,46 @@ export const SPANISH_A1_MOCK_AUDIT = "spanish/mocks/a1/book-bounded-audit.json";
  * `lessonsUpToLevel` already takes the level, so nothing about the measurement
  * needed to change; only the three places that spelled `a1` out loud did.
  */
-export type MockAuditLevel = "pre-A1" | "A1";
+export type MockAuditLevel = "pre-A1" | "A1" | "A2";
 
-const AUDIT_DIR: Readonly<Record<MockAuditLevel, string>> = {
+// Frozen, because `Readonly<>` is erased at runtime and this table is the
+// single source of truth for every path this module builds.
+const AUDIT_DIR: Readonly<Record<MockAuditLevel, string>> = Object.freeze({
   "pre-A1": "spanish/mocks/pre-a1",
   A1: "spanish/mocks/a1",
-};
+  A2: "spanish/mocks/a2",
+});
 
 export function spanishMockAuditPath(level: MockAuditLevel): string {
-  return `${AUDIT_DIR[level]}/book-bounded-audit.json`;
+  // Through the guard, not a bare lookup: `runSpanishA1MockAudit` feeds this
+  // straight into a `writeFileSync`, so an unchecked level here is a traversal
+  // WRITE rather than a failed read. Unreachable from either CLI, both of which
+  // validate `--level` first -- but `package.json` declares no `exports` map,
+  // so a consumer can deep-import this module, which is the same
+  // package-boundary argument that made the reporter's traversal real.
+  return `${spanishMockDir(level)}/book-bounded-audit.json`;
+}
+
+/**
+ * The directory a level's papers live in, by LOOKUP rather than interpolation.
+ *
+ * `AUDIT_DIR` is traversal-proof by construction: an unrecognised level yields
+ * `undefined` and throws here, where a template string would have built a path
+ * out of whatever it was handed. That is not hypothetical -- `mock-stem-coverage`
+ * first wrote `spanish/mocks/${level.toLowerCase()}`, and because it is exported
+ * from `index.ts`, a JavaScript caller passing `"../../../../../../etc"` read
+ * outside the curriculum root entirely. TypeScript's union type does not
+ * survive the package boundary; this check does.
+ */
+export function spanishMockDir(level: MockAuditLevel): string {
+  const dir = Object.hasOwn(AUDIT_DIR, level) ? AUDIT_DIR[level] : undefined;
+  if (dir === undefined) {
+    // `reportableFilename`, not a bare strip: `stripControlCharacters` keeps
+    // `\n` by design, and this is a ONE-LINE message, so a level carrying a
+    // newline would forge a second log line. constants.ts documents the pair.
+    throw new Error(`unknown mock level ${reportableFilename(String(level))}`);
+  }
+  return dir;
 }
 
 const citationFormCredits = [
@@ -41,33 +73,418 @@ const numberWordCredits = [
   "cincuenta", "sesenta", "setenta", "ochenta", "noventa", "cien",
 ];
 
+/**
+ * The largest item count a `## Prueba N` heading may declare.
+ *
+ * Both a floor and a ceiling on the same guard: below 1 a paper disappears from
+ * the gate entirely, and above this the expected-set construction does enough
+ * work to abort the process before any message is printed. The real keys
+ * declare 10 or 25.
+ */
+const MAX_DECLARED_ITEMS = 1000;
+
 const clean = (value: string): string =>
   value.toLowerCase().normalize("NFC").replace(/^\*+|\*+$/g, "").trim();
 
-type Item = { paper: number; item: number; requires: string[] };
+export type AnswerKeyRow = { paper: number; item: number; requires: string[] };
 
-function parseAnswerKey(path: string): Item[] {
-  const rows: Item[] = [];
-  let paper = 0;
-  for (const line of readFileSync(path, "utf8").split(/\r?\n/)) {
-    const heading = /^## Prueba (\d)/.exec(line);
-    if (heading) paper = Number(heading[1]);
-    const row = /^\|\s*(\d+)\s*\|.*\|\s*([^|]+)\s*\|$/.exec(line);
-    if (row && (paper === 1 || paper === 2)) {
-      rows.push({
-        paper,
-        item: Number(row[1]),
-        requires: row[2].split(",").map(clean),
-      });
-    }
-  }
-  return rows;
+/**
+ * What a parse of an answer key found, INCLUDING what it could not use.
+ *
+ * `rows` alone was the wrong return type, and the reason is the whole subject
+ * of this module. Every way this parse can go wrong is silent: a line
+ * terminator the split misses, a heading whose numbering changes, a table that
+ * grew a trailing space. Each one removes a row, and a removed row is an item
+ * the gate never scores -- which reads downstream as an item that is fine.
+ * Anything the parse REJECTED has to come back with it, or the caller cannot
+ * tell "nothing was wrong" from "I could not see it".
+ */
+export interface AnswerKeyParse {
+  /** Rows under Prueba 1 or 2 that carry at least one requirement. */
+  readonly rows: readonly AnswerKeyRow[];
+  /** Items whose requirement column parsed to nothing. Never scored -- see below. */
+  readonly unscored: readonly { paper: number; item: number }[];
+  /** Lines that open like a numbered table row but that the row pattern rejected. */
+  readonly malformed: readonly string[];
+  /**
+   * Item counts the `## Prueba N` headings state for themselves.
+   *
+   * The file says how many items it has. Checking the parse against that is
+   * the only guard here that does not depend on anticipating the shape of the
+   * damage -- every silent drop, however it happened, is a shortfall.
+   */
+  readonly declared: ReadonlyMap<number, number>;
 }
 
-export function buildSpanishA1MockAudit(
+/**
+ * The answer key's scored rows, from its TEXT.
+ *
+ * Split from `parseAnswerKey` so the parse can be tested the way
+ * `parseMockPaper` is -- on strings, without a whole synthetic curriculum
+ * behind it. All three of this gate's silent drops (a line terminator the split
+ * misses, an empty last column, a row the pattern rejects) were found by
+ * READING, in two rounds of security review, because the only way into the
+ * parser was a 20-minute run over the real corpus.
+ *
+ * It returns rather than throws: "" is a legitimate input to a parser and is
+ * not a legitimate answer key, and that judgement belongs to `parseAnswerKey`,
+ * which knows which file it opened.
+ */
+export function parseAnswerKeyRows(text: string): AnswerKeyParse {
+  const rows: AnswerKeyRow[] = [];
+  const unscored: { paper: number; item: number }[] = [];
+  const malformed: string[] = [];
+  const declared = new Map<number, number>();
+  // The cell count of the FIRST scored row of each paper, which every later row
+  // of that paper has to match. See the arity check below.
+  const arityByPaper = new Map<number, number>();
+  let paper = 0;
+  // `LINE_TERMINATORS`, not `/\r?\n/`, and this is the FAIL-OPEN copy of that
+  // omission. `.` cannot match a lone CR or U+2028, so a key using either
+  // collapsed to one line, matched no rows, and this gate reported
+  // `objectiveFailed: 0` with `reading: 0` and `listening: 0` -- a clean bill
+  // of health for items it never read, which `--write` would then persist.
+  // `mock-stem-coverage.ts` had the same omission in the direction that only
+  // adds noise; the hardening went to the harmless copy first because the two
+  // were written out separately instead of shared.
+  for (const line of text.split(LINE_TERMINATORS)) {
+    // EVERY level-2 heading resets the paper; only `## Prueba <digit>` sets it.
+    //
+    // The old `if (heading) paper = ...` could only ever SET, never clear, and
+    // that is live in this corpus rather than hypothetical: `a2/mock-1` and
+    // `a2/mock-2` write `## Pruebas 3 and 4` -- PLURAL, so `(\d)` cannot follow
+    // the `s` -- above a section whose own text says it is "not read by the
+    // audit". `paper` stayed 2 through it, so any numbered table added there
+    // would be scored as listening. The A1 keys were safe only by luck: they
+    // happen to spell `## Prueba 3` and `## Prueba 4`, which match and reset.
+    //
+    // Resetting to 0 rather than leaving it is the fail-CLOSED choice: an
+    // unrecognised heading means "I do not know what section this is", and the
+    // count check below then catches a Prueba whose rows went missing.
+    if (/^##\s/.test(line)) {
+      const heading = /^## Prueba (\d)/.exec(line);
+      paper = heading ? Number(heading[1]) : 0;
+      // The heading declares its own size -- `## Prueba 1 · Comprensión de
+      // lectura (25 items)`. That is the invariant the guards were missing: a
+      // count the FILE states, against a count the parse produced. Every silent
+      // drop below shows up as a shortfall here, including the shapes the
+      // `malformed` detector cannot see.
+      const count = /^## Prueba \d[^(]*\((\d+) items?\)/.exec(line);
+      if (heading && count) declared.set(Number(heading[1]), Number(count[1]));
+    }
+    // `([^|]*)` rather than `\s*([^|]+)\s*`. The old shape measured CUBIC --
+    // 1.1s at a 2000-character line, 8.7s at 4000 -- which is strictly worse
+    // than the two quadratic patterns CodeQL flagged in the sibling module, and
+    // it is reachable by the same argument: `buildSpanishA1MockAudit` is
+    // exported and takes a caller-supplied `root`. Fixing only the new copy and
+    // leaving this one was the wrong call. `clean` already trims, so every row
+    // in the corpus parses identically.
+    const row = /^\|\s*(\d+)\s*\|.*\|([^|]*)\|$/.exec(line);
+    if (row === null) {
+      if (looksLikeDataRow(line)) malformed.push(line);
+      continue;
+    }
+    if (paper !== 1 && paper !== 2) continue;
+    // REJECT a row whose CELL COUNT disagrees with its table, rather than
+    // taking the tail of a cell a stray pipe split.
+    //
+    // `([^|]*)` takes the LAST pipe-delimited run, so a pipe inside the
+    // requirement cell silently truncates the list:
+    //
+    //     | 1 | a | casa \| ayuntamiento |   ->  ["ayuntamiento"]   `casa` gone
+    //     | 1 | a | `a|b`, casa |            ->  ["b`", "casa"]
+    //
+    // A SHORTER requirement list is the fail-open direction: fewer things for
+    // `taught` to miss, so the item is likelier to be credited as answerable
+    // from the book.
+    //
+    // A first attempt compared the regex's capture against the last split
+    // piece, which is WORTHLESS -- both take the last run, so they agree by
+    // construction and the inline-code case sailed through. My own attack
+    // matrix caught that, not review.
+    //
+    // The invariant that does work is the table's own: every row in a markdown
+    // table has the same number of cells. A stray pipe gives the row one more;
+    // an escaped `\|` gives it one fewer than the row pattern saw. Either way
+    // it disagrees with the first row of its paper, and disagreement is all we
+    // need -- we do not have to know which cell was meant.
+    // TWO checks, because neither catches the other's case -- which I found by
+    // running the matrix, after a single-check version passed one of them.
+    //
+    // ARITY catches a pipe that SPLITS a cell (`` `a|b` ``): the row gets one
+    // more cell than the first row of its paper.
+    //
+    // ESCAPE runs FIRST, and the reason is not the one an earlier draft of this
+    // comment gave. That draft said arity could not see `casa \| ayuntamiento`
+    // because the split and the regex disagree in opposite directions; measured
+    // on the real A1 key, that row splits into 7 pieces against an expected 6,
+    // so arity catches it perfectly well. The claim was false.
+    //
+    // The check is still load-bearing, for a different reason: arity is seeded
+    // from the FIRST scored row of each paper. An escaped pipe in THAT row
+    // would seed a wrong arity and then reject all 24 of its honest siblings.
+    // Running the escape test before `arityByPaper.set` is what prevents it.
+    // A requirement is a Spanish lexeme; a pipe has no business inside one.
+    if (/\\\|/.test(line)) {
+      malformed.push(line);
+      continue;
+    }
+    const arity = line.split("|").length;
+    const expected = arityByPaper.get(paper);
+    if (expected === undefined) {
+      arityByPaper.set(paper, arity);
+    } else if (arity !== expected) {
+      malformed.push(line);
+      continue;
+    }
+    const requires = (row[2] ?? "").split(",").map(clean).filter(Boolean);
+    if (requires.length === 0) {
+      // NOT A PASS, AND NOT A FAILURE EITHER. This row is unusable, and both
+      // ways of scoring it are wrong in a way that hides something:
+      //
+      //   requires: [""]  -- what `+` -> `*` produced before the filter. `taught`
+      //                      never contains "", so the item FAILS on a
+      //                      requirement nobody wrote, inflating
+      //                      `objectiveFailed` and putting "" in
+      //                      `missingObjectiveLexemes`.
+      //   requires: []    -- what the filter alone produced. `[].every(...)` is
+      //                      `true`, so the item PASSES unconditionally and
+      //                      counts toward `reading`/`listening`. Round two of
+      //                      security review caught this: the fix for the
+      //                      phantom failure had landed on a phantom pass,
+      //                      which is the FAIL-OPEN direction.
+      //
+      // So it is neither. It is reported, and `parseAnswerKey` refuses the file.
+      unscored.push({ paper, item: Number(row[1]) });
+      continue;
+    }
+    rows.push({ paper, item: Number(row[1]), requires });
+  }
+  return { rows, unscored, malformed, declared };
+}
+
+/**
+ * Does this line CLAIM to be one of the table's data rows?
+ *
+ * By SHAPE rather than by a prefix, because the first version -- a prefix test,
+ * `/^\|\s*\d+\s*\|/` -- required the pipe at index 0 and a bare ASCII digit
+ * immediately after it, which round three showed is blind to every edit but the
+ * one it was written for. All of these dropped their row into no bucket at all
+ * while the gate reported success:
+ *
+ *     | 2 | a | perro |     one trailing space   <- the only one it caught
+ *    " | 2 | a | perro |"   one leading space, legal in GFM
+ *     | **2** | a | perro | a bolded item number, already house style in
+ *                           `pre-a1/mock-1-answer-key.md`
+ *     | 2a | a | perro |    an item label with a suffix
+ *
+ * So: up to three leading spaces (GFM's own allowance), a pipe, and at least
+ * three cells, of which the FIRST contains a digit. The digit is what separates
+ * a data row from the furniture -- `| # | Clave | Requiere |` and `|---|---|---|`
+ * carry none, and flagging those would make the gate refuse every real key.
+ *
+ * It is deliberately generous, and that is safe because it only ever runs on
+ * the six keys the audit opens, which flag zero lines between them. Measured
+ * across the wider corpus for scale: a line somewhere in 100 of the 8670
+ * markdown files under `human-languages/` would trip it, mostly numbered
+ * two-column tables that the arity check above already excludes from a
+ * stricter draft's 177.
+ *
+ * This is the cheap half. The count check in `assertAnswerKeyParse` is the half
+ * that does not depend on guessing which mutations a human might make.
+ */
+function looksLikeDataRow(line: string): boolean {
+  if (!/^ {0,3}\|/.test(line)) return false;
+  // FIVE, not four. A data row of this table has THREE columns, so splitting on
+  // the pipe yields five pieces -- the two empty edges plus the three cells.
+  // Four is what a TWO-column numbered table yields (`| 1 | ***onru*** |`), and
+  // those exist all over the corpus. A test pins it, because the first draft of
+  // this used four and the test is what caught it.
+  const cells = line.split("|");
+  return cells.length >= 5 && /\d/.test(cells[1] ?? "");
+}
+
+/**
+ * Refuse a parse that lost something, and say what.
+ *
+ * Exported and taking a PARSE rather than a path, for the reason
+ * `parseAnswerKeyRows` is: the only way into this logic used to be a
+ * twenty-minute run over the real corpus, which is why three rounds of review
+ * found its holes by reading instead of by a failing test.
+ *
+ * A GATE THAT READ NOTHING MUST NOT REPORT SUCCESS -- and "nothing" has six
+ * shapes, not one. The first version of this checked `rows.length === 0`,
+ * which fires only when EVERY row is lost; one trailing space drops a single
+ * row and sails past it, and a single dropped row is an item this gate never
+ * scores, which downstream is indistinguishable from an item that passed.
+ */
+export function assertAnswerKeyParse(parse: AnswerKeyParse, name: string): void {
+  const { rows, unscored, malformed, declared } = parse;
+  // Sanitised HERE, not at the call site. This function is exported and
+  // `package.json` declares no `exports` map, so a deep importer hands it a
+  // caller-supplied string that went straight into four one-line error
+  // messages; a `\r` or a `\u001b[2K` in it forges or erases a log line. That
+  // is the same argument `spanishMockDir` two hundred lines up already makes.
+  //
+  // CALLERS MUST PASS THE RAW NAME. `reportableFilename` QUOTES, so it is NOT
+  // idempotent -- `"key.md"` applied twice is `"\"key.md\""` -- and a draft of
+  // this comment claimed the opposite, which would have invited a future
+  // maintainer to re-add `reportableFilename(path)` at the call site and print
+  // double-quoted paths. `parseAnswerKey` was changed to pass `path` directly
+  // in the same commit that moved the sanitising here.
+  const label = reportableFilename(name);
+  if (malformed.length > 0) {
+    // The rejected line is NAMED rather than counted. A message that says only
+    // "1 table row rejected" tells a maintainer that something is wrong and
+    // nothing about where, in a file of 160 lines. Through
+    // `reportableFilename`, because this line is file content: it strips C0/C1
+    // and quotes, so a row carrying a newline cannot forge a second log line.
+    const first = reportableFilename(malformed[0] ?? "");
+    throw new Error(
+      `${label}: ${malformed.length} table row(s) the row pattern rejected, first ${first}`,
+    );
+  }
+  if (unscored.length > 0) {
+    const items = unscored.map(({ paper, item }) => `${paper}.${item}`).join(", ");
+    throw new Error(`${label}: item(s) ${items} state no requirements`);
+  }
+  if (rows.length === 0) {
+    throw new Error(`${label}: parsed no answer-key rows`);
+  }
+  // ONE CHECK, AND IT IS AN EQUALITY.
+  //
+  // Five rounds of review found five fail-open holes here, each one in the fix
+  // for the last, because each fix added another PARTIAL check:
+  //
+  //   zero rows          missed a single dropped row
+  //   adjacency          blind at index 0, so a lost FIRST row read as contiguous
+  //   span, replacing it STRICTLY WEAKER -- `[1,1,3]` has span 3 and length 3, so a
+  //                      duplicated row plus a dropped one passed, which the
+  //                      adjacency check it replaced had caught
+  //   declared count     switched itself off when a heading lost `(25 items)`
+  //
+  // The lesson is not that the sixth partial check will be the right one. It is
+  // that a set of partial checks has holes at the joins, and the only way to
+  // stop finding them one round at a time is to stop enumerating what can go
+  // wrong and state what RIGHT looks like.
+  //
+  // The file says how many items each scored paper has, and the papers number
+  // straight through: Prueba 1 is 1..n, Prueba 2 is n+1..n+m. So the expected
+  // item SET is derivable, and the check is one equality against it. A drop, a
+  // duplicate, a lost first or last row, a renumbering, a merge are all the
+  // same failure now: "the items are not the items".
+  //
+  // COMPLETE FOR THE ITEM SET, AND THAT IS ALL. A draft of this comment called
+  // it "a complete specification", which it is not -- transposing the
+  // requirement cells of items 3 and 4 while leaving their numbers alone still
+  // passes, and item 3 is then scored against item 4's requirements. No
+  // invariant over item NUMBERS can see that, and there is no second source to
+  // check the requirements against; `report:mock-stem-coverage` exists because
+  // the rows themselves are the thing nobody can verify mechanically. Overclaim
+  // it here and the next reader trusts a guarantee that was never made.
+  const expected = (paper: number, first: number): Set<number> => {
+    const count = declared.get(paper);
+    // UNCONDITIONAL. This was `count !== undefined && ...`, so the one guard
+    // that did not depend on anticipating the damage switched itself off
+    // whenever a heading stopped saying `(25 items)` -- silently. Both edits
+    // that do that are ordinary: `## Prueba 3 · Expresión e interacción
+    // escritas` in the SAME FILE already carries no count, and `ítems` is the
+    // correct Spanish spelling in a file that writes `Comprensión`.
+    if (count === undefined) {
+      throw new Error(`${label}: Prueba ${paper} heading declares no item count`);
+    }
+    // A SCORED PAPER WITH NO ITEMS IS NOT A PAPER, and the equality cannot say
+    // so on its own: `(0 items)` makes `want` empty, an empty `want` matches an
+    // empty `got`, and the paper is skipped. The per-paper
+    // `parsed no Prueba N rows` check this replaced caught that
+    // unconditionally, and deleting it alongside the others reopened the hole
+    // -- the same mistake as replacing adjacency with span one commit earlier.
+    //
+    // Worse, it is asymmetric. `(0 items)` on Prueba 1 is caught incidentally,
+    // because `first` never advances and Prueba 2's expected run then starts at
+    // 1 while the file numbers from 26. Only the LAST paper fails open, and
+    // stubbing out a not-yet-authored paper as `(0 items)` is ordinary
+    // editorial work.
+    //
+    // The upper bound is the same guard doing a second job.
+    // `Array.from({ length: count })` does the work BEFORE anything caps the
+    // message: `(999999999 items)` aborts the process outright --
+    // `FATAL ERROR: invalid table size - JavaScript heap out of memory`,
+    // exit 134, uncatchable, no gate message at all. `(99999999999 items)` is
+    // SAFER, because `ArrayCreate` rejects a length at or above 2^32 with a
+    // plain `RangeError`; the merely enormous number is the dangerous one. On a
+    // memory-capped CI runner the dangerous band starts far lower.
+    //
+    // The real keys declare 10 or 25.
+    // `Number.isInteger` FIRST, because both comparisons below are false for
+    // `NaN` -- so a non-numeric count would fall straight through to
+    // `Array.from({ length: NaN })`, an empty `want`, and the exact fail-open
+    // this bound exists to close. Unreachable from file content, where `count`
+    // comes from `(\d+)`; reachable from a caller that fabricates the parse,
+    // which is the same deep-import threat model this function's OTHER argument
+    // is hardened against ten lines up. Consistency costs one call.
+    if (!Number.isInteger(count) || count < 1 || count > MAX_DECLARED_ITEMS) {
+      throw new Error(
+        `${label}: Prueba ${paper} heading declares ${count} items, outside 1-${MAX_DECLARED_ITEMS}`,
+      );
+    }
+    return new Set(Array.from({ length: count }, (_, index) => first + index));
+  };
+  let first = 1;
+  for (const paper of [1, 2]) {
+    const want = expected(paper, first);
+    first += want.size;
+    const got = rows.filter((row) => row.paper === paper).map((row) => row.item);
+    // Sets, not `includes`/`indexOf`. Those made this quadratic in the row
+    // count -- measured 10.1s at n=100000 -- on the PASSING path as well as the
+    // failing one.
+    const seen = new Set<number>();
+    const duplicated: number[] = [];
+    for (const item of got) {
+      if (seen.has(item)) duplicated.push(item);
+      else seen.add(item);
+    }
+    const missing = [...want].filter((item) => !seen.has(item));
+    const extra = got.filter((item) => !want.has(item));
+    if (missing.length === 0 && extra.length === 0 && duplicated.length === 0) continue;
+    // Every part is named, because "the items are not the items" is true of a
+    // renumbered table and of a single lost row alike, and a maintainer needs
+    // to know which. The counts are capped in the message; the numbers
+    // themselves are the file's own item labels, not free text.
+    const say = (label: string, list: number[]) =>
+      list.length === 0 ? "" : ` ${label} ${list.slice(0, 5).join(", ")}${list.length > 5 ? ", ..." : ""}`;
+    throw new Error(
+      `${label}: Prueba ${paper} declares ${want.size} items ${[...want][0]}-${[...want][want.size - 1]}, but parsed` +
+        `${say("is missing", missing)}${say("has unexpected", extra)}${say("duplicates", duplicated)}`.trimEnd(),
+    );
+  }
+}
+
+function parseAnswerKey(path: string): readonly AnswerKeyRow[] {
+  const parse = parseAnswerKeyRows(readFileSync(path, "utf8"));
+  assertAnswerKeyParse(parse, path);
+  return parse.rows;
+}
+
+/**
+ * The taught set this gate measures against, and the ONLY copy of it.
+ *
+ * Exported rather than left local because a second consumer now exists --
+ * `mock-stem-coverage.ts`, which reports the words a paper's STEMS and OPTIONS
+ * use -- and a reporter that rebuilds the taught set from its own reading of
+ * the corpus is measuring a different thing from the gate it reports on.
+ * `root-slug-splits.ts` records the same lesson under "one notion of a slug":
+ * a guard reading different bytes from the thing it guards is not a guard.
+ *
+ * HEADWORDS ONLY, deliberately, and that is a live argument rather than an
+ * oversight -- see HL-C422. A lexeme taught inside another lesson's body reads
+ * as untaught here, which is why `glossed-not-taught.ts` exists to queue those
+ * for review instead of silently crediting them.
+ */
+export function spanishTaughtForms(
   root = defaultCurriculumRoot(),
   level: MockAuditLevel = "A1",
-) {
+): { taught: Set<string>; lessonCount: number } {
   const everything = loadEverything(root);
   const lessons = lessonsUpToLevel(
     everything.lessons.filter((lesson) => lesson.language === "spanish"),
@@ -89,10 +506,18 @@ export function buildSpanishA1MockAudit(
   for (const credit of citationFormCredits) taught.add(credit);
   for (const credit of numberWordCredits) taught.add(credit);
   for (let number = 0; number <= 100; number += 1) taught.add(String(number));
+  return { taught, lessonCount: lessons.length };
+}
+
+export function buildSpanishA1MockAudit(
+  root = defaultCurriculumRoot(),
+  level: MockAuditLevel = "A1",
+) {
+  const { taught, lessonCount } = spanishTaughtForms(root, level);
 
   const answerKeys = [1, 2].map((mock) => ({
     mock,
-    rows: parseAnswerKey(resolve(root, `${AUDIT_DIR[level]}/mock-${mock}-answer-key.md`)),
+    rows: parseAnswerKey(resolve(root, `${spanishMockDir(level)}/mock-${mock}-answer-key.md`)),
   }));
   const mocks = answerKeys.map(({ mock, rows }) => {
     const failed = rows
@@ -102,7 +527,7 @@ export function buildSpanishA1MockAudit(
         missing: row.requires.filter((entry) => !entry.startsWith("!") && !taught.has(entry)),
       }))
       .filter((row) => row.missing.length > 0);
-    const passes = (row: Item) => row.requires.every((entry) => entry.startsWith("!") || taught.has(entry));
+    const passes = (row: AnswerKeyRow) => row.requires.every((entry) => entry.startsWith("!") || taught.has(entry));
     return {
       mock,
       reading: rows.filter((row) => row.paper === 1 && passes(row)).length,
@@ -130,7 +555,7 @@ export function buildSpanishA1MockAudit(
       numberWordCredits,
       numericCredits: "0-100",
     },
-    lessonCount: lessons.length,
+    lessonCount,
     taughtForms: taught.size,
     objectiveFailed: mocks.reduce((sum, mock) => sum + mock.objectiveFailed, 0),
     mocks,
@@ -155,13 +580,13 @@ export function runSpanishA1MockAudit(
   const mode = args.find((arg) => arg.startsWith("--") && arg !== "--level");
   const levelArg = args.includes("--level") ? args[args.indexOf("--level") + 1] : "A1";
   const level: MockAuditLevel | undefined =
-    levelArg === "pre-A1" || levelArg === "A1" ? levelArg : undefined;
+    levelArg === "pre-A1" || levelArg === "A1" || levelArg === "A2" ? levelArg : undefined;
   if (
     (mode !== "--write" && mode !== "--check" && mode !== "--report") ||
     level === undefined
   ) {
     process.stderr.write(
-      "usage: spanish-a1-mock-audit-cli (--write | --check | --report) [--level pre-A1|A1]\n",
+      "usage: spanish-a1-mock-audit-cli (--write | --check | --report) [--level pre-A1|A1|A2]\n",
     );
     return 2;
   }

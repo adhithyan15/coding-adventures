@@ -1,0 +1,23 @@
+{
+  "chapter": 451,
+  "title": "La cola y el carné",
+  "label": "ch:es-turno",
+  "canDo": "I can get through a counter: queue, put my name on a list, show the right card, keep the right slip of paper, and follow a notice that says what will be checked and when.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C451-sintesis-turno",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C451-TURNO-01",
+      "ES-LEX-C451-TURNO-02",
+      "ES-LEX-C451-TURNO-03",
+      "ES-LEX-C451-TURNO-04",
+      "ES-LEX-C451-TURNO-05",
+      "ES-LEX-C451-TURNO-06"
+    ],
+    "note": "SIX WORDS RATHER THAN FIVE, because the counter scene completes three exam rows at once. FOUR SPANISH WORDS NOW DIVIDE WHAT ENGLISH CALLS A CARD OR A TICKET, and the sort is by job and never by material, since three of them look identical: carne says who you are, billete carries you somewhere (and is also a banknote, so asking for one at a till suggests you want change), entrada gets you in, ticket proves you paid. carne vs tarjeta has its own test -- did somebody official issue it ABOUT YOU. Etymology does most of the work: apuntar is built on el punto and Latin punctum from pungere, to pierce, so all three of its senses are one action, putting a point on something -- on paper, down a rifle, or beside your own name on a list; revisar joins latin-videre with ver and el aviso, three words from one Latin verb hiding it to three different degrees, and the family only becomes visible when the third arrives; mostrar is monstrare from monstrum, an OMEN, something shown as a warning, so mostrar and monstruo are one root that split into a neutral word and a frightening one; carne is French carnet from quaternum, four sheets folded, making it the same object as el cuaderno seen at a different size; ticket went to England as Old French estiquet, a label STUCK on something, narrowed to a paid slip, and came back with English spelling, while Spanish kept the French form separately as la etiqueta -- one Frankish word for sticking, ending up as both a supermarket receipt and the word etiquette. la cola is two unrelated words, cauda (tail, hence queue) and Greek kolla (glue), and English queue is independently the same cauda by way of French. mostrar shows the stressed-o break inside a conjugation (muestro / mostramos) after the previous chapter showed it in a noun. Register matters: mostrar is what the sign says and ensenar what a friend says. The sintesis notice uses usted commands for the instructions and switches to nosotros for revisamos, which is how a notice stops giving orders and starts making a promise; apuntese needs its written accent to hold the stress the added pronoun would otherwise move."
+  }
+}

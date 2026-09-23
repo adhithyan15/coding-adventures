@@ -11,7 +11,7 @@ gloss: "first — which one, not how many, and a word not built from odin"
 concept_tag: RU-ORDINAL-FIRST
 prerequisites: [RU-C25-practice]
 sounds: [stress-unmarked]
-roots: [proto-indo-european-per]
+roots: [pie-per]
 etymology_hook: "pervyy is not built from odin, exactly as English first is not built from one: both go back to a root meaning forward, foremost, which is also the per- of English first's cousin fore."
 duration:
   max_seconds: 270

@@ -10,7 +10,7 @@ gloss: you (singular) / you (plural) — a PURELY grammatical number distinction
 concept_tag: PRONOUN-YOU
 prerequisites: [LA-C20-name-case-variation]
 sounds: [long-vowel-u, macron-long-vowel]
-roots: [tu-pie, vos-pie]
+roots: [pie-tu, vos-pie]
 etymology_hook: "tū ('you,' singular) and vōs ('you,' plural) are a PURELY grammatical number distinction in Classical Latin — genuinely NO politeness dimension existed yet; the later habit of using plural vōs to address one person politely only developed in LATE Latin, after the classical period, and is the direct ancestor of French's polite vous — a genuinely separate solution from German's Sie, which independently repurposes an entirely different pronoun (3rd-person plural 'they'), not a descendant of vōs at all"
 duration:
   max_seconds: 240

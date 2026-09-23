@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-433-EDIFICIO",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-433-EDIFICIO"
+  ],
+  "after": []
+}

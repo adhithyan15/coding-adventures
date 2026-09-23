@@ -1,0 +1,21 @@
+{
+  "chapter": 465,
+  "title": "El cuaderno de campo",
+  "label": "ch:es-apunte",
+  "canDo": "I can keep a shared written record: read the instructions inside a weather notebook, note down a temperature and a rainfall, and understand why a zero is not the same as a blank.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C465-sintesis-apunte",
+    "kind": "task",
+    "summary": "Read the instructions taped inside a shared weather notebook, then fill in a day out loud.",
+    "assesses": [
+      "ES-LEX-C465-APUNTE-01",
+      "ES-LEX-C465-APUNTE-02",
+      "ES-LEX-C465-APUNTE-03",
+      "ES-LEX-C465-APUNTE-04"
+    ],
+    "note": "THE CHAPTER'S SUBJECT IS THE MOMENT AN IMPRESSION BECOMES A RECORD. hace calor and llueve are both true and neither can be compared with yesterday; la temperatura and la lluvia can, which is the whole reason a notebook wants nouns. ANOTAR IS NOT APUNTAR and the difference is what the writing is for: apuntar is punctum, the pen touching down once, a scrap in a pocket; anotar is nota, a mark made to be read, a line in a book somebody else will open. A doctor apunta while you talk and anota in your file afterwards -- the etymologies say the same thing as the usage, which is rare enough to point out. el cuaderno is QUATERNUS on quattuor, FOUR, because one fold of a sheet makes four pages and the cheapest book anybody could make was a stack of those; it joins quattuor-latin with cuatro and cuarto, and English kept the count plainer in QUIRE. Its ua does NOT break: the stress sits on -der-, and a vowel is only a candidate for breaking if it is stressed AND came from a short Latin e or o, so this lesson is the counter-case to the stem-change rule rather than an instance of it. la temperatura is TEMPERARE, to mix in the right proportion -- not heat at all -- which is why tempered steel, a temperate climate, a person's temper and tempera paint are one family, and Spanish keeps the verb as templar. Its -ura is the DEVERBAL kind that la factura already taught (the thing an action produces, verb hiding inside); the ADJECTIVE family (alto/altura, ancho/anchura) is the ending's second job and is introduced here as the second thing to look for, not the first. LA LLUVIA MUST NOT TEACH pl- TO ll-: ES-C30-llueve owns that rule (cl-, fl-, pl- all to ll-, citing llamar, llave, llama) and ES-C316-llanto already prints 'Latin pluvia is la lluvia' as its worked example beside lleno and llorar. The lesson says so out loud -- the word was handed over twice before it was needed -- and joins pluere-latin rather than minting pluvia-latin. Grammar in the payoff: usted commands on a notice (anote, escriba, deje, siga) are the subjunctive borrowed, the same form as reduzca on the road sign; and the notice's own point is that UN CERO and LA CASILLA EN BLANCO are different facts."
+  }
+}

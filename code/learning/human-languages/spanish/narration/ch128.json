@@ -4,7 +4,7 @@
   "chapter": 128,
   "title": "The Subjunctive Built From the Yo Form",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:899dc1ba1ef4385f",
+  "sourceHash": "fnv1a64:f8a57e75895c4b2e",
   "lessons": [
     {
       "id": "ES-C18-querer-subjuntivo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51937e93444f8194",
+      "sourceHash": "fnv1a64:583346ff84a3a882",
       "notice": null,
       "blocks": [
         {
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f35ed61789ff4f10",
+      "sourceHash": "fnv1a64:bc3ea7340826d15a",
       "notice": null,
       "blocks": [
         {
@@ -334,7 +334,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:451e65ee6ed39868",
+      "sourceHash": "fnv1a64:f652c054ad5f314e",
       "notice": null,
       "blocks": [
         {

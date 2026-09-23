@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-468-ABRIGO",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-468-ABRIGO"
+  ],
+  "after": []
+}

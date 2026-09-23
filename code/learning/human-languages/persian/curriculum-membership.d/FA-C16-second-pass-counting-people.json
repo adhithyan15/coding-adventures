@@ -1,0 +1,11 @@
+{
+  "id": "FA-C16-second-pass-counting-people",
+  "pathSegment": "FA-PATH-017",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "FA-EXT-031-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

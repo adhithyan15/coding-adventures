@@ -2656,7 +2656,14 @@ fn push_architecture_icon(instructions: &mut Vec<PaintInstruction>, name: &str, 
             instructions.push(white_rect(x + size * 0.47, y + size * 0.24, size * 0.06, size * 0.52));
             instructions.push(white_rect(x + size * 0.24, y + size * 0.47, size * 0.52, size * 0.06));
         }
-        _ => {}
+        _ => {
+            instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(), cx: x + size * 0.5, cy: y + size * 0.5,
+                rx: size * 0.26, ry: size * 0.26, fill: None, stroke: Some("#ffffff".into()),
+                stroke_width: Some(2.0), stroke_dash: None, stroke_dash_offset: None,
+            }));
+            instructions.push(white_rect(x + size * 0.44, y + size * 0.32, size * 0.12, size * 0.36));
+        }
     }
 }
 
@@ -5407,6 +5414,9 @@ mod tests {
         push_architecture_icon(&mut instructions, "database", 0.0, 0.0, 48.0);
         assert!(instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
         assert!(instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
+        let known_count = instructions.len();
+        push_architecture_icon(&mut instructions, "aws:lambda", 0.0, 0.0, 48.0);
+        assert!(instructions.len() > known_count);
     }
 
     #[test]

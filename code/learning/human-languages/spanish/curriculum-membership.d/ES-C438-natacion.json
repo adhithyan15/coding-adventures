@@ -1,0 +1,11 @@
+{
+  "id": "ES-C438-natacion",
+  "pathSegment": "ES-PATH-438-CUERPO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-438-CUERPO",
+      "order": 1
+    }
+  ]
+}

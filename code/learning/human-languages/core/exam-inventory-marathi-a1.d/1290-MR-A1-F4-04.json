@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-F4-04",
+  "category": "Influencing the listener",
+  "label": "respond to an order, a request or a plea",
+  "probe": [
+    "MR-SENSE-CHALEL-OKAY",
+    "MR-LEX-HO-01",
+    "MR-LEX-BARAM-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-F4-04",
+    "A1-NG6-05"
+  ]
+}

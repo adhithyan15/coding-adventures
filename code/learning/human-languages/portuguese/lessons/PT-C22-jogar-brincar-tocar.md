@@ -10,7 +10,7 @@ gloss: "to play — split three ways, by whether it is a game, a child at play, 
 concept_tag: VERB-PLAY
 prerequisites: [PT-C22-encontrar, PT-C17-mao, PT-C05-practice]
 sounds: [nasal-in, hard-c]
-roots: [latin-iocari, latin-toccare, latin-vinculum]
+roots: [iocari-latin, latin-toccare, latin-vinculum]
 etymology_hook: "jogar ← iocārī 'to jest', from iocus 'a joke' → joke, jocular, juggler; tocar ← Vulgar Latin *toccāre 'to knock, to strike' → touch, toccata, tocsin; brincar is unsettled — most likely through brinco 'earring' ← vinculum 'a bond', with a Germanic 'gleam' word as the rival"
 duration:
   max_seconds: 296

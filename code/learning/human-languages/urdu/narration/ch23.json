@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Before a Postposition, Everything Changes",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:28e785017af0f314",
+  "sourceHash": "fnv1a64:f7ae1e535c63859d",
   "lessons": [
     {
       "id": "UR-C23-kamra",
@@ -990,6 +990,145 @@
             {
               "kind": "speech",
               "text": "Source: Unicode Arabic chart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R23-second-pass-three-layers",
+      "sequence": 1265,
+      "title": "Where a word came from, and what to say when you lose it",
+      "headword": "کوٹ · ہوا · آرام سے",
+      "romanization": "koṭ · hawā · ārām se",
+      "gloss": "second pass over the layers an Urdu word can come from, and the phrase that buys you time",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32599428fe93ba8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Someone is speaking faster than you can follow. Two words, from memory, that ask them to slow down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: an Urdu word arrives by one of several roads",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the road it took"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: کوٹ koṭ. the road it took: straight from English, one generation old.",
+                "word: ہوا hawā. the road it took: Arabic to Persian, Persian to Urdu — a loan of a loan.",
+                "word: گرمی garmī. the road it took: Persian, on a root it shares with Greek thermós."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Three different histories, and the spelling announces none of them. کوٹ is the sharpest case: an identical کوٹ meaning \"fort\" came in from Sanskrit koṭṭa centuries earlier, so the two are homographs rather than cousins and the page gives you no warning at all."
+            },
+            {
+              "kind": "speech",
+              "text": "ہوا is the shape worth naming, because it is not the usual one. A word that splits from a shared root into two roads has two descendants; ہوا was handed along a single chain, Arabic to Persian to Urdu, arriving once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: the phrase for when the road runs out",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آرام سے — ārām se — slowly, gently, take your time. آرام سے کہیں — ārām se kaheṅ — please say it slowly."
+            },
+            {
+              "kind": "speech",
+              "text": "سے is the postposition with, so the phrase is literally with ease. Every letter in it is already yours, and it is worth more in a first conversation than any of the three words above."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask someone to say it slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask someone to say it slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three words above came from English, and how recently",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three words above came from English, and how recently]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one was borrowed twice before it reached Urdu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one was borrowed twice before it reached Urdu]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the first-meeting page once more, aloud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the first-meeting page once more, aloud]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word came straight from English? (کوٹ.) What else does that spelling mean, and is it related? (A fort, from Sanskrit — unrelated.) What makes ہوا a loan of a loan? (Arabic to Persian, then Persian to Urdu.) And what does آرام سے say literally? (With ease.)"
             }
           ]
         }

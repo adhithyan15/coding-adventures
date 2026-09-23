@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-V-14",
+  "category": "The verb",
+  "label": "the present tense declares the speaker's own gender",
+  "probe": [
+    "MR-GRAMMAR-PRESENT-GENDER",
+    "MR-PHRASE-YETO-YETE-01"
+  ],
+  "note": "MARATHI-SPECIFIC. Spanish verbs never mark the speaker's gender, so no Spanish point covers this; assessment-spec.md makes it assessable by requiring consistent agreement rather than one assumed candidate identity.",
+  "anchorIds": [
+    "editorial-marathi-structure",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

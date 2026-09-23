@@ -1,20 +1,21 @@
 {
   "language": "german",
   "chapter": 11,
-  "sourceHash": "fnv1a64:761e7e109d83b508",
+  "sourceHash": "fnv1a64:0ddd375377b66473",
   "lessonIds": [
     "GE-C07-sonne",
     "GE-C07-sonntag",
     "GE-C07-sabbat",
     "GE-C07-samstag",
     "GE-C07-sonnabend",
-    "GE-C07-wochentage-2"
+    "GE-C07-wochentage-2",
+    "GE-R07-spaet-und-was-drin-steckt"
   ],
   "voiceLessons": 6,
   "drivablePrefix": 6,
   "text": "german/narration/ch11.txt",
   "json": "german/narration/ch11.json",
-  "textHash": "fnv1a64:65caa7a522c72572",
-  "jsonHash": "fnv1a64:499e4eb25545f030",
+  "textHash": "fnv1a64:c6a3997add114518",
+  "jsonHash": "fnv1a64:d90d14deddd5e9bc",
   "findings": []
 }

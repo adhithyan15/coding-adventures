@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C443-doler",
+    "language": "spanish",
+    "chapter": 443,
+    "sequence": 11280,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:23040de87a60849d"
+  },
+  "findings": []
+}

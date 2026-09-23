@@ -1,0 +1,22 @@
+{
+  "chapter": 438,
+  "title": "El Cuerpo Y El Descanso",
+  "label": "ch:es-cuerpo",
+  "canDo": "I can say where I exercise, report an injury the way a clinic expects to hear it, say I have to rest, and close the story by laughing about it.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C438-sintesis-cuerpo",
+    "kind": "task",
+    "summary": "Read the notice or message this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C438-CUERPO-01",
+      "ES-LEX-C438-CUERPO-02",
+      "ES-LEX-C438-CUERPO-03",
+      "ES-LEX-C438-CUERPO-04",
+      "ES-LEX-C438-CUERPO-05"
+    ],
+    "note": "Wordlist derived from the A2 mock audit, as in 431-437. THE CHAPTER TEACHES ONE TEST: a word looks built, but does the rest of it survive without the piece? polideportivo loses poli- and deportivo stands; descansar loses des- and cansar stands; REIR LOSES re- AND NOTHING IS LEFT, which proves it was never a prefix -- the whole word is Latin ridere. That is the mirror of 434's bateria, which wears an ENDING it never earned; this chapter supplies the word that wears a PREFIX it never had. natacion adds a DOUBLET: natare arrived twice, worn down into nadar by a thousand years of mouths and lifted off the page intact as natacion, and the learned twin is the one on the timetable. torcerse reuses ES-GRAMMAR-STEM-O-UE-06 from dormir rather than re-teaching the o->ue break."
+  }
+}

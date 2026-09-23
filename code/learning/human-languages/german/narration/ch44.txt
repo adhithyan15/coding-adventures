@@ -1,8 +1,8 @@
 German, chapter 44: Arm, Finger, Foot, Heart.
-4 lessons. All 4 can be done entirely by ear.
+5 lessons. All 5 can be done entirely by ear.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 der Arm — the word Hand's own table already named.
 
 Warm-up.
@@ -35,7 +35,7 @@ Wrap-up Recall.
 Give "arm" with its article and plural. (Der Arm, die Arme.) Which earlier table already named this word? (Hand's table — Hand, Arm, Finger, Fuß, Herz.) Why does Arm look almost identical to English arm, when Vater/father do not? (Its sounds were never in Grimm's law's path.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 der Finger — maybe "one of the five".
 
 Warm-up.
@@ -67,7 +67,7 @@ Wrap-up Recall.
 Give "finger" with its article and plural. (Der Finger, die Finger — unchanged.) What number might Finger be built on, and how certain is that link? (Fünf, "five" — plausible, not proven.) Name one other word in this book that carries the same kind of unsettled-but-cited etymology. (Hören's "sharp-eared" account.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 der Fuß — Grimm's law, on a second word.
 
 Warm-up.
@@ -100,7 +100,7 @@ Wrap-up Recall.
 Give "foot" with its article and plural. (Der Fuß, die Füße.) Which family word already showed this same sound-law step? (Vater/father, both p becomes f.) Why does Fuß keep its ß while Fluss does not? (Long vowel before it, by the eszett rule.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 das Herz — the body list, complete at last.
 
 Warm-up.
@@ -136,3 +136,31 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Give "heart" with its article and plural. (Das Herz, die Herzen.) Which two earlier words showed the same Grimm's-law k becomes h swap? (Hören and Hund.) Name all five words from that original table, now that all five are taught. (Hand, Arm, Finger, Fuß, Herz.) Which one breaks the chapter's masculine pattern, and how? (Herz — it is neuter.)
+
+
+Lesson 5 of 5.
+Herz — and the last few this book showed you exactly once.
+
+Warm-up.
+[pause 3 seconds]
+The heart. Say it, and let the z land as ts rather than as an English z.
+
+Across the family.
+Herz and English heart are the same word, separated by one regular sound change: the k of the older form became h in the Germanic line, the same swap already heard between hören and hear, and between Hund and hound. Once you have seen it three times it stops being a curiosity and becomes something you can use to guess.
+Haupt and head are that same pair — and this is the one place the guess would mislead you, because the word it predicts is not the word Germans say. For the thing on your shoulders they reach for the old cup-word instead. A sound law tells you which words are cousins. It does not tell you which cousin people chose.
+
+Guided Practice: the apology, and the two warm thank-yous.
+[pause 1 second]
+[your turn — say: bump into someone — Entschuldigung]
+[pause 8 seconds for the answer]
+[your turn — say: stop a stranger to ask something — and notice it is the same word]
+[pause 8 seconds for the answer]
+[your turn — say: the thank-you with the adjective — danke schön]
+[pause 8 seconds for the answer]
+[your turn — say: the warmest everyday one — vielen Dank]
+[pause 8 seconds for the answer]
+English splits sorry from excuse me; German does not, and your voice carries the difference the vocabulary declines to.
+
+Wrap-up Recall.
+[pause 3 seconds]
+What sound does z make in Herz? (ts.) Which sound change links Herz to heart? (k becoming h in the Germanic line.) Does German use one word or two for sorry and excuse me? (One.)

@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-460-PEDIR",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can borrow a tool from a shared store: read the notice, apply the way the form wants, and understand that there is a waiting list.",
+  "prerequisites": [
+    "ES-EXT-459-STOCK"
+  ]
+}

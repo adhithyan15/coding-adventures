@@ -10,7 +10,7 @@ gloss: identity or nature against location or resulting condition
 concept_tag: PT-BE-CONTRAST
 prerequisites: [PT-C16-ser-roots, PT-C02-como-vai-esta, PT-C05-morar]
 sounds: [nasal-ao, unstressed-vowel-reduction]
-roots: [latin-sedere, latin-stare]
+roots: [sedere-latin, stare-latin]
 etymology_hook: "ser's sit and estar's stand origins make a useful mnemonic, though esse versus stare caused the meaning split"
 duration:
   max_seconds: 230

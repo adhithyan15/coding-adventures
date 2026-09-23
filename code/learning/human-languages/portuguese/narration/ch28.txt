@@ -1,8 +1,8 @@
 Portuguese, chapter 28: Sexto ao Decimo.
-6 lessons. All 6 can be done entirely by ear.
+7 lessons. All 7 can be done entirely by ear.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 sexto — the sixth, and where the numbering stops.
 
 Warm-up.
@@ -45,7 +45,7 @@ Wrap-up Recall.
 Say "the sixth floor." (O sexto andar.) How many days does the Portuguese week actually number, and which? (Five — segunda through sexta.) And why do sábado and domingo keep their names? (They were older and holier than the renaming.)
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 sétimo — the seventh, and the first with no day behind it.
 
 Warm-up.
@@ -89,7 +89,41 @@ Wrap-up Recall.
 Where is the stress in sétimo? (On the first syllable — SÉ-ti-mo.) What is the accent doing? (Marking that stress, against the default.) And why is there no sétima-feira? (Sábado kept its own name.)
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
+Finished, or still going on — second pass over ter + participle, and the goodbyes that make the same distinction.
+
+Warm-up.
+[pause 3 seconds]
+Tenho falado. Say what it means in English before reading on. If your answer was "I have spoken", the page is about to disagree with you.
+
+Grammar Lens: the compound that means something else.
+[a table of 2 rows, read aloud]
+falei means I spoke — one finished event.
+tenho falado means I have been speaking — repeatedly, lately.
+Ter + participle looks exactly like the French and Italian compound past and does a different job. It is the single most common mistake an English speaker makes in Portuguese, because the form invites the wrong reading and the wrong reading is almost never corrected out loud.
+The test to apply: was it one event, or has it been going on? One event takes falei. Going on takes tenho falado.
+
+What you've built — the goodbyes draw the same line.
+Portuguese makes the same cut where it takes its leave:
+[a table of 2 rows, read aloud]
+adeus, finished — "to God", no return named.
+até logo, até amanhã, até breve, still going on — each names a return.
+One closes the account; the others leave it open. The same instinct that keeps falei apart from tenho falado is at work in choosing between them, and noticing it once is easier than learning the two rules separately.
+
+Guided Practice.
+[your turn — say: "I spoke to him yesterday" — one event, so one word]
+[pause 8 seconds for the answer]
+[your turn — say: "I have been speaking to him lately" — ongoing, so the compound]
+[pause 8 seconds for the answer]
+[your turn — say: the goodbye for someone you will see tomorrow, then the one for someone you will not see again]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does tenho falado mean? (I have been speaking — lately, repeatedly.) Which form takes one finished event? (Falei.) Which goodbye names no return? (Adeus.) And what is the one test behind both? (One event, or still going on.)
+
+
+Lesson 4 of 7.
 oitavo — the odd ending that became the fraction ending.
 
 Warm-up.
@@ -136,7 +170,7 @@ Wrap-up Recall.
 What ending does oitavo take, and how many of the ten take it? (-avo, and only this one.) How does Portuguese say "one twelfth"? (Um doze avos.) And where did that -avos come from? (From oitavo's exceptional ending.)
 
 
-Lesson 4 of 6.
+Lesson 5 of 7.
 nono — the ninth, squeezed shut.
 
 Warm-up.
@@ -179,7 +213,7 @@ Wrap-up Recall.
 How is nono made out of nove? (By squeezing it shut, not by adding.) Which English word is the ninth hour? (Noon.) And what moved — the word or the hour? (The hour; the name stayed and the time it named drifted.)
 
 
-Lesson 5 of 6.
+Lesson 6 of 7.
 décimo — the tenth, and how the counting goes on.
 
 Warm-up.
@@ -227,7 +261,7 @@ Wrap-up Recall.
 Where is the stress in décimo, and what marks it? (First syllable, marked by the acute accent.) How does Portuguese say "eleventh"? (Décimo primeiro — the words stack.) And how many of the ten have their cardinal visible inside them? (Eight — every one but primeiro and segundo.)
 
 
-Lesson 6 of 6.
+Lesson 7 of 7.
 1.º and 1.ª — the ordinal on a doorplate.
 
 Warm-up.

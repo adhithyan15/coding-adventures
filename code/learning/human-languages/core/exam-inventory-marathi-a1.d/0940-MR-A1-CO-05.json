@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-CO-05",
+  "category": "Coordination",
+  "label": "distributive coordination: ek ... dusraa",
+  "probe": [
+    "MR-JOIN-EK-DUSRA",
+    "MR-LEX-DUSRA"
+  ],
+  "note": "Closed by MR-C31-dusra (chapter 31). Both halves are required: ek was already taught in the numbers chapter, dusraa is new, and the point is the frame rather than either word.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-CO-05"
+  ]
+}

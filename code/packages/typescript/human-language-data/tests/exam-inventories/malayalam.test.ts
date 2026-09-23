@@ -73,17 +73,27 @@ describe("the committed Malayalam A1 inventory", () => {
     // 479 -> 480: ML-S148-letter-pha adds the first headword containing ഫ and
     // gives that same glyph a direct script owner. Both census totals rise by one,
     // while the nine-glyph open set below is unchanged.
-    expect(lessons).toHaveLength(480);
+    // 484 -> 488: chapter 112's four lessons. THREE COUNTS BELOW MOVE, and the
+    // chapter's three headwords are exactly why: ശ 17/13 -> 18/14 from
+    // ആശുപത്രി, and ങ 14/12 -> 15/13 plus ബ 4/4 -> 5/5 from ബാങ്ക്. പോലീസ്
+    // moves nothing because its glyphs are all script-owned already. `shown`
+    // HOLDS AT 69 -- the chapter shows no glyph the track had not already
+    // shown, which was verified before drafting and is re-proved here.
+    // 480 -> 484: chapter 111's four lessons. Every count below is UNCHANGED,
+    // and that is the chapter in one line: it teaches a CONSTRUCTION out of a
+    // past form and a word both long owned, so it introduces no headword
+    // carrying a glyph the census had not already seen and owned.
+    expect(lessons).toHaveLength(488);
     expect(shown.size).toBe(69);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(60);
     expect(open).toEqual([
       { glyph: "ള", fields: 24, tokens: 19 },
-      { glyph: "ശ", fields: 17, tokens: 13 },
-      { glyph: "ങ", fields: 14, tokens: 12 },
+      { glyph: "ശ", fields: 18, tokens: 14 },
+      { glyph: "ങ", fields: 15, tokens: 13 },
       { glyph: "ർ", fields: 12, tokens: 12 },
       { glyph: "ധ", fields: 8, tokens: 7 },
       { glyph: "ൈ", fields: 6, tokens: 6 },
-      { glyph: "ബ", fields: 4, tokens: 4 },
+      { glyph: "ബ", fields: 5, tokens: 5 },
       { glyph: "ഖ", fields: 3, tokens: 3 },
       { glyph: "ഛ", fields: 2, tokens: 2 },
     ]);
@@ -974,8 +984,24 @@ describe("the committed Malayalam A1 inventory", () => {
     // written shape comes when its letter does -- chapter 88's precedent for
     // eighty, and before that ML-C07-numbers-6-10's. The phone is the SECOND
     // word the curriculum has wanted that contains the glyph.
-    expect(coverage.covered).toBe(218);
-    expect(coverage.unmapped).toBe(25);
+    // 218 -> 219: ML-A1-V-19, the present perfect. 219/243 is 90.1, still 90.
+    // THE NOTE WAS HALF STALE AND HALF RIGHT, which is why this one was worth
+    // opening carefully. "Neither the participle nor the construction appears"
+    // -- the PARTICIPLE half is FALSE: ML-C90-past-participle teaches vanna at
+    // sequence 3180, and it even establishes the regularity the Spanish source
+    // points ask about (A1-V-10 irregular participles, A1-V-14 the regular one),
+    // saying outright that the rule is "about the letter and not about the
+    // tense". The CONSTRUCTION half is true: -ittu returned ZERO files.
+    // SO THE CHAPTER COSTS NO VOCABULARY. Both halves of the perfect were
+    // already owned -- the past vannu at ML-C32-varuka, and undu at ML-C32-undu
+    // (sequence 650), whose gloss has read "[someone] has" since it was written.
+    // What was missing was the join, and the recall asks the learner outright
+    // how many new words the chapter cost.
+    // FOUR SHAPES OFF ONE PAST FORM is the chapter's spine: vannu, then vanna
+    // (a vowel sign taken OFF, per ML-C90), then vannittu (-ittu put ON), then
+    // vannittundu. Each row is the row above with one change.
+    expect(coverage.covered).toBe(220);
+    expect(coverage.unmapped).toBe(23);
     expect(coverage.partial).toBe(0);
     // 162 -> 163: the HL-C354 ordinal tranche closed ML-A1-NUM-05 (chapters
     // 67-68). It is the ONLY point that moved, and the numeral column below
@@ -1031,7 +1057,7 @@ describe("the committed Malayalam A1 inventory", () => {
     expect(coverage.byCategory["Kriya (the verb)"]!.covered).toBeGreaterThan(15);
     expect(coverage.byCategory["Vyavahaaram (communicative functions)"]!.covered).toBeGreaterThan(30);
     expect(formatExamCoverage(coverage)).toContain(
-      "malayalam A1 (partial inventory): 218/243 points covered (90%)",
+      "malayalam A1 (partial inventory): 220/243 points covered (91%)",
     );
   }, 60_000);
 });

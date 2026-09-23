@@ -10,7 +10,7 @@ gloss: eye — masculine, with a plural that looks irregular but is the REGULAR 
 concept_tag: FR-BODY-OEIL
 prerequisites: [FR-C30-oeuf, FR-C17-tete, FR-C17-main]
 sounds: [oe-ligature, elision]
-roots: [latin-oculus]
+roots: [oculus-latin]
 etymology_hook: "œil ← Old French oeil ← Vulgar Latin oclus (Latin oculus); yeux ← Old French ieuz/ialz, the REGULAR sound outcome of Latin's plural oculos — les yeux only LOOKS irregular against œil, because œil's own singular took a separate, more eroded path, the same pattern as le/les ciel/cieux and travail/travaux"
 duration:
   max_seconds: 280

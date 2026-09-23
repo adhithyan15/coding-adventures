@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C438-torcerse",
+    "language": "spanish",
+    "chapter": 438,
+    "sequence": 10950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9620cc8b8d344081"
+  },
+  "findings": []
+}

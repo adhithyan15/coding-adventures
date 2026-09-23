@@ -1,8 +1,8 @@
 Persian, chapter 16: One to Five, and the Words English Already Says.
-6 lessons. All 6 can be done entirely by ear.
+7 lessons. You can do the first 6 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 یک (yek) — one, and the first number this book has ever taught.
 
 Warm-up.
@@ -31,7 +31,7 @@ Sources: Wiktionary: یک (yek); Omniglot, Numbers in Persian.
 Type the Persian word for 'one'.
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 دو — two, and a letter doing its third job.
 
 Warm-up.
@@ -62,7 +62,7 @@ Sources: Wiktionary: دو (do); Omniglot, Numbers in Persian.
 Type the Persian word for 'two'.
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
 سه (se) — three, and the first number the hand can make.
 
 Warm-up.
@@ -94,7 +94,7 @@ Sources: Wiktionary: سه (se); Omniglot, Numbers in Persian.
 Write the Persian word for 'three', using the two letters the script chapter taught.
 
 
-Lesson 4 of 6.
+Lesson 4 of 7.
 چهار (chahâr) — four, and one consonant taking three different paths.
 
 Warm-up.
@@ -125,7 +125,7 @@ Sources: Wiktionary: چهار (chahâr); Omniglot, Numbers in Persian.
 Type the Persian word for 'four'.
 
 
-Lesson 5 of 6.
+Lesson 5 of 7.
 پنج (panj) — five, and the word you have already met on a map.
 
 Warm-up.
@@ -156,7 +156,7 @@ Sources: Wiktionary: پنج (panj); Omniglot, Numbers in Persian.
 Count aloud from one to five in Persian.
 
 
-Lesson 6 of 6.
+Lesson 6 of 7.
 Payoff — one to five, out of order.
 
 Warm-up.
@@ -175,3 +175,37 @@ Wrap-up Recall.
 Source: Omniglot, Numbers in Persian.
 [question — say your answer, then pause 16 seconds]
 Count backwards from five to one in Persian.
+
+
+Lesson 7 of 7.
+یک دوست (yek dust) — counting the people you can name.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 3 seconds]
+Two person words, from memory: the one for woman, and the one for friend. Neither is a family role, which is what made them worth learning.
+
+You'll want to know: numbers go in front, and nothing else changes.
+Put a number you now have in front of a person word you now have:
+[a table of 3 rows, read aloud]
+یک دوست yek dust, one friend.
+دو دوست do dust, two friends.
+سه زن se zan, three women.
+Read the middle column down and notice what stays still. دوست does not change between one friend and two, and neither does زن. Persian does not reach for a plural ending once a number has already said how many — the number has done that job, so the noun does not repeat it.
+دوست is also the one to hold on to. It goes back to a root meaning to choose, so a friend in Persian is the one chosen — and the same root gave English choose.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: one friend, then two friends — the noun does not move]
+[pause 8 seconds for the answer]
+[your turn — say: three women]
+[pause 8 seconds for the answer]
+[your turn — say: dust — and what a friend is, literally]
+[pause 8 seconds for the answer]
+[your turn — run: yek, do, se in front of dust, one after the other]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How do you say two friends? (دو دوست do dust — the noun is unchanged.) Why is there no plural ending? (The number already said how many.) What does دوست mean literally? (The one chosen.) And which English word shares its root? (Choose.)

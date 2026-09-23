@@ -18,9 +18,9 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04]
+  knowledge: [TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-SCRIPT-C08-DAYACHESI-04]
 practises:
-  knowledge: [TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04]
+  knowledge: [TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-SCRIPT-C08-DAYACHESI-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -64,14 +64,6 @@ compassion"). Further off, **Arabic** *min faḍlik* ("from your **grace**") and
 - Kannada **ದಯವಿಟ್ಟು** *daya**viṭṭu*** — compassion **+ having placed**
 - Malayalam **ദയവായി** *daya**vāyi*** — compassion **+ as / having become**
 
-## Why it's said this way: Be honest about how it's used
-<!-- hl-knowledge: introduces=[TE-PRAGMATICS-C08-DAYACHESI-03]; assesses=[] -->
-
-Honestly: the standalone word is somewhat **formal / emphatic**. Day-to-day,
-Telugu politeness rides on the **respectful command** ending **‑ండి** (*-aṇḍi*):
-**కూర్చోండి** (*kūrcōṇḍi*) "please sit," **చెప్పండి** (*ceppaṇḍi*) "please tell me."
-That *-aṇḍi* is already "please." Put **దయచేసి** in front to warm it further.
-
 ## Script you'll notice: Sound & structure point
 <!-- hl-knowledge: introduces=[TE-SCRIPT-C08-DAYACHESI-04]; assesses=[] -->
 
@@ -82,18 +74,18 @@ vowel's length and quality by the little sign riding on the consonant — the
 consonant stays put, the vowel-sign changes the tune.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-SCRIPT-C08-DAYACHESI-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "daya" — compassion — then "cēsi," having done]
 - [YOU SAY: the whole word — "dayacēsi" = please]
-- [YOU SAY: the everyday way — the verb ending: "kūrcōṇḍi" = please sit]
+- [YOU SAY: the two pieces again, slowly — "daya" then "cēsi"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-PRAGMATICS-C08-DAYACHESI-03, TE-SCRIPT-C08-DAYACHESI-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C08-DAYACHESI-01, TE-ETYMON-C08-DAYACHESI-02, TE-SCRIPT-C08-DAYACHESI-04] -->
 
 [PAUSE 3s] What is the Telugu word for please? (**దయచేసి** *dayacēsi*.) What do
 its pieces mean? ("**Compassion**" *daya* + "**having done**" *cēsi*.) Which
 cousins ask the same way? (**Tamil, Kannada, Malayalam** with *daya* — plus
-**Arabic** *faḍl*, **Hindi** *kṛpā*.) What carries "please" in ordinary speech?
-(**The respectful verb ending ‑ండి** *-aṇḍi*.)
+**Arabic** *faḍl*, **Hindi** *kṛpā*.) Which sign sits on the middle
+syllable? (**The long‑ē sign ‑ే**, making చ into చే.)

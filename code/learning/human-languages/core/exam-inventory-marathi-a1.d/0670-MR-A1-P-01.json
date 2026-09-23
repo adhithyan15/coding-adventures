@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-P-01",
+  "category": "Case and postpositions",
+  "label": "the dative -laa / -naa",
+  "probe": [
+    "MR-GRAMMAR-DATIVE-LIKING",
+    "MR-GRAMMAR-DATIVE-KNOWLEDGE",
+    "MR-GRAMMAR-DATIVE-FEELING"
+  ],
+  "anchorIds": [
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

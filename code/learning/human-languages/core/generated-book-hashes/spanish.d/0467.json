@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:937ff4abf5894ba8",
+  "lessonIds": [
+    "ES-C467-producir",
+    "ES-C467-suficiente",
+    "ES-C467-alimentar",
+    "ES-C467-objetivo",
+    "ES-R467-repaso-alimento",
+    "ES-C467-sintesis-alimento"
+  ],
+  "tex": "spanish/book/chapters/ch467-alimento.tex"
+}

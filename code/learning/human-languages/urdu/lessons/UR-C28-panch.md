@@ -11,7 +11,7 @@ gloss: "five — the number inside Punjab, and the first five are complete"
 concept_tag: NUMBER-ONE-TO-FIVE
 prerequisites: [UR-C28-char]
 sounds: [rtl, long-a, nasal-vowel]
-roots: [sanskrit-panca, proto-indo-european-penkwe]
+roots: [sanskrit-panca, pie-penkwe]
 etymology_hook: "paanch continues Sanskrit panca from Proto-Indo-European *penkwe -- Greek pente, Latin quinque, English five -- and it is the panch of Punjab, the land of five waters."
 duration:
   max_seconds: 275

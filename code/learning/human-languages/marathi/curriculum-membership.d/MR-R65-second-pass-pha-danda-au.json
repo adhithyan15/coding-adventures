@@ -1,0 +1,11 @@
+{
+  "id": "MR-R65-second-pass-pha-danda-au",
+  "pathSegment": "MR-PATH-067",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MR-EXT-085-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

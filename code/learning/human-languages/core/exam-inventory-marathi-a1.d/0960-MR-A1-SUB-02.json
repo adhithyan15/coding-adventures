@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-SUB-02",
+  "category": "Subordination",
+  "label": "the verbal noun as direct object",
+  "probe": null,
+  "note": "Untaught. Blocked behind MR-A1-V-19: the verbs that take one are the wanting verbs.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SUB-02"
+  ]
+}

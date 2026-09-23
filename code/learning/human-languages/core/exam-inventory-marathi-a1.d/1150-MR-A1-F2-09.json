@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F2-09",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "express certainty by plain assertion",
+  "probe": [
+    "MR-LEX-ASNE-AAHE",
+    "MR-GRAMMAR-AAHE-LAST"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F2-10",
+    "A1-NG1-05"
+  ]
+}

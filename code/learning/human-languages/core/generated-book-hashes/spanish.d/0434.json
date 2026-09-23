@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:d3f276fb856f944d",
+  "lessonIds": [
+    "ES-C434-taller",
+    "ES-C434-maquina",
+    "ES-C434-pieza",
+    "ES-C434-bateria",
+    "ES-C434-cargador",
+    "ES-R434-repaso-maquina",
+    "ES-C434-sintesis-averia"
+  ],
+  "tex": "spanish/book/chapters/ch434-maquina.tex"
+}

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:02516c475339e8f5",
+  "sourceHash": "fnv1a64:8ef1d55554ed021b",
   "lessons": [
     {
       "id": "PA-S03-nanna-bihari-dulava",
@@ -332,7 +332,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1507dbbb28bdb9ff",
+      "sourceHash": "fnv1a64:8bc1779f82634f4f",
       "notice": null,
       "blocks": [
         {

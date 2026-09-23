@@ -1,0 +1,11 @@
+{
+  "id": "ES-C456-cargo",
+  "pathSegment": "ES-PATH-456-CUENTA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-456-CUENTA",
+      "order": 1
+    }
+  ]
+}

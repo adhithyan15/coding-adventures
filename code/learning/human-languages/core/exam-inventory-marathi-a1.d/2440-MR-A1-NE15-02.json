@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE15-02",
+  "category": "Money and the economy",
+  "label": "buyer and seller",
+  "probe": null,
+  "note": "Untaught; SPINE-NAME-EVERYDAY-ACTIONS omits VERB-BUY.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-NE15-02"
+  ]
+}

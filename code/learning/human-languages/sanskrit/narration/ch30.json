@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:60f34dfc3c5541af",
+  "sourceHash": "fnv1a64:2db807cb4be3066a",
   "lessons": [
     {
       "id": "SA-C30-door",
@@ -656,6 +656,185 @@
             {
               "kind": "speech",
               "text": "What does अञ्जलिः (añjaliḥ) mean? (\"the two hands cupped together\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R30-second-pass-from-the-door-to-the-promise",
+      "sequence": 1475,
+      "title": "स्वागतम् (svāgatam) — the door, the seat, and the promise at the end",
+      "headword": "स्वागतम्",
+      "romanization": "svāgatam",
+      "gloss": "second pass over a whole visit — the welcome owed to a guest, the verb that carries the person, and the ending that turns seeing into a purpose",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2114d09b507c1786",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: one letter, read cold"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: one letter, read cold until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word you say to someone standing at your door. Then the one syllable that agrees to whatever they ask next."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A whole visit, in the order it happens. The nouns around it — the door, the seat, the flower, the garland, the cupped hands — are this chapter's. Everything you say is older."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "welcome them in — svāgatam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: welcome them in — *svāgatam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask how they are, respectfully — bhavān kathaṁ asti?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask how they are, respectfully — *bhavān kathaṁ asti?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer for yourself, with no pronoun — kuśalī asmi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer for yourself, with no pronoun — *kuśalī asmi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agree to something — ām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: agree to something — *ām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say when — śvaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say when — *śvaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "close it — punar darśanāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: close it — *punar darśanāya*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: three endings doing three jobs",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what you said",
+                "what the ending did"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what you said: asti. what the ending did: put the sentence in the third person, because bhavān is a third-person word.",
+                "what you said: asmi. what the ending did: carried I by itself, so the pronoun could go.",
+                "what you said: darśanāya. what the ending did: turned seeing into a purpose to act for."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The last of those is the one with no English shape behind it. Punar darśanāya is not a sentence and has no verb: it is again plus seeing wearing an ending that means for the sake of. English needs a clause — until we meet again — where Sanskrit needs an ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script: one letter, read cold",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "इदानीम् — name the letter it opens on, and say why it is full-size rather than a small sign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **इदानीम्** — name the letter it opens on, and say why it is full-size rather than a small sign]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the ending on darśanāya add? (For the sake of — purpose.) How many words does Sanskrit need for tomorrow? (One — śvaḥ.) Is welcoming a guest in a pleasantry or a duty? (A duty.)"
             }
           ]
         }

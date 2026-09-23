@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-ADJ-04",
+  "category": "The adjective",
+  "label": "adjective number and agreement in the plural",
+  "probe": null,
+  "note": "Blocked behind the plurals themselves (MR-A1-N-05 to -07). The SINGULAR agreement is now taught and named (MR-A1-ADJ-01, chapter 49), so this point is the plural column of a paradigm whose singular column is complete.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-04"
+  ]
+}

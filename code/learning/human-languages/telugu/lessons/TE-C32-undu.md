@@ -11,7 +11,7 @@ romanization: uṇḍu
 concept_tag: VERB-BE
 prerequisites: [TE-C31-subha-madhyahnam-register]
 sounds: [retroflex-nd, telugu-standing-u]
-roots: [undu-be-dravidian, le-absence-telugu]
+roots: [dravidian-undu-be, le-absence-telugu]
 etymology_hook: "ఉండు is Telugu's own be-verb where all three sisters use iru-; and it cannot be negated at all — Telugu switches to the separate verb లే-, the root behind Chapter 1's లేదు, where Tamil, Kannada and Malayalam all negate with the shared root il-"
 duration:
   max_seconds: 250

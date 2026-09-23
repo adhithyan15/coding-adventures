@@ -1,0 +1,11 @@
+{
+  "id": "ES-C449-rueda",
+  "pathSegment": "ES-PATH-449-TALLER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-449-TALLER",
+      "order": 2
+    }
+  ]
+}

@@ -10,7 +10,7 @@ gloss: the internet — English Internet, itself Latin inter, between, bolted on
 concept_tag: ES-THING-INTERNET
 prerequisites: [ES-C393-ordenador]
 sounds: [stress-final, t-dental, r-tap, nasal-n, vowel-e]
-roots: [internet-english, inter-latin, nett-old-english]
+roots: [english-internet, inter-latin, nett-old-english]
 etymology_hook: "internet is the English word Internet taken into Spanish unchanged, and the English word is itself a hybrid, inter- from Latin inter, between, bolted onto net, a Germanic noun that is Old English nett, so a Latin prefix and a Germanic word meet inside a twentieth-century coinage; the fact that pays off out loud is the beat, because Spanish says internét with the weight on the last syllable where English says ínternet with the weight on the first, and the Diccionario panhispánico de dudas states this in as many words; the same dictionary records the gender as ambiguous, with both el and la attested and the feminine more frequent, the pull coming from red, the Spanish word for a net, which is feminine, and it capitalises the word when it names the one global network and lowercases it when it works as an ordinary noun; there is no internete and no written accent"
 duration:
   max_seconds: 240

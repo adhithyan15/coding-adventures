@@ -10,7 +10,7 @@ gloss: "age — Portuguese HOLDS its years, and annus loses its double n"
 concept_tag: PT-AGE
 prerequisites: [PT-C14-ter, PT-C12-numeros-16-20]
 sounds: [nasal-anos, plural-s]
-roots: [latin-annus, latin-aetas]
+roots: [annus-latin, aetas-latin]
 etymology_hook: "tenho vinte anos literally 'I HOLD twenty years' (ter ← tenēre), the strongest form of the Romance have-your-age idiom; ano ← annus simplified the -nn- where Spanish palatalized it to año — one Latin word, two Iberian outcomes"
 duration:
   max_seconds: 259

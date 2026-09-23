@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-437-PLAN",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can decide between two dates, say that one clashes, admit a mistake, say how long something takes, and name the evening meal.",
+  "prerequisites": [
+    "ES-EXT-436-GENTE"
+  ]
+}

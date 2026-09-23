@@ -388,6 +388,13 @@ jobs:
           # shard shape/order and any optional local rendered view. The detect
           # job separately forbids shard deletion and tracked render targets.
           npm run check:doc-shards
+          # HL-C419: `roots:` is the cousins join key and the join is exact
+          # string equality, so `stare-latin` and `latin-stare` split one
+          # cousin panel into two of one item each. The corpus carries 191 such
+          # splits today, pinned in a baseline that may only SHRINK; this fails
+          # on a new one, and also on a baseline entry that no longer splits, so
+          # the file cannot go stale while the normalisation PR is still owed.
+          npm run check:root-slug-splits
           # HL20 §6b: every artifact `<track>/assessment.json` promises must be a
           # file that is there. Thirteen tracks named 351 mocks, rubrics, answer
           # keys and task-shape inventories that do not exist, and every gate was

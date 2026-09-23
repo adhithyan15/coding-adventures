@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C444-sintesis-casa",
+    "language": "spanish",
+    "chapter": 444,
+    "sequence": 11410,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5df4b36a01652afe"
+  },
+  "findings": []
+}

@@ -18,8 +18,8 @@ command-line surface. A script written against
 > `--enabled-pass`, `--disabled-pass`). It was retired in favor of
 > drop-in compatibility — users coming from the Java tool
 > shouldn't have to relearn the flag set. The friendlier names
-> may return as v2+ aliases once cli-builder grows alias
-> support.
+> may return as separately reviewed v2+ aliases, but are not part
+> of the current upstream-compatible surface.
 
 ## Source of truth for the flag list
 
@@ -121,25 +121,23 @@ honors them:
 | `-W`  | `--warning_level` |
 | `-D`  | `--define` |
 
-### Known compatibility gaps in v0.1.0
+### Alternate long spellings
 
-cli-builder doesn't currently support multiple long-form aliases
-per flag, so a handful of deprecated upstream aliases are **not
-implemented** in v0.1.0. Users should pass the canonical name
-instead:
+The Java tool retains four alternate double-dash spellings.
+`closurec` accepts each one through cli-builder's `long_aliases`
+field and resolves it to the canonical flag ID before validation
+or runtime wiring:
 
-| Deprecated alias    | Use instead              |
-|---------------------|--------------------------|
-| `--checks-only`     | `--checks_only`          |
-| `--dev_mode`        | `--jscomp_dev_mode`      |
+| Alternate spelling | Canonical spelling |
+|--------------------|--------------------|
+| `--checks-only` | `--checks_only` |
+| `--dev_mode` | `--jscomp_dev_mode` |
 | `--warnings_whitelist_file` | `--warnings_allowlist_file` |
-| `--D` (long form)   | `--define` or `-D`       |
+| `--D` | `--define` |
 
-Passing a deprecated alias yields a clear "unknown flag" error
-with no "did you mean?" suggestion pointing at the canonical
-name. (Improving the suggestion to point at the canonical when
-the deprecated name is recognized is tracked as a v0.2
-enhancement.)
+Canonical and alternate spellings therefore share duplicate,
+constraint, repeatability, and explicit-presence behavior. Help
+lists them deterministically after the canonical spelling.
 
 ## Crate location and layout
 
@@ -253,8 +251,6 @@ body fills in.**
   passes consult; `--compilation_level` selects a canonical pass
   preset; `--use_types_for_optimization` toggles type-driven
   pass behavior.
-- v0.2 alias enhancement: hyphenated long-form aliases per
-  flag, when cli-builder supports them.
 - A `--debug-cv` extension flag that dumps the CV log for
   tracing how each output byte came from which input byte.
 - `--config FILE` for project-level defaults (likely

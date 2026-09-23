@@ -1,13 +1,14 @@
 {
   "language": "marathi",
   "chapter": 65,
-  "sourceHash": "fnv1a64:e0a4d51a448d9d2f",
+  "sourceHash": "fnv1a64:9a960d3babfc7ee0",
   "lessonIds": [
     "MR-W65-ii-independent",
     "MR-W65-o-independent",
     "MR-W65-ai-independent",
     "MR-W65-au-independent",
-    "MR-R65-standing-vowels"
+    "MR-R65-standing-vowels",
+    "MR-R65-second-pass-pha-danda-au"
   ],
   "tex": "marathi/book/chapters/ch65-standing-vowels.tex"
 }

@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-ADJ-03",
+  "category": "The adjective",
+  "label": "adjective gender: the -aa class agrees, in three genders rather than two",
+  "probe": [
+    "MR-A1-FORM-AGREEMENT-FEMININE",
+    "MR-A1-FORM-AGREEMENT-NEUTER"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-03"
+  ]
+}

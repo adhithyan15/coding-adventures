@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R469-repaso-oficina",
+    "language": "spanish",
+    "chapter": 469,
+    "sequence": 12910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1681e293aa24c8ec"
+  },
+  "findings": []
+}

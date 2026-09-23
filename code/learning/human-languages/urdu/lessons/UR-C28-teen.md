@@ -11,7 +11,7 @@ gloss: "three — where Urdu keeps the t that Persian threw away"
 concept_tag: UR-NUMBER-THREE
 prerequisites: [UR-C28-do]
 sounds: [rtl, long-i]
-roots: [sanskrit-tri, proto-indo-european-treyes]
+roots: [sanskrit-tri, pie-treyes]
 etymology_hook: "teen continues Sanskrit tri from Proto-Indo-European *treyes -- English three, Latin tres -- and beside Persian se, which lost both the t and the r, it shows how much more of the old word the inherited road kept."
 duration:
   max_seconds: 265

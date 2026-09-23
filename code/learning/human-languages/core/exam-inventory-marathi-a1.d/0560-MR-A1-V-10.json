@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-V-10",
+  "category": "The verb",
+  "label": "the imperative, plain and polite",
+  "probe": [
+    "MR-GRAMMAR-IMPERATIVE-REGISTER"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-V-11",
+    "A1-F4-01"
+  ]
+}

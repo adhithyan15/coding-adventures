@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:2332cdbab3ca16ca",
+  "lessonIds": [
+    "ES-C439-anden",
+    "ES-C439-trasladar",
+    "ES-C439-cerrado",
+    "ES-C439-cortar",
+    "ES-C439-tirar",
+    "ES-R439-repaso-via",
+    "ES-C439-sintesis-via"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch439.txt",
+  "json": "spanish/narration/ch439.json",
+  "textHash": "fnv1a64:448c5899e85a108e",
+  "jsonHash": "fnv1a64:bc3c36a37d9c7826",
+  "findings": []
+}

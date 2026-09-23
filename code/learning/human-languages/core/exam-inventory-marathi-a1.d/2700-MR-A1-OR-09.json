@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-OR-09",
+  "category": "Devanagari letters and signs",
+  "label": "the three sibilants sha ssa sa, and ha",
+  "probe": [
+    "MR-SCRIPT-SHA-01",
+    "MR-SCRIPT-SSA-01",
+    "MR-SCRIPT-SA-01",
+    "MR-SCRIPT-HA-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-03"
+  ]
+}

@@ -10,7 +10,7 @@ gloss: "to help — and the Latin i that hardened into Portuguese j"
 concept_tag: VERB-HELP
 prerequisites: [PT-C20-perguntar]
 sounds: [j-soft, final-r]
-roots: [latin-adiutare]
+roots: [adiutare-latin]
 etymology_hook: "ajudar ← adiūtāre, the repeating form of adiuvāre (ad- 'toward' + iuvāre 'to help') → aid, aide, first aid, adjutant, adjuvant; adiūtāre → aiudar → ajudar is the same i→j that gave hoje, já, janeiro"
 duration:
   max_seconds: 280

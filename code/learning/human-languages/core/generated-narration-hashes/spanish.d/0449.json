@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:c4f7787ce489f4ab",
+  "lessonIds": [
+    "ES-C449-arreglar",
+    "ES-C449-freno",
+    "ES-C449-rueda",
+    "ES-C449-taladro",
+    "ES-C449-acercar",
+    "ES-R449-repaso-taller",
+    "ES-C449-sintesis-taller"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch449.txt",
+  "json": "spanish/narration/ch449.json",
+  "textHash": "fnv1a64:9b3913b6ab64a913",
+  "jsonHash": "fnv1a64:f45b695a270c9105",
+  "findings": []
+}

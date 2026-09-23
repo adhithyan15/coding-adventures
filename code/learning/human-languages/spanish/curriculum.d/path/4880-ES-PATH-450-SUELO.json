@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-450-SUELO",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-450-SUELO"
+  ],
+  "after": []
+}

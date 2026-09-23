@@ -1,0 +1,22 @@
+{
+  "language": "spanish",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:38b513f93e2b62ad",
+  "lessonIds": [
+    "ES-C471-demasiado",
+    "ES-C471-nivel",
+    "ES-C471-avanzado",
+    "ES-C471-principiante",
+    "ES-C471-sencillo",
+    "ES-C471-perderse",
+    "ES-R471-repaso-curso",
+    "ES-C471-sintesis-curso"
+  ],
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
+  "text": "spanish/narration/ch471.txt",
+  "json": "spanish/narration/ch471.json",
+  "textHash": "fnv1a64:25d3c396813008f1",
+  "jsonHash": "fnv1a64:0834d1420aafccec",
+  "findings": []
+}

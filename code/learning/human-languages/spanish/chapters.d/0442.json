@@ -1,0 +1,22 @@
+{
+  "chapter": 442,
+  "title": "La Gestion",
+  "label": "ch:es-gestion",
+  "canDo": "I can deal with an institution rather than a person: book the appointment, read what the office wants, track what it sent me, and do it on a screen.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C442-sintesis-gestion",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C442-GESTION-01",
+      "ES-LEX-C442-GESTION-02",
+      "ES-LEX-C442-GESTION-03",
+      "ES-LEX-C442-GESTION-04",
+      "ES-LEX-C442-GESTION-05"
+    ],
+    "note": "Wordlist derived from the A2 mock audit by the solo-blocker rule described on chapter 440. This is the INSTITUTION half of A2 reading, the half that is not about friends. TWO CONNECTIONS THE CORPUS ALREADY HELD: ES-C413-concierto carries concertare-latin, so 'concertar una cita' and 'un concierto' are THE SAME WORD -- concertare was con- + certare, to fight it out, and the sense slid from contending against to striving together, so a negotiation and an orchestra are one activity in two moods; and administracion takes the EXISTING slug magis-minus-latin, because minister is built on minus (the lesser one, who serves) against magister on magis (the one who directs, behind maestro), which joins the lesson to menos, regular, Portuguese mais ou menos, French moins and Latin. Four of the five words come apart; PANTALLA DOES NOT and its origin is unsettled, so the repaso teaches the other route -- follow the MEANINGS, not the parts: a shade in front of a flame, then a projector, then a lit device. That is the third roots: [] word after anden and tirar, and the repaso says outright that insisting on the parts route when only the meanings route is open is how invented etymologies get made. The payoff counts the people in a public-sector notice and finds none: se requiere, se confirmara, se ruega -- the same se as 'la junta se celebra' in 440."
+  }
+}

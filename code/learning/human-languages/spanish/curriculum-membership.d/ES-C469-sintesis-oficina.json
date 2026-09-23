@@ -1,0 +1,11 @@
+{
+  "id": "ES-C469-sintesis-oficina",
+  "pathSegment": "ES-PATH-469-OFICINA",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ES-EXT-469-OFICINA",
+      "order": 5
+    }
+  ]
+}

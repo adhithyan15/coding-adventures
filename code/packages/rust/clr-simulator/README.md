@@ -15,8 +15,8 @@ ret, and two-byte comparison opcodes (ceq, cgt, clt).
 `Int64(i64)` preserves a separate 64-bit stack type. Integer arithmetic and
 comparisons require matching widths; array sizes and indices remain int32.
 Division rejects zero and signed overflow. This subset does not implement
-floating-point arithmetic, string/byte host input, or full CLR boxing/type
-verification. It does provide the bounded integer-input host calls described
+floating-point arithmetic, byte-oriented host input, or full CLR boxing/type
+verification. It does provide the bounded line-input host calls described
 below.
 
 Since 0.2.0 it also executes **reference types**: a stack/local slot is a
@@ -58,8 +58,8 @@ assert_eq!(sim.stack[0], Some(4));
 ### Call token tables
 
 Internal calls accept MethodDef tokens (`0x06` table) with valid one-based
-method ordinals. MemberRef rows 6 and 7 are reserved for `input_i64` and
-`input_more`; all other MemberRefs and token tables panic with an explicit
+method ordinals. MemberRef rows 6, 7 and 8 are reserved for `input_i64`,
+`input_more` and `input_str`; all other MemberRefs and token tables panic with an explicit
 unsupported-token diagnostic before changing execution state. A MemberRef row
 cannot alias the internal method at the same row. This follows the simulator's
 existing invalid-bytecode panic convention.
@@ -69,6 +69,13 @@ Call `set_input` to replace and rewind the simulator-owned byte stream.
 consumes one LF/CRLF/final line, trims ASCII whitespace and parses an exact
 signed i64; EOF, empty, malformed and overflowing lines return zero. Loading a
 program does not clear or rewind input.
+
+`input_str` consumes the same line boundary without trimming content and returns
+a distinct string-arena handle. LF and a preceding CR are excluded; all other
+bytes are preserved exactly, including invalid UTF-8 and a trailing CR on an
+unterminated final line. `string_bytes` provides a
+checked read-only view. EOF produces an empty string, and program loads clear
+the value arena without rewinding input.
 
 ### Explicit integer conversions (CLR03)
 

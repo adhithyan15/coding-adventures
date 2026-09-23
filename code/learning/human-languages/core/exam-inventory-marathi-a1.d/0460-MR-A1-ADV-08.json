@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-ADV-08",
+  "category": "Adverbs",
+  "label": "kaa against kaaran: asking why, and answering it",
+  "probe": [
+    "MR-JOIN-KAA-WHY",
+    "MR-JOIN-KAARAN"
+  ],
+  "note": "Closed by MR-C34-kaa-why and MR-C34-kaaran (chapter 34). Both halves are required, which is what the point asks for: asking why and answering it.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-ADV-08",
+    "A1-SUB-06"
+  ]
+}

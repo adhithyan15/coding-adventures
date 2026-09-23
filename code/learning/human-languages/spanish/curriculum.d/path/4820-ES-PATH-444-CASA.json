@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-444-CASA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-444-CASA"
+  ],
+  "after": []
+}

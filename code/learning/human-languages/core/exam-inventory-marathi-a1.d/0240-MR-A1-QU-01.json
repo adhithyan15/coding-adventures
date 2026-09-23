@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-QU-01",
+  "category": "Quantifiers",
+  "label": "cardinal numerals one to five",
+  "probe": [
+    "MR-LEX-NUMBERS-ONE-TO-FIVE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-Q-01",
+    "A1-NG2-01",
+    "A1-NE16-01"
+  ]
+}

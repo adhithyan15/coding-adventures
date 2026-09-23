@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d4c62bf2299fd3d7",
+  "sourceHash": "fnv1a64:ab9c845f3644341c",
   "lessons": [
     {
       "id": "TE-S149-digit-0",
@@ -685,6 +685,167 @@
             {
               "kind": "speech",
               "text": "What does నాకు తెలుగు వచ్చు (nāku telugu vaccu) literally say? (\"To-me Telugu comes.\") Which verb is doing the work, and where did you meet it? (వచ్చు \"to come\" — Chapter 4.) What has English got that Telugu hasn't? (A nominative \"I\" — nēnu is replaced by the dative nāku.) Why the dative? (Knowing happens to you.) Which English word keeps the same idea? (Methinks.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C06-second-pass-greetings",
+      "sequence": 325,
+      "title": "The opening five, again — three jobs",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over the five opening words, sorted by the job each one does",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5adbc8594c86a9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the book on everything so far. From memory: the word that opens a conversation, and the word that closes a piece of business."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sort them by the job, not by the order they arrived",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This far on, the question is no longer what does each word mean but which one do I reach for. Three jobs cover all five:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "job",
+                "the word"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "job: open or close the whole exchange. the word: నమస్కారం namaskāram.",
+                "job: answer a question. the word: అవును avunu, లేదు lēdu.",
+                "job: close one turn and move on. the word: సరే sarē, ధన్యవాదములు dhanyavādamulu."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The second row is the one to feel: అవును and లేదు are the two ways a Telugu answer can go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built — what each word was carrying",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Each of the five arrived with a point attached. Recall the point, not the sentence it came in:"
+            },
+            {
+              "kind": "speech",
+              "text": "నమస్కారం — hello and goodbye in one word, respectful without being stiff."
+            },
+            {
+              "kind": "speech",
+              "text": "ధన్యవాదములు — its -mulu is an ending glued to a stem, which is how Telugu does most of its grammar."
+            },
+            {
+              "kind": "speech",
+              "text": "అవును — a small statement of being, \"it is so,\" not a bare particle."
+            },
+            {
+              "kind": "speech",
+              "text": "లేదు — one of two negatives: lēdu denies that a thing is there, కాదు kādu that it is the thing you named."
+            },
+            {
+              "kind": "speech",
+              "text": "సరే — one Dravidian word wearing three scripts."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: choose, then say",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "someone asks whether you speak Telugu — one word back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: someone asks whether you speak Telugu — one word back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "someone asks whether the tea is there — deny that it is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: someone asks whether the tea is there — deny that it is]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word for thanks, all five syllables, unhurried",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word for thanks, all five syllables, unhurried]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hello, then goodbye — the same word both times",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hello, then goodbye — the same word both times]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word does both hello and goodbye? (నమస్కారం.) Which two negatives does Telugu keep apart? (లేదు, not there; కాదు, not that.) What is the -mulu an example of? (An ending glued onto a stem.) Which of the five would a Kannada speaker know on sight? (సరే.)"
             }
           ]
         }

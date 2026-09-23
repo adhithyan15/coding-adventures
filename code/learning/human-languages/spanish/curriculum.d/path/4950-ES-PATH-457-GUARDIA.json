@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-457-GUARDIA",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-457-GUARDIA"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ES-PATH-437-PLAN",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "ES-EXT-437-PLAN"
+  ],
+  "after": []
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 464,
+  "title": "La cita perdida",
+  "label": "ch:es-cita",
+  "canDo": "I can handle a missed appointment: read the reminder, apologise for not going, say what let me down, and ask for another.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C464-sintesis-cita",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C464-CITA-01",
+      "ES-LEX-C464-CITA-02",
+      "ES-LEX-C464-CITA-03"
+    ],
+    "note": "ALL THREE WORDS WERE ALREADY IN THE READER'S VOCABULARY AS ROOTS -- cor in el corazón, dentem in el diente, fallere in falso -- which by nine hundred headwords is the ordinary case rather than a happy accident. RECORDAR IS THE ONE TO KEEP: re- + COR, the HEART, because Latin located memory there rather than in the head, so remembering is running a thing back past your heart; el acuerdo is hearts brought together, English RECORD is a thing committed to memory, and courage is cor by way of French. recordar does double duty as remember AND remind, separated only by whether somebody else is being told; its near-twin ACORDARSE always takes DE, and dropping that de is among the commonest learner errors. FALLAR IS NOT ESTROPEARSE: estropearse is stopped working and stayed that way, fallar is DID NOT DO ITS JOB AT THE MOMENT NEEDED, so a car can fallar once and be fine after -- which is why fallar is also the verb for people, and 'me falló' about a friend is a reproach. fallere meant TO DECEIVE, the same verb inside falso, and the move from deceiving to failing runs through disappointment; faltar is a second branch of the same root. -ISTA NOUNS DO NOT CHANGE FOR GENDER: only the article moves (el dentista / la dentista), because that -a is GREEK and not the Spanish feminine, where el médico / la médica does change. The payoff separates the two verbs of remembering in one apology -- 'me falló el despertador' for the thing that failed, 'no me acordé' for the person who forgot -- and teaches the standard apology frame 'siento no haber ido', not the 'siento que no fui' a learner reaches for."
+  }
+}

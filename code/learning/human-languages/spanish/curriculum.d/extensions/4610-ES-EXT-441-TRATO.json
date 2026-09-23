@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-441-TRATO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can read the four pieces of paper that decide where my money goes: what I agreed to, that I agreed to it, what I owe, and what I owe it on.",
+  "prerequisites": [
+    "ES-EXT-440-FIESTA"
+  ]
+}

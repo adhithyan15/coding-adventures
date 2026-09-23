@@ -22,6 +22,19 @@
 // Generating panels from `concept_tag` would emit false etymology at scale, in
 // the one layer of the course whose whole value is that its etymology can be
 // trusted. So the join key is `roots:`, and this module will not accept another.
+//
+// NOTHING CONSUMES THIS YET, AND THAT IS RECORDED HERE ON PURPOSE (HL-C423).
+// `cousinsFor` is exported and tested, but no production code calls it: the
+// `cousinweb` a book prints is built by `book.ts` from an AUTHORED `etymology`
+// block, prose a human wrote, not from this join. As of the HL-C419
+// normalisation the join covers 494 lessons and 866 cousin pairs, and a reader
+// sees none of them.
+//
+// It is written down because the measurement is easy to mistake for a shipped
+// improvement -- the same trap this module's own subject sets. A missing cousin
+// panel looks exactly like a word with no cousins yet; an unconsumed join layer
+// looks exactly like a feature that works, and every guard around it stays
+// green forever because nothing downstream can contradict it.
 // ---------------------------------------------------------------------------
 import type { ParsedLesson } from "./parse.js";
 
@@ -65,7 +78,17 @@ interface CousinEntry {
  * fixture can still carry one, and because failing open here would mean a panel
  * that quietly stops appearing rather than a test that fails.
  */
-function rootSlugs(lesson: ParsedLesson): string[] {
+/**
+ * EXPORTED for `root-slug-splits.ts`, which guards these very slugs.
+ *
+ * It must be this function and not a second reading of the frontmatter. The
+ * guard's first draft used `lesson.realization.roots` (i.e. `parse.ts`
+ * `arrayify`), which wraps an unbracketed `roots: a, b` as ONE string while
+ * this function splits it on the comma -- so a genuine split written without
+ * brackets produced two join keys here and one opaque slug there, and the gate
+ * reported nothing. One notion of a slug, owned by the joiner.
+ */
+export function rootSlugs(lesson: ParsedLesson): string[] {
   const raw = lesson.frontmatter.roots;
   const parts = Array.isArray(raw)
     ? raw.map((slug) => String(slug))

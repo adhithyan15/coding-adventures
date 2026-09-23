@@ -1,11 +1,12 @@
 {
   "language": "german",
   "chapter": 42,
-  "sourceHash": "fnv1a64:f95b37ee2dd31324",
+  "sourceHash": "fnv1a64:8d8d727259921643",
   "lessonIds": [
     "GE-C29-freund",
     "GE-C29-freundin",
-    "GE-C29-familie"
+    "GE-C29-familie",
+    "GE-R29-neun-laute"
   ],
   "tex": "german/book/chapters/ch42-friend-and-family.tex"
 }

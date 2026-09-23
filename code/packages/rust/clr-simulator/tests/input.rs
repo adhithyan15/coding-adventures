@@ -1,5 +1,6 @@
 use clr_simulator::{
-    CLRSimulator, Value, BASIC_INPUT_I64_TOKEN, BASIC_INPUT_MORE_TOKEN, OP_CALL, OP_RET,
+    CLRSimulator, Value, BASIC_INPUT_I64_TOKEN, BASIC_INPUT_MORE_TOKEN, BASIC_INPUT_STR_TOKEN,
+    OP_CALL, OP_RET,
 };
 
 fn call(token: u32, body: &mut Vec<u8>) {
@@ -7,7 +8,7 @@ fn call(token: u32, body: &mut Vec<u8>) {
     body.extend_from_slice(&token.to_le_bytes());
 }
 
-fn run(input: &[u8], tokens: &[u32]) -> Vec<Option<Value>> {
+fn run_simulator(input: &[u8], tokens: &[u32]) -> CLRSimulator {
     let mut body = Vec::new();
     for token in tokens {
         call(*token, &mut body);
@@ -18,7 +19,11 @@ fn run(input: &[u8], tokens: &[u32]) -> Vec<Option<Value>> {
     sim.set_input(input);
     sim.run(10_000);
     assert!(sim.halted);
-    sim.stack
+    sim
+}
+
+fn run(input: &[u8], tokens: &[u32]) -> Vec<Option<Value>> {
+    run_simulator(input, tokens).stack
 }
 
 #[test]
@@ -95,8 +100,97 @@ fn load_does_not_rewind_input_and_replacement_does() {
 }
 
 #[test]
+fn string_input_preserves_bytes_and_consumes_line_delimiters() {
+    let sim = run_simulator(
+        b"  hi \r\n\n\xff\t\nlast\rpart",
+        &[
+            BASIC_INPUT_MORE_TOKEN,
+            BASIC_INPUT_STR_TOKEN,
+            BASIC_INPUT_MORE_TOKEN,
+            BASIC_INPUT_STR_TOKEN,
+            BASIC_INPUT_STR_TOKEN,
+            BASIC_INPUT_STR_TOKEN,
+            BASIC_INPUT_MORE_TOKEN,
+            BASIC_INPUT_STR_TOKEN,
+            BASIC_INPUT_STR_TOKEN,
+        ],
+    );
+    assert_eq!(sim.stack[0], Some(Value::Int64(1)));
+    assert_eq!(sim.string_bytes(sim.stack[1].unwrap()), Some(&b"  hi "[..]));
+    assert_eq!(sim.stack[2], Some(Value::Int64(1)));
+    assert_eq!(sim.string_bytes(sim.stack[3].unwrap()), Some(&b""[..]));
+    assert_eq!(sim.string_bytes(sim.stack[4].unwrap()), Some(&b"\xff\t"[..]));
+    assert_eq!(
+        sim.string_bytes(sim.stack[5].unwrap()),
+        Some(&b"last\rpart"[..])
+    );
+    assert_eq!(sim.stack[6], Some(Value::Int64(0)));
+    assert_eq!(sim.string_bytes(sim.stack[7].unwrap()), Some(&b""[..]));
+    assert_eq!(sim.string_bytes(sim.stack[8].unwrap()), Some(&b""[..]));
+}
+
+#[test]
+fn string_input_distinguishes_final_cr_content_from_crlf_delimiters() {
+    for (input, expected) in [
+        (&b"\r"[..], &b"\r"[..]),
+        (&b"last\r"[..], &b"last\r"[..]),
+        (&b"last\r\r"[..], &b"last\r\r"[..]),
+        (&b"last\r\n"[..], &b"last"[..]),
+        (&b"last\r\r\n"[..], &b"last\r"[..]),
+        (&b"a\rb\n"[..], &b"a\rb"[..]),
+    ] {
+        // Literal MemberRef row 8 avoids sharing token assembly with production.
+        let mut sim = CLRSimulator::new();
+        sim.load(&[0x28, 8, 0, 0, 0x0a, 0x2a], 0);
+        sim.set_input(input);
+        sim.run(10);
+        assert!(sim.halted);
+        assert_eq!(sim.string_bytes(sim.stack[0].unwrap()), Some(expected), "{input:?}");
+    }
+}
+
+#[test]
+fn mixed_input_preserves_final_cr_and_integer_trimming() {
+    let sim = run_simulator(
+        b" 42\r\nfirst\r\nlast\r",
+        &[
+            BASIC_INPUT_I64_TOKEN, BASIC_INPUT_STR_TOKEN, BASIC_INPUT_MORE_TOKEN,
+            BASIC_INPUT_STR_TOKEN, BASIC_INPUT_MORE_TOKEN, BASIC_INPUT_STR_TOKEN,
+            BASIC_INPUT_STR_TOKEN,
+        ],
+    );
+    assert_eq!(sim.stack[0], Some(Value::Int64(42)));
+    assert_eq!(sim.string_bytes(sim.stack[1].unwrap()), Some(&b"first"[..]));
+    assert_eq!(sim.stack[2], Some(Value::Int64(1)));
+    assert_eq!(sim.string_bytes(sim.stack[3].unwrap()), Some(&b"last\r"[..]));
+    assert_eq!(sim.stack[4], Some(Value::Int64(0)));
+    for index in [5, 6] {
+        assert_eq!(sim.string_bytes(sim.stack[index].unwrap()), Some(&b""[..]));
+    }
+    assert_eq!(run(b"42\r", &[BASIC_INPUT_I64_TOKEN]), vec![Some(Value::Int64(42))]);
+}
+
+#[test]
+fn replacing_input_preserves_strings_until_the_next_program_load() {
+    let mut body = Vec::new();
+    call(BASIC_INPUT_STR_TOKEN, &mut body);
+    body.push(OP_RET);
+    let mut sim = CLRSimulator::new();
+    sim.set_input(b"old");
+    sim.load(&body, 0);
+    sim.run(10);
+    let old = sim.stack[0].unwrap();
+    sim.set_input(b"new");
+    assert_eq!(sim.string_bytes(old), Some(&b"old"[..]));
+    sim.load(&body, 0);
+    assert_eq!(sim.string_bytes(old), None);
+    sim.run(10);
+    assert_eq!(sim.string_bytes(sim.stack[0].unwrap()), Some(&b"new"[..]));
+}
+
+#[test]
 fn unknown_memberref_refuses_before_state_or_input_changes() {
-    let unknown = 0x0A00_0008_u32;
+    let unknown = 0x0A00_0009_u32;
     let mut body = Vec::new();
     call(unknown, &mut body);
     let mut sim = CLRSimulator::new();

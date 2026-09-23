@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C441-factura",
+    "language": "spanish",
+    "chapter": 441,
+    "sequence": 11170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1f195b8184505b4"
+  },
+  "findings": []
+}

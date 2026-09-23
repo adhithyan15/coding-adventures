@@ -7,8 +7,9 @@ historical languages or every backend are complete. Follow-up IDs live in the
 
 ## Reading the evidence
 
-The [driver](../packages/rust/lang-aot/src/lib.rs) wires ten `Language` variants.
-The [unified corpus](../packages/rust/lang-aot/tests/lang_matrix.rs) has eight.
+The [driver](../packages/rust/lang-aot/src/lib.rs) wires eleven `Language`
+variants (PREP01 slice 1 adds MacroOct).
+The [unified corpus](../packages/rust/lang-aot/tests/lang_matrix.rs) has nine.
 Its seven standard columns are NativeAOT, LLVM, WASM, JVM, CLR, VM and JIT.
 Twig, Nib, Oct, FLOW-MATIC, COBOL-60 and (as of VM-042) Brainfuck rows
 additionally declare BEAM, each only for the specific rows independently
@@ -29,13 +30,52 @@ refusal also does not imply the complete driver refuses that feature.
 | Brainfuck | 6 | 48 | All eight columns; BEAM09 proves byte input, all 256 byte values and repeated EOF on real Erlang |
 | Dartmouth BASIC | 51 | 408 | All 51 of those cells are BEAM (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins + 4 arrays/DATA + 2 string arrays + 5 `INPUT` rows + `RND`, BEAM03/VM-LOOP-24/BEAM04/BEAM06/BEAM07/BEAM08); random differential suite and frontend JIT tests |
 | Oct | 12 | 96 | All eight columns, including real BEAM stdout and u8 wrap; frontend JIT control-flow tests |
-| ALGOL 60 | 233 | 1631 | Separate owner; full-matrix CI exclusion remains VM-025; not re-audited by VM-061 (see below) |
+| MacroOct | 15 | 120 | All eight columns. Unlike every other row here, these do not prove a new language feature: PREP01's criterion is that each MacroOct program lowers to IIR **identical** to its hand-expanded Oct equivalent, asserted directly by `macrooct_rows_lower_to_iir_identical_to_hand_expanded_oct`, with Oct's own 12 rows additionally recompiled byte-identically through the MacroOct frontend. Slice 1's 9 conditional/include rows are joined by slice 2's 6 (five `@define` shapes plus the VM-068 positive control), whose hand-expanded twins are the *textual* expansion (`21 + 21`, not `42`) so a constant-folding frontend cannot satisfy the oracle. Oct's counts above are unchanged, deliberately — PREP01 holds Oct fixed as the reference |
+| ALGOL 60 | 292 | 2044 | Separate owner; full-matrix CI exclusion remains VM-025. **Deliberately not pinned** — see the note below the table. Every row declares seven backends; none declares `Beam` (VM-064). BEAM10 closed `array_len`, and **277 of the 292 now run correctly on real `erl`** (up from 254), so promotion remains the ALGOL owner's call but is no longer an unmeasured one |
 | FLOW-MATIC | 8 | 64 | All eight rows now declare Beam (BEAM07 promoted the four `READ-ITEM`/EOF rows that were on seven columns) |
 | COBOL-60 | 59 | 472 | All eight backends; VM-058 adds independently executed two-boundary INSPECT tally proof |
 | McCarthy Lisp | 0 | 0 | Dedicated 19-program capstone with nine runner lanes |
 | Macsyma | 0 | 0 | Dedicated 21-program capstone with eight runner lanes plus real CoreCLR |
 
-The normal non-ALGOL capstone declares 211 programs and 1688 cells. Every
+### Why the ALGOL row is not pinned, and how to re-derive it
+
+`feature_coverage_doc_counts_match_programs_source` asserts the seven non-ALGOL
+tuples and deliberately omits ALGOL. That omission is why this row was wrong:
+it read 233 rows / 1631 cells while `lang_matrix.rs` declared **292 / 2044** — a
+drift of 59 rows that nothing was checking.
+
+*(Compounding it, VM-065 found that the pinning test itself matched none of
+`lang-aot/BUILD`'s name filters and so had never run in CI at all. That is
+fixed; the non-ALGOL tuples are now genuinely enforced.)*
+
+Pinning ALGOL too is tempting and is the wrong trade. The ALGOL campaign is
+separately owned and actively adding rows; a pinned tuple would make every
+ALGOL PR edit this shared document, turning it into a cross-campaign
+serialization point — the exact conflict class this repo has already paid for
+elsewhere. So the number here is a **snapshot**, and the way to trust it is to
+re-derive it rather than to believe the table:
+
+```bash
+S=$(grep -n 'const PROGRAMS' code/packages/rust/lang-aot/tests/lang_matrix.rs | cut -d: -f1)
+E=$(awk -v s="$S" 'NR>s && /^\];/{print NR; exit}' code/packages/rust/lang-aot/tests/lang_matrix.rs)
+awk -v s="$S" -v e="$E" 'NR>s && NR<e' code/packages/rust/lang-aot/tests/lang_matrix.rs \
+  | grep -c 'lang: Language::Algol60'
+```
+
+Count the rows strictly *inside* `PROGRAMS`: a repo-wide grep over the file
+over-counts, because `Language::Algol60` also appears in comments and helpers.
+That is not hypothetical — it is how an earlier attempt at this got Dartmouth
+BASIC as 57 when the pinned test asserts 51.
+
+Cells are `rows x 7`: all 292 ALGOL rows declare exactly seven backends and
+none declares `Beam`, which is VM-064 and the only systematic hole left in the
+matrix.
+
+The normal non-ALGOL capstone declares 226 programs and 1808 cells (PREP01
+slice 1 added MacroOct's first 9 rows / 72 cells and slice 2 added 6 more /
+48 cells for `@define` — five for definition and substitution, plus a positive
+control for VM-068 proving a defined name reaches a controlling expression; the
+other counts are unchanged, Oct's deliberately so). Every
 existing non-ALGOL corpus row now declares all eight backends. BEAM09 adds
 Brainfuck's three input cells after real Erlang execution and separately proves
 all 256 byte values, repeated EOF and tape state across input calls. This does
@@ -345,6 +385,7 @@ tenth universal backend.
 | [Brainfuck compiler](../packages/rust/brainfuck-iir-compiler/src/compiler.rs) | All eight commands, wrapped tape cells/pointer movement, nested loops and input/EOF. Unified rows plus [WASM](../packages/rust/brainfuck-iir-compiler/tests/wasm_e2e.rs), [JVM](../packages/rust/brainfuck-iir-compiler/tests/jvm_e2e.rs), [CLR](../packages/rust/brainfuck-iir-compiler/tests/clr_e2e.rs) and [JIT](../packages/rust/brainfuck-iir-compiler/tests/jit_smoke.rs) execution. | VM-042/VM-D031: the frontend README's "BEAM tape support intentionally excluded" claim was stale — `iir-to-beam`'s `:atomics`-backed mutable memory (added for this exact purpose) already lowers tape mutation and `.`; a real `erl` probe promoted the 3 non-input rows to a real Beam cell each. `,` still refuses explicitly (no `getchar` builtin), pinned by `call_builtin_getchar_rejected_but_putchar_accepted`; that gap is host input (VM-060b), shared with every other frontend's BEAM input rows, not a Brainfuck- or tape-specific limitation. |
 | [BASIC lowerer](../packages/rust/dartmouth-basic-iir-compiler/src/lib.rs) | f64 arithmetic/general power/transcendentals, deterministic RND, scalar/string input and output, branches, FOR, GOSUB/RETURN, DEF FN, numeric/string arrays, mixed DATA/READ/RESTORE. All 51 rows declare all eight columns, including BEAM (18 pure-string + 2 numeric-baseline + 2 neg/pow + 12 general-arithmetic/control-flow + 5 math builtins + 4 arrays/DATA + 2 string arrays + 5 `INPUT` rows + `RND`, BEAM03/VM-LOOP-24/BEAM04/BEAM06/BEAM07/BEAM08); random differential tests supplement fixed results. | DEF FN global access and historical print zones are frontend semantics, not already-implemented parity. No BEAM gaps remain: BEAM07 closed the 5 `INPUT` rows (VM-060b, BEAM host input); BEAM08 closed `RND` (VM-018) — its trap turned out to be caused entirely by `global_store`'s pre-existing `erlang:put/2`-via-`gc_bif2` bug (issue #15332), not a new design question, so fixing that bug was both necessary and sufficient. String-typed arrays and mixed numeric/string `DATA` (2 rows) were closed by BEAM06: the existing `:ets`-backed array substrate (BEAM04) already stores `str` values natively (a `str` value is already an ordinary Erlang character list), needing zero new representation work. Two-dimensional numeric DIM already has a seven-column matrix proof; the stale one-dimensional-only README wording is corrected in this audit. |
 | [Oct lowerer](../packages/rust/oct-iir-compiler/src/lib.rs) | u8 arithmetic/masking, bitwise/logical operations, functions, local/global state, if/while/loop/break and stdout `out`. Matrix covers output, wrap, short circuit, shared globals, loop-carried wrapping returned from a function, conditional break and nested break targets; [JIT suite](../packages/rust/oct-iir-compiler/tests/jit_e2e.rs) separately executes while loops and returned function values. | VM-044 adds observable loop/break and returned-call standard-column proofs. `in`, carry arithmetic and rotations are explicit intrinsic errors; VM-013 owns portable machine-state design. Body-local static and floats are not implemented parity gaps. |
+| [MacroOct frontend](../packages/rust/macrooct-iir-compiler/src/lib.rs) | **Oct, plus a preprocessor, and nothing else** (PREP01 slice 1). `@include` / `@if` / `@else` / `@end` are consumed by the generic [`source-preprocessor`](../packages/rust/source-preprocessor) engine before parsing; Oct's parser grammar, type checker and `compile_ast` are reused UNCHANGED, and no backend learns anything. Fifteen unified rows cover taken/untaken branches, comparison and `&&`/`!=` conditions, an undefined name, nesting, a dropped function, u8 wrap under a directive, and a multi-function `static`/`while` program, and (slice 2) object- and function-like `@define`. [`iir_identity.rs`](../packages/rust/macrooct-iir-compiler/tests/iir_identity.rs) additionally proves 11 directive pairs and 5 `@include` shapes against hand-expanded Oct. | The evidence here is of a different KIND from the rows above it: the eight backend cells prove the selected program behaves, and the identity oracle proves the preprocessor contributed nothing beyond selecting text — from which the backend results follow rather than being independent facts. `IIRFunction::source_map` is excluded from most comparisons because the two programs occupy different lines; that exclusion is measured, not assumed, by `line_aligned_sources_produce_byte_identical_iir_including_provenance`. `@define` lowers as of slice 2, with Prosser hide sets making self-referential and mutually recursive definitions terminate. A matched PAIR of rows pins VM-068 (a defined name reaching a controlling expression): either row alone is satisfied by a broken evaluator — always-zero passes the undefined-name row, always-truthy passes the defined-name row. `@include` is unreachable from the matrix harness by construction (`compile_source_to_iir` takes a source string, which has no directory), so include coverage lives in the frontend and engine suites. Oct, Nib, their specs, grammars and pinned counts are untouched by this slice. |
 | [ALGOL lowerer](../packages/rust/algol-iir-compiler/src/lib.rs) | Scalar integer/boolean/real/string operations, arrays, procedures, by-name specializations, switches and nonlocal control flow have a substantial evolving corpus. [Frontend JIT](../packages/rust/algol-iir-compiler/tests/jit_e2e.rs) and [AOT smoke](../packages/rust/algol-iir-compiler/tests/aot_smoke.rs) are separate proofs. | Full LANG matrix remains excluded for the recorded native-array failure. VM-025 and the separate ALGOL owner control fixes and detailed feature expansion; 232 declarations do not mean 232 green Linux programs. |
 | [FLOW-MATIC lowerer](../packages/rust/flow-matic-iir-compiler/src/lib.rs) | MOVE, COMPARE/IF/OTHERWISE, GO TO/JUMP, STOP, READ-ITEM/EOF and WRITE-ITEM. Four unified rows prove scalar move/output, a taken EQUAL, false LESS/GREATER reaching OTHERWISE, and a jump chain. [JIT stream tests](../packages/rust/flow-matic-iir-compiler/tests/jit_e2e.rs) run read/process/write to EOF through custom `input_more`/`input_i64` builtins. | VM-037 adds terminating, output-discriminating control-flow rows; positive LESS/GREATER on nonzero input still requires VM-039. VM-039 provides portable EOF-aware input before promoting record streams to code-generation columns. TRANSFER and tape control are clean frontend rejections, not secretly implemented file I/O. |
 | [COBOL lowerer](../packages/rust/cobol-iir-compiler/src/lib.rs) | PICTURE/scaled arithmetic, DISPLAY/MOVE, condition names, IF/EVALUATE, PERFORM/GOTO, COMPUTE/power, size errors and signed/alphanumeric operations occur in the matrix, now expanded to 58 rows with ASCII reference modification: literal/computed bounds, comparisons, MOVE fitting and invalid-bound traps, plus STRING SIZE full-width copying, truncation and untouched tails, STRING delimiters and UNSTRING field fitting/empty fields/exhaustion, pointer/overflow branches, a self-referential `STRING` proof (VM-057), and INSPECT TALLYING/REPLACING BEFORE/AFTER region proofs including the not-found asymmetry and BEFORE+AFTER used together across one combined statement's independently-regioned halves (VM-047c). The [JIT/oracle suite](../packages/rust/cobol-iir-compiler/tests/jit_e2e.rs) additionally exercises reference modification, STRING, UNSTRING and INSPECT families. | VM-045 adds reference-modification rows; VM-046a/b/c add STRING SIZE, delimiter/splitting and pointer/overflow rows; VM-047a adds ALL/CHARACTERS/LEADING tallying proofs; VM-047b adds replacement including first-match/non-rechaining; VM-047c adds BEFORE/AFTER region proofs. A single delimiter phrase carrying BOTH `BEFORE` and `AFTER` together (the ISO two-delimiter intersection) parses but currently reads only the first region clause on both the oracle and the compiler (VM-D027); genuine intersection support is a separate follow-up. Validator acceptance is insufficient. Existing byte/character and category restrictions must remain explicit. |

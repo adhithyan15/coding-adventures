@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:8c26f25fcda3bc7e",
+  "lessonIds": [
+    "ES-C466-director",
+    "ES-C466-visible",
+    "ES-C466-comportamiento",
+    "ES-C466-discutir",
+    "ES-R466-repaso-informe",
+    "ES-C466-sintesis-informe"
+  ],
+  "tex": "spanish/book/chapters/ch466-informe.tex"
+}

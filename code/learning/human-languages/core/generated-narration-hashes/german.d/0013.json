@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 13,
-  "sourceHash": "fnv1a64:cb2fceb0b972b8ed",
+  "sourceHash": "fnv1a64:b8c3d74cb744960d",
   "lessonIds": [
     "GE-C09-monate",
     "GE-C09-januar",
@@ -18,6 +18,6 @@
   "text": "german/narration/ch13.txt",
   "json": "german/narration/ch13.json",
   "textHash": "fnv1a64:099734ddeb4e161f",
-  "jsonHash": "fnv1a64:5f67e253a003ac67",
+  "jsonHash": "fnv1a64:d1fbe157b738b43b",
   "findings": []
 }

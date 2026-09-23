@@ -14,7 +14,7 @@ romanization: "mujhe … pasand hai"
 concept_tag: VERB-LIKE-LOVE
 prerequisites: [HI-C35-madad, HI-C23-kutta-billi, HI-C29-shaam]
 sounds: [anusvara, dental-da]
-roots: [pasand-persian, kar-do]
+roots: [persian-pasand, kar-do]
 etymology_hook: "पसंद (pasand) is a Persian word — from پسندیدن (pasandīdan), 'to approve, to find pleasing' — and it is a NOUN/adjective, not a verb: मुझे रोटी पसंद है is literally 'to me, bread is pleasing', with the liker in the dative (मुझे, 'to me') and the thing liked as the grammatical subject that है agrees with; Spanish reached the identical construction independently in me gusta el café, and Italian in mi piace, so three languages in two unrelated families built liking as being-pleased-by; पसंद करना, 'to do liking', is the deliberate alternative and is the same noun+करना conjunct verb as मदद करना"
 duration:
   max_seconds: 250

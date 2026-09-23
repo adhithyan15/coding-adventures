@@ -1,5 +1,13 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — strict encoded string input (CLR15)
+
+Extend only `lower_typed_scalars_to_cil` with `str` transport through locals,
+parameters, moves, direct calls and returns, plus `input_str` at exact MemberRef
+row 8. Emit `string` metadata and refuse string literals, arithmetic,
+comparisons, malformed builtins and all general string operations. Legacy
+encoded lowering and source routing retain their existing input gates.
+
 ## Unreleased — strict encoded integer input (CLR13)
 
 Extend only `lower_typed_scalars_to_cil` with i64 `input_i64` and `input_more`

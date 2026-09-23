@@ -10,7 +10,7 @@ gloss: "to come — and the missing n that explains why the infinitive is so sho
 concept_tag: VERB-COME
 prerequisites: [PT-C18-ir, PT-C17-mao]
 sounds: [nh-palatal, circumflex-tem]
-roots: [latin-venire]
+roots: [venire-latin]
 etymology_hook: "vir ← venīre: the -n- between vowels dissolved, the same change that turned manus into mão; venīre → venue, advent, adventure, convene, convenient, intervene, prevent, invent, revenue, avenue, souvenir, event"
 duration:
   max_seconds: 216

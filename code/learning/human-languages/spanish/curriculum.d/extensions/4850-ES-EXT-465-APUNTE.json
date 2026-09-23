@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-465-APUNTE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can keep a shared written record: read the instructions inside a weather notebook, note down a temperature and a rainfall, and understand why a zero is not the same as a blank.",
+  "prerequisites": [
+    "ES-EXT-464-CITA"
+  ]
+}

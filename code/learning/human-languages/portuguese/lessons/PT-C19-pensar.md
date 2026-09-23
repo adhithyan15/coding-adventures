@@ -10,7 +10,7 @@ gloss: "to think — from a Latin verb that meant to weigh a thing in a balance"
 concept_tag: VERB-THINK
 prerequisites: [PT-C18-saber-conhecer, PT-C05-falar]
 sounds: [nasal-en, final-r]
-roots: [latin-pensare]
+roots: [pensare-latin]
 etymology_hook: "pensar ← pēnsāre 'to weigh out', built on pendere 'to hang' → pensive, ponder, pension, compensate, dispense, expense, stipend, pendulum, pendant, depend, suspend — and the peso, still a weight"
 duration:
   max_seconds: 268

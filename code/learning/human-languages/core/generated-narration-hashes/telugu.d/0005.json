@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 5,
-  "sourceHash": "fnv1a64:02f09d2c50f7857a",
+  "sourceHash": "fnv1a64:69db3aa5067dd55a",
   "lessonIds": [
     "TE-S01-letter-ta",
     "TE-S01-copy-in-a-word",
@@ -23,6 +23,6 @@
   "text": "telugu/narration/ch05.txt",
   "json": "telugu/narration/ch05.json",
   "textHash": "fnv1a64:c8ee60c387e22e65",
-  "jsonHash": "fnv1a64:b1ebdea784497b5f",
+  "jsonHash": "fnv1a64:6ee822ea05c4a119",
   "findings": []
 }

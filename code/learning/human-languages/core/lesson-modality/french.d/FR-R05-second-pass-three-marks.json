@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "FR-R05-second-pass-three-marks",
+    "language": "french",
+    "chapter": 4,
+    "sequence": 179,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50fab74eb2ae4bfa",
+    "detachableSegments": [
+      "Script: what each mark is actually for"
+    ]
+  },
+  "findings": []
+}

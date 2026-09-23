@@ -1,0 +1,11 @@
+{
+  "id": "ES-C462-decidirse",
+  "pathSegment": "ES-PATH-462-JEFE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-462-JEFE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-F4-01",
+  "category": "Influencing the listener",
+  "label": "give an order or an instruction",
+  "probe": [
+    "MR-GRAMMAR-IMPERATIVE-REGISTER"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-F4-01"
+  ]
+}

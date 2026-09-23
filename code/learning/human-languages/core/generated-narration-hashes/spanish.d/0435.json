@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:c255020790c27a23",
+  "lessonIds": [
+    "ES-C435-curriculum",
+    "ES-C435-documentacion",
+    "ES-C435-experiencia",
+    "ES-C435-previo",
+    "ES-C435-jubilado",
+    "ES-R435-repaso-papeles",
+    "ES-C435-sintesis-anuncio"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch435.txt",
+  "json": "spanish/narration/ch435.json",
+  "textHash": "fnv1a64:b0cd6a944d9ddb94",
+  "jsonHash": "fnv1a64:b457b36792d1ab42",
+  "findings": []
+}

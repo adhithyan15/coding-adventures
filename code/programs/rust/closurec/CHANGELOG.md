@@ -2,6 +2,426 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [Unreleased]
+
+### Added - five ladder rungs for CCR-078, and the fix it stopped me shipping
+
+**No behaviour change.** This is measurement, and the reason it is only
+measurement is the useful part.
+
+`ladder_t6_{local_const,local_let,block_scope,top_const_cond,top_const_and}` at
+all three levels. The ladder is **57 rungs, 171 fixtures**; the reviewed
+inventory tripwire moves 782 → 797 and the ledger 62 → 68.
+
+CCR-078 reported that at SIMPLE `closurec` propagates a top-level `const` into
+its use site where upstream does not — the one place on the ladder where we
+optimize *more* than the oracle. Probing the oracle properly shows upstream
+treats a top-level `const` **two different ways depending on position**:
+
+| Position | upstream at SIMPLE |
+|---|---|
+| value — `const b=2;console.log(b);` | **not** substituted; comes back unchanged |
+| condition — `const DEBUG=false;if(DEBUG){…}else{…}` | value **is** used, branch folded, declaration kept: `const DEBUG=!1;console.log(2);` |
+
+The obvious fix — gate `inline-variables` to ADVANCED, as `inline`,
+`remove-unused-vars` and `treeshake` already are — closes the value-position
+rung and **breaks the whole condition-position family**, which `closurec`
+currently gets byte-identical to upstream. On a probe of eight condition shapes
+(`if` on `false`/`true`/`0`/`""`/`1`, `&&`, `||`, statement-position ternary),
+gating regressed **all eight**. Separately it closed the one **value**-position
+rung (`ladder_t6_let_const_simple`) that CCR-078 originally reported, and that
+is what made the change look like a fix — but no condition shape improves under
+it.
+
+Nothing caught that, because **no fixture in the 782-fixture inventory
+exercised a top-level `const` in a condition**. The suite passed at 0 failures
+with the regression present. `top_const_cond` and `top_const_and` exist so that
+cannot happen twice: they match upstream today and are pure regression guards.
+
+The three local-scope rungs measure the opposite defect, which the original
+rung also could not see because it declares at top level:
+
+| Input | upstream | `closurec` |
+|---|---|---|
+| `function f(){const b=2;return b+1}` | `function f(){return 3}` | unchanged |
+| `function f(){let b=2;return b+1}` | `function f(){return 3}` | unchanged |
+| `{const b=2;console.log(b);}` | `console.log(2);` | unchanged |
+
+`inline-variables` considers only top-level `const`, so nothing declared inside
+a function or block is propagated **at either optimizing level**. The `let` row
+shows the real constraint is scope, not `const`-ness.
+
+**The percentages move down, and that is correct.** `SIMPLE` 32/52 → 34/57 and
+`ADVANCED` 13/52 → 15/57: no rung closed, six divergences appeared that were
+always there and unmeasured, and the two new condition rungs match.
+`WHITESPACE_ONLY` is 54/57.
+
+The real fix is narrower than the issue implies — substitute into condition
+positions but not value positions at SIMPLE, and reach local scopes at both
+levels — and is left to CCR-078 with the corrected analysis recorded there.
+
+
+### Fixed - the statement terminator, and a rung that closed (CCR-073)
+
+Depends on `closure-emitter` 0.59.0, which fixes two independent emitter
+defects: the program's last statement was terminated only when it was a
+function or class declaration, and a switch's last case clause kept a
+terminator upstream drops.
+
+**The original diagnosis of CCR-073 was wrong and is withdrawn.** It was filed
+as "the terminator is placed inside a block-terminated `switch`/`try` rather
+than after it", read off the before/after bytes of two ladder rungs. Running
+the pinned oracle over 31 minimal probes shows the rule has nothing to do with
+`switch` or `try`: upstream terminates the **last statement of a program**
+whenever it ends with `}`, and suppresses that terminator mid-stream. `switch`
+and `try` were simply the two constructs those rungs happened to end with. The
+corrected analysis, and the evidence, are on the issue.
+
+Ladder effect — `SIMPLE` **31/52 → 32/52**:
+
+| Rung | Outcome |
+|---|---|
+| `ladder_t4_switch_simple` | **closed**, ledger entry deleted |
+| `ladder_t4_switch_advanced` | terminator now correct; still blocked on CCR-068 |
+| `ladder_t4_try_catch_{simple,advanced}` | terminator now correct; CCR-022 is now the *only* remaining difference |
+| `ladder_t6_for_of_{simple,advanced}` | terminator now correct; CCR-022 and CCR-076 remain |
+
+The ledger tripwire moves 63 → 62. `WHITESPACE_ONLY` (49/52) and `ADVANCED`
+(13/52) are unchanged, which is expected: `WHITESPACE_ONLY` runs the token-only
+path that never builds an AST, so the emitter fix cannot reach it.
+
+**Two `unverified` goldens were pinning the old behaviour**, `simple-try-catch`
+and `simple-with`, and were the only non-ladder fixtures the change touched —
+the blast radius measured before the work, and it held. Regenerating them
+surfaced something worth recording: running the pinned oracle over both inputs
+shows **upstream refuses to compile either of them**, exiting 1 with
+`JSC_PARSE_ERROR` ("return must be inside function") and `JSC_USE_OF_WITH`
+respectively, while `closurec` compiles both. They sit in the fixture set
+`non-minify-unverified-stdout` (138 fixtures) whose disposition is
+`upstream_golden` but whose provenance is `unverified`. An expected output
+upstream would never produce cannot be an upstream golden, so those two are not
+merely unverified but unverifiable in their present form. Tracked separately;
+same family as CCR-075.
+
+
+> Not version-bumped: `tests/cli-surface/v20260915-audit.json` pins a SHA-256
+> over the whole of `cli.spec.json`, including its `version` field, so bumping
+> the version invalidates the audit and regenerating it requires the pinned
+> upstream `CommandLineRunner.java` (exact byte length and hash, never
+> downloaded by the tool). Tracked in
+> [#15832](https://github.com/adhithyan15/coding-adventures/issues/15832).
+
+### Added - the differential complexity ladder (CCR-066)
+
+`tests/diff/ladder_*` — 45 fixtures: 15 rungs across tiers 1-3, each compiled at
+`WHITESPACE_ONLY`, `SIMPLE`, and `ADVANCED`. Gated by `tests/ladder.rs`.
+
+Unlike the 462-fixture `minify_*` corpus, **`expected.stdout` here is
+upstream's output, not ours.** That corpus was captured from behaviour
+`closurec` already implemented, so it proves we have not regressed; it cannot
+prove parity, and it reports 100% agreement while a 52-rung ladder over the
+same pinned oracle finds 49/52 at `WHITESPACE_ONLY`, 31/52 at `SIMPLE`, and
+13/52 at `ADVANCED`.
+
+The rungs are ordered by deliberate complexity, so a failure is attributable to
+the simplest construct that produces it and the ladder is worked bottom-up.
+
+Six of the 45 diverge, all in tier 3, all the same family — single-use function
+inlining and unused-local removal:
+
+| Fixture | upstream | `closurec` |
+|---|---|---|
+| `ladder_t3_nested_fn_simple` | `function o(){return 1}…` | keeps the nested function |
+| `ladder_t3_unused_local_simple` | `function f(){return 2}…` | keeps `var u=1` |
+| `ladder_t3_nested_fn_advanced` | `console.log(1);` | emits the input |
+| `ladder_t3_unused_local_advanced` | `console.log(2);` | emits the input |
+| `ladder_t3_function_expr_advanced` | `console.log(1);` | emits the input |
+| `ladder_t3_iife_advanced` | `console.log(1);` | emits the input |
+
+Each is recorded in `tests/ladder/divergences.json` with a reason and a
+tracking issue. The ledger pins **our** current output as well as upstream's,
+which makes the known-gap list machine-checked in both directions: a gap cannot
+silently widen, and it cannot silently close either — matching upstream fails
+the harness, and that failure is the signal to delete the entry.
+
+The per-rung decision is a pure `verdict()` function so the gate's *failure*
+paths are themselves tested rather than assumed. Four negative tests drive it
+into each failure branch — an unrecorded divergence, a recorded gap that has
+started matching upstream, a recorded gap whose output has shifted (by stdout
+or by exit code), and a ledger whose record of upstream has drifted from the
+fixture bytes — plus one test asserting the two passing verdicts, so the
+negative tests cannot be satisfied by a `verdict` that only ever fails.
+
+The ledger's size is pinned at 6 in the same tripwire style as the reviewed
+fixture inventory. Without that, a change breaking a currently-passing rung
+could be made green by appending a ledger entry; growing the known-gap list
+should be a deliberate, reviewer-visible act.
+
+`flags.txt` is validated rather than passed through: each rung must be exactly
+`--compilation_level <level> --js tests/diff/<itself>/input/a.js`, with the
+level agreeing with the fixture-name suffix. That stops a rung being silently
+rewired to another rung's input, and keeps argv closed against write-capable
+flags. Output is compared as **bytes**, not via `from_utf8_lossy`, matching
+`tests/diff_minify.rs` — lossy decoding would let an encoding regression pass.
+
+### Added - ladder tiers 6 and 7; the ladder is complete (CCR-066)
+
+75 more rungs — 25 across tier 6 (ES6) and tier 7 (modern syntax), each at all
+three levels. **The ladder is now the full 52 rungs, 156 fixtures**, and
+reproduces the ad-hoc survey that motivated it exactly:
+
+| Level | Matching | |
+|-------|---------:|---|
+| `WHITESPACE_ONLY` | 49 / 52 | 94% |
+| `SIMPLE` | 31 / 52 | 59% |
+| `ADVANCED` | 13 / 52 | 25% |
+
+32 of the 75 agree. The 43 that do not split three ways, and the split matters
+more than the count:
+
+| Kind | Count | Meaning |
+|---|---:|---|
+| We exit non-zero, upstream compiles | 14 | front-end capability gaps |
+| Both exit 0, bytes differ | 26 | optimizer and emitter gaps |
+| **Upstream declines, we compile** | **3** | not a gap at all |
+
+**The 14 hard failures are seven rungs at two levels each** — `template`,
+`class` (a method after a constructor), `getter_setter`, `destructure_arr`,
+`destructure_obj`, `async_fn`, `for_await`. All pass at `WHITESPACE_ONLY`,
+because that path never parses. Four of the seven die in `bridge.rs`, which
+the ESTree migration (CCR-067) eliminates.
+
+**The 3 in the last row are the interesting ones.** Closure `v20260915` does
+not implement private class elements at any level and exits non-zero with
+`JSC_UNSUPPORTED_LANGUAGE_FEATURE`; `closurec` compiles them. That is not a
+parity gap — there is no upstream behaviour to converge on. Whether we should
+match the refusal is an open product decision, CCR-075.
+
+New issues filed from tiers 6-7 evidence:
+
+- **CCR-075** — policy for input Closure refuses (#15860)
+- **CCR-076** — emitter never drops braces around a single-statement body (#15861)
+- **CCR-077** — `function* g` spacing and a dropped class-field terminator (#15862)
+- **CCR-078** — we propagate a `const` at SIMPLE where upstream does not (#15863)
+
+CCR-078 is the only divergence found anywhere on the ladder where `closurec`
+optimizes **more** than the oracle at the same level. That direction carries
+different risk: being behind produces larger output, being ahead produces
+output nothing has validated. Worth settling before it is assumed to be a win.
+
+### Fixed - two gate weaknesses the new rung categories exposed
+
+Tiers 6-7 introduced two outcome shapes the harness could not distinguish, both
+found by the pre-push security review.
+
+**Parity now requires that upstream succeeded.** The predicate was
+`actual == expected && code == 0`, which has no notion of upstream's exit
+status. On the three `private_field` rungs `expected.stdout` is empty because
+upstream *refused the input*, not because the program compiles to nothing. Had
+`closurec` ever regressed to emitting nothing at exit 0, the harness would have
+reported **"NOW MATCHES UPSTREAM — delete its entry"** — and a maintainer
+following that instruction would have left the rung passing vacuously forever,
+comparing empty against empty. The ledger now carries `upstream_exit` and the
+verdict is gated on it. Verified by removing the guard and confirming the
+misleading message reappears.
+
+**A recorded failure must still fail the same way.** All 14 rungs where
+`closurec` refuses valid JavaScript pinned the identical pair
+`closurec_stdout: ""`, `closurec_exit: 1` — so the gate asserted only "it fails
+somehow". The underlying diagnostics genuinely differ: `class` fails at the
+parse stage, `async_fn` at the typed-AST bridge. A regression moving the
+failure between stages would have stayed green. Entries with empty stdout now
+pin `closurec_stderr_starts_with`, and a changed stage fails the gate.
+
+Both guards have negative tests driving `verdict()` into the branch each one
+added.
+
+**Then the guards themselves needed guarding.** Two further review rounds found
+the same defect twice more, one level up each time: the guard existed, but
+nothing required it to be *armed*. The ledger is input to the gate, not part of
+it, and a field the gate trusts is a field an edit to a data file can switch
+off — with every test still green.
+
+*Round two — the stage pin.* Nothing required an entry to carry
+`closurec_stderr_starts_with`. Deleting the key, setting it to `null`, or
+setting it to `""` each restored the "it fails somehow" weakness exactly, and
+`starts_with("")` is vacuously true, so an empty pin is indistinguishable from
+no pin at the comparison site.
+
+*Round three — `upstream_exit`, and the pin again.* `upstream_exit` is the one
+ledger field nothing else corroborates: `upstream_stdout` is cross-checked
+against the committed `expected.stdout` bytes on every run, but upstream's exit
+status is recorded in no fixture. It is also load-bearing, because parity now
+requires `upstream_exit == 0`. So setting it non-zero on any entry permanently
+disables that rung's staleness detection — the rung stops being a parity check
+against the oracle and becomes a golden of our own output, passing forever so
+long as we keep producing what we once produced. One token, in a data file, no
+test moves. Separately, requiring the stage pin to be *non-empty* was not
+enough: every real pin reads `"<LEVEL> compilation failed at <stage> stage:"`,
+and a pin truncated to `"SIMPLE compilation failed at"` — or to `"S"` — is
+non-empty, looks plausible in review, and matches every stage alike.
+
+The rules an entry must satisfy are now a pure `well_formedness_error()`
+predicate rather than inline assertions, for the same reason `verdict()` was
+extracted: rules checked only against a ledger that satisfies them are never
+exercised in the direction that matters. Test (g) drives each into its
+rejecting direction, and asserts the baselines are accepted so the rejections
+cannot be satisfied by a predicate that rejects everything. The rules:
+
+- `upstream_exit` may be non-zero only where `upstream_stdout` is empty — the
+  one story a non-zero exit can tell — and the size of that exempt cohort is
+  pinned at 3 in the same style as the ledger's own size.
+- `closurec_exit` and `closurec_stdout` must agree about what happened. All 63
+  entries are one of two shapes: compiled (exit 0, output) or refused (non-zero
+  exit, no output). The mixed shape `exit 0, no output` is exactly what
+  accepting an "emit nothing, successfully" regression looks like written down,
+  one `upstream_exit` edit from comparing empty against empty forever. `verdict`
+  already refuses to call it a match; it can now not be recorded at all.
+- A recorded failure must pin a stage, and the pin must run through the stage
+  name to `stage:`.
+- A `closurec_stderr_starts_with` that is present but not a string now panics
+  instead of degrading to `None`.
+
+Each attack was run against the real ledger, and the ledger restored
+byte-identical afterwards. Flipping `upstream_exit` fails two tests
+independently; making it *consistent* by also blanking `upstream_stdout` still
+fails two, because the gate cross-checks that field against the fixture bytes.
+
+`ladder_fixtures()` also now selects directories with `file_type()` rather than
+`Path::is_dir()`. `is_dir` follows symlinks and the manifest's
+`discover_fixture_directories()` does not, so a committed symlinked rung would
+have been run by the gate while staying invisible to the reviewed inventory —
+neither the manifest nor the 782 tripwire would move, and its input bytes would
+live outside the repository, unreviewable in a diff. There are no symlinks under
+`tests/diff` today; this closes it latently.
+
+The verdict's arm order was also wrong for one shape: a rung recorded as a hard
+failure that *starts succeeding* with output unlike upstream's matched the
+changed-stage arm before the changed-output arm, reporting a stale-stderr
+message for what is really a changed result. That arm now also requires the
+observed output to be empty, so a rung that produces output is judged on its
+output.
+
+*Round four — the exempt cohort.* `reviewed_upstream_refusal_count_is_pinned`
+asserted a count while its own doc comment claimed an identity ("the three
+`private_field` rungs"). A count is satisfied by any swap. Un-exempting one of
+the three costs nothing, because their recorded output is non-empty while
+`expected.stdout` is empty, so parity is false either way. Exempting some *other*
+rung in its place needs only that rung's `expected.stdout` blanked to match a
+blanked `upstream_stdout` — self-consistent, because the gate checks the two for
+equality and nothing checks either against a pin. Four coordinated edits, all 13
+tests green, and that rung is exempt from staleness detection forever.
+
+The enabling condition was that nothing asserted *which* fixtures have empty
+oracle output. The reviewed inventory counts fixtures; `expected.stdout` only has
+to exist. Both halves are now pinned by name against one `UPSTREAM_REFUSED`
+constant — the ledger entries claiming refusal, and the fixtures with empty
+bytes, which are the same three rungs because upstream emitted nothing *because*
+it refused. The full four-edit exploit was run and fails both pins independently.
+
+The symlink fix was also incomplete: it covered the rung directory but not its
+files. The argv assertion pins the `--js` path *string*, not the bytes at that
+path, so `input/a.js -> ../../ladder_t1_empty_simple/input/a.js` would re-point a
+hard rung at a trivial program while the manifest, the inventory and the argv
+check all stayed put. A rung's `flags.txt`, `expected.stdout` and `input/a.js`
+must now be regular files by `symlink_metadata`. Verified by committing that exact
+symlink and watching the gate reject it.
+
+The ladder's own test count is 14.
+
+Registered in `tests/oracle/manifest.json`; the reviewed fixture inventory
+tripwire moves from 707 to 782 and the ledger tripwire from 20 to 63.
+
+### Added - ladder tiers 4 and 5 (CCR-066)
+
+36 more rungs — 12 rungs across tiers 4 (control flow) and 5 (data literals), each
+at all three levels. The ladder is now 81 fixtures; the ledger holds 20 recorded
+divergences.
+
+22 of the 36 agree. The 14 that do not have five distinct causes, three of which
+had no tracking issue before:
+
+| Cause | Rungs | Tracked |
+|---|---|---|
+| Single-use value propagation | `object`, `array`, `nested_obj`, `quoted_key`, `regex`, `if_else`, `switch` (ADVANCED) | CCR-068 |
+| Statement terminator placed inside a block-terminated `switch`/`try` rather than after it | `switch` (SIMPLE), `try_catch` (both) | **CCR-073**, new |
+| `while`→`for` rewrite does not hoist the initializer | `while` (both) | **CCR-074**, new |
+| Renaming skips loop-header locals, catch parameters and labels | `for_loop` (ADVANCED), `try_catch` (both) | **CCR-022**, long-standing, now has an issue |
+
+Two observations worth recording. Seven of the fourteen are single-use value
+propagation, which confirms it as the largest single contributor to the ADVANCED
+result rather than one gap among many. And the `while` rung shows a transform
+that runs, costs time, and produces output *longer* than the shape it replaced —
+we do the structurally harder half (recognising the loop and reshaping it) and
+stop before the byte-saving half.
+
+Registered in `tests/oracle/manifest.json` as fixture set `ladder-v20260915`
+(`documented_release`, command `closure-flags-file-v1`). The reviewed fixture
+inventory tripwire in `tests/oracle_manifest.rs` moves from 626 to 671; the
+minify cohort is untouched at 462.
+
+### Fixed - the correlation-vector trace no longer names passes that did not run
+
+The `passes` list in a correlation-vector trace came from two hand-maintained
+constants, `SIMPLE_PASS_NAMES` and `ADVANCED_PASS_NAMES`, kept in parallel with
+the `pipeline.add(...)` calls a few hundred lines away. Nothing tied them
+together and they had drifted: `inline` is registered only under
+`if advanced.is_some()`, but the SIMPLE constant still listed it, so **every
+SIMPLE run emitted provenance naming a pass that never executed**.
+
+Both constants are gone. `run_typed_pipeline` now returns
+`TypedPipelineRun { code, executed_passes }`, taking the inventory from
+`PipelineOutput::execution_order` — the scheduler's own record of what it ran.
+The trace site can only report that value; it no longer decides anything. The
+`will_rename_properties` variable, which existed solely so the trace could
+re-derive whether `rename-properties` had been scheduled, is deleted with it.
+
+This also corrects the reported **order**. The constants listed registration
+order, which is not what executes: `closure-pass-pipeline`'s Kahn scheduler
+uses a FIFO ready queue, so every pass declaring no `depends_on` is scheduled
+ahead of every dependent pass. `rename` is registered eighth and runs second.
+Traces now show the real schedule. That ordering defect is tracked separately
+in [#15829](https://github.com/adhithyan15/coding-adventures/issues/15829); it
+is a defect in the scheduler, not in this trace.
+
+Observable change for `--correlation_vector` consumers:
+
+```text
+SIMPLE    before  ["constant-fold","fold-control-flow","dce","inline","inline-variables","rename"]
+SIMPLE    after   ["constant-fold","rename","fold-control-flow","dce","inline-variables"]
+ADVANCED  after   ["constant-fold","rename","rename-globals","fold-control-flow","dce",
+                   "inline","inline-variables","treeshake","remove-unused-vars"]
+```
+
+Emitted JavaScript is byte-identical; only the provenance record changed.
+
+### Fixed - `transform_source_with_cv` was undocumented
+
+Removing `SIMPLE_PASS_NAMES` revealed that the doc comment describing
+`transform_source_with_cv` and the full CV contribution-shape table had been
+orphaned onto that constant — a private constant carried the public function's
+documentation, and the function itself had none. Re-homed onto the function.
+
+### Added
+
+`tests/cv_executed_passes.rs`: six end-to-end tests asserting that
+conditionally registered passes (`inline`, `remove-unused-vars`, `treeshake`,
+`rename-globals`, `rename-properties`) appear in the trace exactly when they
+were registered, that every reported name is a known pass, and pinning the
+scheduler's real order so a future fix to #15829 must consciously update it.
+
+## [0.246.0] - 2026-09-19
+
+### Added - upstream long-form aliases
+
+`closurec` now accepts all four alternate long spellings declared by the
+pinned upstream `CommandLineRunner.java`: `--D`, `--checks-only`, `--dev_mode`,
+and `--warnings_whitelist_file`. Each resolves to its canonical flag ID, so
+runtime behavior, duplicate detection, constraints, and explicit-presence
+tracking are identical to the canonical spelling. Generated help exposes the
+aliases deterministically, and the machine-generated surface audit now reports
+zero unsupported upstream aliases.
+
 ## [0.245.0] - 2026-09-19
 
 ### Added - pinned, generated Closure CLI surface audit

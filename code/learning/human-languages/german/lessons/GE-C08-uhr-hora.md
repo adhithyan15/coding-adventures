@@ -10,7 +10,7 @@ gloss: the third layer of the German day — numbers native, weekdays Germanic, 
 concept_tag: GE-ETYMON-UHR
 prerequisites: [GE-C08-uhr, GE-C06-monate-latein]
 sounds: []
-roots: [latin-hora]
+roots: [hora-latin]
 etymology_hook: "Uhr ← Latin hōra, the same word as French heure, Italian ora and English hour: German kept its own numbers and its own gods, but for the machine that measures hours it reached for Rome"
 duration:
   max_seconds: 180

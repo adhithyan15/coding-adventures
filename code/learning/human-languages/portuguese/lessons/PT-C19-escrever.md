@@ -10,7 +10,7 @@ gloss: "to write — to scratch, and the propped-up e- that decodes a hundred ot
 concept_tag: VERB-WRITE
 prerequisites: [PT-C19-ler, PT-C18-ser-estar]
 sounds: [initial-es, final-r]
-roots: [latin-scribere]
+roots: [scribere-latin]
 etymology_hook: "escrever ← scrībere 'to scratch, incise' → scribe, script, describe, prescribe, subscribe, transcribe, inscribe, manuscript, postscript, shrift; and Iberian Romance propped an e- in front of every sc-/sp-/st- word: escola, estar, esperar"
 duration:
   max_seconds: 271

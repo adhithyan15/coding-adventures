@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-VP-04",
+  "category": "The verb phrase",
+  "label": "the direct object: animates take -laa, inanimates do not",
+  "probe": [
+    "MR-GRAMMAR-OBJECT-LAA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SV-04"
+  ]
+}

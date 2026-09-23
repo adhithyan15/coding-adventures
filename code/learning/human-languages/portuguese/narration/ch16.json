@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Ser and Estar",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3c30918ad5f51b37",
+  "sourceHash": "fnv1a64:4afd61b609648215",
   "lessons": [
     {
       "id": "PT-C16-ser",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99acbf7abc4291b9",
+      "sourceHash": "fnv1a64:aa6f3f2e51a00a9b",
       "notice": null,
       "blocks": [
         {
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1294352bb1259676",
+      "sourceHash": "fnv1a64:7764be3627c0bc0e",
       "notice": null,
       "blocks": [
         {
@@ -324,7 +324,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:219924dff3f3fe9b",
+      "sourceHash": "fnv1a64:2dd33802727f65c5",
       "notice": null,
       "blocks": [
         {
@@ -478,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:090994bb004c6153",
+      "sourceHash": "fnv1a64:b4bdf9e8e8801839",
       "notice": null,
       "blocks": [
         {

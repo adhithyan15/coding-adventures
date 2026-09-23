@@ -3,7 +3,8 @@
   "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "before": [],
   "inline": [
-    "TE-EXT-012-LANGUAGE-SPECIFIC"
+    "TE-EXT-012-LANGUAGE-SPECIFIC",
+    "TE-EXT-012-CONSOLIDATION"
   ],
   "after": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C450-hierba",
+    "language": "spanish",
+    "chapter": 450,
+    "sequence": 11770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4545e977c3cf6416"
+  },
+  "findings": []
+}

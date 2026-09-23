@@ -1,18 +1,19 @@
 {
   "language": "sanskrit",
   "chapter": 12,
-  "sourceHash": "fnv1a64:d7ca21b2ab0edaba",
+  "sourceHash": "fnv1a64:b3ee8602ae73ab32",
   "lessonIds": [
     "SA-C12-akshi",
     "SA-C12-karnah",
     "SA-S117-letter-ttha",
-    "SA-C12-mukham"
+    "SA-C12-mukham",
+    "SA-R12-second-pass-what-sanskrit-leaves-out"
   ],
-  "voiceLessons": 0,
+  "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "sanskrit/narration/ch12.txt",
   "json": "sanskrit/narration/ch12.json",
-  "textHash": "fnv1a64:d8d756c980db3f8e",
-  "jsonHash": "fnv1a64:84ebe501ed463c4d",
+  "textHash": "fnv1a64:0cdb963bc391c52f",
+  "jsonHash": "fnv1a64:2d35c2c70a2e2d65",
   "findings": []
 }

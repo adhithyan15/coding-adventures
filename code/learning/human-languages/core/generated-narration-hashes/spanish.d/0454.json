@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:25a63b590fde8a45",
+  "lessonIds": [
+    "ES-C454-obra",
+    "ES-C454-via",
+    "ES-C454-accidente",
+    "ES-C454-servicio",
+    "ES-R454-repaso-corte",
+    "ES-C454-sintesis-corte"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "spanish/narration/ch454.txt",
+  "json": "spanish/narration/ch454.json",
+  "textHash": "fnv1a64:df0329ea7ef900f9",
+  "jsonHash": "fnv1a64:eacb8e0050a70248",
+  "findings": []
+}

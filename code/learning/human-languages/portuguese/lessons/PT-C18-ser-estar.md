@@ -10,7 +10,7 @@ gloss: "to be — the one English verb that Portuguese answers with two, and the
 concept_tag: VERB-BE
 prerequisites: [PT-C16-ser-estar-meaning, PT-C16-ser-vs-estar]
 sounds: [nasal-ao, open-e]
-roots: [latin-esse, latin-stare]
+roots: [esse-latin, stare-latin]
 etymology_hook: "ser ← esse, the inherited relative of English is and am (→ essence, present, absent, interest); estar ← stāre 'to stand' (→ state, status, estate, circumstance) — and Portuguese puts marriage on the ser side where Spanish puts it on the estar side"
 duration:
   max_seconds: 242

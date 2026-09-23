@@ -9,7 +9,7 @@ headword: దయచేసి టీ
 gloss: tea, please — Telugu's traditional word for tea travelled by sea, not by the overland road most of its neighbours took
 romanization: dayacēsi ṭī
 concept_tag: TE-TEA
-prerequisites: [TE-C38-hrudayam, TE-C08-dayachesi]
+prerequisites: [TE-C38-hrudayam, TE-C08-dayachesi, TE-C08-andi]
 sounds: [telugu-retroflex-tta, telugu-long-ii]
 roots: [hokkien-te-tea, malay-teh]
 etymology_hook: "టీ is a direct English loan, and English tea itself descends from Hokkien tê, carried by Dutch and English sea trade through Malay teh into Europe — the opposite road from Hindi, Kannada and Marathi's overland chai, which travelled from Mandarin chá through Persian chāy; Telugu's coastal contact with English trade left it the sea-word, not the land-word most of its neighbours use"

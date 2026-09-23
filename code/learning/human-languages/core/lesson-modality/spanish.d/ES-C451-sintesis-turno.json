@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C451-sintesis-turno",
+    "language": "spanish",
+    "chapter": 451,
+    "sequence": 11900,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:49c6d095126710be"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-OR-02",
+  "category": "Devanagari letters and signs",
+  "label": "the shirorekha headline, which binds the letters of one written word",
+  "probe": [
+    "MR-SCRIPT-HA-01"
+  ],
+  "note": "MARATHI-SPECIFIC: the Latin alphabet has no equivalent, and it is what makes a Devanagari word one visual unit.",
+  "anchorIds": [
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [],
+  "marathiSpecific": true
+}

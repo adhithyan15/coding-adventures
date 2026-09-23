@@ -10,7 +10,7 @@ gloss: "to know — the second place Portuguese answers one English verb with tw
 concept_tag: VERB-KNOW
 prerequisites: [PT-C18-ver, PT-C18-ser-estar]
 sounds: [open-e, cedilla-s]
-roots: [latin-sapere, latin-cognoscere]
+roots: [sapere-latin, cognoscere-latin]
 etymology_hook: "saber ← sapere, which meant 'to TASTE' before it meant 'to be wise' — and Portuguese kept both senses in one verb (sabe bem, 'it tastes good'); → sapient, savour, insipid, sage. conhecer ← cognōscere → cognition, recognise, incognito, notice, connoisseur — and English know is a distant relative of its second half"
 duration:
   max_seconds: 273

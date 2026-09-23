@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "When the Calendar Stopped Naming",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:1aade3cb90b99bdd",
+  "sourceHash": "fnv1a64:45e00de82b056b18",
   "lessons": [
     {
       "id": "GE-C09-juli",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b1167ca088e29db",
+      "sourceHash": "fnv1a64:e652bb4747b408e5",
       "notice": null,
       "blocks": [
         {
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c848cf10868bea52",
+      "sourceHash": "fnv1a64:989b87ec807d9704",
       "notice": null,
       "blocks": [
         {

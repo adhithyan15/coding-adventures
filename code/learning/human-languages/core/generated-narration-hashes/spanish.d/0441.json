@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:bd7c361f498136e8",
+  "lessonIds": [
+    "ES-C441-contrato",
+    "ES-C441-firmar",
+    "ES-C441-fijo",
+    "ES-C441-factura",
+    "ES-C441-prestamo",
+    "ES-R441-repaso-trato",
+    "ES-C441-sintesis-trato"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch441.txt",
+  "json": "spanish/narration/ch441.json",
+  "textHash": "fnv1a64:62c052fb365bc655",
+  "jsonHash": "fnv1a64:9e1c2baaa19685a9",
+  "findings": []
+}

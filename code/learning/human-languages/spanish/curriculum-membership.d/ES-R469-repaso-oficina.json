@@ -1,0 +1,11 @@
+{
+  "id": "ES-R469-repaso-oficina",
+  "pathSegment": "ES-PATH-469-OFICINA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ES-EXT-469-OFICINA",
+      "order": 4
+    }
+  ]
+}

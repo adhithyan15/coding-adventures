@@ -1,0 +1,14 @@
+{
+  "language": "spanish",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:35ad27bbe7fe5061",
+  "lessonIds": [
+    "ES-C447-analisis",
+    "ES-C447-comentar",
+    "ES-C447-urgencia",
+    "ES-C447-torpe",
+    "ES-R447-repaso-juicio",
+    "ES-C447-sintesis-juicio"
+  ],
+  "tex": "spanish/book/chapters/ch447-juicio.tex"
+}

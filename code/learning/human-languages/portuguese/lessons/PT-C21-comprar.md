@@ -10,7 +10,7 @@ gloss: "to buy — from a Latin verb spelled exactly like the one behind 'compar
 concept_tag: VERB-BUY
 prerequisites: [PT-C21-esperar, PT-C19-entender-compreender, PT-C15-tenho-falado, PT-C14-idade]
 sounds: [nasal-om, open-a]
-roots: [latin-comparare, latin-parare]
+roots: [latin-comparare, parare-latin]
 etymology_hook: "comprar ← comparāre 'to procure, get ready', com- + parāre → prepare, repair, separate, apparatus, emperor; NOT the identically spelled comparāre from com- + pār 'equal', which is where English compare comes from — two Latin verbs, one spelling"
 duration:
   max_seconds: 291

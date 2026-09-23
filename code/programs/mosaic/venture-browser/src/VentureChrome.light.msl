@@ -92,6 +92,17 @@ style VentureChrome {
   part bookmarks-previous-button { background : "#fffdf8" ; color : "#39342d" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#b9b09f" ; state disabled { opacity : 0.45 ; } }
   part bookmarks-next-button { background : "#fffdf8" ; color : "#39342d" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#b9b09f" ; state disabled { opacity : 0.45 ; } }
   part bookmarks-open-button { background : "#9a5b18" ; color : "#ffffff" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#74400e" ; state disabled { opacity : 0.45 ; } }
+  part history-button { background : "#fffdf8" ; color : "#39342d" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#b9b09f" ; state hover { background : "#f7e6c7" ; } state pressed { background : "#e8c98f" ; } state focused { outline-color : "#9a5b18" ; outline-width : 2 ; } state disabled { opacity : 0.45 ; } }
+  part history-panel { background : "#fffaf0" ; color : "#211f1b" ; padding : 10 ; gap : 7 ; border-bottom-width : 1 ; border-bottom-color : "#c8c0b1" ; }
+  part history-header { gap : 12 ; align : center-vertical ; }
+  part history-heading { color : "#6d3d13" ; font-size : 14 ; font-weight : bold ; flex-grow : 1 ; }
+  part history-position { color : "#6d6559" ; font-size : 11 ; }
+  part history-close-button { background : "#fffdf8" ; color : "#39342d" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#b9b09f" ; }
+  part history-address { color : "#6d6559" ; font-family : monospace ; font-size : 11 ; }
+  part history-actions { gap : 6 ; align : center-vertical ; }
+  part history-previous-button { background : "#fffdf8" ; color : "#39342d" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#b9b09f" ; state disabled { opacity : 0.45 ; } }
+  part history-next-button { background : "#fffdf8" ; color : "#39342d" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#b9b09f" ; state disabled { opacity : 0.45 ; } }
+  part history-open-button { background : "#9a5b18" ; color : "#ffffff" ; padding : 6 ; border-radius : 5 ; border-width : 1 ; border-color : "#74400e" ; state disabled { opacity : 0.45 ; } }
   part copy-address-button {
     background : "#fffdf8" ; color : "#39342d" ; padding : 7 ; border-radius : 5 ; border-width : 1 ; border-color : "#b9b09f" ;
     state hover { background : "#f7e6c7" ; }

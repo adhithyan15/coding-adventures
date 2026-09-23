@@ -10,7 +10,7 @@ gloss: "to get — the everyday verb that also means 'to manage to', and the for
 concept_tag: VERB-GET
 prerequisites: [PT-C21-trazer, PT-C18-ter-haver, PT-C20-ajudar, PT-C02-formal-practice]
 sounds: [closed-i, hard-g]
-roots: [latin-consequi, latin-obtinere]
+roots: [consequi-latin, latin-obtinere]
 etymology_hook: "conseguir ← cōnsequī, con- 'all the way' + sequī 'to follow' → consequence, consecutive, sequel, sequence, subsequent, second (secundus, 'the following one'), pursue, execute; obter ← obtinēre, built on the same tenēre that gave ter"
 duration:
   max_seconds: 286

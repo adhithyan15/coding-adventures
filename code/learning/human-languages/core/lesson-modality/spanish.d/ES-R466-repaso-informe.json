@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R466-repaso-informe",
+    "language": "spanish",
+    "chapter": 466,
+    "sequence": 12730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86ffc88d233d6421"
+  },
+  "findings": []
+}

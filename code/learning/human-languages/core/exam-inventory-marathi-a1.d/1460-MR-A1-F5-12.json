@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F5-12",
+  "category": "Social relations",
+  "label": "take leave",
+  "probe": [
+    "MR-A1-MESSAGE-LINE-SEE-AGAIN",
+    "MR-A1-MESSAGE-LINE-SEE-TOMORROW",
+    "MR-PHRASE-YETO-YETE-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F5-11"
+  ]
+}

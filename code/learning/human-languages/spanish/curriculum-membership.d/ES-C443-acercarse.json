@@ -1,0 +1,11 @@
+{
+  "id": "ES-C443-acercarse",
+  "pathSegment": "ES-PATH-443-ANIMO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ES-EXT-443-ANIMO",
+      "order": 2
+    }
+  ]
+}

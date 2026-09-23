@@ -10,7 +10,7 @@ gloss: to have — where Portuguese and Spanish broke ranks with the rest of Rom
 concept_tag: PT-VERB-HAVE
 prerequisites: [PT-C13-vermelho-azul, PT-C05-falar]
 sounds: [nasal-em, circumflex-tem]
-roots: [latin-tenere]
+roots: [tenere-latin]
 etymology_hook: "PT and ES alone use tenēre 'to HOLD' (→ tenant/retain/tenacious) for 'have', while French/Italian kept habēre; Portuguese does have haver ← habēre, but demoted it to an auxiliary — two verbs swapped jobs on the Iberian peninsula"
 duration:
   max_seconds: 216

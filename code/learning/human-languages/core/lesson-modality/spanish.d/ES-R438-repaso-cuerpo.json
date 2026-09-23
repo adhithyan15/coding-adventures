@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R438-repaso-cuerpo",
+    "language": "spanish",
+    "chapter": 438,
+    "sequence": 10980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0f3fd75e96c60b4"
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "The Imperfect --- What Used to Happen",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d916732db0d13be3",
+  "sourceHash": "fnv1a64:bf55ade65be42742",
   "lessons": [
     {
       "id": "ES-C16-imperfecto",
@@ -401,7 +401,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2559f37ed69dbf42",
+      "sourceHash": "fnv1a64:d5f78f146e426f64",
       "notice": null,
       "blocks": [
         {

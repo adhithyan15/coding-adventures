@@ -1,0 +1,595 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 111,
+  "title": "It Has Happened",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:722111a64ef30ab2",
+  "lessons": [
+    {
+      "id": "ML-C111-vannittu",
+      "sequence": 4100,
+      "title": "വന്നിട്ട് (vanniṭṭŭ) — having come",
+      "headword": "വന്നിട്ട്",
+      "romanization": "vanniṭṭŭ",
+      "gloss": "having come — the other thing a past form can turn into, made by adding rather than taking away",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd3cc69c2efdf108",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say he came."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say the describing form you made from it — the teacher who came."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വന്നിട്ട് (vanniṭṭŭ) — having come."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the past form with -ഇട്ട് put on the end."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "വന്നു, he came.",
+                "വന്നിട്ട് (vanniṭṭŭ), having come."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one past form, two directions",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have now made two things out of the same past form, and they were made in opposite ways."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "വന്ന, the ു taken off — describes a noun.",
+                "വന്നിട്ട് (vanniṭṭŭ), -ഇട്ട് put on — leans toward a verb."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The describing form was made by taking a vowel sign away. This one is made by adding, and what it reaches for is different: വന്ന wants a noun to sit in front of, while വന്നിട്ട് (vanniṭṭŭ) wants something else to follow — another verb, or the word that closes the sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "On its own it feels unfinished, and that is the point. Saying vanniṭṭŭ and stopping leaves a listener waiting, the way having come does in English. The next page gives it the word it is waiting for."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "വന്നു, then വന്ന, then വന്നിട്ട് (vanniṭṭŭ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **വന്നു**, then **വന്ന**, then **വന്നിട്ട്**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three was made by taking something away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three was made by taking something away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three leaves a listener waiting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three leaves a listener waiting]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is added to a past form to make this one? (-ഇട്ട്.) What does വന്ന want in front of it? (A noun.) What does വന്നിട്ട് (vanniṭṭŭ) want after it? (Another word to finish the sentence.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C111-vannittundu",
+      "sequence": 4110,
+      "title": "വന്നിട്ടുണ്ട് (vanniṭṭuṇṭŭ) — he has come",
+      "headword": "വന്നിട്ടുണ്ട്",
+      "romanization": "vanniṭṭuṇṭŭ",
+      "gloss": "he has come — the waiting form given the word it was waiting for",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:376339b5cd3cab0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say having come."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say the word that means there is — the one that also does somebody has."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "അവൻ വന്നിട്ടുണ്ട്. avan vanniṭṭuṇṭŭ — \"He has come.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Put the two together and nothing is left over."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "വന്നിട്ട് (vanniṭṭŭ), having come.",
+                "ഉണ്ട്, there is."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "They run together in speech into വന്നിട്ടുണ്ട് (vanniṭṭuṇṭŭ), and that is the whole of the construction: the waiting form, and the word it was waiting for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the word you already knew did the work",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉണ്ട് was given to you as there is and somebody has. That second job is the one showing here. English builds its perfect on have — he has come — and Malayalam reaches for the word it already uses for having."
+            },
+            {
+              "kind": "speech",
+              "text": "So the two languages land in the same place from the same starting point, which is worth noticing precisely because so little else about the two verbs lines up."
+            },
+            {
+              "kind": "speech",
+              "text": "What it says that a plain past does not is that the coming is done and bears on now. avan vannu reports the event. avan vanniṭṭuṇṭŭ tells you he is here — the arriving happened, and you are being told about its result."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "അവൻ വന്നിട്ടുണ്ട് (vanniṭṭuṇṭŭ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **അവൻ വന്നിട്ടുണ്ട്**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two pieces it is made of, separately",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two pieces it is made of, separately]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which English word Malayalam is matching when it reaches for ഉണ്ട്",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which English word Malayalam is matching when it reaches for **ഉണ്ട്**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "He has come? (അവൻ വന്നിട്ടുണ്ട് (vanniṭṭuṇṭŭ).) What two pieces is it built from? (വന്നിട്ട് (vanniṭṭŭ) and ഉണ്ട്.) Which of ഉണ്ട്'s two jobs is doing the work? (Having.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C111-past-or-perfect",
+      "sequence": 4120,
+      "title": "വന്നു — വന്നിട്ടുണ്ട് (vannu — vanniṭṭuṇṭŭ)",
+      "headword": "വന്നു — വന്നിട്ടുണ്ട്",
+      "romanization": "vannu — vanniṭṭuṇṭŭ",
+      "gloss": "choosing between the event and its result, with nothing new to learn",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05ba2617673c83e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say he came, then he has come."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: which one a situation asks for",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "അവൻ വന്നു, reports the event.",
+                "അവൻ വന്നിട്ടുണ്ട് (vanniṭṭuṇṭŭ), reports where that leaves things."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Both are true of the same arrival. Which you pick depends on what the person listening needs: whether you are telling them what happened, or telling them how matters stand because of it."
+            },
+            {
+              "kind": "speech",
+              "text": "A useful test while the difference is settling: if you could follow your sentence with …so he is here now without repeating yourself, the second form was the one you wanted."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "somebody asks whether the teacher is here — answer with അവൻ വന്നിട്ടുണ്ട് (vanniṭṭuṇṭŭ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: somebody asks whether the teacher is here — answer with **അവൻ വന്നിട്ടുണ്ട്**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "somebody asks what happened yesterday — answer with അവൻ വന്നു",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: somebody asks what happened yesterday — answer with **അവൻ വന്നു**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both sentences one after the other, and name the piece that differs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both sentences one after the other, and name the piece that differs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the middle piece on its own — വന്നിട്ട് (vanniṭṭŭ) — and stop, hearing how it waits",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the middle piece on its own — **വന്നിട്ട്** — and stop, hearing how it waits]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form reports the event itself? (വന്നു.) Which reports how things stand now? (വന്നിട്ടുണ്ട് (vanniṭṭuṇṭŭ).) How many new words did choosing between them need? (None.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R111-perfect-recall",
+      "sequence": 4130,
+      "title": "(vannu, vanna, vanniṭṭŭ, vanniṭṭuṇṭŭ) (naalu roopam) — from cold",
+      "headword": "(vannu, vanna, vanniṭṭŭ, vanniṭṭuṇṭŭ)",
+      "romanization": "naalu roopam",
+      "gloss": "cold retrieval of four shapes off one past form, and of the word that finished the last of them",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:6f07b88c44cfb23d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say having come, then he has come."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: four shapes off one past form",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "വന്നു, he came.",
+                "വന്ന, that came — a vowel sign taken off.",
+                "വന്നിട്ട് (vanniṭṭŭ), having come — -ഇട്ട് put on.",
+                "വന്നിട്ടുണ്ട് (vanniṭṭuṇṭŭ), he has come — that, plus ഉണ്ട്."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Every row after the first is the row above it with one change. Nothing in this chapter asked you to learn a word; it asked you to notice what a form you already had could be turned into."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You could say that something happened, and not that it has happened. The difference matters more than it looks: answering is he here? with the plain past reports yesterday, and leaves the question standing."
+            },
+            {
+              "kind": "speech",
+              "text": "The word that closed the gap was one you had held for a long time. ഉണ്ട് was given to you as there is and somebody has, and it is the second job that builds this. English does the same thing with have, which is a coincidence worth having noticed, because very little else about the two verbs matches."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four shapes, in the order of the table",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four shapes, in the order of the table]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one was made by taking something away",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one was made by taking something away]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word finishes the last one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word finishes the last one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "He has come? (അവൻ വന്നിട്ടുണ്ട് (vanniṭṭuṇṭŭ).) What is added to a past form to start it? (-ഇട്ട്.) What finishes it? (ഉണ്ട്.) How many new words did this chapter cost? (None.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

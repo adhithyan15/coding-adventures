@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-F2-04",
+  "category": "Opinions, attitudes and knowledge",
+  "label": "evaluate with baraM and chaalel",
+  "probe": [
+    "MR-LEX-BARAM-01",
+    "MR-SENSE-CHALEL-OKAY"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-F2-04",
+    "A1-NG6-01"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NG5-03",
+  "category": "Qualitative notions",
+  "label": "colour",
+  "probe": null,
+  "note": "Untaught. Colours are the standard A1 descriptor set and what a sign-and-label item uses for its distractors.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG5-03"
+  ]
+}

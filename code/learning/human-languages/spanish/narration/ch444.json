@@ -1,0 +1,1103 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 444,
+  "title": "La Casa Por Fuera",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3c8891835f6c4b11",
+  "lessons": [
+    {
+      "id": "ES-C444-calefaccion",
+      "sequence": 11350,
+      "title": "la calefacción — heat, made",
+      "headword": "la calefacción",
+      "romanization": "la calefacción",
+      "gloss": "the heating — heat-making, built from two words you already own",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bce9e208e25bb315",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el calor and el frío. It is January and the flat is cold. Name the thing that is not working."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la calefacción",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la calefacción — the heating."
+            },
+            {
+              "kind": "speech",
+              "text": "No funciona la calefacción — the heating is not working, which is the sentence a tenant needs first. Calefacción central — central heating. Poner la calefacción — to put the heating on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two pieces, and you own both."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                "where you have it"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "piece: cale-. where you have it: calor, heat.",
+                "piece: -facción. where you have it: facere, to make."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Heat-making. The second half is the same facere that sits under hacer and under la factura, which you met as a making. A factura is a making of accounts; a calefacción is a making of heat."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the pieces too, in calorie — a unit of heat — and in the -faction of satisfaction and liquefaction."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Notice that Spanish names the process, not the device."
+            },
+            {
+              "kind": "speech",
+              "text": "English heating can mean the radiators, the boiler, or the service. Spanish calefacción is the making-of-heat, and the hardware has its own words — el radiador, la caldera. That is why the bill says calefacción and the plumber talks about la caldera: the two are not the same noun."
+            },
+            {
+              "kind": "speech",
+              "text": "So la factura de la calefacción is the bill for heat-made, not the bill for a machine. Both words on that line come from facere, one making heat and one making the account of it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la calefacción",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la calefacción*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the heating is not working and I am cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the heating is not working and I am cold]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the two pieces of the word mean",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the two pieces of the word mean]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The heating? (La calefacción.) What does the second half mean? (To make.) Which other word you have is built on it? (La factura.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C444-madera",
+      "sequence": 11360,
+      "title": "la madera — the stuff a tree is for",
+      "headword": "la madera",
+      "romanization": "la madera",
+      "gloss": "wood — Latin's word for matter, which meant timber first, and reached Spanish twice",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e5923a5d2f4ff39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la mesa, la silla and el árbol. Two of those are made of the third. Name what they are made of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la madera",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la madera — wood, as a material."
+            },
+            {
+              "kind": "speech",
+              "text": "Una mesa de madera — a wooden table. Spanish says de madera, of wood, where English turns the noun into an adjective."
+            },
+            {
+              "kind": "speech",
+              "text": "The tree is el árbol, the wood you build with is la madera, and a wood you walk in is el bosque — three words where English stretches one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "madera is Latin māteria, and māteria meant timber before it meant anything else."
+            },
+            {
+              "kind": "speech",
+              "text": "Behind it sits māter, mother. A tree's māteria was its trunk — the part that puts out the branches, the mothering stock. Only later did Roman philosophers borrow the word for the stuff a thing is made of in general."
+            },
+            {
+              "kind": "speech",
+              "text": "So the abstract sense came second. Matter was named after wood, not the other way round."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That one Latin word reached Spanish twice, and this is the third pair of its kind you have met."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the word",
+                "the road it took"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "the word: la madera. the road it took: carried in every mouth, worn down.",
+                "the word: la materia. the road it took: lifted off the page by scholars."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Māteria spoken for a thousand years became madera and kept the concrete sense: the planks. Māteria read off the page centuries later came back as la materia and kept the abstract one: matter, subject-matter, a school subject."
+            },
+            {
+              "kind": "speech",
+              "text": "You have seen the shape before — nadar beside la natación, hacer beside la factura, and now madera beside materia. The worn twin is the everyday one; the learned twin is the one on the timetable, the bill or the syllabus. When two Spanish words look loosely alike and one is plainer than the other, this is the first thing to suspect."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la madera",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la madera*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wooden table and a wooden chair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wooden table and a wooden chair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why madera and materia are the same word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *madera* and *materia* are the same word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Wood? (La madera.) A wooden table? (Una mesa de madera.) What did māteria mean first? (Timber.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C444-plantar",
+      "sequence": 11370,
+      "title": "plantar — pressed in with the foot",
+      "headword": "plantar",
+      "romanization": "plantar",
+      "gloss": "to plant — to press in with the sole of the foot, which is what planta meant",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa3576ada9779dc0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la planta, el jardín and la tierra. You have the thing, the place and the ground. Name the act."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: plantar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "plantar — to plant."
+            },
+            {
+              "kind": "speech",
+              "text": "Plantamos un árbol en el jardín — we planted a tree in the garden. Plantar cara is to stand up to somebody, and dejar plantado is to stand somebody up — to leave them planted where they were waiting."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la planta has three meanings in Spanish and one origin."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "the sense",
+                "what it names"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "the sense: la planta del pie. what it names: the sole of the foot.",
+                "the sense: una planta. what it names: a growing plant.",
+                "the sense: la primera planta. what it names: a storey of a building."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Latin planta was the sole of the foot, and nothing else. To plantāre was to press a cutting into the soil with your heel — the actual gesture a Roman gardener made. The plant is named after the foot that put it there."
+            },
+            {
+              "kind": "speech",
+              "text": "The storey follows the same foot: a planta of a building is a floor plan, the outline you would leave standing on it, which is why English plan is the same word again."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is worth holding next to madera."
+            },
+            {
+              "kind": "speech",
+              "text": "Madera went the other way: a concrete thing (timber) whose name was borrowed upward into an abstraction (matter). Planta started as a body part and spread sideways into two unrelated-looking objects — a shrub and a floor of a building."
+            },
+            {
+              "kind": "speech",
+              "text": "Neither is a word splitting into homonyms by accident. Both are one image being reused, and if you can recover the image you get the whole family instead of three separate entries. For planta, the image is a foot pressing down."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plantar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *plantar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "we planted a tree in the garden",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: we planted a tree in the garden]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three meanings of planta, and the one picture behind them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three meanings of *planta*, and the one picture behind them]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To plant? (Plantar.) What did Latin planta mean? (The sole of the foot.) What is la primera planta? (The first floor.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C444-cubrir",
+      "sequence": 11380,
+      "title": "cubrir — and the lid that comes off again",
+      "headword": "cubrir",
+      "romanization": "cubrir",
+      "gloss": "to cover — an irregular participle that joins abierto, and the des- that really does reverse",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52cfd6affd5b4e58",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say abrir and cerrado. Say plantar. You have put a cutting in the ground and the frost is coming. Name what you do to it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cubrir",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cubrir — to cover."
+            },
+            {
+              "kind": "speech",
+              "text": "Cubre la olla — cover the pot. El seguro no lo cubre — the insurance does not cover it, which is the sense you will meet on paper rather than in a kitchen. el cubierto is a place setting at table, the knife and fork laid out — what covers your place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a third irregular participle",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "abrir gave you abierto and cerrar gave you cerrado. Cubrir follows abrir."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "verb",
+                "participle"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "verb: cerrar. participle: cerrado — regular.",
+                "verb: abrir. participle: abierto — irregular.",
+                "verb: cubrir. participle: cubierto — irregular."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Abrir and cubrir both end in -brir, and both break the same way. That is not a coincidence you have to memorise separately: the handful of irregular participles come in small families, and finding one member gives you the others. Descubrir makes descubierto, because it is cubrir with something on the front."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin cooperīre — co- together, plus operīre, to shut or cover over. Operīre is itself ob- plus a root meaning to close, and its opposite, aperīre, gave you abrir. So cubrir and abrir are not merely alike in shape; they are two halves of one Latin pair."
+            },
+            {
+              "kind": "speech",
+              "text": "And now the prefix that earns its keep:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what des- does"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: cubrir. what des- does: put the cover on.",
+                "word: descubrir. what des- does: take it off — to discover."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Descansar taught you des- as an undoing, and this is the same job done plainly: to discover something is to uncover it. Compare disfrutar, where the prefix did not reverse at all. Same shape, two behaviours, and only the meaning of the whole word tells you which you have."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cubrir, then cubierto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cubrir*, then *cubierto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cover the pot, the frost is coming",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cover the pot, the frost is coming]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "descubrir, and what des- is doing to it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *descubrir*, and what *des-* is doing to it]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To cover? (Cubrir.) The participle? (Cubierto — irregular, like abierto.) To discover? (Descubrir — to un-cover.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C444-carrito",
+      "sequence": 11390,
+      "title": "el carrito — a small cart, and a very large ending",
+      "headword": "el carrito",
+      "romanization": "el carrito",
+      "gloss": "the trolley — a little cart, and the ending Spanish uses more than almost any other",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a1b082b47b76005",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el supermercado and el coche. Say cubrir. You are at the door of the shop with a week's shopping to do. Name what you take."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el carrito",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el carrito — the trolley, the cart."
+            },
+            {
+              "kind": "speech",
+              "text": "El carrito de la compra — the shopping trolley. Un carrito de bebé — a pushchair. On a website, añadir al carrito is add to basket, and that is where you will meet the word most often."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "carro plus -ito."
+            },
+            {
+              "kind": "speech",
+              "text": "El carro is a cart, from Latin carrus, a wagon — a word Latin itself took from Gaulish, and the same one behind English car, carry and cargo. Add -ito and you have a small one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending that does more than shrink",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "-ito and -ita attach to almost any noun, and size is only its first job."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "with -ito",
+                "what it adds"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "word: un momento. with -ito: un momentito. what it adds: a moment becomes one moment, please.",
+                "word: ahora. with -ito: ahorita. what it adds: now becomes right now, or soon."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Momentito is not a shorter moment. The ending softens the request, the way English softens one by adding a little or if you would. Spanish speakers use it constantly for that, not for measuring."
+            },
+            {
+              "kind": "speech",
+              "text": "Two things to watch. Spelling follows sound: poco becomes poquito, because c before i would go soft and the word must keep its k. And the ending has a cousin, -illo, which shrinks less kindly — un librillo is faintly dismissive where un librito is affectionate."
+            },
+            {
+              "kind": "speech",
+              "text": "So when a Spanish speaker adds -ito to something that is not small, they are usually being warm rather than inaccurate."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el carrito",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el carrito*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "add it to the basket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: add it to the basket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "un momentito, and what the ending is doing there",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *un momentito*, and what the ending is doing there]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The trolley? (El carrito.) What does -ito add besides size? (Warmth, or softening.) Why is it poquito and not pocito? (To keep the hard k.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R444-repaso-casa",
+      "sequence": 11400,
+      "title": "(calefacción, madera, plantar, cubrir, carrito) — from cold",
+      "headword": "(calefacción, madera, plantar, cubrir, carrito)",
+      "romanization": "(calefacción, madera, plantar, cubrir, carrito)",
+      "gloss": "cold retrieval of the five, and of the three shapes a Latin word can take on its way in",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d3dd8bcc9f2a155",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all five: the heating, wood, to plant, to cover, the trolley."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: three things a word can do on its way into Spanish",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every word in this chapter came from Latin, and no two arrived the same way."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what happened to it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: madera. what happened to it: arrived twice — and materia is the other one.",
+                "word: planta. what happened to it: arrived once and spread into three meanings.",
+                "word: carrito. what happened to it: arrived, then Spanish built on it."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Madera and materia are one word on two roads, the worn twin and the learned twin. Planta is one road and one word that kept being reused — sole of the foot, then the cutting pressed in by it, then the floor plan you stand on. Carrito is neither: carro came in, and the -ito on the end is Spanish's own work, added centuries after Latin had finished."
+            },
+            {
+              "kind": "speech",
+              "text": "Those three cover most of what you will meet. A word arrives twice, or it arrives once and stretches, or it arrives and the language grows something new on it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the heating is not working",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the heating is not working]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cover the pot before the frost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cover the pot before the frost]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wooden table, and why madera and materia are one word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wooden table, and why *madera* and *materia* are one word]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now report what is wrong with a home and say what you did about it — the heating, the material, the garden, the thing you covered, the trolley you took to the shop. Between this and the contract chapter you can hold up most of a tenancy in Spanish."
+            },
+            {
+              "kind": "speech",
+              "text": "You also have a third irregular participle. Cubierto joins abierto, and they break together because they rhyme: the irregulars come in small families, so finding one gives you the rest."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The participle of cubrir? (Cubierto.) Wood? (La madera.) The heating? (La calefacción.) Which of those three is a doublet? (Madera, with materia.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C444-sintesis-casa",
+      "sequence": 11410,
+      "title": "(un aviso del casero) — read it, then do it yourself",
+      "headword": "(un aviso del casero)",
+      "romanization": "(un aviso del casero)",
+      "gloss": "the payoff — read a landlord's notice and a reply, then report a fault yourself",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:5df4b36a01652afe",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la calefacción and cubrir. The notice you are about to read uses one of them, and the reply uses the other."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read both, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "1 — un aviso en el portal."
+            },
+            {
+              "kind": "speech",
+              "text": "Se informa a los vecinos de que la calefacción quedará apagada el martes por trabajos en la caldera. Los suelos de madera del portal se barnizarán el mismo día. Rogamos no pisar."
+            },
+            {
+              "kind": "speech",
+              "text": "2 — un mensaje al casero."
+            },
+            {
+              "kind": "speech",
+              "text": "Buenos días. La ventana del salón no cierra bien y entra frío. También he plantado las macetas que dejó en la terraza, pero habrá que cubrirlas si hiela. ¿Puede pasar el técnico esta semana?"
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what will be off on Tuesday, and why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what will be off on Tuesday, and why]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the residents are asked not to do",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the residents are asked not to do]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two things the tenant reports, and the one request",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two things the tenant reports, and the one request]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at cubrirlas in the second message."
+            },
+            {
+              "kind": "speech",
+              "text": "The pronoun is stuck on the end of the infinitive: cubrir plus las, the flowerpots. Spanish attaches the object to an infinitive rather than putting it in front, and does the same to a command — cúbrelas — and to a gerund. English never does this, which is why habrá que cubrirlas looks like one long word and is two."
+            },
+            {
+              "kind": "speech",
+              "text": "The first notice will not do that, because it has no people in it: se informa, se barnizarán, rogamos. It is the impersonal register you met on the council's page, and the contrast between the two texts is the whole point of reading them together. A neighbour writes with pronouns; a notice writes without."
+            },
+            {
+              "kind": "speech",
+              "text": "Even the -ito ending belongs to the message and not the notice. Nobody puts un momentito on a formal sign."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Five sentences to a landlord: say the heating is not working, say which room, say what you planted, say you had to cover it, and ask for someone to come."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did you write cubrirlas as one word?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

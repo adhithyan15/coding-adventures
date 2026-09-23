@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f0f216cdd576cc84",
+  "sourceHash": "fnv1a64:646675b2ff30ad04",
   "lessons": [
     {
       "id": "KA-C05-maatanaadu",
@@ -473,7 +473,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:97ead52324285627",
+      "sourceHash": "fnv1a64:6a6ac601a53a4525",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 7,
-  "sourceHash": "fnv1a64:1251e66877da0e63",
+  "sourceHash": "fnv1a64:acd65ee71d64de32",
   "lessonIds": [
     "PA-C07-hona",
     "PA-S07-naana-jajja-vavva",
@@ -18,6 +18,6 @@
   "text": "punjabi/narration/ch07.txt",
   "json": "punjabi/narration/ch07.json",
   "textHash": "fnv1a64:afd1e05e12dfc5fe",
-  "jsonHash": "fnv1a64:fa231c2992b9995e",
+  "jsonHash": "fnv1a64:390134b2b27bc6f3",
   "findings": []
 }

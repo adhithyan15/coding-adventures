@@ -11,7 +11,7 @@ gloss: "thirteen — the unit wears down, and the rule still holds"
 concept_tag: FA-NUMBER-THIRTEEN
 prerequisites: [FA-C18-yazdah]
 sounds: [rtl, long-i, short-vowels-unwritten]
-roots: [proto-indo-european-treyes]
+roots: [pie-treyes]
 etymology_hook: "sizdah is se worn to si plus dah: the unit changes shape a little and the ten never does, which is how the reader learns to hear the join."
 duration:
   max_seconds: 245

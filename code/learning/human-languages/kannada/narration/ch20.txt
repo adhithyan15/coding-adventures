@@ -1,8 +1,8 @@
 Kannada, chapter 20: Numbers 11–20 and Weather.
-3 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+4 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 ಹನ್ನೊಂದು to ಇಪ್ಪತ್ತು — numbers 11–20.
 
 Warm-up.
@@ -29,7 +29,37 @@ Wrap-up Recall.
 How are Kannada's teens built? (ಹತ್ತು (ten) + a digit, compounded.) Does ಇಪ್ಪತ್ತು (twenty) have a compositional "two-tens" origin? (Yes — Proto-Dravidian ir- "two" + paHtu "ten.") Can you still spot modern eraḍu or modern hattu inside it today? (No — the old bound "two" root and the un-lenited middle-of-word "ten" root look different from their modern standalone descendants.) Do Sanskrit's vimshati or Latin's vīgintī have any compositional origin like this at all? (No — neither has a buried "two-ten" history the way Kannada's does.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
+ನನಗೆ — one ending, and the sentences that have no subject.
+
+Warm-up.
+[pause 3 seconds]
+Say that you know Kannada. Then say that you speak it. Only one of the two sentences has a subject — say which.
+
+Why it's said this way.
+ನನಗೆ ಕನ್ನಡ ಗೊತ್ತು (nanage kannaḍa gottu) is to-me Kannada known. There is no I in it and no verb to know: knowing is something that is the case for you, not something you do.
+That one idea runs much further than it looks, and age is where it surfaces again. Kannada asks your age how-much? rather than how old are you — the years are a quantity attached to a person, not a property the person performs. The same suffix, the same shape of thought:
+[a table of 2 rows, read aloud]
+what you mean: I know Kannada. how Kannada builds it: to-me Kannada known.
+what you mean: how old are you. how Kannada builds it: your age how-much.
+English needs a different verb for each — know, be — and Kannada needs neither.
+
+Grammar Lens: one suffix per job.
+Where Latin fuses number and case into one ending you cannot take apart, Kannada adds one visible suffix per job, and they stack in order. A reader who can find the seams can read a long word they have never met.
+[pause 1 second]
+[your turn — say: that you speak Kannada, with its subject — nānu kannaḍa mātanāḍuttēne]
+[pause 8 seconds for the answer]
+[your turn — say: that you know it, without one — nanage kannaḍa gottu]
+[pause 8 seconds for the answer]
+[your turn — say: that it is no trouble — paravāgilla]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of the two sentences about Kannada has no subject? (The one about knowing.) How many jobs does a single Kannada suffix do? (One — they stack rather than fuse.)
+
+
+Lesson 3 of 4.
 ಹವಾಮಾನ (havāmāna) — a genuine two-language hybrid word.
 
 Warm-up.
@@ -59,7 +89,7 @@ Wrap-up Recall.
 What are the two pieces of ಹವಾಮಾನ, and where does each come from? (ಹವಾ, "air," a Persian/Arabic loan; ಮಾನ, "measure," native Sanskrit.) What does havāmāna literally mean? ("Air-measure.") What other Indian language shares the exact same word for "air"? (Hindi — havā.)
 
 
-Lesson 3 of 3.
+Lesson 4 of 4.
 ಝ (jha) — one character, and the pattern it completes.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಝ and Guided Practice until you have stopped, and I will say so again when we reach it.

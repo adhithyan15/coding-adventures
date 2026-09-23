@@ -1,0 +1,22 @@
+{
+  "chapter": 448,
+  "title": "La mudanza",
+  "label": "ch:es-mudanza",
+  "canDo": "I can hand a flat over and take one on: say when I am moving, call the day hard, and tell somebody which things are out of order and which are actually in pieces.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C448-sintesis-mudanza",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C448-MUDA-01",
+      "ES-LEX-C448-MUDA-02",
+      "ES-LEX-C448-MUDA-03",
+      "ES-LEX-C448-MUDA-04",
+      "ES-LEX-C448-MUDA-05"
+    ],
+    "note": "Scene-grouped wordlist: the ranking rule is exhausted (only one remaining lexeme appears in more than one failing exam row), so chapters are now built around a situation rather than around frequency. THE CHAPTER TURNS ON ESTROPEADO VS ROTO, which English collapses into 'broken' and Spanish does not: roto is romper's participle and says the thing came apart, estropeado says it stopped working whether or not anything came apart. A washing machine full of water is estropeada and not rota; milk that has gone off is estropeada and could never be rota, since nothing in a carton can come apart -- that case is the one where English offers no help at all. Etymology pays twice. estropear reaches Spanish through Italian stroppiare from Latin TURPIS, so it is a cousin of torpe, introduced one chapter earlier: the same Latin word for 'shameful' landed as 'wreck a thing' in one branch and as the near-apology you make over a spilled glass in the other, which is the previous chapter's point about roots guiding shape and never tone, now demonstrated rather than asserted. And roto is ruptus, Latin's own short participle, kept short because romper is used too constantly for the regular -ido pattern to take hold -- the same reason English keeps 'wrote' beside 'worked'. Two productive endings: -anza builds a feminine noun of action on a verb (mudanza, esperanza, ensenanza, tardanza), and esperanza repays a look because Spanish named hope after the waiting rather than after the wanting. mudarse takes A for the destination. The slash headword estropear / estropeado is deliberate: the verb and its participle-adjective are both high-frequency and the adjective is what appears on a lift door."
+  }
+}

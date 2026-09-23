@@ -11,7 +11,7 @@ gloss: "four — one Indo-European sound, and three languages that did three thi
 concept_tag: UR-NUMBER-FOUR
 prerequisites: [UR-C28-teen]
 sounds: [rtl, long-a]
-roots: [sanskrit-catvaras, proto-indo-european-kwetwores]
+roots: [sanskrit-catvaras, pie-kwetwores]
 etymology_hook: "chaar continues Sanskrit catvaras from Proto-Indo-European *kwetwores: Latin quattuor kept the kw whole, English four lost it, and Indo-Aryan pushed it forward to ch."
 duration:
   max_seconds: 265

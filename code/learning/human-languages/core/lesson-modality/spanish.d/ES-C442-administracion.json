@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C442-administracion",
+    "language": "spanish",
+    "chapter": 442,
+    "sequence": 11210,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:127d01116088cd75"
+  },
+  "findings": []
+}

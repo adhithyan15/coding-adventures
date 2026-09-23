@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 4,
-  "sourceHash": "fnv1a64:e4f53e791a6f334a",
+  "sourceHash": "fnv1a64:911257360416620c",
   "lessonIds": [
     "FR-C04-au-revoir",
     "FR-C04-a-plus-tard",
@@ -10,13 +10,15 @@
     "FR-C04-practice",
     "FR-W01-accents",
     "FR-W02-cedille",
-    "FR-W03-trema"
+    "FR-W03-trema",
+    "FR-R05-second-pass-courtesy-and-farewells",
+    "FR-R05-second-pass-three-marks"
   ],
-  "voiceLessons": 5,
+  "voiceLessons": 6,
   "drivablePrefix": 5,
   "text": "french/narration/ch04.txt",
   "json": "french/narration/ch04.json",
-  "textHash": "fnv1a64:ae5385301fd55fe9",
-  "jsonHash": "fnv1a64:49e972f833898c1f",
+  "textHash": "fnv1a64:6d19a390bf0d0088",
+  "jsonHash": "fnv1a64:67f2d6cd81a892b2",
   "findings": []
 }

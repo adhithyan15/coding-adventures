@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TE-S168-script-recall-split-sounds",
+    "language": "telugu",
+    "chapter": 18,
+    "sequence": 455,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f27031eb88097a0",
+    "detachableSegments": [
+      "Script: both are here to keep a difference visible"
+    ]
+  },
+  "findings": []
+}

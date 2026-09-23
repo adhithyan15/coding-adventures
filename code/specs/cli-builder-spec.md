@@ -151,6 +151,7 @@ form). At least one of `short`, `long`, or `single_dash_long` must be specified.
   "id": "long-listing",
   "short": "l",
   "long": "long-listing",
+  "long_aliases": ["long"],
   "description": "Use long listing format",
   "type": "boolean",
   "required": false,
@@ -169,6 +170,7 @@ form). At least one of `short`, `long`, or `single_dash_long` must be specified.
 | `id` | string | yes | Unique identifier within this scope. Used in `conflicts_with`, `requires`, output dict keys. |
 | `short` | string | no | Single character without the `-` prefix (e.g., `"l"`). |
 | `long` | string | no | Word or hyphenated word without the `--` prefix (e.g., `"long-listing"`). |
+| `long_aliases` | array | no | Alternate double-dash spellings without the `--` prefix. Requires `long`; defaults to `[]`. All spellings resolve to the same canonical `id`. |
 | `single_dash_long` | string | no | Multi-character name used with a single leading `-` (e.g., `"classpath"` → `-classpath`). Used by Java, X11, and some Unix utilities. Matched with longest-match-first (see §5.2). |
 | `description` | string | yes | Human-readable description. Shown in help output. |
 | `type` | string | yes | Value type (see §3). |
@@ -183,6 +185,9 @@ form). At least one of `short`, `long`, or `single_dash_long` must be specified.
 
 **Constraints:**
 - `id` must be unique within its scope (root, or a specific `commands` entry).
+- Every `long_aliases` entry must be non-empty, omit the leading `-`, and be
+  unique across all canonical long forms and aliases active in that command
+  scope, including inherited globals and enabled built-ins.
 - If `type` is `"enum"`, `enum_values` must be a non-empty array.
 - If `type` is `"boolean"`, `value_name` and `enum_values` are ignored.
 - `conflicts_with` and `requires` must reference valid flag IDs within the same scope
@@ -387,8 +392,8 @@ reads one argv token character-by-character and emits a typed token event.
 | Token Type | Pattern | Notes |
 |---|---|---|
 | `END_OF_FLAGS` | Exactly `--` | Signals that all remaining tokens are positional. |
-| `LONG_FLAG(name)` | `--name` (no `=`) | Boolean flag or value-taking flag where value follows as next token. |
-| `LONG_FLAG_WITH_VALUE(name, value)` | `--name=value` | Flag and value in a single token. |
+| `LONG_FLAG(name)` | `--name` (no `=`), where `name` is canonical or a declared alias | Boolean flag or value-taking flag where value follows as next token. |
+| `LONG_FLAG_WITH_VALUE(name, value)` | `--name=value`, where `name` is canonical or a declared alias | Flag and value in a single token. |
 | `SINGLE_DASH_LONG(name)` | `-name` matching a declared `single_dash_long` flag | Longest-match-first (see §5.2). |
 | `SHORT_FLAG(char)` | `-x` where `x` is a single declared short flag | May consume next token as value if flag is non-boolean. |
 | `SHORT_FLAG_WITH_VALUE(char, value)` | `-xVALUE` where `x` is a non-boolean flag | Value is the remainder of the token after the flag character. |
@@ -688,12 +693,15 @@ When loading a spec, before any argv is parsed:
 2. For each scope (root + every command): verify no duplicate flag `id`, command `id`,
    or argument `id`.
 3. Verify every flag has at least one of `short`, `long`, or `single_dash_long`.
-4. Verify all `conflicts_with` and `requires` IDs exist in the same scope or in
+4. Verify `long_aliases` appears only with a canonical `long`, and every
+   effective double-dash spelling is valid and unambiguous after inherited
+   globals and enabled built-ins are included.
+5. Verify all `conflicts_with` and `requires` IDs exist in the same scope or in
    `global_flags`.
-5. Verify all `mutually_exclusive_groups` reference valid flag IDs in the same scope.
-6. Verify `enum_values` is present and non-empty when `type` is `"enum"`.
-7. Verify at most one argument per scope has `variadic: true`.
-8. Build G_flag for each scope and call `has_cycle?`. If a cycle exists, report
+6. Verify all `mutually_exclusive_groups` reference valid flag IDs in the same scope.
+7. Verify `enum_values` is present and non-empty when `type` is `"enum"`.
+8. Verify at most one argument per scope has `variadic: true`.
+9. Build G_flag for each scope and call `has_cycle?`. If a cycle exists, report
    a spec error: circular `requires` dependency.
 
 Spec validation errors are fatal. The library must surface them before attempting
@@ -797,6 +805,7 @@ COMMANDS
 
 OPTIONS
   -s, --long-name <VALUE>    Description of the flag. [default: val]
+  --canonical, --old-name    A flag with a declared long alias.
   -b, --boolean              Boolean flag description.
 
 GLOBAL OPTIONS
@@ -828,6 +837,9 @@ ARGUMENTS
 - Variadic optional: `[DISPLAY_NAME...]`
 - Non-boolean flags: `-s, --long <VALUE>` (value_name or the type name uppercased)
 - Boolean flags: `-s, --long`
+- Long aliases follow the canonical spelling in declaration order and repeat
+  the value placeholder when the flag accepts a value:
+  `-s, --long <VALUE>, --legacy <VALUE>`.
 - `single_dash_long` flags: `-classpath <VALUE>`
 - Default values appended as `[default: X]` when set and `required` is `false`
 

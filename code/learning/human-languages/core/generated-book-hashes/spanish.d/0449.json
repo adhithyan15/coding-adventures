@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:a738cb4bdbd22a70",
+  "lessonIds": [
+    "ES-C449-arreglar",
+    "ES-C449-freno",
+    "ES-C449-rueda",
+    "ES-C449-taladro",
+    "ES-C449-acercar",
+    "ES-R449-repaso-taller",
+    "ES-C449-sintesis-taller"
+  ],
+  "tex": "spanish/book/chapters/ch449-taller.tex"
+}

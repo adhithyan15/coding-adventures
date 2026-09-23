@@ -9,7 +9,7 @@ headword: "మరియు"
 gloss: "and"
 romanization: "mariyu"
 concept_tag: TE-CONJ-AND
-prerequisites: [TE-C73-astringent, TE-C08-dayachesi]
+prerequisites: [TE-C73-astringent, TE-C08-dayachesi, TE-C08-andi]
 sounds: []
 roots: []
 duration:

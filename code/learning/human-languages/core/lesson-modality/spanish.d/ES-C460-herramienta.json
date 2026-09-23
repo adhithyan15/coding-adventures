@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C460-herramienta",
+    "language": "spanish",
+    "chapter": 460,
+    "sequence": 12380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:788ef69a247a9bb3"
+  },
+  "findings": []
+}

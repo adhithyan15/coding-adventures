@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-F1-05",
+  "category": "Giving and asking for information",
+  "label": "confirm or deny the previous statement",
+  "probe": [
+    "MR-LEX-HO-01",
+    "MR-LEX-NAHI-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F1-05"
+  ]
+}

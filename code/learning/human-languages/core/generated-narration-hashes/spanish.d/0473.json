@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:00344e962be6e703",
+  "lessonIds": [
+    "ES-C473-aconsejar",
+    "ES-C473-recomendar",
+    "ES-C473-estado",
+    "ES-R473-repaso-consejo",
+    "ES-C473-sintesis-consejo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch473.txt",
+  "json": "spanish/narration/ch473.json",
+  "textHash": "fnv1a64:390a14233ff8b485",
+  "jsonHash": "fnv1a64:9e4af259185bd68f",
+  "findings": []
+}

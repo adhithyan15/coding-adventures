@@ -1,8 +1,8 @@
 Urdu, chapter 23: Before a Postposition, Everything Changes.
-6 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
+7 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 کمرہ (kamrā) — room.
 
 Warm-up.
@@ -39,7 +39,7 @@ Which language did کمرہ (kamrā) come from, and by what route? (Portuguese, 
 Source: Unicode Arabic chart.
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 کمرے (kamre) — the shape a noun takes before a postposition.
 
 Warm-up.
@@ -77,7 +77,7 @@ What makes a noun change shape? (A postposition coming after it.) What does کم
 Source: Unicode Arabic chart.
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
 کو (ko) — to, and the one it happens to.
 
 Warm-up.
@@ -114,7 +114,7 @@ What two pieces is mujhe made of? (Mujh and کو (ko).) What does کو (ko) mark
 Source: Unicode Arabic chart.
 
 
-Lesson 4 of 6.
+Lesson 4 of 7.
 میں (meṅ) — in.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -156,7 +156,7 @@ How do you tell the pronoun from the postposition? (By where it stands — head 
 Source: Unicode Arabic chart.
 
 
-Lesson 5 of 6.
+Lesson 5 of 7.
 پر (par) — on.
 
 Warm-up.
@@ -193,7 +193,7 @@ Which postposition puts a thing inside, and which on top? (میں (meṅ) and پ
 Source: Unicode Arabic chart.
 
 
-Lesson 6 of 6.
+Lesson 6 of 7.
 Into, onto, and to — one shape-change, three postpositions, and the first sentences in this book that put something somewhere.
 
 Warm-up.
@@ -233,3 +233,37 @@ Wrap-up Recall.
 [pause 4 seconds]
 What must a noun do before a postposition? (Take the oblique shape.) Does the adjective follow? (Yes.) Which nouns show no visible change? (Those not ending in -ا.) And which two words in this chapter are each spelled like something else entirely? (میں (meṅ) and پر (par).)
 Source: Unicode Arabic chart.
+
+
+Lesson 7 of 7.
+Where a word came from, and what to say when you lose it — second pass over the layers an Urdu word can come from, and the phrase that buys you time.
+
+Warm-up.
+[pause 3 seconds]
+Someone is speaking faster than you can follow. Two words, from memory, that ask them to slow down.
+
+You'll want to know: an Urdu word arrives by one of several roads.
+[a table of 3 rows, read aloud]
+word: کوٹ koṭ. the road it took: straight from English, one generation old.
+word: ہوا hawā. the road it took: Arabic to Persian, Persian to Urdu — a loan of a loan.
+word: گرمی garmī. the road it took: Persian, on a root it shares with Greek thermós.
+Three different histories, and the spelling announces none of them. کوٹ is the sharpest case: an identical کوٹ meaning "fort" came in from Sanskrit koṭṭa centuries earlier, so the two are homographs rather than cousins and the page gives you no warning at all.
+ہوا is the shape worth naming, because it is not the usual one. A word that splits from a shared root into two roads has two descendants; ہوا was handed along a single chain, Arabic to Persian to Urdu, arriving once.
+
+You'll want to know: the phrase for when the road runs out.
+آرام سے — ārām se — slowly, gently, take your time. آرام سے کہیں — ārām se kaheṅ — please say it slowly.
+سے is the postposition with, so the phrase is literally with ease. Every letter in it is already yours, and it is worth more in a first conversation than any of the three words above.
+
+Guided Practice.
+[your turn — say: ask someone to say it slowly]
+[pause 8 seconds for the answer]
+[your turn — say: which of the three words above came from English, and how recently]
+[pause 8 seconds for the answer]
+[your turn — say: which one was borrowed twice before it reached Urdu]
+[pause 8 seconds for the answer]
+[your turn — read: the first-meeting page once more, aloud]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which word came straight from English? (کوٹ.) What else does that spelling mean, and is it related? (A fort, from Sanskrit — unrelated.) What makes ہوا a loan of a loan? (Arabic to Persian, then Persian to Urdu.) And what does آرام سے say literally? (With ease.)

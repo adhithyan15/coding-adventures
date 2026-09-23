@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Head and Hand",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:055419c105d4a061",
+  "sourceHash": "fnv1a64:5126ac2f0cc88433",
   "lessons": [
     {
       "id": "PT-C17-cabeca",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d1fe5fb9c851463",
+      "sourceHash": "fnv1a64:4c5225e34ca3361f",
       "notice": null,
       "blocks": [
         {
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87b979e83167bc55",
+      "sourceHash": "fnv1a64:181c3b352b98e1f1",
       "notice": null,
       "blocks": [
         {

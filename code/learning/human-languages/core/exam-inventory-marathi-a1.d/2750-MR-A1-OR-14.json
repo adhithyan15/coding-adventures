@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-OR-14",
+  "category": "Devanagari letters and signs",
+  "label": "the ai and au vowel signs",
+  "probe": [
+    "MR-SCRIPT-AI-MATRA-01",
+    "MR-SCRIPT-AU-MATRA-01"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-assessment"
+  ],
+  "derivedFrom": [
+    "A1-O1-02"
+  ]
+}

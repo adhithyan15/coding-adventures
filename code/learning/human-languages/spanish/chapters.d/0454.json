@@ -1,0 +1,21 @@
+{
+  "chapter": 454,
+  "title": "La vía cortada",
+  "label": "ch:es-corte",
+  "canDo": "I can follow a road or rail closure: read the barrier notice, understand a delay announcement, say what caused it and what is running instead.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "ES-C454-sintesis-corte",
+    "kind": "task",
+    "summary": "Read the message or notice this chapter's words exist for, then say the same thing back.",
+    "assesses": [
+      "ES-LEX-C454-CORTE-01",
+      "ES-LEX-C454-CORTE-02",
+      "ES-LEX-C454-CORTE-03",
+      "ES-LEX-C454-CORTE-04"
+    ],
+    "note": "EVERY ONE OF THE FOUR WORDS HAD ITS ROOT ALREADY IN THE CORPUS, and todavía is the sharpest case in the tranche: LA VÍA is Latin via, the word on every Roman milestone, and TODAVÍA is toda vía, ALL THE WAY -- 'by every route, in any case', which slid to 'still', the sense of something that has gone the whole distance and is still going. The reader has been using one of the commonest words in the language for many chapters with a road sitting inside it. LA OBRA is opera, plural of opus, taken into Spanish as a singular feminine, and the same opus is inside LA OFICINA (opus + facere, the place where work gets done) -- a builder's site and an office are one Latin word landing far apart, and opera the music is the identical word again by way of Italian. EL ACCIDENTE is ad + cadere, a thing that FALLS UPON you, and LA OCASIÓN is the same cadere with a different prefix, a chance that falls TO you: the pair is a small map of luck, and neither was chosen by anybody, which is why accidental in English still means unplanned rather than harmful. EL SERVICIO is servitium from servus, A SLAVE -- an uncomfortable root that has not disappeared (el siervo, English servile) while the rest of the family softened. TWO OF THE FOUR CHANGE MEANING IN THE PLURAL and the plural is the form the reader will actually meet: las obras is the disruption on every diversion sign, los servicios is the toilets on every bar door. Grammar: the accent on vía is NOT about stress position, it prises two vowels apart that would otherwise fuse (vía, día against familia), which is the accent's second job across the language; -cc- in accidente is TWO sounds, k then soft c, following the c-hard-before-a-o-u rule already known; fuera de + BARE NOUN is a fixed frame (fuera de servicio, fuera de plazo) where inserting an article sounds wrong; and POR + noun is how a notice gives a cause without building a porque clause."
+  }
+}

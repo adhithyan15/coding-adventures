@@ -11,7 +11,7 @@ gloss: "five — the number inside a word English borrowed whole"
 concept_tag: NUMBER-ONE-TO-FIVE
 prerequisites: [RU-C23-chetyre]
 sounds: [stress-unmarked]
-roots: [proto-indo-european-penkwe]
+roots: [pie-penkwe]
 etymology_hook: "pyat continues Proto-Indo-European *penkwe -- Greek pente, Latin quinque, English five -- and its Greek cousin is inside pentagon, which English took whole."
 duration:
   max_seconds: 270

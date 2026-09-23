@@ -1,0 +1,11 @@
+{
+  "id": "TE-C12-second-pass-verbs",
+  "pathSegment": "TE-PATH-016",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-016-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

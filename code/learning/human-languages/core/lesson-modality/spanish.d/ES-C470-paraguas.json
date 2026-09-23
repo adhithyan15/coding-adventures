@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C470-paraguas",
+    "language": "spanish",
+    "chapter": 470,
+    "sequence": 12930,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e393fe6ad43e30c2"
+  },
+  "findings": []
+}

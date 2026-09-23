@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C438-sintesis-cuerpo",
+    "language": "spanish",
+    "chapter": 438,
+    "sequence": 10990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e198a1706d83c0f"
+  },
+  "findings": []
+}

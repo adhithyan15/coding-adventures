@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 37,
-  "sourceHash": "fnv1a64:997b48be59503224",
+  "sourceHash": "fnv1a64:e19588af2e213c95",
   "lessonIds": [
     "GE-C24-denken",
     "GE-C24-verstehen",
@@ -13,6 +13,6 @@
   "text": "german/narration/ch37.txt",
   "json": "german/narration/ch37.json",
   "textHash": "fnv1a64:866413d671a34028",
-  "jsonHash": "fnv1a64:99b2ac72eed2795a",
+  "jsonHash": "fnv1a64:f3812e49718cb788",
   "findings": []
 }

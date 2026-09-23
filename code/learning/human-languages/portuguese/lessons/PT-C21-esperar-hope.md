@@ -10,7 +10,7 @@ gloss: "I hope so"
 concept_tag: PT-VERB-HOPE
 prerequisites: [PT-C21-esperar]
 sounds: [open-e, prop-e]
-roots: [latin-sperare]
+roots: [sperare-latin]
 etymology_hook: "hope was the oldest meaning of Latin spērāre and remains alive in esperar"
 duration:
   max_seconds: 125

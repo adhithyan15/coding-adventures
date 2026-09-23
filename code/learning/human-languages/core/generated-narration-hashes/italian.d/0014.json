@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 14,
-  "sourceHash": "fnv1a64:107eaa34576d12bc",
+  "sourceHash": "fnv1a64:cf4b53b18112d826",
   "lessonIds": [
     "IT-C14-avere",
     "IT-C14-eta"
@@ -11,6 +11,6 @@
   "text": "italian/narration/ch14.txt",
   "json": "italian/narration/ch14.json",
   "textHash": "fnv1a64:dcb61b2646ca0757",
-  "jsonHash": "fnv1a64:d3bdab707dfb78a6",
+  "jsonHash": "fnv1a64:1f2b21a5a96ec298",
   "findings": []
 }

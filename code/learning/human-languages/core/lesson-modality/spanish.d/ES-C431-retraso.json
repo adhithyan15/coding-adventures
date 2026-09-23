@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C431-retraso",
+    "language": "spanish",
+    "chapter": 431,
+    "sequence": 10460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d6fa6e77c8d2126"
+  },
+  "findings": []
+}

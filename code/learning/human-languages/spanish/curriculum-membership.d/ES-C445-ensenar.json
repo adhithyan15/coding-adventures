@@ -1,0 +1,11 @@
+{
+  "id": "ES-C445-ensenar",
+  "pathSegment": "ES-PATH-445-PUESTO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ES-EXT-445-PUESTO",
+      "order": 3
+    }
+  ]
+}

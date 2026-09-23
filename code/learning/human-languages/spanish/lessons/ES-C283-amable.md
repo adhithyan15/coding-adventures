@@ -10,7 +10,7 @@ gloss: kind — Latin amabilis, loveable: the person it is easy to be fond of
 concept_tag: ES-COURTESY-KIND
 prerequisites: [ES-C283-permiso]
 sounds: [vowel-a, b-soft]
-roots: []
+roots: [amare-latin]
 etymology_hook: "amable is amabilis, loveable, from amare; English amiable is the same word and amateur a lover"
 duration:
   max_seconds: 240

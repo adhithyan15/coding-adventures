@@ -1,0 +1,20 @@
+{
+  "language": "spanish",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:f354dc86376c202b",
+  "lessonIds": [
+    "ES-C468-chaqueta",
+    "ES-C468-grado",
+    "ES-C468-abrigo",
+    "ES-C468-bufanda",
+    "ES-R468-repaso-abrigo",
+    "ES-C468-sintesis-abrigo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 0,
+  "text": "spanish/narration/ch468.txt",
+  "json": "spanish/narration/ch468.json",
+  "textHash": "fnv1a64:48888f997209f251",
+  "jsonHash": "fnv1a64:63f57a73b631bde6",
+  "findings": []
+}

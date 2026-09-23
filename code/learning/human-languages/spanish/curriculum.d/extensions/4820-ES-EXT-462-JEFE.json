@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-462-JEFE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a message from a manager about cutting spending, and reply that I am still choosing between two options.",
+  "prerequisites": [
+    "ES-EXT-461-DONAR"
+  ]
+}

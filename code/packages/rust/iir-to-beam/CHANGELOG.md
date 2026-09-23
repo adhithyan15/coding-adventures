@@ -1,5 +1,227 @@
 # Changelog — iir-to-beam
 
+## 0.19.0 - BEAM10: `array_len`
+
+This backend had arrays but not their length: `array_len` fell through to
+`UnsupportedOp`, and it was the only backend missing the op (LLVM, WASM, CIL,
+JVM and vm-core all implement it). That single gap blocked 31 of the 37 ALGOL
+60 corpus programs that refused to lower to BEAM.
+
+Measured before and after, by compiling all 292 ALGOL matrix rows to `.beam`
+and **executing them on real `erl`** (OTP 27) against each row's declared
+`Expect`:
+
+| | before | after |
+|---|---|---|
+| run correctly on real `erl` | 254 | **277** |
+| refused to compile (`array_len`) | 31 | 0 |
+| trapped at runtime | 1 | 9 |
+| unchanged either way | 6 | 6 |
+
+(The 6 unchanged are 4 rows whose function signatures hit `UnsupportedType`, 1
+other compile refusal, and 1 program that both prints and returns a value,
+which the measuring harness scores as a mismatch. Listed so the columns sum to
+292.)
+
+The accounting closes exactly: of the 31 that could not compile, 23 now run
+correctly and 8 now trap. No program that passed before changed behaviour.
+
+### Why this was not a one-line addition
+
+Arrays live on two substrates (BEAM04/BEAM06) that answer "how long are you?"
+differently, and only one can answer at all:
+
+- `array<i64>` is `:atomics`, which is fixed-size. `atomics:info/1` reports the
+  declared extent — verified on real `erl` to be unchanged by writes. There is
+  no `atomics:size/1` and this backend emits no map opcodes, so the `size` key
+  is projected with `maps:get/2`, an ordinary `call_ext`.
+- `array<f64>`/`array<str>` is `:ets`, which has no extent at all.
+  `ets:info(Tab, size)` returns the number of entries INSERTED: a ten-element
+  array with three cells written reports `3`. That is the worst failure shape
+  available — a small plausible number instead of an error, on exactly the
+  substrate ALGOL `real` arrays use. So `alloc_array` now records the declared
+  length under a reserved atom key (its size operand was previously discarded),
+  and `array_len` reads that back with `ets:lookup_element/3`.
+
+The key is an atom rather than `-1` because `BEAMOperand::i` takes a `u64` —
+this backend cannot encode a negative literal operand at all.
+
+Dispatch cannot be copied from `array_get`/`array_set`: their `type_hint` is
+the element type, while `array_len`'s is `"i64"`, its own result type. Nor can
+it be deferred to runtime — both substrates are references, so `is_reference/1`
+cannot separate them (confirmed on `erl`). It comes instead from a per-function
+map built from each handle's defining instruction and from `IIRFunction::params`.
+A handle the map cannot resolve is **refused**, not guessed: guessing emits a
+call that raises `badarg` on the other substrate, or returns a wrong number.
+
+That rule was measured before it was written. Across the 31 blocked programs it
+resolves 202 of 202 `array_len` instructions with no holes — and 79 of those
+202 are on `:ets`, so the cheap "atomics-only" option would have unblocked none
+of them.
+
+### The bug this shipped with, and then without
+
+`array_len` was missing from the list of ops that emit a `call_ext`. That is
+not a missing optimisation: `restore_live_across_imported_call!` ends in
+`sanitize_normal_x_after_call!`, which nils every normal x-register it cannot
+prove live, and an empty `live_across` entry lets it prove nothing. All five
+end-to-end programs died with `{badarith,[{erlang,'-',[1,[]]}]}` until it was
+added. Fourth occurrence of this class here (VM-D029, VM-D035, #15332) — and
+the first to happen despite a spec section written to prevent it.
+
+The originally-planned test for this ("assert the emitted sequence sits in a
+save/restore bracket") would have passed against the broken code: the bracket
+was present and correct; what was empty was the set of variables it had to
+save. The shipped test asserts membership in the op list itself.
+
+### Security review found the reserved key was forgeable, and a claim in this code was wrong
+
+The first version of this change named the key `$array_len` and carried a
+comment arguing it could not be forged, on the reasoning that `array_set`'s key
+operand always holds a runtime integer and that nothing in this backend
+produces an atom as a runtime *value*. The first half is true. **The second is
+false**, and security review supplied the counterexample:
+
+```
+%c = alloc_closure Str("$array_len")   ; interns the NAME as an atom and
+                                       ; put_lists it into a register
+%k = field_load %c, 0                  ; get_list lifts the atom back out
+                                       ; as an ordinary value
+     array_set %arr, %k, 9999          ; ets:insert(Tab, {reserved, 9999})
+%n = array_len %arr                    ; reads back the forged 9999
+```
+
+Verified rather than accepted: with the new check disabled, lowering *accepts*
+that module, the source-supplied name interns to the **same atom index** the
+compiler uses for its own key, and `ets:insert/2` is emitted. (An atom key
+coexisting with integer keys in one ets table, and reading back through
+`lookup_element`, was separately confirmed on real `erl`.) Running the forged
+module end to end was not completed — a hand-built module needs export
+scaffolding unrelated to the question — so the claim made here is exactly the
+collision and the emitted call, not an observed wrong answer at runtime.
+
+The impact is bounded: a program can only corrupt its own array's recorded
+length, and BEAM's own BIFs still type- and range-check every access, so this
+is guest data integrity rather than host memory safety. But a
+compiler-maintained invariant that untrusted input can rewrite is not an
+invariant. Two changes:
+
+- The key is renamed to `$lang_vm_array_len`, matching the `$lang_vm_` prefix
+  this backend already established for `$lang_vm_input_peek`.
+- `validate_for_beam` now **rejects** that prefix wherever a source-supplied
+  string becomes an atom: the module name, function names, and the leading
+  `Operand::Str` of `global_load`/`global_store`/`alloc_closure`/`call`.
+  `str_const` is deliberately exempt — its `Str` is a string *literal* that
+  lowers to a character list, never an atom, and restricting it would make the
+  prefix unusable as ordinary program text.
+
+The validation also closes a **pre-existing** instance of the same class that
+needed no closure trick: `global_store Str("$lang_vm_input_peek")` does
+`erlang:put/2` straight over BEAM07's stdin lookahead cache.
+
+Re-running the 292-row ALGOL corpus after the change: still 277 passing, and
+**zero** programs rejected by the new check. It costs nothing.
+
+### And a second round found the checks were screening the wrong string
+
+`validate_for_beam` takes an `IIRModule` and screens `module.name`. The atom
+actually interned as BEAM atom #1 — the name the loader identifies the module
+by — is `IIRBeamConfig::module_name`, a *separate* string supplied by the
+embedder. Both real drivers thread the same operator-chosen name into both,
+which is exactly why the divergence went unnoticed; nothing enforced it.
+
+This affected the new reserved-prefix check and the pre-existing
+`AtomTooLong` check equally. The consequence is not a crash — `encode_atu8`
+uses a `debug_assert!` and then **silently truncates** in release builds — so
+an over-long config module name produced a loadable but semantically *wrong*
+module. A wrong answer rather than an error, which is the failure shape this
+whole spec exists to avoid.
+
+Both rules are now hoisted into `validate::check_module_name` and applied to
+`config.module_name` at the top of `lower_iir_to_beam`, so the string that is
+actually interned is the string that is checked.
+
+### The representation this arrived at, and the two defects that forced it
+
+An ets-backed array handle is the **pair `[Tab | N]`**, not a bare table
+identifier. That was not the first design, and the path to it is the useful
+part.
+
+Storing the length *inside* the table under a reserved key looks obvious and is
+wrong twice:
+
+1. **Not GC-safe.** An insert needs a tuple; this backend has no
+   tuple-construction opcode, so it needs `erlang:list_to_tuple/1` — a second
+   `call_ext` — with the table parked in a scratch x-register above `live`,
+   which is not a GC root. An ets tid is a heap-allocated magic reference, so a
+   collection inside that call relocated the real term and left the parked copy
+   dangling: `size_object: bad tag for 0x…`. Intermittently, on macOS CI only,
+   after passing Linux CI *and* the full local suite twice.
+2. **Forgeable.** A reserved key inside a table the program can also write is
+   not reserved: `alloc_closure` interns any source string as an atom,
+   `field_load` lifts it back out as data, and `array_set` will use it as an
+   index.
+
+A `put_list` needs no call. The pair is built while the table is still in `x0`
+and still a root, so nothing is parked across anything, and there is no
+in-table key to forge. Both defects vanish rather than being mitigated — and
+the correct shape is also the cheaper one: `array_len` on ets is now a single
+`get_list` where it was a `call_ext`, and `array_get`/`array_set` pay one
+`get_list` to recover the table.
+
+Verified: 2000 ets-backed allocations in one function (which segfaulted the
+emulator before) run cleanly, and the ALGOL corpus still reports **277 of 292**
+passing on real `erl` with no heap corruption in any bucket.
+
+### The heap bug CI caught, and the latent one beside it
+
+`put_list` allocates a cons cell and does **not** check or grow the process
+heap; a preceding `test_heap` is required. The length entry's two `put_list`s
+were emitted without one.
+
+That does not fail cleanly. It writes past the heap limit and corrupts
+whatever is there — which surfaced as the emulator's own
+`size_object: bad tag for 0x…` on macOS and Windows CI while every Linux job
+stayed green, because whether the overflow lands on anything depends on how
+full the heap happens to be at that moment.
+
+Reproduced deterministically before fixing: 2000 ets-backed allocations in one
+function **segfault** the emulator without the reservation and run cleanly with
+it. That reproduction is now `test_99_real_erl_many_ets_allocations_do_not_corrupt_the_heap`,
+alongside two structural tests — one asserting the `test_heap` exists, one
+asserting it comes *before* the first `put_list`, since a reservation after the
+allocation is no reservation at all.
+
+**The same omission existed in `array_set`'s ets path** and had simply never
+been caught: no promoted row happened to overflow. Fixed in the same change,
+because it is the same bug in the same file, and a latent segfault is not
+something to leave behind having just learned what it looks like.
+
+`live` on each `test_heap` is minimal by construction: the values that must
+survive a collection are moved down into `x0..` first, because `live` is a
+plain count and a wider one would sweep in uninitialised registers the GC
+would then try to interpret as live terms — the failure `call_builtin
+"input_str"` documents at length.
+
+Not fixed here: a scratch register above `live` is not a GC root, so a
+collection *inside* `list_to_tuple/1` or `ets:insert/2` could still leave a
+staged table reference stale. That is pre-existing and backend-wide
+(`array_set`, `alloc_array` and `call_closure` all stage this way) and is
+tracked as issue #15882 rather than half-fixed here.
+
+### Known gap, now reachable
+
+Implementing `array_len` exposes BEAM04's documented pre-zero limitation:
+`ets:new` does not pre-zero cells, so reading a never-written element raises
+`badarg`/`badkey`. Six ALGOL programs hit this, all of them passing a sparse
+multi-dimensional `real`/`string` array **by value** — `emit_array_value_copy`
+reads every element of the source. Previously these refused at `array_len`
+before getting that far. Logged as its own backlog item with a design that
+pays the O(n) cost entirely in `call_ext`s (`lists:seq/2`, `lists:duplicate/2`,
+`lists:zip/2`, one `ets:insert/2`) rather than an emitted loop.
+
+See `code/specs/BEAM10-array-length.md`.
+
 ## Unreleased - initialize and restore normal GC roots
 
 Initialize non-parameter X registers to nil at entry and clear clobbered normal

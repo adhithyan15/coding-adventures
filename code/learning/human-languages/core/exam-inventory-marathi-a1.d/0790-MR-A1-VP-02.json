@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-VP-02",
+  "category": "The verb phrase",
+  "label": "one copula where Spanish has two",
+  "probe": [
+    "MR-LEX-ASNE-AAHE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-SV-02"
+  ]
+}

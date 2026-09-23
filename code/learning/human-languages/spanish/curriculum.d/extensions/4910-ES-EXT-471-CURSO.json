@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-471-CURSO",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow somebody explaining that a class did not suit them: hear that the level was too high, that they kept losing the thread, and that they moved to a beginners' group, and say the same about something of my own without criticising anyone.",
+  "prerequisites": [
+    "ES-EXT-470-PARAGUAS"
+  ]
+}

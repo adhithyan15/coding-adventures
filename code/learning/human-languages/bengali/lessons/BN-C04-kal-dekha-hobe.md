@@ -11,7 +11,7 @@ gloss: see you tomorrow (and the কাল puzzle)
 concept_tag: FAREWELL-TOMORROW
 prerequisites: [BN-C04-dekha-hobe]
 sounds: [long-aa]
-roots: [kaala-time-sanskrit]
+roots: [sanskrit-kaala-time]
 duration:
   max_seconds: 240
 requires:

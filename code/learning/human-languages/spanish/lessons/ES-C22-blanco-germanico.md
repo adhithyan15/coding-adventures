@@ -10,7 +10,7 @@ gloss: white is a Germanic loan, not a Latin inheritance — and Latin's own alb
 concept_tag: ES-COLOUR-BLANCO-ORIGIN
 prerequisites: [ES-C22-negro-blanco]
 sounds: [nasal-n]
-roots: [germanic-blank, latin-albus]
+roots: [germanic-blank, albus-latin]
 etymology_hook: "blanco is NOT from Latin albus — it's Germanic *blank 'shining', traditionally linked to Visigothic-era contact, the same word French borrowed (more firmly attested) via the Franks"
 duration:
   max_seconds: 260

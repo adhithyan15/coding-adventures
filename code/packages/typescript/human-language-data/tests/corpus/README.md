@@ -3,11 +3,14 @@
 Each language owns its exact corpus assertions in this directory. A low-churn
 track may use `<language>.test.ts`. Once agents are working on the same track in
 parallel, give it a `<language>/` directory and put each stable concern or chapter
-regression in its own `*.test.ts` owner. Keep the top-level test files for
-algorithm fixtures and genuine cross-language invariants; do not add another
-language's expected totals there.
+regression in its own collision-resistant `*.case.ts` owner. The flat file then
+becomes a tiny, stable `import.meta.glob` entrypoint: adding a regression creates
+one owner without editing a shared manifest. The loader sorts owners and rejects
+missing, unsafe, case-fold-colliding, or linked files before importing any case.
+Keep the top-level test files for algorithm fixtures and genuine cross-language
+invariants; do not add another language's expected totals there.
 
-Malayalam and Hindi are the reference same-language layouts. Their track,
+Malayalam and Hindi are the original same-language layouts. Their track,
 opening/writing, exam, romanization/script-order, and chapter regressions have
 independent owners under `corpus/<language>/`. A new chapter regression gets a
 new chapter-named test file; it must not recreate the retired flat aggregate or
@@ -20,6 +23,10 @@ hand-edited totals.
 Hindi and Malayalam A1 point-specific audit history now lives with the
 corresponding direct owner under `core/exam-inventory-<language>-a1.d/`; chapter
 agents must not recreate either retired aggregate inventory.
+
+The ten other Indian tracks use the stricter discovered-owner layout described
+above. Their top-level entrypoints must stay declarative; chapter agents add a
+new hashed case owner and never append executable assertions to the entrypoint.
 
 Continuity and ramp reports are derived directly from each track's canonical
 lessons and authored policy. The shared assertion helper retains stable hard

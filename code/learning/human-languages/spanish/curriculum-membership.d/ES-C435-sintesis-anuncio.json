@@ -1,0 +1,11 @@
+{
+  "id": "ES-C435-sintesis-anuncio",
+  "pathSegment": "ES-PATH-435-PAPELES",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ES-EXT-435-PAPELES",
+      "order": 6
+    }
+  ]
+}

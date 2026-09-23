@@ -1,0 +1,426 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 81,
+  "title": "The Ones That Never Came Back",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:9eaa8f401b2e38d9",
+  "lessons": [
+    {
+      "id": "KA-R81-signs-that-hang",
+      "sequence": 2960,
+      "title": "(ಾ ಿ ೆ ೊ ೋ ೃ ಂ ಃ) (neladalli) — eight that cannot stand alone",
+      "headword": "(ಾ ಿ ೆ ೊ ೋ ೃ ಂ ಃ)",
+      "romanization": "neladalli",
+      "gloss": "cold retrieval of six vowel signs and two marks, none of which can stand on its own",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1ef1e04c2b474990",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: six signs and two marks"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: six signs and two marks until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two of these you met in the book's first handful of pages. Name the one that lengthens a vowel, and the one that makes it i."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: six signs and two marks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Six vowel signs, cold. Each attaches to a consonant and replaces the a built into it:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "sign",
+                "sound"
+              ],
+              "columns": 2,
+              "rowCount": 6,
+              "utterances": [
+                "sign: ಾ. sound: ā.",
+                "sign: ಿ. sound: i.",
+                "sign: ೆ. sound: e.",
+                "sign: ೊ. sound: o.",
+                "sign: ೋ. sound: ō.",
+                "sign: ೃ. sound: ṛ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The last is the odd one. ೃ writes a vowel that behaves like a consonant in the mouth, inherited from Sanskrit and rare enough that a reader can go pages without meeting it — which is exactly why it is here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two marks now, and they are not vowel signs at all."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಂ — say what it adds to the syllable it follows",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಂ** — say what it adds to the syllable it follows]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಃ — say the same for this one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಃ** — say the same for this one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ೊ and ೋ back to back, and say what separates them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ೊ** and **ೋ** back to back, and say what separates them]"
+            },
+            {
+              "kind": "speech",
+              "text": "ಂ and ಃ ride after a syllable rather than reshaping its vowel. That is the division worth keeping: a vowel sign changes the sound already there, a mark adds one behind it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the eight writes a vowel that acts like a consonant? (ೃ.) Which two follow a syllable instead of reshaping it? (ಂ and ಃ.) And which one only makes the vowel longer? (ಾ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R81-vowels-that-stand",
+      "sequence": 2970,
+      "title": "(ಇ ಈ ಉ ಊ ಓ) (nintiruva) — five that need nothing to lean on",
+      "headword": "(ಇ ಈ ಉ ಊ ಓ)",
+      "romanization": "nintiruva",
+      "gloss": "cold retrieval of the five standing vowels, against the signs that write the same sounds when a consonant is there to carry them",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ed9e3f9069b9cb32",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: the same vowel, two shapes"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: the same vowel, two shapes until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two full-size letters, not signs. Name the one that says i and the one that says u."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: the same vowel, two shapes",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "standing letter",
+                "sound",
+                "when you use it"
+              ],
+              "columns": 3,
+              "rowCount": 5,
+              "utterances": [
+                "standing letter: ಇ. sound: i. when you use it: the word opens on the vowel.",
+                "standing letter: ಈ. sound: ī. when you use it: the same, held long.",
+                "standing letter: ಉ. sound: u. when you use it: the word opens on the vowel.",
+                "standing letter: ಊ. sound: ū. when you use it: the same, held long.",
+                "standing letter: ಓ. sound: ō. when you use it: the word opens on the vowel."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of these has a partner among the signs. The difference is not the sound — it is whether a consonant is there to carry it. A vowel with nothing in front of it must be written full-size; the moment a consonant arrives, the same vowel shrinks to a sign hanging off it."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pairs make this visible: ಇ against ಿ, and ಓ against ೋ. Same vowel, twice, and the shape tells you where in the word you are."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಈ and ಊ — say which is the long one in each pair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಈ** and **ಊ** — say which is the long one in each pair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಾ — and say why this one has no standing partner among the five",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಾ** — and say why this one has no standing partner among the five]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What decides whether a vowel is written full-size or as a sign? (Whether a consonant is there to carry it.) Name the standing letter that pairs with ೋ. (ಓ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R81-ten-consonants",
+      "sequence": 2980,
+      "title": "(ಕ ಗ ಚ ಝ ಞ ಥ ಪ ಯ ಸ ಹ) (hattu) — ten, gathered at last",
+      "headword": "(ಕ ಗ ಚ ಝ ಞ ಥ ಪ ಯ ಸ ಹ)",
+      "romanization": "hattu",
+      "gloss": "cold retrieval of ten consonants taught one at a time across forty chapters and never gathered until now",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:aef31802bcd76fad",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script: ten, sorted by where they are made"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: ten, sorted by where they are made until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two that differ by voice alone. Read ಕ, then ಗ, and say what your throat does on the second that it did not do on the first."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: ten, sorted by where they are made",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "These ten arrived one per chapter, scattered from the book's opening to well past its middle, and no page ever put them side by side. Sorted by the mouth rather than by the order you met them:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "where",
+                "letters"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "where: throat. letters: ಕ ka, ಗ ga.",
+                "where: palate. letters: ಚ ca, ಝ jha, ಞ ña.",
+                "where: teeth. letters: ಥ tha.",
+                "where: lips. letters: ಪ pa."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read down the middle row. ಚ, ಝ and ಞ are made in the same place, and they differ only in voice, breath and nasality — which is the organising idea the whole Kannada consonant grid is built on."
+            },
+            {
+              "kind": "speech",
+              "text": "ಞ is the one to look at twice. It is the nasal of the palatal row and is rare on the page; a reader who has not seen it since the chapter that taught it will not place it at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three that belong to no stop row, and one more from above."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಯ — a glide, not a stop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಯ** — a glide, not a stop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಸ — the hiss",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಸ** — the hiss]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಹ — the breath, and the letter your first yes opens on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಹ** — the breath, and the letter your first *yes* opens on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಥ — and say which row it belongs to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಥ** — and say which row it belongs to]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the ten is the palatal nasal? (ಞ.) Which pair differs by voice alone? (ಕ and ಗ.) And which one opens the word for yes? (ಹ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C456-agencia",
+    "language": "spanish",
+    "chapter": 456,
+    "sequence": 12200,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:affe9f25d7dc28dc"
+  },
+  "findings": []
+}

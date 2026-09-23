@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R07-spaet-und-was-drin-steckt",
+    "language": "german",
+    "chapter": 11,
+    "sequence": 242,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6b2b5ec129f22af3"
+  },
+  "findings": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "MR-A1-PRON-03",
+  "category": "Pronouns",
+  "label": "the dative experiencer that the liking verb requires",
+  "probe": [
+    "MR-GRAMMAR-DATIVE-LIKING",
+    "MR-A1-MESSAGE-LINE-KNOW-MARATHI"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-PRON-03"
+  ]
+}

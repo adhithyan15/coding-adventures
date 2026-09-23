@@ -14,7 +14,7 @@ romanization: "dūdh"
 concept_tag: HI-DRINK-MILK
 prerequisites: [HI-S149-vowel-sign-uu, HI-C37-chai, HI-C15-paani-roti, HI-C35-lena, HI-C35-puchna, HI-C35-madad]
 sounds: [devanagari-long-uu, aspirated-dha]
-roots: [dugdha-sanskrit, pie-dhewgh]
+roots: [sanskrit-dugdha, pie-dhewgh]
 etymology_hook: "दूध (dūdh) is Sanskrit दुग्ध (dugdha), which is not a noun but a past participle — 'milked' — so दूध names the liquid by what was done to it, exactly the trick पानी plays by naming water 'the drinkable thing'; the root दुह् duh- goes back to PIE *dʰewgʰ- 'to be strong, to yield', which also gives Greek teúkhein and English doughty, though English dough is NOT related and comes from a different root entirely"
 duration:
   max_seconds: 235

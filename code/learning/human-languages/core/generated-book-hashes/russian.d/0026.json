@@ -1,13 +1,14 @@
 {
   "language": "russian",
   "chapter": 26,
-  "sourceHash": "fnv1a64:416417f135f2e6bb",
+  "sourceHash": "fnv1a64:753b9100800f89e1",
   "lessonIds": [
     "RU-C26-pervyy",
     "RU-C26-vtoroy-tretiy",
     "RU-W26-ordinal-hyphen",
     "RU-C26-practice",
-    "RU-R26-close"
+    "RU-R26-close",
+    "RU-R26-second-pass-li-from-cold"
   ],
   "tex": "russian/book/chapters/ch26-ordinals.tex"
 }

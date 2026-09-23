@@ -8,7 +8,579 @@ the ALGOL campaign is owned separately. It complements
 executed tests and current package changelogs are authoritative until the older
 roadmap is reconciled.
 
+### VM-071 — BEAM04's pre-zero gap is no longer unreachable (opened by VM-070)
+
+Tracked as issue #15880.
+
+Security review of the VM-070 PR also filed **#15882** — scratch x-registers
+parked across a `call_ext` are not GC roots. Pre-existing and backend-wide
+(`array_set`, `alloc_array`, `call_closure` all do it), so not VM-070's to
+fix, but it is the same subject as the recurring `live_across` op-list bug
+approached from the other side: not *which* variables get spilled, but *where*
+they are parked.
+
+`ets:new` does not pre-zero cells, so reading an `array<f64>`/`array<str>`
+element that was never written raises `badarg`/`badkey` instead of returning
+`0.0`. BEAM04 recorded this and left it undecided on the grounds that no
+promoted row reaches it.
+
+That reasoning was too narrow, and VM-070 proved it by running the corpus.
+ALGOL's `emit_array_value_copy` writes every element of the *destination* but
+**reads every element of the source**, and an ALGOL source array may be
+sparsely written — `real array A[1:3]` with only `A[1]` and `A[3]` assigned has
+nothing at flat index 1. Passing such an array by value therefore reads a cell
+that was never written.
+
+**Six ALGOL corpus programs now trap this way**, every one of them a
+call-by-value pass of a sparse multi-dimensional `real`/`string` array. They
+previously refused at `array_len` before getting that far, so implementing
+`array_len` did not create the bug — it made an existing one reachable. It is
+now the largest single cause of ALGOL-on-BEAM runtime failure (6 of 15
+remaining).
+
+Two further programs fail with `badarith`/`badarg` reading `own` storage that
+was never initialised. Same family — uninitialised storage read before
+writing — but a different mechanism, and not an array problem.
+
+Design, which is the part worth recording: the O(n) cost can be paid entirely
+in `call_ext`s, with **no emitted loop and no new opcodes**, using the shapes
+this backend already emits:
+
+```
+lists:seq(0, N-1)                  -> [0, 1, ..., N-1]
+lists:duplicate(N, <zero>)         -> [Z, Z, ..., Z]
+lists:zip(Keys, Zeros)             -> [{0,Z}, {1,Z}, ...]
+ets:insert(Tab, ThatList)          -> the whole table, pre-populated
+```
+
+`<zero>` is `0.0` for `array<f64>` (via the existing float literal pool) and
+the empty list for `array<str>`, since an empty Erlang string *is* `[]`. The
+element type is available at `alloc_array` from its `type_hint`, which is where
+the pre-population belongs.
+
+Cost to weigh: this makes every ets-backed allocation O(n) where it is
+currently O(1), plus four `call_ext`s. BEAM04 deliberately avoided that. The
+counter-argument is that an array whose cells cannot be read is not really an
+array, and six corpus programs now demonstrate it rather than hypothesise it.
+
+Note that the reserved length key from BEAM10 is independent and stays correct
+alongside this: pre-population fills the integer key space `0..N-1`, the length
+lives under an atom key, and the two cannot collide. Anything added later that
+reads `ets:info(Tab, size)` must subtract the length entry, which would
+otherwise inflate the count by one (verified on real `erl`).
+
+### VM-070 — `array_len` on BEAM — **DELIVERED**
+
+Spec `code/specs/BEAM10-array-length.md`; implemented in `iir-to-beam` 0.19.0
+with real-`erl` coverage in `lang-aot` `tests/beam_array_len.rs`.
+
+Measured before and after by compiling all 292 ALGOL matrix rows to `.beam` and
+**executing them on real `erl`** (OTP 27) against each row's declared `Expect`:
+
+| | before | after |
+|---|---|---|
+| run correctly on real `erl` | 254 | **277** |
+| refused to compile (`array_len`) | 31 | 0 |
+| trapped at runtime | 1 | 9 |
+| unchanged either way | 6 | 6 |
+
+(The 6 unchanged are 4 `UnsupportedType` function signatures, 1 other compile
+refusal, and 1 program that both prints and returns a value, which the
+measuring harness scores as a mismatch. Listed so the columns sum to 292.)
+
+The accounting closes exactly: of the 31 that could not compile, 23 now run
+correctly and 8 now trap. No program that passed before changed behaviour. The
+8 are VM-071 above (6) plus two `own`-storage cases (2).
+
+Three things the research changed, recorded because each killed an option the
+original entry listed as viable:
+
+1. **The obvious implementation is silently wrong.** `ets:info(Tab, size)`
+   returns inserted entries, not declared length — confirmed on real `erl`: a
+   ten-element array with three writes reports `3`. Plausible, wrong, and wrong
+   on exactly the substrate ALGOL `real` arrays use. Worse than the honest
+   refusal it would have replaced.
+2. **The cheap option would have unblocked nothing.** Option 3 in the original
+   entry was "implement for `:atomics` only". Of 202 `array_len` instructions
+   across the 31 blocked programs, **79 are on `:ets`** — an ALGOL program with
+   a `real` array generally also bounds-checks it. Dead on evidence, not taste.
+3. **Dispatch could not be copied from the neighbouring ops.**
+   `array_get`/`array_set` dispatch on `type_hint` because theirs is the
+   element type; `array_len`'s is `"i64"`, its own result type. And both
+   substrates are references at runtime, so `is_reference/1` cannot separate
+   them. Hence the per-function substrate map, measured to resolve 202/202 with
+   zero holes before it was written.
+
+And the bug it shipped with, then without: `array_len` was missing from
+`lower.rs`'s list of `call_ext`-emitting ops, so every end-to-end program died
+with `{badarith,[{erlang,'-',[1,[]]}]}`. Fourth occurrence of this class
+(VM-D029, VM-D035, #15332) and the first to happen *despite* a spec section
+written to prevent it. The originally-planned test — "assert the emitted
+sequence sits in a save/restore bracket" — would have passed against the broken
+code, because the bracket was present and correct; what was empty was the set
+of variables it had to save. The shipped test asserts membership in the op list
+itself.
+
+Promotion of ALGOL matrix rows to declare `Beam` remains a separate decision
+for the ALGOL owner (VM-064), now much better informed: 277 of 292 rows are
+demonstrated to run correctly on real `erl`, not merely to emit.
+
+### VM-070 — `array_len` on BEAM is a representation question, not a missing case
+
+Selected as the next platform item after VM-064 showed `array_len` is the only
+thing blocking 31 of 37 ALGOL-to-BEAM lowerings, and that every other backend
+already implements it. Researched before writing any code, and the research
+changed the shape of the job.
+
+`iir-to-beam` deliberately uses **two different array substrates** (BEAM04,
+BEAM06):
+
+| element type | substrate | has a declared length? |
+|---|---|---|
+| `array<i64>` | `:atomics` | **yes** — `atomics:new/2` is fixed-size |
+| `array<f64>`, `array<str>` | `:ets` | **no** — ets tables grow dynamically |
+
+That split was the right call for `alloc_array`/`array_get`/`array_set` — the
+spec records that the bit-syntax alternative would have needed an entirely new
+operand-encoding subsystem, while ets needed zero new BEAM opcodes. But it
+means `array_len` has no single answer:
+
+- On `:atomics`, `atomics:info/1` returns a map carrying `size`. Straightforward.
+- On `:ets`, `ets:info(Tab, size)` returns **the number of inserted entries,
+  not the declared length**. A `DIM A(10)` with three writes would report 3.
+
+So a naive `array_len` would be *silently wrong* on exactly the substrate BASIC
+uses, and wrong in the direction that looks plausible — a small number rather
+than an error. That is worse than the current honest `UnsupportedOp`.
+
+This also connects to a limitation `iir-to-beam` already documents and left
+deliberately undecided: `ets:new` does not pre-zero cells, so reading an
+element never written traps `badarg` instead of returning `0.0`. Both problems
+have the same root — the ets substrate does not model an array's *extent*, only
+its populated entries.
+
+Options, none chosen yet because this needs a spec first (CLAUDE.md):
+
+1. Store the declared length in the ets table under a reserved key at
+   `alloc_array` time. Cheap, no new opcodes, but reserves a key from the
+   index space and every `array_get`/`array_set` must not collide with it.
+2. Pre-populate the ets table at `alloc_array`, which would fix the
+   read-before-write trap too — at an O(n) allocation cost the current design
+   deliberately avoids.
+3. Implement `array_len` for `:atomics` only and keep refusing on ets. Honest
+   and unblocks the ALGOL integer-array rows, but leaves the op partial in a
+   way that will confuse the next reader unless the refusal names the reason.
+
+Option 2 is the only one that also closes the pre-zero gap, which argues for
+taking them together rather than bolting length onto a substrate that cannot
+express extent.
+
+**Bug class to check during implementation, not after:** any `iir-to-beam` op
+emitting a `call_ext` must be wrapped in `save_live_across_imported_call!` /
+`restore_live_across_imported_call!`, or live SSA values in clobbered X
+registers are silently corrupted. `atomics:info/1` and `ets:info/2` are both
+`call_ext`. That class has bitten this backend three times already (VM-D029,
+VM-D035, issue #15332) — the third time was found only because a deferred item
+forced a re-read.
+
+### VM-064 scoped: 252 of 289 ALGOL programs already lower to BEAM
+
+VM-064 (all 292 ALGOL rows omit `Beam`, the last systematic matrix hole) was
+logged as "scope to settle with the ALGOL owner", which was a way of saying
+nobody had measured it. Measured now, by extracting every ALGOL `src` from
+`PROGRAMS` and calling `compile_source_to_beam` on each:
+
+```
+ALGOL -> BEAM lowering: 252 / 289 succeeded
+refusals, by cause:
+    31  UnsupportedOp: array_len
+     4  ValidationFailed: UnsupportedType (function signatures)
+     2  FrontendError (ALGOL parse — mangled by the extraction, not real)
+```
+
+**One missing op accounts for 31 of the 37 refusals.** `iir-to-beam` has no
+`array_len` at all — confirmed by grep, while `array_get`, `array_set` and
+`alloc_array` are handled across 34 sites. The BEAM backend has arrays but not
+their length.
+
+What this does and does not establish, stated precisely because the difference
+is the whole value of the number:
+
+- It establishes that ALGOL's IIR is **not** structurally incompatible with
+  BEAM. The hole is not a design gap; it is a handful of unimplemented ops.
+- It does **not** establish that those 252 programs would *run correctly* on
+  real `erl`. Lowering is emission, not execution. Every promotion in the
+  non-ALGOL BEAM track required proof on real `erl`, and this probe is not that.
+  Treat 252 as "worth attempting", not as "252 green cells".
+
+**And `array_len` is not ALGOL's to fix — it is a BEAM backend parity gap.**
+Checked across every backend:
+
+| backend | `array_len` |
+|---|---|
+| `iir-to-llvm`, `iir-to-wasm`, `iir-to-cil-bytecode`, `iir-to-jvm-class-file`, `vm-core` | implemented |
+| `iir-to-beam` | **absent** |
+
+Every other backend has it. ALGOL is merely the only frontend that currently
+emits it, which is why the gap has stayed invisible — the non-ALGOL BEAM track
+completed without ever needing it.
+
+That splits VM-064 cleanly along the ownership boundary this document already
+draws. Implementing `array_len` in `iir-to-beam` is **shared-platform work this
+backlog owns**: rung 4, missing backend parity for a feature every other
+backend already implements. It requires no ALGOL change and touches no ALGOL
+semantics. Only the subsequent question — whether to promote ALGOL rows to
+declare `Beam` — belongs to the ALGOL owner, and it is much easier to answer
+once the op exists and the probe can be re-run against a backend that supports
+it.
+
+Sequencing note if it is taken up: implement `array_len` in `iir-to-beam`
+first, re-run this probe, and only then decide how many rows to promote — the
+non-ALGOL track's repeated lesson (BEAM03-BEAM08, VM-LOOP-24, VM-041) is that
+probing the whole group before implementing is dramatically more productive
+than promoting row by row. Note also that `iir-to-beam` has a recurring bug
+class: any op emitting `call_ext` must be wrapped in
+`save_live_across_imported_call!` / `restore_live_across_imported_call!`, or
+live SSA values are silently corrupted. That has bitten three times (VM-D029,
+VM-D035, #15332), so check it for `array_len` specifically.
+
+ALGOL semantics remain separately owned; this is measurement offered to that
+owner, not a claim on the work.
+
+## VM-063 — ALGOL coverage-doc drift, corrected (2026-09-21)
+
+`LANG-VM-FEATURE-COVERAGE.md` recorded ALGOL 60 at 233 rows / 1631 cells while
+`lang_matrix.rs` declares **292 / 2044** — 59 rows of drift. Measured exactly:
+292 rows inside `PROGRAMS`, every one declaring seven backends, none declaring
+`Beam`.
+
+The root cause is two layers deep, and the second layer is the interesting one.
+`feature_coverage_doc_counts_match_programs_source` asserts only the seven
+non-ALGOL tuples, so the ALGOL row was free to drift — that was the diagnosis
+when this was logged. VM-065 then found the pinning test **matched none of
+BUILD name filters and had never run in CI at all**, so nothing was enforcing
+any tuple. The non-ALGOL numbers matching source was discipline, not a gate.
+
+Fixed the number. Deliberately did NOT pin ALGOL: that campaign is separately
+owned and actively adding rows, so a pinned tuple would make every ALGOL PR
+edit this shared document — a cross-campaign serialization point, a conflict
+class this repo has already paid for. Instead the doc carries a re-derivation
+command, verified to reproduce 292 before being published, and says plainly
+that the row is a snapshot.
+
+That command counts rows strictly INSIDE `PROGRAMS` on purpose: a repo-wide
+grep over the file over-counts, because `Language::Algol60` also appears in
+comments and helpers. Not hypothetical — that mistake produced Dartmouth BASIC
+as 57 against the pinned 51 during an earlier pass.
+
+VM-064 (all 292 ALGOL rows omit `Beam`, the last systematic matrix hole)
+remains open and still needs scope settled with the ALGOL owner.
+## PREP01 slice 2 — macro expansion (selected 2026-09-21 after slice 1 merged)
+
+Slice 1 merged as #15853. Slice 2 adds the macro table and the hide-set
+non-recursive expansion algorithm, and gives MacroOct `@define`. Stringize and
+paste stay unimplemented dialect hooks — MacroOct declines both, which is
+itself a test that the engine does not assume they exist.
+
+### VM-069 — expanded tokens have no expansion provenance (interim fix in slice 2)
+
+Slice 2's security review found that an expanded token carried the macro
+**body's** line and column while `emit` stamped it with the file currently
+being read. A macro defined in an included header therefore surfaced at a
+position inside the *including* file's `@include` line — pointing at text with
+no relationship to the token. Confidently wrong provenance, not merely absent:
+a reader follows it and lands somewhere unrelated.
+
+**Interim, shipped:** expanded tokens now carry the position of the
+**invocation**, which is real text in the file that genuinely produced them.
+Pinned by `an_expanded_token_points_at_its_invocation_not_at_unrelated_text`.
+
+**Still open:** `Locus::expansion` is always `None`, so the interned expansion
+arena in `source_map.rs` — `intern_expansion`, `expansion_parent`,
+`expansion_site` — is entirely unexercised. That arena is not incidental:
+`lib.rs` names "keeping a token's true origin across inclusion **and
+expansion**" as one of the three hard parts this crate exists to solve, and
+`source_map.rs` documents the interning design at length precisely so the map
+stays `O(tokens + expansions)` rather than `O(tokens × depth)`.
+
+Closing it needs an `Option<ExpansionId>` on `MToken` alongside `hide`,
+`intern_expansion` called at each substitution, and the macro body's defining
+`FileId` recorded in `MacroDef` so a chain can name it. Then a diagnostic can
+say "in expansion of `FOO`, defined at `ports.oct:3`, used at `main.oct:12`" —
+which is the whole reason the side-table design was chosen over widening
+`Token`.
+
+Worth doing before C (slice 4): C programs nest macros deeply enough that
+"which expansion produced this token" is the difference between a usable
+diagnostic and an unusable one.
+
+### VM-068 — controlling expressions were not macro-expanded (found and fixed in slice 2)
+
+Found by the agent implementing MacroOct's `@define`, reported rather than
+worked around, and fixed in the engine the same slice.
+
+`Dialect::eval_condition` receives a bare `&[Token]`. It has no macro table and,
+until this fix, no expansion had been applied — so after `@define LED_PORT 1`,
+the line `@if LED_PORT == 1` evaluated `LED_PORT` as an *undefined* name (0) and
+took the `@else` branch. The program compiled, and compiled to the wrong thing.
+
+**PREP01 §7's own worked example is exactly that shape**, so the spec's
+canonical illustration of the feature was silently broken. That is what moved
+this from "log it" to "fix it now".
+
+The agent was right not to patch it dialect-side. Both workarounds are worse
+than the gap: a private macro table inside the dialect makes the dialect
+stateful, which is precisely what currently lets one instance be shared across
+translation units with nothing leaking; and expanding inside `classify`
+duplicates `macros::expand` into every dialect — the duplication this crate
+exists to remove. No dialect could have done better however written, which is
+what makes it an engine defect rather than a MacroOct one.
+
+Fixed by expanding the controlling expression in the engine before handing it to
+`eval_condition`, with the grouping-depth pre-scan run **twice**: once on the
+raw tokens (cheap, refuses a pathological list before any work) and once after
+expansion (a macro body can introduce grouping the raw text did not have, so the
+first scan does not bound what the dialect finally sees).
+
+Proved by a matched **pair** of matrix rows, because either alone can be
+satisfied by a broken implementation — an always-0 evaluator passes the
+undefined-name row, and an always-truthy one passes the defined-name row:
+
+| row | asserts |
+|---|---|
+| `@if LED_PORT == 0` with no definition | an undefined name still reads 0 *after* expansion runs |
+| `@define LED_PORT 1` then `@if LED_PORT == 1` | a defined name reaches the condition |
+
+Also pinned in the engine's own suite, including that grouping introduced *by a
+macro body* is still depth-bounded.
+
+**Still open, deliberately:** a `defined()`-style operator needs its operand
+left *un*expanded while the rest of the expression is expanded — C special-cases
+exactly this. `Directive::If(Vec<Token>)` does not yet say whether its tokens
+are pre- or post-expansion, and that question has to be answered before slice 4,
+because `#if defined(X)` is unimplementable without it.
+
+### VM-067 — Rust compiled grammars have no CI regeneration check (found 2026-09-21)
+
+`.github/workflows/ci.yml` runs `generate-compiled-grammars --lane ruby` and a
+Mosaic equivalent. **There is no Rust lane.** `grammar-tools/main.rb` supports
+only `--lane ruby`; omitting `--lane` regenerates every language, but CI never
+does that. So every `code/packages/rust/*-lexer/src/_grammar.rs` can drift from
+its `.tokens` source with nothing reporting it.
+
+Third variant of the same failure mode as VM-062 (an omitted `--test` target)
+and VM-065 (a test matching no CI filter): **a generated or gated artifact
+whose check looks present and is absent.** Worth noting the class explicitly,
+because it has now appeared in three unrelated mechanisms — target lists,
+name filters, and code generation.
+
+macrooct's own artifact was verified correct at slice 1: regenerated with the
+Rust `grammar-tools` binary directly and diffed byte-identical against the
+committed file.
+
+*A trap for whoever picks this up:* the full `generate-compiled-grammars` run
+exits 1 early on a Windows dev box (dies at the css/python step with
+"No such file or directory - mise") and never reaches most grammars, so a clean
+`git status` after that run proves nothing. Check the specific artifact with the
+Rust binary.
+
+Two options, and the cheaper one is probably right first:
+1. A per-crate test asserting every token name in the `.tokens` file appears in
+   the committed `_grammar.rs`. Cheap, local, no CI config, catches the realistic
+   "edited `.tokens`, forgot to regenerate" case.
+2. A real `--lane rust` plus a CI job. Stronger, but may turn CI red immediately
+   if other Rust grammars are already stale — which is worth discovering, and is
+   exactly why it belongs in its own PR rather than riding along with one.
+
+## PREP01 slice 1 — the generic preprocessor engine, proven on MacroOct (2026-09-21)
+
+Owner-directed track. C is genuinely blocked without a preprocessor: `SIR27`
+scopes the frontend to ignoring two `#include` lines with no `#define`, no
+macros and no conditionals, and `c-lexer` does not merely ignore directives —
+`code/grammars/c/c.tokens:123` carries `PREPROC = /#[^
+]*/` in the grammar's
+`skip:` section, so a directive line never reaches the parser or any hook.
+
+Slice 1 lands `source-preprocessor`: includes, conditionals, source mapping and
+resource bounds, with per-language dialect plug-ins. Macro expansion is slice 2
+and is refused with a located diagnostic rather than silently ignored.
+
+**MacroOct** is the proving ground — a NEW language, a preprocessor dialect of
+Oct. Two owner constraints shaped it, both of which improved the design:
+
+1. *Use a small real language, not a synthetic dialect.* A test-only dialect is
+   written by the same author, in the same PR, against no prior requirements,
+   so it can be unconsciously shaped to fit whatever the engine does. It cannot
+   fail in the way that matters.
+2. *Do not modify Oct or Nib; create a new dialect instead.* This is the
+   stronger constraint. Oct becomes a **reference**, and a reference you may
+   edit is not a reference. It also sharpens the oracle: because MacroOct is a
+   dialect of Oct, a directive-using program's hand-expanded twin IS a valid
+   Oct program, so the differential runs against Oct's existing untouched
+   corpus rather than twins authored alongside.
+
+Evidence: 9 MacroOct rows x 8 backends (72 cells) in the non-ALGOL capstone
+(220 programs / 1540 cells exercised); `macrooct_rows_lower_to_iir_identical_to_hand_expanded_oct`;
+and `macrooct_compiles_every_oct_corpus_row_byte_identically`, which recompiles
+all 12 existing Oct rows through the MacroOct frontend and asserts byte-identical
+IIR — making MacroOct a verified strict superset of Oct on the whole corpus.
+Oct's own counts, specs, grammar and rows are unchanged.
+
+`oct-parser` gained exactly one additive entry point,
+`create_oct_parser_from_tokens`, and no other change. An earlier draft avoided
+even that by embedding a second compiled copy of `oct.grammar` plus a restated
+`MAX_RULE_DEPTH`; both were guarded by tests, but that is a fork with a
+tripwire rather than reuse. Reusing Oct's own builder removes both copies and
+makes "MacroOct reuses Oct's parser unchanged" literally true.
+
+### VM-065 — the pinned coverage test was itself never running in CI (found here)
+
+Third instance of VM-062's failure mode, and it revises VM-063's root cause.
+`feature_coverage_doc_counts_match_programs_source` is the test that supposedly
+pins `LANG-VM-FEATURE-COVERAGE.md` against `lang_matrix.rs`. On main it matched
+**none** of `lang-aot/BUILD`'s three `lang_matrix` filters, and the unfiltered
+`lang_matrix` target is deliberately excluded (ALGOL red cells, VM-D005) — so
+the test compiled and never executed.
+
+VM-063 recorded the ALGOL row drifting 233/1631 -> 292/2044 and attributed it to
+the test asserting only the seven non-ALGOL tuples. That is true but secondary:
+nothing was enforcing *any* tuple, so the non-ALGOL numbers matching source was
+discipline, not a gate. Fixed by giving the test its own BUILD line. VM-063's
+remaining question — whether to extend the assertion to ALGOL, which would make
+every ALGOL PR touch a shared doc and create a cross-campaign serialization
+point — is unchanged and still open.
+
+The general shape is now seen three times: **a filtered CI invocation silently
+stops covering a test that no longer matches its filter, exactly as an omitted
+`--test` target does.** An excluded-by-default target makes it worse, because
+the filters are then the only path and nothing reports a test that matches none
+of them.
+
+**Full audit of `lang_matrix.rs` against `BUILD`'s filters.** Every `#[test]`
+in that file was checked. Excluding the ~225 ALGOL rows (deliberately excluded,
+VM-025), six tests ran nowhere:
+
+| Test | Why it was missed | Now |
+|---|---|---|
+| `feature_coverage_doc_counts_match_programs_source` | matched no filter | protected |
+| `t7_differential_random_u8_expressions_agree` | the `t7_differential_random_basic_` filter has a trailing `_` and never matched the u8 sibling | protected |
+| `twig_beam_match_union` | matched no filter | protected |
+| `twig_beam_string_ops` | matched no filter | protected |
+| `twig_beam_dynamic_arith_list_ops_and_closures` | matched no filter | protected |
+| `every_backend_name_round_trips_through_the_single_cell_env_var` | matched no filter | protected |
+
+All five newly protected non-ALGOL tests were executed first and pass.
+
+### VM-066 — `proven_columns_do_not_silently_skip` is red, blocked on #12032
+
+The audit's most important find, and the one that cannot be fixed here.
+`proven_columns_do_not_silently_skip` is the guard against a backend column
+quietly skipping instead of running — **rung 1** of this document's own
+prioritization policy. It has never run in CI, and it **fails** when run:
+
+```
+Jvm Algol60: `java` execution of the emitted class failed — this is a REAL failure, not a skip.
+Error: Unable to initialize main class Main
+Caused by: java.lang.VerifyError: (class: Main, method: main signature: ()J) Stack size too large
+```
+
+on a nested-procedure multidimensional-array-capture program. That is issue
+**#12032**, separately owned, and the same defect that keeps the unfiltered
+`lang_matrix` target excluded. It is therefore deliberately NOT added to
+`BUILD`: listing it today would paint CI red for a pre-existing ALGOL defect
+this backlog does not own.
+
+**Turn it on the moment #12032 closes** — until then the repo has no executing
+guard against silent backend skips, which is worth stating plainly rather than
+leaving implied by an unlisted test.
+
+## VM-062 — four CLR test targets ran in no CI command (selected 2026-09-21)
+
+CLR16 landed in #15827. A fresh prioritization survey over
+`LANG-VM-FEATURE-COVERAGE.md`, `lang_matrix.rs`, `lang-aot/BUILD` and this
+backlog then found a rung-2 item ("missing CI protection for already-working
+conformance") outranking every rung-4/5 candidate, so it was selected ahead of
+them.
+
+`lang-aot/BUILD` runs its suites by naming each target explicitly. The
+CLR09-CLR16 campaign (2026-09-19..20) added `clr_long_branches`,
+`clr_source_typed`, `clr_strict_flow` and `clr_typed_scalars` and listed none of
+them; `BUILD` was last touched 2026-09-07. For the whole campaign those targets
+compiled in the check step and asserted nothing on any merge gate. All 19 tests
+pass when run by hand, so nothing is red — the defect is that nothing would have
+been reported if something had been. The BUILD header already warned about this
+exact failure mode and was still missed, because adding a `tests/*.rs` file is a
+complete, locally-green change and no tool reports an unprotected target.
+
+Fixed by listing the four targets, recording the mechanism in the BUILD header
+and in `lessons.d/`, and publishing a reusable `comm`-based diagnostic that
+diffs a crate's `tests/` directory against its BUILD list. Run before this fix
+it printed exactly those four names; after it, nothing.
+
+### Prioritization run, 2026-09-21
+
+Ranked by this document's own policy. VM-062 was taken first; the rest stay
+queued in this order.
+
+1. **VM-062 (rung 2, taken).** Four unprotected CLR test targets. Done here.
+2. **PREP01 generic source preprocessor (owner-directed).** A shared
+   preprocessor engine with per-language dialects. C is genuinely blocked on it:
+   `SIR27` scopes the frontend to ignoring two `#include` lines with no
+   `#define`, no macros and no conditionals, and `c.tokens` discards every `#…`
+   line in its `skip:` section. COBOL `COPY … REPLACING` is the second customer
+   and the proof the boundary is not C-shaped. Spec-first; see
+   `PREP01-generic-source-preprocessor.md`. This also corrects
+   `lexer-parser-hooks.md`, which places `#include` at `pre_tokenize` — not
+   faithful to C, where inclusion and conditionals interleave.
+3. **VM-058 publication (rung 2).** COBOL INSPECT region intersection is
+   implementation-complete locally with "publication/CI remains."
+4. **VM-063 ALGOL coverage-doc drift (rung 3, new).**
+   `LANG-VM-FEATURE-COVERAGE.md` states ALGOL 60 at 233 rows / 1631 cells;
+   `lang_matrix.rs` declares **292 rows / 2044 cells**. The pinned
+   `feature_coverage_doc_counts_match_programs_source` test asserts only the
+   seven non-ALGOL tuples, so the ALGOL row was free to drift and did. Rung 3
+   ("documentation that could send work down a dead path"), not rung 1: the
+   cells themselves are declared and run. ALGOL semantics remain separately
+   owned, but the *count* in a shared status document is this backlog's
+   business.
+5. **VM-064 ALGOL rows declare no BEAM backend (rung 4, new).** All 292 ALGOL
+   rows declare 7 backends, omitting `Beam`; every one of the 211 non-ALGOL rows
+   declares all 8. That is the only remaining systematic matrix hole — 292 cells.
+   Non-ALGOL BEAM is complete (BEAM08), so the substrate exists. Scope and
+   ownership need settling with the ALGOL owner before any work starts.
+6. **AOT00 T2 slice 2 (rung 5).** VM/JIT throw/catch reference oracle. The sole
+   unblocked rung of the only roadmap track with a written PR ladder; slice 1
+   landed in #15419. Its spec mandates one slice per PR.
+
+Also confirmed still open and unchanged, not re-ranked here: VM-059 (encoded
+CIL `call_builtin` lacks `input_i64`/`input_str`/`input_more`), VM-025 (full
+ALGOL CI exclusion, separately owned), the CLR carve-outs at lines 32-33 and
+86-105, and BEAM register allocation beyond 255 variables.
+
 ## Encoded CLR input prerequisites (selected 2026-09-19 after VM-058)
+
+### CLR16 final carriage return repair (2026-09-20)
+
+CLR14 source artifacts landed in #15808 with all four workflows successful.
+CLR15 string input landed externally in #15809 as 346fbf47dc; its push CI was
+still pending when the merge was observed. A literal encoded-call probe and
+permanent regressions demonstrate lost CR bytes on unterminated final lines.
+The CLR16 contract was committed before repairing delimiter tracking. Preserve
+the CLR15 byte contract and integer trimming; no source/backend expansion.
+
+### CLR14 source artifact API landed; CLR15 strict encoded string input selected (2026-09-20)
+
+PR #15808 merged as `cd406cc46f`. It exposes the opt-in strict source
+artifact API selected by the source-width audit while preserving the legacy
+encoded path and its refusal behavior.
+
+Select the next bounded ABI slice: reserve one exact MemberRef for strict
+`input_str`, add a distinct simulator string arena handle, and permit only
+typed string transport through locals, parameters, returns, moves, and direct
+calls. Preserve input bytes exactly while consuming LF/CRLF delimiters; EOF is
+an empty string. String constants and operations, default source migration,
+real PE host metadata, byte input, and general callbacks remain separate.
+See `CLR15-strict-encoded-string-input.md`. ALGOL remains separately owned.
 
 ### CLR13 landed; source width audit resumed (2026-09-20)
 

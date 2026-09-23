@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C436-ofrecer",
+    "language": "spanish",
+    "chapter": 436,
+    "sequence": 10810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f76f378bd9e98d9b"
+  },
+  "findings": []
+}

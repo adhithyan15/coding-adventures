@@ -1,0 +1,21 @@
+{
+  "language": "spanish",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:bf9028169886a54c",
+  "lessonIds": [
+    "ES-C445-jubilarse",
+    "ES-C445-responsabilidad",
+    "ES-C445-exigente",
+    "ES-C445-ensenar",
+    "ES-C445-repetir",
+    "ES-R445-repaso-puesto",
+    "ES-C445-sintesis-puesto"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "spanish/narration/ch445.txt",
+  "json": "spanish/narration/ch445.json",
+  "textHash": "fnv1a64:0a4aa9dc7a56a0b7",
+  "jsonHash": "fnv1a64:2c7c15f1b0983578",
+  "findings": []
+}

@@ -548,7 +548,7 @@ fn positioned_node_breaks_find_text(node: &PositionedNode) -> bool {
 }
 
 /// Mosaic `VentureChrome` slot names, in interface declaration order.
-pub const VENTURE_CHROME_SLOT_NAMES: [&str; 43] = [
+pub const VENTURE_CHROME_SLOT_NAMES: [&str; 51] = [
     "address",
     "page-title",
     "status-text",
@@ -566,6 +566,14 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 43] = [
     "bookmarks-previous-disabled",
     "bookmarks-next-disabled",
     "bookmarks-navigate-disabled",
+    "history-label",
+    "history-disabled",
+    "history-open",
+    "history-position",
+    "history-address",
+    "history-previous-disabled",
+    "history-next-disabled",
+    "history-navigate-disabled",
     "copy-address-disabled",
     "open-page-disabled",
     "save-page-disabled",
@@ -598,7 +606,7 @@ pub const VENTURE_CHROME_SLOT_NAMES: [&str; 43] = [
 pub const VENTURE_CHROME_HOST_SURFACE_SLOT_NAME: &str = "content-surface";
 
 /// Mosaic `VentureChrome` event names, in interface declaration order.
-pub const VENTURE_CHROME_EVENT_NAMES: [&str; 31] = [
+pub const VENTURE_CHROME_EVENT_NAMES: [&str; 36] = [
     "onBack",
     "onForward",
     "onHome",
@@ -610,6 +618,11 @@ pub const VENTURE_CHROME_EVENT_NAMES: [&str; 31] = [
     "onBookmarksNext",
     "onBookmarksNavigate",
     "onBookmarksClose",
+    "onHistoryOpen",
+    "onHistoryPrevious",
+    "onHistoryNext",
+    "onHistoryNavigate",
+    "onHistoryClose",
     "onCopyAddress",
     "onOpenPageInNewWindow",
     "onSavePage",
@@ -1783,6 +1796,7 @@ pub enum BrowserNavigation {
     Navigate(String),
     Back,
     Forward,
+    HistoryEntry(NavigationEntryId),
     Home,
     Reload,
 }
@@ -1796,6 +1810,9 @@ pub enum BrowserChromeAction {
     OpenBookmarkCatalog,
     BrowseBookmarkCatalog,
     CloseBookmarkCatalog,
+    OpenHistoryCatalog,
+    BrowseHistoryCatalog,
+    CloseHistoryCatalog,
     CopyPageAddress,
     OpenPageInNewWindow,
     SavePage,
@@ -1830,6 +1847,11 @@ pub enum BrowserChromeEvent {
     BookmarksNext,
     BookmarksNavigate,
     BookmarksClose,
+    HistoryOpen,
+    HistoryPrevious,
+    HistoryNext,
+    HistoryNavigate,
+    HistoryClose,
     CopyAddress,
     OpenPageInNewWindow,
     SavePage,
@@ -1872,6 +1894,11 @@ impl BrowserChromeEvent {
             Self::BookmarksNext => "onBookmarksNext",
             Self::BookmarksNavigate => "onBookmarksNavigate",
             Self::BookmarksClose => "onBookmarksClose",
+            Self::HistoryOpen => "onHistoryOpen",
+            Self::HistoryPrevious => "onHistoryPrevious",
+            Self::HistoryNext => "onHistoryNext",
+            Self::HistoryNavigate => "onHistoryNavigate",
+            Self::HistoryClose => "onHistoryClose",
             Self::CopyAddress => "onCopyAddress",
             Self::OpenPageInNewWindow => "onOpenPageInNewWindow",
             Self::SavePage => "onSavePage",
@@ -1913,6 +1940,11 @@ impl BrowserChromeEvent {
             "onBookmarksNext" => Self::BookmarksNext,
             "onBookmarksNavigate" => Self::BookmarksNavigate,
             "onBookmarksClose" => Self::BookmarksClose,
+            "onHistoryOpen" => Self::HistoryOpen,
+            "onHistoryPrevious" => Self::HistoryPrevious,
+            "onHistoryNext" => Self::HistoryNext,
+            "onHistoryNavigate" => Self::HistoryNavigate,
+            "onHistoryClose" => Self::HistoryClose,
             "onCopyAddress" => Self::CopyAddress,
             "onOpenPageInNewWindow" => Self::OpenPageInNewWindow,
             "onSavePage" => Self::SavePage,
@@ -1966,6 +1998,14 @@ pub struct BrowserChromeProps {
     pub bookmarks_previous_disabled: bool,
     pub bookmarks_next_disabled: bool,
     pub bookmarks_navigate_disabled: bool,
+    pub history_label: String,
+    pub history_disabled: bool,
+    pub history_open: bool,
+    pub history_position: String,
+    pub history_address: String,
+    pub history_previous_disabled: bool,
+    pub history_next_disabled: bool,
+    pub history_navigate_disabled: bool,
     pub copy_address_disabled: bool,
     pub open_page_disabled: bool,
     pub save_page_disabled: bool,
@@ -2082,7 +2122,7 @@ impl BrowserChromeProps {
     /// Serialize all shared chrome slots using their authored MIL names.
     pub fn to_bridge_json(&self) -> String {
         format!(
-            "{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"stop-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"bookmarks-label\":{},\"bookmarks-disabled\":{},\"bookmarks-open\":{},\"bookmarks-position\":{},\"bookmarks-title\":{},\"bookmarks-address\":{},\"bookmarks-previous-disabled\":{},\"bookmarks-next-disabled\":{},\"bookmarks-navigate-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"page-info-open\":{},\"page-info-title\":{},\"page-info-address\":{},\"page-info-requested-address\":{},\"page-info-status\":{},\"page-info-resources\":{},\"zoom-label\":{},\"zoom-out-disabled\":{},\"zoom-reset-disabled\":{},\"zoom-in-disabled\":{},\"view-source-disabled\":{},\"view-source-open\":{},\"view-source-title\":{},\"view-source-address\":{},\"view-source-content\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":{}}}",
+            "{{\"address\":{},\"page-title\":{},\"status-text\":{},\"back-disabled\":{},\"forward-disabled\":{},\"stop-disabled\":{},\"bookmark-label\":{},\"bookmark-disabled\":{},\"bookmarks-label\":{},\"bookmarks-disabled\":{},\"bookmarks-open\":{},\"bookmarks-position\":{},\"bookmarks-title\":{},\"bookmarks-address\":{},\"bookmarks-previous-disabled\":{},\"bookmarks-next-disabled\":{},\"bookmarks-navigate-disabled\":{},\"history-label\":{},\"history-disabled\":{},\"history-open\":{},\"history-position\":{},\"history-address\":{},\"history-previous-disabled\":{},\"history-next-disabled\":{},\"history-navigate-disabled\":{},\"copy-address-disabled\":{},\"open-page-disabled\":{},\"save-page-disabled\":{},\"print-page-disabled\":{},\"share-page-disabled\":{},\"page-info-disabled\":{},\"page-info-open\":{},\"page-info-title\":{},\"page-info-address\":{},\"page-info-requested-address\":{},\"page-info-status\":{},\"page-info-resources\":{},\"zoom-label\":{},\"zoom-out-disabled\":{},\"zoom-reset-disabled\":{},\"zoom-in-disabled\":{},\"view-source-disabled\":{},\"view-source-open\":{},\"view-source-title\":{},\"view-source-address\":{},\"view-source-content\":{},\"find-open\":{},\"find-query\":{},\"find-result-label\":{},\"find-disabled\":{},\"navigation-disabled\":{}}}",
             bridge_json_string(&self.address),
             bridge_json_string(&self.page_title),
             bridge_json_string(&self.status_text),
@@ -2100,6 +2140,14 @@ impl BrowserChromeProps {
             self.bookmarks_previous_disabled,
             self.bookmarks_next_disabled,
             self.bookmarks_navigate_disabled,
+            bridge_json_string(&self.history_label),
+            self.history_disabled,
+            self.history_open,
+            bridge_json_string(&self.history_position),
+            bridge_json_string(&self.history_address),
+            self.history_previous_disabled,
+            self.history_next_disabled,
+            self.history_navigate_disabled,
             self.copy_address_disabled,
             self.open_page_disabled,
             self.save_page_disabled,
@@ -2187,6 +2235,8 @@ pub struct BrowserChromeController {
     address_draft: String,
     bookmark_catalog_open: bool,
     bookmark_selection: usize,
+    history_catalog_open: bool,
+    history_selection: usize,
     page_info: Option<BrowserPageInfoRequest>,
     source_view: Option<BrowserSourceSnapshot>,
 }
@@ -2201,6 +2251,8 @@ impl BrowserChromeController {
                 .to_string(),
             bookmark_catalog_open: false,
             bookmark_selection: 0,
+            history_catalog_open: false,
+            history_selection: 0,
             page_info: None,
             source_view: None,
         }
@@ -2216,6 +2268,10 @@ impl BrowserChromeController {
 
     pub fn bookmark_catalog_open(&self) -> bool {
         self.bookmark_catalog_open
+    }
+
+    pub fn history_catalog_open(&self) -> bool {
+        self.history_catalog_open
     }
 
     fn selected_bookmark<'a>(&self, session: &'a BrowserSession) -> Option<&'a Bookmark> {
@@ -2235,6 +2291,26 @@ impl BrowserChromeController {
             })
             .unwrap_or(0);
         self.bookmark_catalog_open = !entries.is_empty();
+        self.history_catalog_open = false;
+        self.page_info = None;
+        self.source_view = None;
+    }
+
+    fn selected_history_entry<'a>(
+        &self,
+        session: &'a BrowserSession,
+    ) -> Option<(NavigationEntryId, &'a str)> {
+        session
+            .history()
+            .entries()
+            .get(self.history_selection)
+            .copied()
+    }
+
+    fn open_history_catalog(&mut self, session: &BrowserSession) {
+        self.history_selection = session.history().current_index().unwrap_or(0);
+        self.history_catalog_open = session.history().current_url().is_some();
+        self.bookmark_catalog_open = false;
         self.page_info = None;
         self.source_view = None;
     }
@@ -2251,6 +2327,7 @@ impl BrowserChromeController {
 
     pub fn show_page_info(&mut self, page_info: BrowserPageInfoRequest) {
         self.bookmark_catalog_open = false;
+        self.history_catalog_open = false;
         self.page_info = Some(page_info);
         self.source_view = None;
     }
@@ -2261,6 +2338,7 @@ impl BrowserChromeController {
 
     pub fn show_source_view(&mut self, source_view: BrowserSourceSnapshot) {
         self.bookmark_catalog_open = false;
+        self.history_catalog_open = false;
         self.source_view = Some(source_view);
         self.page_info = None;
     }
@@ -2270,7 +2348,9 @@ impl BrowserChromeController {
         if let Some(current_url) = session.history().current_url() {
             self.address_draft = current_url.to_string();
         }
+        self.history_selection = session.history().current_index().unwrap_or(0);
         self.bookmark_catalog_open = false;
+        self.history_catalog_open = false;
         self.page_info = None;
         self.source_view = None;
     }
@@ -2300,6 +2380,11 @@ impl BrowserChromeController {
             let changed = self.bookmark_catalog_open;
             self.bookmark_catalog_open = false;
             return changed.then_some(BrowserChromeAction::CloseBookmarkCatalog);
+        }
+        if event == BrowserChromeEvent::HistoryClose {
+            let changed = self.history_catalog_open;
+            self.history_catalog_open = false;
+            return changed.then_some(BrowserChromeAction::CloseHistoryCatalog);
         }
         if event == BrowserChromeEvent::Stop {
             return (!session.pending_subresource_requests().is_empty())
@@ -2360,6 +2445,30 @@ impl BrowserChromeController {
                     ))
                 })
             }
+            BrowserChromeEvent::HistoryOpen if session.history().current_url().is_some() => {
+                self.open_history_catalog(session);
+                Some(BrowserChromeAction::OpenHistoryCatalog)
+            }
+            BrowserChromeEvent::HistoryPrevious
+                if self.history_catalog_open && session.history().entries().len() > 1 =>
+            {
+                let len = session.history().entries().len();
+                self.history_selection = (self.history_selection + len - 1) % len;
+                Some(BrowserChromeAction::BrowseHistoryCatalog)
+            }
+            BrowserChromeEvent::HistoryNext
+                if self.history_catalog_open && session.history().entries().len() > 1 =>
+            {
+                self.history_selection =
+                    (self.history_selection + 1) % session.history().entries().len();
+                Some(BrowserChromeAction::BrowseHistoryCatalog)
+            }
+            BrowserChromeEvent::HistoryNavigate if self.history_catalog_open => self
+                .selected_history_entry(session)
+                .filter(|(entry_id, _)| Some(*entry_id) != session.history().current_entry_id())
+                .map(|(entry_id, _)| {
+                    BrowserChromeAction::Navigate(BrowserNavigation::HistoryEntry(entry_id))
+                }),
             BrowserChromeEvent::CopyAddress if session.history().current_url().is_some() => {
                 Some(BrowserChromeAction::CopyPageAddress)
             }
@@ -2419,6 +2528,11 @@ impl BrowserChromeController {
             | BrowserChromeEvent::BookmarksNext
             | BrowserChromeEvent::BookmarksNavigate
             | BrowserChromeEvent::BookmarksClose
+            | BrowserChromeEvent::HistoryOpen
+            | BrowserChromeEvent::HistoryPrevious
+            | BrowserChromeEvent::HistoryNext
+            | BrowserChromeEvent::HistoryNavigate
+            | BrowserChromeEvent::HistoryClose
             | BrowserChromeEvent::CopyAddress
             | BrowserChromeEvent::OpenPageInNewWindow
             | BrowserChromeEvent::SavePage
@@ -2460,6 +2574,9 @@ impl BrowserChromeController {
             .bookmark_selection
             .min(bookmarks.len().saturating_sub(1));
         let selected_bookmark = bookmarks.get(bookmark_selection);
+        let history = session.history().entries();
+        let history_selection = self.history_selection.min(history.len().saturating_sub(1));
+        let selected_history = history.get(history_selection).copied();
 
         BrowserChromeProps {
             address: self.address_draft.clone(),
@@ -2490,6 +2607,21 @@ impl BrowserChromeController {
             bookmarks_previous_disabled: navigation_disabled || bookmarks.len() < 2,
             bookmarks_next_disabled: navigation_disabled || bookmarks.len() < 2,
             bookmarks_navigate_disabled: navigation_disabled || selected_bookmark.is_none(),
+            history_label: format!("History ({})", history.len()),
+            history_disabled: navigation_disabled || history.is_empty(),
+            history_open: self.history_catalog_open && !history.is_empty(),
+            history_position: selected_history
+                .map(|_| format!("{} of {}", history_selection + 1, history.len()))
+                .unwrap_or_default(),
+            history_address: selected_history
+                .map(|(_, address)| address.to_string())
+                .unwrap_or_default(),
+            history_previous_disabled: navigation_disabled || history.len() < 2,
+            history_next_disabled: navigation_disabled || history.len() < 2,
+            history_navigate_disabled: navigation_disabled
+                || selected_history.is_none_or(|(entry_id, _)| {
+                    Some(entry_id) == session.history().current_entry_id()
+                }),
             copy_address_disabled: navigation_disabled || session.history().current_url().is_none(),
             open_page_disabled: navigation_disabled || session.history().current_url().is_none(),
             save_page_disabled: navigation_disabled || session.viewport().is_none(),
@@ -2672,6 +2804,18 @@ impl BrowserHostController {
                 Ok(BrowserHostEventOutcome::changed(true))
             }
             BrowserChromeAction::CloseBookmarkCatalog => {
+                self.status_text = "Ready".to_string();
+                Ok(BrowserHostEventOutcome::changed(true))
+            }
+            BrowserChromeAction::OpenHistoryCatalog => {
+                self.status_text = "History shown".to_string();
+                Ok(BrowserHostEventOutcome::changed(true))
+            }
+            BrowserChromeAction::BrowseHistoryCatalog => {
+                self.status_text = self.props().history_position;
+                Ok(BrowserHostEventOutcome::changed(true))
+            }
+            BrowserChromeAction::CloseHistoryCatalog => {
                 self.status_text = "Ready".to_string();
                 Ok(BrowserHostEventOutcome::changed(true))
             }
@@ -6547,7 +6691,9 @@ impl BrowserSession {
         let reloads_document = matches!(&navigation, BrowserNavigation::Reload);
         let traverses_history = matches!(
             &navigation,
-            BrowserNavigation::Back | BrowserNavigation::Forward
+            BrowserNavigation::Back
+                | BrowserNavigation::Forward
+                | BrowserNavigation::HistoryEntry(_)
         );
         let departing_state = (!matches!(&navigation, BrowserNavigation::Reload))
             .then(|| self.current_history_entry_state())
@@ -6557,6 +6703,9 @@ impl BrowserSession {
             BrowserNavigation::Navigate(url) => Some(history.navigate(url).to_string()),
             BrowserNavigation::Back => history.back().map(str::to_owned),
             BrowserNavigation::Forward => history.forward().map(str::to_owned),
+            BrowserNavigation::HistoryEntry(entry_id) => {
+                history.go_to_entry(entry_id).map(str::to_owned)
+            }
             BrowserNavigation::Home => Some(history.home().to_string()),
             BrowserNavigation::Reload => history.reload().map(str::to_owned),
         };
@@ -8010,6 +8159,14 @@ mod tests {
             bookmarks_previous_disabled: false,
             bookmarks_next_disabled: false,
             bookmarks_navigate_disabled: false,
+            history_label: "History (3)".into(),
+            history_disabled: false,
+            history_open: true,
+            history_position: "2 of 3".into(),
+            history_address: "https://example.test/history".into(),
+            history_previous_disabled: false,
+            history_next_disabled: false,
+            history_navigate_disabled: false,
             copy_address_disabled: true,
             open_page_disabled: false,
             save_page_disabled: true,
@@ -8041,7 +8198,7 @@ mod tests {
 
         assert_eq!(
             browser_bridge_response_json(&props, Some(&effect), Some("bad\nrequest")),
-            r#"{"props":{"address":"https://example.test/\"draft\"","page-title":"Line\nTitle","status-text":"Ready\tsoon","back-disabled":true,"forward-disabled":false,"stop-disabled":false,"bookmark-label":"Remove \"bookmark\"","bookmark-disabled":false,"bookmarks-label":"Bookmarks (2)","bookmarks-disabled":false,"bookmarks-open":true,"bookmarks-position":"2 of 2","bookmarks-title":"Second","bookmarks-address":"https://example.test/second","bookmarks-previous-disabled":false,"bookmarks-next-disabled":false,"bookmarks-navigate-disabled":false,"copy-address-disabled":true,"open-page-disabled":false,"save-page-disabled":true,"print-page-disabled":false,"share-page-disabled":true,"page-info-disabled":false,"page-info-open":true,"page-info-title":"Example","page-info-address":"https://example.test/final","page-info-requested-address":"https://example.test/start","page-info-status":"HTTP 200","page-info-resources":"Images: 3 (1 failed)  Stylesheets: 2 (0 failed)","zoom-label":"125%","zoom-out-disabled":true,"zoom-reset-disabled":false,"zoom-in-disabled":true,"view-source-disabled":false,"view-source-open":true,"view-source-title":"Source: Example","view-source-address":"https://example.test/final","view-source-content":"<p>source</p>\n","find-open":true,"find-query":"a\\b","find-result-label":"1 of 2","find-disabled":false,"navigation-disabled":true},"effect":{"type":"write-clipboard","text":"copy\u0001"},"error":"bad\nrequest"}"#
+            r#"{"props":{"address":"https://example.test/\"draft\"","page-title":"Line\nTitle","status-text":"Ready\tsoon","back-disabled":true,"forward-disabled":false,"stop-disabled":false,"bookmark-label":"Remove \"bookmark\"","bookmark-disabled":false,"bookmarks-label":"Bookmarks (2)","bookmarks-disabled":false,"bookmarks-open":true,"bookmarks-position":"2 of 2","bookmarks-title":"Second","bookmarks-address":"https://example.test/second","bookmarks-previous-disabled":false,"bookmarks-next-disabled":false,"bookmarks-navigate-disabled":false,"history-label":"History (3)","history-disabled":false,"history-open":true,"history-position":"2 of 3","history-address":"https://example.test/history","history-previous-disabled":false,"history-next-disabled":false,"history-navigate-disabled":false,"copy-address-disabled":true,"open-page-disabled":false,"save-page-disabled":true,"print-page-disabled":false,"share-page-disabled":true,"page-info-disabled":false,"page-info-open":true,"page-info-title":"Example","page-info-address":"https://example.test/final","page-info-requested-address":"https://example.test/start","page-info-status":"HTTP 200","page-info-resources":"Images: 3 (1 failed)  Stylesheets: 2 (0 failed)","zoom-label":"125%","zoom-out-disabled":true,"zoom-reset-disabled":false,"zoom-in-disabled":true,"view-source-disabled":false,"view-source-open":true,"view-source-title":"Source: Example","view-source-address":"https://example.test/final","view-source-content":"<p>source</p>\n","find-open":true,"find-query":"a\\b","find-result-label":"1 of 2","find-disabled":false,"navigation-disabled":true},"effect":{"type":"write-clipboard","text":"copy\u0001"},"error":"bad\nrequest"}"#
         );
     }
 
@@ -8112,6 +8269,14 @@ mod tests {
                 bookmarks_previous_disabled: true,
                 bookmarks_next_disabled: true,
                 bookmarks_navigate_disabled: true,
+                history_label: "History (0)".into(),
+                history_disabled: true,
+                history_open: false,
+                history_position: String::new(),
+                history_address: String::new(),
+                history_previous_disabled: true,
+                history_next_disabled: true,
+                history_navigate_disabled: true,
                 copy_address_disabled: true,
                 open_page_disabled: true,
                 save_page_disabled: true,
@@ -8199,6 +8364,14 @@ mod tests {
                 bookmarks_previous_disabled: true,
                 bookmarks_next_disabled: true,
                 bookmarks_navigate_disabled: true,
+                history_label: "History (2)".into(),
+                history_disabled: false,
+                history_open: false,
+                history_position: "2 of 2".into(),
+                history_address: page_url.into(),
+                history_previous_disabled: false,
+                history_next_disabled: false,
+                history_navigate_disabled: true,
                 copy_address_disabled: false,
                 open_page_disabled: false,
                 save_page_disabled: false,
@@ -8389,6 +8562,11 @@ mod tests {
             BrowserChromeEvent::BookmarksNext,
             BrowserChromeEvent::BookmarksNavigate,
             BrowserChromeEvent::BookmarksClose,
+            BrowserChromeEvent::HistoryOpen,
+            BrowserChromeEvent::HistoryPrevious,
+            BrowserChromeEvent::HistoryNext,
+            BrowserChromeEvent::HistoryNavigate,
+            BrowserChromeEvent::HistoryClose,
             BrowserChromeEvent::CopyAddress,
             BrowserChromeEvent::OpenPageInNewWindow,
             BrowserChromeEvent::SavePage,
@@ -8897,6 +9075,100 @@ mod tests {
                 |_, _| { unreachable!("an empty catalog must not navigate") }
             )
             .unwrap());
+    }
+
+    #[test]
+    fn history_catalog_wraps_and_traverses_to_stable_duplicate_entries() {
+        let first = "https://example.test/first";
+        let repeated = "https://example.test/repeated";
+        let fetcher = |url: &str| {
+            Ok(BrowserFetchResponse::new(
+                url,
+                200,
+                Some("text/html".into()),
+                format!("<title>{url}</title><p>{url}</p>").into_bytes(),
+            ))
+        };
+        let theme = mosaic_html_theme();
+        let pipeline = BrowserPagePipeline::new(
+            &theme,
+            HtmlPaintViewport::new(220.0, 80.0, 1.0),
+            &MonoMeasurer,
+            &FakeShaper,
+            &FakeMetrics,
+            &FakeResolver,
+        );
+        let mut session = BrowserSession::new(first, 40.0);
+        session
+            .execute(
+                BrowserNavigation::Navigate(first.into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        session
+            .execute(
+                BrowserNavigation::Navigate(repeated.into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        let repeated_first = session.history().current_entry_id().unwrap();
+        session
+            .execute(
+                BrowserNavigation::Navigate(repeated.into()),
+                &pipeline,
+                &fetcher,
+            )
+            .unwrap();
+        let repeated_second = session.history().current_entry_id().unwrap();
+        assert_ne!(repeated_first, repeated_second);
+
+        let mut host = BrowserHostController::new(session);
+        let mut repository = MemoryBookmarkRepository::default();
+        assert_eq!(host.props().history_label, "History (3)");
+        assert!(host
+            .handle_event(
+                BrowserChromeEvent::HistoryOpen,
+                &mut repository,
+                |_, _| unreachable!("opening history must not navigate"),
+            )
+            .unwrap());
+        assert!(host.props().history_open);
+        assert_eq!(host.props().history_position, "3 of 3");
+        assert_eq!(host.props().history_address, repeated);
+        assert!(host.props().history_navigate_disabled);
+
+        host.handle_event(
+            BrowserChromeEvent::HistoryPrevious,
+            &mut repository,
+            |_, _| unreachable!("browsing history must not navigate"),
+        )
+        .unwrap();
+        assert_eq!(host.props().history_position, "2 of 3");
+        assert!(!host.props().history_navigate_disabled);
+
+        assert!(host
+            .handle_event(
+                BrowserChromeEvent::HistoryNavigate,
+                &mut repository,
+                |session, navigation| {
+                    Ok(session.execute(navigation, &pipeline, &fetcher)?.is_some())
+                },
+            )
+            .unwrap());
+        assert_eq!(
+            host.session().history().current_entry_id(),
+            Some(repeated_first)
+        );
+        assert_eq!(host.session().history().entries().len(), 3);
+        assert_eq!(
+            host.session().history().forward_stack(),
+            &[String::from(repeated)]
+        );
+        assert!(!host.props().history_open);
+        assert_eq!(host.props().history_position, "2 of 3");
+        assert!(host.props().history_navigate_disabled);
     }
 
     #[test]

@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE10-04",
+  "category": "Housing",
+  "label": "household objects and furniture",
+  "probe": null,
+  "note": "Untaught; daar and khidkii have no atoms, and a sign-and-label reading part labels exactly this kind of thing. The dwelling itself is now taught (MR-A1-NE10-02, chapter 41), so this is the remaining half of Housing rather than the whole of it.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE10-04"
+  ]
+}

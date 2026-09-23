@@ -1,0 +1,10 @@
+{
+  "id": "ES-EXT-449-TALLER",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can leave a bike at a repair shop and understand the slip that comes back: say which part has failed, ask whether it can be fixed by a given day, and ask somebody to pass me a tool.",
+  "prerequisites": [
+    "ES-EXT-448-MUDANZA"
+  ]
+}

@@ -9,6 +9,7 @@ use std::collections::{HashMap, HashSet};
 
 const BASIC_INPUT_I64_TOKEN: u32 = 0x0A00_0006;
 const BASIC_INPUT_MORE_TOKEN: u32 = 0x0A00_0007;
+const BASIC_INPUT_STR_TOKEN: u32 = 0x0A00_0008;
 
 fn invalid(function: &str, detail: &str) -> IIRClrError {
     IIRClrError::InvalidOperand {
@@ -23,12 +24,14 @@ enum ScalarType {
     I32,
     I64,
     Bool,
+    Str,
 }
 impl ScalarType {
     fn metadata(self) -> &'static str {
         match self {
             Self::I64 => "int64",
             Self::I32 | Self::Bool => "int32",
+            Self::Str => "string",
         }
     }
 }
@@ -37,6 +40,7 @@ fn width(function: &str, hint: &str) -> Result<ScalarType, IIRClrError> {
         "i32" => Ok(ScalarType::I32),
         "i64" => Ok(ScalarType::I64),
         "bool" => Ok(ScalarType::Bool),
+        "str" => Ok(ScalarType::Str),
         _ => Err(IIRClrError::UnsupportedType {
             function: function.into(),
             type_hint: hint.into(),
@@ -165,7 +169,7 @@ fn validate_flow(f: &IIRFunction) -> Result<(), IIRClrError> {
     Ok(())
 }
 
-/// Lower explicitly typed i32/i64/bool functions with forward-only control flow.
+/// Lower explicitly typed i32/i64/bool/string functions with forward-only control flow.
 ///
 /// Unsupported operations or inconsistent signatures return an error, never a
 /// legacy fallback. Integer immediates retain the CLR01 i32 range restriction;
@@ -299,6 +303,9 @@ pub fn lower_typed_scalars_to_cil(
                     };
                     b.emit_ldc_i4(i32::from(value));
                 }
+                "const" if ty == ScalarType::Str => {
+                    return Err(invalid(&f.name, "encoded string constants are unsupported"));
+                }
                 "const" => {
                     let Operand::Int(n) = ins.srcs[0] else {
                         return Err(invalid(&f.name, "expected integer literal"));
@@ -322,7 +329,7 @@ pub fn lower_typed_scalars_to_cil(
                         .get(name.as_str())
                         .copied()
                         .ok_or_else(|| invalid(&f.name, "undefined or forward variable"))?;
-                    if input.ty == ScalarType::Bool {
+                    if matches!(input.ty, ScalarType::Bool | ScalarType::Str) {
                         return Err(invalid(&f.name, "comparison requires integer operands"));
                     }
                     let right = operand(&ins.srcs[1], input.ty)?;
@@ -342,15 +349,19 @@ pub fn lower_typed_scalars_to_cil(
                     }
                 }
                 "call_builtin" => {
-                    if ty != ScalarType::I64 {
-                        return Err(invalid(&f.name, "input builtin result must be i64"));
-                    }
                     let Some(Operand::Var(name)) = ins.srcs.first() else {
                         return Err(invalid(&f.name, "missing input builtin name"));
                     };
                     let token = match name.as_str() {
-                        "input_i64" => BASIC_INPUT_I64_TOKEN,
-                        "input_more" => BASIC_INPUT_MORE_TOKEN,
+                        "input_i64" if ty == ScalarType::I64 => BASIC_INPUT_I64_TOKEN,
+                        "input_more" if ty == ScalarType::I64 => BASIC_INPUT_MORE_TOKEN,
+                        "input_str" if ty == ScalarType::Str => BASIC_INPUT_STR_TOKEN,
+                        "input_i64" | "input_more" => {
+                            return Err(invalid(&f.name, "integer input result must be i64"))
+                        }
+                        "input_str" => {
+                            return Err(invalid(&f.name, "string input result must be str"))
+                        }
                         _ => {
                             return Err(IIRClrError::UnsupportedOp {
                                 function: f.name.clone(),
@@ -383,6 +394,9 @@ pub fn lower_typed_scalars_to_cil(
                 _ => {
                     if ty == ScalarType::Bool && !matches!(op, "mov" | "ret") {
                         return Err(invalid(&f.name, "boolean arithmetic is unsupported"));
+                    }
+                    if ty == ScalarType::Str && !matches!(op, "mov" | "ret") {
+                        return Err(invalid(&f.name, "string arithmetic is unsupported"));
                     }
                     for src in &ins.srcs {
                         load(&mut b, operand(src, ty)?);

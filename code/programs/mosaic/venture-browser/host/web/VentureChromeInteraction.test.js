@@ -38,6 +38,14 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       bookmarksPreviousDisabled: true,
       bookmarksNextDisabled: true,
       bookmarksNavigateDisabled: true,
+      historyLabel: "History (2)",
+      historyDisabled: true,
+      historyOpen: false,
+      historyPosition: "2 of 2",
+      historyAddress: "https://venture.test/initial",
+      historyPreviousDisabled: true,
+      historyNextDisabled: true,
+      historyNavigateDisabled: true,
       copyAddressDisabled: true,
       openPageDisabled: true,
       savePageDisabled: true,
@@ -93,6 +101,20 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
         }
         if (request.event.type === "bookmarksClose" || request.event.type === "bookmarksNavigate") {
           props = { ...props, bookmarksOpen: false };
+        }
+        if (request.event.type === "historyOpen") {
+          props = { ...props, bookmarksOpen: false, historyOpen: true };
+        }
+        if (request.event.type === "historyPrevious") {
+          props = {
+            ...props,
+            historyPosition: "1 of 2",
+            historyAddress: "https://venture.test/previous",
+            historyNavigateDisabled: false,
+          };
+        }
+        if (request.event.type === "historyClose" || request.event.type === "historyNavigate") {
+          props = { ...props, historyOpen: false };
         }
         if (request.event.type === "findChange") {
           props = { ...props, findQuery: request.event.value, findResultLabel: "1 of 2" };
@@ -196,6 +218,9 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
       zoomInDisabled: false,
       viewSourceDisabled: false,
       findDisabled: false,
+      historyDisabled: false,
+      historyPreviousDisabled: false,
+      historyNextDisabled: false,
       navigationDisabled: false,
       statusText: "Enabled by mosaic-host-ready",
     };
@@ -251,6 +276,17 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     buttonByLabel(root, "Close").click();
     await settle();
     assert.equal(calls.at(-1)?.type, "bookmarksClose");
+    controls = readControls(root);
+    controls.history.click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "historyOpen");
+    buttonByLabel(root, "Previous").click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "historyPrevious");
+    assert.match(renderScope(root).textContent, /https:\/\/venture\.test\/previous/);
+    buttonByLabel(root, "Open").click();
+    await settle();
+    assert.equal(calls.at(-1)?.type, "historyNavigate");
     controls = readControls(root);
 
     controls.copyAddress.click();
@@ -359,7 +395,7 @@ test(`${backend} controls cross the Mosaic host seam`, async () => {
     assert.equal(calls.at(-1)?.type, "navigate");
     assert.deepEqual(
       calls.map(event => event.type),
-      ["stop", "toggleBookmark", "bookmarksOpen", "bookmarksClose", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "pageInfoClose", "zoomIn", "zoomReset", "viewSource", "viewSourceCopy", "viewSourceClose", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
+      ["stop", "toggleBookmark", "bookmarksOpen", "bookmarksClose", "historyOpen", "historyPrevious", "historyNavigate", "copyAddress", "openPageInNewWindow", "savePage", "printPage", "sharePage", "pageInfo", "pageInfoClose", "zoomIn", "zoomReset", "viewSource", "viewSourceCopy", "viewSourceClose", "findOpen", "findChange", "findNext", "findClose", "addressChange", "navigate", "navigate"],
     );
     assert.match(renderScope(root).textContent, /Handled navigate through MosaicHost/);
   } finally {
@@ -420,6 +456,8 @@ function readControls(root) {
   assert.ok(bookmark, "bookmark button must exist");
   const bookmarks = [...buttons.entries()].find(([label]) => /^Bookmarks \(\d+\)$/.test(label))?.[1];
   assert.ok(bookmarks, "bookmarks button must exist");
+  const history = [...buttons.entries()].find(([label]) => /^History \(\d+\)$/.test(label))?.[1];
+  assert.ok(history, "history button must exist");
   return {
     back: buttons.get("Back"),
     forward: buttons.get("Forward"),
@@ -427,6 +465,7 @@ function readControls(root) {
     stop: buttons.get("Stop"),
     bookmark,
     bookmarks,
+    history,
     copyAddress: buttons.get("Copy"),
     openPage: buttons.get("New Window"),
     savePage: buttons.get("Save"),

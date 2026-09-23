@@ -10,7 +10,7 @@ gloss: the notice, the warning — from avisar, and Latin ad visum, to what is s
 concept_tag: ES-WORD-NOTICE
 prerequisites: [ES-C332-permiso]
 sounds: [v-b, s-clear, stress-penultimate]
-roots: [latin-videre]
+roots: [videre-latin]
 etymology_hook: "aviso comes through avisar from Latin ad visum, toward what has been seen, on the verb videre to see -- English advise and advice are the same formation, and vision, evident, provide, survey and video are all seeings"
 duration:
   max_seconds: 240

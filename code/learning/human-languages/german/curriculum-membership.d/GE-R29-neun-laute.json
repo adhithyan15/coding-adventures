@@ -1,0 +1,11 @@
+{
+  "id": "GE-R29-neun-laute",
+  "pathSegment": "GE-PATH-032",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-032-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

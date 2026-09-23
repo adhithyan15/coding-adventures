@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NG5-04",
+  "category": "Qualitative notions",
+  "label": "age",
+  "probe": null,
+  "note": "Untaught, and blocked behind MR-A1-QU-03 alone. Numbers to twenty exist as of chapter 58, so a child's age is sayable; an adult's is not, and the A1 interview asks for the candidate's own.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-NG5-04"
+  ]
+}

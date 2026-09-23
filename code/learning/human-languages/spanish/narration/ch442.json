@@ -1,0 +1,1096 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 442,
+  "title": "La Gestion",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:7d01cad5c35a4646",
+  "lessons": [
+    {
+      "id": "ES-C442-administracion",
+      "sequence": 11210,
+      "title": "la administración — the lesser one, serving",
+      "headword": "la administración",
+      "romanization": "la administración",
+      "gloss": "the administration — built on the word for the LESSER one, which is what a servant was",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:127d01116088cd75",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la oficina, el documento and servir. Put the three together and you have named the thing that asks you for papers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la administración",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la administración — the administration, and in Spain usually the state: la Administración with a capital letter is officialdom as a whole."
+            },
+            {
+              "kind": "speech",
+              "text": "Trabaja en la administración — he works in the public sector. Trámites con la administración — dealings with officialdom. The verb is administrar, to manage or to administer."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending is -ción, which you have had since the chapter on paperwork, so the word is the act of administering made into a thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ad- towards, plus ministr- from Latin minister, a servant or attendant, plus -ción."
+            },
+            {
+              "kind": "speech",
+              "text": "And minister comes from minus, less. A minister was the lesser one, the person who serves — which is why the word for a government's most senior officials is built on the word for less."
+            },
+            {
+              "kind": "speech",
+              "text": "The pair is the point:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Latin word",
+                "built on",
+                "what it named"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "Latin word: minister. built on: minus, less. what it named: the one who serves.",
+                "Latin word: magister. built on: magis, more. what it named: the one who directs."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Magister is where el maestro comes from. So maestro and ministro are the same shape twice over, once on more and once on less, and Spanish kept both."
+            },
+            {
+              "kind": "speech",
+              "text": "You already own the smaller half of that pair outright: menos is minus, unchanged in meaning and barely changed in sound. The administration is named with the same word you use to say less."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That etymology is not a curiosity here; it tells you the register."
+            },
+            {
+              "kind": "speech",
+              "text": "La administración is what a notice calls itself when it wants to sound like an institution rather than a person. A letter from it will not say le pedimos — it will say se requiere, and it will ask for documentación rather than papers."
+            },
+            {
+              "kind": "speech",
+              "text": "So when you see the word on a form, expect the impersonal grammar that comes with it. The vocabulary and the sentence shape travel together, and recognising one tells you to expect the other."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la administración",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la administración*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "she works in an office, in the public sector",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: she works in an office, in the public sector]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what minister originally meant, and what magister meant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *minister* originally meant, and what *magister* meant]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The administration? (La administración.) What does minus mean? (Less.) And the word built on more? (Magister, behind maestro.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C442-envio",
+      "sequence": 11220,
+      "title": "el envío — put on the road",
+      "headword": "el envío",
+      "romanization": "el envío",
+      "gloss": "the shipment — what enviar leaves behind, and a road hidden inside the verb",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3671be4c4709badf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say enviar and la carta. Say la administración. You have the verb for sending. Name the thing that is on its way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el envío",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el envío — the shipment, the dispatch, the consignment."
+            },
+            {
+              "kind": "speech",
+              "text": "Gastos de envío — shipping costs, the line on every order page. Su envío está en camino — your parcel is on its way. El envío se ha retrasado uses the retraso family you already have."
+            },
+            {
+              "kind": "speech",
+              "text": "The accent sits on the í and breaks it away from the o: en-VÍ-o, three syllables."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enviar is Latin inviāre — in- onto, plus via, a road."
+            },
+            {
+              "kind": "speech",
+              "text": "To send something was to put it on the road, and the road is still sitting inside the word. El envío is what has been put on it."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the road in it"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: enviar. the road in it: put onto the way.",
+                "word: el envío. the road in it: the thing on the way."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English has via unchanged as a preposition, and the same via is inside obvious — ob viam, lying in the way, so plain you trip over it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Envío is the second word in two chapters built by putting a plain ending on a verb you already own: prestar gave préstamo, enviar gives envío."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a pattern worth using deliberately. When you know a Spanish verb and need the noun for its result, the noun very often exists and is short — and you can usually recognise it even when you could not have produced it."
+            },
+            {
+              "kind": "speech",
+              "text": "The administración will use the noun where a friend would use the verb. A friend says te lo envío; the tracking page says su envío. Same event, and the choice of word tells you who is writing."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el envío",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el envío*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shipping costs are not included",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shipping costs are not included]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the word via is doing inside enviar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the word *via* is doing inside *enviar*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The shipment? (El envío.) Which Latin word is hidden in it? (Via, a road.) How many syllables? (Three — en-VÍ-o.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C442-concertar",
+      "sequence": 11230,
+      "title": "concertar — agreeing, by way of a fight",
+      "headword": "concertar",
+      "romanization": "concertar",
+      "gloss": "to arrange an appointment — the same word as a concert, and it began as a fight",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de3f8d9b1bd7dfe2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la cita and la hora. Say el envío. You know the appointment and you know the time. Name the act of fixing them together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: concertar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "concertar — to arrange, to set up by agreement."
+            },
+            {
+              "kind": "speech",
+              "text": "Concertar una cita — to make an appointment. It is the verb a clinic, a bank or a council uses on its website, where a friend would say quedar."
+            },
+            {
+              "kind": "speech",
+              "text": "It breaks its stem under stress, like cerrar: concierto, conciertas, concierta, but concertamos."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the yo form aloud: concierto. You have met that word already, and it meant a performance."
+            },
+            {
+              "kind": "speech",
+              "text": "el concierto and yo concierto are the same word. Both are Latin concertāre, and here is the part that surprises people: concertāre meant to contend, to fight it out — con- together plus certāre, to compete."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what it became",
+                "how the contest turned into it"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what it became: concertar una cita. how the contest turned into it: settle it by thrashing it out.",
+                "what it became: un concierto. how the contest turned into it: voices contending with each other."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The sense slid from fighting against to striving together, and both descendants kept a piece of it. A negotiation and an orchestra are the same activity seen from two moods."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "English has the same pair and hides it every bit as well. A concert is the performance; to concert an effort, and in concert with, are the agreement sense, and concerted is what several people fought out in advance."
+            },
+            {
+              "kind": "speech",
+              "text": "So concertar is not a word to learn cold. You already had el concierto, and the only new thing is that the noun has a verb standing behind it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth doing on purpose whenever a new verb looks like a noun you know. Check whether they are the same word before you treat them as two."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "concertar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *concertar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I want to make an appointment for Thursday at nine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I want to make an appointment for Thursday at nine]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why concierto has two meanings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *concierto* has two meanings]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To arrange an appointment? (Concertar una cita.) What did certāre mean? (To compete, to fight.) What is the yo form? (Concierto.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C442-reunion",
+      "sequence": 11240,
+      "title": "la reunión — made one again",
+      "headword": "la reunión",
+      "romanization": "la reunión",
+      "gloss": "the meeting — making one again, out of the plainest number there is",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4629019fc32a8315",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la sala and celebrar. Say concertar. You can fix a time and you know what a notice calls holding an event. Name the event itself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la reunión",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la reunión — the meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "Una reunión de vecinos is a residents' meeting, the one whose notice goes up in the entrance hall. La sala de reuniones is the meeting room. The verb is reunirse: nos reunimos el jueves — we are meeting on Thursday."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "re- again, plus unir from Latin ūnus, one, plus -ión."
+            },
+            {
+              "kind": "speech",
+              "text": "A reunión is a making-one-again. The word assumes the people were together before and have scattered, which is why reunirse also covers a family gathering and why English reunion sounds warmer than meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish uses the one word for both. Una reunión de trabajo and una reunión familiar are the same noun, and only the adjective says which."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put this next to celebrarse, which you met on a notice meaning is held."
+            },
+            {
+              "kind": "speech",
+              "text": "La reunión de vecinos se celebrará el jueves."
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves of that sentence are about a crowd. Celebrar is built on celeber, thronged; reunión is built on making people one again. The sentence says, twice over, that people are being brought together — and neither word mentions anybody doing the bringing."
+            },
+            {
+              "kind": "speech",
+              "text": "That doubling is ordinary in official Spanish. Once you can hear it, a notice stops being a wall of formal vocabulary and becomes two or three plain ideas said in their dressed-up clothes."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la reunión",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la reunión*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "we are meeting on Thursday in the meeting room",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: we are meeting on Thursday in the meeting room]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I want to arrange a meeting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I want to arrange a meeting]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The meeting? (La reunión.) Which number is inside it? (Ūnus, one.) What does the re- add? (Again.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C442-pantalla",
+      "sequence": 11250,
+      "title": "la pantalla — the thing you put in front of a light",
+      "headword": "la pantalla",
+      "romanization": "la pantalla",
+      "gloss": "the screen — a lampshade before it was a monitor, and a history nobody can settle",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c87fff9b65f69d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el ordenador and el móvil. Say la reunión. Both devices have the same part, and a meeting held remotely happens on it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la pantalla",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la pantalla — the screen."
+            },
+            {
+              "kind": "speech",
+              "text": "La pantalla del ordenador, la pantalla del móvil. Compartir pantalla — to share your screen. En pantalla — on screen. It also still means a lampshade, and a cinema screen: la gran pantalla is the big screen."
+            },
+            {
+              "kind": "speech",
+              "text": "The ll is one sound, not two: pan-TA-ya."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The oldest sense is the useful one. A pantalla was a shade put in front of a flame so the light did not hit your eyes directly."
+            },
+            {
+              "kind": "speech",
+              "text": "That is one idea, and every later use is the same idea moved:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what it shades",
+                "the sense"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what it shades: a candle. the sense: the lampshade.",
+                "what it shades: a projector's beam. the sense: the cinema screen.",
+                "what it shades: a lit device. the sense: the phone or computer screen."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing about a modern screen shades anything, but the word arrived by way of things that did. Spanish did not borrow a new word for the new object; it moved an old one, and the chain is short enough to hold in your head."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "It does not come apart, and its history is unsettled. Dictionaries reach for a crossing of two older words and do not commit further; no derivation has carried the field."
+            },
+            {
+              "kind": "speech",
+              "text": "That makes three now — el andén, tirar and la pantalla — and it is the same honest answer each time. You met the piece-test in the chapter on the sports centre: take a piece off and see whether the rest stands. These words fail that test at the first step, because there is no piece to take off, and no amount of staring at modern Spanish supplies one."
+            },
+            {
+              "kind": "speech",
+              "text": "What you can do with a word like this is what the block above did: follow the meanings instead of the parts. Pantalla has no recoverable ancestry and a perfectly clear career, and the career is what makes it memorable."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la pantalla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la pantalla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the meeting is on screen, I will share my screen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the meeting is on screen, I will share my screen]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what a pantalla was before it was a screen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what a *pantalla* was before it was a screen]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The screen? (La pantalla.) What did it mean first? (A shade in front of a light.) Does the word come apart? (No, and its origin is unsettled.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R442-repaso-gestion",
+      "sequence": 11260,
+      "title": "(administración, envío, concertar, reunión, pantalla) — from cold",
+      "headword": "(administración, envío, concertar, reunión, pantalla)",
+      "romanization": "(administración, envío, concertar, reunión, pantalla)",
+      "gloss": "cold retrieval of the five, and of the two ways to get at a word when the parts run out",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b98f34fb50616632",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all five: officialdom, the shipment, to arrange an appointment, the meeting, the screen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: two routes into a word, and when each one runs out",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four of this chapter's five words come apart cleanly."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "the part that carries it"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: administración. the part that carries it: minus, less — the one who serves.",
+                "word: reunión. the part that carries it: ūnus, one — made one again.",
+                "word: pantalla. the part that carries it: nothing; follow the meanings instead."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "For pantalla the parts route is closed, and a different one is open: a shade in front of a flame, then in front of a projector, then in front of a lit device. One idea moved three times."
+            },
+            {
+              "kind": "speech",
+              "text": "Both routes make a word stick. What does not work is insisting on the first when only the second is available, because that is how invented etymologies get made."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I want to arrange a meeting for Thursday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I want to arrange a meeting for Thursday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shipping costs are not included",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shipping costs are not included]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "concertar and un concierto, and why they are one word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *concertar* and *un concierto*, and why they are one word]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now deal with an institution rather than a person — book the appointment, read what the office wants, track what it sent you, and do it on a screen. That is the half of A2 reading that is not about friends."
+            },
+            {
+              "kind": "speech",
+              "text": "The register travels with the vocabulary. La administración does not write le pedimos; it writes se requiere. When one of these words appears, expect the impersonal grammar that comes with it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The meeting? (La reunión.) The screen? (La pantalla.) Officialdom? (La administración.) Which of the three has no recoverable origin? (Pantalla.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C442-sintesis-gestion",
+      "sequence": 11270,
+      "title": "(una cita con la administración) — read it, then do it yourself",
+      "headword": "(una cita con la administración)",
+      "romanization": "(una cita con la administración)",
+      "gloss": "the payoff — book an appointment from a public-sector page, and notice who is never named",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b8c438873bba402",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la administración and concertar. The page you are about to read uses both, and it never once says you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read it once straight through, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "en la web de la administración."
+            },
+            {
+              "kind": "speech",
+              "text": "Para concertar una cita, seleccione el trámite en la pantalla de inicio. Se requiere documentación en vigor. La cita se confirmará por correo. Si no puede acudir, se ruega anular con 24 horas de antelación."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you have to do first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you have to do first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you must bring",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you must bring]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what to do if you cannot come",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what to do if you cannot come]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Count the people in that notice. There are none."
+            },
+            {
+              "kind": "speech",
+              "text": "Se requiere, se confirmará, se ruega — three verbs, no subject. The one exception is seleccione, an instruction aimed at whoever is reading, and even that is the formal form that avoids saying tú."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the same se you met on la junta se celebra and la oficina ha sido trasladada: it takes the person out and leaves the obligation attached to the procedure. A public-sector page is written this way from top to bottom, and once you expect it, the sentences get shorter — se requiere documentación means no more than bring your papers."
+            },
+            {
+              "kind": "speech",
+              "text": "The tracking page for your envío and the notice about the reunión use exactly the same grammar. One register, three settings."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Five sentences: say you want to make an appointment, say what the screen asked for, say what papers you took, say the meeting was moved, and say your parcel has not come."
+            },
+            {
+              "kind": "speech",
+              "text": "Then say the first one again the way the website would say it, with no you in it at all."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

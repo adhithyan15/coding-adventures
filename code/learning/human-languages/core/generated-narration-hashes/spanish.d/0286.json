@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 286,
-  "sourceHash": "fnv1a64:877f6d8c9d4dd131",
+  "sourceHash": "fnv1a64:bdd9dec3f6358d06",
   "lessonIds": [
     "ES-C286-ojo",
     "ES-C286-boca",
@@ -14,6 +14,6 @@
   "text": "spanish/narration/ch286.txt",
   "json": "spanish/narration/ch286.json",
   "textHash": "fnv1a64:3b7daacf5b2ccfdf",
-  "jsonHash": "fnv1a64:e1ba6ce8831d8b18",
+  "jsonHash": "fnv1a64:c4cd51421d551fee",
   "findings": []
 }

@@ -1,8 +1,8 @@
 Marathi, chapter 65: Standing Vowels.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 ई (ii) — the long one, standing on its own.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -34,7 +34,7 @@ Stroke order for ई (ii) is illustrated in the Devanagari letter-order animatio
 Write the standing long i, then the standing short i.
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 ओ — the same trade, a second time.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -66,7 +66,7 @@ Stroke order for ओ is illustrated in the Devanagari letter-order animations he
 Write the standing o, then the standing long i.
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 ऐ — the letter a number was waiting on.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -97,7 +97,7 @@ Stroke order for ऐ (ai) is illustrated in the Devanagari letter-order animatio
 Write the letter that opens the Marathi word for eighty.
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 औ (au) — the last one standing.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -129,7 +129,7 @@ Stroke order for औ (au) is illustrated in the Devanagari letter-order animatio
 Write the standing au, then the standing ai.
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 standing vowels (ubhe svara) — four letters, from cold.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: the four pairs, written out once until you have stopped, and I will say so again when we reach it.
@@ -164,3 +164,35 @@ Wrap-up Recall.
 How many of these four had a sign you already knew? (All of them.) Was the gap in the sound or in the position? (The position.)
 [question — say your answer, then pause 30 seconds]
 From memory and with nothing open: the four standing vowels (ubhe svara) this chapter taught, in the order you met them.
+
+
+Lesson 6 of 6.
+फ औ । (pha, au, daṇḍa) — a sound that moved, a vowel that stands, a stroke that stops.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: three marks, three different kinds of fact and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+The aspirated partner of प. Say its name, then say what its sound has done that the other aspirated letters have not.
+
+Script: three marks, three different kinds of fact.
+[a table of 3 rows, read aloud]
+फ. what it is: the gap in the lip row — and the one letter whose sound has drifted.
+औ. what it is: the standing au, last of the vowels that can begin a word alone.
+।. what it is: the upright stroke that ends a sentence, now largely replaced by a full stop.
+Three different kinds of fact sit in that column, which is why they are worth holding together rather than as three isolated shapes.
+फ is a fact about speech: the letter records an aspirated p, and the sound modern speakers make has moved away from it. औ (au) is a fact about position: a vowel needs its own standing letter when nothing carries it. । is a fact about convention: a mark that is still correct and is quietly losing ground to an imported one.
+Drift, position, convention. A script old enough to have a history carries all three at once, and none of them is a rule about pronunciation.
+
+Guided Practice.
+[your turn — say: प, then फ, and note which of the two your mouth changes for]
+[pause 8 seconds for the answer]
+[your turn — look: at औ (au) and say why it is a whole letter rather than a sign]
+[pause 8 seconds for the answer]
+[your turn — look: at । and say what a modern page is likely to print instead]
+[pause 8 seconds for the answer]
+[once you have stopped driving — trace: each of the three once]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which of the three is a fact about a sound that moved? (फ.) When does a vowel need a standing letter? (When no consonant is carrying it.) What does । do, and what is replacing it? (Ends a sentence; the full stop.) And what do the three have in common? (Nothing — drift, position and convention are three different kinds of fact, which is the point.)

@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:53e170065b261af1",
+  "lessonIds": [
+    "ES-C450-patio",
+    "ES-C450-hierba",
+    "ES-C450-piedra",
+    "ES-C450-cesped",
+    "ES-C450-entrenamiento",
+    "ES-R450-repaso-suelo",
+    "ES-C450-sintesis-suelo"
+  ],
+  "tex": "spanish/book/chapters/ch450-suelo.tex"
+}

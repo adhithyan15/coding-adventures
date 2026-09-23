@@ -1,0 +1,13 @@
+{
+  "language": "spanish",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:53fb6cafa166226c",
+  "lessonIds": [
+    "ES-C463-organizar",
+    "ES-C463-guia",
+    "ES-C463-importar",
+    "ES-R463-repaso-guia",
+    "ES-C463-sintesis-guia"
+  ],
+  "tex": "spanish/book/chapters/ch463-guia.tex"
+}

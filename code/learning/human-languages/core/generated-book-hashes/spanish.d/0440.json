@@ -1,0 +1,15 @@
+{
+  "language": "spanish",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:96c057b8d4f2df5e",
+  "lessonIds": [
+    "ES-C440-boda",
+    "ES-C440-cumpleanos",
+    "ES-C440-celebrar",
+    "ES-C440-disfrutar",
+    "ES-C440-humor",
+    "ES-R440-repaso-fiesta",
+    "ES-C440-sintesis-fiesta"
+  ],
+  "tex": "spanish/book/chapters/ch440-fiesta.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-R451-repaso-turno",
+    "language": "spanish",
+    "chapter": 451,
+    "sequence": 11890,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:aea7548dd3a357b1"
+  },
+  "findings": []
+}

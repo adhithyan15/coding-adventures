@@ -10,7 +10,7 @@ gloss: the passato prossimo built on essere, with the participle agreeing with t
 concept_tag: IT-PAST-PROSSIMO-ESSERE
 prerequisites: [IT-C16-andare, IT-C16-essere-stato, IT-C15-passato-prossimo]
 sounds: [double-consonant, final-vowel]
-roots: [latin-esse-participle, latin-andare]
+roots: [latin-esse-participle, andare-latin]
 etymology_hook: "sono andato / sono andata preserves the participle's older job as an adjective describing the subject"
 duration:
   max_seconds: 233

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C461-peligroso",
+    "language": "spanish",
+    "chapter": 461,
+    "sequence": 12440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1305bae32d96280e"
+  },
+  "findings": []
+}

@@ -10,7 +10,7 @@ gloss: family — feminine and fixed, whoever is in it, and once meant the house
 concept_tag: FR-PERSON-FAMILLE
 prerequisites: [FR-C29-ami]
 sounds: [ill-mouille]
-roots: [latin-familia]
+roots: [familia-latin]
 etymology_hook: "famille ← Latin familia, 'the household', from famulus 'servant, slave' — Roman familia named everyone under one roof, servants included, and only broadened to 'blood relatives' because they usually lived under that same roof"
 duration:
   max_seconds: 250

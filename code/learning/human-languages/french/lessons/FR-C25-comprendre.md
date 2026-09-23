@@ -10,7 +10,7 @@ gloss: to understand — literally com- + prendre, "to take together," so in Fre
 concept_tag: VERB-UNDERSTAND
 prerequisites: [FR-C24-aimer, FR-C18-non]
 sounds: [nasal-an, silent-final]
-roots: [latin-comprehendere, latin-prehendere]
+roots: [latin-comprehendere, prehendere-latin]
 etymology_hook: "comprendre = com- ('together') + prendre ('to take') ← Latin comprehendere → comprehend, comprehensive, comprise — understanding is a taking-hold of several things at once"
 duration:
   max_seconds: 278

@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-ADJ-02",
+  "category": "The adjective",
+  "label": "relational adjectives: naming a language and a people",
+  "probe": [
+    "MR-A1-FORM-LABEL-BHASHA"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-ADJ-02"
+  ]
+}

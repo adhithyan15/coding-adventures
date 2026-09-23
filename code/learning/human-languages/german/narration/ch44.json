@@ -3,8 +3,8 @@
   "language": "german",
   "chapter": 44,
   "title": "Arm, Finger, Foot, Heart",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ad42bdc7b20df0fc",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:94f39af4733bb63e",
   "lessons": [
     {
       "id": "GE-C31-arm",
@@ -565,6 +565,126 @@
             {
               "kind": "speech",
               "text": "Give \"heart\" with its article and plural. (Das Herz, die Herzen.) Which two earlier words showed the same Grimm's-law k becomes h swap? (Hören and Hund.) Name all five words from that original table, now that all five are taught. (Hand, Arm, Finger, Fuß, Herz.) Which one breaks the chapter's masculine pattern, and how? (Herz — it is neuter.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R31-zuletzt-einmal-gesehen",
+      "sequence": 1051,
+      "title": "Herz — and the last few this book showed you exactly once",
+      "headword": "Herz · Haupt · Entschuldigung",
+      "romanization": "Herz · Haupt · Entschuldigung",
+      "gloss": "the last of the words this book showed once, gathered on purpose — a heart, a head, and an apology",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:205415ae780b045d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The heart. Say it, and let the z land as ts rather than as an English z."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "cognates",
+          "title": "Across the family",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Herz and English heart are the same word, separated by one regular sound change: the k of the older form became h in the Germanic line, the same swap already heard between hören and hear, and between Hund and hound. Once you have seen it three times it stops being a curiosity and becomes something you can use to guess."
+            },
+            {
+              "kind": "speech",
+              "text": "Haupt and head are that same pair — and this is the one place the guess would mislead you, because the word it predicts is not the word Germans say. For the thing on your shoulders they reach for the old cup-word instead. A sound law tells you which words are cousins. It does not tell you which cousin people chose."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice: the apology, and the two warm thank-yous",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bump into someone — Entschuldigung",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bump into someone — *Entschuldigung*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stop a stranger to ask something — and notice it is the same word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stop a stranger to ask something — and notice it is the same word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the thank-you with the adjective — danke schön",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the thank-you with the adjective — *danke schön*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the warmest everyday one — vielen Dank",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the warmest everyday one — *vielen Dank*]"
+            },
+            {
+              "kind": "speech",
+              "text": "English splits sorry from excuse me; German does not, and your voice carries the difference the vocabulary declines to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What sound does z make in Herz? (ts.) Which sound change links Herz to heart? (k becoming h in the Germanic line.) Does German use one word or two for sorry and excuse me? (One.)"
             }
           ]
         }

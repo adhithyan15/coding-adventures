@@ -1,0 +1,1144 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 456,
+  "title": "La cuenta",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:8d5aceaaaf449633",
+  "lessons": [
+    {
+      "id": "ES-C456-ensalada",
+      "sequence": 12160,
+      "title": "la ensalada — the salted thing",
+      "headword": "la ensalada",
+      "romanization": "la ensalada",
+      "gloss": "the salad — a salted thing, and the salt is still in the word",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:206bb684eeccd8ab",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la sal and la verdura. Put the first on the second and you have named a dish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la ensalada",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la ensalada — the salad."
+            },
+            {
+              "kind": "speech",
+              "text": "Una ensalada mixta — a mixed salad, the standard one on every menu: lettuce, tomato, onion, tuna, olives. De primero, ensalada — salad to start."
+            },
+            {
+              "kind": "speech",
+              "text": "Ensaladilla is not a small salad. La ensaladilla rusa is a cold dish of potato, carrot, tuna and mayonnaise, and it is a fixture in bars."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: ordering a course",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A set menu comes in courses, and Spanish names them with de:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "Spanish",
+                "what it covers"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "Spanish: de primero. what it covers: for a first course.",
+                "Spanish: de segundo. what it covers: for a main.",
+                "Spanish: de postre. what it covers: for pudding."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "De primero, una ensalada is a complete order. No verb is needed, and adding quiero makes it heavier rather than politer — the waiter has asked what you are having for each course, and the phrase answers exactly that."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ensalada is en- plus sal: a thing that has been salted."
+            },
+            {
+              "kind": "speech",
+              "text": "It came from Catalan or Occitan and reached English as salad through French, wearing the salt down to nothing on the way. Spanish kept it visible, which is the whole point of stopping here — the dish is named after the dressing, not after the leaves."
+            },
+            {
+              "kind": "speech",
+              "text": "The same sal is in la salsa, a sauce, and in el salario — Latin salārium is built on sal, and that much is solid. The famous story attached to it is not: no Roman source says soldiers were paid in salt, and the salt lesson has already warned you that the tale is an eighteenth-century invention. A salad, a sauce and a salary share a root; they do not share that anecdote."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mixed salad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mixed salad]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "salad to start, using the phrase from the table above",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: salad to start, using the phrase from the table above]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what ensalada, salsa and salario share",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *ensalada*, *salsa* and *salario* share]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The salad? (La ensalada.) For a first course? (De primero.) What is inside the word? (Sal — it is the salted thing.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C456-cargo",
+      "sequence": 12170,
+      "title": "el cargo — what has been put on the bill",
+      "headword": "el cargo",
+      "romanization": "el cargo",
+      "gloss": "the charge on a bill — a load, from the same cart as el carrito",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebda4e581d426a10",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el carrito and la cuenta. A cart carries a load, and so does a bill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el cargo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el cargo — the charge: an amount put onto a bill or an account."
+            },
+            {
+              "kind": "speech",
+              "text": "Hay un cargo de doce euros — there's a twelve-euro charge. Un cargo por servicio — a service charge. Sin cargo — free of charge, the wording on a receipt."
+            },
+            {
+              "kind": "speech",
+              "text": "Cargar is the verb — me han cargado dos veces, they've charged me twice — and it also means to load, and to charge a phone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: cargo is not precio",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what you mean",
+                "the word"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what you mean: what a thing costs. the word: el precio.",
+                "what you mean: an amount added to your bill. the word: el cargo."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "El precio de la ensalada is on the menu; un cargo en la cuenta is something a business has placed there, and you may be querying it. That is why cargo turns up on disputes and precio does not: a precio is announced in advance, a cargo appears afterwards."
+            },
+            {
+              "kind": "speech",
+              "text": "El cargo has a third life as a post or office — el cargo de director — for the same reason: a job is a load somebody carries."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin carricare, to load a cart, built on carrus — the cart itself, which Spanish kept as el carro and shrank into el carrito."
+            },
+            {
+              "kind": "speech",
+              "text": "So a charge on your bill is a load put onto a cart, and the picture holds in every branch of the family: la carga is a load, el cargamento is cargo, and descargar is to unload — or to download, which is unloading onto your machine."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the same carricare twice, by two different doors: charge came through French, and cargo was taken straight from Spanish in the seventeenth century. Two English words, one Latin verb, and one of them is this very Spanish noun."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "there's a twelve-euro charge on the bill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: there's a twelve-euro charge on the bill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "free of charge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: free of charge]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word is on the menu and which on the bill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word is on the menu and which on the bill]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The charge? (El cargo.) Free of charge? (Sin cargo.) What was a carrus? (A cart — the same one inside el carrito.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C456-aceptar",
+      "sequence": 12180,
+      "title": "aceptar — we take that here",
+      "headword": "aceptar",
+      "romanization": "aceptar",
+      "gloss": "to accept — to take a thing towards you, and the sign on the till",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4d8c2545ab7c017f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say pagar and la cuenta. The question is whether they take the card."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: aceptar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "aceptar — to accept."
+            },
+            {
+              "kind": "speech",
+              "text": "No se aceptan tarjetas."
+            },
+            {
+              "kind": "speech",
+              "text": "¿Aceptan tarjeta? — do you take card? Acepto — I accept, on a form or a screen. Aceptar las condiciones — to accept the terms."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the verb of agreeing to something offered: money, terms, an invitation, an apology."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: aceptar is not admitir",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both come out as \"accept\" in English and they part company on a bill:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what is happening",
+                "the verb"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "what is happening: you agree to take what is offered. the verb: aceptar.",
+                "what is happening: you let something in, or own up to it. the verb: admitir."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Aceptan tarjeta — they will take your card. No se admiten perros — dogs are not let in. And admitir un error is to own up to one, where aceptar un error would mean putting up with it."
+            },
+            {
+              "kind": "speech",
+              "text": "The test is direction: aceptar is about agreeing, admitir about letting through."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin accipere: ad-, towards, plus capere, to take."
+            },
+            {
+              "kind": "speech",
+              "text": "So to accept is to take a thing towards yourself, and the direction is the whole meaning. Something you did not take towards yourself, you did not accept."
+            },
+            {
+              "kind": "speech",
+              "text": "Capere is one of Latin's most productive verbs and you meet it constantly in English: capture, capable, captive, receive (re-capere, take back), deceive, conceive, perceive. Spanish has capaz, captar, recibir and percibir from the same stem."
+            },
+            {
+              "kind": "speech",
+              "text": "The c before e is soft, so aceptar is a-thep-TAR in Spain and a-sep-TAR elsewhere — the same rule that gave you accidente."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "do you take card?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: do you take card?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cards are not accepted, as the sign puts it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cards are not accepted, as the sign puts it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which verb fits a sign about dogs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which verb fits a sign about dogs]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To accept? (Aceptar.) What does capere mean? (To take.) Which direction does the ad- give it? (Towards you.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C456-coste",
+      "sequence": 12190,
+      "title": "el coste — what it comes to",
+      "headword": "el coste",
+      "romanization": "el coste",
+      "gloss": "the cost — the noun that belongs to costar, and what it stands on",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94aa5865a4ce7b92",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say costar and el precio. The verb has a noun of its own, and it is not precio."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: el coste",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el coste — the cost."
+            },
+            {
+              "kind": "speech",
+              "text": "El coste total — the total cost. El coste del envío — the cost of postage. Sin coste adicional — at no extra cost."
+            },
+            {
+              "kind": "speech",
+              "text": "In Latin America you will more often hear el costo; Spain says coste. Both are the noun sitting beside costar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: coste, precio, cargo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three words now stand between you and a bill you can read:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what it names",
+                "the word"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what it names: what the seller asks. the word: el precio.",
+                "what it names: what it works out at for you. the word: el coste.",
+                "what it names: an amount added to your account. the word: el cargo."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "El precio is a number on a label. El coste is what the thing ends up costing once postage and the rest are in — which is why a business talks about costes and a shop window shows precios."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin constare: con-, together, plus stare, to stand."
+            },
+            {
+              "kind": "speech",
+              "text": "Constare meant to stand firm, to be settled — and from \"this is settled\" it became \"this is what it comes to\". The price is the point at which the matter stands still."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the same verb twice. Through French it wore down to cost; lifted straight from Latin it gave constant, a thing that stands firm. Coste and constant are one word, and you can hear the n that Spanish dropped and English kept."
+            },
+            {
+              "kind": "speech",
+              "text": "The stare underneath is the one inside estar, and that is the sense to hold: a cost is a standing, a place the reckoning comes to rest."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the total cost, and at no extra cost",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the total cost, and at no extra cost]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the verb that goes with it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the verb that goes with it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of precio and coste is on a price tag",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of *precio* and *coste* is on a price tag]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The cost? (El coste.) What does constare mean? (To stand firm.) Which English word kept the n? (Constant.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C456-agencia",
+      "sequence": 12200,
+      "title": "la agencia — somebody who acts for you",
+      "headword": "la agencia",
+      "romanization": "la agencia",
+      "gloss": "the agency — a place that acts for you, and the agenda is its cousin",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:affe9f25d7dc28dc",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say la agenda and la oficina. One of those two is about to turn out to be a relative."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la agencia",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la agencia — the agency."
+            },
+            {
+              "kind": "speech",
+              "text": "Una agencia de viajes — a travel agency. La agencia inmobiliaria — the estate agent's. Lo he reservado por agencia — I booked it through an agency."
+            },
+            {
+              "kind": "speech",
+              "text": "El agente is the person. And the thing an agency charges you for its trouble is la comisión, which appears on the bill beside the coste."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: -encia names the doing, again",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have a set of noun-making endings now, and this is another:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "ending",
+                "example"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "ending: -anza. example: la mudanza.",
+                "ending: -miento. example: el seguimiento.",
+                "ending: -encia. example: la agencia."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "-encia and its twin -ancia come off Latin present participles, which is why they so often name an activity or a quality: la paciencia, la distancia, la experiencia, la importancia."
+            },
+            {
+              "kind": "speech",
+              "text": "Every -encia and -ancia noun is feminine. Set beside -anza, -eza and -ción, that is five feminine suffix families against the masculine -miento."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the claim on the suffixes, though, not on abstract nouns in general — el coste and el cargo from this same chapter are masculine and end in neither. What the endings buy you is an article you no longer have to guess at, one ending at a time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Latin agere, to do, to drive, to act."
+            },
+            {
+              "kind": "speech",
+              "text": "An agencia is a place that acts on your behalf, and an agente is the one doing the acting. Now look at la agenda, which you already have: it is agenda, \"the things that must be done\" — a Latin plural that Spanish took as a singular noun."
+            },
+            {
+              "kind": "speech",
+              "text": "So your diary and a travel agency are the same verb: one lists what must be done, the other does it for you."
+            },
+            {
+              "kind": "speech",
+              "text": "English is full of the family too — agent, agenda, act, agile, agitate — and Spanish keeps el acto, la acción, exigente and ágil off the same root."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a travel agency",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a travel agency]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I booked it through an agency and the cost was higher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I booked it through an agency and the cost was higher]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what la agenda literally means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *la agenda* literally means]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The agency? (La agencia.) The person? (El agente.) What does agere mean? (To do, to act.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-R456-repaso-cuenta",
+      "sequence": 12210,
+      "title": "(la ensalada, el cargo, aceptar, el coste, la agencia) — from cold",
+      "headword": "(la ensalada, el cargo, aceptar, el coste, la agencia)",
+      "romanization": "(la ensalada, el cargo, aceptar, el coste, la agencia)",
+      "gloss": "cold retrieval of the five, and three words that stand between you and a bill",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:223d1d7b074ecaa6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Close the lessons before this one. Say all five: the salad, the charge, to accept, the cost, the agency."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: three words for money on a page",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what it names",
+                "the word",
+                "where you see it"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "what it names: what the seller asks. the word: el precio. where you see it: a label.",
+                "what it names: what it comes to for you. the word: el coste. where you see it: a quote.",
+                "what it names: what has been added. the word: el cargo. where you see it: a bill."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The order is the order of a transaction: you read a precio, you work out a coste, and afterwards a cargo appears. Any of the three translated as \"price\" will read as slightly wrong to a Spanish speaker in two of the three places."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: four of the five were relatives",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "new word",
+                "what it was built on"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "new word: la ensalada. what it was built on: la sal — the salted thing.",
+                "new word: el cargo. what it was built on: el carrito — a load on a cart.",
+                "new word: el coste. what it was built on: costar, and estar underneath it.",
+                "new word: la agencia. what it was built on: la agenda — things to be done."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "La agencia is the neat one. Your agenda is a Latin plural meaning \"the things that must be done\", and an agencia is a firm that does them for you. Diary and travel agent, one verb."
+            },
+            {
+              "kind": "speech",
+              "text": "Even aceptar has one, though it takes longer to spot: its capere, to take, is the capere inside el principio, where princeps is the one who takes first place. Every word in the chapter had a relative waiting."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "there's a charge on the bill I didn't expect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: there's a charge on the bill I didn't expect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "do you take card?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: do you take card?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the three money words appears last",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the three money words appears last]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All five again, in Spanish, without looking. Then one sentence querying something on a bill."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C456-sintesis-cuenta",
+      "sequence": 12220,
+      "title": "(revisar la cuenta) — read it, then do it yourself",
+      "headword": "(revisar la cuenta)",
+      "romanization": "(revisar la cuenta)",
+      "gloss": "the payoff — read a bill with something wrong on it, then query one yourself",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:49d63feb14cb97ad",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say el cargo and la ensalada. One of them is on the bill twice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A bill on the table. Read it, then answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Mesa 7."
+            },
+            {
+              "kind": "speech",
+              "text": "2 ensaladas mixtas.......... 14,00."
+            },
+            {
+              "kind": "speech",
+              "text": "1 ensalada mixta............ 7,00."
+            },
+            {
+              "kind": "speech",
+              "text": "2 cafés......................... 3,60."
+            },
+            {
+              "kind": "speech",
+              "text": "Cargo por servicio.......... 2,50."
+            },
+            {
+              "kind": "speech",
+              "text": "No se aceptan tarjetas."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what has been counted twice, and what it should say",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what has been counted twice, and what it should say]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the 2,50 is for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the 2,50 is for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how you are going to have to pay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how you are going to have to pay]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "To query this politely you need the right noun, and it is cargo rather than precio: the 2,50 was not asked for in advance, it was added. Hay un cargo que no entiendo is the sentence, and hay un precio que no entiendo would sound as though you were confused by the menu."
+            },
+            {
+              "kind": "speech",
+              "text": "No se aceptan tarjetas is the se construction again, and it is plural because tarjetas is. Spanish agrees the verb with the thing, not with the restaurant, so a single line telling you the same thing about one card would read no se acepta tarjeta."
+            },
+            {
+              "kind": "speech",
+              "text": "A useful softener for the whole exchange: perdone, ¿me lo mira? — literally \"will you look at it for me\", and far more common than accusing anybody of an error."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now your turn, out loud and then in writing. Four lines querying a bill: ask them to look at it, say there is a charge you do not understand, say the salad appears twice, and ask whether they take card."
+            },
+            {
+              "kind": "speech",
+              "text": "Then check yourself: did you use cargo rather than precio, and did se aceptan agree with the cards?"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

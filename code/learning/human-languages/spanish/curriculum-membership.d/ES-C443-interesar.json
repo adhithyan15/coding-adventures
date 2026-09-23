@@ -1,0 +1,11 @@
+{
+  "id": "ES-C443-interesar",
+  "pathSegment": "ES-PATH-443-ANIMO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-443-ANIMO",
+      "order": 1
+    }
+  ]
+}

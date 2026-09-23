@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "Ver --- Seeing",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0827412e236cde46",
+  "sourceHash": "fnv1a64:eb88c34c116e640c",
   "lessons": [
     {
       "id": "ES-C16-ver",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86ade96e820077fa",
+      "sourceHash": "fnv1a64:71666928cb232bb0",
       "notice": null,
       "blocks": [
         {

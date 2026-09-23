@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C449-sintesis-taller",
+    "language": "spanish",
+    "chapter": 449,
+    "sequence": 11750,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2c267759fdceb85e"
+  },
+  "findings": []
+}

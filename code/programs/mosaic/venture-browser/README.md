@@ -2,7 +2,7 @@
 
 This package is the shared Mosaic source of truth for Venture's native browser
 chrome. It authors the title, Back, Forward, Home, Reload, Stop, address input, Go
-action, bookmark toggle and catalog, Copy Address, Open in New Window, Save Page, Print Page,
+action, bookmark toggle and catalog, session-history catalog, Copy Address, Open in New Window, Save Page, Print Page,
 Share Page, Page Information, bounded page zoom, View Source, and find-in-page controls, status
 line, disabled states, and dispatch contract once
 in MIL, MLL, and MSL.
@@ -18,10 +18,10 @@ recreating the surrounding chrome in backend-specific UI code.
 ## Contract
 
 - Slots carry the current address, page title, status text, bookmark label,
-  ordered-catalog selection, and host-derived disabled flags; the host supplies
+  bookmark/history catalog selection, and host-derived disabled flags; the host supplies
   the native page renderer as a node slot.
 - Emits carry Back, Forward, Home, Reload, Stop, address edits, Navigate, the
-  storage-neutral bookmark toggle and catalog commands, host-neutral Copy Address and Open
+  storage-neutral bookmark and identity-preserving history catalog commands, host-neutral Copy Address and Open
   in New Window transactions, a host-neutral Save Page download, and a
   host-neutral Print Page, Share Page, Page Information, View Source, and Copy
   Source requests.
@@ -58,6 +58,11 @@ recreating the surrounding chrome in backend-specific UI code.
   backend-neutral paint highlights are shared. The same retained state owns
   whether the conditionally rendered Mosaic bar is open; generated hosts only
   forward open, query, next, previous, and close events.
+- Session History projects the complete ordered navigation stack from stable
+  entry identifiers rather than URLs. The shared panel owns wraparound
+  selection and direct traversal, so repeated URLs retain independent form,
+  editing, and scroll snapshots while generated hosts only forward semantic
+  open, previous, next, navigate, and close events.
 - View Source never refetches the page. Core retains the exact response text,
   projects it into one closable Mosaic source panel for every generated shell,
   and also escapes it into a synthetic `<pre>` HTML document carried by the

@@ -17,7 +17,11 @@ it("pins Portuguese lesson-content budgets", () =>
     // of ola with the model covered, where the accent is the expected miss, and a
     // dictation, where it stops being a mark to remember and becomes one that can
     // be worked out -- the stress is audible, and the accent records it.
-    lessons: 118,
+    //
+    // 118 -> 120: HL-C428, two `review` lessons closing the reinforcement debt --
+    // the closings with coracao, and ter + participle against adeus. No new atoms.
+    //
+    lessons: 120,
     idioms: 7,
     senses: 7,
     cultureClaims: 11,

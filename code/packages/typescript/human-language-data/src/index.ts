@@ -7,6 +7,7 @@
 export * from "./types.js";
 export * from "./constants.js";
 export * from "./cousins.js";
+export * from "./mock-stem-coverage.js";
 export * from "./exam-inventory.js";
 export * from "./assessment.js";
 export * from "./artifact-presence.js";
@@ -491,3 +492,15 @@ export {
   type ClosureViolation,
   type TrackClosure,
 } from "./script-closure.js";
+export {
+  ROOT_SLUG_BASELINE_PATH,
+  ROOT_TAGS_PATH,
+  diffRootSlugSplits,
+  findRootSlugSplits,
+  liveRootSlugs,
+  loadRootSlugBaseline,
+  loadRootTagVocabulary,
+  parseRootSlug,
+  serialiseRootSlugBaseline,
+} from "./root-slug-splits.js";
+export { runRootSlugSplitsCli } from "./root-slug-splits-cli.js";

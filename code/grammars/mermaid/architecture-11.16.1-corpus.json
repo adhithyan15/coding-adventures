@@ -41,6 +41,10 @@
     {
       "id": "perpendicular-port-routing",
       "source": "architecture-beta\nservice gateway(server)[Gateway]\nservice queue(disk)[Queue]\ngateway:R -[publishes]-> T:queue"
+    },
+    {
+      "id": "namespaced-service-icon",
+      "source": "architecture-beta\nservice worker(aws:lambda)[Worker]"
     }
   ]
 }

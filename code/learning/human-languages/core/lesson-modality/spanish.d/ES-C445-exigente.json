@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C445-exigente",
+    "language": "spanish",
+    "chapter": 445,
+    "sequence": 11440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:922367f1c8ffcedd"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-F3-04",
+  "category": "Likes, wishes and feelings",
+  "label": "express wishes",
+  "probe": null,
+  "note": "Untaught; SPINE-SAY-WHAT-I-WANT omits VERB-WANT.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-F3-04"
+  ]
+}

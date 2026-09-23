@@ -3,7 +3,8 @@
   "spine_node": "SPINE-TIME-OF-DAY",
   "before": [],
   "inline": [
-    "TE-EXT-014-LANGUAGE-SPECIFIC"
+    "TE-EXT-014-LANGUAGE-SPECIFIC",
+    "TE-EXT-014-CONSOLIDATION"
   ],
   "after": []
 }

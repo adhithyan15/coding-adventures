@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE20-03",
+  "category": "Geography and nature",
+  "label": "town and countryside",
+  "probe": null,
+  "note": "Untaught; rastaa and gaav have no atoms.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE20-03"
+  ]
+}

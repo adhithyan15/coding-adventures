@@ -10,7 +10,7 @@ gloss: to think — from a Latin verb meaning "to weigh," which is why English p
 concept_tag: VERB-THINK
 prerequisites: [FR-C25-comprendre, FR-C18-non]
 sounds: [nasal-an, er-ending]
-roots: [latin-pensare, latin-pendere]
+roots: [pensare-latin, pendere-latin]
 etymology_hook: "penser ← Latin pēnsāre 'to weigh carefully', from pendere 'to weigh, to hang' → pensive, compensate, expense, dispense, pension, suspend, pendant, poise — and pansy, borrowed straight from French pensée, 'a thought'"
 duration:
   max_seconds: 280

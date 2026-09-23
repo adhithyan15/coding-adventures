@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b41e7e1dd1caa770",
+  "sourceHash": "fnv1a64:d9f2e2c5436c218b",
   "lessons": [
     {
       "id": "TE-C07-numbers-1-5",
@@ -1194,6 +1194,189 @@
             {
               "kind": "speech",
               "text": "Which character is this — ఆ? What sound does it carry? (ā.) Which number begins with it? (ఆరు.) Which cell of the square has no shape in it at all? (Short a carried by a consonant — the consonant alone says it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C07-second-pass-names",
+      "sequence": 345,
+      "title": "The name exchange again — built from four pieces",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over the name exchange, rebuilt from its parts, with the three letters that open numbers",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4836463439e40f92",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: three letters that open numbers"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: three letters that open numbers until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words, from memory: the one for name, and the one for my."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: four pieces, and everything they build",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The question you learned and its answer are made of the same four pieces:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "piece",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "piece: పేరు pēru, name.",
+                "piece: నా nā, మీ mī, my, your.",
+                "piece: ఏమిటి ēmiṭi, what?",
+                "piece: నువ్వు nuvvu, మీరు mīru, you, close, you, respectful."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Two side by side give the answer, నా పేరు … The respectful one in front and the question word behind give the question, మీ పేరు ఏమిటి?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the two things the name exchange was really teaching",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two points sit under those four pieces:"
+            },
+            {
+              "kind": "speech",
+              "text": "No word for is. Nā pēru Arun is \"my name Arun,\" and the link stays unsaid in every sentence of this shape."
+            },
+            {
+              "kind": "speech",
+              "text": "Respect rides on the plural. మీరు is a plural doing the work of politeness — the move Tamil nīṅgaḷ and French vous also make."
+            },
+            {
+              "kind": "speech",
+              "text": "The familiar your goes with the familiar you: నీ పేరు ఏమిటి?"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script: three letters that open numbers",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఒ (o), ఐ (ai), ఆ (ā)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three vowel letters come back with the counting. Each opens a number you now say, and each is a whole letter rather than a sign for one reason: nothing is carrying the vowel."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "the number it opens"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "letter: ఒ o. the number it opens: ఒకటి — one.",
+                "letter: ఐ ai. the number it opens: ఐదు — five.",
+                "letter: ఆ ā. the number it opens: ఆరు — six."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice: the exchange, both ways",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask a stranger their name, then answer with your own — no \"is\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask a stranger their name, then answer with your own — no \"is\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one word for \"pleased to meet you\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one word for \"pleased to meet you\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same question to a child — one letter of mī changes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same question to a child — one letter of *mī* changes]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word does నా పేరు … leave out? (Is.) Which you goes to a stranger, and what is it really? (మీరు — a plural doing politeness.) One word for \"pleased to meet you\"? (సంతోషం.) Which three numbers open on a whole vowel letter? (ఒకటి, ఐదు, ఆరు.)"
             }
           ]
         }

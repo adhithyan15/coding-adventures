@@ -10,7 +10,7 @@ gloss: wine — a der-word, and the one thing on this table Rome supplied
 concept_tag: GE-FOOD-WINE
 prerequisites: [GE-C11-wasser-water]
 sounds: [w-as-v, diphthong-ei]
-roots: [latin-vinum]
+roots: [vinum-latin]
 etymology_hook: "Wein is w as v and ei as eye, so it comes out sounding exactly like English vine — which is not a coincidence, because the vine and the word arrived together"
 duration:
   max_seconds: 165

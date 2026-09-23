@@ -1,0 +1,15 @@
+{
+  "id": "MR-A1-NG6-06",
+  "category": "Evaluative notions",
+  "label": "interest",
+  "probe": [
+    "MR-LEX-AVADNE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NG6-08"
+  ]
+}

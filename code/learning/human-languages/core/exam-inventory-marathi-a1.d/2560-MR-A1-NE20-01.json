@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-NE20-01",
+  "category": "Geography and nature",
+  "label": "the sky and the natural world at large",
+  "probe": null,
+  "note": "Untaught.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-lexis"
+  ],
+  "derivedFrom": [
+    "A1-NE20-01"
+  ]
+}

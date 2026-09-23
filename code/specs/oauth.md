@@ -564,6 +564,11 @@ constructed `[0] EXPLICIT Version` field under shared depth and element limits.
 It exposes omitted `v1` as the caller's default, rejects an explicitly encoded
 DER default, and accepts only explicit `v2` or `v3`. It does not parse the
 surrounding certificate or enforce version-dependent field policy.
+A bounded `x509-name` semantic layer now decodes exact RFC 5280 RDN sequences,
+non-empty DER-ordered RDN sets, and OID-plus-opaque-value attributes under
+shared limits. It retains exact borrowed values and RDN boundaries without
+claiming DirectoryString normalization, semantic name equality, issuer/subject
+relationship decisions, or path validation.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

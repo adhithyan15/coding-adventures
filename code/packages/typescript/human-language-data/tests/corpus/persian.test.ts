@@ -20,7 +20,11 @@ it("pins Persian lesson-content budgets", () =>
     // of alef with the model covered, and the same stroke written from the long
     // vowel alone. Both stay on ONE letter: the stages are about what the hand
     // is asked to do, not about how much language is on the page.
-    lessons: 102,
+    //
+    // 102 -> 104: HL-C428, two `review` lessons giving mamnun, zan and dust their
+    // second revisit. No new atoms.
+    //
+    lessons: 104,
     idioms: 4,
     senses: 4,
     cultureClaims: 4,

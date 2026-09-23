@@ -10,7 +10,7 @@ gloss: the singular present subjunctive of comer
 concept_tag: ES-SUBJUNCTIVE-ER-SINGULAR
 prerequisites: [ES-C18-subjuntivo, ES-C07-comer]
 sounds: [vowel-a, stress-default-vowel-ns]
-roots: [latin-comedere]
+roots: [comedere-latin]
 etymology_hook: "the same yo-stem recipe sends regular -er verbs to the a-family endings -a, -as, -a"
 duration:
   max_seconds: 290

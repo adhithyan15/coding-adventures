@@ -1,8 +1,8 @@
 Italian, chapter 5: The First Verbs.
-5 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+6 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 parlare — "to speak," the model -are verb.
 
 Warm-up.
@@ -45,7 +45,7 @@ Wrap-up Recall.
 What Latin word gives parlare, and which French verb is its twin? (parabolāre — French parler.) Which Romance "speak" verb is from a different root, and which? (Spanish hablar from fabulārī.) Does Italian keep or drop io, and why? (Drops it — the endings are distinct.) Next: abitare, "to live."
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 abitare — "to live," about having a place.
 
 Warm-up.
@@ -82,7 +82,7 @@ Wrap-up Recall.
 What Latin verb is abitare from, and what does it literally involve? (habitāre — "keep having a place," from habēre, "to have.") English cousins? (Habitat, inhabit.) Say "I live in Rome." (Abito a Roma.) Next: lavorare, "to work."
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 lavorare — "to work," the honest kind.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The word, taken apart until you have stopped, and I will say so again when we reach it.
@@ -121,7 +121,7 @@ Wrap-up Recall.
 What Latin word is lavorare from, and its English cousins? (labōrāre — labor, laboratory, elaborate.) How does its root differ from Spanish trabajar and French travailler? (Those are from tripalium, "torture"; Italian is from labor, "toil.") Say "I work in Milan." (Lavoro a Milano.) Next: your first sentence — Parlo italiano.
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 Parlo italiano — your first real sentence.
 
 Warm-up.
@@ -158,7 +158,7 @@ Wrap-up Recall.
 Where does italiano come from, and what might Italia have meant? (Italia; perhaps "land of calves.") In Parlo italiano, why no io and no article? (The -o ending is "I"; languages take no article.) Which two of the five languages drop the pronoun? (Spanish and Italian.) Next: practice.
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 Practice — making sentences with -are verbs.
 
 Warm-up.
@@ -196,3 +196,35 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What are the three singular -are endings? (-o / -i / -a.) Give the "I" forms of the three verbs. (Parlo, abito, lavoro.) Which languages drop the subject pronoun, and which keep it, and why? (Drop: ES/IT — distinct endings; keep: FR — silent endings, DE — grammar.) Italian now moves in real sentences.
+
+
+Lesson 6 of 6.
+One conversation, from hello to goodbye — the three exchanges you have built, run end to end as one conversation, with prego doing its fourth job.
+
+Warm-up.
+[pause 3 seconds]
+You have practised three exchanges one at a time. Nothing has yet asked you to run them together, which is what a real conversation is.
+
+You'll want to know: the three, joined up.
+One formal meeting, first word to last:
+— Buongiorno. Come sta? — Bene, grazie. E Lei? Come si chiama? — Prego? — Come si chiama? — Mi chiamo Anna. Piacere. — Piacere. Arrivederci, a domani!
+The third line is the one to notice. Prego? on a rising voice is not the prego that answers grazie — it is the repair for a sentence you did not catch, and a first conversation in a new language needs it more than any other line in the exchange.
+
+What you've built — three chapters in one view.
+[a table of 3 rows, read aloud]
+informal, formal: Come stai, Come sta, asking how someone is.
+informal, formal: Come ti chiami, Come si chiama, asking a name.
+informal, formal: Ciao, Arrivederci, leaving.
+The first two rows differ in the verb ending, not in an added polite word. The third row is the exception that proves it: arrivederci is "until we re-see each other", a domani "until tomorrow", a presto "until soon". Italian takes its leave by naming the next meeting, as au revoir and auf Wiedersehen do.
+
+Guided Practice.
+[your turn — say: the whole formal meeting above, both voices, without stopping]
+[pause 8 seconds for the answer]
+[your turn — say: it informally — every verb ending moves]
+[pause 8 seconds for the answer]
+[your turn — ask: rising Prego?, then the question you missed]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does Italian mark formal against informal? (In the verb ending.) What does a rising Prego? ask for? (A repeat.) What do arrivederci, a domani and a presto share? (Each names the next meeting.) Which word answers piacere? (Piacere.)

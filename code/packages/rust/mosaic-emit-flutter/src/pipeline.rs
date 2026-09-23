@@ -6427,6 +6427,38 @@ fn emit_host_navigation_split(
         .map(|width| format!("{child}    width: {width},\n"))
         .unwrap_or_default();
 
+    // #15834 -- the button that opens the pane.
+    //
+    // The compact branch used to be `Scaffold(drawer: …, body: …)` and
+    // nothing else. Flutter draws the hamburger that opens a drawer only
+    // from an `AppBar`, and this Scaffold has none, so the pane could be
+    // opened by an edge-drag gesture and by nothing else. Measured on the
+    // generated fixture at 500px: 0 AppBars, 0 IconButtons, 0 buttons of
+    // any kind, and ZERO actionable nodes in the whole semantics tree. A
+    // keyboard user could not reach the navigation pane; a screen reader
+    // had nothing to activate. In the primitive whose stated reason to
+    // exist (UI29-6 §3) is that a pane is a landmark a screen-reader user
+    // navigates by.
+    //
+    // An `AppBar` would supply the button for free, but it also draws a
+    // title bar the layout never asked for -- the same objection the XAML
+    // lowering raised against NavigationView's settings row. So the button
+    // is explicit instead: a real `IconButton`, which is focusable, has a
+    // tooltip, and carries that tooltip into semantics as its label.
+    //
+    // It is named with `pane-title`, so what the screen reader announces is
+    // the pane the author named rather than a generic string this emitter
+    // invented.
+    //
+    // Both `semanticLabel` and `tooltip`, because that is what Flutter's own
+    // drawer button does. Measured against a stock `Scaffold(appBar:,
+    // drawer:)`: its hamburger reports `label="Open navigation menu"` AND
+    // `tooltip="Open navigation menu"`. A `tooltip` alone leaves the label
+    // empty, and an unnamed button is barely better than no button.
+    //
+    // `Scaffold.of(context)` needs a context BELOW the Scaffold, hence the
+    // `Builder`; without it this throws at runtime rather than failing to
+    // compile.
     Ok(format!(
         "{pad}LayoutBuilder(\n\
          {inner}builder: (_, constraints) {{\n\
@@ -6440,7 +6472,22 @@ fn emit_host_navigation_split(
          {child}      child: {pane_compact},\n\
          {child}    ),\n\
          {child}  ),\n\
-         {child}  body: {detail_compact},\n\
+         {child}  body: Builder(\n\
+         {child}    builder: (context) => Column(\n\
+         {child}      crossAxisAlignment: CrossAxisAlignment.start,\n\
+         {child}      children: [\n\
+         {child}        SafeArea(\n\
+         {child}          bottom: false,\n\
+         {child}          child: IconButton(\n\
+         {child}            icon: Icon(Icons.menu, semanticLabel: {title}),\n\
+         {child}            tooltip: {title},\n\
+         {child}            onPressed: () => Scaffold.of(context).openDrawer(),\n\
+         {child}          ),\n\
+         {child}        ),\n\
+         {child}        Expanded(child: {detail_compact}),\n\
+         {child}      ],\n\
+         {child}    ),\n\
+         {child}  ),\n\
          {child});\n\
          {body}}}\n\
          {body}return {regular};\n\
@@ -11124,6 +11171,39 @@ mod tests {
         assert!(out.contains("width: 236"), "{out}");
         assert!(out.contains("return Row("), "{out}");
         assert!(out.contains("Expanded("), "{out}");
+
+        // #15834 -- a drawer nothing can open is not a navigation pane.
+        //
+        // Flutter draws the hamburger only from an `AppBar`, and this
+        // Scaffold has none, so before this the pane opened on an edge-drag
+        // gesture and nothing else: measured on the generated fixture at
+        // 500px, 0 buttons and ZERO actionable semantics nodes. The widget
+        // test in `fixtures/host-navigation-split-test` is what proves the
+        // pane actually opens when tapped; these are the cheap guards that
+        // fail in seconds without a Flutter toolchain.
+        assert!(
+            out.contains("IconButton("),
+            "the compact pane needs a control a user can press:\n{out}"
+        );
+        assert!(
+            out.contains("Scaffold.of(context).openDrawer()"),
+            "the control must open the pane:\n{out}"
+        );
+        assert!(
+            out.contains("Builder("),
+            "openDrawer needs a context below the Scaffold:\n{out}"
+        );
+        // Named, and named twice: Flutter's own drawer button reports both a
+        // semantics label and a tooltip, and a `tooltip` alone leaves the
+        // label empty.
+        assert!(
+            out.contains("semanticLabel: \"Projects\""),
+            "the control must be named for a screen reader:\n{out}"
+        );
+        assert!(
+            out.contains("tooltip: \"Projects\""),
+            "the control must carry a tooltip too:\n{out}"
+        );
     }
 
     #[test]

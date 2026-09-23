@@ -1,0 +1,11 @@
+{
+  "id": "ES-C466-visible",
+  "pathSegment": "ES-PATH-466-INFORME",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ES-EXT-466-INFORME",
+      "order": 1
+    }
+  ]
+}

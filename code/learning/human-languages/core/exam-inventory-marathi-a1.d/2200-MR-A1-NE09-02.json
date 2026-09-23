@@ -1,0 +1,18 @@
+{
+  "id": "MR-A1-NE09-02",
+  "category": "Information and media",
+  "label": "written correspondence: the lines of a short personal message",
+  "probe": [
+    "MR-A1-MESSAGE-LINE-GREETING",
+    "MR-A1-MESSAGE-LINE-NAME",
+    "MR-A1-MESSAGE-LINE-THANKS",
+    "MR-A1-MESSAGE-LINE-SEE-AGAIN"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-marathi-task-shapes-a1"
+  ],
+  "derivedFrom": [
+    "A1-NE09-02"
+  ]
+}

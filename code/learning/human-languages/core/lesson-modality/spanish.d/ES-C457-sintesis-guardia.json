@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C457-sintesis-guardia",
+    "language": "spanish",
+    "chapter": 457,
+    "sequence": 12270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74f69e643214fbf5"
+  },
+  "findings": []
+}

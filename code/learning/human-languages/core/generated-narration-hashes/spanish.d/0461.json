@@ -1,0 +1,19 @@
+{
+  "language": "spanish",
+  "chapter": 461,
+  "sourceHash": "fnv1a64:82e187912c7f9bdc",
+  "lessonIds": [
+    "ES-C461-donar",
+    "ES-C461-peligroso",
+    "ES-C461-rechazar",
+    "ES-R461-repaso-donar",
+    "ES-C461-sintesis-donar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "spanish/narration/ch461.txt",
+  "json": "spanish/narration/ch461.json",
+  "textHash": "fnv1a64:07193da6202d8c07",
+  "jsonHash": "fnv1a64:6fd17dbdc2b1e3ea",
+  "findings": []
+}

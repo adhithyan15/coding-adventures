@@ -29,6 +29,17 @@ function fixture(output = "spanish/book/figures/ES-C06-cafe-etymology.svg"): str
     version: 1,
     targets: [{ kind: "etymology-route", lessonId: "ES-C06-cafe", output }],
   })}\n`);
+  // THIS fixture's own vocabulary, under THIS root. Before the etymology
+  // renderer took its tags as an input it read `core/root-tags.json` from the
+  // package's own install location, so these fixtures silently consumed the
+  // real repository's corpus file and were not self-contained -- a figure
+  // generated for root R depended on a file outside R, and outside the
+  // `sourceHash` that is supposed to cover everything that can change the SVG.
+  writeFileSync(join(root, "core", "root-tags.json"), `${JSON.stringify({
+    version: 1,
+    tags: ["arabic", "italian", "turkish"],
+    aliases: {},
+  })}\n`);
   writeFileSync(join(root, "spanish", "lessons", "cafe.md"), `---
 schema_version: 2
 id: ES-C06-cafe

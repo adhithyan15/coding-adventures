@@ -3,8 +3,8 @@
   "language": "german",
   "chapter": 30,
   "title": "Head and Hand",
-  "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:85c321692302f3e3",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:29132e62d6535d85",
   "lessons": [
     {
       "id": "GE-C17-kopf",
@@ -538,6 +538,166 @@
             {
               "kind": "speech",
               "text": "Say \"the hand.\" (Die Hand — feminine.) How is the final d pronounced, and why? (As a t — German devoices final consonants; the d returns in Hände.) Is Hand related to French main? (No — Germanic handuz against Latin manus; the families differ here.) How did manus reach German anyway? (As borrowed learned words — Manuskript, manuell.) Next: the rest of the body."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R17-wie-geht-es-wirklich",
+      "sequence": 681,
+      "title": "Wie geht es dir? — and the whole ladder of answers",
+      "headword": "Wie geht es dir? · so lala · es geht",
+      "romanization": "Wie geht es dir? · so lala · es geht",
+      "gloss": "the whole answer ladder run cold, the one word that changes the register, and the first thing that can actually be wrong with you",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fea4b03ba54f62ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask a friend how they are. Then ask a stranger. One word moves, and the capital letter moves with it — say which."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four rungs, top to bottom",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question, informally — Wie geht es dir?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question, informally — *Wie geht es dir?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the good answer — gut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the good answer — *gut*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the middle, sing-song — so lala",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the middle, sing-song — *so lala*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the shrug — es geht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the shrug — *es geht*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question, formally — Wie geht es Ihnen?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question, formally — *Wie geht es Ihnen?*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "es geht says it goes and nothing more, and the nothing more is the point. German does not treat how are you as a greeting to be waved past, so an answer that adds no adjective is heard as an answer, not as politeness. It means something between I'm managing and don't ask — and the person who hears it may well follow up."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the same fact the register pair makes from the other side. dir becomes Ihnen is one word, and it does not soften or intensify the question; it changes who you are allowed to be to the person. The metaphor underneath — how does it go with you — is untouched by either."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: and the first thing that can be wrong",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the head — Kopf, and hold that final pf as one sound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the head — *Kopf*, and hold that final **pf** as one sound]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you have when it hurts — Kopfschmerzen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you have when it hurts — *Kopfschmerzen*]"
+            },
+            {
+              "kind": "speech",
+              "text": "A compound built the ordinary German way: the part of you, then the pains, run together into a single word. Say the seam out loud once, then stop hearing it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which answer invites a follow-up question — gut, so lala, or es geht? (Es geht.) What two words are inside Kopfschmerzen? (Kopf and Schmerzen.)"
             }
           ]
         }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ES-C474-invitar",
+    "language": "spanish",
+    "chapter": 474,
+    "sequence": 13190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b65b2f2e0b7c2b5d"
+  },
+  "findings": []
+}

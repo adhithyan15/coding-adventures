@@ -1,0 +1,14 @@
+{
+  "id": "MR-A1-F6-02",
+  "category": "Structuring the exchange",
+  "label": "ask for a person and respond",
+  "probe": null,
+  "note": "Still uncovered, and the blockers named here have both cleared. MR-A1-PRON-06 and MR-A1-OS-03 are now covered, so the question half exists. The point is asking FOR a person -- 'is Mira there?' -- and being told whether they are, and no lesson supplies that exchange; the chapter-39 material asks WHERE a named person is, which is a different move. Deliberately not claimed on the strength of the nearby material.",
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "editorial-marathi-structure"
+  ],
+  "derivedFrom": [
+    "A1-F6-03"
+  ]
+}

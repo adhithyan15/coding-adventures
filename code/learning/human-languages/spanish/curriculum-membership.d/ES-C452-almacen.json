@@ -1,0 +1,11 @@
+{
+  "id": "ES-C452-almacen",
+  "pathSegment": "ES-PATH-452-REPARTO",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ES-EXT-452-REPARTO",
+      "order": 0
+    }
+  ]
+}

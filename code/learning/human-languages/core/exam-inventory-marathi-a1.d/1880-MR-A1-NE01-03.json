@@ -1,0 +1,17 @@
+{
+  "id": "MR-A1-NE01-03",
+  "category": "The person: the body",
+  "label": "actions and positions of the body",
+  "probe": [
+    "MR-LEX-BASNE",
+    "MR-LEX-JHOPNE",
+    "MR-LEX-CHALNE"
+  ],
+  "anchorIds": [
+    "ca-spanish-a1-proxy",
+    "ca-spine"
+  ],
+  "derivedFrom": [
+    "A1-NE01-03"
+  ]
+}
