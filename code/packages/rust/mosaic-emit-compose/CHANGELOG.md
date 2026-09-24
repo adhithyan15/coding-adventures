@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-24 (placeholders)
+
+- **A field's placeholder wears the field's text style, dimmed (#14798).** The `HostInput` placeholder `Text` took only a bound `font-size`. A field whose typed text was light (`TextStyle(color = …)`) therefore showed its placeholder in Material's black: in dark Trestle, "What needs doing?", "Due (optional)" and "New project" were black on #1a1714. The placeholder now takes the field's colour, size, weight and family, with the colour at 60% alpha (`(Color(…)).copy(alpha = 0.6f)`), as a browser draws `::placeholder`. An unstyled field keeps `Text(text = …)`. Rendered in dark Trestle. `TaskAppUiTest` passes, and Engram and Journal compile.
+
 ## 2026-09-24 (later)
 
 - **`HostNavigationSplit` wears its own part style (#14798).** The split's `Box` was written as a bare `Modifier.fillMaxSize()`, so its part's `background` never appeared and its `color` never reached its children, and nothing reported the drop. Trestle's `app-shell` sets both. On Compose the dark theme drew a white window, and every label without its own colour fell back to Material's black. Now the part's modifier chain follows `fillMaxSize()`, as a container's follows its default fill, and its text style (`cell_text_style`) becomes the inherited text context of both the pane and the detail. Rendered: dark Trestle shows the #1a1714 window with readable default text in every view. `TaskAppUiTest` passes, the gate reports 0 degradations, and Engram and Journal compile. Still open: text typed into a field (`BasicTextField`) keeps Material's black in the dark theme.
