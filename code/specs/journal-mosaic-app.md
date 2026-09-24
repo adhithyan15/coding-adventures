@@ -507,6 +507,29 @@ timeline but stays open in the editor, like unstarring under *Starred only*.
 
 **Events:** `onDraftJournalChange { index }`.
 
+## An empty journal (J4h)
+
+A journal can be empty while others are not: a newly added one, or one
+whose entries were moved away. Until now the pane then showed nothing below
+the filters, as if the list had failed to load.
+
+A fourth `EmptyState` mount says so instead: "No entries in this journal",
+with "New entries you write while it is selected are filed here." It shows
+when a journal is selected, that journal has no entries, and there is no
+search (a search that finds nothing is `no-matches`, as before). The pane
+picks one empty state, in this order:
+
+1. `timeline-empty`: no entries in any journal ("No entries yet");
+2. `no-matches`: searching, and nothing matches;
+3. `journal-empty`: the selected journal has no entries;
+4. `no-starred`: *Starred only*, and nothing starred;
+5. otherwise the timeline.
+
+`journal-empty` comes before `no-starred` because it is the more accurate
+reason: with no entries there is nothing to star.
+
+**Slots:** `journal-empty` (`bool`).
+
 ## Deferred
 
 The web host (J5c-2), launching on the remaining native lanes, packaging and release (J5); the markdown preview;

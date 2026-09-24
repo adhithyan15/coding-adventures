@@ -2,6 +2,9 @@
 
 ## 0.1.0 — unreleased
 
+- **An empty journal (J4h)** needs no host code. The journals test now
+  checks that a newly added journal says "No entries in this journal"
+  until an entry is written in it.
 - **An entry's journal (J4g)** needs no host code. A new test checks that
   the picker is hidden while there is one journal. It then moves an entry
   from Personal to Work with the editor's picker, checks that Cancel after

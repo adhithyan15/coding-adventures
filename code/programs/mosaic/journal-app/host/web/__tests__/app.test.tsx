@@ -179,8 +179,10 @@ it("adds a journal, files new entries there and switches between journals", asyn
   await act(async () => button("Add").click());
   expect(field("New journal name").value).toBe("");
   expect(() => button("At home")).toThrow();
+  expect(container.textContent).toContain("No entries in this journal"); // J4h
   await write("Standup");
   expect(button("Standup")).toBeTruthy();
+  expect(container.textContent).not.toContain("No entries in this journal");
 
   await act(async () => button("Personal").click());
   expect(button("At home")).toBeTruthy();

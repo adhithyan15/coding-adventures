@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **An empty journal (J4h).** A new slot, `journal-empty`, is set when a
+  journal is selected, it has no entries, and there is no search. It is
+  not set when no journal has any entries, which is `timeline-empty`, and it
+  wins over `no-starred`, so the pane gives the more accurate reason.
+  `JournalScreenshots` adds 09a-empty-journal.
 - **An entry's journal (J4g).** `draft_journal` joins the draft (in the
   snapshot with `#[serde(default)]`; empty means "not chosen", and a restored
   id longer than `MAX_ID_BYTES` is refused). It is read through

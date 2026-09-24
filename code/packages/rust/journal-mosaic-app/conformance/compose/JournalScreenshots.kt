@@ -114,11 +114,13 @@ class JournalScreenshots {
             shot("09-draft-error")
 
             // Journals (J4f): add a Work journal (selected, so the lists
-            // start empty), write in it, then try a name already taken.
+            // start empty and say so, J4h), write in it, then try a name
+            // already taken.
             onNodeWithTag("journal-name-input").performTextInput("Work")
             waitForIdle()
             onNodeWithText("Add").performClick()
             waitForIdle()
+            shot("09a-empty-journal")
             onNodeWithText("New entry").performClick()
             waitForIdle()
             onNodeWithTag("draft-editor-title").performTextInput("Standup notes")
