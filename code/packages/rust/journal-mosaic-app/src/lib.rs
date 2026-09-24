@@ -404,12 +404,21 @@ impl MosaicApp for JournalMosaicApp {
 
 // ── helpers ─────────────────────────────────────────────────────────────────────
 
-/// The system clock, natively. `SystemTime` is the platform's.
+/// The last millisecond of 9999-12-31 (UTC). journal-core writes a date as a
+/// four-digit ISO year and reads back only years 0 to 9999. An entry dated
+/// later would snapshot fine and then make the WHOLE saved journal refuse to
+/// restore. So no clock reading past this is ever used to date an entry.
+const LAST_WRITABLE_MS: u64 = 253_402_300_799_999;
+
+/// The system clock, natively. `SystemTime` is the platform's; a reading past
+/// the last writable date (a badly set clock) reads as the epoch.
 #[cfg(not(target_arch = "wasm32"))]
 fn system_now_ms() -> u64 {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
-        .map(|d| u64::try_from(d.as_millis()).unwrap_or(u64::MAX))
+        .ok()
+        .and_then(|d| u64::try_from(d.as_millis()).ok())
+        .filter(|&ms| ms <= LAST_WRITABLE_MS)
         .unwrap_or(0)
 }
 
@@ -423,21 +432,27 @@ extern "C" {
 }
 
 /// The host's clock, in the browser. The import crosses a trust boundary, so
-/// anything that is not a plausible time (NaN, infinite, negative, or at or
-/// past 2^53, where `f64` stops being exact) reads as the epoch rather than
-/// panicking or saturating to a date millions of years away.
+/// anything that is not a writable time (NaN, infinite, negative, or past
+/// 9999-12-31) reads as the epoch rather than panicking, wrapping, or dating
+/// an entry the journal could never read back.
 #[cfg(target_arch = "wasm32")]
 fn system_now_ms() -> u64 {
-    // SAFETY: a plain import taking no arguments and returning an f64; any
-    // host function with that signature is sound to call.
+    // SAFETY: the import takes no arguments and returns an f64, and a host
+    // function of another signature fails at instantiation. The precondition
+    // is that it RETURNS: a JS exception thrown out of it would unwind past
+    // these Rust frames without running their destructors. The documented
+    // host shim therefore catches everything and returns NaN (read as the
+    // epoch below). A re-entrant call from it into the bridge is refused by
+    // the bridge's RefCell (a trap, not aliasing).
     let ms = unsafe { now_ms() };
     clamp_host_ms(ms)
 }
 
 #[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
 fn clamp_host_ms(ms: f64) -> u64 {
-    const EXACT: f64 = 9_007_199_254_740_992.0; // 2^53
-    if ms.is_finite() && (0.0..EXACT).contains(&ms) {
+    // Exact: LAST_WRITABLE_MS < 2^53, so the bound and every value below it
+    // convert between f64 and u64 without rounding.
+    if ms.is_finite() && ms >= 0.0 && ms <= LAST_WRITABLE_MS as f64 {
         ms as u64
     } else {
         0
@@ -997,6 +1012,11 @@ mod tests {
     fn an_implausible_host_clock_reads_as_the_epoch() {
         assert_eq!(clamp_host_ms(1_790_000_000_000.0), 1_790_000_000_000);
         assert_eq!(clamp_host_ms(12.9), 12);
+        // The last writable instant, and the first one past it.
+        assert_eq!(clamp_host_ms(LAST_WRITABLE_MS as f64), LAST_WRITABLE_MS);
+        assert_eq!(clamp_host_ms(LAST_WRITABLE_MS as f64 + 1.0), 0);
+        // The largest value `Date.now()` can return (year 275760).
+        assert_eq!(clamp_host_ms(8.64e15), 0);
         for bad in [
             f64::NAN,
             f64::INFINITY,
@@ -1007,5 +1027,24 @@ mod tests {
         ] {
             assert_eq!(clamp_host_ms(bad), 0, "{bad}");
         }
+    }
+
+    /// The latest date the clock can give an entry still round-trips: an
+    /// entry dated 9999-12-31 snapshots and restores.
+    #[test]
+    fn an_entry_on_the_last_writable_day_survives_a_restore() {
+        let mut a = app();
+        set_now(LAST_WRITABLE_MS);
+        send(&mut a, "onNewEntry", json!({})).unwrap();
+        send(&mut a, "onTitleChange", json!({ "value": "Far" })).unwrap();
+        send(&mut a, "onSaveEntry", json!({})).unwrap();
+        let snapshot = a.snapshot().unwrap().unwrap();
+        let mut b = app();
+        let props = b.restore(snapshot).unwrap().props;
+        assert_eq!(props["timeline-rows"][0][2], "Far");
+        assert!(props["timeline-rows"][0][1]
+            .as_str()
+            .unwrap()
+            .contains("9999"));
     }
 }

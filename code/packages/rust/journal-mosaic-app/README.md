@@ -38,11 +38,14 @@ exports the standard Mosaic lifecycle bridge
 `mosaic-host.mjs`.
 
 - **The clock comes from the host.** wasm32 has no clock, so the module imports
-  `journal.now_ms() -> f64`, and the host passes `Date.now`. A value that isn't
-  a plausible time reads as the epoch.
+  `journal.now_ms() -> f64`, and the host passes `Date.now`. The host must pass
+  it through a shim that never throws, because an exception unwinding through
+  wasm would leave the instance unusable. A value that isn't a writable time
+  (NaN, negative, or past 9999-12-31) reads as the epoch.
 
   ```js
-  const module = await loadMosaicModule(bytes, { journal: { now_ms: Date.now } });
+  const now_ms = () => { try { return Number(Date.now()); } catch { return NaN; } };
+  const module = await loadMosaicModule(bytes, { journal: { now_ms } });
   ```
 
 - **Bare event names work too.** The generated React component dispatches

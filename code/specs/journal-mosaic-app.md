@@ -148,10 +148,20 @@ and `destroy` over `mosaic_wasm_call`. The native C ABI is unchanged.
 **The clock is the host's.** `std::time::SystemTime::now()` panics on
 `wasm32-unknown-unknown`, which has no clock of its own. On wasm32 the clock is
 a module import, `journal.now_ms() -> f64` (milliseconds since the epoch).
-The browser host passes `{ journal: { now_ms: Date.now } }`. A value that is
-not finite, is negative, or is at least 2^53 reads as 0 (the epoch), never as
-a panic or a wrapped huge date. The module needs the import to instantiate.
-Native builds keep `SystemTime`.
+The browser host passes `Date.now` through a shim that must **return**. An
+exception thrown out of an import would unwind past Rust frames, so the shim
+catches everything and returns NaN:
+
+```js
+{ journal: { now_ms: () => { try { return Number(Date.now()); } catch { return NaN; } } } }
+```
+
+A value that is not finite, is negative, or is later than 9999-12-31 reads as
+0 (the epoch), never as a panic or a wrapped date. The upper bound matters:
+journal-core writes four-digit years and reads back only 0–9999, so an entry
+dated later would make the *whole* snapshot refuse to restore. The same bound
+applies to the native `SystemTime` reading. The module needs the import to
+instantiate.
 
 **Event names, bare or prefixed.** Native hosts send the raw emit name
 (`onSelectEntry`). The generated React component dispatches `type:

@@ -7,8 +7,12 @@
 - **wasm32 build:** `mosaic_app_wasm::export_mosaic_wasm!` exports the
   standard lifecycle bridge next to the native C ABI.
 - **The clock is a host import on wasm32** (`journal.now_ms() -> f64`).
-  `SystemTime::now()` panics on `wasm32-unknown-unknown`. A non-finite,
-  negative or ≥ 2^53 value reads as the epoch. Native builds keep `SystemTime`.
+  `SystemTime::now()` panics on `wasm32-unknown-unknown`. The host passes it
+  through a shim that never throws.
+- **Out-of-range clock readings date at the epoch.** Any non-finite or negative
+  value, or one past 9999-12-31, reads as the epoch, on native and wasm alike.
+  journal-core reads back only four-digit years, so a far-future entry would
+  have made the whole snapshot unrestorable.
 - **Bare event names** (`selectEntry`, as the generated React component
   dispatches them) are read as their emit names. An unknown event's error
   still names what was sent.
