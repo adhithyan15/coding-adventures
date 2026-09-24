@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-24 (row controls)
+
+- **A control's percentage width in a Row is its share of the Row.** Since #15968 a `Text` in a RowScope took `weight(f)` from a percentage width, but `HostInput`, `Input` and `HostButton` didn't. Their `width: 100%` fills only outside a Row, so in a Row it was dropped without a report. Journal's search field, beside *Clear*, stayed at its intrinsic ~120px in a 276px pane. The precomputed set (renamed `leaf_parts_row_weighted`) now covers the three controls, and their modifier chain starts with `.weight(f)`, unless the chain already decides the width (a `max-width`). A part used both in and out of a Row still gets neither the weight nor the fill.
+  - Measured before/after across every Mosaic program: Journal changes on 1 control (`search-input`) and Trestle on 4. In Trestle, the sidebar's project buttons now span the sidebar, the *New project* field takes what `+` leaves, and a task row's name takes the row's slack, pushing its due date and buttons to the row's end, as on the web. Engram, VisiCalc and the demos don't change.
+  - Verified: `TaskAppUiTest` passes, the emitted-control contract passes, and the native-complete report is still 0 degradations.
+
 ## 2026-09-24 (placeholders)
 
 - **A field's placeholder wears the field's text style, dimmed (#14798).** The `HostInput` placeholder `Text` took only a bound `font-size`. A field whose typed text was light (`TextStyle(color = …)`) therefore showed its placeholder in Material's black: in dark Trestle, "What needs doing?", "Due (optional)" and "New project" were black on #1a1714. The placeholder now takes the field's colour, size, weight and family, with the colour at 60% alpha (`(Color(…)).copy(alpha = 0.6f)`), as a browser draws `::placeholder`. An unstyled field keeps `Text(text = …)`. Rendered in dark Trestle. `TaskAppUiTest` passes, and Engram and Journal compile.

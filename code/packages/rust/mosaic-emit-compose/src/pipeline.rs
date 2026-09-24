@@ -1823,11 +1823,12 @@ fn parts_filling_width(root: &LayoutNode, part_styles: &PartStyleMap) -> HashSet
     outside
 }
 
-/// `Text` parts that sit directly in a RowScope and author a percentage
-/// width, mapped to the `weight` that percentage becomes there.
+/// Leaf parts (`Text`, and the `HostInput` / `Input` / `HostButton`
+/// controls) that sit directly in a RowScope and author a percentage width,
+/// mapped to the `weight` that percentage becomes there.
 ///
 /// A container in a Row already gets its weight from `emit_container`; a
-/// `Text` is a leaf with no `in_row_scope` of its own, so the answer is
+/// leaf has no `in_row_scope` of its own, so the answer is
 /// precomputed here from the same scope rule as [`parts_width_guarded`] (and
 /// that set leaves these parts out, because [`compose_row_weight`] is `Some`
 /// for them -- a weighted child absorbs slack instead of holding width).
@@ -1839,10 +1840,21 @@ fn parts_filling_width(root: &LayoutNode, part_styles: &PartStyleMap) -> HashSet
 ///     → Text("Sun", modifier = Modifier.weight(0.142857f), …) ×7
 ///
 /// Before, the seven names measured to their text and sat packed at the
-/// Row's start ("SunMonTueWedThuFriSat") above a seven-column grid. A part
+/// Row's start ("SunMonTueWedThuFriSat") above a seven-column grid. The
+/// controls had the same gap: Journal's search field, `width: 100%` in a
+/// Row beside *Clear*, stayed at its intrinsic ~120px in a 276px pane
+///
+///   Row [ search-bar ] {
+///     HostInput [ search-input ] ( … )     // width "100%"
+///     HostButton [ search-clear ] ( … )    // no width
+///   }
+///     → BasicTextField(…, modifier = Modifier.weight(1f)…)
+///
+/// so the field takes what Clear leaves (one weighted child takes all the
+/// slack, which is what a CSS `100%` in a flex row ends up doing). A part
 /// that is also used outside a Row is left out: `weight` does not resolve
 /// outside RowScope, and half-applying would render one part two ways.
-fn text_parts_row_weighted(root: &LayoutNode, part_styles: &PartStyleMap) -> HashMap<String, String> {
+fn leaf_parts_row_weighted(root: &LayoutNode, part_styles: &PartStyleMap) -> HashMap<String, String> {
     fn walk(
         node: &LayoutNode,
         in_row_scope: bool,
@@ -1850,7 +1862,7 @@ fn text_parts_row_weighted(root: &LayoutNode, part_styles: &PartStyleMap) -> Has
         weighted: &mut HashMap<String, String>,
         outside: &mut HashSet<String>,
     ) {
-        if node.tag == "Text" {
+        if matches!(node.tag.as_str(), "Text" | "HostInput" | "Input" | "HostButton") {
             if let Some(part) = node.part_name.as_deref() {
                 if !in_row_scope {
                     outside.insert(part.to_string());
@@ -2947,9 +2959,9 @@ struct PartStyleMap {
     /// [`parts_filling_width`]. Precomputed for the same reason as
     /// `width_guarded`: leaf writers have no `in_row_scope` of their own.
     fill_width: HashSet<String>,
-    /// `Text` parts that take a RowScope `weight` from a percentage width;
-    /// see [`text_parts_row_weighted`]. Part name → weight.
-    row_weighted_text: HashMap<String, String>,
+    /// Leaf parts that take a RowScope `weight` from a percentage width;
+    /// see [`leaf_parts_row_weighted`]. Part name → weight.
+    row_weighted_leaf: HashMap<String, String>,
 }
 
 impl PartStyleMap {
@@ -2971,12 +2983,12 @@ impl PartStyleMap {
     fn resolve_width_guards(&mut self, root: &LayoutNode) {
         self.width_guarded = parts_width_guarded(root, self);
         self.fill_width = parts_filling_width(root, self);
-        self.row_weighted_text = text_parts_row_weighted(root, self);
+        self.row_weighted_leaf = leaf_parts_row_weighted(root, self);
     }
 
-    /// The RowScope weight a `Text` part takes, if any.
-    fn text_row_weight(&self, part: &str) -> Option<&str> {
-        self.row_weighted_text.get(part).map(String::as_str)
+    /// The RowScope weight a leaf part takes, if any.
+    fn leaf_row_weight(&self, part: &str) -> Option<&str> {
+        self.row_weighted_leaf.get(part).map(String::as_str)
     }
 
     /// Does this leaf control's `width: 100%` lower to `fillMaxWidth()`?
@@ -3046,7 +3058,7 @@ fn build_part_style_map(style: &StyleDef, slots: &[SlotDecl]) -> PartStyleMap {
         slot_states,
         width_guarded: HashSet::new(),
         fill_width: HashSet::new(),
-        row_weighted_text: HashMap::new(),
+        row_weighted_leaf: HashMap::new(),
     }
 }
 
@@ -6819,11 +6831,11 @@ fn emit_text(
             (None, false) => None,
         }
     };
-    // A percentage width in a Row is a share of it (`text_parts_row_weighted`).
+    // A percentage width in a Row is a share of it (`leaf_parts_row_weighted`).
     let modifier = match node
         .part_name
         .as_deref()
-        .and_then(|part| part_styles.text_row_weight(part))
+        .and_then(|part| part_styles.leaf_row_weight(part))
     {
         Some(weight) => {
             let base = modifier.unwrap_or_else(|| "Modifier".to_string());
@@ -7012,7 +7024,12 @@ fn emit_host_input(
         .part_name
         .as_deref()
         .is_some_and(|part| part_styles.fills_width(part));
-    let mut modifier_expr = host_control_modifier_expr_filling(node, style.as_ref(), fills);
+    let row_weight = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.leaf_row_weight(part));
+    let mut modifier_expr =
+        host_control_modifier_expr_filling(node, style.as_ref(), fills, row_weight);
     if let Some(accessible_label) = text_prop_expr(node, "a11y-label")? {
         let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
         modifier_expr = Some(format!(
@@ -7154,7 +7171,12 @@ fn emit_host_button(
         .part_name
         .as_deref()
         .is_some_and(|part| part_styles.fills_width(part));
-    let mut modifier_expr = host_control_modifier_expr_filling(node, style.as_ref(), fills);
+    let row_weight = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.leaf_row_weight(part));
+    let mut modifier_expr =
+        host_control_modifier_expr_filling(node, style.as_ref(), fills, row_weight);
     // UI59 §4 -- the floor reaches leaves too. `emit_container` applies it
     // for container children; a `Button` is emitted here instead and got
     // nothing, so `Delete` measured ZERO WIDTH at 1280 -- the declared
@@ -7218,24 +7240,31 @@ fn emit_host_button(
 }
 
 fn host_control_modifier_expr(node: &LayoutNode, style: Option<&ComposeStyle>) -> Option<String> {
-    host_control_modifier_expr_filling(node, style, false)
+    host_control_modifier_expr_filling(node, style, false, None)
 }
 
 /// [`host_control_modifier_expr`] for a control that may fill its parent's
-/// width ([`parts_filling_width`]). The fill goes FIRST, as the container
+/// width ([`parts_filling_width`]) or, in a Row, take a share of it
+/// ([`leaf_parts_row_weighted`]). Either goes FIRST, as the container
 /// default does, and only when the chain does not already decide the width
 /// (`chain_sets_own_width`): a `max-width` emits its own
 /// `widthIn(max).fillMaxWidth()`, and the order of those two is not
-/// symmetric (#14833).
+/// symmetric (#14833). The two never meet: a part in a Row is left out of
+/// the fill set, and one outside every Row has no weight.
 fn host_control_modifier_expr_filling(
     node: &LayoutNode,
     style: Option<&ComposeStyle>,
     fill_width: bool,
+    row_weight: Option<&str>,
 ) -> Option<String> {
     let mut modifier = String::from("Modifier");
     let chain = style.map(|s| s.modifier.as_str()).unwrap_or("");
-    if fill_width && !chain_sets_own_width(chain) {
-        modifier.push_str(".fillMaxWidth()");
+    if !chain_sets_own_width(chain) {
+        if let Some(weight) = row_weight {
+            write!(modifier, ".weight({weight}f)").unwrap();
+        } else if fill_width {
+            modifier.push_str(".fillMaxWidth()");
+        }
     }
     modifier.push_str(chain);
     if let Some(part) = &node.part_name {
@@ -8858,13 +8887,13 @@ mod tests {
         assert!(matches!(from_pipeline(&m, &l, &style), Err(PipelineEmitError::InvalidTypography(_))));
     }
 
-    /// `width: 100%` on a leaf control fills its parent — but only outside a
-    /// RowScope, where `fillMaxWidth()` would take the whole Row before its
-    /// siblings are measured. A part used in a Row even once keeps its
-    /// intrinsic width everywhere, and `max-width` keeps its own
-    /// `widthIn(max).fillMaxWidth()` order.
+    /// `width: 100%` on a leaf control fills its parent outside a RowScope,
+    /// where `fillMaxWidth()` would take the whole Row before its siblings
+    /// are measured. In a Row, a percentage width is a `weight` instead. A
+    /// part used both in and out of a Row gets neither, and `max-width`
+    /// keeps its own `widthIn(max).fillMaxWidth()` order.
     #[test]
-    fn full_width_leaf_controls_fill_outside_rows_only() {
+    fn full_width_leaf_controls_fill_columns_and_share_rows() {
         let m = component("Form", vec![], vec![]);
         let input = |part: &str| styled_node("HostInput", part, vec![], vec![]);
         let l = layout(
@@ -8878,6 +8907,14 @@ mod tests {
                     input("capped-field"),
                     input("shared-field"),
                     node("Row", vec![], vec![input("row-field"), input("shared-field")]),
+                    node(
+                        "Row",
+                        vec![],
+                        vec![
+                            input("row-capped-field"),
+                            styled_node("HostButton", "half-btn", vec![], vec![]),
+                        ],
+                    ),
                     input("plain-field"),
                 ],
             ),
@@ -8891,6 +8928,8 @@ mod tests {
                 part("capped-field", vec![full(), sprop("max-width", "400px")], vec![]),
                 part("shared-field", vec![full()], vec![]),
                 part("row-field", vec![full()], vec![]),
+                part("row-capped-field", vec![full(), sprop("max-width", "400px")], vec![]),
+                part("half-btn", vec![sprop("width", "50%")], vec![]),
                 part("plain-field", vec![sprop("padding", "4px")], vec![]),
             ],
         );
@@ -8907,8 +8946,17 @@ mod tests {
         let capped = modifier_of("capped-field");
         assert!(!capped.starts_with("modifier = Modifier.fillMaxWidth()"), "{capped}");
         assert!(capped.contains(".widthIn(max = 400.dp)"), "{capped}");
-        for part in ["row-field", "shared-field", "plain-field"] {
+        for part in ["row-field", "shared-field", "plain-field", "half-btn"] {
             assert!(!modifier_of(part).contains("fillMaxWidth"), "{part}:\n{out}");
+        }
+        // In a Row the percentage is a share of it: the field takes the
+        // slack, the button half. A part also used outside a Row gets no
+        // weight (it does not resolve there), and a capped field keeps its
+        // own `widthIn`, which already decides the width.
+        assert!(modifier_of("row-field").starts_with("modifier = Modifier.weight(1f)"), "{out}");
+        assert!(modifier_of("half-btn").starts_with("modifier = Modifier.weight(0.5f)"), "{out}");
+        for part in ["shared-field", "row-capped-field", "title-field", "plain-field"] {
+            assert!(!modifier_of(part).contains(".weight("), "{part}:\n{out}");
         }
     }
 
