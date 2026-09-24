@@ -83,17 +83,39 @@ describe("the committed Malayalam A1 inventory", () => {
     // and that is the chapter in one line: it teaches a CONSTRUCTION out of a
     // past form and a word both long owned, so it introduces no headword
     // carrying a glyph the census had not already seen and owned.
-    expect(lessons).toHaveLength(488);
+    // 488 -> 493: HL-C438's five `review` lessons closing the track's pre-A1
+    // reinforcement debt. THREE FIELD COUNTS BELOW MOVE, NO TOKEN COUNT DOES,
+    // and one pair reorders. This comment was wrong twice before it was right,
+    // in the same way the chapter-109 note above records: the first draft said
+    // every count held, the second said two moved. The assertion caught both.
+    //
+    // `review` is outside `CONTENT_TYPES`, so none of the five introduces a
+    // headword and every TOKEN count holds. But a review lesson still HAS a
+    // headword field, and three of the five carry glyphs that are
+    // shown-but-not-directly-owned:
+    //
+    //   ള 24 -> 25 fields   from മലയാളി
+    //   ശ 18 -> 19 fields   from ശരി
+    //   ബ  5 ->  6 fields   from ബിൽ
+    //
+    // ബ reaching 6 ties it with ൈ, and the sort breaks ties on
+    // `a.glyph.localeCompare(b.glyph)`, so ബ now precedes ൈ. The reorder is the
+    // tie-break doing its job, not a count moving twice.
+    //
+    // `shown` HOLDS AT 69 and the directly-owned overlap holds at 60: the five
+    // print only glyphs the track already shows, which is what a recall of
+    // pieces taught one per chapter should do. No NEW glyph opens.
+    expect(lessons).toHaveLength(493);
     expect(shown.size).toBe(69);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(60);
     expect(open).toEqual([
-      { glyph: "ള", fields: 24, tokens: 19 },
-      { glyph: "ശ", fields: 18, tokens: 14 },
+      { glyph: "ള", fields: 25, tokens: 19 },
+      { glyph: "ശ", fields: 19, tokens: 14 },
       { glyph: "ങ", fields: 15, tokens: 13 },
       { glyph: "ർ", fields: 12, tokens: 12 },
       { glyph: "ധ", fields: 8, tokens: 7 },
+      { glyph: "ബ", fields: 6, tokens: 5 },
       { glyph: "ൈ", fields: 6, tokens: 6 },
-      { glyph: "ബ", fields: 5, tokens: 5 },
       { glyph: "ഖ", fields: 3, tokens: 3 },
       { glyph: "ഛ", fields: 2, tokens: 2 },
     ]);

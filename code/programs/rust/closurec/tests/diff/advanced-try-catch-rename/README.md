@@ -1,7 +1,8 @@
 # Fixture: `advanced-try-catch-rename`
 
-End-to-end oracle for `--compilation_level ADVANCED` renaming soundness
-across a `catch` binding (CLOC19).
+Regression test for `closurec`'s `--compilation_level ADVANCED` renaming
+across a `catch` binding (CLOC19). **Not an oracle** — see the note below on
+what upstream actually does with this input.
 
 | File | Role |
 |------|------|
@@ -10,11 +11,10 @@ across a `catch` binding (CLOC19).
 | `expected.stdout` | The renamed output (see below) |
 
 ```text
-function c(a){var b;b=a + 1;try{compute(b)}catch(err){report(err,b)}return b};c(7);
+function c(a){var b=a+1;try{compute(b)}catch(err){report(err,b)}return b}c(7);
 ```
 
-This fixture pins the **catch-param-soundness** guarantee that makes
-ADVANCED renaming safe in the presence of `try`/`catch`:
+This fixture pins how `closurec` renames in the presence of `try`/`catch`:
 
 * `process` ⇒ `c`, `value` ⇒ `a`, `temp` ⇒ `b` — ordinary local/global
   renaming.
@@ -25,8 +25,62 @@ ADVANCED renaming safe in the presence of `try`/`catch`:
 * The catch binding **`err` is preserved verbatim**: it is never
   renamed (catch params are not in the local-rename set) and no other
   local is ever aliased onto it (the catch param joins the fresh-name
-  avoid set). If either guard were missing, `err` would collide with a
-  generated short name and miscompile the handler.
+  avoid set).
+
+**Only the second guard is a soundness requirement.** Without it, a
+generated short name could alias the caught value and miscompile the
+handler — that is the case
+`fresh_name_avoids_catch_param_unused_in_its_own_body` pins. (Its
+older sibling `fresh_name_avoids_colliding_with_catch_param` reads as
+though it pins the same thing and does not: its handler mentions its
+own binding, so the name reaches the avoid set regardless.) The first
+guard is
+a conservative choice. An earlier revision of this file claimed that
+dropping *either* would miscompile; that is false for the first, and
+upstream Closure is the counterexample: measured against the pinned
+oracle it renames catch parameters at both SIMPLE and ADVANCED, and
+satisfies the second guard by choosing a non-colliding fresh name
+instead of reserving the original.
+
+So this fixture is a regression test for a rule `closurec` chose, not an
+oracle for upstream's behaviour.
+
+**Under this fixture's own `flags.txt`, upstream produces nothing at all.**
+`--compilation_level ADVANCED --js input/a.js` passes no externs, and
+`compute`/`report` are free globals, so the pinned oracle exits 2 with two
+`JSC_UNDEFINED_VARIABLE` errors and zero bytes of stdout. *With externs
+added* it compiles and inlines `process` away entirely — ADVANCED gives
+`try{compute(8)}catch(a){report(a,8)};`, folding `7 + 1`, dropping the
+function, and renaming the catch binding. Either way, the bytes in
+`expected.stdout` are ours.
+
+That refusal is not unique to this fixture. Running all 126 fixtures of
+`non-minify-unverified-stdout` under their own `flags.txt` against the
+pinned oracle, **five** satisfy the predicate of the `upstream_refuses`
+disposition added in CCR-081
+([#15868](https://github.com/adhithyan15/coding-adventures/issues/15868))
+while still being dispositioned `upstream_golden` — this one and the other
+four `advanced-*` fixtures (`advanced-bigpass`,
+`advanced-class-constructor`, `advanced-optimizes`,
+`advanced-rename-globals`), all `JSC_UNDEFINED_VARIABLE`, all zero bytes of
+stdout.
+
+They are not in that cohort by a deliberate decision recorded on #15868:
+their refusals *are* fixable by adding externs, which is a real distinction
+from a fixture upstream will not compile however it is invoked. What is
+missing is any trace of that distinction in the recorded predicate, which
+says only "refuses as invoked" — and `simple-importmeta`, which is in the
+cohort, has the same kind of flag-fixable refusal. So the cohort and its
+stated criterion disagree. See #15868 for the follow-up.
+
+The parity cost of reserving the catch binding is tracked as CCR-022
+([#15856](https://github.com/adhithyan15/coding-adventures/issues/15856)).
+The ladder fixtures had already recorded the same divergence —
+`ladder_t4_try_catch_simple`'s README says "upstream renames the catch
+parameter `e` to `a`, which closurec skips (CCR-022)", and the `_advanced`
+one says the same in different words — so this is a correction catching up
+with evidence the repo already had, not a new discovery. Full probes are in
+`code/specs/CLOC19-try-catch.md`.
 
 Regenerate the expected file after an intentional behavior change:
 

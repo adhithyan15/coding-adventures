@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-048-SCRIPT",
+  "spine_node": "SPINE-READ-SIGNS-AND-NOTICES",
+  "before": [],
+  "inline": [
+    "PA-EXT-048-SCRIPT"
+  ],
+  "after": []
+}

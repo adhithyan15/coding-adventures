@@ -59,7 +59,6 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // Flutter gained reporting in #12022. These pre-existing typography
     // losses are pinned until the emitter applies them to the native child.
     (Backend::Flutter, "color"),
-    (Backend::Flutter, "font-size"),
     (Backend::Flutter, "font-weight"),
 ];
 

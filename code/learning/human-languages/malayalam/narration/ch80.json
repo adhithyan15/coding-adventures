@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "Where You Are From",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:45bbb098ce3ab90b",
+  "sourceHash": "fnv1a64:c2c3a65cb165c978",
   "lessons": [
     {
       "id": "ML-C80-uuru",
@@ -649,6 +649,128 @@
             {
               "kind": "speech",
               "text": "Which word names one settled place? (ūrŭ.) Which word names the person rather than the place? (malayāḷi.) And how many shapes does Malayalam keep for that job, where English keeps two? (One.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R80-what-came-once",
+      "sequence": 2791,
+      "title": "ഊണ്, വേണോ, അല്ലേ — asking, offering, and checking",
+      "headword": "ഊണ് · വേണോ · അല്ലേ · മലയാളി",
+      "romanization": "ūṇ · vēṇō · allē · malayāḷi",
+      "gloss": "second pass over a meal, the asking form, the tag that invites agreement, and the word that makes a person out of a language",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:668b1153c990bada",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word for a meal. Say it, then offer one — the asking form of want."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: three moves that need each other",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "offer a meal — ūṇ vēṇō?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: offer a meal — *ūṇ vēṇō?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "check that you have understood — allē?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: check that you have understood — *allē?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the meal word again, and say which verb it is built from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the meal word again, and say which verb it is built from]"
+            },
+            {
+              "kind": "speech",
+              "text": "വേണോ is not a separate word for do you want: it is the wanting word wearing the question ending the book taught long before. അല്ലേ does the opposite job — it does not ask a question so much as invite the other person to agree with one you have already answered."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മലയാളി (malayāḷi) is the language word with a person ending on it, and that is worth holding because English does not build words this way reliably. The pattern is productive: a place or a tongue plus the ending gives you the people of it."
+            },
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ഗ — name the letter, cold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ഗ** — name the letter, cold]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Does അല്ലേ ask for information, or for agreement? (Agreement.) What does the ending on മലയാളി (malayāḷi) do to the language word? (Makes a person of it.)"
             }
           ]
         }

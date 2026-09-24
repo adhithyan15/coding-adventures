@@ -429,39 +429,28 @@ fn dce_program(prog: &Program, st: &mut DceState) -> Program {
         .map(|item| dce_program_item(item, st))
         .collect();
 
-    // Strip top-level `debugger;` statements (CLOC24).
+    // NOTE (CCR-053): `debugger` statements are NOT stripped here, and were
+    // until 2026-09-23. The removed code claimed it was "matching upstream
+    // Closure exactly". It was not — see `preserves_debugger_statement_in_block`
+    // and its siblings. Upstream keeps `debugger` at SIMPLE wherever it is
+    // reachable, and removes it only as collateral when the enclosing statement
+    // goes (after a `return`, or a `throw`, or inside `if (false) { … }`).
+    // All three of those still work, because they are ordinary reachability and
+    // branch folding rather than anything specific to `debugger`. The `throw`
+    // case in particular is load-bearing: a surviving `debugger` in a dead tail
+    // would otherwise block whole-tail truncation, which is why
+    // `tail_is_safe_to_truncate` whitelists it.
     //
-    // The program body is a list of `ProgramItem`s, not a `BlockStatement`,
-    // so it needs its own sweep separate from `dce_block_statement`'s. Same
-    // rationale: a `debugger` statement is a development-only breakpoint with
-    // no effect on a shipped program, so at SIMPLE/ADVANCED we remove it — and
-    // because this pass never runs at WHITESPACE_ONLY, `debugger` survives
-    // there, matching upstream Closure exactly. See `is_debugger_statement`.
-    let before_debugger_drop = new_body.len();
-    // Capture the removed items' CV ids *before* `retain` drops them,
-    // so `record_deletion` can tombstone each vanished span.
-    let removed_debugger_cvs: Vec<Option<String>> = new_body
-        .iter()
-        .filter(|item| is_debugger_program_item(item))
-        .map(program_item_cv)
-        .collect();
-    new_body.retain(|item| !is_debugger_program_item(item));
-    let dropped_debuggers = before_debugger_drop - new_body.len();
-    if dropped_debuggers > 0 {
-        st.record_deletion(
-            &removed_debugger_cvs,
-            &prog.cv,
-            "removed-debugger",
-            &format!("program with {} top-level items", before_debugger_drop),
-            &format!("dropped {} top-level debugger statements", dropped_debuggers),
-        );
-    }
+    // It is also not a no-op to remove: `debugger` is observable behaviour —
+    // it breaks into an attached debugger — so dropping it changes what the
+    // program does, which is not a size win to take unilaterally.
 
     // Strip stray top-level `EmptyStatement`s (`;`) — CLOC12.195.
     //
-    // Like `debugger`, an empty statement at statement-list position is a pure
-    // no-op, so the program body needs its own sweep separate from
-    // `dce_block_statement`'s (which already does this for block bodies). These
+    // An empty statement at statement-list position is a pure no-op — unlike
+    // `debugger` just above, which is observable and therefore kept — so the
+    // program body needs its own sweep separate from `dce_block_statement`'s
+    // (which already does this for block bodies). These
     // arise from a hand-written `;`, from `constant-fold`/`fold-control-flow`
     // folding `if (false) …;` / `while (false) …;` to an `EmptyStatement`, and
     // from the trailing `;` a flattened block leaves behind
@@ -1033,14 +1022,12 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_)
-        // A `debugger;` reaching HERE is a non-list child (e.g. a brace-less
-        // `if (c) debugger;` consequent), so it is preserved as-is. The
-        // CLOC24 strip operates on statement *lists* — the block-body sweep in
-        // `dce_block_statement` and the top-level sweep in `dce_program` —
-        // where a `debugger` can be removed without leaving a dangling
-        // single-statement slot. (A bare consequent could be stripped too, but
-        // that is a rarer shape left for future work, consistent with how the
-        // empty-statement sweep is also list-scoped.)
+        // A `debugger;` is preserved wherever it appears, including as a
+        // non-list child (a brace-less `if (c) debugger;` consequent). CCR-053:
+        // upstream keeps reachable `debugger` statements, so there is nothing
+        // special about this position any more — it used to be the one place
+        // the CLOC24 list-scoped sweeps could not reach, which made it
+        // accidentally correct.
         | TaggedStatement::DebuggerStatement(_) => stmt.clone(),
     }
 }
@@ -1171,35 +1158,9 @@ fn dce_block_statement(b: &BlockStatement, st: &mut DceState) -> BlockStatement 
         );
     }
 
-    // Strip `debugger;` statements (CLOC24).
-    //
-    // A `debugger` statement is a development-only breakpoint: it pauses
-    // execution ONLY when a debugger is attached and is a no-op otherwise, so
-    // removing it from a shipped program preserves the program's observable
-    // behaviour. At SIMPLE/ADVANCED upstream Closure strips it; we do the same
-    // here (and only here — this pass never runs at WHITESPACE_ONLY, where the
-    // statement is preserved). We sweep it from the statement list exactly like
-    // empty statements; a `debugger` reaching a non-list position (e.g. a
-    // brace-less `if (c) debugger;` consequent) is left intact — see
-    // `dce_tagged_statement`'s leaf arm.
-    let before_debugger_drop = working.len();
-    let removed_debugger_cvs: Vec<Option<String>> = working
-        .iter()
-        .filter(|s| is_debugger_statement(s))
-        .map(statement_cv)
-        .collect();
-    working.retain(|s| !is_debugger_statement(s));
-    let dropped_debuggers = before_debugger_drop - working.len();
-    if dropped_debuggers > 0 {
-        st.record_deletion(
-            &removed_debugger_cvs,
-            &b.cv,
-            "removed-debugger",
-            &format!("block with {} statements", before_debugger_drop),
-            &format!("dropped {} debugger statements", dropped_debuggers),
-        );
-    }
-
+    // NOTE (CCR-053): block bodies keep their `debugger` statements. A sweep
+    // here used to remove them, claiming upstream did the same; measured
+    // against the pinned oracle, it does not. See the note in `dce_program`.
     BlockStatement {
         cv: b.cv.clone(),
         body: working,
@@ -1246,6 +1207,10 @@ fn is_terminator(stmt: &Statement) -> bool {
 /// - `ExpressionStatement` (a statement-position expression declares nothing;
 ///   a function/class *expression* owns its own scope),
 /// - `EmptyStatement`, `break`, `continue`, `return`, `throw`,
+/// - `debugger` (declares nothing, and an UNREACHABLE one can never fire, so
+///   dropping it is a genuine no-op — CCR-053 stopped removing *reachable*
+///   `debugger` statements precisely because those are observable, and this is
+///   the other side of that line),
 /// - `let` / `const` declarations (block-scoped, TDZ — not hoisted; a
 ///   reference before the declaration throws either way).
 ///
@@ -1266,6 +1231,7 @@ fn tail_is_safe_to_truncate(stmts: &[Statement]) -> bool {
                 | TaggedStatement::ContinueStatement(_)
                 | TaggedStatement::ReturnStatement(_)
                 | TaggedStatement::ThrowStatement(_)
+                | TaggedStatement::DebuggerStatement(_)
         ),
         // `let` / `const` are block-scoped (safe to drop); `var` hoists (unsafe).
         Statement::Declaration(Declaration::VariableDeclaration(vd)) => vd.kind != VarKind::Var,
@@ -1457,27 +1423,6 @@ fn is_empty_statement(stmt: &Statement) -> bool {
     )
 }
 
-/// Is this a `debugger;` statement?
-///
-/// Used by the block-body and top-level sweeps (CLOC24) to strip `debugger`
-/// statements at SIMPLE/ADVANCED — a development-only breakpoint with no effect
-/// on a shipped program, so removing it is a sound size win (this matches
-/// upstream Closure). Because the dce pass runs only inside the typed pipeline,
-/// `debugger` is preserved at WHITESPACE_ONLY, which never reaches here.
-fn is_debugger_statement(stmt: &Statement) -> bool {
-    matches!(
-        stmt,
-        Statement::Tagged(TaggedStatement::DebuggerStatement(_))
-    )
-}
-
-/// Is this top-level program item a `debugger;` statement? The program body is
-/// a list of `ProgramItem`s rather than `Statement`s, so the top-level sweep in
-/// `dce_program` needs this thin wrapper over [`is_debugger_statement`].
-fn is_debugger_program_item(item: &ProgramItem) -> bool {
-    matches!(item, ProgramItem::Statement(s) if is_debugger_statement(s))
-}
-
 /// Is this top-level item a bare `EmptyStatement` (`;`)? Mirrors
 /// [`is_empty_statement`] for the `ProgramItem` list, so [`dce_program`] can
 /// sweep stray semicolons out of the program body the same way
@@ -1499,9 +1444,9 @@ fn is_empty_program_item(item: &ProgramItem) -> bool {
 /// rather than lossy: DCE's removal sites never drop a `var` / `function`
 /// declaration. The dead-tail truncate is gated on
 /// `tail_is_safe_to_truncate`, whose whitelist excludes both (they
-/// hoist, so removing them could break earlier code), and the empty /
-/// debugger sweeps only ever match those two leaf kinds. So there is no
-/// declaration deletion here to attribute in the first place.
+/// hoist, so removing them could break earlier code), and the
+/// empty-statement sweep only ever matches that one leaf kind. So there is
+/// no declaration deletion here to attribute in the first place.
 fn statement_cv(stmt: &Statement) -> Option<String> {
     match stmt {
         Statement::Tagged(t) => tagged_statement_cv(t),
@@ -1539,8 +1484,9 @@ fn tagged_statement_cv(t: &TaggedStatement) -> Option<String> {
 }
 
 /// Top-level analogue of [`statement_cv`] for a `ProgramItem`. Only the
-/// `Statement` arm can be a `debugger;` (the sole top-level deletion), so
-/// a `Declaration` item falls through to `None`.
+/// `Statement` arm can be an `EmptyStatement` — since CCR-053 stopped the
+/// `debugger` sweep, that is the sole top-level deletion — so a
+/// `Declaration` item falls through to `None`.
 fn program_item_cv(item: &ProgramItem) -> Option<String> {
     match item {
         ProgramItem::Statement(s) => statement_cv(s),
@@ -2157,22 +2103,28 @@ mod tests {
         }
     }
 
+    /// CCR-053: a `debugger` in a block is not removed, so it must carry no
+    /// deletion tombstone either. This was
+    /// `block_debugger_removal_tombstones_the_statement`, which asserted the
+    /// opposite; provenance that records a deletion which did not happen is
+    /// exactly the class of defect CCR-041 was about.
     #[test]
-    fn block_debugger_removal_tombstones_the_statement() {
+    fn block_debugger_is_not_tombstoned_because_it_is_not_removed() {
         let mut log = CVLog::new(true);
         let (dbg, dbg_id) = traced_debugger(&mut log);
         let prog = program_with_function(vec![expr_stmt(ident("keep")), dbg], Some("block.7"));
 
-        let _out = run_pass_capturing_cv(&prog, &mut log);
+        let out = run_pass_capturing_cv(&prog, &mut log);
 
-        let del = log
-            .get(&dbg_id)
-            .unwrap()
-            .deleted
-            .as_ref()
-            .expect("a stripped debugger must be tombstoned");
-        assert_eq!(del.source, "dce");
-        assert_eq!(del.reason, "removed-debugger");
+        assert!(
+            log.get(&dbg_id).unwrap().deleted.is_none(),
+            "a surviving debugger must not be tombstoned as deleted"
+        );
+        assert_eq!(
+            extract_function_body(&out).body.len(),
+            2,
+            "both statements must survive"
+        );
     }
 
     #[test]
@@ -2196,22 +2148,21 @@ mod tests {
     }
 
     #[test]
-    fn top_level_debugger_removal_tombstones_the_statement() {
-        // The program-body sweep is a separate code path from the
-        // block-body sweep, so it gets its own tombstone test.
+    fn top_level_debugger_is_not_tombstoned_because_it_is_not_removed() {
+        // The program body is a separate code path from the block body, so it
+        // gets its own test. CCR-053: neither removes `debugger`, so neither
+        // tombstones it. Was `top_level_debugger_removal_tombstones_the_statement`.
         let mut log = CVLog::new(true);
         let (dbg, dbg_id) = traced_debugger(&mut log);
         let prog = program().with_body(vec![ProgramItem::Statement(dbg)]);
 
-        let _out = run_pass_capturing_cv(&prog, &mut log);
+        let out = run_pass_capturing_cv(&prog, &mut log);
 
-        let del = log
-            .get(&dbg_id)
-            .unwrap()
-            .deleted
-            .as_ref()
-            .expect("a stripped top-level debugger must be tombstoned");
-        assert_eq!(del.reason, "removed-debugger");
+        assert!(
+            log.get(&dbg_id).unwrap().deleted.is_none(),
+            "a surviving top-level debugger must not be tombstoned as deleted"
+        );
+        assert_eq!(out.body.len(), 1, "the debugger must survive");
     }
 
     #[test]
@@ -2301,11 +2252,31 @@ mod tests {
 
     #[test]
     fn disabled_log_still_removes_code_without_panicking() {
-        // With CV disabled, `delete` is a no-op; the pass must still
-        // strip the debugger and never panic on the missing entry.
+        // With CV disabled, `delete` is a no-op; the pass must still remove
+        // what it removes and never panic on the missing entry.
+        //
+        // The vehicle used to be a `debugger` statement. CCR-053 stopped
+        // removing those, so this now uses a stray `EmptyStatement`, which is
+        // still swept. The test's subject is the disabled-log path, not the
+        // statement kind.
+        //
+        // The cv id is load-bearing and the first attempt at this swap omitted
+        // it: `record_deletion` iterates `removed.iter().flatten()`, so a
+        // statement with `cv: None` is skipped and `cv.delete` is never
+        // reached — the test would have passed while exercising nothing.
+        //
+        // What this pins, precisely: the deletion-recording loop runs, and
+        // calls `delete` with an id the disabled log never stored, and the
+        // whole path is a safe no-op. It does NOT reach the missing-entry
+        // lookup — `CVLog::delete` returns early on `!self.enabled`, before
+        // `entries.get_mut` — and that lookup could not panic anyway, since it
+        // is an `if let Some`. An earlier revision of this comment claimed the
+        // missing-entry branch was the subject; it is not.
         let mut log = CVLog::new(false);
-        let (dbg, _dbg_id) = traced_debugger(&mut log);
-        let prog = program_with_function(vec![expr_stmt(ident("keep")), dbg], Some("b"));
+        let empty = Statement::empty_statement(EmptyStatement {
+            cv: Some(log.create(None)),
+        });
+        let prog = program_with_function(vec![expr_stmt(ident("keep")), empty], Some("b"));
 
         let out = run_pass_capturing_cv(&prog, &mut log);
 
@@ -2313,7 +2284,7 @@ mod tests {
         assert_eq!(
             block.body.len(),
             1,
-            "debugger must still be stripped under a disabled CV log"
+            "the empty statement must still be swept under a disabled CV log"
         );
     }
 
@@ -2515,101 +2486,171 @@ mod tests {
         assert_eq!(new_block.body.len(), 2, "expected 2 statements; got {:?}", new_block.body);
     }
 
-    // --- CLOC24: `debugger` stripping -----------------------------------
+    // --- CCR-053: `debugger` is PRESERVED -------------------------------
+    //
+    // These four tests were `strips_debugger_statement_from_block`,
+    // `strips_top_level_debugger_statement`, `block_of_only_debuggers_becomes_empty`
+    // and `preserves_braceless_if_consequent_debugger`. They pinned a sweep
+    // that removed `debugger` at SIMPLE and ADVANCED, justified in a comment
+    // as "matching upstream Closure exactly".
+    //
+    // That was measured against the pinned oracle and is false: upstream keeps
+    // a reachable `debugger` at SIMPLE. (At ADVANCED the rule is narrower —
+    // upstream eliminates a call whose body is only a `debugger`, so
+    // `function f(){debugger}f();` does go to nothing there. That is
+    // call-elimination treating the body as pure, not a `debugger` sweep, and
+    // we do not do it.) They are retargeted rather than deleted, because the
+    // behaviour they cover still needs pinning — just in the opposite
+    // direction.
 
     #[test]
-    fn strips_debugger_statement_from_block() {
-        // { x; debugger; y; } → { x; y; }
+    fn preserves_debugger_statement_in_block() {
+        // { x; debugger; y; } is unchanged.
         let body = vec![
             expr_stmt(ident("x")),
             debugger_stmt(),
             expr_stmt(ident("y")),
         ];
         let prog = program_with_function(body, Some("block.1"));
-        let (out, contribs, changed, _) = run_pass(prog);
-        assert!(changed, "stripping a debugger must mark the program changed");
+        let (out, contribs, _changed, _) = run_pass(prog);
         assert!(
-            contribs.iter().any(|c| c.tag == "removed-debugger"),
-            "expected a removed-debugger contribution; got {:?}",
+            !contribs.iter().any(|c| c.tag == "removed-debugger"),
+            "debugger must not be swept from a block; got {:?}",
             contribs
         );
         let new_block = extract_function_body(&out);
         assert_eq!(
             new_block.body.len(),
-            2,
-            "the debugger should be gone, leaving x; y;; got {:?}",
-            new_block.body
-        );
-        assert!(
-            !new_block.body.iter().any(is_debugger_statement),
-            "no debugger statement should remain; got {:?}",
+            3,
+            "x; debugger; y; must all survive; got {:?}",
             new_block.body
         );
     }
 
     #[test]
-    fn strips_top_level_debugger_statement() {
-        // top-level: x; debugger; → x;
+    fn preserves_top_level_debugger_statement() {
+        // top-level: x; debugger; is unchanged.
         let prog = program().with_body(vec![
             ProgramItem::Statement(expr_stmt(ident("x"))),
             ProgramItem::Statement(debugger_stmt()),
         ]);
-        let (out, contribs, changed, _) = run_pass(prog);
-        assert!(changed, "stripping a top-level debugger must mark changed");
+        let (out, contribs, _changed, _) = run_pass(prog);
         assert!(
-            contribs.iter().any(|c| c.tag == "removed-debugger"),
-            "expected a removed-debugger contribution; got {:?}",
+            !contribs.iter().any(|c| c.tag == "removed-debugger"),
+            "a top-level debugger must not be swept; got {:?}",
             contribs
         );
         assert_eq!(
             out.body.len(),
-            1,
-            "only the top-level debugger should be removed; got {:?}",
-            out.body
-        );
-        assert!(
-            !out.body.iter().any(is_debugger_program_item),
-            "no top-level debugger should remain; got {:?}",
+            2,
+            "both top-level statements must survive; got {:?}",
             out.body
         );
     }
 
     #[test]
-    fn block_of_only_debuggers_becomes_empty() {
-        // { debugger; debugger; } → { }
+    fn a_block_of_only_debuggers_is_not_emptied() {
+        // { debugger; debugger; } keeps both. Previously this block was
+        // emptied outright, which is the largest single case of the defect.
         let body = vec![debugger_stmt(), debugger_stmt()];
         let prog = program_with_function(body, Some("block.1"));
-        let (out, _contribs, changed, _) = run_pass(prog);
-        assert!(changed);
+        let (out, _contribs, _changed, _) = run_pass(prog);
         let new_block = extract_function_body(&out);
-        assert!(
-            new_block.body.is_empty(),
-            "both debuggers should be gone, leaving an empty block; got {:?}",
+        assert_eq!(
+            new_block.body.len(),
+            2,
+            "both debuggers must survive; got {:?}",
             new_block.body
         );
     }
 
     #[test]
     fn preserves_braceless_if_consequent_debugger() {
-        // `if (x) debugger;` — the debugger is the consequent, NOT in a
-        // statement list, so the list-scoped sweep leaves it intact. This pins
-        // the documented limitation (see `dce_tagged_statement`'s leaf arm).
+        // `if (x) debugger;` — always preserved. This used to pin a
+        // *limitation* of the sweep (a consequent is not in a statement list,
+        // so the list-scoped sweep could not reach it). Now it pins ordinary
+        // correct behaviour, and it is kept because it is the one shape that
+        // was right before and must stay right.
         let body = vec![if_stmt(ident("x"), debugger_stmt())];
         let prog = program_with_function(body, Some("block.1"));
         let (out, contribs, _changed, _) = run_pass(prog);
         assert!(
             !contribs.iter().any(|c| c.tag == "removed-debugger"),
-            "a brace-less consequent debugger must NOT be swept; got {:?}",
+            "a brace-less consequent debugger must not be swept; got {:?}",
             contribs
         );
         let new_block = extract_function_body(&out);
-        let Statement::Tagged(TaggedStatement::IfStatement(if_s)) = &new_block.body[0] else {
-            panic!("expected the if statement to survive; got {:?}", new_block.body);
-        };
+        assert_eq!(new_block.body.len(), 1, "the if must survive");
+        // Assert the consequent is still the `debugger`, not merely that *some*
+        // statement survived. A length check alone passes if the consequent is
+        // swapped for an `EmptyStatement`, and this is the only test covering
+        // the `DebuggerStatement` leaf arm of `dce_tagged_statement`.
+        match &new_block.body[0] {
+            Statement::Tagged(TaggedStatement::IfStatement(if_s)) => assert!(
+                matches!(
+                    &*if_s.consequent,
+                    Statement::Tagged(TaggedStatement::DebuggerStatement(_))
+                ),
+                "the consequent must still be the debugger; got {:?}",
+                if_s.consequent
+            ),
+            other => panic!("expected the if to survive; got {other:?}"),
+        }
+    }
+
+    // CCR-053 regression cover for the `DebuggerStatement` arm of
+    // `tail_is_safe_to_truncate`.
+    //
+    // These two are the shapes that actually broke. The first draft of CCR-053
+    // probed `return` and `if (false)`, asserted "both still work", and never
+    // probed `throw` — so a `debugger` surviving in a post-`throw` tail silently
+    // blocked whole-tail truncation and leaked the rest of the dead code into
+    // the output. The whitelist entry that fixes it had no test at all until
+    // now; a length assertion on the truncated body is what carries both.
+    //
+    // Why dropping it is sound: `is_terminator` matches only `return` and
+    // `throw`, both of which leave the enclosing function unconditionally, so
+    // nothing in the tail can ever execute. An UNREACHABLE `debugger` can never
+    // break into anything. That is the exact complement of the rule above — a
+    // REACHABLE `debugger` is observable and is never removed.
+
+    #[test]
+    fn unreachable_debugger_after_throw_does_not_block_truncation() {
+        // function () { throw x; debugger; } → { throw x; }
+        let body = vec![throw_stmt(ident("x")), debugger_stmt()];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        assert!(changed, "the dead tail must be truncated");
         assert!(
-            is_debugger_statement(&if_s.consequent),
-            "the consequent debugger should be preserved; got {:?}",
-            if_s.consequent
+            contribs.iter().any(|c| c.tag == "removed-dead-code"),
+            "expected removed-dead-code; got {contribs:?}"
+        );
+        let new_block = extract_function_body(&out);
+        assert_eq!(
+            new_block.body.len(),
+            1,
+            "only the throw may survive; got {:?}",
+            new_block.body
+        );
+    }
+
+    #[test]
+    fn unreachable_debugger_does_not_shield_the_dead_code_behind_it() {
+        // function () { throw x; debugger; y; } → { throw x; }
+        //
+        // This is the regression proper. With `DebuggerStatement` missing from
+        // the whitelist the tail was judged unsafe to truncate, so `y;` — real
+        // dead code — survived into the output alongside the `debugger`.
+        let body = vec![throw_stmt(ident("x")), debugger_stmt(), expr_stmt(ident("y"))];
+        let prog = program_with_function(body, Some("block.1"));
+        let (out, _contribs, changed, _) = run_pass(prog);
+        assert!(changed, "the dead tail must be truncated");
+        let new_block = extract_function_body(&out);
+        assert_eq!(
+            new_block.body.len(),
+            1,
+            "the debugger must not shield `y;` from truncation; got {:?}",
+            new_block.body
         );
     }
 
