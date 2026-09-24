@@ -22,6 +22,23 @@ layout JournalApp {
         label : "New entry" ,
         onClick : emit: onNewEntry
       )
+      // Search (J4a): a query turns the list below into ranked results.
+      // Clear appears only while there is something to clear.
+      Row [ search-bar ] {
+        HostInput [ search-input ] (
+          value : slot: search-query ,
+          placeholder : "Search" ,
+          a11y-label : "Search entries" ,
+          disabled : false ,
+          onChange : emit: onSearchChange
+        )
+        If ( when: slot: searching ) {
+          HostButton [ search-clear ] (
+            label : "Clear" ,
+            onClick : emit: onClearSearch
+          )
+        }
+      }
       If ( when: slot: timeline-empty ) {
         pkg::mosaic-pkg-toolkit::EmptyState (
           title : "No entries yet" ,
@@ -30,11 +47,22 @@ layout JournalApp {
         )
       }
       Else {
-        pkg::mosaic-pkg-toolkit::RecordList (
-          rows : slot: timeline-rows ,
-          selected-key : slot: selected-key ,
-          onSelect : emit: onSelectEntry
-        )
+        // A second EmptyState mount (#15959): the journal has entries, but
+        // none matches every word of the query.
+        If ( when: slot: no-matches ) {
+          pkg::mosaic-pkg-toolkit::EmptyState (
+            title : "No entries match" ,
+            message : "Every word must appear in an entry. Try fewer words, or Clear." ,
+            action-label : ""
+          )
+        }
+        Else {
+          pkg::mosaic-pkg-toolkit::RecordList (
+            rows : slot: timeline-rows ,
+            selected-key : slot: selected-key ,
+            onSelect : emit: onSelectEntry
+          )
+        }
       }
     }
     Column [ editor ] {

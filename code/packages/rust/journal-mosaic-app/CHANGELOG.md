@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Search (J4a).** `search_query` (not in the snapshot; a restart opens the
+  full timeline) and `onSearchChange` / `onClearSearch`. A query over the
+  engine's 1,024 characters is refused as it is typed. While searching,
+  `timeline-rows` holds the hits in rank order: no day heading, the engine's
+  snippet as the subtitle, and the day as a short `meta` ("24 Sep 2026"). The
+  long heading form did not fit beside a title in the 300px pane on Compose,
+  where it was drawn over the title. `timeline-empty` now means "no entries
+  at all"; `no-matches` is new. `onSelectEntry`'s index refers to the rows last
+  rendered, results included. `JournalScreenshots` adds 05-search-results and
+  06-no-matches; the editor's fields are now the 2nd and 3rd text fields.
 - `conformance/compose/JournalScreenshots.kt`: a screenshot harness for the
   generated Compose Journal over this runtime. Set `MOSAIC_SHOT_DIR` and run
   `gradle test --tests JournalScreenshots` in an emitted project. It checks

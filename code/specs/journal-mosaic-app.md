@@ -251,8 +251,11 @@ day groups:
 - `heading` is `""`, because results are ranked, not grouped by day;
 - `title` and `badge` are as for a timeline row;
 - `subtitle` is the engine's snippet around the first body match;
-- `meta` is the entry's day, in the same form as a timeline heading, so a hit
-  still says when it was written.
+- `meta` is the entry's day in short form (`24 Sep 2026`), so a hit still says
+  when it was written. It is short because `meta` shares a line with the
+  title button in the 300px pane: rendered on Compose, the long heading form
+  ("Thursday, 24 September 2026") did not fit beside a title and was drawn
+  over it. *Changed from the first draft, which reused the heading form.*
 
 `timeline-empty` stays "the journal has no entries". A search that matches
 nothing is `no-matches`, not `timeline-empty`, so the two empty states can say

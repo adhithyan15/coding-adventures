@@ -53,11 +53,12 @@ class JournalScreenshots {
 
             shot("01-empty-journal")
 
-            // The editor's two text fields: the title, then the body.
+            // The text fields: the timeline's search box (J4a), then the
+            // editor's title and body.
             val fields = onAllNodes(hasSetTextAction())
-            fields[0].performTextInput("First light")
+            fields[1].performTextInput("First light")
             waitForIdle()
-            fields[1].performTextInput("Wrote this on the Compose host. The timeline should show it under today.")
+            fields[2].performTextInput("Wrote this on the Compose host. The timeline should show it under today.")
             waitForIdle()
             shot("02-draft")
 
@@ -68,6 +69,19 @@ class JournalScreenshots {
             onNodeWithText("New entry").performClick()
             waitForIdle()
             shot("04-new-entry-beside-the-timeline")
+
+            // Search (J4a): the first field is now the search box, then the
+            // editor's title and body.
+            fields[1].performTextInput("A second entry")
+            waitForIdle()
+            onNodeWithText("Save").performClick()
+            waitForIdle()
+            onAllNodes(hasSetTextAction())[0].performTextInput("compose")
+            waitForIdle()
+            shot("05-search-results")
+            onAllNodes(hasSetTextAction())[0].performTextInput(" nothing-matches-this")
+            waitForIdle()
+            shot("06-no-matches")
         }
     }
 }

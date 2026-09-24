@@ -19,6 +19,31 @@ style JournalApp {
     border-color  : "#1d4ed8" ;
     border-radius : 4 ;
   }
+  // Search (J4a): the field takes the bar's spare width (a Row child's
+  // `width: 100%` is its share of the Row), and wears the
+  // editor's own field style; Clear wears the editor's Cancel style.
+  part search-bar {
+    gap : 6 ;
+  }
+  part search-input {
+    width         : 100% ;
+    padding       : 8 ;
+    background    : "#1f2937" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part search-clear {
+    padding       : 8 ;
+    background    : "#111827" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
   part editor {
     padding    : 16 ;
     background : "#0b1220" ;

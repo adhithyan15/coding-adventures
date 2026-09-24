@@ -9,11 +9,13 @@ behaviour of its own:
 | part | component | package |
 | --- | --- | --- |
 | the timeline | `RecordList` (rows grouped by day) | `mosaic-pkg-toolkit` |
-| the first-run state | `EmptyState` | `mosaic-pkg-toolkit` |
+| the first-run state, and "No entries match" | `EmptyState` (mounted twice) | `mosaic-pkg-toolkit` |
+| search (J4a) | a `HostInput` and a *Clear* button above the timeline | kernel primitives |
 | the editor | `DraftEditor` (title, body, Save / Delete / Cancel) | `mosaic-pkg-draft-editor` |
 
-The layout is a `HostNavigationSplit`: the timeline and a **New entry** button
-in the pane, and the editor in the detail.
+The layout is a `HostNavigationSplit`: a **New entry** button, the search field
+and the timeline in the pane, and the editor in the detail. A search turns the
+timeline into ranked results (the engine's `search`: every word must match).
 
 ## The behaviour lives in Rust
 
