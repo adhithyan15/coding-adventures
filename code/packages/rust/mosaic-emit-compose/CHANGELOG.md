@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-24 (disabled buttons)
+
+- **A disabled `HostButton` keeps its authored background.** `ButtonDefaults.buttonColors(backgroundColor = …)` sets only the enabled colour. A disabled button therefore fell back to Material's `disabledBackgroundColor`, `onSurface` at 12% over the light theme's surface, which is near-white. On Engram's dark Collection panel, "Delete note" and "Delete note type" rendered as blank pale pills while nothing was selected, found with the Engram screenshot harness (#15987). `disabledBackgroundColor` is now the same expression. That matches the web, where a disabled button keeps its authored background unless the package styles `state disabled`. Rendered: the two buttons show their crimson in Engram's Decks screen, the other five Engram screens and every Trestle view are byte-identical, and the emitter's 210 tests pass.
+
 ## 2026-09-24 (text box)
 
 - **A `Text` wears its part's box.** The `Text` arm built the part's whole `ComposeStyle` but passed only its text style to `emit_text`. The modifier chain was thrown away: padding, background, rounded corners, size and border. Calendar's today badge (a 21px amber pill) was never drawn, and Trestle's "Up next" count and due-date pills were bare text. The drop reporter lowers the same properties through the container path, so it reported 0 degradations. Now the chain follows the width decision (`fillMaxWidth()` / `weight` / the UI59 floor, which comes first as it does for containers) and precedes the semantics. The previous semantics-first order is gone. The reporter's answer is now true, and a lesson records the gap.
