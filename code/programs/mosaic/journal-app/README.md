@@ -67,8 +67,13 @@ The same lane also runs this package's tests.
 and the Compose lane runs `gradle compileKotlin`. Both use the same strict
 binding, with zero degradations.
 
+**The browser** (J5c): `host/web` is a Vite and React page. It mounts the
+generated `JournalApp` over the `journal-mosaic-app` runtime built for wasm32,
+and it keeps the journal in `localStorage`. See [`host/web/README.md`](host/web/README.md).
+`scripts/build-web.sh` regenerates its inputs, and
+`.github/workflows/journal-mosaic-web.yml` tests it against the real wasm.
+
 Not yet:
 
 - launching on SwiftUI or Compose, and the Flutter and XAML lanes;
-- the web host, which needs a wasm clock;
 - packaging and release (J5).
