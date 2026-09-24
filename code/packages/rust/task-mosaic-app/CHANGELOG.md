@@ -1,5 +1,12 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — Calendar day names centred on Compose
+
+- No code change here. On Compose a `Text`'s `text-align` is now lowered
+  (`mosaic-emit-compose`), so the Calendar view's Sun–Sat names are
+  centred over their columns as on the web. Only `03c-calendar` changes;
+  `TaskAppUiTest` still passes.
+
 ## [Unreleased] — Compose rows share their width
 
 - No code change here. On Compose, a control's `width: 100%` in a Row is now
