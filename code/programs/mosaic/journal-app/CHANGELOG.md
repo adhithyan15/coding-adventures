@@ -2,6 +2,13 @@
 
 ## 0.1.0 — unreleased
 
+- **Tags (J4d).** A labelled *Tags* field above the editor (comma-separated,
+  saved by Save), each row's tags as its `meta`, and, when any entry has a
+  tag, a vertical `SegmentedControl` of options like "#travel (3)" (the first
+  `SegmentedControl` in Journal; vertical because the pane is 300px). An
+  option filters every list, and selecting it again clears the filter. New
+  slots: `draft-tags`, `tag-options`, `selected-tag-index`, `has-tags`. New
+  events: `onTagsChange`, `onSelectTag`.
 - **On this day (J4c).** Above the timeline, when earlier years have entries on
   today's date: an "On this day" heading in the stars' amber, and a second
   `RecordList` mount grouped as "1 year ago · 24 Sep 2025". It follows the

@@ -35,11 +35,19 @@
 //!
 //! Above the timeline, the engine's `on_this_day` recall: what was written on
 //! today's month and day in earlier years. Hidden while searching.
+//!
+//! ## Tags (J4d)
+//!
+//! Tags are part of the draft, typed comma-separated, and written on Save
+//! AFTER being validated, so a bad tag leaves the journal untouched. A
+//! SegmentedControl of the journal's tags filters every list; the choice is
+//! a view, not persisted.
 
 use std::error::Error;
 use std::fmt;
 
-use journal_core::projections::{on_this_day, search, timeline, MAX_QUERY_CHARS};
+use journal_core::projections::{on_this_day, search, tag_counts, timeline, MAX_QUERY_CHARS};
+use journal_core::tag::{normalize_tags, MAX_TAGS_PER_ENTRY, MAX_TAG_CHARS};
 use journal_core::{
     apply, Command, Date, Entry, EntryFilter, EntryId, JournalId, JournalState, OpError,
     MAX_BODY_BYTES, MAX_TITLE_CHARS,
@@ -79,6 +87,10 @@ struct AppState {
     target: Target,
     draft_title: String,
     draft_body: String,
+    /// The editor's tags, as typed: `travel, family` (J4d). Defaults to empty
+    /// so a version-1 snapshot written before tags still loads.
+    #[serde(default)]
+    draft_tags: String,
     next_entry: u64,
 }
 
@@ -98,6 +110,8 @@ pub struct JournalMosaicApp {
     search_query: String,
     /// The *Starred only* filter (J4b). Not in the snapshot, like the query.
     starred_only: bool,
+    /// The selected tag's key (J4d). Not in the snapshot, like the filter.
+    tag_filter: Option<String>,
 }
 
 impl Default for JournalMosaicApp {
@@ -148,11 +162,13 @@ impl JournalMosaicApp {
             utc_offset_minutes: 0,
             search_query: String::new(),
             starred_only: false,
+            tag_filter: None,
             state: AppState {
                 journal,
                 target: Target::New,
                 draft_title: String::new(),
                 draft_body: String::new(),
+                draft_tags: String::new(),
                 next_entry: 1,
             },
             clock,
@@ -167,6 +183,8 @@ impl JournalMosaicApp {
         let rows = self.timeline_rows();
         let journal_empty = self.state.journal.entries.is_empty();
         let recalled = self.on_this_day_rows();
+        let tags = self.all_tags();
+        let active = self.active_tag();
         json!({
             // "The journal has no entries", whatever the query. A search that
             // matches nothing is `no-matches`, so the two empty states can say
@@ -183,6 +201,13 @@ impl JournalMosaicApp {
             // A search takes the whole pane; the recall is a timeline companion.
             "has-on-this-day": !searching && !recalled.is_empty(),
             "on-this-day-rows": recalled,
+            "draft-tags": self.state.draft_tags,
+            "tag-options": tags.iter().map(|c| format!("#{} ({})", c.tag.display(), c.count)).collect::<Vec<_>>(),
+            "selected-tag-index": active
+                .as_ref()
+                .and_then(|tag| tags.iter().position(|c| c.tag.key() == tag.key()))
+                .map_or(-1, |i| i as i64),
+            "has-tags": !tags.is_empty(),
             "star-label": match &self.state.target {
                 Target::New => "",
                 Target::Entry(id) => match self.state.journal.entry(id) {
@@ -208,8 +233,25 @@ impl JournalMosaicApp {
     fn filter(&self) -> EntryFilter {
         EntryFilter {
             starred_only: self.starred_only,
+            tag: self.active_tag(),
             ..EntryFilter::default()
         }
+    }
+
+    /// Every tag in the journal with its entry count, most used first. Counted
+    /// over ALL entries, so an option never vanishes under the filter it sets.
+    fn all_tags(&self) -> Vec<journal_core::projections::TagCount> {
+        tag_counts(&self.state.journal, &EntryFilter::default())
+    }
+
+    /// The selected tag, if it still exists: a tag whose last entry was
+    /// deleted or retagged simply stops filtering.
+    fn active_tag(&self) -> Option<journal_core::Tag> {
+        let key = self.tag_filter.as_deref()?;
+        self.all_tags()
+            .into_iter()
+            .find(|count| count.tag.key() == key)
+            .map(|count| count.tag)
     }
 
     /// Whether the query has anything to search for.
@@ -261,7 +303,7 @@ impl JournalMosaicApp {
                     if i == 0 { heading.clone() } else { String::new() },
                     title,
                     subtitle,
-                    String::new(),
+                    tags_meta(entry),
                     star_badge(entry),
                 ]);
             }
@@ -318,7 +360,7 @@ impl JournalMosaicApp {
                     },
                     title,
                     subtitle,
-                    String::new(),
+                    tags_meta(entry),
                     star_badge(entry),
                 ]);
             }
@@ -370,6 +412,7 @@ impl JournalMosaicApp {
                 self.state.target = Target::New;
                 self.state.draft_title.clear();
                 self.state.draft_body.clear();
+                self.state.draft_tags.clear();
                 Ok(self.update())
             }
             // Drafts are capped at the engine's own entry limits: an unsaveable
@@ -400,6 +443,7 @@ impl JournalMosaicApp {
                 self.state.target = Target::New;
                 self.state.draft_title.clear();
                 self.state.draft_body.clear();
+                self.state.draft_tags.clear();
                 Ok(self.announced("Entry deleted"))
             }
             // The query is capped at what the engine reads: a longer one could
@@ -430,6 +474,32 @@ impl JournalMosaicApp {
                 })?;
                 Ok(self.announced(if starred { "Unstarred" } else { "Starred" }))
             }
+            // Capped at what 64 tags of 64 characters, with separators, could
+            // take: longer could never save, and would be echoed at any size.
+            "onTagsChange" => {
+                let value = text_payload(event, "value")?;
+                if !tags_fit(&value) {
+                    return Err(invalid(event, "value"));
+                }
+                self.state.draft_tags = value;
+                Ok(self.update())
+            }
+            // An option of the tag-options last rendered; the selected one
+            // clears the filter.
+            "onSelectTag" => {
+                let index = index_payload(event, "index")?;
+                let key = self
+                    .all_tags()
+                    .get(index)
+                    .map(|count| count.tag.key().to_string())
+                    .ok_or_else(|| invalid(event, "index"))?;
+                self.tag_filter = if self.active_tag().is_some_and(|t| t.key() == key) {
+                    None
+                } else {
+                    Some(key)
+                };
+                Ok(self.update())
+            }
             "onToggleStarredFilter" => {
                 self.starred_only = !self.starred_only;
                 Ok(self.update())
@@ -443,6 +513,7 @@ impl JournalMosaicApp {
                     Target::New => {
                         self.state.draft_title.clear();
                         self.state.draft_body.clear();
+                        self.state.draft_tags.clear();
                     }
                     Target::Entry(id) => self.target_entry(id),
                 }
@@ -455,6 +526,12 @@ impl JournalMosaicApp {
     fn save(&mut self) -> Result<AppUpdate, JournalAppError> {
         let title = self.state.draft_title.clone();
         let body = self.state.draft_body.clone();
+        // Tags are validated BEFORE anything is written: the entry and its
+        // tags are two commands, and a bad tag must not leave an entry saved
+        // without them.
+        let tags = split_tags(&self.state.draft_tags);
+        normalize_tags(&tags)
+            .map_err(|(index, reason)| engine_error(OpError::InvalidTag { index, reason }))?;
         match self.state.target.clone() {
             Target::New => {
                 if title.trim().is_empty() && body.trim().is_empty() {
@@ -468,14 +545,26 @@ impl JournalMosaicApp {
                     title,
                     body,
                 })?;
+                self.run(Command::SetTags {
+                    id: id.clone(),
+                    tags,
+                })?;
                 self.state.target = Target::Entry(id);
             }
             Target::Entry(id) => {
                 self.run(Command::EditEntry {
-                    id,
+                    id: id.clone(),
                     title: Some(title),
                     body: Some(body),
                 })?;
+                self.run(Command::SetTags { id, tags })?;
+            }
+        }
+        // Show the tags as saved: the engine tidies and de-duplicates them, so
+        // " Travel, travel " comes back as "Travel".
+        if let Target::Entry(id) = &self.state.target {
+            if let Some(entry) = self.state.journal.entry(id) {
+                self.state.draft_tags = tags_text(entry);
             }
         }
         Ok(self.announced("Entry saved"))
@@ -492,12 +581,14 @@ impl JournalMosaicApp {
             Some(entry) => {
                 self.state.draft_title = entry.title.clone();
                 self.state.draft_body = entry.body.clone();
+                self.state.draft_tags = tags_text(entry);
                 self.state.target = Target::Entry(id);
             }
             None => {
                 self.state.target = Target::New;
                 self.state.draft_title.clear();
                 self.state.draft_body.clear();
+                self.state.draft_tags.clear();
             }
         }
     }
@@ -547,18 +638,22 @@ impl MosaicApp for JournalMosaicApp {
             self.state.target.clone(),
             self.state.draft_title.clone(),
             self.state.draft_body.clone(),
+            self.state.draft_tags.clone(),
             self.state.next_entry,
             self.search_query.clone(),
             self.starred_only,
+            self.tag_filter.clone(),
         );
         self.dispatch_inner(&event).inspect_err(|_| {
             (
                 self.state.target,
                 self.state.draft_title,
                 self.state.draft_body,
+                self.state.draft_tags,
                 self.state.next_entry,
                 self.search_query,
                 self.starred_only,
+                self.tag_filter,
             ) = before;
         })
     }
@@ -592,6 +687,7 @@ impl MosaicApp for JournalMosaicApp {
             || state.next_entry > MAX_NEXT_ENTRY
             || !title_fits(&state.draft_title)
             || !body_fits(&state.draft_body)
+            || !tags_fit(&state.draft_tags)
         {
             return Err(JournalAppError::InvalidSnapshot);
         }
@@ -771,6 +867,43 @@ fn row_text(entry: &Entry) -> (String, String) {
     }
 }
 
+/// The editor's text for an entry's tags: `travel, family`.
+fn tags_text(entry: &Entry) -> String {
+    entry
+        .tags
+        .iter()
+        .map(|t| t.display())
+        .collect::<Vec<_>>()
+        .join(", ")
+}
+
+/// A row's `meta`: `#travel #family`, at most 24 characters. Short because
+/// `meta` shares a line with the title button in a 300px pane.
+fn tags_meta(entry: &Entry) -> String {
+    let text = entry
+        .tags
+        .iter()
+        .map(|t| format!("#{}", t.display()))
+        .collect::<Vec<_>>()
+        .join(" ");
+    truncate(&text, 24)
+}
+
+/// The draft's tags, split on commas, blanks dropped: `" a, ,b "` → `["a", "b"]`.
+fn split_tags(text: &str) -> Vec<String> {
+    text.split(',')
+        .map(str::trim)
+        .filter(|part| !part.is_empty())
+        .map(str::to_string)
+        .collect()
+}
+
+/// The most the Tags field can hold: 64 tags of 64 characters, each with a
+/// `, ` separator. Anything longer could never be saved.
+fn tags_fit(value: &str) -> bool {
+    value.chars().count() <= MAX_TAGS_PER_ENTRY * (MAX_TAG_CHARS + 2)
+}
+
 /// `★` for a starred entry, else `""`.
 fn star_badge(entry: &Entry) -> String {
     if entry.starred {
@@ -909,16 +1042,20 @@ mod tests {
             [
                 "delete-label",
                 "draft-body",
+                "draft-tags",
                 "draft-title",
                 "has-on-this-day",
+                "has-tags",
                 "no-matches",
                 "no-starred",
                 "on-this-day-rows",
                 "search-query",
                 "searching",
                 "selected-key",
+                "selected-tag-index",
                 "star-label",
                 "starred-only",
+                "tag-options",
                 "timeline-empty",
                 "timeline-rows"
             ]
@@ -927,6 +1064,143 @@ mod tests {
         assert_eq!(props["delete-label"], "");
         assert_eq!(props["searching"], false);
         assert_eq!(props["no-matches"], false);
+    }
+
+    // ── tags (J4d) ────────────────────────────────────────────────────────────
+
+    fn write_tagged(app: &mut JournalMosaicApp, title: &str, tags: &str) {
+        send(app, "onNewEntry", json!({})).unwrap();
+        send(app, "onTitleChange", json!({ "value": title })).unwrap();
+        send(app, "onTagsChange", json!({ "value": tags })).unwrap();
+        send(app, "onSaveEntry", json!({})).unwrap();
+    }
+
+    fn titles(app: &JournalMosaicApp) -> Vec<String> {
+        rows(app).iter().map(|r| r[2].clone()).collect()
+    }
+
+    #[test]
+    fn tags_are_saved_with_the_entry_and_shown_as_row_meta() {
+        let mut a = app();
+        write_tagged(&mut a, "Trip", " Travel, family ,, travel ");
+        let props = a.props();
+        assert_eq!(rows(&a)[0][4], "#Travel #family", "tidied and deduplicated");
+        assert_eq!(props["draft-tags"], "Travel, family", "the editor shows what was saved");
+        assert_eq!(props["has-tags"], true);
+        assert_eq!(props["tag-options"], json!(["#family (1)", "#Travel (1)"]));
+        assert_eq!(props["selected-tag-index"], -1);
+    }
+
+    #[test]
+    fn tags_belong_to_the_draft_cancel_reverts_them() {
+        let mut a = app();
+        write_tagged(&mut a, "Trip", "travel");
+        send(&mut a, "onTagsChange", json!({ "value": "work" })).unwrap();
+        assert_eq!(rows(&a)[0][4], "#travel", "unsaved tags change nothing yet");
+        let props = send(&mut a, "onCancelEdit", json!({})).unwrap().props;
+        assert_eq!(props["draft-tags"], "travel");
+        let props = send(&mut a, "onNewEntry", json!({})).unwrap().props;
+        assert_eq!(props["draft-tags"], "");
+    }
+
+    #[test]
+    fn a_bad_tag_fails_the_whole_save_and_writes_nothing() {
+        let mut a = app();
+        send(&mut a, "onTitleChange", json!({ "value": "Never saved" })).unwrap();
+        let long = "x".repeat(MAX_TAG_CHARS + 1);
+        send(&mut a, "onTagsChange", json!({ "value": format!("ok, {long}") })).unwrap();
+        assert!(send(&mut a, "onSaveEntry", json!({})).is_err());
+        assert_eq!(a.props()["timeline-empty"], true, "no entry without its tags");
+        assert_eq!(a.props()["draft-title"], "Never saved", "the draft is kept to fix");
+
+        write_tagged(&mut a, "Saved", "fine");
+        send(&mut a, "onTagsChange", json!({ "value": "bad\ntag" })).unwrap();
+        send(&mut a, "onTitleChange", json!({ "value": "Renamed" })).unwrap();
+        assert!(send(&mut a, "onSaveEntry", json!({})).is_err());
+        assert_eq!(titles(&a), ["Saved"], "an edit with a bad tag writes nothing either");
+    }
+
+    #[test]
+    fn an_overlong_tags_field_is_refused_as_typed() {
+        let mut a = app();
+        let long = "x".repeat(MAX_TAGS_PER_ENTRY * (MAX_TAG_CHARS + 2) + 1);
+        assert!(send(&mut a, "onTagsChange", json!({ "value": long })).is_err());
+        assert_eq!(a.props()["draft-tags"], "");
+    }
+
+    #[test]
+    fn selecting_a_tag_filters_every_list_and_again_clears_it() {
+        let mut a = app();
+        write_tagged(&mut a, "Beach", "travel");
+        write_tagged(&mut a, "Office", "work");
+        write_tagged(&mut a, "Airport", "travel, work");
+        let options: Vec<String> =
+            serde_json::from_value(a.props()["tag-options"].clone()).unwrap();
+        assert_eq!(options, ["#travel (2)", "#work (2)"]);
+
+        let props = send(&mut a, "onSelectTag", json!({ "index": 0 })).unwrap().props;
+        assert_eq!(props["selected-tag-index"], 0);
+        let mut got = titles(&a);
+        got.sort();
+        assert_eq!(got, ["Airport", "Beach"]);
+        let options: Vec<String> =
+            serde_json::from_value(a.props()["tag-options"].clone()).unwrap();
+        assert_eq!(options.len(), 2, "options count every entry, not the filtered list");
+
+        send(&mut a, "onSearchChange", json!({ "value": "office" })).unwrap();
+        assert_eq!(a.props()["no-matches"], true, "search honours the tag filter");
+        send(&mut a, "onClearSearch", json!({})).unwrap();
+
+        let props = send(&mut a, "onSelectTag", json!({ "index": 0 })).unwrap().props;
+        assert_eq!(props["selected-tag-index"], -1);
+        assert_eq!(rows(&a).len(), 3);
+        assert!(send(&mut a, "onSelectTag", json!({ "index": 9 })).is_err());
+    }
+
+    #[test]
+    fn a_selected_tag_that_disappears_stops_filtering() {
+        let mut a = app();
+        write_tagged(&mut a, "Only", "rare");
+        write_tagged(&mut a, "Other", "");
+        send(&mut a, "onSelectTag", json!({ "index": 0 })).unwrap();
+        assert_eq!(titles(&a), ["Only"]);
+        send(&mut a, "onSelectEntry", json!({ "index": 0 })).unwrap();
+        send(&mut a, "onTagsChange", json!({ "value": "" })).unwrap();
+        let props = send(&mut a, "onSaveEntry", json!({})).unwrap().props;
+        assert_eq!(props["has-tags"], false);
+        assert_eq!(props["selected-tag-index"], -1);
+        assert_eq!(rows(&a).len(), 2, "the vanished tag no longer filters");
+    }
+
+    #[test]
+    fn draft_tags_persist_but_the_tag_filter_does_not() {
+        let mut a = app();
+        write_tagged(&mut a, "Trip", "travel");
+        send(&mut a, "onSelectTag", json!({ "index": 0 })).unwrap();
+        send(&mut a, "onTagsChange", json!({ "value": "travel, unsaved" })).unwrap();
+        let snapshot = a.snapshot().unwrap().unwrap();
+        let mut b = JournalMosaicApp::with_clock(test_clock);
+        let mut ctx = StartContext::new("en-US", Platform::Linux);
+        ctx.restored_snapshot = Some(snapshot);
+        let props = b.start(ctx).unwrap().props;
+        assert_eq!(props["draft-tags"], "travel, unsaved");
+        assert_eq!(props["selected-tag-index"], -1);
+    }
+
+    #[test]
+    fn a_snapshot_written_before_tags_still_loads() {
+        let mut a = app();
+        write(&mut a, "Old", "body");
+        let snapshot = a.snapshot().unwrap().unwrap();
+        let mut state: Value = serde_json::from_slice(&snapshot.bytes).unwrap();
+        state.as_object_mut().unwrap().remove("draftTags");
+        let old = Snapshot { bytes: serde_json::to_vec(&state).unwrap(), ..snapshot };
+        let mut b = JournalMosaicApp::with_clock(test_clock);
+        let mut ctx = StartContext::new("en-US", Platform::Linux);
+        ctx.restored_snapshot = Some(old);
+        let props = b.start(ctx).unwrap().props;
+        assert_eq!(props["draft-tags"], "");
+        assert_eq!(rows(&b).len(), 1);
     }
 
     // ── on this day (J4c) ─────────────────────────────────────────────────────

@@ -139,6 +139,28 @@ it("stars an entry and filters the timeline to starred entries", async () => {
   expect(() => button("Plain day")).toThrow();
 });
 
+it("tags entries and filters the timeline by a tag", async () => {
+  await mount(memoryStorage());
+  const tagsField = () => container.querySelector('input[aria-label="Tags"]') as HTMLInputElement;
+  const writeTagged = async (title: string, tags: string) => {
+    await act(async () => button("New entry").click());
+    await type(container.querySelector('input[aria-label="Title"]') as HTMLInputElement, title);
+    await type(tagsField(), tags);
+    await act(async () => button("Save").click());
+  };
+  await writeTagged("Beach", "travel");
+  await writeTagged("Office", "work");
+  expect(tagsField().value).toBe("work");
+  expect(container.textContent).toContain("#travel");
+
+  await act(async () => button("#travel (1)").click());
+  expect(button("Beach")).toBeTruthy();
+  expect(() => button("Office")).toThrow();
+
+  await act(async () => button("#travel (1)").click());
+  expect(button("Office")).toBeTruthy();
+});
+
 it("keeps an unreadable journal aside instead of losing it", async () => {
   const storage = memoryStorage();
   storage.setItem(STATE_KEY, '{"schema":"journal-mosaic-app/state","version":1,"text":"not json"}');

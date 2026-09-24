@@ -4,7 +4,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import androidx.compose.ui.test.hasSetTextAction
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runSkikoComposeUiTest
 import java.io.File
 import javax.imageio.ImageIO
@@ -53,12 +53,11 @@ class JournalScreenshots {
 
             shot("01-empty-journal")
 
-            // The text fields: the timeline's search box (J4a), then the
-            // editor's title and body.
-            val fields = onAllNodes(hasSetTextAction())
-            fields[1].performTextInput("First light")
+            // Fields by tag, not position: the pane and editor keep gaining
+            // fields (search J4a, tags J4d).
+            onNodeWithTag("draft-editor-title").performTextInput("First light")
             waitForIdle()
-            fields[2].performTextInput("Wrote this on the Compose host. The timeline should show it under today.")
+            onNodeWithTag("draft-editor-body").performTextInput("Wrote this on the Compose host. The timeline should show it under today.")
             waitForIdle()
             shot("02-draft")
 
@@ -72,14 +71,14 @@ class JournalScreenshots {
 
             // Search (J4a): the first field is now the search box, then the
             // editor's title and body.
-            fields[1].performTextInput("A second entry")
+            onNodeWithTag("draft-editor-title").performTextInput("A second entry")
             waitForIdle()
             onNodeWithText("Save").performClick()
             waitForIdle()
-            onAllNodes(hasSetTextAction())[0].performTextInput("compose")
+            onNodeWithTag("search-input").performTextInput("compose")
             waitForIdle()
             shot("05-search-results")
-            onAllNodes(hasSetTextAction())[0].performTextInput(" nothing-matches-this")
+            onNodeWithTag("search-input").performTextInput(" nothing-matches-this")
             waitForIdle()
             shot("06-no-matches")
 
@@ -91,6 +90,17 @@ class JournalScreenshots {
             onNodeWithText("Starred only").performClick()
             waitForIdle()
             shot("07-starred-only")
+
+            // Tags (J4d): tag the open entry, then filter by the tag.
+            onNodeWithText("Starred only").performClick()
+            waitForIdle()
+            onNodeWithTag("tags-input").performTextInput("travel, family")
+            waitForIdle()
+            onNodeWithText("Save").performClick()
+            waitForIdle()
+            onNodeWithText("#travel (1)").performClick()
+            waitForIdle()
+            shot("08-tag-filter")
         }
     }
 }
