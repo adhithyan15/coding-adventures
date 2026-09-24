@@ -5999,21 +5999,44 @@ fn resolve_layout_package_references(
 /// renamed part itself wins, and no copy is made. Each copy sits right after
 /// its source. With no renames (every component mounted once) the style is
 /// untouched.
+///
+/// One pass, linear in parts plus renames: a package can inline a component
+/// many times over, so this must not scan the style once per rename.
 fn copy_styles_for_renamed_parts(
     style: &mut mosstyle_compiler::StyleDef,
     renames: &[mosaic_package_resolver::PartRename],
 ) {
+    if renames.is_empty() {
+        return;
+    }
+    let existing: HashSet<&str> = style.parts.iter().map(|part| part.name.as_str()).collect();
+    let mut copies: HashMap<&str, Vec<&str>> = HashMap::new();
+    let mut seen: HashSet<&str> = HashSet::new();
     for rename in renames {
-        if style.parts.iter().any(|part| part.name == rename.to) {
+        if existing.contains(rename.to.as_str()) || !seen.insert(rename.to.as_str()) {
             continue;
         }
-        let Some(index) = style.parts.iter().position(|part| part.name == rename.from) else {
-            continue;
-        };
-        let mut copy = style.parts[index].clone();
-        copy.name = rename.to.clone();
-        style.parts.insert(index + 1, copy);
+        copies
+            .entry(rename.from.as_str())
+            .or_default()
+            .push(rename.to.as_str());
     }
+    let mut parts = Vec::with_capacity(style.parts.len() + seen.len());
+    let mut copied: HashSet<&str> = HashSet::new();
+    for part in &style.parts {
+        parts.push(part.clone());
+        // Only the first part of a name carries its copies.
+        if let Some(names) = copies.get(part.name.as_str()) {
+            if copied.insert(part.name.as_str()) {
+                for name in names {
+                    let mut copy = part.clone();
+                    copy.name = (*name).to_string();
+                    parts.push(copy);
+                }
+            }
+        }
+    }
+    style.parts = parts;
 }
 
 fn collect_dependency_style_parts(
