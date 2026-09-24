@@ -55,6 +55,19 @@ layout JournalApp {
           onClick : emit: onToggleStarredFilter
         )
       }
+      // On this day (J4c): a second RecordList mount (#15959), above the
+      // timeline, only when earlier years have entries on today's date.
+      If ( when: slot: has-on-this-day ) {
+        Text [ on-this-day-title ] (
+          content : "On this day" ,
+          a11y-role : heading
+        )
+        pkg::mosaic-pkg-toolkit::RecordList (
+          rows : slot: on-this-day-rows ,
+          selected-key : slot: selected-key ,
+          onSelect : emit: onSelectOnThisDay
+        )
+      }
       If ( when: slot: timeline-empty ) {
         pkg::mosaic-pkg-toolkit::EmptyState (
           title : "No entries yet" ,

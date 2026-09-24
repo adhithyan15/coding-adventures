@@ -192,6 +192,33 @@ it("files an entry under the browser's local day, not UTC's", async () => {
   expect(container.textContent).toContain("Wednesday, 23 September 2026");
 });
 
+it("recalls last year's entry on this day, and opens it", async () => {
+  const storage = memoryStorage();
+  const at = (ms: number) => () => loadRuntime(wasm, false, { now: () => ms, utcOffsetMinutes: 0 });
+  const mountAt = async (ms: number) => {
+    await act(async () => root.render(<App load={at(ms)} storage={storage} />));
+    for (let waited = 0; container.textContent?.includes("Opening your journal"); waited += 10) {
+      if (waited > 5000) throw new Error("Journal did not start");
+      await act(async () => new Promise(resolve => setTimeout(resolve, 10)));
+    }
+  };
+  // Written on 24 September 2025...
+  await mountAt(Date.UTC(2025, 8, 24, 12));
+  await writeEntry("Harbour at dawn", "A year ago today.");
+  expect(container.textContent).not.toContain("On this day");
+  await act(async () => root.unmount());
+  root = createRoot(container);
+  // ...recalled on 24 September 2026.
+  await mountAt(Date.UTC(2026, 8, 24, 12));
+  expect(container.textContent).toContain("On this day");
+  expect(container.textContent).toContain("1 year ago · 24 Sep 2025");
+  await act(async () => button("New entry").click());
+  // The entry is in both lists; the first button is the recall's.
+  const recalled = [...container.querySelectorAll("button")].find(b => b.textContent === "Harbour at dawn")!;
+  await act(async () => recalled.click());
+  expect((container.querySelector('input[aria-label="Title"]') as HTMLInputElement).value).toBe("Harbour at dawn");
+});
+
 it("reads the browser's offset east of UTC, and leaves out an implausible one", () => {
   const at = (minutesWest: number) => ({ getTimezoneOffset: () => minutesWest }) as unknown as Date;
   expect(browserUtcOffsetMinutes(at(300))).toBe(-300); // New York in winter

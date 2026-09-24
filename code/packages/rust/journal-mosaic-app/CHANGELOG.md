@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **On this day (J4c).** `on-this-day-rows` come from journal-core's
+  `on_this_day` for the user's LOCAL today (the same `today(clock, offset)`
+  that files entries), through the shared filter. Each year opens with a
+  "N years ago · 24 Sep 2025" heading. `has-on-this-day` is false during a
+  search. `onSelectOnThisDay { index }` opens a recalled entry; it has its
+  own event because each `RecordList` indexes its own rows.
 - **Stars (J4b).** `onToggleStar` flips `Entry::starred` for the entry in the
   editor through `Command::SetStarred`. It is an error for a new draft. It
   does NOT save the draft, so an unsaved edit stays unsaved. `starred_only`
