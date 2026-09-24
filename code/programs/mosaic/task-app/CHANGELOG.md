@@ -4,6 +4,18 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Changed — Checklists empty states use the toolkit EmptyState
+
+- Both Checklists empty states ("No checklists yet" in the library, "Pick a
+  checklist, or make one" in the detail pane) are the toolkit `EmptyState`
+  again, like the List view's "Your Inbox is ready". C3a had drawn them as
+  plain text because a second mount of one component failed the build
+  (`DuplicatePart 'empty-state'`); the resolver now renames the second and
+  third mounts' parts (#15959), so all three share the heading semantics and
+  styles. The `cl-library-empty` / `cl-detail-empty` parts and styles are
+  gone. Checked on Compose with the screenshot harness: the three render
+  identically.
+
 ### Added — writing questions into a checklist template (C3c, #14018)
 
 - **Looked at, not just asserted.** The Compose screenshot harness
