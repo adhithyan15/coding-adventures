@@ -2036,6 +2036,26 @@ struct NativeScan<'a> {
     native_radio_groups: &'a HashSet<String>,
 }
 
+/// True when `backend` would silently discard the children authored inside a
+/// `HostButton` (#15921). XAML and HTML render them as the button's content —
+/// unless a `label` is also set, in which case the label wins and the subtree
+/// is dropped there too. Every other emitter reads only `label`.
+fn host_button_drops_children(backend: Backend, node: &LayoutNode) -> bool {
+    if node.children.is_empty() {
+        return false;
+    }
+    match backend {
+        Backend::React
+        | Backend::Electron
+        | Backend::WebComponent
+        | Backend::SwiftUI
+        | Backend::Compose
+        | Backend::Flutter
+        | Backend::Qt => true,
+        Backend::Xaml | Backend::Html => node.props.iter().any(|p| p.name == "label"),
+    }
+}
+
 fn collect_native_degradations(
     scan: &NativeScan<'_>,
     node: &LayoutNode,
@@ -2187,6 +2207,17 @@ fn collect_native_degradations(
                 "the backend does not yet lower HostProgressRing to its native determinate progress control",
             ))
         }
+        // #15921 — a HostButton with a child block. Every emitter but XAML and
+        // HTML lowers HostButton from its `label` alone and silently discards
+        // the authored subtree, emitting an empty or label-only button; XAML
+        // and HTML render the children as the button's content, but only when
+        // no `label` competes with them. Until children pass-through is
+        // specified for HostButton, the report must say so rather than stay
+        // clean over a row of blank buttons (J3a's RecordList found it).
+        "HostButton" if host_button_drops_children(backend, node) => Some((
+            "composition.button-children-unimplemented",
+            "the backend lowers HostButton from its label alone and discards the authored child subtree",
+        )),
         "HostLink" if backend == Backend::Flutter && flutter_link_requires_url_host(node) => Some((
             "effect.url-host-missing",
             "the Flutter emitter cannot open URLs without an application-supplied effect host",
@@ -8879,6 +8910,108 @@ layout LeechAction {
     /// UI86: every accepted shape of `HostButton` `selected:` is native on
     /// every native backend (XAML since #15463), and a string is reported
     /// everywhere.
+    #[test]
+    fn host_button_children_are_reported_wherever_they_are_dropped() {
+        // #15921: the card-in-a-button pattern compiled cleanly and emitted
+        // blank buttons on most backends with a clean report.
+        let pkg = make_package("mosaic-pkg-button-children", &["Rows"]);
+        fs::write(
+            pkg.path().join("src/Rows.mil"),
+            "component Rows {\n  slot title : text ;\n  emit onOpen ;\n}\n",
+        )
+        .unwrap();
+        let layout = |label: &str| {
+            format!(
+                r#"
+layout Rows {{
+  HostButton [ root ] ( {label}onClick : emit: onOpen ) {{
+    Column [ body ] {{
+      Text [ title ] ( content : slot: title )
+    }}
+  }}
+}}
+"#
+            )
+        };
+        let analyze = |backend: Backend| {
+            let out = TempDir::new().unwrap();
+            analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("button-children analysis")
+        };
+        let flagged = |report: &DegradationReport| -> Vec<(String, Option<String>)> {
+            report
+                .degradations
+                .iter()
+                .filter(|d| d.code == "composition.button-children-unimplemented")
+                .map(|d| (d.layout_path.clone(), d.primitive.clone()))
+                .collect()
+        };
+        let root = vec![("root".to_string(), Some("HostButton".to_string()))];
+
+        // No label: only the label-only emitters drop the subtree.
+        fs::write(pkg.path().join("src/Rows.mll"), layout("")).unwrap();
+        for backend in [
+            Backend::React,
+            Backend::Electron,
+            Backend::WebComponent,
+            Backend::SwiftUI,
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+        ] {
+            assert_eq!(flagged(&analyze(backend)), root, "{backend:?} drops the children");
+        }
+        for backend in [Backend::Xaml, Backend::Html] {
+            let report = analyze(backend);
+            assert!(flagged(&report).is_empty(), "{backend:?} renders the children");
+        }
+        assert!(analyze(Backend::Xaml).native_complete, "XAML keeps them: nothing to report");
+
+        // With a label, the label wins everywhere, so XAML and HTML drop too.
+        fs::write(pkg.path().join("src/Rows.mll"), layout("label : \"Open\" , ")).unwrap();
+        for backend in [Backend::Xaml, Backend::Html, Backend::Qt] {
+            assert_eq!(flagged(&analyze(backend)), root, "{backend:?} with a label");
+        }
+        assert!(!analyze(Backend::Xaml).native_complete, "the report is no longer clean");
+    }
+
+    #[test]
+    fn a_childless_host_button_is_not_reported() {
+        let pkg = make_package("mosaic-pkg-plain-button", &["Plain"]);
+        fs::write(
+            pkg.path().join("src/Plain.mll"),
+            "layout Plain {\n  HostButton [ root ] ( label: \"Go\" )\n}\n",
+        )
+        .unwrap();
+        for backend in [Backend::Qt, Backend::SwiftUI, Backend::Xaml, Backend::Flutter, Backend::Compose] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("plain-button analysis");
+            assert!(
+                report.degradations.iter().all(|d| d.code != "composition.button-children-unimplemented"),
+                "{backend:?}"
+            );
+        }
+    }
+
     #[test]
     fn host_button_selected_is_native_where_it_is_lowered() {
         let pkg = make_package("mosaic-pkg-selected-button", &["Picker"]);
