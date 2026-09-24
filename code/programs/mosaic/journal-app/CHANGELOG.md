@@ -2,6 +2,9 @@
 
 ## 0.1.0 — unreleased
 
+- The native gate's comment no longer says Compose ignores the editor
+  fields' `width: 100%`; it lowers it since #15967. The search field, a text
+  field inside a Row, is the case Compose still leaves at intrinsic width.
 - **Search (J4a).** A search field above the timeline turns it into ranked
   results from journal-core's `search`: every word must match, title and tag
   hits rank above body hits, and each hit shows a snippet and its day. A *Clear*
