@@ -23,6 +23,9 @@ ACCEPTANCE_PACKAGES = frozenset(
         # one check that compiles that handler was skipped for exactly the edits
         # most likely to break it. Both entries added with the Compose migration.
         "rust/engram-mosaic-app",
+        # Journal (J5b) is emitted and compiled by this lane.
+        "rust/journal-core",
+        "rust/journal-mosaic-app",
         "rust/mosaic-compile",
         "rust/mosaic-emit-swiftui",
         "rust/mosaic-package-artifact-builder",
@@ -31,6 +34,7 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/mosstyle-compiler",
         "mosaic/programs/task-app",
         "mosaic/programs/engram-app",
+        "mosaic/programs/journal-app",
     }
 )
 ACCEPTANCE_PACKAGE_PREFIXES = ("mosaic/mosaic-pkg-",)
