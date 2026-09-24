@@ -32,6 +32,11 @@ use crate::{Checklist, ChecklistId, ChecklistRun, RunStatus, Task, TaskId, TaskK
 /// have tens of items.
 pub const MAX_CHECKLIST_ITEMS: usize = 10_000;
 
+/// Longest run id, in bytes. Every copied item is named `"{run}/{task}"`, so the
+/// run id is repeated once per item; bounding it bounds what one instantiate
+/// stores (a 1 MB id on a full template would otherwise be ~10 GB of keys).
+pub const MAX_RUN_ID_BYTES: usize = 256;
+
 /// How a checklist walk treats a decision's branches.
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Reveal {
@@ -96,6 +101,9 @@ impl ProjectState {
         }
         if self.checklists.contains_key(&run) {
             return Err(OpError::Duplicate);
+        }
+        if run.as_str().len() > MAX_RUN_ID_BYTES {
+            return Err(OpError::Invalid("run id too long"));
         }
         if !self.tasks.contains_key(&tpl.root) {
             return Err(OpError::NotFound);
@@ -398,6 +406,31 @@ impl ProjectState {
         self.checklist_containing(task).map(|c| c.id.clone())
     }
 
+    /// Every checklist task mapped to its checklist, plus the set of roots — built
+    /// once (O(tasks)) for ops that ask "which checklist?" about many tasks.
+    /// On a shared root (malformed snapshot) the most restrictive owner wins, as
+    /// in [`ProjectState::checklist_containing`].
+    pub(crate) fn checklist_membership(&self) -> ChecklistMembership {
+        let mut members = HashMap::new();
+        let mut roots = HashSet::new();
+        if self.checklists.is_empty() {
+            return ChecklistMembership { members, roots };
+        }
+        let index = self.children_index();
+        for c in self.checklists.values() {
+            roots.insert(c.root.clone());
+            let Some(owner) = self.checklist_containing(&c.root) else {
+                continue;
+            };
+            let mut subtree = HashSet::new();
+            collect_subtree(&index, &c.root, &mut subtree);
+            for t in subtree {
+                members.entry(t).or_insert_with(|| owner.id.clone());
+            }
+        }
+        ChecklistMembership { members, roots }
+    }
+
     /// Whether `task` is some checklist's root.
     pub(crate) fn is_checklist_root(&self, task: &TaskId) -> bool {
         self.checklists.values().any(|c| &c.root == task)
@@ -491,6 +524,20 @@ impl ProjectState {
             }
         }
         rows
+    }
+}
+
+/// See [`ProjectState::checklist_membership`].
+pub(crate) struct ChecklistMembership {
+    members: HashMap<TaskId, ChecklistId>,
+    /// Every checklist root.
+    pub(crate) roots: HashSet<TaskId>,
+}
+
+impl ChecklistMembership {
+    /// The checklist containing `task`, if any.
+    pub(crate) fn get(&self, task: &TaskId) -> Option<&ChecklistId> {
+        self.members.get(task)
     }
 }
 
@@ -978,6 +1025,11 @@ mod tests {
         assert_eq!(p.delete_task(&t("r/fuel")), finished);
         assert_eq!(p.reparent(&t("r/doors"), Some(t("r/pax"))), finished);
         assert_eq!(
+            p.set_decision(&t("r/pax"), None),
+            finished,
+            "clearing edits the record too"
+        );
+        assert_eq!(
             p.set_status(&t("r/fuel"), Some(crate::StatusId::from_raw("done"))),
             finished
         );
@@ -1029,6 +1081,18 @@ mod tests {
         );
         // Moving within one checklist is fine.
         p.reparent(&t("doors"), Some(t("fuel"))).unwrap();
+    }
+
+    #[test]
+    fn a_run_id_is_bounded() {
+        let mut p = preflight();
+        let long = "r".repeat(MAX_RUN_ID_BYTES + 1);
+        assert_eq!(
+            p.instantiate_checklist(&c("tpl"), c(&long), 1),
+            Err(OpError::Invalid("run id too long"))
+        );
+        p.instantiate_checklist(&c("tpl"), c(&"r".repeat(MAX_RUN_ID_BYTES)), 1)
+            .unwrap();
     }
 
     #[test]

@@ -573,12 +573,13 @@ impl ProjectState {
         if !self.tasks.contains_key(id) {
             return Err(OpError::NotFound);
         }
+        // A finished run is a record — clearing its decision would also change what
+        // the run shows, so this guard comes before the clear branch.
+        self.ensure_checklist_structure_editable(id)?;
         let Some(d) = decision else {
             self.task_mut(id)?.decision = None;
             return Ok(());
         };
-        // A finished run is a record; answers belong to runs, never templates.
-        self.ensure_checklist_structure_editable(id)?;
         if d.answer.is_some()
             && self
                 .checklist_containing(id)
@@ -597,7 +598,10 @@ impl ProjectState {
             .filter_map(|t| t.decision.as_ref())
             .flat_map(|od| od.yes_children.iter().chain(od.no_children.iter()))
             .collect();
-        let home = self.checklist_id_of(id);
+        // Which checklist each task belongs to, computed once for the whole call
+        // rather than once per listed child.
+        let membership = self.checklist_membership();
+        let home = membership.get(id);
         let mut listed: std::collections::HashSet<&TaskId> = std::collections::HashSet::new();
         for c in d.yes_children.iter().chain(d.no_children.iter()) {
             if !self.tasks.contains_key(c) {
@@ -616,7 +620,7 @@ impl ProjectState {
             }
             // Reparenting under the decision must not pull an item across a
             // checklist boundary (e.g. a template item into a run).
-            if self.is_checklist_root(c) || self.checklist_id_of(c) != home {
+            if membership.roots.contains(c) || membership.get(c) != home {
                 return Err(OpError::Invalid(
                     "branch children must belong to the decision's checklist",
                 ));

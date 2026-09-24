@@ -97,8 +97,13 @@ these reachable):
   checklist and the project. Otherwise an answered decision could be moved
   into a template. `move_task` refuses checklist items altogether.
 - **A finished run is frozen:** no `create_task` under it, and no
-  `delete_task`, `reparent`, `set_decision` or `set_status` on its items.
-  `set_status` counts as ticking, because a done status sets `completed`.
+  `delete_task`, `reparent`, `set_decision` (not even clearing a decision) or
+  `set_status` on its items. `set_status` counts as ticking, because a done
+  status sets `completed`. What is frozen is the *record of the work*: ticks,
+  answers and structure. Text and display fields stay editable (names, notes,
+  order, labels, priority), so a typo in a finished run can still be fixed.
+- A run id is at most 256 bytes (`MAX_RUN_ID_BYTES`), because every copied item
+  repeats it.
 - `ensure_default_workflow` does not stamp checklist items, since stamping would
   tick template items.
 - A template holds at most 10,000 items (`MAX_CHECKLIST_ITEMS`), so one
