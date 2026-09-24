@@ -106,5 +106,24 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // can close. +1/+2/+1/+1 is the whole cost, it is inherent to any lesson that
   // sits at the end rather than a defect in this one, and the next lesson added
   // after it will pay part of it back.
-  expect(report.summary.missedByWindow).toEqual({ R1: 55, R2: 132, R3: 217, R4: 107 });
+  // {55, 132, 217, 107} -> {55, 135, 215, 90}. HL-C437's chapter 48: six `review`
+  // lessons closing the track's pre-A1 reinforcement debt, appended after the
+  // timed writing paper the comment above calls terminal. Decomposed by diffing
+  // the (atom, window) pairs against the corpus measured without them, because a
+  // fall of seventeen in R4 says nothing on its own about whose window closed:
+  //
+  //   CLOSED  8 R3 + 22 R4 = 30, by the six lessons retrieving forty atoms from
+  //           chapters 4-36 at the far end of the book. R4 is the window those
+  //           atoms were least able to reach, and it is where most of the fall is.
+  //   OPENED  3 R2 + 6 R3 + 5 R4 = 14, and NOT ONE of them belongs to a lesson
+  //           this tranche added. They are late-chapter atoms -- the phone
+  //           fields, the pronouns, the question words, connected reading --
+  //           whose windows did not EXIST at 272 lessons and do at 278.
+  //
+  // That second half is the comment above running in reverse. A terminal lesson
+  // cannot be retrieved, so its windows are uncountable rather than closed; the
+  // moment something follows it they become countable and start out missed. The
+  // prediction there -- "the next lesson added after it will pay part of it
+  // back" -- is what the 22 closed R4 windows are.
+  expect(report.summary.missedByWindow).toEqual({ R1: 55, R2: 135, R3: 215, R4: 90 });
 });

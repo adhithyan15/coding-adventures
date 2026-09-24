@@ -1,18 +1,19 @@
 {
   "language": "malayalam",
   "chapter": 92,
-  "sourceHash": "fnv1a64:a856b68f291ec379",
+  "sourceHash": "fnv1a64:3ad0e6eb0f2c7e80",
   "lessonIds": [
     "ML-C92-bhakshanam",
     "ML-C92-hottal",
     "ML-C92-bill",
-    "ML-R92-eating-out-recall"
+    "ML-R92-eating-out-recall",
+    "ML-R92-the-last-seven"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
   "text": "malayalam/narration/ch92.txt",
   "json": "malayalam/narration/ch92.json",
-  "textHash": "fnv1a64:11982caa6a578874",
-  "jsonHash": "fnv1a64:2ab29167b6ec22e2",
+  "textHash": "fnv1a64:55c3c838260e1cf2",
+  "jsonHash": "fnv1a64:9c18905dcda8b7df",
   "findings": []
 }

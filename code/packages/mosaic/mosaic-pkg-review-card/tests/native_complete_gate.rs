@@ -75,7 +75,6 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // reporting. Each pin is checked below and must disappear with its gap.
     (Backend::Flutter, "border-radius"),
     (Backend::Flutter, "color"),
-    (Backend::Flutter, "font-size"),
     (Backend::Flutter, "font-weight"),
     (Backend::Flutter, "padding-bottom"),
     (Backend::Flutter, "padding-top"),

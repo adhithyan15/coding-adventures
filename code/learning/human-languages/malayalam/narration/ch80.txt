@@ -1,8 +1,8 @@
 Malayalam, chapter 80: Where You Are From.
-4 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+5 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 ഊര് (ūrŭ) — town.
 
 Warm-up.
@@ -35,7 +35,7 @@ Wrap-up Recall.
 What is an ūrŭ? (A town — one settled place.) And which is the wider word, ūrŭ or nāṭŭ? (nāṭŭ.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 കേരളം ഇന്ത്യ (kēraḷaṁ indya) (kēraḷaṁ, indya) — Kerala and India.
 
 Warm-up.
@@ -73,7 +73,7 @@ Wrap-up Recall.
 Which of the two is the state? (kēraḷaṁ.) Which is the country? (indya.) And which sound sits in the middle of the first one? (The retroflex ള.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 മലയാളി (malayāḷi) — a Malayali.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -119,7 +119,7 @@ Wrap-up Recall.
 What is a malayāḷi? (A person of Kerala, a speaker of this language.) Which ending makes the person out of the language? (-ി.) And what changes when you put the word in front of another one? (Nothing.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 (where you are from) (evideyāṇŭ enna ōrmma) — from cold.
 
 Warm-up.
@@ -157,3 +157,31 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which word names one settled place? (ūrŭ.) Which word names the person rather than the place? (malayāḷi.) And how many shapes does Malayalam keep for that job, where English keeps two? (One.)
+
+
+Lesson 5 of 5.
+ഊണ്, വേണോ, അല്ലേ — asking, offering, and checking.
+
+Warm-up.
+[pause 3 seconds]
+The word for a meal. Say it, then offer one — the asking form of want.
+
+Guided Practice: three moves that need each other.
+[pause 1 second]
+[your turn — say: offer a meal — ūṇ vēṇō?]
+[pause 8 seconds for the answer]
+[your turn — say: check that you have understood — allē?]
+[pause 8 seconds for the answer]
+[your turn — say: the meal word again, and say which verb it is built from]
+[pause 8 seconds for the answer]
+വേണോ is not a separate word for do you want: it is the wanting word wearing the question ending the book taught long before. അല്ലേ does the opposite job — it does not ask a question so much as invite the other person to agree with one you have already answered.
+
+Why it's said this way.
+മലയാളി (malayāḷi) is the language word with a person ending on it, and that is worth holding because English does not build words this way reliably. The pattern is productive: a place or a tongue plus the ending gives you the people of it.
+[pause 1 second]
+[your turn — read: ഗ — name the letter, cold]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does അല്ലേ ask for information, or for agreement? (Agreement.) What does the ending on മലയാളി (malayāḷi) do to the language word? (Makes a person of it.)

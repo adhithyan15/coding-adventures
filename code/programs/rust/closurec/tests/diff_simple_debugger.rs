@@ -1,14 +1,16 @@
 //! Integration test for the `tests/diff/simple-debugger/` fixture.
 //!
-//! Exercises `--compilation_level SIMPLE` across a `debugger;` statement
-//! (CLOC21 made it representable; CLOC24 strips it). Before CLOC21, any
-//! program containing a `debugger` statement failed the typed-AST parse and
+//! Exercises `--compilation_level SIMPLE` across a `debugger;` statement.
+//! Before CLOC21, any program containing one failed the typed-AST parse and
 //! closurec fell back to WHITESPACE_ONLY (zero optimization). This fixture is
 //! the end-to-end oracle proving the SIMPLE pipeline runs across a `debugger`
-//! statement: `1 + 2` folds to `3` and the `debugger;` statement is STRIPPED
-//! (matching upstream Closure). The single-use `log` declaration is KEPT —
-//! SIMPLE is open-world and never inlines/deletes observable top-level names;
-//! that fold happens only at ADVANCED (closed-world).
+//! statement: `1 + 2` folds to `3`, and the `debugger;` itself is PRESERVED.
+//!
+//! CLOC24 used to strip it, and this file used to assert that. CCR-053
+//! measured it against the pinned oracle: upstream keeps `debugger` at SIMPLE
+//! and ADVANCED wherever it is reachable. The single-use `log` declaration is
+//! KEPT — SIMPLE is open-world and never inlines/deletes observable top-level
+//! names; that fold happens only at ADVANCED (closed-world).
 
 use std::process::Command;
 
@@ -49,18 +51,24 @@ fn simple_debugger_fixture_matches_expected_stdout() {
 }
 
 /// Regression guard: the output must NOT be the WHITESPACE_ONLY fallback. If
-/// `debugger` ever stops being representable in the typed AST, the fixture
-/// above would still "pass" against a regenerated expected file, so we
-/// additionally assert two optimizations that can ONLY come from the typed
-/// pipeline: the `1 + 2` constant-fold to `3`, and the strip of the
-/// `debugger;` statement (a WHITESPACE_ONLY fallback runs neither pass and
-/// would keep both `1+2` and `debugger;` verbatim).
+/// the typed pipeline silently stopped running, the fixture test above would
+/// still "pass" against a regenerated expected file, so this asserts specific
+/// transforms instead of comparing bytes.
+///
+/// It used to assert two things a WHITESPACE_ONLY fallback would not do: the
+/// `1 + 2` constant-fold, and the strip of `debugger;`. CCR-053 removed the
+/// strip — it was never upstream's behaviour — so only the fold remains as a
+/// positive pipeline signal on this input. (The fallback emits
+/// `var x=1+2;debugger;` verbatim, so the fold alone does distinguish them.)
+///
+/// The second assertion is now the opposite one, and it earns its place: it
+/// guards CCR-053 itself, so a future pass that starts deleting `debugger`
+/// again fails here rather than silently changing what the program does under
+/// an attached debugger.
 ///
 /// Note: unlike ADVANCED, SIMPLE is open-world — it must NOT inline the
 /// single-use `log` into `report(1)` nor delete the `function log`
 /// declaration, so the guard deliberately asserts the declaration is KEPT.
-/// (The inline oracle used before CLOC's open-world fix would now be a
-/// miscompile.)
 #[test]
 fn simple_debugger_did_not_fall_back_to_whitespace_only() {
     let out = Command::new(BINARY)
@@ -76,14 +84,15 @@ fn simple_debugger_did_not_fall_back_to_whitespace_only() {
          got:\n{actual}",
     );
     assert!(
-        !actual.contains("debugger"),
-        "expected the `debugger;` statement to be STRIPPED at SIMPLE (CLOC24); \
+        actual.contains("debugger"),
+        "expected the `debugger;` statement to be PRESERVED (CCR-053): \
+         upstream Closure keeps it at SIMPLE wherever it is reachable, and \
+         removing it changes observable behaviour under a debugger; \
          got:\n{actual}",
     );
     assert!(
         actual.contains("function log"),
-        "expected the single-use `log` declaration to be KEPT at SIMPLE \
-         (open-world: SIMPLE never inlines/deletes observable top-level \
-         names); got:\n{actual}",
+        "SIMPLE is open-world and must keep the observable top-level `log` \
+         declaration; got:\n{actual}",
     );
 }

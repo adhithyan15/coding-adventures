@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R82-the-opening-second-pass",
+    "language": "malayalam",
+    "chapter": 82,
+    "sequence": 2871,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4d68d523480fe1a"
+  },
+  "findings": []
+}

@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "ML-R70-script-recall-last-nine",
+    "language": "malayalam",
+    "chapter": 70,
+    "sequence": 2421,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1be7b3abe4bc3474",
+    "detachableSegments": [
+      "Script: six letters, and three marks"
+    ]
+  },
+  "findings": []
+}

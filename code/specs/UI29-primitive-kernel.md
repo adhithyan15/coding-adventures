@@ -103,6 +103,15 @@ Flutter, Compose `contentDescription`, SwiftUI `.accessibilityLabel`, and
 WinUI `AutomationProperties.Name`. A backend must report a native-complete
 degradation rather than silently discard an authored name it cannot lower.
 
+`HostButton` takes its content from `label`. Children nested inside a
+`HostButton` are **not** a portable content model yet: only XAML and HTML
+render them, and only when no `label` is set. Every other backend lowers the
+button from `label` alone. The analyzer reports such a subtree as
+`composition.button-children-unimplemented` (#15921) rather than letting it
+disappear. Until children pass-through is specified for `HostButton`, give the
+button a `label` and put richer content beside it, as the toolkit's
+`RecordList` does.
+
 `HostButton.a11y-label` follows the same rule without replacing the authored
 visual `label` or the platform button role. Literal, slot-bound, keyword-bound,
 and expression-bound names must remain live in repeated rows and lower to
