@@ -1127,6 +1127,22 @@ fn propagate_structured(program: &mut Program, cand: &ConstCandidate) -> Option<
     if has_write_occurrence(&before, &cand.name) {
         return None;
     }
+    // A read of the binding inside its OWN initializer runs while the
+    // binding is still `undefined`, so it always throws:
+    //
+    //     var a = [1, a[0], 5];   // TypeError, every time
+    //
+    // `propagate_all` rewrites chains anywhere in the program, the
+    // declarator's `init` included, so that `a[0]` would fold to `1` — which
+    // both erases a guaranteed throw and removes the very occurrence that
+    // would otherwise have pushed `remaining` above one and rejected the
+    // candidate. The declaration sits at index 0 here, so `prefix_is_inert`
+    // never sees anything to object to. Decline instead; upstream keeps the
+    // program and warns `JSC_REFERENCE_BEFORE_DECLARE`.
+    let init_json = serde_json::to_value(&cand.value).ok()?;
+    if structured::count_name_mentions(&init_json, &cand.name) > 0 {
+        return None;
+    }
 
     let mut trial = program.clone();
     if !propagate_all(&mut trial, cand) {
@@ -1891,6 +1907,45 @@ mod tests {
     /// A spread can contribute the key we are reading, or shadow it, and
     /// we cannot see through it — so no read of the literal resolves.
     /// Upstream does fold this; see CLOC28's "where v1 stays behind".
+    /// A spread earlier in an array contributes an unknown number of
+    /// elements, so every later position shifts by an amount we cannot
+    /// know. Reading `[..."xy", 5]` positionally answers `5` for index 1;
+    /// the program answers `"y"`.
+    ///
+    /// Review caught this: the first version declined only when the element
+    /// *at* the index was a spread, mirroring nothing — the object arm bails
+    /// on any spread at all, and the array arm quietly did not.
+    #[test]
+    fn refuses_an_array_spread_at_or_before_the_index() {
+        assert_eq!(
+            propagate_source(r#"var a = [..."xy", 5];console.log(a[1]);"#),
+            r#"var a=[..."xy",5];console.log(a[1]);"#
+        );
+    }
+
+    /// A spread AFTER the index is harmless — the elements before it are
+    /// still where they appear — so this one folds, and upstream folds it
+    /// too. The guard is positional, not a blanket refusal.
+    #[test]
+    fn still_resolves_an_index_before_an_array_spread() {
+        assert_eq!(
+            propagate_source("var a = [1, 2, ...x];console.log(a[0]);"),
+            "var a=[1,2,...x];console.log(1);"
+        );
+    }
+
+    /// Reading the binding inside its own initializer runs while the binding
+    /// is still `undefined`, so it always throws. Folding it away would
+    /// erase a guaranteed TypeError *and* hide the occurrence that should
+    /// have rejected the candidate.
+    #[test]
+    fn refuses_a_binding_that_reads_itself_in_its_initializer() {
+        assert_eq!(
+            propagate_source("var a = [1, a[0], 5];console.log(a[2]);"),
+            "var a=[1,a[0],5];console.log(a[2]);"
+        );
+    }
+
     #[test]
     fn refuses_a_spread_bearing_literal() {
         assert_eq!(

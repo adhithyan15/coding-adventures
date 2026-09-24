@@ -65,7 +65,40 @@ Deliberately behind upstream, and recorded in CLOC28 rather than left to be
 rediscovered: `a.length`, an out-of-range index, an array hole, a spread in
 the literal, and a getter are all folded by upstream and declined here.
 
-17 tests added.
+### Two miscompiles caught in review, before push
+
+**An array spread before the index.** The resolver declined only when the
+element *at* the index was a spread. A spread earlier in the literal
+contributes an unknown number of elements, so every later position shifts:
+
+```js
+var a = [..."xy", 5];
+console.log(a[1]);        // "y"; the fold answered 5
+```
+
+The object arm bails on any spread at all; the array arm quietly did not. The
+guard is now positional — a spread at or before the index declines, one after
+it does not, because `[1, 2, ...x][0]` is still `1` and upstream folds that
+too. Note `[...[7,8],5]` does not reproduce it: an earlier pass pre-folds an
+array-spread-of-an-array-literal, so the spread source has to be a string, an
+iterator or a call.
+
+**A self-reference inside the candidate's own initializer.** `propagate_all`
+rewrites chains anywhere in the program, the declarator's `init` included:
+
+```js
+var a = [1, a[0], 5];
+console.log(a[2]);        // TypeError, always; the fold printed 5
+```
+
+While the literal is evaluated the binding is still `undefined`, so `a[0]`
+throws every time. Rewriting it erased the throw *and* removed the occurrence
+that would otherwise have pushed the mention count above one and rejected the
+candidate. `prefix_is_inert` cannot help — the declaration is the first item,
+so there is no prefix. A candidate whose initializer mentions its own name is
+now declined outright.
+
+20 tests added.
 
 ## [0.15.1] - 2026-07-19
 

@@ -151,11 +151,30 @@ fn step<'a>(cur: &'a Expression, k: &Key) -> Option<&'a Expression> {
             found
         }
         (Expression::ArrayExpression(arr), Key::Index(i)) => {
+            // A spread AT OR BEFORE the index makes positional reading
+            // meaningless: it contributes an unknown number of elements, so
+            // everything after it shifts by an amount we cannot know.
+            //
+            //     var a = [..."xy", 5];
+            //     a[1]   // "y" — the spread supplied elements 0 and 1
+            //
+            // Reading the literal positionally would answer `5`. A spread
+            // *after* the index is harmless, because the elements before it
+            // are still where they appear (`[1, 2, ...x][0]` is `1`), and
+            // upstream folds that case too — so this declines on position
+            // rather than on the mere presence of a spread.
+            if arr
+                .elements
+                .iter()
+                .take(*i + 1)
+                .any(|e| matches!(e, Some(Expression::SpreadElement(_))))
+            {
+                return None;
+            }
             // An out-of-range index reads `undefined`, and so does a hole.
             // Both are folded by upstream and declined here (CLOC28).
-            let el = arr.elements.get(*i)?;
-            match el {
-                Some(Expression::SpreadElement(_)) | None => None,
+            match arr.elements.get(*i)? {
+                None => None,
                 Some(e) => Some(e),
             }
         }
