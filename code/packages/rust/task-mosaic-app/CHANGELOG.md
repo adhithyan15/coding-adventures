@@ -1,5 +1,14 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — Compose text wears its box
+
+- No code change here. On Compose a `Text` now wears its part's padding,
+  background, corners, size and border (`mosaic-emit-compose`). In the renders,
+  the "Up next" count and the due date are pills, labels have their padding,
+  and Calendar's today badge can be drawn. `TaskAppUiTest` still passes, and
+  the emitted-control contract's two error-text markers match the new call
+  shape.
+
 ## [Unreleased] — Calendar day names centred on Compose
 
 - No code change here. On Compose a `Text`'s `text-align` is now lowered
