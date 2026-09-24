@@ -2,7 +2,7 @@
 <div data-mosaic-component="RowHeaderGrid">
   <!-- emit "onViewportRows" dropped: HTML is static -->
   <!-- emit "onViewportShift" dropped: HTML is static -->
-  <table style="border-width: 1px; border-style: solid; border-color: #3f3f46; background: #1e1e1e" data-mosaic-font-size-slot="fontSize">
+  <table style="border-width: 1px; border-style: solid; border-color: #c8c8c8; background: #ffffff; color: #1f1f1f" data-mosaic-font-size-slot="fontSize">
     <colgroup>
       <col style="width: 48px">
       <!-- mosaic-for each="columnWidths" as="w" index="cw" -->
@@ -12,13 +12,13 @@
     <thead>
       <tr>
         <th>
-          <div>
+          <div style="background: #f3f3f3">
             <span></span>
           </div>
         </th>
         <!-- mosaic-for each="columnHeaders" as="h" index="ch" -->
           <th>
-            <div>
+            <div style="padding: 4px; background: #f3f3f3; color: #555555">
               <span>{{h}}</span>
             </div>
           </th>
@@ -27,9 +27,9 @@
     </thead>
     <tbody>
       <!-- mosaic-for each="viewportRows" as="row" index="r" -->
-        <tr style="background: #1e1e1e">
+        <tr style="background: #ffffff">
           <td>
-            <div>
+            <div style="padding: 4px; background: #f3f3f3; color: #555555">
               <span data-mosaic-font-size-slot="rowFontSize">{{rowHeaders [ r ]}}</span>
             </div>
           </td>

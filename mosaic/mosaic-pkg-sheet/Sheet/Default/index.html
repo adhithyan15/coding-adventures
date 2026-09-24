@@ -35,7 +35,7 @@
             <button data-on-click="onToggleSortDirection" style="padding: 8px; border-radius: 4px; background: #ffffff; color: #212529; border-width: 1px; border-color: #ced4da; font-size: 14px">↓</button>
           <!-- /mosaic-if -->
         </div>
-        <table style="border-width: 1px; border-style: solid; border-color: #3f3f46; background: #1e1e1e">
+        <table style="border-width: 1px; border-style: solid; border-color: #3f3f46; background: #1e1e1e; color: #cccccc">
           <colgroup>
             <!-- mosaic-for each="columnWidths" as="w" index="cw" -->
               <col>
@@ -45,7 +45,7 @@
             <tr>
               <!-- mosaic-for each="columnHeaders" as="h" index="ch" -->
                 <th>
-                  <div>
+                  <div style="padding: 4px; background: #2d2d30; color: #9d9d9d">
                     <span>{{h}}</span>
                   </div>
                 </th>
