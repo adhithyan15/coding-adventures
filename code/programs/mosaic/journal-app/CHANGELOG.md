@@ -5,6 +5,16 @@
 - The native gate's comment no longer says Compose ignores the editor
   fields' `width: 100%`; it lowers it since #15967. The search field, a text
   field inside a Row, is the case Compose still leaves at intrinsic width.
+- **Stars (J4b).** A *Star* / *Unstar* button above the editor (hidden for a
+  new draft), and a *Starred only* toggle under the search field that narrows
+  the timeline and search alike. With the filter on and nothing starred, a
+  third `EmptyState` says "No starred entries". The toggle is two parts
+  (`starred-filter`, `starred-filter-on`), as in Trestle's outline, so the "on"
+  state has its own style on every backend. It uses the amber of the `★` badge.
+  New slots: `star-label`, `starred-only`, `no-starred`. New events:
+  `onToggleStar`, `onToggleStarredFilter`.
+- The editor pane fills the window height like the timeline pane. In dark,
+  it had stopped under its buttons and left white below.
 - **Search (J4a).** A search field above the timeline turns it into ranked
   results from journal-core's `search`: every word must match, title and tag
   hits rank above body hits, and each hit shows a snippet and its day. A *Clear*

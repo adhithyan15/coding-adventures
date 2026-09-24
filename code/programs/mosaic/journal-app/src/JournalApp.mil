@@ -37,6 +37,12 @@ component JournalApp {
   slot searching : bool ;
   // Searching, and nothing matches (the journal itself is not empty).
   slot no-matches : bool ;
+  // Stars (J4b). "Star" / "Unstar" for the entry in the editor, "" for a new
+  // one (the button is hidden). `starred-only` is the pane's filter;
+  // `no-starred` is the filtered, unsearched timeline coming up empty.
+  slot star-label : text ;
+  slot starred-only : bool ;
+  slot no-starred : bool ;
 
   emit onSelectEntry ( index : number ) ;
   emit onNewEntry ;
@@ -47,4 +53,6 @@ component JournalApp {
   emit onCancelEdit ;
   emit onSearchChange ( value : text ) ;
   emit onClearSearch ;
+  emit onToggleStar ;
+  emit onToggleStarredFilter ;
 }

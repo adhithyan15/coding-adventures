@@ -282,8 +282,50 @@ entry edited so that it no longer matches drops out.
   `EmptyState` mount, #15959);
 - else `RecordList`.
 
+## Stars (J4b)
+
+The engine stores `Entry::starred` (`Command::SetStarred`) and filters on it
+(`EntryFilter::starred_only`). Rows already show a starred entry's `★` badge.
+This adds the two controls.
+
+**State.** `starred_only: bool`. Like the search query, it is a way of looking
+at the journal, so it is **not** in the snapshot.
+
+**Slots:**
+
+| slot | type | value |
+| --- | --- | --- |
+| `star-label` | `text` | `"Star"` or `"Unstar"` for an existing entry, `""` for `New` (so the button is hidden) |
+| `starred-only` | `bool` | the filter is on (the filter button shows as selected) |
+| `no-starred` | `bool` | `starred-only`, not searching, and no entry is starred |
+
+`starred-only` applies to the timeline **and** to search results: both use
+`EntryFilter { starred_only, .. }`. A search that finds nothing is still
+`no-matches`, whether the filter is on or off. `no-starred` covers only the
+plain timeline, so each empty state says the right thing.
+
+**Events:**
+
+| event | payload |
+| --- | --- |
+| `onToggleStar` | — stars or unstars the entry in the editor; an error for `New` |
+| `onToggleStarredFilter` | — |
+
+Toggling a star changes only `starred`. The draft is not saved with it, so an
+unsaved title edit stays unsaved (Cancel still reverts it). With the filter on,
+unstarring the open entry drops it from the list but keeps it in the editor.
+
+**Layout.**
+- **Pane:** under the search bar, a *Starred only* toggle button (`selected`
+  bound to `starred-only`, UI86). Then the list's empty states, in order:
+  - "No entries yet";
+  - "No entries match";
+  - a third `EmptyState`, "No starred entries", when `no-starred`.
+- **Editor:** above `DraftEditor`, the *Star* / *Unstar* button when
+  `star-label` is set.
+
 ## Deferred
 
 The web host (J5c-2), launching on the remaining native lanes, packaging and release (J5); the markdown preview;
-on-this-day, tags and stars in the UI (search is J4a, above); the journal switcher; moving an
+on-this-day and tags in the UI (search is J4a and stars J4b, above); the journal switcher; moving an
 entry to another day; importing the TypeScript app's entries.
