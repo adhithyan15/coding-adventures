@@ -385,6 +385,8 @@ export function makeController(engine: any, init: ControllerInit = {}) {
   let selectedChecklist = "";
   let newChecklistName = "";
   let newChecklistItem = "";
+  // The template outline item selected for editing (C3c), or "" for none.
+  let selectedOutlineItem = "";
   // Grid's edit-cursor slots. -1/"" means "none", matching Grid's own contract
   // (see Grid.mil).
   let sheetSelectedRow = -1;
@@ -696,12 +698,85 @@ export function makeController(engine: any, init: ControllerInit = {}) {
     return res?.ok === false ? null : (res.data?.rows?.[index] ?? null);
   };
 
+  /// The selected template's outline rows (C3c), [] without a template.
+  const templateOutline = (template: any): any[] => {
+    const res = engine.checklistOutline({ id: template.id });
+    return res?.ok === false ? [] : ((res.data ?? []) as any[]);
+  };
+
+  /// The selected item's outline row, if the selected template still has it.
+  const selectedOutlineRow = (): any | null => {
+    const template = selectedOfKind(false);
+    if (!template || !selectedOutlineItem) return null;
+    return templateOutline(template).find((r) => r.task === selectedOutlineItem) ?? null;
+  };
+
+  /// The composer's text as a new item under `parent`, at the next sibling
+  /// order; for a branch, listed in that branch of the question `parent`.
+  /// Everything it did is undone if a step fails.
+  const addItemUnder = (template: any, parent: string, branch: boolean | null): boolean => {
+    const name = newChecklistItem.trim();
+    if (!name) return false;
+    // After this item the subtree is items + 2 tasks (root + this one);
+    // instantiate refuses more than task-core's cap.
+    if (templateOutline(template).length + 2 > CHECKLIST_ITEMS_MAX) {
+      console.error("This checklist is full.");
+      return false;
+    }
+    const ws = engine.workspace().data;
+    const tasks = (ws.projects?.[engine.activeProject().data as string]?.tasks ?? {}) as Record<string, any>;
+    // Siblings sort by (order, id), and minted ids do not sort by number
+    // (t10 < t9), so each new item takes the next order.
+    const orders = Object.values(tasks)
+      .filter((t: any) => t.parent === parent)
+      .map((t: any) => Number(t.order ?? 0));
+    const order = orders.length ? Math.max(...orders) + 1 : 0;
+    const decision = tasks[parent]?.decision ?? null;
+    if (branch !== null && !decision) return false;
+    const projects = (ws.projects ?? {}) as Record<string, any>;
+    let id: string | null = null;
+    for (let n = bumpCounter(); n !== null; n = bumpCounter()) {
+      if (!Object.values(projects).some((p: any) => p.tasks?.[`t${n}`])) {
+        id = `t${n}`;
+        break;
+      }
+    }
+    if (id === null) {
+      console.error("Could not add the item: the id counter is exhausted.");
+      return false;
+    }
+    const res = engine.createTask({ id, name, parent });
+    if (res?.ok === false) {
+      console.error("Could not add the item:", res.error ?? res);
+      return false;
+    }
+    engine.setOrder({ id, order });
+    if (branch !== null) {
+      const next = {
+        ...decision,
+        yesChildren: branch ? [...(decision.yesChildren ?? []), id] : decision.yesChildren ?? [],
+        noChildren: branch ? decision.noChildren ?? [] : [...(decision.noChildren ?? []), id],
+      };
+      const set = engine.setDecision({ id: parent, decision: next });
+      if (set?.ok === false) {
+        engine.deleteTask({ id }); // undo the item this event created
+        console.error("Could not add the item to the question:", set.error ?? set);
+        return false;
+      }
+    }
+    newChecklistItem = "";
+    return true;
+  };
+
   const checklistProps = () => {
     const empty = {
       libraryRows: [] as string[][],
       templateMode: false,
       runMode: false,
       outlineRows: [] as string[][],
+      outlineItemSelected: false,
+      outlineQuestionSelected: false,
+      outlineToggleLabel: "",
       runTitle: "",
       runProgress: "",
       runRows: [] as string[][],
@@ -746,7 +821,22 @@ export function makeController(engine: any, init: ControllerInit = {}) {
       const res = engine.checklistOutline({ id: template.id });
       if (res?.ok !== false && res.data) {
         empty.templateMode = true;
-        empty.outlineRows = (res.data as any[]).map((r) => [r.task, checklistIndent(r.depth), r.name]);
+        // [key, indent, name, question-marker, branch-label, selected-marker]:
+        // truthy markers only, as task-mosaic-app sends them (C3c).
+        empty.outlineRows = (res.data as any[]).map((r) => [
+          r.task,
+          checklistIndent(r.depth),
+          r.name,
+          r.isDecision ? "1" : "",
+          r.branch === true ? "Yes" : r.branch === false ? "No" : "",
+          r.task === selectedOutlineItem ? "1" : "",
+        ]);
+        const selected = (res.data as any[]).find((r) => r.task === selectedOutlineItem);
+        if (selected) {
+          empty.outlineItemSelected = true;
+          empty.outlineQuestionSelected = !!selected.isDecision;
+          empty.outlineToggleLabel = selected.isDecision ? "Make it a step" : "Make it a question";
+        }
       }
     }
     return empty;
@@ -1102,6 +1192,10 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         checklistTemplateMode: lists.templateMode,
         checklistRunMode: lists.runMode,
         checklistOutlineRows: lists.outlineRows,
+        selectedOutlineKey: selectedOutlineItem,
+        outlineItemSelected: lists.outlineItemSelected,
+        outlineQuestionSelected: lists.outlineQuestionSelected,
+        outlineToggleLabel: lists.outlineToggleLabel,
         newChecklistItem,
         checklistRunTitle: lists.runTitle,
         checklistRunProgress: lists.runProgress,
@@ -1235,6 +1329,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           const c = checklistLibrary()[event.index];
           if (c) {
             selectedChecklist = c.id;
+            selectedOutlineItem = "";
             newChecklistItem = "";
           }
           break;
@@ -1260,6 +1355,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
             break;
           }
           selectedChecklist = id;
+          selectedOutlineItem = "";
           newChecklistName = "";
           newChecklistItem = "";
           persist();
@@ -1267,43 +1363,77 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         }
         case "addChecklistItem": {
           const template = selectedOfKind(false);
-          const name = newChecklistItem.trim();
-          if (!template || !name) break;
-          const outline = engine.checklistOutline({ id: template.id });
-          const items = outline?.ok === false ? 0 : (outline.data?.length ?? 0);
-          // After this item the subtree is items + 2 tasks (root + this one);
-          // instantiate refuses more than task-core's cap.
-          if (items + 2 > CHECKLIST_ITEMS_MAX) {
-            console.error("This checklist is full.");
+          if (template && addItemUnder(template, template.root, null)) persist();
+          break;
+        }
+        // ── C3c: writing questions into a template ──
+        case "selectOutlineItem": {
+          const template = selectedOfKind(false);
+          const row = template ? templateOutline(template)[event.index] : undefined;
+          if (!row) break;
+          // Clicking the selected item again clears the selection.
+          selectedOutlineItem = selectedOutlineItem === row.task ? "" : row.task;
+          break;
+        }
+        case "addChecklistItemYes":
+        case "addChecklistItemNo": {
+          const template = selectedOfKind(false);
+          const row = selectedOutlineRow();
+          if (!template || !row?.isDecision) break;
+          if (addItemUnder(template, row.task, event.type === "addChecklistItemYes")) persist();
+          break;
+        }
+        case "toggleOutlineQuestion": {
+          const row = selectedOutlineRow();
+          if (!row) break;
+          let res;
+          if (row.isDecision) {
+            // Back to a step: its branch items become ordinary sub-items.
+            res = engine.setDecision({ id: row.task, decision: null });
+          } else {
+            // A question; any sub-items it already has become its Yes branch,
+            // since a question may have no outline child outside its branches.
+            const ws = engine.workspace().data;
+            const tasks = (ws.projects?.[engine.activeProject().data as string]?.tasks ?? {}) as Record<string, any>;
+            const yesChildren = (Object.values(tasks) as any[])
+              .filter((t) => t.parent === row.task)
+              .sort((a, b) => Number(a.order ?? 0) - Number(b.order ?? 0) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+              .map((t) => t.id as string);
+            res = engine.setDecision({
+              id: row.task,
+              decision: { question: row.name, answer: null, yesChildren, noChildren: [] },
+            });
+          }
+          if (res?.ok === false) {
+            console.error("Could not change the item:", res.error ?? res);
             break;
           }
-          const ws = engine.workspace().data;
-          const tasks = (ws.projects?.[engine.activeProject().data as string]?.tasks ?? {}) as Record<string, any>;
-          // Siblings sort by (order, id), and minted ids do not sort by number
-          // (t10 < t9), so each new item takes the next order.
-          const orders = Object.values(tasks)
-            .filter((t: any) => t.parent === template.root)
-            .map((t: any) => Number(t.order ?? 0));
-          const order = orders.length ? Math.max(...orders) + 1 : 0;
-          const projects = (ws.projects ?? {}) as Record<string, any>;
-          let id: string | null = null;
-          for (let n = bumpCounter(); n !== null; n = bumpCounter()) {
-            if (!Object.values(projects).some((p: any) => p.tasks?.[`t${n}`])) {
-              id = `t${n}`;
+          persist();
+          break;
+        }
+        case "deleteOutlineItem": {
+          const template = selectedOfKind(false);
+          const selected = selectedOutlineRow();
+          if (!template || !selected) break;
+          // The item and everything under it, deepest first: deleteTask only
+          // reparents, and a question's branch items reparented onto its
+          // parent would break the decision invariant. Outline rows are
+          // depth-first preorder, so the subtree is the selected row and the
+          // deeper rows right after it.
+          const outline = templateOutline(template);
+          const start = outline.findIndex((r) => r.task === selected.task);
+          const subtree: string[] = [];
+          for (let i = start; i < outline.length && (i === start || outline[i].depth > selected.depth); i++) {
+            subtree.push(outline[i].task);
+          }
+          for (const id of subtree.reverse()) {
+            const res = engine.deleteTask({ id });
+            if (res?.ok === false) {
+              console.error("Could not delete the item:", res.error ?? res);
               break;
             }
           }
-          if (id === null) {
-            console.error("Could not add the item: the id counter is exhausted.");
-            break;
-          }
-          const res = engine.createTask({ id, name, parent: template.root });
-          if (res?.ok === false) {
-            console.error("Could not add the item:", res.error ?? res);
-            break;
-          }
-          engine.setOrder({ id, order });
-          newChecklistItem = "";
+          selectedOutlineItem = "";
           persist();
           break;
         }
@@ -1321,6 +1451,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
             break;
           }
           selectedChecklist = run;
+          selectedOutlineItem = "";
           persist();
           break;
         }
@@ -1375,6 +1506,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
             break;
           }
           selectedChecklist = "";
+          selectedOutlineItem = "";
           newChecklistItem = "";
           persist();
           break;
@@ -1643,6 +1775,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           // for it, and an empty new project would look like nothing happened.
           engine.setActiveProject({ id });
           selectedChecklist = "";
+          selectedOutlineItem = "";
           newProject = "";
           persist();
           break;
@@ -1654,6 +1787,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           if (id && engine.setActiveProject({ id })?.ok !== false) {
             editingTask = null;
             selectedChecklist = "";
+            selectedOutlineItem = "";
             // A Board-tier project never shows Timeline (see the .mll's
             // allow-timeline gate) — switching INTO one while it's the
             // active view would otherwise leave the switcher unable to

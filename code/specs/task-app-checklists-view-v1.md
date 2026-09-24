@@ -203,9 +203,66 @@ counter every other minted id uses:
   - an old snapshot without the new fields restores.
 - `package_compiles` checks that the new slots are declared.
 
+## C3c — writing questions into a template
+
+C3a authors flat templates only. C3c adds yes/no questions. A question's
+**Yes** items show in a run only once it's answered yes, and its **No** items
+only once it's answered no. This is what task-core's `Task.decision` models
+(C1). C3c-1 is the Rust app and package; C3c-2 is the web host, to the same
+contract.
+
+**Selecting an outline item.** A template's outline rows become buttons.
+Clicking one selects it, and clicking it again clears the selection
+(`onSelectOutlineItem(index)`). The selection is `selected_outline_item` in
+`TaskAppState`, serde-defaulted. It is cleared when the checklist selection
+changes, when the item is deleted, and by `repair()` when it no longer names
+an item of the selected template.
+
+**Outline rows** gain three fields:
+`[key, indent, name, question-marker, branch-label, selected-marker]`.
+
+- **question-marker** is `"1"` for a question.
+- **branch-label** is `"Yes"` or `"No"` for an item directly in a question's
+  branch, else `""`. `checklist_outline(..).branch` supplies it.
+- **selected-marker** is `"1"` for the selected item.
+
+These are truthy markers only, like ChecklistRun's (C2). The layout never
+compares strings. An expression such as `item[0] == selected-outline-key`
+reaches the Swift and Kotlin output verbatim, and those languages read the
+kebab-case slot as a subtraction.
+
+**New props:**
+
+| slot | type | value |
+| --- | --- | --- |
+| `selected-outline-key` | text | the selected item's id, `""` for none |
+| `outline-item-selected` | bool | an item is selected |
+| `outline-question-selected` | bool | the selected item is a question |
+| `outline-toggle-label` | text | `"Make it a question"`, or `"Make it a step"` for a question |
+
+**New events:**
+
+| event | effect |
+| --- | --- |
+| `onSelectOutlineItem` `{index}` | select that outline row; the same row again clears the selection |
+| `onToggleOutlineQuestion` | a step becomes a question (`set_decision`, question text = the item's name). Any sub-items it already has become its **Yes** branch, because a question may have no outline child outside its branches. A question becomes a step again (`set_decision(None)`), and its branch items become ordinary sub-items |
+| `onAddChecklistItemYes` / `onAddChecklistItemNo` | the *Add item* composer's text becomes a new item in the selected question's Yes or No branch: `create_task` under the question, then `set_decision` with the branch extended, next `order` among its siblings. Refused (and rolled back) unless a question is selected |
+| `onDeleteOutlineItem` | delete the selected item **and everything under it**, deepest first. Deleting a question alone would leave its branch items as stray children of its parent, which breaks the decision invariant, and `delete_task` only reparents |
+
+*Add item* (C3a) still adds a step at the top level. All the C3a bounds still
+apply: 512-character text, `MAX_CHECKLIST_ITEMS` for the whole template, and
+indents capped at 16. Every event works on the **selected template** only. A
+run's structure is never edited (task-core refuses it, and the app never
+offers it).
+
+**Layout.** The outline rows become toggle buttons that report `selected`
+(UI86), with the question marker and branch label beside them. With an item
+selected, an actions row offers the toggle and **Delete item**. With a
+question selected, **Add to Yes** and **Add to No** sit beside the composer.
+
 ## Deferred
 
-- The web host (C3b), and decision authoring (C3c).
+- Reordering and renaming items; moving an item between branches.
 - Reordering and renaming items in the view; per-item notes.
 - Showing run items in search.
 - Retiring `checklist-app` and `release-checklist.yml`, which happens after
