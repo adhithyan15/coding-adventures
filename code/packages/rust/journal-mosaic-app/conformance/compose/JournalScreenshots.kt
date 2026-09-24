@@ -82,6 +82,15 @@ class JournalScreenshots {
             onAllNodes(hasSetTextAction())[0].performTextInput(" nothing-matches-this")
             waitForIdle()
             shot("06-no-matches")
+
+            // Stars (J4b): star the open entry, then filter to starred ones.
+            onNodeWithText("Clear").performClick()
+            waitForIdle()
+            onNodeWithText("Star").performClick()
+            waitForIdle()
+            onNodeWithText("Starred only").performClick()
+            waitForIdle()
+            shot("07-starred-only")
         }
     }
 }

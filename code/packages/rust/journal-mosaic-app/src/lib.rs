@@ -24,6 +24,12 @@
 //! `journal_core::projections::search`. The query is a way of LOOKING at the
 //! journal, so it lives beside the persisted state, not in it: a restart
 //! opens the full timeline.
+//!
+//! ## Stars (J4b)
+//!
+//! The editor's Star button sets `Entry::starred` directly (it does not save
+//! the draft), and a *Starred only* filter narrows the timeline and search
+//! alike. The filter is a view, like the query, and is not persisted.
 
 use std::error::Error;
 use std::fmt;
@@ -85,6 +91,8 @@ pub struct JournalMosaicApp {
     /// The search field's text (J4a). Not in the snapshot; see the module
     /// docs. At most [`MAX_QUERY_CHARS`] characters, the most the engine reads.
     search_query: String,
+    /// The *Starred only* filter (J4b). Not in the snapshot, like the query.
+    starred_only: bool,
 }
 
 impl Default for JournalMosaicApp {
@@ -134,6 +142,7 @@ impl JournalMosaicApp {
         Self {
             utc_offset_minutes: 0,
             search_query: String::new(),
+            starred_only: false,
             state: AppState {
                 journal,
                 target: Target::New,
@@ -151,15 +160,27 @@ impl JournalMosaicApp {
     fn props(&self) -> Value {
         let searching = self.searching();
         let rows = self.timeline_rows();
+        let journal_empty = self.state.journal.entries.is_empty();
         json!({
             // "The journal has no entries", whatever the query. A search that
             // matches nothing is `no-matches`, so the two empty states can say
             // different things.
-            "timeline-empty": self.state.journal.entries.is_empty(),
+            "timeline-empty": journal_empty,
             "timeline-rows": rows,
             "search-query": self.search_query,
             "searching": searching,
             "no-matches": searching && rows.is_empty(),
+            "starred-only": self.starred_only,
+            // Only the plain timeline: a search that finds nothing is
+            // `no-matches` whether or not the filter is on.
+            "no-starred": self.starred_only && !searching && !journal_empty && rows.is_empty(),
+            "star-label": match &self.state.target {
+                Target::New => "",
+                Target::Entry(id) => match self.state.journal.entry(id) {
+                    Some(entry) if entry.starred => "Unstar",
+                    _ => "Star",
+                },
+            },
             "selected-key": match &self.state.target {
                 Target::New => "",
                 Target::Entry(id) => id.as_str(),
@@ -171,6 +192,15 @@ impl JournalMosaicApp {
                 Target::Entry(_) => "Delete",
             },
         })
+    }
+
+    /// The filter every projection shares: *Starred only* narrows the
+    /// timeline and search alike.
+    fn filter(&self) -> EntryFilter {
+        EntryFilter {
+            starred_only: self.starred_only,
+            ..EntryFilter::default()
+        }
     }
 
     /// Whether the query has anything to search for.
@@ -202,7 +232,7 @@ impl JournalMosaicApp {
     /// title and was drawn over it. The snippet is the
     /// engine's, at most `SNIPPET_CHARS` characters around the first body match.
     fn search_rows(&self) -> Vec<[String; 6]> {
-        search(&self.state.journal, &self.search_query, &EntryFilter::default())
+        search(&self.state.journal, &self.search_query, &self.filter())
             .into_iter()
             .filter_map(|hit| {
                 let entry = self.state.journal.entry(&hit.entry)?;
@@ -223,7 +253,7 @@ impl JournalMosaicApp {
     /// day first, the day heading only on each day's first row.
     fn day_rows(&self) -> Vec<[String; 6]> {
         let mut rows = Vec::new();
-        for day in timeline(&self.state.journal, &EntryFilter::default()) {
+        for day in timeline(&self.state.journal, &self.filter()) {
             for (i, id) in day.entries.iter().enumerate() {
                 let Some(entry) = self.state.journal.entry(id) else {
                     continue;
@@ -320,6 +350,27 @@ impl JournalMosaicApp {
                     return Err(invalid(event, "value"));
                 }
                 self.search_query = value;
+                Ok(self.update())
+            }
+            // Stars the entry in the editor. Only `starred` changes: the draft
+            // is not saved with it, so an unsaved edit stays unsaved.
+            "onToggleStar" => {
+                let Target::Entry(id) = self.state.target.clone() else {
+                    return Err(JournalAppError::Engine("nothing to star".to_string()));
+                };
+                let starred = self
+                    .state
+                    .journal
+                    .entry(&id)
+                    .is_some_and(|entry| entry.starred);
+                self.run(Command::SetStarred {
+                    id,
+                    starred: !starred,
+                })?;
+                Ok(self.announced(if starred { "Unstarred" } else { "Starred" }))
+            }
+            "onToggleStarredFilter" => {
+                self.starred_only = !self.starred_only;
                 Ok(self.update())
             }
             "onClearSearch" => {
@@ -437,6 +488,7 @@ impl MosaicApp for JournalMosaicApp {
             self.state.draft_body.clone(),
             self.state.next_entry,
             self.search_query.clone(),
+            self.starred_only,
         );
         self.dispatch_inner(&event).inspect_err(|_| {
             (
@@ -445,6 +497,7 @@ impl MosaicApp for JournalMosaicApp {
                 self.state.draft_body,
                 self.state.next_entry,
                 self.search_query,
+                self.starred_only,
             ) = before;
         })
     }
@@ -797,9 +850,12 @@ mod tests {
                 "draft-body",
                 "draft-title",
                 "no-matches",
+                "no-starred",
                 "search-query",
                 "searching",
                 "selected-key",
+                "star-label",
+                "starred-only",
                 "timeline-empty",
                 "timeline-rows"
             ]
@@ -808,6 +864,96 @@ mod tests {
         assert_eq!(props["delete-label"], "");
         assert_eq!(props["searching"], false);
         assert_eq!(props["no-matches"], false);
+    }
+
+    // ── stars (J4b) ───────────────────────────────────────────────────────────
+
+    #[test]
+    fn star_toggles_the_open_entry_without_saving_the_draft() {
+        let mut a = app();
+        assert_eq!(a.props()["star-label"], "", "a new draft has nothing to star");
+        assert!(send(&mut a, "onToggleStar", json!({})).is_err());
+
+        write(&mut a, "Kept", "body");
+        assert_eq!(a.props()["star-label"], "Star");
+        send(&mut a, "onTitleChange", json!({ "value": "Unsaved edit" })).unwrap();
+        let props = send(&mut a, "onToggleStar", json!({})).unwrap().props;
+        assert_eq!(props["star-label"], "Unstar");
+        assert_eq!(rows(&a)[0][5], "★");
+        assert_eq!(rows(&a)[0][2], "Kept", "the draft was not saved by starring");
+        assert_eq!(props["draft-title"], "Unsaved edit", "and it is still in the editor");
+
+        let props = send(&mut a, "onToggleStar", json!({})).unwrap().props;
+        assert_eq!(props["star-label"], "Star");
+        assert_eq!(rows(&a)[0][5], "");
+    }
+
+    #[test]
+    fn starred_only_narrows_the_timeline_and_search_alike() {
+        let mut a = app();
+        write(&mut a, "Harbour, starred", "fog");
+        send(&mut a, "onToggleStar", json!({})).unwrap();
+        write(&mut a, "Harbour, plain", "fog");
+
+        let props = send(&mut a, "onToggleStarredFilter", json!({})).unwrap().props;
+        assert_eq!(props["starred-only"], true);
+        let titles: Vec<String> = rows(&a).iter().map(|r| r[2].clone()).collect();
+        assert_eq!(titles, ["Harbour, starred"]);
+
+        send(&mut a, "onSearchChange", json!({ "value": "harbour" })).unwrap();
+        let titles: Vec<String> = rows(&a).iter().map(|r| r[2].clone()).collect();
+        assert_eq!(titles, ["Harbour, starred"], "search honours the filter");
+
+        send(&mut a, "onClearSearch", json!({})).unwrap();
+        let props = send(&mut a, "onToggleStarredFilter", json!({})).unwrap().props;
+        assert_eq!(props["starred-only"], false);
+        assert_eq!(rows(&a).len(), 2);
+    }
+
+    #[test]
+    fn the_empty_states_say_which_list_is_empty() {
+        let mut a = app();
+        let props = send(&mut a, "onToggleStarredFilter", json!({})).unwrap().props;
+        assert_eq!(props["timeline-empty"], true);
+        assert_eq!(props["no-starred"], false, "an empty journal is timeline-empty");
+
+        write(&mut a, "Plain", "fog");
+        let props = a.props();
+        assert_eq!(props["no-starred"], true);
+        assert_eq!(props["no-matches"], false);
+
+        let props = send(&mut a, "onSearchChange", json!({ "value": "fog" }))
+            .unwrap()
+            .props;
+        assert_eq!(props["no-starred"], false, "a search owns its own empty state");
+        assert_eq!(props["no-matches"], true);
+    }
+
+    #[test]
+    fn unstarring_under_the_filter_keeps_the_entry_in_the_editor() {
+        let mut a = app();
+        write(&mut a, "Only", "body");
+        send(&mut a, "onToggleStar", json!({})).unwrap();
+        send(&mut a, "onToggleStarredFilter", json!({})).unwrap();
+        let props = send(&mut a, "onToggleStar", json!({})).unwrap().props;
+        assert_eq!(props["no-starred"], true);
+        assert_eq!(props["draft-title"], "Only");
+        assert_eq!(props["star-label"], "Star");
+    }
+
+    #[test]
+    fn stars_persist_but_the_filter_does_not() {
+        let mut a = app();
+        write(&mut a, "Kept", "body");
+        send(&mut a, "onToggleStar", json!({})).unwrap();
+        send(&mut a, "onToggleStarredFilter", json!({})).unwrap();
+        let snapshot = a.snapshot().unwrap().unwrap();
+        let mut b = JournalMosaicApp::with_clock(test_clock);
+        let mut ctx = StartContext::new("en-US", Platform::Linux);
+        ctx.restored_snapshot = Some(snapshot);
+        let props = b.start(ctx).unwrap().props;
+        assert_eq!(props["starred-only"], false);
+        assert_eq!(rows(&b)[0][5], "★");
     }
 
     // ── search (J4a) ──────────────────────────────────────────────────────────
