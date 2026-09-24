@@ -92,7 +92,6 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // These pre-existing losses became measurable when Flutter gained drop
     // reporting. Each pin is checked below and must disappear with its gap.
     (Backend::Flutter, "color"),
-    (Backend::Flutter, "font-size"),
     (Backend::Flutter, "font-weight"),
     (Backend::Flutter, "padding"),
     (Backend::Flutter, "padding-bottom"),

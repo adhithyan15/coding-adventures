@@ -1688,18 +1688,15 @@ fn emit_html_tree(
         return Ok(out);
     }
 
-    // UI25's `Input` remains the portable multiline editing contract until
-    // the kernel grows a dedicated host-owned editor. It shares the text
-    // props and hydration markers of `HostInput`, but lowers to `<textarea>`
-    // when `multiline: true`.
-    if node.tag == "Input" {
-        out.push_str(&emit_input(node, indent, part_styles));
-        return Ok(out);
-    }
-
     // UI29 §2.1 — `HostInput` and `HostButton`. Both have custom prop
     // shapes (value/placeholder/read-only for input, label/disabled for
     // button) that the simple HtmlTag table cannot express.
+    //
+    // UI25's legacy `Input` shares this lowering: it is the portable multiline
+    // editor, and `emit_host_input` emits `<textarea>` for `Input ( multiline :
+    // true )`. A separate `emit_input` used to be dispatched first and had
+    // fallen behind — no `a11y-label`, `disabled` or `auto-focus` — so a
+    // labelled multiline editor had no accessible name (J3b-pre, #14416).
     if node.tag == "HostInput" || node.tag == "Input" {
         out.push_str(&emit_host_input(node, indent, part_styles));
         return Ok(out);
@@ -2111,62 +2108,6 @@ fn emit_host_input(
     let style_attr = build_style_attr(node, "", part_styles);
     if multiline {
         format!("{pad}<textarea{attrs}{style_attr}>{textarea_value}</textarea>\n")
-    } else {
-        format!("{pad}<input type=\"text\"{attrs}{style_attr}>\n")
-    }
-}
-
-/// Lower the legacy `Input` primitive to an HTML text control.
-///
-/// `HostInput` is intentionally single-line; `Input(multiline: true)` is the
-/// current portable editor contract. Static HTML records callbacks as neutral
-/// hydration markers, matching `HostInput`.
-fn emit_input(node: &LayoutNode, indent: usize, part_styles: &HtmlStyles) -> String {
-    let pad = " ".repeat(indent);
-    let multiline =
-        matches!(find_prop(node, "multiline"), Some(LayoutPropValue::Keyword(k)) if k == "true");
-    let mut attrs = String::new();
-
-    match find_prop(node, "value") {
-        Some(LayoutPropValue::SlotRef(s)) if !multiline => {
-            write!(attrs, " value=\"{{{{{}}}}}\"", camel(s)).unwrap();
-        }
-        Some(LayoutPropValue::String(lit)) if !multiline => {
-            write!(attrs, " value=\"{}\"", escape_html_attr(lit)).unwrap();
-        }
-        _ => {}
-    }
-    match find_prop(node, "placeholder") {
-        Some(LayoutPropValue::SlotRef(s)) => {
-            write!(attrs, " placeholder=\"{{{{{}}}}}\"", camel(s)).unwrap();
-        }
-        Some(LayoutPropValue::String(lit)) => {
-            write!(attrs, " placeholder=\"{}\"", escape_html_attr(lit)).unwrap();
-        }
-        _ => {}
-    }
-    match find_prop(node, "read-only") {
-        Some(LayoutPropValue::Keyword(k)) if k == "true" => attrs.push_str(" readonly"),
-        Some(LayoutPropValue::SlotRef(s)) => {
-            write!(attrs, " data-readonly=\"{{{{{}}}}}\"", camel(s)).unwrap();
-        }
-        _ => {}
-    }
-    if let Some(LayoutPropValue::Number(max_length)) = find_prop(node, "max-length") {
-        write!(attrs, " maxlength=\"{}\"", max_length).unwrap();
-    }
-    append_emit_marker(&mut attrs, node, "onChange", "data-on-change");
-    append_emit_marker(&mut attrs, node, "onCommit", "data-on-commit");
-    append_emit_marker(&mut attrs, node, "onCancel", "data-on-cancel");
-
-    let style_attr = build_style_attr(node, "", part_styles);
-    if multiline {
-        let value = match find_prop(node, "value") {
-            Some(LayoutPropValue::SlotRef(s)) => format!("{{{{{}}}}}", camel(s)),
-            Some(LayoutPropValue::String(lit)) => escape_html_text(lit),
-            _ => String::new(),
-        };
-        format!("{pad}<textarea{attrs}{style_attr}>{value}</textarea>\n")
     } else {
         format!("{pad}<input type=\"text\"{attrs}{style_attr}>\n")
     }
@@ -5364,6 +5305,32 @@ mod tests {
         assert!(out.contains("data-on-change=\"onQueryChange\""));
         assert!(out.contains("data-on-commit=\"onSearch\""));
         assert!(out.contains("data-on-cancel=\"onCancelSearch\""));
+    }
+
+    #[test]
+    fn a_labelled_multiline_input_keeps_its_name_and_disabled_state() {
+        // J3b-pre (#14416): the legacy `Input` was dispatched to a separate
+        // `emit_input` that knew nothing of `a11y-label` or `disabled`, so a
+        // labelled <textarea> had no accessible name on HTML.
+        let l = layout(
+            "Draft",
+            node_with_props(
+                "Input",
+                vec![
+                    prop_slot("value", "body"),
+                    prop_keyword("multiline", "true"),
+                    prop_slot("a11y-label", "body-label"),
+                    prop_keyword("disabled", "true"),
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("Draft", vec![]), &l, &empty_style("Draft"))
+            .unwrap()
+            .output;
+        let textarea = out.lines().find(|line| line.contains("<textarea")).expect("a textarea");
+        assert!(textarea.contains("aria-label=\"{{bodyLabel}}\""), "{textarea}");
+        assert!(textarea.contains(" disabled"), "{textarea}");
+        assert!(textarea.contains(">{{body}}</textarea>"), "{textarea}");
     }
 
     #[test]

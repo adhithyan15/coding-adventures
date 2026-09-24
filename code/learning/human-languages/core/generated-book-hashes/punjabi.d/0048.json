@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:28d14a23010faa47",
+  "lessonIds": [
+    "PA-R48-forms-name-and-language",
+    "PA-R48-forms-residence-and-work",
+    "PA-R48-forms-cold-all-nine",
+    "PA-R48-gurmukhi-met-once",
+    "PA-R48-marks-above-and-below",
+    "PA-R48-courtesy-and-parting"
+  ],
+  "tex": "punjabi/book/chapters/ch48-second-pass.tex"
+}

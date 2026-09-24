@@ -58,7 +58,13 @@ it("pins Punjabi lesson-content budgets", () =>
     // ate and par are the joiners chapters 38 and 39 already taught, and the
     // exercise is the joining rather than the reaching. Between them the two
     // lessons close Punjabi's whole writing ramp, A1 through C2.
-    lessons: 272,
+    //
+    // 272 -> 278: HL-C437, six `review` lessons in a new chapter 48 closing the
+    // track's pre-A1 reinforcement debt. Punjabi's forty thin atoms are spread
+    // across SEVENTEEN path segments -- no earlier chapter could reach them --
+    // so the tranche is appended at the end rather than placed in among the
+    // material it retrieves. None of the six introduces an atom or a headword.
+    lessons: 278,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

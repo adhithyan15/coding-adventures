@@ -1,12 +1,13 @@
 {
   "language": "malayalam",
   "chapter": 80,
-  "sourceHash": "fnv1a64:5001d384a1e3030b",
+  "sourceHash": "fnv1a64:a586ce77afe93967",
   "lessonIds": [
     "ML-C80-uuru",
     "ML-C80-keralam",
     "ML-C80-malayali",
-    "ML-R80-origin-recall"
+    "ML-R80-origin-recall",
+    "ML-R80-what-came-once"
   ],
   "tex": "malayalam/book/chapters/ch80-where-you-are-from.tex"
 }
