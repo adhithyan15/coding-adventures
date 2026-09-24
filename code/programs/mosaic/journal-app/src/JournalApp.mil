@@ -43,6 +43,11 @@ component JournalApp {
   slot star-label : text ;
   slot starred-only : bool ;
   slot no-starred : bool ;
+  // On this day (J4c): entries from today's date in earlier years, as
+  // RecordList rows headed "N years ago · date"; shown when set and not
+  // searching.
+  slot on-this-day-rows : list<list<text>> ;
+  slot has-on-this-day : bool ;
 
   emit onSelectEntry ( index : number ) ;
   emit onNewEntry ;
@@ -55,4 +60,6 @@ component JournalApp {
   emit onClearSearch ;
   emit onToggleStar ;
   emit onToggleStarredFilter ;
+  // A row of on-this-day-rows (each RecordList indexes its own rows).
+  emit onSelectOnThisDay ( index : number ) ;
 }

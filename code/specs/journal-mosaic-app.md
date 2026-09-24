@@ -324,8 +324,47 @@ unstarring the open entry drops it from the list but keeps it in the editor.
 - **Editor:** above `DraftEditor`, the *Star* / *Unstar* button when
   `star-label` is set.
 
+## On this day (J4c)
+
+Day One's best-loved screen: what you wrote on this date in earlier years. The
+engine already answers it (`journal_core::projections::on_this_day`: entries
+on today's month and day in earlier years, most recent year first, with a
+29 February entry recalled on 28 February in a non-leap year). This shows the
+answer above the timeline.
+
+**Today** is the user's local day, as for filing entries (`today(clock, UTC
+offset)`), so the recall follows the user's clock, not UTC's.
+
+**Slots:**
+
+| slot | type | value |
+| --- | --- | --- |
+| `on-this-day-rows` | `list<list<text>>` | `RecordList` rows for the recalled entries |
+| `has-on-this-day` | `bool` | there are recalled entries and no search is running |
+
+Rows use the timeline row shape. `heading` is set on the first row of each
+year, as `1 year ago · 24 Sep 2025` (or `N years ago · …`). `meta` is `""`
+because the heading already says when. The *Starred only* filter applies here
+too, since every projection shares one `EntryFilter`. During a search the
+section is hidden and the results take the pane.
+
+**Event:**
+
+| event | payload |
+| --- | --- |
+| `onSelectOnThisDay` | `{ index }`, a row of the `on-this-day-rows` last rendered |
+
+It opens the entry in the editor exactly as `onSelectEntry` does. It has its
+own event because each `RecordList` indexes its own rows. The open entry is
+highlighted in both lists, since both bind `selected-key`.
+
+**Layout.** In the pane, above the timeline's empty states and list: when
+`has-on-this-day` is set, an "On this day" heading and a second `RecordList`
+mount. The layout already mounts `RecordList` once; the resolver renames the
+second mount's parts (#15959).
+
 ## Deferred
 
 The web host (J5c-2), launching on the remaining native lanes, packaging and release (J5); the markdown preview;
-on-this-day and tags in the UI (search is J4a and stars J4b, above); the journal switcher; moving an
+tags in the UI (search is J4a, stars J4b and on-this-day J4c, above); the journal switcher; moving an
 entry to another day; importing the TypeScript app's entries.
