@@ -170,3 +170,7 @@ code/programs/mosaic/*/dist-native-*/
 # aggregate is precisely the file whose removal stopped every pair of
 # concurrent PRs from conflicting. Edit the shard, never this.
 /lessons.md
+
+# Crash residue from code/scripts/capture-upstream-refusals.sh, which writes the
+# refusal evidence via mkstemp + rename; a killed run can leave the temp behind.
+code/programs/rust/closurec/tests/oracle/.upstream-refusals-*.json

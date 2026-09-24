@@ -497,13 +497,21 @@ pub struct EmptyStatement {
 }
 
 /// `debugger;` (CLOC21). A breakpoint hook: it pauses execution if a debugger
-/// is attached and is otherwise a no-op. Like [`EmptyStatement`] it carries no
-/// children. Making it representable lets the typed pipeline optimize the rest
-/// of a program that contains a `debugger` statement (previously any such
-/// program fell back to WHITESPACE_ONLY). The node itself just preserves the
-/// statement; the `closure-pass-dce` pass strips `debugger` statements from
-/// statement lists at SIMPLE/ADVANCED (CLOC24, matching the upstream Closure
-/// Compiler), while WHITESPACE_ONLY — which never runs that pass — keeps it.
+/// is attached, and does nothing if one is not. Like [`EmptyStatement`] it
+/// carries no children. Making it representable lets the typed pipeline
+/// optimize the rest of a program that contains a `debugger` statement
+/// (previously any such program fell back to WHITESPACE_ONLY).
+///
+/// Note that "does nothing if no debugger is attached" is **not** the same as
+/// "is a no-op", and the difference has bitten this crate once already. Whether
+/// a debugger is attached is not known at compile time, so the statement is
+/// observable and a pass may not drop it for size. Until 2026-09-21 this doc
+/// claimed `closure-pass-dce` "strips `debugger` statements from statement
+/// lists at SIMPLE/ADVANCED (CLOC24, matching the upstream Closure Compiler)".
+/// Both halves were false: the pass no longer strips them (CCR-053), and
+/// upstream Closure never did — it keeps a reachable `debugger` at SIMPLE and
+/// removes one only as collateral, when the statement enclosing it goes. All
+/// three levels now preserve a reachable `debugger`.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DebuggerStatement {

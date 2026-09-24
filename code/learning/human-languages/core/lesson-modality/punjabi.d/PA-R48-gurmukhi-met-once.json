@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "PA-R48-gurmukhi-met-once",
+    "language": "punjabi",
+    "chapter": 48,
+    "sequence": 2660,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce1808ff4434d675",
+    "detachableSegments": [
+      "Script: four standing shapes and one mark"
+    ]
+  },
+  "findings": []
+}

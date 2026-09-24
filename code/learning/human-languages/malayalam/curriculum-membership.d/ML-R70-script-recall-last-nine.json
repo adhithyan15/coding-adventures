@@ -1,0 +1,11 @@
+{
+  "id": "ML-R70-script-recall-last-nine",
+  "pathSegment": "ML-PATH-70-JOINING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-70-JOINING",
+      "order": 4
+    }
+  ]
+}

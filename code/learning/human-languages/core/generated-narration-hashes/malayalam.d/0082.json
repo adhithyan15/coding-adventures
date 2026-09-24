@@ -1,18 +1,19 @@
 {
   "language": "malayalam",
   "chapter": 82,
-  "sourceHash": "fnv1a64:d9fb4597b7142649",
+  "sourceHash": "fnv1a64:70011962911e78d8",
   "lessonIds": [
     "ML-C82-chettaa",
     "ML-C82-chechi-address",
     "ML-C82-greeting-register",
-    "ML-R82-address-recall"
+    "ML-R82-address-recall",
+    "ML-R82-the-opening-second-pass"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
   "text": "malayalam/narration/ch82.txt",
   "json": "malayalam/narration/ch82.json",
-  "textHash": "fnv1a64:c23a47a0fb740ad7",
-  "jsonHash": "fnv1a64:3ec3324860929ccb",
+  "textHash": "fnv1a64:5b7d4b722d0a607a",
+  "jsonHash": "fnv1a64:310c58406bdda4a6",
   "findings": []
 }
