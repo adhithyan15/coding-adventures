@@ -404,8 +404,45 @@ stops filtering.
 **Events:** `onTagsChange { value }`, `onSelectTag { index }`, where index is
 an option of the `tag-options` last rendered.
 
+## An entry's day, and draft errors (J4e)
+
+An entry is filed under the day it was written. J4e lets the user move it
+(a late entry about yesterday, or a back-dated diary). The engine already has
+`Command::SetEntryDate` and `Date::parse_iso`, which reads years 0 to 9999
+and real calendar days only.
+
+**The draft gains a day.** An editor *Date* field (`YYYY-MM-DD`) belongs to
+the draft, like the title, body and tags:
+- `draft_date: String` is in the snapshot (`#[serde(default)]`);
+- selecting an entry loads its day, New leaves it blank, and Cancel reverts it;
+- a blank date means **today** (the user's local day, as before), so the
+  common case needs no typing.
+
+On Save the date is checked **before anything is written**, like the tags.
+Then Save runs `CreateEntry` with that day, or `EditEntry` plus
+`SetEntryDate` when the day changed, followed by `SetTags`. The field is
+capped at 32 characters as it is typed.
+
+**Draft errors are shown, not thrown.** Save now reports a bad date or a bad
+tag the way Trestle reports a bad due date (#14013): the update succeeds, the
+journal is unchanged, and a `draft-error` slot says what to fix:
+- "Use a real date in YYYY-MM-DD format."
+- "Tag 2 is too long (64 characters at most)."
+
+J4d returned an error from `dispatch` instead. That was correct for the
+journal, which stayed unchanged, but silent for the person typing. Any event
+other than Save clears the message, and the next Save sets or clears it
+again.
+
+**Slots:** `draft-date` (`text`), `draft-error` (`text`, `""` when there is
+nothing to fix).
+
+**Event:** `onDateChange { value }`.
+
+**Layout.** In the editor: a *Date* field beside the *Tags* field, and the
+error text above `DraftEditor` when set.
+
 ## Deferred
 
 The web host (J5c-2), launching on the remaining native lanes, packaging and release (J5); the markdown preview;
-(search J4a, stars J4b, on-this-day J4c and tags J4d are above); the journal switcher; moving an
-entry to another day; importing the TypeScript app's entries.
+(search J4a, stars J4b, on-this-day J4c, tags J4d and an entry's day J4e are above); the journal switcher; importing the TypeScript app's entries.

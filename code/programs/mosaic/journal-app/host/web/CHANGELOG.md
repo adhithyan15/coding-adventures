@@ -2,6 +2,9 @@
 
 ## 0.1.0 — unreleased
 
+- **An entry's day (J4e)** needs no host code. A new test is refused a
+  2026-02-30 date with the message, then files the entry on 2026-09-01,
+  through the real wasm.
 - **Tags (J4d)** need no host code. A new test tags two entries, then
   filters by one tag and clears the filter, through the real wasm.
 - **On this day (J4c)** needs no host code. A new test writes an entry under

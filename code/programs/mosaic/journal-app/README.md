@@ -14,6 +14,7 @@ behaviour of its own:
 | stars (J4b) | *Star* above the editor, *Starred only* under the search field | kernel primitives |
 | on this day (J4c) | a second `RecordList`, above the timeline, of earlier years' entries on today's date | `mosaic-pkg-toolkit` |
 | tags (J4d) | a *Tags* field above the editor; a vertical `SegmentedControl` of the journal's tags as a filter | `mosaic-pkg-toolkit` |
+| an entry's day (J4e) | a *Date* field above Tags; a red line when Save refuses a draft | kernel primitives |
 | the editor | `DraftEditor` (title, body, Save / Delete / Cancel) | `mosaic-pkg-draft-editor` |
 
 The layout is a `HostNavigationSplit`: a **New entry** button, the search field

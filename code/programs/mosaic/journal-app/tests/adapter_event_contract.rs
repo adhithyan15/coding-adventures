@@ -26,7 +26,7 @@ fn started() -> JournalMosaicApp {
 #[test]
 fn every_declared_event_is_routed_by_the_adapter() {
     let declared = declared_events();
-    assert_eq!(declared.len(), 14, "if this changed, the adapter must keep up too");
+    assert_eq!(declared.len(), 15, "if this changed, the adapter must keep up too");
     for (i, name) in declared.iter().enumerate() {
         let mut app = started();
         let payload = json!({ "value": "x", "index": 0 });
