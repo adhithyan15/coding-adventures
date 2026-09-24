@@ -572,6 +572,18 @@ pub fn from_pipeline(
     writeln!(out, "    else -> true").unwrap();
     writeln!(out, "}}").unwrap();
     writeln!(out).unwrap();
+    // Every `If` branch runs inside this non-inline composable, so its body
+    // compiles to its own JVM method (see `emit_if_compose`). File-private
+    // like `_mosaicTruthy`, for the same reason.
+    writeln!(out, "@Composable").unwrap();
+    writeln!(
+        out,
+        "private fun _MosaicBranch(content: @Composable () -> Unit) {{"
+    )
+    .unwrap();
+    writeln!(out, "    content()").unwrap();
+    writeln!(out, "}}").unwrap();
+    writeln!(out).unwrap();
 
     if uses_host_link {
         out.push_str(&emit_host_link_helper());
@@ -6316,6 +6328,16 @@ fn emit_for_compose(
 /// no sibling `Else` after the `If`.  In that case we emit just the
 /// then-branch — Compose accepts a bare `if (cond) { … }` inside a
 /// layout block because the trailing-else type is `Unit?`.
+///
+/// **Each branch runs inside `_MosaicBranch { … }`**, a non-inline
+/// composable, so its body compiles to a lambda method of its own. A
+/// plain `if` keeps both branches in the enclosing lambda's bytecode, so an
+/// app shell's view chain (`If a { } Else { If b { } Else { … } }`) piled
+/// every view into one JVM method. Trestle's seventh view (Checklists, C3a
+/// of #14018) pushed it past the JVM's 64 KB limit:
+/// `MethodTooLargeException: TaskAppKt.TaskApp$lambda$1$0$1`. The branch
+/// still lays out in its parent: `_MosaicBranch` adds no layout node, and a
+/// Row or Column scope stays an implicit receiver inside the lambda.
 #[allow(clippy::too_many_arguments)]
 fn emit_if_compose(
     node: &LayoutNode,
@@ -6386,11 +6408,13 @@ fn emit_if_compose(
         None => "false".to_string(),
     };
 
+    let branch_pad = "    ".repeat(inner_depth);
     let mut out = String::new();
     writeln!(out, "{pad}if ({cond_expr}) {{").unwrap();
+    writeln!(out, "{branch_pad}_MosaicBranch {{").unwrap();
     out.push_str(&emit_children_compose(
         &node.children,
-        inner_depth,
+        inner_depth + 1,
         component_name,
         emits,
         part_styles,
@@ -6400,11 +6424,13 @@ fn emit_if_compose(
         None,
         in_row_scope,
     )?);
+    writeln!(out, "{branch_pad}}}").unwrap();
     if let Some(e) = else_node {
         writeln!(out, "{pad}}} else {{").unwrap();
+        writeln!(out, "{branch_pad}_MosaicBranch {{").unwrap();
         out.push_str(&emit_children_compose(
             &e.children,
-            inner_depth,
+            inner_depth + 1,
             component_name,
             emits,
             part_styles,
@@ -6414,6 +6440,7 @@ fn emit_if_compose(
             None,
             in_row_scope,
         )?);
+        writeln!(out, "{branch_pad}}}").unwrap();
     }
     writeln!(out, "{pad}}}").unwrap();
     Ok(out)
@@ -11718,6 +11745,44 @@ mod tests {
         assert!(out.contains("} else {"));
         assert!(out.contains("\"yes\""));
         assert!(out.contains("\"no\""));
+    }
+
+    /// Each branch runs inside `_MosaicBranch { … }`, so its body is a
+    /// lambda method of its own. A long view chain in a plain `if` piled
+    /// every view into one JVM method, and Trestle's seventh view exceeded
+    /// the 64 KB limit (`MethodTooLargeException`, C3a of #14018).
+    #[test]
+    fn each_if_branch_runs_in_its_own_composable_lambda() {
+        let text = |content: &str| {
+            node(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::String(content.to_string()),
+                }],
+                vec![],
+            )
+        };
+        let if_node = node(
+            "If",
+            vec![LayoutProp {
+                name: "when".to_string(),
+                value: LayoutPropValue::Expr("a == 1".to_string()),
+            }],
+            vec![text("yes")],
+        );
+        let else_node = node("Else", vec![], vec![text("no")]);
+        let l = layout("X", node("Column", vec![], vec![if_node, else_node]));
+        let m = component("X", vec![], vec![]);
+        let out = from_pipeline(&m, &l, &empty_style("X")).unwrap().output;
+        assert!(out.contains(
+            "@Composable\nprivate fun _MosaicBranch(content: @Composable () -> Unit) {\n    content()\n}"
+        ));
+        assert_eq!(out.matches("_MosaicBranch {").count(), 2, "one per branch");
+        let then_at = out.find("if (_mosaicTruthy(a == 1)) {").unwrap();
+        let yes_at = out.find("\"yes\"").unwrap();
+        let wrap_at = out[then_at..].find("_MosaicBranch {").unwrap() + then_at;
+        assert!(wrap_at < yes_at, "the then-branch body is inside the wrapper");
     }
 
     #[test]
