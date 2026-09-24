@@ -208,7 +208,7 @@ fixed.
 
 CCR-044 – CCR-062 existed as issues and were absent from this file. **That gap
 is now closed** — see *Backfilled index* below, and as of 2026-09-21 every ID
-from CCR-001 through CCR-081 plus CCR-015A appears somewhere in this document.
+from CCR-001 through CCR-089 plus CCR-015A appears somewhere in this document.
 
 The other direction is still open and is the one that matters for ID
 allocation: **not every ID in this file has an issue.** CCR-011 – CCR-014,
@@ -224,12 +224,12 @@ than an issue.
 |---|---|
 | CCR-001 – CCR-043 | this file; **some** also have issues (see the gaps above) |
 | CCR-044 – CCR-062 | issues **and** this file (backfilled 2026-09-21, see below) |
-| CCR-063 – CCR-081 | issues **and** this file |
+| CCR-063 – CCR-089 | issues **and** this file |
 
 This is why the allocation rule above says to take the next number above the
 highest `CCR-` **in any issue title**, and not to infer it from this document:
 the highest ID here and the highest ID in the tracker are the same today
-(CCR-081), but the sets underneath them are not equal in either direction.
+(CCR-089), but the sets underneath them are not equal in either direction.
 
 New findings are added before selecting the next item. IDs are stable; priority
 order may change. A row marked `Blocked` names its prerequisite. `Survey` means
@@ -448,7 +448,15 @@ than flag plumbing, and rank highest of this group.
 |---|---|---|
 | CCR-079 | The ladder's divergence ledger is trusted input to the gate that reads it. Four review rounds each found the same defect one level up, because every fix added a self-declared field. Derive the ledger from captured oracle runs instead of validating hand-written values. | [#15866](https://github.com/adhithyan15/coding-adventures/issues/15866) |
 | CCR-080 | The token-only `WHITESPACE_ONLY` path drops the program-final terminator after `do…while`. Must not be fixed by porting CCR-073's "ends with `}`" byte test — that output ends in `)`. | [#15867](https://github.com/adhithyan15/coding-adventures/issues/15867) |
-| CCR-081 | The 138-fixture `non-minify-unverified-stdout` set is dispositioned `upstream_golden` but only 62 of 138 match upstream byte-for-byte (68 ignoring a trailing newline); 59 differ and 17 are inputs upstream will not compile. Swept 2026-09-21; partition and next steps are on the issue. | [#15868](https://github.com/adhithyan15/coding-adventures/issues/15868) |
+| CCR-081 | The `non-minify-unverified-stdout` set was 138 fixtures dispositioned `upstream_golden`. After completing the nine incomplete invocations on 2026-09-23 the partition was **63 matched / 67 differed / 8 refused** (63+67+8=138). **Partly resolved the same day:** twelve fixtures moved to `non-minify-upstream-refuses-v20260915` under the new `upstream_refuses` disposition, backed by a captured evidence artifact — the 8 refusals, plus the four module fixtures (`simple-export`, `simple-import`, `simple-importexpr`, `simple-importmeta`) that were counted as divergences after their invocations were completed but that still refuse under their own `flags.txt`. That leaves **126 = 63 matching + 63 diverging**. The 63 divergences are still mislabelled and are the remaining work. | [#15868](https://github.com/adhithyan15/coding-adventures/issues/15868) |
+| CCR-082 | `closure-pass-dce` does not treat `continue` as a terminator, so a dead tail after it is never truncated and a loop body upstream empties survives intact. Pre-existing; surfaced by CCR-053. Upstream **hoists** a `var` out of the dead tail, so a naive truncation would be a miscompile. | [#15878](https://github.com/adhithyan15/coding-adventures/issues/15878) |
+| CCR-083 | Upstream brace-wraps a `do…while` used as the body of `if`/`else`/`while`/`for`/`for-in`/`for-of`/`with`; we emit it bare. Seven positions, all at `WHITESPACE_ONLY`. Compounds with CCR-080 on the same inputs and should land with it. | [#15918](https://github.com/adhithyan15/coding-adventures/issues/15918) |
+| CCR-084 | Upstream keeps the `;` on a block-final `throw` — the one statement kind it does not compact — and our gap-030 suppression drops it, even when the source wrote it. Confirmed at `WHITESPACE_ONLY` and at SIMPLE. | [#15919](https://github.com/adhithyan15/coding-adventures/issues/15919) |
+| CCR-085 | We keep `"use strict"`; upstream strips it unless `--emit_use_strict`, and re-emits it single-quoted. Needs a recorded **decision** on our default, not just a patch: upstream's default actively removes a directive, which can flip a program from strict to sloppy mode. Mechanism behind the `emit-use-strict` divergence CCR-081 found. | [#15920](https://github.com/adhithyan15/coding-adventures/issues/15920) |
+| CCR-086 | `dce_program` has no dead-tail truncation at all, so code after a top-level `throw` survives; a braced `{ … }` is flattened to program level before block-level truncation could reach it. Pre-existing sibling of CCR-082; surfaced by CCR-053. | [#15923](https://github.com/adhithyan15/coding-adventures/issues/15923) |
+| CCR-087 | Upstream unwraps a single-statement block under a label (`lbl:{a()}` → `lbl:a();`, `lbl:{}` → `lbl:;`); we keep the braces. Label-specific — a bare `{a()}` is not unwrapped by either side. Lowest of the CCR-080 spin-offs. | [#15924](https://github.com/adhithyan15/coding-adventures/issues/15924) |
+| CCR-088 | Single-statement substatement blocks are unwrapped only when the statement is an expression statement; `var`, `let`, `debugger`, `throw`, `return` and function declarations keep their braces where upstream drops them. The unwrap machinery exists and works — likely a missing match arm. `while(c){function g(){}}` additionally rewrites the declaration to a parenthesised expression and wants checking first. | [#15925](https://github.com/adhithyan15/coding-adventures/issues/15925) |
+| CCR-089 | The `upstream_refuses` evidence artifact was captured on OpenJDK 21.0.10 while the manifest pins — and `oracle_manifest` hard-asserts — 21.0.12. The deviation is declared in the artifact and enforced in both directions by the validator, so it cannot go unremarked; recapture on the pinned JVM to clear it. Also worth deciding once whether the pin or the practice should move, since every oracle probe recorded since the pin was set carries the same caveat unenforced. | [#15935](https://github.com/adhithyan15/coding-adventures/issues/15935) |
 
 CCR-081's sweep also enlarges CCR-075's decision surface: **eight** fixtures are
 inputs upstream genuinely refuses while `closurec` compiles them, not the three
@@ -456,3 +464,24 @@ ladder rungs that issue was filed on. Two of the eight are `JSC_PARSE_ERROR`
 (a top-level `return`, and `new.target` outside a function) — accepting invalid
 syntax is a narrower front-end question that can be settled without waiting on
 the policy decision.
+
+Completing the nine "incomplete invocations" on 2026-09-23 added **three more**
+to that pile. `simple-import`, `simple-export` and `simple-importexpr` have
+goldens that preserve ES-module syntax verbatim (`import{a,b as c}from"y";a(3);`).
+Upstream never emits that: an unresolvable bare specifier is refused, and a
+resolvable one is rewritten (`1(3);export{};`). No invocation produces the
+golden, so the `upstream_golden` disposition is **unachievable** for them rather
+than merely unverified — the same class as the eight refusals, not the 67
+divergences.
+
+**Resolved 2026-09-23.** Those fixtures now carry a new disposition,
+`upstream_refuses`, in the set `non-minify-upstream-refuses-v20260915`; the
+source set drops to 126 and the 797 total is unchanged. The cohort is **twelve,
+not eleven** — `simple-importmeta` was filed under "completable by a flag"
+because `--chunk_output_type=ES_MODULES` does make upstream compile it, but it
+still refuses under its own recorded invocation, which is what the disposition
+records. The evidence is captured by `code/scripts/capture-upstream-refusals.sh`
+into `tests/oracle/upstream-refusals-v20260915.json` and cross-checked by
+`oracle_manifest`; the recorded predicate is the narrow, re-runnable "refuses as
+invoked", not the hand-searched "no invocation could ever produce this", which
+stays on the issue where it can be argued with.

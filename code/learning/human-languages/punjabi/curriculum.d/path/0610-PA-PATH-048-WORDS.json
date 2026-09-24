@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-048-WORDS",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "PA-EXT-048-WORDS"
+  ],
+  "after": []
+}

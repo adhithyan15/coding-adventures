@@ -1,0 +1,11 @@
+{
+  "id": "PA-R48-marks-above-and-below",
+  "pathSegment": "PA-PATH-048-SCRIPT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-048-SCRIPT",
+      "order": 1
+    }
+  ]
+}

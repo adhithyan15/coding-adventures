@@ -4,6 +4,286 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - the `advanced-try-catch-rename` fixture claimed a soundness rule upstream contradicts (CCR-022)
+
+The fixture's input comment opened "ADVANCED-level renaming SOUNDNESS across a
+catch binding" and said the crux of try/catch support is that the renamer **must**
+treat the catch parameter as reserved, listing two rules:
+
+> 1. It must never itself be renamed (catch params are not in the local-rename set), and
+> 2. No other local may be renamed to a name that collides with it
+
+Its README went further: "If either guard were missing, `err` would collide with
+a generated short name and miscompile the handler." The CLOC19 spec said the same
+in a **MUST** list.
+
+**Only (2) is a soundness requirement.** Measured against the pinned oracle
+(`closure-compiler-v20260915`, sha256 verified before use), with externs for the
+free globals and a value use to stop the inliner:
+
+```js
+function process(value) {
+  var temp = value + 1;
+  try { compute(temp); } catch (err) { report(err, temp); }
+  return temp;
+}
+sink(process);
+```
+
+```
+SIMPLE   : function process(a){a+=1;try{compute(a)}catch(b){report(b,a)}return a}sink(process);
+ADVANCED : sink(function(a){a+=1;try{compute(a)}catch(b){report(b,a)}return a});
+```
+
+`err` becomes `b`. Upstream renames catch parameters at both levels, and does not
+miscompile. Two further probes show why (1) and (2) are different rules rather
+than two halves of one:
+
+```
+in           : function f(a1,a2,a3){var x=a1+a2+a3;try{compute(x)}catch(err){report(err,x,a1,a2,a3)}return x}sink(f);
+out (SIMPLE) : function f(b,c,d){var a=b+c+d;try{compute(a)}catch(e){report(e,a,b,c,d)}return a}sink(f);
+
+in           : var err=1;function f(v){try{compute(v)}catch(err){report(err)}return err}sink(f);
+out (SIMPLE) : var err=1;function f(a){try{compute(a)}catch(b){report(b)}return err}sink(f);
+```
+
+With `a` through `d` taken the catch binding gets `e` — upstream satisfies (2) by
+**choosing a non-colliding fresh name**, not by reserving the original. And the
+rename stays correct when the catch binding shadows an outer `err`.
+
+Two limits on that evidence, since "upstream does it" is not "it is always
+safe". With `eval` in the handler upstream renames anyway and ships a
+miscompile — `catch(err){eval("report(err)")}` becomes `catch(b){eval("report(err)")}`,
+and the string still names a binding that no longer exists. And upstream
+*refuses* `with (o) { report(err) }` (`JSC_USE_OF_WITH`) and a handler that
+redeclares its own binding (`JSC_REDECLARED_VARIABLE_ERROR`) rather than
+renaming them. So the probes show reserving is not required; they do not show
+renaming is safe under `eval`.
+
+**No behaviour change.** `closurec` still reserves catch parameters, the golden
+is unchanged, and no existing test changed. What changed is the justification: reserving
+is now described as the conservative choice it is rather than as a law, in the
+fixture input, the fixture README, `code/specs/CLOC19-try-catch.md`, and the
+`closure-pass-rename` test-section header that grouped both rules under
+"soundness". The retracted claims are quoted in place rather than deleted, since
+the spec is where someone would look before changing this.
+
+One test was **added**, in `closure-pass-rename`. An earlier draft of this entry
+said `fresh_name_avoids_colliding_with_catch_param` pins the avoid-set guard.
+Review showed it does not: its handler body is `use(a, longName)`, so the catch
+binding reaches the avoid set through the body walk whether or not the explicit
+insertion exists, and before the new test existed deleting
+`out.insert(param.name)` left every running test in that crate green. `fresh_name_avoids_catch_param_unused_in_its_own_body` closes
+the gap with a handler that never mentions its own binding
+(`catch (a) { use(longName); }`), where only the explicit insertion can keep
+`longName` off `a`. Verified by deleting the guard: that test, and only that
+test, goes red. Retracting a vague overclaim and replacing it with a sharper
+false one is a failure mode this series has hit more than once, which is why
+the fix here is a test rather than softer wording.
+
+**Under its own `flags.txt` upstream produces nothing on this fixture.** It
+passes no externs and `compute`/`report` are free globals, so the oracle exits 2
+with two `JSC_UNDEFINED_VARIABLE` errors and zero bytes of stdout. The
+"inlines `process` away entirely" result above needs externs added. That also
+means it satisfies the predicate of the `upstream_refuses` disposition added in
+CCR-081 while still being dispositioned `upstream_golden` — and so do four more.
+Running all 126 fixtures of `non-minify-unverified-stdout` under their own
+`flags.txt`, exactly five refuse: this one plus `advanced-bigpass`,
+`advanced-class-constructor`, `advanced-optimizes` and
+`advanced-rename-globals`, all `JSC_UNDEFINED_VARIABLE` with zero bytes of
+stdout. They are absent from that cohort by a deliberate decision recorded on
+#15868: their refusal is harness incompleteness, fixable by adding `--externs`,
+which is a different thing from a fixture upstream will not compile however it
+is invoked. That distinction is real. What is missing is any trace of it in the
+recorded predicate, which says only "refuses as invoked" — and
+`simple-importmeta`, which is in the cohort, has the same kind of flag-fixable
+refusal. So the cohort and its stated criterion disagree. Raised on #15868
+rather than re-cut here.
+
+The ladder fixtures had already recorded this divergence — `ladder_t4_try_catch_simple`'s
+README says "upstream renames the catch parameter `e` to `a`, which closurec
+skips (CCR-022)", and the `_advanced` one says the same in different words — so
+this correction is catching up with evidence the repo already had rather than
+reporting a new discovery.
+
+The parity cost is real: upstream emits shorter output wherever a catch binding
+has a long name. That belongs to CCR-022 (#15856), which currently frames catch
+params as a binding kind our renamer *skips* — incompleteness. The probes say it
+is a **divergence**, and at SIMPLE as well as ADVANCED, so closing it means
+changing this fixture's golden rather than only adding a code path. The fixture
+is also now labelled for what it is: a regression test for our rule, not an
+oracle for upstream's, which does not produce this output at all — it inlines
+`process` away entirely.
+
+
+### Changed - twelve fixtures are dispositioned `upstream_refuses`, not `upstream_golden` (CCR-081)
+
+The `non-minify-unverified-stdout` set carried 138 fixtures under
+`disposition: upstream_golden` with `current_provenance.status: unverified`.
+`unverified` says nobody has checked the bytes against upstream yet — a to-do.
+For twelve of them that framing was wrong in kind, not degree: **the pinned
+oracle refuses the input.** Nonzero exit, empty stdout, a named `JSC_`
+diagnostic. There is no upstream output those goldens could have come from, so
+`upstream_golden` is not merely unconfirmed for them, it is unachievable.
+
+They move to a new set, `non-minify-upstream-refuses-v20260915`, under a new
+disposition `upstream_refuses`. The source set drops to 126. Total fixture
+inventory is unchanged at 797 — these moved, nothing was added or deleted.
+
+| Diagnostic | Count | Fixtures |
+|---|---:|---|
+| `JSC_UNSUPPORTED_LANGUAGE_FEATURE` | 4 | the four `simple-private-*` class-element fixtures |
+| `JSC_INVALID_MODULE_PATH` | 3 | `simple-export`, `simple-import`, `simple-importexpr` |
+| `JSC_PARSE_ERROR` | 2 | `simple-newtarget`, `simple-try-catch` |
+| `JSC_CANNOT_CONVERT` | 1 | `simple-importmeta` |
+| `JSC_INVALID_SUPER_ACCESS` | 1 | `simple-super` |
+| `JSC_USE_OF_WITH` | 1 | `simple-with` |
+
+This is twelve, and an earlier count on #15868 said eleven. The twelfth is
+`simple-importmeta`, which I had put in the "completable by a flag" bucket
+because `--chunk_output_type=ES_MODULES` does make upstream compile it. It
+still refuses under its own recorded invocation, which is what the disposition
+is about, so it belongs here until someone completes its `flags.txt` and
+recaptures its golden.
+
+### The evidence is captured, not asserted
+
+`tests/oracle/upstream-refusals-v20260915.json` is generated by
+`code/scripts/capture-upstream-refusals.sh`, which verifies the JAR's SHA-256
+against the pin, runs the manifest's own `closure-flags-file-v1` command per
+fixture, and records the exit status, stdout byte count, diagnostic and message
+it actually saw. Saying "upstream refuses these" in the manifest costs nothing
+and proves nothing; CCR-079 (#15866) is the standing lesson that a ledger the
+gate trusts, whose values a human typed, is an assertion wearing evidence's
+clothes.
+
+`oracle_manifest` cross-checks the two: the fixture lists must match exactly in
+both directions, the release and JAR hash must be the pinned ones, the command
+must be the one the set declares, and every entry must be a genuine refusal
+(nonzero exit, zero stdout bytes, a `JSC_` diagnostic). Reading that JSON keeps
+the module's never-execute-Java, never-touch-the-network rule intact — the Java
+ran when a maintainer generated the report, exactly as the JAR download did.
+
+Two new tests. `refusal_evidence_must_agree_with_the_set_it_backs` mutates the
+manifest six ways — a fixture with no captured refusal, a captured refusal with
+no fixture, the evidence pointer swapped for the minify report, the disposition
+claimed by a different set, provenance downgraded to `unverified`, and an
+emptied `local_boundary` — and asserts each is caught. It mutates the manifest
+rather than the report on purpose: the report is a capture, and a test that
+rewrote it would defeat the point. `refusal_evidence_on_disk_is_a_genuine_capture`
+guards the artifact itself and pins the two `JSC_PARSE_ERROR` fixtures by name.
+A third, `refusal_report_checks_reject_a_doctored_report`, feeds synthetic
+reports to `check_refusal_report` — a pure function the report-side checks were
+split into precisely so a test could reach them.
+
+That split came out of review. The first version of this change checked vacuity
+at function granularity: neutering `validate_refusal_evidence` wholesale turned
+exactly one test red, which is true and which the entry claimed. But deleting
+only the report-side branches — release, JAR hash, command, exit status, stdout
+bytes, diagnostic prefix — left the suite **green**. Five of the six checks
+advertised in that function's own doc-comment table were unprotected. The
+enforcement was real, but it was coming from
+`refusal_evidence_on_disk_is_a_genuine_capture` asserting against the committed
+artifact, which catches a hand-edited file and would not catch a refactor.
+
+Each branch is now individually load-bearing: deleting any one of them turns
+tests red. That was verified by deleting them one at a time, not by reasoning
+about it. The report-side checks have since grown past the original six — the
+JVM-deviation pair and a `schema_version` check joined them, the latter for the
+same reason `oracle_refresh_report` checks its own: `RefusalReport` tolerates
+unknown fields, so a future v2 artifact reusing these field names with different
+meaning would otherwise be accepted silently.
+
+### The capture JVM deviates from the pin, and says so
+
+The manifest pins `capture_environment.java_version` at 21.0.12 and
+`oracle_manifest` hard-asserts it. This artifact was captured on **21.0.10** —
+the only JVM available where the work was done. Rather than ship a silent
+mismatch, the report carries a `java_version_deviation` note, and the validator
+**requires** that note to be non-empty whenever the captured JVM differs from
+the pin, and **rejects a stale note** left behind once it no longer does. So the
+deviation cannot go unremarked in either direction.
+
+All twelve entries are parse, policy or module-resolution refusals — front-end
+decisions, not codegen — so they are not expected to move with a JDK patch
+level. That is a judgement, not a measurement, which is why it is declared
+rather than assumed. Recapture on the pinned JVM is CCR-089 (#15935). One real
+consequence in the meantime: the artifact reproduces byte-for-byte only on a
+21.0.10 host, because `java_version` is a recorded field.
+
+### The recorded predicate is deliberately narrow
+
+The evidence records only that upstream refuses **as invoked**. It is not the
+broader claim that no invocation could produce the golden. That broader claim
+is also true for the three ES-module fixtures — their goldens preserve
+`import`/`export` syntax that upstream rewrites under every resolver setting
+tried, and the closest completed invocation yields `1(3);export{};` where the
+golden is `import{a,b as c}from"y";a(3);` — but it quantifies over a hand search
+no script can re-run. An unfalsifiable claim does not belong in a file the test
+suite trusts, so it stays on #15868.
+
+### What this does not decide
+
+Whether `closurec` should refuse what upstream refuses is CCR-075 (#15860), an
+open product decision. This change does not settle it; it stops the corpus
+asserting upstream provenance it cannot have, which is a prerequisite for
+deciding it on real numbers. The two `JSC_PARSE_ERROR` cases — a top-level
+`return` and `new.target` outside a function — are the sharpest input to that
+decision, because a syntax error is not a matter of upstream's taste.
+
+### Fixed - `debugger` survives SIMPLE and ADVANCED (CCR-053)
+
+Depends on `closure-pass-dce` 0.31.0, which stops stripping `debugger`
+statements. Upstream keeps them at SIMPLE wherever they are reachable; we
+deleted them, which silently changed what a program does under an attached
+debugger. (At ADVANCED the rule is narrower — upstream eliminates a call whose
+body is only a `debugger` — and we do not match that; see the pass changelog.)
+
+This was found by the CCR-081 sweep rather than by reading the flag surface:
+`simple-debugger` was one of 59 fixtures whose golden disagreed with the oracle
+as that sweep stood on 2026-09-21, and reading the side-by-side named the cause
+outright. (Completing the sweep's nine incomplete invocations on 2026-09-23
+revised that count to 67 — see the backlog's CCR-081 row. The 59 is left as the
+number that was true when this was found.)
+
+`tests/diff/simple-debugger` is corrected — golden and commentary. Its header
+claimed the strip "matched the upstream Closure Compiler"; it did not. The
+fixture still does **not** match upstream byte-for-byte, because upstream also
+renames the parameter (`function log(a)`) and we do not — that is CCR-022, and
+it is now the *only* remaining difference on that input.
+
+`simple_debugger_did_not_fall_back_to_whitespace_only` is a regression guard
+against the typed pipeline silently stopping, and it asserted two transforms a
+WHITESPACE_ONLY fallback would not perform: the `1 + 2` constant-fold, and the
+`debugger` strip. Losing the strip leaves the fold as the only positive signal
+on this input, so the second assertion is now its inverse — `debugger` must be
+**present** — which guards CCR-053 itself. A future pass that starts deleting
+them again fails there rather than quietly shipping.
+
+**Three byte matches are lost**, all of them accidents of the unconditional
+strip, and all of them exposing pre-existing truncation gaps rather than new
+defects:
+
+| Input at SIMPLE | upstream | before | after |
+|---|---|---|---|
+| `for(var c=0;c<1;c++){continue;debugger}` | `for(var c=0;c<1;c++);` | matched | `…{continue;debugger};` |
+| `throw 1;debugger;` | `throw 1;` | matched | `throw 1;debugger;` |
+| `{throw 1;debugger;}` | `throw 1;` | matched | `throw 1;debugger;` |
+
+Dead code after `continue` is never truncated (CCR-082, #15878); a dead tail at
+program level is never truncated either (CCR-086, #15923). Both gaps predate
+this change — the controls `for(var c=0;c<1;c++){continue;g()}` and
+`throw 1;console.log(1);` already diverged before it — and both are wrong for
+any dead tail that is not a `debugger`. Stripping merely hid them on this one
+input shape.
+
+**Consumers who want `debugger` removed now need their own step.** The strip was
+documented behaviour, however wrongly justified, so anyone relying on `closurec`
+to keep breakpoints out of a shipped bundle should add an explicit pass. There
+is no flag for it — matching upstream means not doing it, and upstream has no
+flag either.
+
+
 ### Added - five ladder rungs for CCR-078, and the fix it stopped me shipping
 
 **No behaviour change.** This is measurement, and the reason it is only

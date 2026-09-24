@@ -1,8 +1,8 @@
 Malayalam, chapter 70: Joining Things Together.
-4 lessons. All 4 can be done entirely by ear.
+5 lessons. You can do the first 4 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 വെള്ളവും അരിയും (veḷḷavuṁ ariyuṁ) — where Malayalam puts its "and".
 
 Warm-up.
@@ -41,7 +41,7 @@ Wrap-up Recall.
 Where does Malayalam put its "and" — between the items or on them? (On them.) How many -ഉം does a two-item list carry? (Two.) What is in the space between the two words? (Nothing at all.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 വെള്ളവും അരിയും പാലും (veḷḷavuṁ ariyuṁ pāluṁ) — every item, however many there are.
 
 Warm-up.
@@ -81,7 +81,7 @@ Wrap-up Recall.
 Does the ending go on every item or only the last? (Every one.) What happens to ൽ when a vowel follows it? (It unfurls back to ല.) And when a consonant does, as in നിങ്ങൾക്ക്? (It stays a chillu.) How many endings in a four-item list? (Four.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 ചായയോ കാപ്പിയോ (cāyayō kāppiyō) — the same trick, a different answer.
 
 Warm-up.
@@ -121,7 +121,7 @@ Wrap-up Recall.
 Which ending offers a choice? (-ഓ.) Which one means you get both? (-ഉം.) Where do they go — between the items or on them? (On them, one each.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 ചേർക്കുക (cērkkuka) — two endings, from cold.
 
 Warm-up.
@@ -155,3 +155,37 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Where does a joining ending go? (On every item.) What sits between the items? (Nothing.) Which ending asks somebody to pick one? (-ഓ.)
+
+
+Lesson 5 of 5.
+(ഷ ദ സ ഭ ഥ ഗ ോ ം ൃ) (randaam onpath) — the thin nine.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: six letters, and three marks until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+Read സ. Then read ം and say why it is not a letter at all.
+
+Script: six letters, and three marks.
+[a table of 6 rows, read aloud]
+piece: ഷ. sound: ṣa. where you meet it: almost only in words Malayalam took from Sanskrit.
+piece: ദ. sound: da. where you meet it: the voiced dental.
+piece: സ. sound: sa. where you meet it: the plain sibilant.
+piece: ഭ. sound: bha. where you meet it: voiced, with breath behind it.
+piece: ഥ. sound: tha. where you meet it: voiceless, with breath behind it.
+piece: ഗ. sound: ga. where you meet it: the voiced velar.
+Read the right-hand column and a pattern surfaces that the chapters could not show one at a time: ഷ, ഭ and ഥ are Sanskrit-borrowing letters. A Malayalam word built from Dravidian roots rarely needs them, which is exactly why they arrived late and were never asked for again.
+
+Guided Practice.
+[pause 1 second]
+Three marks, and each attaches differently.
+[your turn — read: ോ — a hanger, replacing the built-in vowel with a long ō]
+[pause 8 seconds for the answer]
+[your turn — read: ം — a mark that rides after the syllable rather than reshaping it]
+[pause 8 seconds for the answer]
+[your turn — read: ൃ — a hanger for a vowel that behaves like a consonant, inherited with the Sanskrit words that carry it]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which three of these six letters belong mostly to borrowed words? (ഷ, ഭ, ഥ.) Which mark follows a syllable instead of reshaping it? (ം.) Read ഗ and name it.

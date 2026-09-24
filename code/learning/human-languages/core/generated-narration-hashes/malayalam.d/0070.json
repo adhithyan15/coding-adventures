@@ -1,18 +1,19 @@
 {
   "language": "malayalam",
   "chapter": 70,
-  "sourceHash": "fnv1a64:1071e41911beb0df",
+  "sourceHash": "fnv1a64:4b33dbe18dacd22d",
   "lessonIds": [
     "ML-C70-um",
     "ML-C70-um-more",
     "ML-C70-o",
-    "ML-R70-cherkkuka"
+    "ML-R70-cherkkuka",
+    "ML-R70-script-recall-last-nine"
   ],
   "voiceLessons": 4,
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch70.txt",
   "json": "malayalam/narration/ch70.json",
-  "textHash": "fnv1a64:23d238852c3865a5",
-  "jsonHash": "fnv1a64:cf01edd19b8ce40d",
+  "textHash": "fnv1a64:2f72be1f756778ae",
+  "jsonHash": "fnv1a64:03551dc752962115",
   "findings": []
 }

@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Fixed — the Flutter `font-size` pin was licensing a drop that no longer happens
+
+Flutter now projects numeric typography onto its text controls, so
+`(Flutter, "font-size")` stopped occurring, and
+`no_pinned_style_drop_has_silently_been_fixed` correctly failed on it. The
+pin is removed. Found when a Qt emitter change (plain-text `Text`) brought
+this package's gate back into CI.
+
 ### Fixed — the SwiftUI `gap` pin was licensing a drop that never happened
 
 `ALLOWED_STYLE_DROPS` is now empty; `(SwiftUI, "gap")` was its only entry and it
