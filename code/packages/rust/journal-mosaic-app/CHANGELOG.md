@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **Journals (J4f).** New slots `journal-options` ("All journals", then each
+  journal by name in creation order, ties by id), `selected-journal-index`,
+  `new-journal-name` and `journal-error`. New events `onSelectJournal`,
+  `onNewJournalNameChange` and `onAddJournal`.
+  - `journal_filter` (not persisted) feeds `EntryFilter::journal` to the
+    timeline, search, On this day and the tag counts. A journal that no
+    longer exists stops filtering.
+  - *Add* runs `CreateJournal` with a minted `journal-{n}` (skipping ids in
+    use) and the trimmed name, then selects the new journal. A blank name
+    does nothing. A refused name (a duplicate, too long or several lines,
+    too many journals) is said in `journal-error`, and the journal is
+    untouched.
+  - The name field is capped at `MAX_JOURNAL_NAME_CHARS` as typed.
+  - A new entry is filed in the selected journal, or in Personal under All.
+  - `JournalScreenshots` adds 10-work-journal and 11-journal-error.
 - `conformance/compose/JournalUiTest.kt`: Journal on Compose is DRIVEN in CI,
   not only compiled. The first launch writes and saves two entries through
   the generated editor, reopens one from the timeline and deletes it; a

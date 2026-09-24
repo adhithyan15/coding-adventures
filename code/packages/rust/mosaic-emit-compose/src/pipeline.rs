@@ -7037,8 +7037,16 @@ fn emit_host_input(
         writeln!(out, "{inner}decorationBox = {{ innerTextField ->").unwrap();
         writeln!(out, "{inner}    Box {{").unwrap();
         writeln!(out, "{inner}        if ({value_expr}.isEmpty()) {{").unwrap();
-        let placeholder_text = input_text.bound_size.as_ref().map(|_| &input_text);
-        writeln!(out, "{inner}            {}", text_call(&placeholder, placeholder_text, None)).unwrap();
+        // The placeholder wears the field's own text style, its colour dimmed
+        // to 60% as a browser draws `::placeholder` (#14798). It used to take
+        // only a bound font size, so on a dark theme "What needs doing?" sat
+        // in Material's black while the typed text was light. An unstyled
+        // field keeps the plain `Text(text = …)`.
+        let mut placeholder_text = input_text.clone();
+        if let Some(color) = &placeholder_text.color {
+            placeholder_text.color = Some(format!("({color}).copy(alpha = 0.6f)"));
+        }
+        writeln!(out, "{inner}            {}", text_call(&placeholder, Some(&placeholder_text), None)).unwrap();
         writeln!(out, "{inner}        }}").unwrap();
         writeln!(out, "{inner}        innerTextField()").unwrap();
         writeln!(out, "{inner}    }}").unwrap();
@@ -11338,6 +11346,43 @@ mod tests {
         );
         assert!(out.contains("ExperimentalMaterial3AdaptiveNavigationSuiteApi::class"));
         assert!(out.contains("import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout"));
+    }
+
+    /// A field's placeholder wears the field's text style, colour dimmed to
+    /// 60% like a browser's `::placeholder`; an unstyled field keeps the
+    /// plain `Text(text = …)`.
+    #[test]
+    fn placeholder_wears_the_fields_text_style_dimmed() {
+        let m = component("Form", vec![slot("draft", SlotType::Text, true)], vec![]);
+        let input = |part: &str| {
+            styled_node(
+                "HostInput",
+                part,
+                vec![
+                    slot_prop("value", "draft"),
+                    LayoutProp {
+                        name: "placeholder".into(),
+                        value: LayoutPropValue::String(format!("{part} hint")),
+                    },
+                ],
+                vec![],
+            )
+        };
+        let l = layout("Form", node("Column", vec![], vec![input("styled"), input("plain")]));
+        let style = style_def(
+            "Form",
+            vec![part(
+                "styled",
+                vec![sprop("color", "#f1ebe1"), sprop("font-size", "14")],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        let line = |needle: &str| out.lines().find(|l| l.contains(needle)).unwrap().to_string();
+        let styled = line("\"styled hint\"");
+        assert!(styled.contains("color = (Color(0xFFF1EBE1)).copy(alpha = 0.6f)"), "{styled}");
+        assert!(styled.contains("fontSize = 14.sp"), "{styled}");
+        assert!(out.contains("Text(text = \"plain hint\")"), "{out}");
     }
 
     /// The split wears its OWN part style (#14798): Trestle's `app-shell`

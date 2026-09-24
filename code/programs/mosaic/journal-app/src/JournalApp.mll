@@ -3,6 +3,7 @@
 //   HostNavigationSplit [ app-shell ]          pane: the timeline; detail: the editor
 //     Column [ timeline ]
 //       HostButton [ new-entry ]
+//       search, Starred only, tags and journals (J4a–J4f)
 //       If (timeline-empty)  toolkit EmptyState
 //       Else                 toolkit RecordList   (first product consumer)
 //     Column [ editor ]
@@ -65,6 +66,32 @@ layout JournalApp {
           disabled : false ,
           onSelect : emit: onSelectTag
         )
+      }
+      // Journals (J4f): a second SegmentedControl mount, after the tags so
+      // the tag options keep their part names. "All journals" first.
+      pkg::mosaic-pkg-toolkit::SegmentedControl (
+        options : slot: journal-options ,
+        selected-index : slot: selected-journal-index ,
+        vertical : true ,
+        disabled : false ,
+        onSelect : emit: onSelectJournal
+      )
+      // A New journal field and Add; a refused name is said below it.
+      Row [ journal-bar ] {
+        HostInput [ journal-name-input ] (
+          value : slot: new-journal-name ,
+          placeholder : "New journal" ,
+          a11y-label : "New journal name" ,
+          disabled : false ,
+          onChange : emit: onNewJournalNameChange
+        )
+        HostButton [ add-journal ] (
+          label : "Add" ,
+          onClick : emit: onAddJournal
+        )
+      }
+      If ( when: slot: journal-error ) {
+        Text [ journal-error ] ( content : slot: journal-error )
       }
       // On this day (J4c): a second RecordList mount (#15959), above the
       // timeline, only when earlier years have entries on today's date.

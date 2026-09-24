@@ -109,6 +109,25 @@ class JournalScreenshots {
             onNodeWithText("Save").performClick()
             waitForIdle()
             shot("09-draft-error")
+
+            // Journals (J4f): add a Work journal (selected, so the lists
+            // start empty), write in it, then try a name already taken.
+            onNodeWithTag("journal-name-input").performTextInput("Work")
+            waitForIdle()
+            onNodeWithText("Add").performClick()
+            waitForIdle()
+            onNodeWithText("New entry").performClick()
+            waitForIdle()
+            onNodeWithTag("draft-editor-title").performTextInput("Standup notes")
+            waitForIdle()
+            onNodeWithText("Save").performClick()
+            waitForIdle()
+            shot("10-work-journal")
+            onNodeWithTag("journal-name-input").performTextInput("personal")
+            waitForIdle()
+            onNodeWithText("Add").performClick()
+            waitForIdle()
+            shot("11-journal-error")
         }
     }
 }

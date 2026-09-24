@@ -59,6 +59,14 @@ component JournalApp {
   // last Save refused the draft ("" when there is nothing to fix).
   slot draft-date : text ;
   slot draft-error : text ;
+  // Journals (J4f): "All journals", then each journal by name in the order
+  // it was created; the selected one (0 for All) filters every list and is
+  // where new entries are filed. The New journal field, and why the engine
+  // refused its last name ("" when there is nothing to fix).
+  slot journal-options : list<text> ;
+  slot selected-journal-index : number ;
+  slot new-journal-name : text ;
+  slot journal-error : text ;
 
   emit onSelectEntry ( index : number ) ;
   emit onNewEntry ;
@@ -77,4 +85,8 @@ component JournalApp {
   emit onTagsChange ( value : text ) ;
   // An option of tag-options; the selected one clears the filter.
   emit onSelectTag ( index : number ) ;
+  // An option of journal-options (0 is All journals).
+  emit onSelectJournal ( index : number ) ;
+  emit onNewJournalNameChange ( value : text ) ;
+  emit onAddJournal ;
 }
