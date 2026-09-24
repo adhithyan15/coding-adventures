@@ -2,6 +2,8 @@
 
 ## 2026-09-24
 
+- **A `Text` wears its own part's text style.** `color`, `font-size`, `font-weight` and `font-family: monospace` on a `Text`'s part now reach the `Text(...)` call, layered over any colour a container threads down. Before, only a `Text` with a `font-size` *prop* (#15081) read its part; every other label fell back to Material's default black and the degradation report stayed empty. On a dark theme that made the toolkit `EmptyState` heading and message and `DraftEditor`'s field labels unreadable (Journal on Compose, found with the screenshot harness in #15963). Unstyled text keeps the `Text(text = ...)` shape. Verified locally: Trestle's `TaskAppUiTest` passes, Engram, VisiCalc, Journal and Trestle compile, and Journal's dark renders show every label. `taskapp_native_control_contract.py` now matches the styled call shape for Trestle's error, row and empty-state text.
+
 - **Each `If` branch runs inside `_MosaicBranch { … }`**, a new file-private, non-inline composable, so its body compiles to its own JVM lambda method. A plain Kotlin `if` kept every branch in the enclosing lambda's bytecode, so an app shell's `If`/`Else` view chain piled every view into one method. Adding Trestle's seventh view (Checklists, C3a of #14018) broke its Compose build with `MethodTooLargeException: TaskAppKt.TaskApp$lambda$1$0$1`, the JVM's 64 KB method limit. The wrapper adds no layout node, and Row/Column scopes stay available as implicit receivers. Verified locally: TaskApp with Checklists fails `gradle compileKotlin` before the fix and builds after it.
 
 ## 2026-09-13
