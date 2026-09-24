@@ -1,18 +1,19 @@
 {
   "language": "malayalam",
   "chapter": 80,
-  "sourceHash": "fnv1a64:45bbb098ce3ab90b",
+  "sourceHash": "fnv1a64:c2c3a65cb165c978",
   "lessonIds": [
     "ML-C80-uuru",
     "ML-C80-keralam",
     "ML-C80-malayali",
-    "ML-R80-origin-recall"
+    "ML-R80-origin-recall",
+    "ML-R80-what-came-once"
   ],
-  "voiceLessons": 3,
+  "voiceLessons": 4,
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch80.txt",
   "json": "malayalam/narration/ch80.json",
-  "textHash": "fnv1a64:cd1f72efb3fe8229",
-  "jsonHash": "fnv1a64:10f624f59eef4b2f",
+  "textHash": "fnv1a64:cff5d894efb0559c",
+  "jsonHash": "fnv1a64:29dd9ae4239e71a1",
   "findings": []
 }

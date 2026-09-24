@@ -1,4 +1,4 @@
-# Session Map — Punjabi Chapters 1–47
+# Session Map — Punjabi Chapters 1–48
 
 This is the authoritative book order. Every row is one session of at most five
 minutes. Sound and meaning come before load-bearing decoding; writing grows from
@@ -279,6 +279,12 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 270 | 45 | PA-C45-pehla-paath | the same six facts as sentences, and ਹੈ said out loud |
 | 271 | 46 | PA-W10-a1-con-reloj | the same fields under the paper's own twenty-minute clock |
 | 272 | 47 | PA-W11-jodi-hoiyan-lineaan | four lines to one reader, joined with ਅਤੇ and ਪਰ |
+| 273 | 48 | PA-R48-forms-name-and-language | the name and language fields, at all three levels of support |
+| 274 | 48 | PA-R48-forms-residence-and-work | the residence and work fields, and the repair move |
+| 275 | 48 | PA-R48-forms-cold-all-nine | nine field-entry moves, sorted by how much the page helps |
+| 276 | 48 | PA-R48-gurmukhi-met-once | four standing shapes, one mark, read inside whole words |
+| 277 | 48 | PA-R48-marks-above-and-below | a standing long-a, and the marks that ride above and below |
+| 278 | 48 | PA-R48-courtesy-and-parting | the courtesy words, the partings, and their registers |
 
-After session 272, the track continues through the dependency-linked backlog;
+After session 278, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

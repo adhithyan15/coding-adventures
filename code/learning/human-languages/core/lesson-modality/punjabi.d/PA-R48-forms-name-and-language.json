@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R48-forms-name-and-language",
+    "language": "punjabi",
+    "chapter": 48,
+    "sequence": 2630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f92746b7204d65f1"
+  },
+  "findings": []
+}

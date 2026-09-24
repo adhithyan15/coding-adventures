@@ -73,7 +73,6 @@ Reason tags, one per removal site:
 - `removed-dead-code` — after a block-level terminator;
 - `removed-dead-code-in-case` — after a `switch`-case terminator;
 - `removed-empty-statement` — a swept `;`;
-- `removed-debugger` — a stripped `debugger;` (block body or top level).
 
 `block-flattened` is intentionally NOT a deletion: flattening *moves* a
 nested block's statements up one scope, so those nodes stay live in the

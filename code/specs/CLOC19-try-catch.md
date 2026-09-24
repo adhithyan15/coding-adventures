@@ -77,25 +77,112 @@ keyword↔`{`/`}` or `}`↔keyword (`try{…}catch{…}`, `}finally{…}`), all 
 lex cleanly with no space. Pretty mode adds readability spaces; the
 optional-catch-binding form emits `catch{…}` with no parens.
 
-## The catch-param soundness rule (the crux)
+## The catch-param rule
 
 The catch parameter is a binding scoped to the handler body and **nowhere else**.
-Every pass that renames or removes bindings MUST treat it as such. Concretely:
+Every pass that renames or removes bindings must treat it as such. Concretely:
 
-1. **It is never renamed.** Renaming passes collect the catch param as an
+1. **We never rename it.** Renaming passes collect the catch param as an
    *ineligible* declaration occurrence — it stays in the output verbatim.
+   **This is a conservative choice, not a soundness requirement** — see below.
 2. **Nothing is renamed onto it.** The catch param joins the fresh-name **avoid
-   set**, so no generated short name can collide with it.
+   set**, so no generated short name can collide with it. *This one is a
+   soundness requirement.*
 3. **It is counted as a declared binding** in every `count_decl_names_*` /
    shadow-guard tally, so a free identifier elsewhere that is also bound by a
    catch clause is correctly treated as shadowed (CLOC16 linchpin).
 4. **A `try` is not a terminator.** It can catch and continue, so DCE/control-flow
    passes keep statements *after* a try/catch reachable.
 
-If either of (1)/(2) is missing, a generated short name can alias the caught
-value and miscompile the handler. The regression test
-`fresh_name_avoids_colliding_with_catch_param` pins the killer case: with a catch
-param literally named `a`, the function's own param renames to `b`, not `a`.
+If (2) is missing, a generated short name can alias the caught value and
+miscompile the handler. The regression test that pins it is
+`fresh_name_avoids_catch_param_unused_in_its_own_body`: the handler is
+`catch (a) { use(longName); }`, which never mentions its own binding, so only
+the explicit avoid-set insertion can keep `longName` off `a`.
+
+Note which test that is. `fresh_name_avoids_colliding_with_catch_param` reads as
+though it pins the same guard and does not — its handler is `use(a, longName)`,
+so `a` reaches the avoid set through the body walk regardless. Before the test
+above existed, deleting `out.insert(param.name)` left every test in the crate
+green; now it fails that one and nothing else. The upstream port
+`fresh_name_avoids_catch_binding` shares the blind spot. Both are still useful
+as end-to-end cover; neither discriminates the guard.
+
+### (1) is ours, not a law — corrected 2026-09-23
+
+An earlier revision of this section listed (1) and (2) together as things every
+pass **MUST** do, and concluded "if either of (1)/(2) is missing, a generated
+short name can alias the caught value and miscompile the handler". That is true
+of (2) and false of (1), and upstream Closure is the counterexample. Measured
+against the pinned oracle (`closure-compiler-v20260915`, sha256 verified),
+with externs for the free globals and a value use to stop the inliner:
+
+```js
+function process(value) {
+  var temp = value + 1;
+  try { compute(temp); } catch (err) { report(err, temp); }
+  return temp;
+}
+sink(process);
+```
+
+```
+SIMPLE   : function process(a){a+=1;try{compute(a)}catch(b){report(b,a)}return a}sink(process);
+ADVANCED : sink(function(a){a+=1;try{compute(a)}catch(b){report(b,a)}return a});
+```
+
+`err` → `b`. Upstream renames catch parameters at **both** levels. Two further
+probes show why that is safe, and they are the reason (1) and (2) are not the
+same rule:
+
+```
+in            : function f(a1,a2,a3){var x=a1+a2+a3;try{compute(x)}catch(err){report(err,x,a1,a2,a3)}return x}sink(f);
+out (SIMPLE)  : function f(b,c,d){var a=b+c+d;try{compute(a)}catch(e){report(e,a,b,c,d)}return a}sink(f);
+out (ADVANCED): sink(function(b,c,d){var a=b+c+d;try{compute(a)}catch(e){report(e,a,b,c,d)}return a});
+```
+
+With `a` through `d` already taken, upstream gives the catch binding `e`. It
+satisfies (2) by **choosing a non-colliding fresh name**, which is a different
+mechanism from reserving the original one. And renaming stays correct across
+shadowing:
+
+```
+in            : var err=1;function f(v){try{compute(v)}catch(err){report(err)}return err}sink(f);
+out (SIMPLE)  : var err=1;function f(a){try{compute(a)}catch(b){report(b)}return err}sink(f);
+out (ADVANCED): sink(function(a){try{compute(a)}catch(b){report(b)}return 1});
+```
+
+The inner binding becomes `b` while the outer `err` reference keeps its own
+identity — at SIMPLE it survives verbatim, and at ADVANCED it is constant-folded
+to `1`, which is the same fact seen through one more pass.
+
+So reserving the catch param is a sound way to satisfy (2), and it is the one we
+implement, but it is not the only one and it is not required.
+
+Two limits on how far this evidence reaches, since "upstream does it" is not the
+same as "it is always safe":
+
+* **`eval` in the handler defeats any rename, and upstream renames anyway.**
+  `function f(v){try{compute(v)}catch(err){eval("report(err)")}return v}sink(f);`
+  compiles at both levels to `…catch(b){eval("report(err)")}…` — the string still
+  names `err`, which no longer exists. Upstream ships that miscompile by policy,
+  the same way it does for any renamed binding an `eval` string reaches. So the
+  probes show renaming is not *required* to be avoided; they do not show it is
+  safe in the presence of `eval`, and neither does our reserving rule make us
+  safe there for any other local.
+* **Upstream refuses two of the hard cases rather than renaming them.**
+  `with (o) { report(err) }` is `JSC_USE_OF_WITH`, and a handler that
+  redeclares its binding (`catch (err) { var err = err + 1; }`) is
+  `JSC_REDECLARED_VARIABLE_ERROR`, at both levels. Its evidence therefore covers
+  only the subset of JavaScript it accepts.
+
+Reserving has a cost: upstream emits shorter output than we do wherever a catch
+binding has a long name, which is part of **CCR-022**
+([#15856](https://github.com/adhithyan15/coding-adventures/issues/15856)).
+That issue currently frames catch params as a binding kind our renamer *skips* —
+incompleteness. The probes above say it is a **divergence**, and at SIMPLE as
+well as ADVANCED. Anyone picking up CCR-022 should expect to change this rule
+and the `advanced-try-catch-rename` golden together, not just add a code path.
 
 ### Per-pass handling
 
@@ -125,7 +212,10 @@ the handler and a `BindingKind::Let` binding for the catch param.
 * **`advanced-try-catch-rename`** — at ADVANCED: `process`/`value`/`temp` get
   short names, uses inside both the try block and the catch body are rewritten,
   and the catch binding `err` is preserved verbatim and never aliased to a
-  generated name.
+  generated name. Note this fixture pins **our** behaviour, not upstream's:
+  upstream renames the catch binding (see "(1) is ours, not a law" above) and
+  in fact inlines this whole function away. It is a regression test for the
+  conservative rule we chose, not an oracle for it.
 
 ## Out of scope (future work)
 

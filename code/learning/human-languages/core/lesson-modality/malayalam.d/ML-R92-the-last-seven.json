@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R92-the-last-seven",
+    "language": "malayalam",
+    "chapter": 92,
+    "sequence": 3281,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00817cdf324a4762"
+  },
+  "findings": []
+}

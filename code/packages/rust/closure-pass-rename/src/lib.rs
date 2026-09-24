@@ -2017,7 +2017,26 @@ mod tests {
         );
     }
 
-    // ---- catch-param soundness (CLOC19) -----------------------
+    // ---- catch-param handling (CLOC19) -------------------------
+    //
+    // Two rules, and only one of them is a soundness requirement.
+    // Numbered as in code/specs/CLOC19-try-catch.md, where the rules are
+    // (1) never rename the binding and (2) never rename anything onto it.
+    //
+    // (2) is the soundness requirement: dropping the avoid-set insertion
+    // miscompiles the handler, which
+    // `fresh_name_avoids_catch_param_unused_in_its_own_body` below pins.
+    // (Its older sibling `fresh_name_avoids_colliding_with_catch_param`
+    // reads like it pins this and does not: that input mentions the
+    // catch binding inside its own handler, so the body walk adds the
+    // name anyway.)
+    //
+    // (1), leaving the binding itself unrenamed, is a conservative choice
+    // rather than a requirement:
+    // upstream Closure renames catch params at both SIMPLE and ADVANCED
+    // and satisfies (2) by picking a non-colliding fresh name instead.
+    // See code/specs/CLOC19-try-catch.md, "(1) is ours, not a law", for
+    // the oracle probes; the parity cost is CCR-022 (#15856).
 
     #[test]
     fn rewrites_param_use_inside_catch_body() {
@@ -2049,16 +2068,45 @@ mod tests {
 
     #[test]
     fn fresh_name_avoids_colliding_with_catch_param() {
-        // The killer case: the catch param is literally `a`, the name the
-        // allocator would otherwise hand to the function's own param. The
-        // soundness guard adds the catch param to the avoid set, so
-        // `longName` must become `b` (NOT `a`) — otherwise the renamed
-        // param would alias the caught value and miscompile `use(a, …)`.
+        // The catch param is literally `a`, the name the allocator would
+        // otherwise hand to the function's own param, so `longName` must
+        // become `b` (NOT `a`).
+        //
+        // This comment used to credit the avoid-set guard for that, and the
+        // guard is not what makes it `b` here: `a` is mentioned inside the
+        // handler body, so `collect_all_idents_block` puts it in the avoid
+        // set whether or not the explicit insertion exists. Deleting the
+        // insertion leaves this test green. It is still useful end-to-end
+        // cover; the test that discriminates the guard is
+        // `fresh_name_avoids_catch_param_unused_in_its_own_body`.
         assert_eq!(
             rename_source(
                 "function f(longName) { try { risky(); } catch (a) { use(a, longName); } }"
             ),
             "function f(b){try{risky()}catch(a){use(a,b)}};"
+        );
+    }
+
+    #[test]
+    fn fresh_name_avoids_catch_param_unused_in_its_own_body() {
+        // The case that actually pins the avoid-set guard.
+        //
+        // `fresh_name_avoids_colliding_with_catch_param` above looks like it
+        // does, and a review found it does not: its handler body is
+        // `use(a, longName)`, so the catch param `a` reaches the avoid set via
+        // `collect_all_idents_block(&h.body, …)` whether or not the explicit
+        // insertion exists. Before this test existed, deleting
+        // `out.insert(param.name)` left every running test in the crate
+        // green.
+        //
+        // Here the handler never mentions its own binding, so the body walk
+        // cannot see `a` and only the explicit insertion can. Without it the
+        // allocator hands `longName` the name `a`, and `use(a)` in the handler
+        // silently starts reading the caught exception instead of the param —
+        // a miscompile with no syntax error to catch it.
+        assert_eq!(
+            rename_source("function f(longName) { try { risky(); } catch (a) { use(longName); } }"),
+            "function f(b){try{risky()}catch(a){use(b)}};"
         );
     }
 

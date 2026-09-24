@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-23
+
+- The multiline `TextEditor` (legacy `Input`) now takes its accessible name from the authored `a11y-label`, with the placeholder only as a fallback. It also honours UI58 `disabled` before the `read-only` approximation, sharing `text_field_disabled_modifier` with `HostInput`. It used to use the placeholder unconditionally and read only `read-only` (J3b-pre, #14416).
+
 ## 2026-09-13
 
 - Project numeric typography through a stable font modifier on Text, HostInput, HostButton and HostTable. Invalid live values keep the inherited/authored font; monospaced design flows through resolved descendants. Add a macOS test that type-checks two generated components together.

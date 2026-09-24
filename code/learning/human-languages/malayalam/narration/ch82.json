@@ -3,8 +3,8 @@
   "language": "malayalam",
   "chapter": 82,
   "title": "Opening A Conversation",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d9fb4597b7142649",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:70011962911e78d8",
   "lessons": [
     {
       "id": "ML-C82-chettaa",
@@ -623,6 +623,179 @@
             {
               "kind": "speech",
               "text": "Which ending does the calling form replace? (-ൻ, with -ാ.) Whose words are you using when you address a stranger? (The family's.) And which greeting can you always fall back on? (namaskāraṁ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-R82-the-opening-second-pass",
+      "sequence": 2871,
+      "title": "നന്ദി, ശരി, അതെ — the first four chapters, run cold",
+      "headword": "നന്ദി · ശരി · അതെ · സന്തോഷം",
+      "romanization": "nandi · śari · athe · santōṣaṁ",
+      "gloss": "second pass over the book's first four chapters — thanks, agreement, a name exchange, and the two goodbyes that promise a return",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4d68d523480fe1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Thanks, yes, and the word that accepts what somebody has said. All three, before you read on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A whole first meeting, in the order it happens."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask a name — ninṟe pēru entāṇu?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask a name — *ninṟe pēru entāṇu?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer with your own — enṟe pēru … āṇu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer with your own — *enṟe pēru … āṇu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "that meeting them is a pleasure — santōṣaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: that meeting them is a pleasure — *santōṣaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask after them — sukhamāṇō?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask after them — *sukhamāṇō?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "leave, promising to come back — pōyi varāṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: leave, promising to come back — *pōyi varāṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "leave, promising to meet — vīṇḍuṁ kāṇāṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: leave, promising to meet — *vīṇḍuṁ kāṇāṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A question in Malayalam can be made by an ending rather than a word order. Sukhamāṇō is the statement you are well with an -ō on the end, and the whole difference between telling and asking sits in that one syllable."
+            },
+            {
+              "kind": "speech",
+              "text": "The two goodbyes make a distinction English collapses. പോയി വരാം is I will go and come back — said by the person leaving, about themselves. വീണ്ടും കാണാം is we will meet again — said about both of you. Neither is a word for goodbye, because neither treats the parting as final."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agree that something is so — athe — and say what it literally claims",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: agree that something is so — *athe* — and say what it literally claims]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "സന്തോഷം, from memory, and check the shapes against the page afterwards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **സന്തോഷം**, from memory, and check the shapes against the page afterwards]"
+            },
+            {
+              "kind": "speech",
+              "text": "ശരി is the one to hold up. It is written four different ways across the languages that share it, and the same spoken word carries across all of them — a reminder that a script boundary is not a language boundary."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What turns you are well into are you well? (The ending -ō.) Which of the two farewells is about you alone? (Pōyi varāṁ — I will go and come back.)"
             }
           ]
         }

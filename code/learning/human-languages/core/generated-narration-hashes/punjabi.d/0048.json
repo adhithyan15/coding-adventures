@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:b16ac77497d53200",
+  "lessonIds": [
+    "PA-R48-forms-name-and-language",
+    "PA-R48-forms-residence-and-work",
+    "PA-R48-forms-cold-all-nine",
+    "PA-R48-gurmukhi-met-once",
+    "PA-R48-marks-above-and-below",
+    "PA-R48-courtesy-and-parting"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "punjabi/narration/ch48.txt",
+  "json": "punjabi/narration/ch48.json",
+  "textHash": "fnv1a64:093bf63831ac5554",
+  "jsonHash": "fnv1a64:1d3455af16077458",
+  "findings": []
+}

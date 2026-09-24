@@ -9539,7 +9539,7 @@ fn host_content_control_children(
     part_styles: &PartStyleMap,
     ctx: &mut EmitContext<'_>,
 ) -> Result<Option<String>, PipelineEmitError> {
-    if node.children.is_empty() || attrs.contains(" Content=") {
+    if node.children.is_empty() || xaml_attrs_set(attrs, "Content") {
         return Ok(None);
     }
     Ok(Some(emit_xaml_single_content_children(
@@ -9548,6 +9548,31 @@ fn host_content_control_children(
         part_styles,
         ctx,
     )?))
+}
+
+/// True if the serialized attribute list `attrs` (` Name="value" …`) sets the
+/// attribute `name` — matched as an attribute name, **outside** any quoted
+/// value.
+///
+/// A plain `attrs.contains(" Content=")` is fooled by a value: `escape_xaml_attr`
+/// leaves spaces and `=` alone, so an accessible name such as
+/// `AutomationProperties.Name="Open Content=details"` contains ` Content=` and
+/// used to make a label-less HostButton drop its children — silently, since the
+/// degradation analyzer (#15921) correctly believed XAML keeps them.
+fn xaml_attrs_set(attrs: &str, name: &str) -> bool {
+    let mut in_quotes = false;
+    let bytes = attrs.as_bytes();
+    let needle = format!("{name}=");
+    let mut i = 0;
+    while i < bytes.len() {
+        match bytes[i] {
+            b'"' => in_quotes = !in_quotes,
+            b' ' if !in_quotes && attrs[i + 1..].starts_with(&needle) => return true,
+            _ => {}
+        }
+        i += 1;
+    }
+    false
 }
 
 fn host_button_click_payload_expr(emit_name: &str, ctx: &EmitContext<'_>) -> Option<String> {
@@ -23176,6 +23201,32 @@ mod tests {
         assert!(xaml.contains("Read more"), "got:\n{xaml}");
         assert!(xaml.contains("</Button>"), "got:\n{xaml}");
         assert!(!xaml.contains("<Button x:Name=\"button0\"/>"), "got:\n{xaml}");
+    }
+
+    #[test]
+    fn an_accessible_name_mentioning_content_does_not_drop_the_children() {
+        // `escape_xaml_attr` keeps spaces and `=`, so this name serializes as
+        // AutomationProperties.Name="Open Content=details". A substring test for
+        // " Content=" matched inside that value and discarded the subtree, while
+        // the degradation analyzer (#15921) reported XAML as keeping it.
+        let xaml = emit_wrapper(wrapper_node(
+            "HostButton",
+            vec![LayoutProp {
+                name: "a11y-label".to_string(),
+                value: LayoutPropValue::String("Open Content=details".to_string()),
+            }],
+            vec![text_leaf("Read more")],
+        ));
+        assert!(xaml.contains("Read more"), "children kept:\n{xaml}");
+        assert!(xaml.contains("</Button>"), "got:\n{xaml}");
+    }
+
+    #[test]
+    fn xaml_attrs_set_matches_names_not_values() {
+        assert!(xaml_attrs_set(r#" x:Name="a" Content="Go""#, "Content"));
+        assert!(!xaml_attrs_set(r#" AutomationProperties.Name="Open Content=x""#, "Content"));
+        assert!(!xaml_attrs_set(r#" ContentTemplate="t""#, "Content"));
+        assert!(!xaml_attrs_set("", "Content"));
     }
 
     #[test]
