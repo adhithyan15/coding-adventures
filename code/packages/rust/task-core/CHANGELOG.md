@@ -6,6 +6,33 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **Checklist templates and runs** (C1 of #14018; spec
+  `code/specs/task-app-checklists-v1.md`). The standalone Checklist app is folding
+  into Trestle, and its yes/no decision node already existed here. What was
+  missing was the checklist as a thing and the template/run split. Answering a
+  question wrote onto the task itself, so the "template" *was* the run.
+  - **Model:** `Checklist` (a template, or a run with `RunStatus` and
+    timestamps) names a subtree of ordinary tasks. `ProjectState.checklists` is
+    serde-defaulted, so pre-C1 snapshots load.
+  - **Ops** (new `checklists` module):
+    - `create_checklist_template`
+    - `instantiate_checklist`: a deep copy; copied ids are *derived* as
+      `"{run}/{task}"`, never minted.
+    - `complete_checklist_run`: rejected unless every visible item is ticked and
+      every visible question answered. That was a disabled button in the
+      standalone app.
+    - `abandon_checklist_run`, `delete_checklist`
+    - `clear_decision_answer`
+  - **Projections:** `checklists` (the library), `checklist_run` (visible rows,
+    progress, duration) and `checklist_outline` (both branches, labelled).
+    Progress counts visible items only, as `computeStats` did.
+  - **Templates are ticked and answered only in their runs,** and a finished run
+    is read-only. `set_completed`, `answer_decision` and `set_decision` enforce
+    this.
+  - **Checklist items stay out of the general views:** `view::select` (List,
+    Sheet and Calendar), `todos`, `kanban`, `flowchart` and the project-wide
+    `checklist`.
+
 - **`ProjectState::ensure_default_workflow`** — seeds a project's first
   `Workflow` (4 statuses: `next`/"Up next", `doing`/"In progress",
   `review`/"In review", `done`/"Done") the first time one is needed, and
@@ -19,6 +46,16 @@ All notable changes to `task-core` are documented here.
   `code/programs/mosaic/task-app/BACKLOG.md`'s Board design-fidelity item.
 
 ### Fixed
+
+- **`set_decision` enforces the decision invariant:** a decision's branch
+  children *are* its outline children. Listed children must exist, appear once,
+  and not be the decision, its ancestor, or another decision's child. They are
+  reparented under the decision, and an outline child outside both branches is
+  refused. Before, a branch child parented elsewhere showed whatever the answer,
+  and an outline child outside both branches never showed.
+- **`delete_task` removes the deleted id from every decision's branch lists.**
+  It used to leave dangling references. It also refuses to delete a checklist's
+  root: delete the checklist instead.
 
 - **`set_status` now cascades `completed`** — entering a status that some
   workflow marks as its `done_status` sets `completed = true`; leaving one

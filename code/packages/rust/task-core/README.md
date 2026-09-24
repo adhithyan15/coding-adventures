@@ -6,6 +6,9 @@ so that every simpler tool is a *restriction* of one rich `Task` entity rather t
 separate data model.
 
 - A **checklist item** is a task with a done-flag and no scheduling.
+  Named checklists split into a **template** and its **runs** (`Checklist`,
+  `instantiate_checklist`, `checklist_run`): a yes/no `Decision` reveals only the
+  answered branch, and a run completes only when every visible item is done.
 - A **todo** is a task with a deadline.
 - A **kanban card** is a task with a workflow status.
 - A **Gantt bar** is a fully-scheduled task.

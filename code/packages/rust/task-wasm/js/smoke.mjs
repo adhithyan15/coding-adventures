@@ -69,6 +69,30 @@ assert(
   "toggle to Full persists",
 );
 
+// Checklists (C1): a template with a yes/no branch, one run, completion gated
+// on the visible items only.
+assert(engine.createChecklistTemplate({ id: "pre", root: "pre-root", name: "Pre-flight", now: 1 }).ok, "template");
+assert(engine.createTask({ id: "fuel", name: "Fuel", parent: "pre-root" }).ok, "item");
+assert(engine.createTask({ id: "pax", name: "Passengers?", parent: "pre-root" }).ok, "question");
+assert(engine.createTask({ id: "brief", name: "Brief them", parent: "pax" }).ok, "branch item");
+assert(
+  engine.setDecision({ id: "pax", decision: { question: "Passengers?", answer: null, yesChildren: ["brief"], noChildren: [] } }).ok,
+  "decision",
+);
+assert(engine.answerDecision({ id: "pax", answer: true }).ok === false, "templates are not answered");
+assert(engine.instantiateChecklist({ template: "pre", run: "r1", now: 10 }).ok, "run");
+let run = engine.checklistRun({ id: "r1" });
+assert(run.ok && run.data.rows.length === 2 && !run.data.progress.complete, "unanswered hides the branch");
+assert(engine.completeChecklistRun({ id: "r1", now: 20 }).ok === false, "incomplete run cannot complete");
+assert(engine.answerDecision({ id: "r1/pax", answer: true }).ok, "answer in the run");
+assert(engine.setCompleted({ id: "r1/fuel", completed: true }).ok, "tick");
+assert(engine.setCompleted({ id: "r1/brief", completed: true }).ok, "tick revealed item");
+assert(engine.completeChecklistRun({ id: "r1", now: 30 }).ok, "complete");
+run = engine.checklistRun({ id: "r1" });
+assert(run.data.status === "completed" && run.data.durationMs === 20, "completed with duration");
+assert(engine.checklists().data.length === 2, "library lists template + run");
+assert(!engine.todos().data.some((t) => t.task.startsWith("r1/") || t.task === "fuel"), "checklist items are not todos");
+
 console.log("task-wasm smoke OK — bars:", JSON.stringify(gantt.data.bars.map((b) => [b.name, b.start, b.finish])));
 
 function assert(cond, msg) {

@@ -93,6 +93,11 @@ impl ProjectState {
     /// Delete a task; its children are reparented to its parent, and links,
     /// dependencies, and assignments referencing it are removed.
     pub fn delete_task(&mut self, id: &TaskId) -> Result<(), OpError> {
+        // A checklist's root is its container, not an item: deleting it alone would
+        // reparent the items into the project and strand the checklist.
+        if self.checklists.values().any(|c| &c.root == id) {
+            return Err(OpError::Invalid("delete the checklist, not its root task"));
+        }
         let removed = self.tasks.remove(id).ok_or(OpError::NotFound)?;
         for t in self.tasks.values_mut() {
             if t.parent.as_ref() == Some(id) {
@@ -103,6 +108,14 @@ impl ProjectState {
             .retain(|d| &d.predecessor != id && &d.successor != id);
         self.links.retain(|l| &l.from != id && &l.to != id);
         self.assignments.retain(|a| &a.task != id);
+        // A deleted task must not stay listed in a decision's branch — that dangling
+        // id used to survive every delete (found in C1).
+        for t in self.tasks.values_mut() {
+            if let Some(d) = &mut t.decision {
+                d.yes_children.retain(|c| c != id);
+                d.no_children.retain(|c| c != id);
+            }
+        }
         // Orphan, don't delete: a note is a first-class entity in its own right —
         // losing the task it happened to be attached to shouldn't silently destroy
         // content the user wrote. It becomes a standalone note instead.
@@ -247,6 +260,9 @@ impl ProjectState {
 
     /// Set a task's completion flag.
     pub fn set_completed(&mut self, id: &TaskId, completed: bool) -> Result<(), OpError> {
+        // A checklist template is ticked in its runs, never itself; a finished run
+        // is a record (C1, `task-app-checklists-v1.md`).
+        self.ensure_checklist_item_editable(id)?;
         self.task_mut(id)?.completed = completed;
         Ok(())
     }
@@ -516,19 +532,102 @@ impl ProjectState {
     // ── decisions ────────────────────────────────────────────────────────────────
 
     /// Set or clear a task's decision (branch point).
+    ///
+    /// Enforces the decision invariant (`task-app-checklists-v1.md`): a decision's
+    /// branch children *are* its outline children and nothing else is. So every
+    /// listed child must exist, appear once across both branches, not be the
+    /// decision itself or one of its ancestors, and not already belong to another
+    /// decision; each is reparented under the decision; and the decision may not
+    /// keep an outline child outside both branches. Before C1 none of this was
+    /// checked — a branch child parented elsewhere showed whatever the answer, and
+    /// an outline child outside both branches never showed at all.
+    ///
+    /// Clearing (`None`) leaves the children as ordinary outline children.
     pub fn set_decision(&mut self, id: &TaskId, decision: Option<Decision>) -> Result<(), OpError> {
-        self.task_mut(id)?.decision = decision;
+        if !self.tasks.contains_key(id) {
+            return Err(OpError::NotFound);
+        }
+        let Some(d) = decision else {
+            self.task_mut(id)?.decision = None;
+            return Ok(());
+        };
+        if d.answer.is_some()
+            && self
+                .checklist_containing(id)
+                .is_some_and(|c| c.run.is_none())
+        {
+            return Err(OpError::Invalid(
+                "templates are not answered; instantiate a run",
+            ));
+        }
+        let mut listed: Vec<&TaskId> = Vec::new();
+        for c in d.yes_children.iter().chain(d.no_children.iter()) {
+            if !self.tasks.contains_key(c) {
+                return Err(OpError::NotFound);
+            }
+            if c == id || is_ancestor(self, c, id) {
+                return Err(OpError::WouldCycle);
+            }
+            if listed.contains(&c) {
+                return Err(OpError::Invalid("a branch child is listed twice"));
+            }
+            listed.push(c);
+            let claimed_elsewhere = self.tasks.values().any(|t| {
+                &t.id != id
+                    && t.decision
+                        .as_ref()
+                        .is_some_and(|od| od.yes_children.contains(c) || od.no_children.contains(c))
+            });
+            if claimed_elsewhere {
+                return Err(OpError::Invalid(
+                    "a branch child already belongs to another decision",
+                ));
+            }
+        }
+        let stray = self
+            .tasks
+            .values()
+            .any(|t| t.parent.as_ref() == Some(id) && !listed.contains(&&t.id));
+        if stray {
+            return Err(OpError::Invalid(
+                "every outline child of a decision must be in its yes or no branch",
+            ));
+        }
+        // All checks passed — now write.
+        let children: Vec<TaskId> = listed.into_iter().cloned().collect();
+        for c in &children {
+            if let Some(t) = self.tasks.get_mut(c) {
+                t.parent = Some(id.clone());
+            }
+        }
+        self.task_mut(id)?.decision = Some(d);
         Ok(())
     }
 
-    /// Answer a task's decision. Rejects a task with no decision.
+    /// Answer a task's decision. Rejects a task with no decision, and — since
+    /// answers belong to runs — a decision in a checklist template or in a
+    /// finished run.
     pub fn answer_decision(&mut self, id: &TaskId, answer: bool) -> Result<(), OpError> {
+        self.ensure_checklist_item_editable(id)?;
         let d = self
             .task_mut(id)?
             .decision
             .as_mut()
             .ok_or(OpError::Invalid("task has no decision"))?;
         d.answer = Some(answer);
+        Ok(())
+    }
+
+    /// Return a decision to unanswered (the standalone app's `answer: null`).
+    /// Hidden-branch items keep their state either way.
+    pub fn clear_decision_answer(&mut self, id: &TaskId) -> Result<(), OpError> {
+        self.ensure_checklist_item_editable(id)?;
+        let d = self
+            .task_mut(id)?
+            .decision
+            .as_mut()
+            .ok_or(OpError::Invalid("task has no decision"))?;
+        d.answer = None;
         Ok(())
     }
 
@@ -905,7 +1004,7 @@ fn valid_day_schedule(sched: &DaySchedule) -> bool {
 
 /// Whether `ancestor` appears on the parent chain of `task` (so making `task` the
 /// parent of `ancestor` would create a cycle). Bounded by the task count.
-fn is_ancestor(state: &ProjectState, ancestor: &TaskId, task: &TaskId) -> bool {
+pub(crate) fn is_ancestor(state: &ProjectState, ancestor: &TaskId, task: &TaskId) -> bool {
     let mut cur = state.tasks.get(task).and_then(|t| t.parent.clone());
     let mut guard = 0;
     while let Some(p) = cur {

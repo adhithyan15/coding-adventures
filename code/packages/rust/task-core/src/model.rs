@@ -953,6 +953,70 @@ pub enum DurationUnit {
     Weeks,
 }
 
+/// A named checklist: a **template** you author once, or one **run** of a template.
+///
+/// A checklist names a *subtree*: its items are the ordinary [`Task`]s under
+/// `root`, and its yes/no branch points are ordinary [`Decision`]s on those tasks,
+/// so every existing tool (notes, labels, search) keeps working on them. What this
+/// adds is the part the standalone Checklist app had and the task model did not:
+/// the checklist as a thing, and the split between the template and its runs.
+///
+/// ```text
+///   template "Pre-flight"            run "Pre-flight" (Tuesday)
+///   root ─┬─ Fuel checked            root ─┬─ Fuel checked      ✓
+///         └─ Passengers? (decision)        └─ Passengers? → yes
+///              ├ yes: Brief them                ├ yes: Brief them  ✓
+///              └ no:  —                         └ (no branch hidden)
+/// ```
+///
+/// Answering a question in a run never touches the template: a run is a deep copy
+/// (see `instantiate_checklist`). See `code/specs/task-app-checklists-v1.md`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct Checklist {
+    /// Stable id (host-minted).
+    pub id: ChecklistId,
+    /// Display name.
+    pub name: String,
+    /// What the checklist is for.
+    pub description: String,
+    /// The task whose subtree holds the items. A Summary task; not itself an item.
+    pub root: TaskId,
+    /// When it was created (injected clock, like every timestamp in the core).
+    pub created_at: u64,
+    /// `None` for a template; the run's state for a run.
+    pub run: Option<ChecklistRun>,
+}
+
+/// The state of one run of a checklist template.
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub struct ChecklistRun {
+    /// The template this run was copied from. May dangle once that template is
+    /// deleted — a finished run is a record, and deleting the template must not
+    /// delete the history of having run it.
+    pub template: ChecklistId,
+    /// Where the run is in its life.
+    pub status: RunStatus,
+    /// When it was completed or abandoned.
+    pub finished_at: Option<u64>,
+}
+
+/// A checklist run's lifecycle. Only an in-progress run can be changed.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+pub enum RunStatus {
+    /// Being worked through.
+    InProgress,
+    /// Every visible item done and every visible question answered.
+    Completed,
+    /// Stopped before completion.
+    Abandoned,
+}
+
 /// The entire project — the flat, normalised root. Every entity is stored by id in a
 /// map (deterministic iteration for stable serialization); relationships are by id,
 /// never by nesting, which keeps the dependency graph, snapshots, and incremental
@@ -1000,6 +1064,10 @@ pub struct ProjectState {
     /// Defaulted so pre-notes snapshots still deserialize.
     #[cfg_attr(feature = "serde", serde(default))]
     pub notes: BTreeMap<NoteId, Note>,
+    /// Checklists — templates and their runs — by id (see [`Checklist`]).
+    /// Defaulted so pre-checklist snapshots still deserialize.
+    #[cfg_attr(feature = "serde", serde(default))]
+    pub checklists: BTreeMap<ChecklistId, Checklist>,
     /// Status workflows, by id.
     pub workflows: BTreeMap<WorkflowId, Workflow>,
     /// Captured baselines, by id.
@@ -1033,6 +1101,7 @@ impl ProjectState {
             fields: BTreeMap::new(),
             labels: BTreeMap::new(),
             notes: BTreeMap::new(),
+            checklists: BTreeMap::new(),
             workflows: BTreeMap::new(),
             baselines: BTreeMap::new(),
             views: BTreeMap::new(),

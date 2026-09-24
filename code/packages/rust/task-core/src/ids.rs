@@ -108,6 +108,11 @@ id_type!(
     StatusId
 );
 id_type!(
+    /// Identifies a checklist — a template, or one run of a template (see
+    /// [`crate::Checklist`]).
+    ChecklistId
+);
+id_type!(
     /// Identifies a note. A note may be standalone (belongs to the project
     /// itself) or attached to a task — see `Note::attached_task`.
     NoteId
