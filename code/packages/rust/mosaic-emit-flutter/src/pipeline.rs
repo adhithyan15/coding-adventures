@@ -2165,6 +2165,12 @@ struct TableCtx<'a> {
     /// children. A `Row` that is itself a non-flex child of another `Row` is
     /// laid out with unbounded width and must keep its children non-flex.
     direct_row_accepts_flex: bool,
+    /// How many enclosing `HostNavigationSplit`s with `collapse: auto` this
+    /// widget sits inside (#15851). Each one emits its children TWICE — once
+    /// for the regular-width `Row`, once for the compact `Drawer` — so nesting
+    /// multiplies output as 2^depth. Counted so the emitter can refuse a nest
+    /// deep enough to exhaust memory; see [`MAX_DUPLICATING_SPLIT_DEPTH`].
+    duplicating_split_depth: u32,
     /// Whether this widget's own width is bounded (#14857).
     ///
     /// Distinct from `direct_row_accepts_flex`, which asks only about the
@@ -6304,6 +6310,14 @@ fn required_progress_ring_value(node: &LayoutNode) -> Result<String, PipelineEmi
 /// has no first-party adaptive split widget, so `collapse: auto` remains
 /// recorded separately as the non-gating
 /// `interaction.navigation-split-collapse-static` behaviour degradation.
+/// Deepest nest of `collapse: auto` navigation splits the Flutter emitter will
+/// lower (#15851). Each level doubles the emitted copies of everything beneath
+/// it, so 6 levels is already 64 copies of the innermost pane — far past any
+/// real app (Trestle nests none; a mail-style app nests one). The layout parser
+/// caps *recursion* at `MAX_RULE_DEPTH = 100`, which bounds nothing here:
+/// 30 nested splits parse in ~60 lines and would ask for 2^30 copies.
+const MAX_DUPLICATING_SPLIT_DEPTH: u32 = 6;
+
 fn emit_host_navigation_split(
     node: &LayoutNode,
     indent: usize,
@@ -6351,6 +6365,25 @@ fn emit_host_navigation_split(
             return Err(PipelineEmitError::UnknownPrimitive(
                 "HostNavigationSplit `collapse` takes the keyword `auto` or `never`".to_string(),
             ));
+        }
+    };
+    // `collapse: auto` emits both children twice (regular Row + compact
+    // Drawer), so every descendant is counted one level deeper; `never` emits
+    // once and adds nothing. Shadowing `ctx` carries the count into all four
+    // child emissions below.
+    let ctx = if pinned {
+        ctx
+    } else {
+        if ctx.duplicating_split_depth >= MAX_DUPLICATING_SPLIT_DEPTH {
+            return Err(PipelineEmitError::UnknownPrimitive(format!(
+                "HostNavigationSplit: more than {MAX_DUPLICATING_SPLIT_DEPTH} nested `collapse: auto` \
+                 splits — each doubles the emitted Flutter code (2^depth copies); \
+                 nest fewer, or use `collapse: never` for inner splits"
+            )));
+        }
+        TableCtx {
+            duplicating_split_depth: ctx.duplicating_split_depth + 1,
+            ..ctx
         }
     };
 
@@ -7265,6 +7298,8 @@ fn emit_host_table(
         width_bounded: true,
         direct_stack_child: false,
         radio_group_members: parent_ctx.radio_group_members,
+        // A table inside a split is still inside it (#15851).
+        duplicating_split_depth: parent_ctx.duplicating_split_depth,
     };
 
     let table_body = if let Some(shape) = flutter_data_table_shape(node) {
@@ -11135,6 +11170,52 @@ mod tests {
     }
 
     // ----- HostNavigationSplit ------------------------------------------
+
+    /// #15851: every `collapse: auto` split emits its children twice, so the
+    /// emitter bounds how deeply they nest instead of emitting 2^depth copies.
+    #[test]
+    fn nested_auto_splits_are_bounded_and_never_splits_are_not() {
+        fn nested(depth: u32, collapse: &str) -> LayoutNode {
+            let leaf = node_with(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::String("Leaf".into()),
+                }],
+                vec![],
+            );
+            let mut node = leaf.clone();
+            for _ in 0..depth {
+                node = node_with(
+                    "HostNavigationSplit",
+                    vec![
+                        LayoutProp {
+                            name: "pane-title".into(),
+                            value: LayoutPropValue::String("Pane".into()),
+                        },
+                        LayoutProp {
+                            name: "collapse".into(),
+                            value: LayoutPropValue::Keyword(collapse.into()),
+                        },
+                    ],
+                    vec![node, leaf.clone()],
+                );
+            }
+            node
+        }
+        let m = component("Shell", vec![], vec![]);
+        let emit = |root| from_pipeline(&m, &layout("Shell", root), &empty_style("Shell"));
+
+        let ok = emit(nested(MAX_DUPLICATING_SPLIT_DEPTH, "auto")).expect("at the limit");
+        assert!(ok.output.contains("Drawer("));
+        let Err(err) = emit(nested(MAX_DUPLICATING_SPLIT_DEPTH + 1, "auto")) else {
+            panic!("past the limit must be refused");
+        };
+        assert!(format!("{err:?}").contains("nested `collapse: auto`"), "{err:?}");
+
+        // `never` emits each child once, so depth costs nothing extra.
+        emit(nested(30, "never")).expect("never-splits do not duplicate");
+    }
 
     #[test]
     fn host_navigation_split_auto_uses_regular_row_and_compact_drawer() {
