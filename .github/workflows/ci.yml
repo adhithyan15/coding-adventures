@@ -2453,6 +2453,49 @@ jobs:
           env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$task_state_path" \
             MOSAIC_EXPECT_RESTORED=1 "$task_ui_binary"
 
+          # ---- Journal: build, install and LAUNCH (J5a, #14416). --------------
+          #
+          # The first native host Journal runs in. Same shape as TaskApp above:
+          # the strict standard binding (native-complete + runtime library), the
+          # built runtime is the one installed, and the installed app must stay
+          # up for five seconds without the runtime or a required prop missing.
+          # It launches twice against one state file, so the second start
+          # restores whatever the first saved. Journal raises no effects and
+          # ships no host assets, so no harness files are needed.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
+          journal_runtime_library="$(pwd)/code/packages/rust/target/debug/libjournal_mosaic_app.so"
+          test -f "$journal_runtime_library"
+
+          journal_output="$RUNNER_TEMP/mosaic-qt-journal"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend qt --output "$journal_output" --emit-project --profile native-complete --runtime-library "$journal_runtime_library"
+          jq -e '.replacedGeneratedFiles == []' "$journal_output/qt/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_output/qt/mosaic-degradations.json"
+          cmake -S "$journal_output/qt" -B "$journal_output/qt/build" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$journal_output/install"
+          cmake --build "$journal_output/qt/build" --config Release --parallel
+          cmake --install "$journal_output/qt/build" --config Release
+          installed_journal_runtime="$(find "$journal_output/install" -type f -name libmosaic_app.so -print -quit)"
+          test -n "$installed_journal_runtime"
+          cmp "$journal_runtime_library" "$installed_journal_runtime"
+          installed_journal="$(dirname "$installed_journal_runtime")/JournalApp"
+          test -x "$installed_journal"
+          journal_state_path="$RUNNER_TEMP/mosaic-qt-journal-state.json"
+          rm -f "$journal_state_path" "$journal_state_path.corrupt" "$journal_state_path.tmp"
+          for journal_launch in first restored; do
+            journal_log="$RUNNER_TEMP/mosaic-qt-journal-launch-$journal_launch.log"
+            set +e
+            env -u MOSAIC_APP_LIBRARY QT_QPA_PLATFORM=offscreen MOSAIC_APP_STATE_PATH="$journal_state_path" \
+              timeout 5s "$installed_journal" >"$journal_log" 2>&1
+            journal_status=$?
+            set -e
+            cat "$journal_log"
+            test "$journal_status" -eq 124
+            ! grep -F "Mosaic Rust runtime unavailable" "$journal_log"
+            ! grep -E "missing required MIL prop|ReferenceError|TypeError" "$journal_log"
+          done
+
+          # Journal's own suite (the package opts out of the workspace).
+          cargo test --manifest-path code/programs/mosaic/journal-app/Cargo.toml
+
           # ---- Engram: prove the Qt emission COMPILES. ------------------------
           #
           # Nothing compiled Engram's Qt output before this. Its own suite is

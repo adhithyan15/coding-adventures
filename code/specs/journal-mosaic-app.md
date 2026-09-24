@@ -118,8 +118,28 @@ The package's tests enforce the contract from both sides:
 - the app's start props are exactly the slots;
 - every declared emit is routed, and an undeclared one is rejected.
 
+## Native hosts (J5a)
+
+The first native host is **Qt on Linux**, in CI's "Round-trip Rust engine
+through standard Qt binding" step, the same lane that launches TaskApp. It:
+
+1. builds `journal-mosaic-app` as a cdylib (`export_mosaic_app!`);
+2. emits `journal-app` with `--profile native-complete --runtime-library`, and
+   requires no replaced generated files and zero degradations;
+3. builds and installs the project, and checks that the installed
+   `libmosaic_app.so` is the one built;
+4. launches the installed `JournalApp` offscreen twice against one state file.
+   Each launch must stay up for five seconds, with the runtime present and no
+   missing prop or QML error; the second exercises restore;
+5. runs the package's own `cargo test`.
+
+The lane is triggered by `journal-core`, `journal-mosaic-app` and the
+`journal-app` package (`mosaic_qt_runtime_ci_acceptance.py`). The other native
+backends follow in the same shape. The web host waits on a wasm clock:
+`SystemTime::now()` panics on `wasm32-unknown-unknown`.
+
 ## Deferred
 
-Web host, native packaging and CI lanes, release (J5); the markdown preview;
+The web host and the remaining native lanes, packaging and release (J5); the markdown preview;
 search, on-this-day, tags and stars in the UI; the journal switcher; moving an
 entry to another day; importing the TypeScript app's entries.

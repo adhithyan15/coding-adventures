@@ -52,8 +52,19 @@ JournalApp.mll ── RecordList · EmptyState · DraftEditor
 - `native_complete_gate` fails on any native degradation, and on any style
   drop beyond the pinned set. It checks the pins both ways.
 
-## Not yet
+## Where it runs
 
-This package has no host shells, native packaging, CI lanes or release yet
-(J5). The web and native hosts load `journal-mosaic-app` as `libmosaic_app`
-the same way Engram's and Trestle's do.
+**Qt (Linux)** is the first native host (J5a). In CI, its Qt lane:
+
+- builds the generated project against `journal-mosaic-app`, which the host
+  loads as `libmosaic_app`;
+- installs it, and launches `JournalApp` offscreen twice, so the second launch
+  restores the state the first saved.
+
+The same lane also runs this package's tests.
+
+Not yet:
+
+- the other native lanes (Compose, SwiftUI, Flutter, XAML);
+- the web host, which needs a wasm clock;
+- packaging and release (J5).

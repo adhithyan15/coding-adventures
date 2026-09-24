@@ -58,6 +58,21 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
                     )
                 )
 
+    def test_journal_requires_acceptance(self) -> None:
+        # J5a: Journal launches in this lane, so its engine, its app and its
+        # package all have to trigger it.
+        for package in (
+            "rust/journal-core",
+            "rust/journal-mosaic-app",
+            "mosaic/programs/journal-app",
+        ):
+            with self.subTest(package=package):
+                self.assertTrue(
+                    MODULE.requires_mosaic_qt_runtime(
+                        {"affected_packages": [package]}
+                    )
+                )
+
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_qt_runtime(
@@ -176,6 +191,29 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
         #
         # Qt now reaches the engine through the standard runtime, so the flags
         # are required rather than forbidden, and the pins are inverted to match.
+        # Journal (J5a) is built with the strict binding, installed with the
+        # runtime it was built from, and LAUNCHED, twice, against one state file.
+        self.assertIn("mosaic-qt-journal", workflow)
+        self.assertIn(
+            "cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app",
+            workflow,
+        )
+        journal_step = qt_runtime_step[
+            qt_runtime_step.index("-p journal-mosaic-app"):qt_runtime_step.index("mosaic-qt-engram")
+        ]
+        self.assertIn("--profile native-complete", journal_step)
+        self.assertIn('--runtime-library "$journal_runtime_library"', journal_step)
+        self.assertIn("libjournal_mosaic_app.so", journal_step)
+        self.assertIn('cmp "$journal_runtime_library" "$installed_journal_runtime"', journal_step)
+        self.assertIn('test "$journal_status" -eq 124', journal_step)
+        self.assertIn(
+            '! grep -E "missing required MIL prop|ReferenceError|TypeError" "$journal_log"',
+            journal_step,
+        )
+        self.assertIn(
+            "cargo test --manifest-path code/programs/mosaic/journal-app/Cargo.toml",
+            journal_step,
+        )
         self.assertIn("mosaic-qt-engram", workflow)
         self.assertIn(
             "cargo build --manifest-path code/packages/rust/Cargo.toml -p engram-mosaic-app",
