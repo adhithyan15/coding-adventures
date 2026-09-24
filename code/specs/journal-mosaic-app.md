@@ -102,6 +102,22 @@ that fails `JournalState::validate()`, an oversized draft, or an implausible id
 counter; a target naming a missing entry is
 repaired to `New`.
 
+## The package (J3c-2)
+
+`code/programs/mosaic/journal-app` exports `JournalApp`. Its `.mil` declares
+exactly the slots and events above. Its layout is a `HostNavigationSplit`:
+
+- the **pane** holds a *New entry* button (`onNewEntry`), then `EmptyState`
+  when `timeline-empty` is true, else `RecordList` (`timeline-rows`,
+  `selected-key`, and `onSelect` forwarded as `onSelectEntry`);
+- the **detail** holds `DraftEditor`, with the draft slots and `delete-label`
+  bound and its change, save, delete and cancel events forwarded.
+
+The package's tests enforce the contract from both sides:
+
+- the app's start props are exactly the slots;
+- every declared emit is routed, and an undeclared one is rejected.
+
 ## Deferred
 
 Web host, native packaging and CI lanes, release (J5); the markdown preview;
