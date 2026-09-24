@@ -6303,13 +6303,6 @@ fn required_progress_ring_value(node: &LayoutNode) -> Result<String, PipelineEmi
     }
 }
 
-/// Lower UI29-6's pane/detail primitive to Flutter's platform composition.
-/// At regular widths the pane and detail are side-by-side. At compact widths
-/// the pane becomes a Material `Drawer` owned by a `Scaffold`, so Flutter
-/// provides the edge gesture, route semantics, and drawer lifecycle. Flutter
-/// has no first-party adaptive split widget, so `collapse: auto` remains
-/// recorded separately as the non-gating
-/// `interaction.navigation-split-collapse-static` behaviour degradation.
 /// Deepest nest of `collapse: auto` navigation splits the Flutter emitter will
 /// lower (#15851). Each level doubles the emitted copies of everything beneath
 /// it, so 6 levels is already 64 copies of the innermost pane — far past any
@@ -6318,6 +6311,13 @@ fn required_progress_ring_value(node: &LayoutNode) -> Result<String, PipelineEmi
 /// 30 nested splits parse in ~60 lines and would ask for 2^30 copies.
 const MAX_DUPLICATING_SPLIT_DEPTH: u32 = 6;
 
+/// Lower UI29-6's pane/detail primitive to Flutter's platform composition.
+/// At regular widths the pane and detail are side-by-side. At compact widths
+/// the pane becomes a Material `Drawer` owned by a `Scaffold`, so Flutter
+/// provides the edge gesture, route semantics, and drawer lifecycle. Flutter
+/// has no first-party adaptive split widget, so `collapse: auto` remains
+/// recorded separately as the non-gating
+/// `interaction.navigation-split-collapse-static` behaviour degradation.
 fn emit_host_navigation_split(
     node: &LayoutNode,
     indent: usize,
