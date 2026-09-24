@@ -161,6 +161,35 @@ it("tags entries and filters the timeline by a tag", async () => {
   expect(button("Office")).toBeTruthy();
 });
 
+it("adds a journal, files new entries there and switches between journals", async () => {
+  await mount(memoryStorage());
+  const field = (label: string) => container.querySelector(`input[aria-label="${label}"]`) as HTMLInputElement;
+  const write = async (title: string) => {
+    await act(async () => button("New entry").click());
+    await type(field("Title"), title);
+    await act(async () => button("Save").click());
+  };
+  await write("At home");
+  await type(field("New journal name"), "personal");
+  await act(async () => button("Add").click());
+  expect(container.textContent).toContain("A journal named \u201cpersonal\u201d already exists.");
+
+  await type(field("New journal name"), "Work");
+  expect(container.textContent).not.toContain("already exists");
+  await act(async () => button("Add").click());
+  expect(field("New journal name").value).toBe("");
+  expect(() => button("At home")).toThrow();
+  await write("Standup");
+  expect(button("Standup")).toBeTruthy();
+
+  await act(async () => button("Personal").click());
+  expect(button("At home")).toBeTruthy();
+  expect(() => button("Standup")).toThrow();
+  await act(async () => button("All journals").click());
+  expect(button("At home")).toBeTruthy();
+  expect(button("Standup")).toBeTruthy();
+});
+
 it("says why a bad date cannot be saved, then files the entry on the day typed", async () => {
   await mount(memoryStorage());
   const field = (label: string) => container.querySelector(`input[aria-label="${label}"]`) as HTMLInputElement;

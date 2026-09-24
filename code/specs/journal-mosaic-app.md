@@ -442,7 +442,42 @@ nothing to fix).
 **Layout.** In the editor: a *Date* field beside the *Tags* field, and the
 error text above `DraftEditor` when set.
 
+## Journals (J4f)
+
+Day One keeps several journals (Personal, Work, Travel). The engine already
+does too: `CreateJournal` (names unique case-insensitively, at most
+`MAX_JOURNALS`), and entries that each belong to one journal
+(`EntryFilter::journal`). Until now Journal only ever used the built-in
+"Personal".
+
+**Switching.** The pane shows the journals as a `SegmentedControl` (a second
+mount, after the tags): "All journals", then each journal by name in the
+order it was created. Selecting a journal filters the timeline, search, On
+this day and the tag counts (`EntryFilter::journal`). "All journals" clears
+the filter. `journal_filter` is a view, like the other filters, so it is not
+persisted. A selected journal that no longer exists stops filtering.
+
+**Creating.** Under the switcher, a *New journal* field and an *Add journal*
+button run `CreateJournal`:
+- the id is minted as `journal-{n}`, skipping any already in use;
+- the name is the field's text, trimmed;
+- a blank name does nothing;
+- a name the engine refuses (a duplicate, too long, or too many journals)
+  is said in words in `journal-error`, like `draft-error`;
+- on success the field clears and the new journal is selected.
+
+**Filing.** A new entry is created in the selected journal, or in Personal
+when "All journals" is selected. Moving an existing entry between journals
+is later work.
+
+**Slots:** `journal-options` (`list<text>`), `selected-journal-index`
+(`number`, `0` for All journals), `new-journal-name` (`text`),
+`journal-error` (`text`).
+
+**Events:** `onSelectJournal { index }`, `onNewJournalNameChange { value }`,
+`onAddJournal`.
+
 ## Deferred
 
 The web host (J5c-2), launching on the remaining native lanes, packaging and release (J5); the markdown preview;
-(search J4a, stars J4b, on-this-day J4c, tags J4d and an entry's day J4e are above); the journal switcher; importing the TypeScript app's entries.
+(search J4a, stars J4b, on-this-day J4c, tags J4d, an entry's day J4e and journals J4f are above); moving an entry between journals; export (needs a host file-save effect on native hosts); importing the TypeScript app's entries.
