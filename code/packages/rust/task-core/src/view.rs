@@ -273,10 +273,13 @@ pub fn select(
     schedule: &ScheduleResult,
 ) -> Vec<SelectionGroup> {
     // 1. Filter.
+    // Checklist templates and runs have their own surface; their items are not rows
+    // in List/Sheet/Calendar (task-app-checklists-v1.md).
+    let owned = project.checklist_owned();
     let mut tasks: Vec<&Task> = project
         .tasks
         .values()
-        .filter(|t| t.kind != TaskKind::Summary)
+        .filter(|t| t.kind != TaskKind::Summary && !owned.contains(&t.id))
         .filter(|t| passes_filter(t, &view.filter))
         .collect();
 
