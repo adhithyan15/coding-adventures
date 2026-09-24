@@ -17,11 +17,18 @@
 //! a **target**: either a new entry, or an existing one. Typing only changes the
 //! draft; nothing reaches the engine until Save. Select loads an entry's draft,
 //! New starts an empty one, Cancel reloads the draft from its target.
+//!
+//! ## Search (J4a)
+//!
+//! A non-blank query turns the timeline into ranked search results from
+//! `journal_core::projections::search`. The query is a way of LOOKING at the
+//! journal, so it lives beside the persisted state, not in it: a restart
+//! opens the full timeline.
 
 use std::error::Error;
 use std::fmt;
 
-use journal_core::projections::timeline;
+use journal_core::projections::{search, timeline, MAX_QUERY_CHARS};
 use journal_core::{
     apply, Command, Date, Entry, EntryFilter, EntryId, JournalId, JournalState, OpError,
     MAX_BODY_BYTES, MAX_TITLE_CHARS,
@@ -75,6 +82,9 @@ pub struct JournalMosaicApp {
     /// minutes east of UTC; 0 (UTC) when the host did not say. Host context,
     /// not journal state: it is not in the snapshot.
     utc_offset_minutes: i32,
+    /// The search field's text (J4a). Not in the snapshot; see the module
+    /// docs. At most [`MAX_QUERY_CHARS`] characters, the most the engine reads.
+    search_query: String,
 }
 
 impl Default for JournalMosaicApp {
@@ -123,6 +133,7 @@ impl JournalMosaicApp {
             .expect("the built-in journal id and name are valid");
         Self {
             utc_offset_minutes: 0,
+            search_query: String::new(),
             state: AppState {
                 journal,
                 target: Target::New,
@@ -138,10 +149,17 @@ impl JournalMosaicApp {
 
     /// The slot values, keyed exactly by the `journal-app` package's slot names.
     fn props(&self) -> Value {
+        let searching = self.searching();
         let rows = self.timeline_rows();
         json!({
-            "timeline-empty": rows.is_empty(),
+            // "The journal has no entries", whatever the query. A search that
+            // matches nothing is `no-matches`, so the two empty states can say
+            // different things.
+            "timeline-empty": self.state.journal.entries.is_empty(),
             "timeline-rows": rows,
+            "search-query": self.search_query,
+            "searching": searching,
+            "no-matches": searching && rows.is_empty(),
             "selected-key": match &self.state.target {
                 Target::New => "",
                 Target::Entry(id) => id.as_str(),
@@ -155,9 +173,55 @@ impl JournalMosaicApp {
         })
     }
 
+    /// Whether the query has anything to search for.
+    fn searching(&self) -> bool {
+        !self.search_query.trim().is_empty()
+    }
+
+    /// The rows `RecordList` shows, and that `onSelectEntry`'s index refers
+    /// to: search results while [`searching`](Self::searching), else the
+    /// timeline.
+    fn timeline_rows(&self) -> Vec<[String; 6]> {
+        if self.searching() {
+            self.search_rows()
+        } else {
+            self.day_rows()
+        }
+    }
+
+    /// Search hits in rank order, as rows:
+    ///
+    /// ```text
+    ///   [key, "", title, snippet, "24 Sep 2026", badge]
+    /// ```
+    ///
+    /// No heading: results are ranked, not grouped by day, so the day moves to
+    /// `meta` and a hit still says when it was written. Short, because `meta`
+    /// shares a line with the title button in a 300px pane: rendered on
+    /// Compose, the long "Thursday, 24 September 2026" did not fit beside a
+    /// title and was drawn over it. The snippet is the
+    /// engine's, at most `SNIPPET_CHARS` characters around the first body match.
+    fn search_rows(&self) -> Vec<[String; 6]> {
+        search(&self.state.journal, &self.search_query, &EntryFilter::default())
+            .into_iter()
+            .filter_map(|hit| {
+                let entry = self.state.journal.entry(&hit.entry)?;
+                let (title, _) = row_text(entry);
+                Some([
+                    hit.entry.as_str().to_string(),
+                    String::new(),
+                    title,
+                    hit.snippet,
+                    short_date(entry.date),
+                    star_badge(entry),
+                ])
+            })
+            .collect()
+    }
+
     /// `RecordList` rows `[key, heading, title, subtitle, meta, badge]`, newest
     /// day first, the day heading only on each day's first row.
-    fn timeline_rows(&self) -> Vec<[String; 6]> {
+    fn day_rows(&self) -> Vec<[String; 6]> {
         let mut rows = Vec::new();
         for day in timeline(&self.state.journal, &EntryFilter::default()) {
             for (i, id) in day.entries.iter().enumerate() {
@@ -175,11 +239,7 @@ impl JournalMosaicApp {
                     title,
                     subtitle,
                     String::new(),
-                    if entry.starred {
-                        "★".to_string()
-                    } else {
-                        String::new()
-                    },
+                    star_badge(entry),
                 ]);
             }
         }
@@ -250,6 +310,21 @@ impl JournalMosaicApp {
                 self.state.draft_title.clear();
                 self.state.draft_body.clear();
                 Ok(self.announced("Entry deleted"))
+            }
+            // The query is capped at what the engine reads: a longer one could
+            // not change the results, and would be echoed back on every
+            // keystroke at any size.
+            "onSearchChange" => {
+                let value = text_payload(event, "value")?;
+                if value.chars().count() > MAX_QUERY_CHARS {
+                    return Err(invalid(event, "value"));
+                }
+                self.search_query = value;
+                Ok(self.update())
+            }
+            "onClearSearch" => {
+                self.search_query.clear();
+                Ok(self.update())
             }
             "onCancelEdit" => {
                 match self.state.target.clone() {
@@ -361,6 +436,7 @@ impl MosaicApp for JournalMosaicApp {
             self.state.draft_title.clone(),
             self.state.draft_body.clone(),
             self.state.next_entry,
+            self.search_query.clone(),
         );
         self.dispatch_inner(&event).inspect_err(|_| {
             (
@@ -368,6 +444,7 @@ impl MosaicApp for JournalMosaicApp {
                 self.state.draft_title,
                 self.state.draft_body,
                 self.state.next_entry,
+                self.search_query,
             ) = before;
         })
     }
@@ -546,6 +623,20 @@ fn day_heading(date: Date) -> String {
     format!("{weekday}, {day} {month} {year}")
 }
 
+/// `24 Sep 2026`: a search hit's day, short enough to share a line with its
+/// title (see `search_rows`).
+fn short_date(date: Date) -> String {
+    const MONTHS: [&str; 12] = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ];
+    let (year, month, day) = date.to_ymd();
+    let month = MONTHS
+        .get(usize::from(month).saturating_sub(1))
+        .copied()
+        .unwrap_or("");
+    format!("{day} {month} {year}")
+}
+
 /// A row's `(title, subtitle)`. The title is never empty — `RecordList` draws
 /// it as the row's button — so an untitled entry is named by its body.
 fn row_text(entry: &Entry) -> (String, String) {
@@ -563,6 +654,15 @@ fn row_text(entry: &Entry) -> (String, String) {
             Some(line) => (line, String::new()),
             None => ("Untitled entry".to_string(), String::new()),
         }
+    }
+}
+
+/// `★` for a starred entry, else `""`.
+fn star_badge(entry: &Entry) -> String {
+    if entry.starred {
+        "★".to_string()
+    } else {
+        String::new()
     }
 }
 
@@ -696,6 +796,9 @@ mod tests {
                 "delete-label",
                 "draft-body",
                 "draft-title",
+                "no-matches",
+                "search-query",
+                "searching",
                 "selected-key",
                 "timeline-empty",
                 "timeline-rows"
@@ -703,6 +806,119 @@ mod tests {
         );
         assert_eq!(props["timeline-empty"], true);
         assert_eq!(props["delete-label"], "");
+        assert_eq!(props["searching"], false);
+        assert_eq!(props["no-matches"], false);
+    }
+
+    // ── search (J4a) ──────────────────────────────────────────────────────────
+
+    fn search_for(app: &mut JournalMosaicApp, query: &str) -> Value {
+        send(app, "onSearchChange", json!({ "value": query }))
+            .unwrap()
+            .props
+    }
+
+    #[test]
+    fn a_query_turns_the_timeline_into_ranked_results() {
+        let mut a = app();
+        write(&mut a, "Harbour walk", "Fog over the water, then sun by noon.");
+        write(&mut a, "Groceries", "Bread, and a walk to the harbour after.");
+        write(&mut a, "Unrelated", "Nothing to see here.");
+
+        let props = search_for(&mut a, "harbour");
+        assert_eq!(props["searching"], true);
+        assert_eq!(props["no-matches"], false);
+        assert_eq!(props["timeline-empty"], false);
+        let hits: Vec<Vec<String>> = serde_json::from_value(props["timeline-rows"].clone()).unwrap();
+        // Title hit outranks the body hit; the unrelated entry is gone.
+        let titles: Vec<&str> = hits.iter().map(|r| r[2].as_str()).collect();
+        assert_eq!(titles, ["Harbour walk", "Groceries"]);
+        for row in &hits {
+            assert_eq!(row[1], "", "results are ranked, not grouped: no heading");
+            assert_eq!(row[4], "24 Sep 2026", "the day moves to meta, short");
+        }
+        assert!(hits[1][3].contains("harbour"), "the snippet shows the body match");
+    }
+
+    #[test]
+    fn every_term_must_match_and_blank_is_not_a_search() {
+        let mut a = app();
+        write(&mut a, "Harbour walk", "Fog over the water.");
+        let props = search_for(&mut a, "harbour sunshine");
+        assert_eq!(props["searching"], true);
+        assert_eq!(props["no-matches"], true);
+        assert_eq!(props["timeline-empty"], false, "the journal is not empty");
+        assert_eq!(props["timeline-rows"], json!([]));
+
+        let props = search_for(&mut a, "   ");
+        assert_eq!(props["searching"], false);
+        assert_eq!(props["no-matches"], false);
+        assert_eq!(rows(&a)[0][1], "Thursday, 24 September 2026", "the timeline is back");
+    }
+
+    #[test]
+    fn selecting_a_result_opens_that_entry_and_clear_restores_the_timeline() {
+        let mut a = app();
+        write(&mut a, "First", "alpha");
+        write(&mut a, "Second", "beta");
+        write(&mut a, "Third", "alpha again");
+        search_for(&mut a, "alpha");
+        let hits = rows(&a);
+        let target = hits.iter().position(|r| r[2] == "First").unwrap();
+        let props = send(&mut a, "onSelectEntry", json!({ "index": target }))
+            .unwrap()
+            .props;
+        assert_eq!(props["draft-title"], "First");
+        assert_eq!(props["search-query"], "alpha", "selecting keeps the query");
+
+        let props = send(&mut a, "onClearSearch", json!({})).unwrap().props;
+        assert_eq!(props["search-query"], "");
+        assert_eq!(props["searching"], false);
+        assert_eq!(rows(&a).len(), 3);
+    }
+
+    #[test]
+    fn an_edit_that_stops_matching_drops_out_of_the_results() {
+        let mut a = app();
+        write(&mut a, "Harbour", "fog");
+        search_for(&mut a, "harbour");
+        assert_eq!(rows(&a).len(), 1);
+        send(&mut a, "onSelectEntry", json!({ "index": 0 })).unwrap();
+        send(&mut a, "onTitleChange", json!({ "value": "Hill" })).unwrap();
+        let props = send(&mut a, "onSaveEntry", json!({})).unwrap().props;
+        assert_eq!(props["no-matches"], true);
+    }
+
+    #[test]
+    fn an_overlong_query_is_refused_and_changes_nothing() {
+        let mut a = app();
+        search_for(&mut a, "kept");
+        let long = "x".repeat(MAX_QUERY_CHARS + 1);
+        let err = send(&mut a, "onSearchChange", json!({ "value": long })).unwrap_err();
+        assert!(matches!(err, JournalAppError::InvalidPayload { field: "value", .. }));
+        assert_eq!(a.props()["search-query"], "kept");
+        // Exactly the engine's limit is fine.
+        search_for(&mut a, &"y".repeat(MAX_QUERY_CHARS));
+        assert!(send(&mut a, "onSearchChange", json!({ "value": 7 })).is_err());
+    }
+
+    #[test]
+    fn the_query_is_not_persisted() {
+        let mut a = app();
+        write(&mut a, "Harbour", "fog");
+        search_for(&mut a, "harbour");
+        let snapshot = a.snapshot().unwrap().unwrap();
+        assert!(
+            !String::from_utf8_lossy(&snapshot.bytes).contains("harbour\""),
+            "the query must not be in the snapshot"
+        );
+        let mut b = JournalMosaicApp::with_clock(test_clock);
+        let mut ctx = StartContext::new("en-US", Platform::Linux);
+        ctx.restored_snapshot = Some(snapshot);
+        let props = b.start(ctx).unwrap().props;
+        assert_eq!(props["search-query"], "");
+        assert_eq!(props["searching"], false);
+        assert_eq!(rows(&b).len(), 1);
     }
 
     #[test]
