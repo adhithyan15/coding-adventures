@@ -12,7 +12,7 @@ import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { JournalApp as Light, type JournalAppEvent } from "./components/light/react/JournalApp";
 import { JournalApp as Dark } from "./components/dark/react/JournalApp";
 import { loadMosaicModule, type MosaicHost, type MosaicUpdate } from "../../../../../../packages/rust/mosaic-app-wasm/js/mosaic-host.mjs";
-import { browserStorage, readStored, setAside, writeSnapshot } from "./persistence";
+import { browserStorage, readStored, setAside, STATE_KEY, writeSnapshot } from "./persistence";
 
 function prefersDark(): boolean {
   return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
@@ -63,6 +63,21 @@ export function App({
   const [update, setUpdate] = useState<MosaicUpdate | null>(null);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  // Set when another tab changes the stored journal. From then on this tab
+  // stops saving: its snapshot is older, and writing it would silently undo
+  // the other tab's work. Reloading picks the newer journal up.
+  const stale = useRef(false);
+
+  useEffect(() => {
+    const changedElsewhere = (event: StorageEvent) => {
+      // `storage` fires only for OTHER tabs' writes; null means cleared.
+      if (event.key !== STATE_KEY && event.key !== null) return;
+      stale.current = true;
+      setNotice("Journal was changed in another tab. Reload this page to continue; changes made here are no longer saved.");
+    };
+    window.addEventListener("storage", changedElsewhere);
+    return () => window.removeEventListener("storage", changedElsewhere);
+  }, []);
 
   useEffect(() => {
     let live = true;
@@ -100,7 +115,7 @@ export function App({
   }, [load, storage]);
 
   const persist = (app: MosaicHost) => {
-    if (!storage) return;
+    if (!storage || stale.current) return;
     try {
       const snapshot = app.snapshot();
       if (snapshot) writeSnapshot(storage, snapshot);

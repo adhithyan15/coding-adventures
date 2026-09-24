@@ -7,7 +7,8 @@
 // few-megabyte budget).
 //
 // Nothing here ever deletes a journal. A stored value the runtime refuses is
-// moved aside under UNREADABLE_KEY, and the journal starts empty.
+// moved aside under a key of its own (UNREADABLE_KEY + "." + a time), and
+// the journal starts empty; a second refusal never overwrites the first.
 import type { MosaicSnapshot } from "../../../../../../packages/rust/mosaic-app-wasm/js/mosaic-host.mjs";
 
 export const STATE_KEY = "journal-mosaic/state";
@@ -46,10 +47,31 @@ export function readStored(storage: Storage | null): { snapshot: MosaicSnapshot 
   }
 }
 
-/** Keep a value the runtime could not read, instead of losing it. */
-export function setAside(storage: Storage | null, raw: string): void {
-  storage?.setItem(UNREADABLE_KEY, raw);
-  storage?.removeItem(STATE_KEY);
+/** Every value kept aside so far, oldest first. */
+export function keptAside(storage: Storage | null): string[] {
+  if (!storage) return [];
+  const keys: string[] = [];
+  for (let i = 0; i < storage.length; i++) {
+    const key = storage.key(i);
+    if (key?.startsWith(`${UNREADABLE_KEY}.`)) keys.push(key);
+  }
+  return keys.sort().map(key => storage.getItem(key) ?? "");
+}
+
+/**
+ * Keep a value the runtime could not read, instead of losing it. Each one gets
+ * its own key, so an earlier one is never overwritten; the same value is not
+ * kept twice. The live key is cleared only after the copy is written, so a
+ * full storage (setItem throws) loses nothing.
+ */
+export function setAside(storage: Storage | null, raw: string, now: number = Date.now()): void {
+  if (!storage) return;
+  if (!keptAside(storage).includes(raw)) {
+    let key = `${UNREADABLE_KEY}.${String(now).padStart(16, "0")}`;
+    for (let n = 1; storage.getItem(key) !== null; n++) key = `${UNREADABLE_KEY}.${String(now).padStart(16, "0")}-${n}`;
+    storage.setItem(key, raw);
+  }
+  storage.removeItem(STATE_KEY);
 }
 
 /** Store a snapshot. Throws when the browser refuses (quota, private mode). */

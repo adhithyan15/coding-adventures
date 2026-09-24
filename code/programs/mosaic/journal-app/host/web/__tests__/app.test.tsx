@@ -4,7 +4,7 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it } from "vitest";
 import { App, hostClock, loadRuntime } from "../src/App";
-import { STATE_KEY, UNREADABLE_KEY } from "../src/persistence";
+import { keptAside, setAside, STATE_KEY } from "../src/persistence";
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 
@@ -40,8 +40,12 @@ afterEach(async () => {
 
 async function mount(storage: Storage) {
   await act(async () => root.render(<App load={load} storage={storage} />));
-  // The wasm loads asynchronously; let it settle.
-  await act(async () => new Promise(resolve => setTimeout(resolve, 0)));
+  // The wasm compiles and loads asynchronously (slowest the first time):
+  // wait until the app has started, not for a fixed number of ticks.
+  for (let waited = 0; container.textContent?.includes("Opening your journal"); waited += 10) {
+    if (waited > 5000) throw new Error("Journal did not start");
+    await act(async () => new Promise(resolve => setTimeout(resolve, 10)));
+  }
 }
 
 function button(label: string): HTMLButtonElement {
@@ -98,8 +102,30 @@ it("keeps an unreadable journal aside instead of losing it", async () => {
   await mount(storage);
   expect(container.textContent).toContain("No entries yet");
   expect(container.querySelector('[role="alert"]')?.textContent).toContain("kept aside");
-  expect(storage.getItem(UNREADABLE_KEY)).toContain("not json");
+  expect(keptAside(storage)).toEqual([expect.stringContaining("not json")]);
   expect(storage.getItem(STATE_KEY)).toBeNull();
+});
+
+it("never overwrites a journal kept aside earlier", () => {
+  const storage = memoryStorage();
+  storage.setItem(STATE_KEY, "first");
+  setAside(storage, "first", 1);
+  storage.setItem(STATE_KEY, "second");
+  setAside(storage, "second", 1); // the same instant: still its own key
+  setAside(storage, "second", 2); // the same value: not kept twice
+  expect(keptAside(storage)).toEqual(["first", "second"]);
+});
+
+it("stops saving once another tab changes the journal", async () => {
+  const storage = memoryStorage();
+  await mount(storage);
+  await writeEntry("Here", "Tab A.");
+  // Another tab writes a newer journal.
+  storage.setItem(STATE_KEY, "newer journal from tab B");
+  await act(async () => window.dispatchEvent(new StorageEvent("storage", { key: STATE_KEY })));
+  expect(container.querySelector('[role="alert"]')?.textContent).toContain("another tab");
+  await act(async () => button("New entry").click());
+  expect(storage.getItem(STATE_KEY)).toBe("newer journal from tab B");
 });
 
 it("the clock shim never throws into the runtime", () => {

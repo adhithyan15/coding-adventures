@@ -195,9 +195,13 @@ VisiCalc's host.
   it in `localStorage` under `journal-mosaic/state`. It stores the snapshot's
   bytes as text, because they are the runtime's JSON. On boot, a stored
   snapshot is restored. If the runtime refuses it, the stored value is **kept**
-  under `journal-mosaic/state.unreadable` (never deleted), the journal starts
-  empty, and an alert says so. If saving fails (quota, private mode), an alert
-  says so and the journal keeps working in memory.
+  under a key of its own, `journal-mosaic/state.unreadable.<time>`. It is never
+  deleted, and a later refusal never overwrites an earlier one. The journal
+  then starts empty, and an alert says so. If saving fails (quota, private
+  mode), an alert says so and the journal keeps working in memory.
+- **One writer.** When another tab changes the stored journal (a `storage`
+  event), this tab stops saving and asks for a reload. Its snapshot is older,
+  and writing it would silently undo the other tab's work.
 - **Tests (Vitest and jsdom):** they use the real wasm to check four things:
   - the empty state renders;
   - writing and saving an entry puts it on the timeline;

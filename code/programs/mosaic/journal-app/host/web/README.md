@@ -19,7 +19,9 @@ The runtime owns every piece of state, and this host only does three things:
 - **Saves.** After each event it stores the runtime's snapshot in
   `localStorage` (`journal-mosaic/state`), and it restores that snapshot on
   the next visit. A stored journal the runtime refuses is kept aside under
-  `journal-mosaic/state.unreadable`, never deleted.
+  a key of its own (`journal-mosaic/state.unreadable.<time>`), and never
+  deleted or overwritten. When another tab changes the journal, this tab stops
+  saving and asks for a reload, so an older tab never undoes newer work.
 
 ## Running it
 
