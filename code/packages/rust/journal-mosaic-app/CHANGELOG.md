@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `js/wasm.test.mjs` creates every app at UTC (`utcOffsetMinutes: 0`). The
+  Mosaic loader now sends the machine's own offset, and the day headings would
+  otherwise depend on where the tests run.
+
 ### Changed — entries are filed under the user's local day
 
 - "Today" is the local date at the host's `StartContext.utc_offset_minutes`,

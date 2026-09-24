@@ -157,7 +157,13 @@ hosts and snapshots are unchanged. An app told nothing falls back to UTC.
 Startup rejects an offset outside −840..=840 (UTC−14:00 to UTC+14:00, the
 extremes in use). The value is a snapshot at start. A daylight-saving change
 during a session takes effect at the next start. A host that wants it sooner
-restarts the app, whose state survives through its snapshot.
+restarts the app, whose state survives through its snapshot. Every standard host sends it:
+- the five native binding templates, each through its platform's time zone
+  API (`TimeZone.current`, `java.util.TimeZone`, `QDateTime`,
+  `DateTime.timeZoneOffset`, `TimeZoneInfo.Local`);
+- the wasm loader `mosaic-host.mjs`, through `-getTimezoneOffset()`. The
+  loader leaves out an implausible value, and a caller's explicit context
+  overrides it.
 An application method returning an error must leave its observable state unchanged;
 the runtime does not consume sequence or revision state, so the host can retry.
 
