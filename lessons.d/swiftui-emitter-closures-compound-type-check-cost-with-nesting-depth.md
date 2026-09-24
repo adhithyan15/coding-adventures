@@ -18,9 +18,16 @@ together with its enclosing expression (SE-0326), so nesting compounds.
 `func _mosaicNode()`. A local function's body is checked on its own.
 `tests/nested_if_chain_typechecks.rs` pins a 10-deep chain.
 
+**Compose hit the same wall differently.** A plain Kotlin `if` keeps every
+branch in the enclosing lambda, so the whole chain became one JVM method and
+exceeded the 64 KB limit (`MethodTooLargeException`). Each branch now runs in
+a non-inline `_MosaicBranch { }` composable, which gives it a method of its own.
+
 **Do differently:**
-- When a change deepens a generated SwiftUI tree (a new view in a chain, a new
-  wrapper), run `swift build -c release` on the emitted project locally. Swift
-  is on the dev Mac; it takes about 20 s.
-- In the emitter, never leave control flow directly in an expression-embedded
-  closure; wrap it in a local function.
+- When a change grows or deepens a generated app tree (a new view in a chain,
+  a new wrapper), compile the emitted native projects locally before pushing:
+  `swift build -c release` (SwiftUI) and `gradle compileKotlin` (Compose).
+  Swift, Java 21 and Gradle are on the dev Mac; each takes about 20 s. The
+  emitter tests and native-complete reports do not compile anything.
+- In an emitter, never let one construct absorb an unbounded subtree. Give
+  each branch its own function or lambda.
