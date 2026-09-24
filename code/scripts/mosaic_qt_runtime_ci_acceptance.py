@@ -18,6 +18,8 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/mosaic-app-runtime",
         "rust/task-mosaic-app",
         "rust/engram-mosaic-app",
+        "rust/journal-core",
+        "rust/journal-mosaic-app",
         "rust/mosaic-compile",
         "rust/mosaic-emit-qt",
         "rust/mosaic-package-artifact-builder",
@@ -26,6 +28,7 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/mosstyle-compiler",
         "mosaic/programs/task-app",
         "mosaic/programs/engram-app",
+        "mosaic/programs/journal-app",
     }
 )
 ACCEPTANCE_PACKAGE_PREFIXES = ("mosaic/mosaic-pkg-",)

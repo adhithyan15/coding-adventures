@@ -5,6 +5,19 @@ export class MosaicHostError extends Error {
 }
 
 // Standard Mosaic lifecycle transport. No application behavior belongs here.
+// The browser's UTC offset in minutes EAST of UTC (getTimezoneOffset counts
+// west), for StartContext.utcOffsetMinutes (UI38 "Local time"). Left out when
+// it is not a plausible offset: the runtime refuses one outside -840..=840
+// and the app would not start; without it the app falls back to UTC.
+function localUtcOffsetMinutes() {
+  try {
+    const east = 0 - new Date().getTimezoneOffset();
+    return Number.isInteger(east) && east >= -840 && east <= 840 ? { utcOffsetMinutes: east } : {};
+  } catch {
+    return {};
+  }
+}
+
 export async function loadMosaicModule(bytes, imports = {}) {
   const result = await WebAssembly.instantiate(bytes, imports);
   return createMosaicModule(result.instance ?? result);
@@ -52,7 +65,7 @@ export function createMosaicModule(instance) {
     create(context = {}) {
       const created = request({ op: 'create', context: {
         protocolVersion: 1, locale: 'en', colorScheme: 'system', textScale: 1,
-        platform: 'web', restoredSnapshot: null, ...context,
+        platform: 'web', restoredSnapshot: null, ...localUtcOffsetMinutes(), ...context,
       } });
       const handle = created.handle;
       let update = created.update;

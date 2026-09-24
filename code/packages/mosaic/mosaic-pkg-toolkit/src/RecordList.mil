@@ -1,0 +1,67 @@
+// RecordList.mil — interface for the toolkit's RecordList (J3a, #14416).
+//
+// A vertical list of selectable rows where each row is a small record — a
+// title, a line of detail, a date or count, a badge — optionally grouped
+// under headings.
+//
+//   Monday 21 September                      ← heading (group)
+//   ┌────────────────────────────────────┐
+//   │ First light            07:40  ★    │   title · meta · badge
+//   │ Walked to the lighthouse before …  │   subtitle
+//   └────────────────────────────────────┘
+//   ┌────────────────────────────────────┐
+//   │ Rain                   21:10       │
+//   └────────────────────────────────────┘
+//
+// Why this exists
+// ---------------
+// Journal's timeline, its search results, and a tag browser all want rows
+// with several fields; so do Trestle's task list, Engram's deck list and
+// card browser. ListGroup's `list<text>` holds one string per row, so each
+// product had grown its own: TaskApp's 17-field `task-rows`, Engram's
+// `deck-rows` and five parallel `browser-result-*` lists, Notes' `note-rows`.
+// The Journal audit (J1, finding 2) asked for "one decision, not three
+// components". This is that decision.
+//
+// Why `list<list<text>>` and not a record type
+// --------------------------------------------
+// Mosaic has no record slot type yet (UI38's open P1 item; UI29-4 proposes
+// `list of {key: type}`). Every multi-field list in the repo — Grid, Sheet,
+// Calendar, ProjectNav, Notes, DeckStatsPanel, TaskApp, Engram — already uses
+// positional `list<list<text>>` rows, so this adopts that idiom rather than
+// inventing a third. When records land, the positions below become field
+// names and nothing about the layout changes.
+//
+// Row fields (positional; append-only, so row[n] never changes meaning)
+// ---------------------------------------------------------------------
+//   row[0]  key       stable id; compared with `selected-key`. Not shown.
+//   row[1]  heading   group heading, set ONLY on the first row of a group
+//                     (TaskApp's flattened-grouping idiom); "" = no heading.
+//   row[2]  title     the row's name, drawn as its button; REQUIRED — an empty
+//                     title is an unnamed button. (Journal passes the date or
+//                     the opening words for an untitled entry.)
+//   row[3]  subtitle  a line of detail (an excerpt, a search snippet); "" = none.
+//   row[4]  meta      short trailing text (a time, a date, a count); "" = none.
+//   row[5]  badge     short trailing marker (★, a status); "" = none.
+//
+// An empty field is omitted from the layout entirely, not drawn as a blank
+// line, so a title-only row is exactly one line tall.
+//
+// Selection is by key, not index
+// ------------------------------
+// A list the host filters or re-sorts moves rows under a fixed index. The
+// selected row is the one whose key equals `selected-key`, so selection
+// survives re-ordering. The click still reports an index (the kernel gives
+// HostButton the index of its innermost For, UI37), which the host maps back
+// to a key through the rows it just passed in.
+
+component RecordList {
+  // The rows, in display order. See the field table above.
+  slot rows : list<list<text>> ;
+
+  // Key (row[0]) of the selected row; "" selects nothing.
+  slot selected-key : text ;
+
+  // Fired when a row is activated. Payload is the row's index in `rows`.
+  emit onSelect ( index : number ) ;
+}

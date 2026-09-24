@@ -76,6 +76,7 @@ export function createTaskEngine(wasmBytes, options = {}) {
     reparent: op("reparent"),
     setKind: op("set_kind"),
     setCompleted: op("set_completed"),
+    setOrder: op("set_order"),
     setPercentComplete: op("set_percent_complete"),
     setStatus: op("set_status"),
     // Seeds the project's default 4-status workflow (idempotent) and
@@ -102,6 +103,23 @@ export function createTaskEngine(wasmBytes, options = {}) {
     setFieldValue: op("set_field_value"),
     setDecision: op("set_decision"),
     answerDecision: op("answer_decision"),
+    /** Return a decision to unanswered: { id }. */
+    clearDecisionAnswer: op("clear_decision_answer"),
+    // ── checklists: templates and runs (C1, #14018) ──
+    /** { id, root, name, description?, now? } — creates the template and its root task. */
+    createChecklistTemplate: op("create_checklist_template"),
+    /** { template, run, now? } — a deep copy; run items are "{run}/{templateTask}". */
+    instantiateChecklist: op("instantiate_checklist"),
+    /** { id, now? } — rejected unless every visible item is ticked and answered. */
+    completeChecklistRun: op("complete_checklist_run"),
+    /** { id, now? } */
+    abandonChecklistRun: op("abandon_checklist_run"),
+    /** { id } — the checklist and its subtree; runs of a deleted template survive. */
+    deleteChecklist: op("delete_checklist"),
+    /** { id } → { checklist, name, status, rows, progress, durationMs } */
+    checklistRun: op("checklist_run"),
+    /** { id } → every row of a template, both branches, each with its branch. */
+    checklistOutline: op("checklist_outline"),
     setProjectName: op("set_project_name"),
     /**
      * How much of the scheduling machinery the active project exposes to
@@ -158,6 +176,8 @@ export function createTaskEngine(wasmBytes, options = {}) {
 
     // ── queries / projections (each returns { ok:true, data }) ──
     checklist: query("checklist"),
+    /** Every checklist template and run, for a library. */
+    checklists: query("checklists"),
     todos: query("todos"),
     flowchart: query("flowchart"),
     /** The whole workspace: projects, nesting, cross-project edges, shared pool. */

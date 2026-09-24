@@ -2,6 +2,40 @@
 
 ## Unreleased
 
+### Added — styles follow a component mounted more than once
+
+- Composition gives each part the resolver renamed for a second (third, …)
+  mount a copy of the original part's style, every state included, so the
+  n-th mount renders like the first.
+- A style the consumer wrote for the renamed part itself (for example
+  `part empty-state-m2 { … }`) wins, and no copy is made.
+- With every component mounted once, nothing is renamed and the output is
+  byte-identical to before.
+- `tests/multi_mount.rs` composes the toolkit's `EmptyState` twice, checks
+  the copied styles, and checks that a consumer override and a single mount
+  are unchanged.
+
+### Fixed — a HostButton's dropped children are reported, not silent (#15921)
+
+A `HostButton` with a child block compiled cleanly, and the native-complete
+report stayed clean, but on most backends the button came out blank.
+`collect_native_degradations` now reports
+`composition.button-children-unimplemented` (blocking) at the button's
+layout path.
+
+| Backend | Reported |
+| --- | --- |
+| React, Electron, WebComponent, SwiftUI, Compose, Flutter, Qt | always; they lower the button from `label` alone |
+| XAML, HTML | only when a `label` is also set; they render the children as content, but the label wins |
+
+The toolkit's `RecordList` (J3a of #14416) was designed as one button per row
+with its fields inside it, and that design is where this was found. No `.mll`
+in the repo nests children in a `HostButton`, so no package gate changes.
+
+**Also:** five packages lose a stale `(Flutter, "font-size")` pin. This change
+rebuilds them, so their "silently fixed" gates fail on it. The same removal is
+in #15926, and the identical hunks merge cleanly.
+
 ### Fixed — Compose native startup failures are visible and recoverable (#15786)
 
 Strict generated Compose Desktop shells now open their window before loading the

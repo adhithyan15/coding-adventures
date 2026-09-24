@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **`StartContext.utc_offset_minutes`** (wire `utcOffsetMinutes`, UI38 "Local
+  time"): the host's UTC offset at startup, in minutes east of UTC. It lets an
+  app decide which local day "now" falls on. It is optional on the wire both
+  ways: an earlier host's context decodes to `None`, and `None` is never
+  written. Startup rejects an offset outside −840..=840 with the new
+  `RuntimeError::InvalidUtcOffset`. `MIN_UTC_OFFSET_MINUTES` and
+  `MAX_UTC_OFFSET_MINUTES` are exported.
 - Add UI47 protocol-2 effect completion with pending-work checkpoint protection,
   explicit terminal outcomes and shared native/WASM conformance coverage.
 

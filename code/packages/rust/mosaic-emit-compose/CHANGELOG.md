@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-24
+
+- **Each `If` branch runs inside `_MosaicBranch { … }`**, a new file-private, non-inline composable, so its body compiles to its own JVM lambda method. A plain Kotlin `if` kept every branch in the enclosing lambda's bytecode, so an app shell's `If`/`Else` view chain piled every view into one method. Adding Trestle's seventh view (Checklists, C3a of #14018) broke its Compose build with `MethodTooLargeException: TaskAppKt.TaskApp$lambda$1$0$1`, the JVM's 64 KB method limit. The wrapper adds no layout node, and Row/Column scopes stay available as implicit receivers. Verified locally: TaskApp with Checklists fails `gradle compileKotlin` before the fix and builds after it.
+
 ## 2026-09-13
 
 - Project numeric font-size bindings on Text, HostInput, HostButton and HostTable as native TextUnit values. Preserve authored/inherited fallbacks for invalid live values, propagate table typography through split sections and scale input placeholders.

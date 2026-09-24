@@ -1,0 +1,25 @@
+// JournalApp.dark.msl — dark-theme styling for the app's own parts. The
+// timeline and editor style themselves (RecordList, DraftEditor); only the
+// two columns and the New-entry button are styled here (the shell has no
+// style: Flutter does not lower a background on the split view), with
+// properties every native backend lowers.
+
+style JournalApp {
+  part timeline {
+    padding    : 12 ;
+    gap        : 8 ;
+    background : "#111827" ;
+  }
+  part new-entry {
+    padding       : 8 ;
+    background    : "#1d4ed8" ;
+    color         : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#1d4ed8" ;
+    border-radius : 4 ;
+  }
+  part editor {
+    padding    : 16 ;
+    background : "#0b1220" ;
+  }
+}

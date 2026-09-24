@@ -1,5 +1,50 @@
 # Changelog
 
+## 2026-09-24
+
+- **Fixed: a signal named like a control member no longer calls that member.**
+  A handler such as `onClicked: toggle(i)` is written *inside* the Button, and
+  QML resolves an unqualified name against the control's own members first. So
+  an emit that lowered to `toggle` called `Button.toggle()`, and the component's
+  signal never fired. This made the toolkit's `Accordion`, `Select` and
+  `DropdownMenu`, and `ChecklistRun`'s `onToggle` (C2 of #14018), inert on Qt.
+  `onClicked: click()` re-fires `clicked`, and `onToggled: toggle()` flips the
+  box it came from. `allocate_qml_signal_names` now learns, per emit, which
+  controls call it (`emit_call_scopes`: button, text input, link text, popup,
+  range). A signal that collides with a member of one of *those* controls gets
+  the `mosaicEmit…` spelling, exactly like an `Item`-member clash. Only real
+  clashes are renamed: `select` fired from a button keeps its name, and so does
+  Engram's `undo`, whose host contract pins it. The host still receives the raw
+  event name. Tests that pinned the broken `click`/`toggle` spellings are
+  updated; a new test covers scoped allocation.
+
+## 2026-09-23
+
+- **Security: data `Text` renders as plain text.** Every `Text` that shows
+  application data now carries `textFormat: Text.PlainText`: the `Text`
+  primitive, dialog titles, and data-table cells. QtQuick's default
+  `Text.AutoText` switches to StyledText when a value looks like markup. A task
+  name or journal title such as `<img src="https://…">` would then make the QML
+  engine fetch that URL on render, a tracking beacon, and `<font>` could restyle
+  the text around it. `HostLink` keeps its deliberate, entity-escaped
+  `Text.RichText`, and a test pins that it carries exactly one `textFormat`.
+  This came from the pre-push security review of the toolkit's `RecordList`
+  (J3a of #14416), the first component built to carry user-written text.
+- **Security: data-bound control labels render as plain text.** A Controls
+  label is also a `QQuickText` left at `AutoText`: Button's `IconLabel`, and
+  CheckBox/RadioButton's `CheckLabel`. So a `HostButton`, `HostCheckbox` or
+  `HostRadio` whose `label` is a slot, keyword or expression now gets a
+  `contentItem: Text { …; textFormat: Text.PlainText }`. It mirrors the Basic
+  style's label: the control's `text`, `font` and palette colour, centred on a
+  button and padded past the indicator on a check control. The control's own
+  `text` and `Accessible.*` are unchanged. Literal labels are written by the
+  author, so they keep Qt's default label.
+- **Known, not fixed:** a slot-bound `HostInput` `placeholderText` still reaches
+  Qt's `PlaceholderText` at `AutoText`. Placeholders are author-written hints in
+  every current consumer. Treat a data-bound placeholder as trusted text until
+  this is lowered too.
+- A multiline `Input` with both an `a11y-label` and a `placeholder` wrote `Accessible.name` twice: the authored name, then the placeholder fallback. A duplicate property assignment is a hard `qmlcachegen` error. The placeholder is now only the default name for an unlabelled text area (J3b-pre, #14416).
+
 ## 2026-09-13
 
 - Project numeric typography on Text, HostInput, HostButton and HostTable through conditional native font bindings. Round to integer pixels and restore authored/inherited or platform defaults when live values are invalid. Include a generated-QML conformance fixture.

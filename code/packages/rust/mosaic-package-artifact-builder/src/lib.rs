@@ -764,7 +764,7 @@ fn compose_component_with_model_and_style_options(
         &mut Vec::new(),
         &mut HashSet::new(),
     )?;
-    resolve_layout_package_references(
+    let renames = resolve_layout_package_references(
         component,
         &mut layout,
         &model.descriptor_json,
@@ -779,6 +779,7 @@ fn compose_component_with_model_and_style_options(
     )
     .map_err(|errs| pipeline_err(component, &errs[0]))?;
     let mut style = merge_dependency_styles(own_style.def, dependency_style_parts);
+    copy_styles_for_renamed_parts(&mut style, &renames);
 
     // #15169 -- resolve `currentColor` here, at the ONE place both entry
     // points build a `ComposedComponent`, so the answer cannot differ
@@ -2036,6 +2037,26 @@ struct NativeScan<'a> {
     native_radio_groups: &'a HashSet<String>,
 }
 
+/// True when `backend` would silently discard the children authored inside a
+/// `HostButton` (#15921). XAML and HTML render them as the button's content —
+/// unless a `label` is also set, in which case the label wins and the subtree
+/// is dropped there too. Every other emitter reads only `label`.
+fn host_button_drops_children(backend: Backend, node: &LayoutNode) -> bool {
+    if node.children.is_empty() {
+        return false;
+    }
+    match backend {
+        Backend::React
+        | Backend::Electron
+        | Backend::WebComponent
+        | Backend::SwiftUI
+        | Backend::Compose
+        | Backend::Flutter
+        | Backend::Qt => true,
+        Backend::Xaml | Backend::Html => node.props.iter().any(|p| p.name == "label"),
+    }
+}
+
 fn collect_native_degradations(
     scan: &NativeScan<'_>,
     node: &LayoutNode,
@@ -2187,6 +2208,17 @@ fn collect_native_degradations(
                 "the backend does not yet lower HostProgressRing to its native determinate progress control",
             ))
         }
+        // #15921 — a HostButton with a child block. Every emitter but XAML and
+        // HTML lowers HostButton from its `label` alone and silently discards
+        // the authored subtree, emitting an empty or label-only button; XAML
+        // and HTML render the children as the button's content, but only when
+        // no `label` competes with them. Until children pass-through is
+        // specified for HostButton, the report must say so rather than stay
+        // clean over a row of blank buttons (J3a's RecordList found it).
+        "HostButton" if host_button_drops_children(backend, node) => Some((
+            "composition.button-children-unimplemented",
+            "the backend lowers HostButton from its label alone and discards the authored child subtree",
+        )),
         "HostLink" if backend == Backend::Flutter && flutter_link_requires_url_host(node) => Some((
             "effect.url-host-missing",
             "the Flutter emitter cannot open URLs without an application-supplied effect host",
@@ -5936,11 +5968,11 @@ fn resolve_layout_package_references(
     layout_out: &mut moslayout_compiler::CompileOutput,
     descriptor_json: &str,
     package_search_paths: &[PathBuf],
-) -> Result<(), BuildError> {
+) -> Result<Vec<mosaic_package_resolver::PartRename>, BuildError> {
     let resolver =
         mosaic_package_resolver::LayoutPackageResolver::new(package_search_paths.to_vec());
-    resolver
-        .resolve(&mut layout_out.def)
+    let renames = resolver
+        .resolve_with_renames(&mut layout_out.def)
         .map_err(|e| BuildError::PackageReferenceError {
             component: component.to_string(),
             error: e.to_string(),
@@ -5958,7 +5990,53 @@ fn resolve_layout_package_references(
     layout_out.parts = resolved_parts;
     layout_out.part_map_json =
         moslayout_compiler::emit_part_map_json(&layout_out.def.component_name, &layout_out.parts);
-    Ok(())
+    Ok(renames)
+}
+
+/// Give each part renamed for a second (third, …) mount a copy of the
+/// original part's style, every state included, so the n-th mount renders
+/// like the first (UI34 §5 step 4). A style the consumer wrote for the
+/// renamed part itself wins, and no copy is made. Each copy sits right after
+/// its source. With no renames (every component mounted once) the style is
+/// untouched.
+///
+/// One pass, linear in parts plus renames: a package can inline a component
+/// many times over, so this must not scan the style once per rename.
+fn copy_styles_for_renamed_parts(
+    style: &mut mosstyle_compiler::StyleDef,
+    renames: &[mosaic_package_resolver::PartRename],
+) {
+    if renames.is_empty() {
+        return;
+    }
+    let existing: HashSet<&str> = style.parts.iter().map(|part| part.name.as_str()).collect();
+    let mut copies: HashMap<&str, Vec<&str>> = HashMap::new();
+    let mut seen: HashSet<&str> = HashSet::new();
+    for rename in renames {
+        if existing.contains(rename.to.as_str()) || !seen.insert(rename.to.as_str()) {
+            continue;
+        }
+        copies
+            .entry(rename.from.as_str())
+            .or_default()
+            .push(rename.to.as_str());
+    }
+    let mut parts = Vec::with_capacity(style.parts.len() + seen.len());
+    let mut copied: HashSet<&str> = HashSet::new();
+    for part in &style.parts {
+        parts.push(part.clone());
+        // Only the first part of a name carries its copies.
+        if let Some(names) = copies.get(part.name.as_str()) {
+            if copied.insert(part.name.as_str()) {
+                for name in names {
+                    let mut copy = part.clone();
+                    copy.name = (*name).to_string();
+                    parts.push(copy);
+                }
+            }
+        }
+    }
+    style.parts = parts;
 }
 
 fn collect_dependency_style_parts(
@@ -8879,6 +8957,108 @@ layout LeechAction {
     /// UI86: every accepted shape of `HostButton` `selected:` is native on
     /// every native backend (XAML since #15463), and a string is reported
     /// everywhere.
+    #[test]
+    fn host_button_children_are_reported_wherever_they_are_dropped() {
+        // #15921: the card-in-a-button pattern compiled cleanly and emitted
+        // blank buttons on most backends with a clean report.
+        let pkg = make_package("mosaic-pkg-button-children", &["Rows"]);
+        fs::write(
+            pkg.path().join("src/Rows.mil"),
+            "component Rows {\n  slot title : text ;\n  emit onOpen ;\n}\n",
+        )
+        .unwrap();
+        let layout = |label: &str| {
+            format!(
+                r#"
+layout Rows {{
+  HostButton [ root ] ( {label}onClick : emit: onOpen ) {{
+    Column [ body ] {{
+      Text [ title ] ( content : slot: title )
+    }}
+  }}
+}}
+"#
+            )
+        };
+        let analyze = |backend: Backend| {
+            let out = TempDir::new().unwrap();
+            analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("button-children analysis")
+        };
+        let flagged = |report: &DegradationReport| -> Vec<(String, Option<String>)> {
+            report
+                .degradations
+                .iter()
+                .filter(|d| d.code == "composition.button-children-unimplemented")
+                .map(|d| (d.layout_path.clone(), d.primitive.clone()))
+                .collect()
+        };
+        let root = vec![("root".to_string(), Some("HostButton".to_string()))];
+
+        // No label: only the label-only emitters drop the subtree.
+        fs::write(pkg.path().join("src/Rows.mll"), layout("")).unwrap();
+        for backend in [
+            Backend::React,
+            Backend::Electron,
+            Backend::WebComponent,
+            Backend::SwiftUI,
+            Backend::Compose,
+            Backend::Flutter,
+            Backend::Qt,
+        ] {
+            assert_eq!(flagged(&analyze(backend)), root, "{backend:?} drops the children");
+        }
+        for backend in [Backend::Xaml, Backend::Html] {
+            let report = analyze(backend);
+            assert!(flagged(&report).is_empty(), "{backend:?} renders the children");
+        }
+        assert!(analyze(Backend::Xaml).native_complete, "XAML keeps them: nothing to report");
+
+        // With a label, the label wins everywhere, so XAML and HTML drop too.
+        fs::write(pkg.path().join("src/Rows.mll"), layout("label : \"Open\" , ")).unwrap();
+        for backend in [Backend::Xaml, Backend::Html, Backend::Qt] {
+            assert_eq!(flagged(&analyze(backend)), root, "{backend:?} with a label");
+        }
+        assert!(!analyze(Backend::Xaml).native_complete, "the report is no longer clean");
+    }
+
+    #[test]
+    fn a_childless_host_button_is_not_reported() {
+        let pkg = make_package("mosaic-pkg-plain-button", &["Plain"]);
+        fs::write(
+            pkg.path().join("src/Plain.mll"),
+            "layout Plain {\n  HostButton [ root ] ( label: \"Go\" )\n}\n",
+        )
+        .unwrap();
+        for backend in [Backend::Qt, Backend::SwiftUI, Backend::Xaml, Backend::Flutter, Backend::Compose] {
+            let out = TempDir::new().unwrap();
+            let report = analyze_package_degradations(
+                &BuildOptions {
+                    package_root: pkg.path().to_path_buf(),
+                    output_root: out.path().to_path_buf(),
+                    backend,
+                    emit_project: false,
+                    theme: None,
+                },
+                BuildProfile::NativeComplete,
+            )
+            .expect("plain-button analysis");
+            assert!(
+                report.degradations.iter().all(|d| d.code != "composition.button-children-unimplemented"),
+                "{backend:?}"
+            );
+        }
+    }
+
     #[test]
     fn host_button_selected_is_native_where_it_is_lowered() {
         let pkg = make_package("mosaic-pkg-selected-button", &["Picker"]);

@@ -1,0 +1,78 @@
+// RecordList.dark.msl — dark-theme styling.
+//
+// Only properties every native backend lowers (the toolkit's native gate
+// allows no style drops). Text parts carry colour and size only: a Qt Text
+// part cannot paint a background, border or padding (#15276), so the row's
+// chrome lives on its Column, and the title button is drawn flat inside it.
+
+style RecordList {
+  part record-list {
+    gap : 4 ;
+  }
+  part record-list-heading {
+    color     : "#9ca3af" ;
+    font-size : 12 ;
+  }
+  part record-list-row {
+    padding       : 12 ;
+    gap           : 4 ;
+    background    : "#111827" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+  }
+  part record-list-line {
+    gap : 8 ;
+  }
+  part record-list-title {
+    padding       : 0 ;
+    background    : "transparent" ;
+    color         : "#f9fafb" ;
+    border-width  : 0 ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+  part record-list-meta {
+    color     : "#9ca3af" ;
+    font-size : 12 ;
+  }
+  part record-list-badge {
+    color     : "#fbbf24" ;
+    font-size : 12 ;
+  }
+  part record-list-subtitle {
+    color     : "#9ca3af" ;
+    font-size : 13 ;
+  }
+  part record-list-row-selected {
+    padding       : 12 ;
+    gap           : 4 ;
+    background    : "#1e3a8a" ;
+    border-width  : 1 ;
+    border-color  : "#3b82f6" ;
+    border-radius : 4 ;
+  }
+  part record-list-line-selected {
+    gap : 8 ;
+  }
+  part record-list-title-selected {
+    padding       : 0 ;
+    background    : "transparent" ;
+    color         : "#dbeafe" ;
+    border-width  : 0 ;
+    font-size     : 14 ;
+    border-radius : 0 ;
+  }
+  part record-list-meta-selected {
+    color     : "#9ca3af" ;
+    font-size : 12 ;
+  }
+  part record-list-badge-selected {
+    color     : "#fbbf24" ;
+    font-size : 12 ;
+  }
+  part record-list-subtitle-selected {
+    color     : "#9ca3af" ;
+    font-size : 13 ;
+  }
+}

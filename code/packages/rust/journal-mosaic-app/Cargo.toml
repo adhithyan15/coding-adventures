@@ -1,0 +1,19 @@
+[package]
+name = "journal-mosaic-app"
+version = "0.1.0"
+edition = "2021"
+description = "Standard Mosaic application adapter for the journal-core engine (Journal on the Mosaic ABI)."
+license = "MIT"
+
+[lib]
+# `cdylib` is what generated native hosts load as `libmosaic_app`; `rlib` keeps
+# it testable and usable as a dependency. Same shape as task-mosaic-app.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+journal-core = { path = "../journal-core", features = ["serde"] }
+mosaic-app-capi = { path = "../mosaic-app-capi" }
+mosaic-app-wasm = { path = "../mosaic-app-wasm" }
+mosaic-app-runtime = { path = "../mosaic-app-runtime" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

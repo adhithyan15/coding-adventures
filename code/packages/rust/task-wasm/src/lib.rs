@@ -442,6 +442,21 @@ export_op!(
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
+struct OrderArgs {
+    id: String,
+    order: i64,
+}
+export_op!(
+    /// Set a task's sibling order. Siblings sort by `(order, id)`, and minted
+    /// ids do not sort by number (`t10` < `t9`), so a host that appends items
+    /// (a checklist template's, C3b of #14018) numbers them here.
+    set_order,
+    OrderArgs,
+    |s, a| s.set_order(&TaskId::from_raw(a.id), a.order)
+);
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 struct PercentArgs {
     id: String,
     percent: u8,
@@ -633,6 +648,120 @@ export_op!(
     AnswerArgs,
     |s, a| s.answer_decision(&TaskId::from_raw(a.id), a.answer)
 );
+
+export_op!(
+    /// Return a decision to unanswered (C1, #14018).
+    clear_decision_answer,
+    IdArg,
+    |s, a| s.clear_decision_answer(&TaskId::from_raw(a.id))
+);
+
+// ── checklists: templates and runs (C1, #14018; task-app-checklists-v1.md) ──────
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ChecklistTemplateArgs {
+    id: String,
+    root: String,
+    name: String,
+    #[serde(default)]
+    description: String,
+    #[serde(default)]
+    now: u64,
+}
+export_op!(
+    /// Create an empty checklist template (its root task is created too).
+    create_checklist_template,
+    ChecklistTemplateArgs,
+    |s, a| s.create_checklist_template(
+        task_core::ChecklistId::from_raw(a.id),
+        TaskId::from_raw(a.root),
+        a.name,
+        a.description,
+        a.now
+    )
+);
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct InstantiateArgs {
+    template: String,
+    run: String,
+    #[serde(default)]
+    now: u64,
+}
+export_op!(
+    /// Start a run of a template (a deep copy; items `"{run}/{templateTask}"`).
+    instantiate_checklist,
+    InstantiateArgs,
+    |s, a| s.instantiate_checklist(
+        &task_core::ChecklistId::from_raw(a.template),
+        task_core::ChecklistId::from_raw(a.run),
+        a.now
+    )
+);
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ChecklistAtArgs {
+    id: String,
+    #[serde(default)]
+    now: u64,
+}
+export_op!(
+    /// Complete a run — rejected unless every visible item is done.
+    complete_checklist_run,
+    ChecklistAtArgs,
+    |s, a| s.complete_checklist_run(&task_core::ChecklistId::from_raw(a.id), a.now)
+);
+export_op!(
+    /// Abandon a run.
+    abandon_checklist_run,
+    ChecklistAtArgs,
+    |s, a| s.abandon_checklist_run(&task_core::ChecklistId::from_raw(a.id), a.now)
+);
+export_op!(
+    /// Delete a checklist and its subtree (runs of a deleted template survive).
+    delete_checklist,
+    IdArg,
+    |s, a| s.delete_checklist(&task_core::ChecklistId::from_raw(a.id))
+);
+
+export_query!(
+    /// Every checklist template and run, for a library.
+    checklists,
+    |s| ok_data(&s.checklists())
+);
+
+/// One run's visible rows, status and progress.
+///
+/// # Safety
+/// `ptr`/`len` must describe readable bytes, or be null with a zero length.
+#[no_mangle]
+pub unsafe extern "C" fn checklist_run(ptr: *const u8, len: usize) -> *mut u8 {
+    let json = unsafe { read_input(ptr, len) };
+    pack(run_view::<IdArg>(&json, |project, a| {
+        match project.checklist_run(&task_core::ChecklistId::from_raw(a.id)) {
+            Some(view) => ok_data(&view),
+            None => error_json("no such run"),
+        }
+    }))
+}
+
+/// A template's full outline (both branches of every decision).
+///
+/// # Safety
+/// `ptr`/`len` must describe readable bytes, or be null with a zero length.
+#[no_mangle]
+pub unsafe extern "C" fn checklist_outline(ptr: *const u8, len: usize) -> *mut u8 {
+    let json = unsafe { read_input(ptr, len) };
+    pack(run_view::<IdArg>(&json, |project, a| {
+        match project.checklist_outline(&task_core::ChecklistId::from_raw(a.id)) {
+            Some(rows) => ok_data(&rows),
+            None => error_json("no such checklist"),
+        }
+    }))
+}
 
 #[derive(Deserialize)]
 struct NameArg {
@@ -1574,5 +1703,31 @@ mod tests {
             out.contains(r#""ok":false"#) && out.contains(r#""code":1"#),
             "{out}"
         );
+    }
+
+    /// C3b: a host appending checklist items numbers them with set_order, so
+    /// `t10` sorts after `t9` in the template's outline.
+    #[test]
+    fn set_order_keeps_appended_items_in_the_order_they_were_added() {
+        reset();
+        call1(
+            create_checklist_template,
+            r#"{"id":"c","root":"c/root","name":"Release","now":1}"#,
+        );
+        for (n, id) in ["t9", "t10"].iter().enumerate() {
+            call1(
+                create_task,
+                &format!(r#"{{"id":"{id}","name":"{id}","parent":"c/root"}}"#),
+            );
+            let out = call1(set_order, &format!(r#"{{"id":"{id}","order":{n}}}"#));
+            assert!(out.contains(r#""ok":true"#), "{out}");
+        }
+        let outline = call1(checklist_outline, r#"{"id":"c"}"#);
+        let nine = outline.find(r#""t9""#).expect("t9 in the outline");
+        let ten = outline.find(r#""t10""#).expect("t10 in the outline");
+        assert!(nine < ten, "{outline}");
+
+        let missing = call1(set_order, r#"{"id":"ghost","order":1}"#);
+        assert!(missing.contains(r#""ok":false"#), "{missing}");
     }
 }

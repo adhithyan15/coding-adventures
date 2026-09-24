@@ -784,5 +784,21 @@ mod tests {
         assert!(bindings[3].0.contains("MoveFileExW"));
         assert!(bindings[3].0.contains("temporary.renameSync(target.path)"));
         assert!(bindings[4].0.contains("QSaveFile file(path)"));
+
+        // Every native host tells the app its UTC offset (UI38 "Local time"),
+        // read from the platform's own time zone API, in minutes EAST of UTC,
+        // and leaves it out when it is out of range (the runtime would refuse
+        // it and the app would not start).
+        let offsets = [
+            "if (utcOffsetMinutes in -840..840) put(\"utcOffsetMinutes\", utcOffsetMinutes)",
+            "if (-840...840).contains(utcOffsetMinutes) { start[\"utcOffsetMinutes\"] = utcOffsetMinutes }",
+            "if (utcOffsetMinutes >= -840 && utcOffsetMinutes <= 840) start[\"utcOffsetMinutes\"] = utcOffsetMinutes;",
+            "..._utcOffsetEntry(),",
+            "context.insert(QStringLiteral(\"utcOffsetMinutes\"), utcOffsetMinutes);",
+        ];
+        for ((source, ..), offset) in bindings.iter().zip(offsets) {
+            assert!(source.contains(offset), "missing {offset}");
+        }
+        assert!(bindings[4].0.contains("#include <QDateTime>"));
     }
 }

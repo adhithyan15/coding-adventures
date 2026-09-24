@@ -4,6 +4,25 @@ All notable changes to `task-wasm` are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added — `set_order` (C3b, #14018)
+
+- **`set_order {id, order}`** (JS `setOrder`) sets a task's sibling order.
+  Siblings sort by `(order, id)`, and minted ids don't sort by number
+  (`t10` < `t9`), so the web host numbers the items it appends to a
+  checklist template. `pkg/task_engine.wasm` is rebuilt.
+
+### Added — checklist templates and runs (C1, #14018)
+
+- **New exports:**
+  - operations: `create_checklist_template`, `instantiate_checklist`,
+    `complete_checklist_run`, `abandon_checklist_run`, `delete_checklist` and
+    `clear_decision_answer`
+  - queries: `checklists`, `checklist_run` and `checklist_outline`
+- **JS accessor methods** to match.
+- **The smoke test** drives a template with a branch, one run, gated
+  completion, and checks that checklist items stay out of the todos.
+- **`pkg/task_engine.wasm` rebuilt.**
+
 ### Changed - refresh the first-release WASM engine (#13543)
 
 - Rebuilt `pkg/task_engine.wasm` from the current `task-wasm`/`task-core` source

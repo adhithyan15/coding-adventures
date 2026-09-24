@@ -2,6 +2,43 @@
 
 ## [Unreleased]
 
+### Added — `RecordList`: multi-field, groupable rows (v0.16.0, J3a of #14416)
+
+`ListGroup` holds one string per row. Journal's timeline and search
+results, Trestle's task list, and Engram's deck list and card browser all
+need several fields per row, and each had grown its own shape.
+`RecordList` is the shared one:
+
+```
+slot rows         : list<list<text>> ;  // [key, heading, title, subtitle, meta, badge]
+slot selected-key : text ;
+emit onSelect ( index : number ) ;
+```
+
+- **Rows** use positional `list<list<text>>`, the idiom every multi-field
+  list in the repo already uses, because Mosaic has no record slot type yet.
+- **Grouping** is flattened: `row[1]` draws a heading (heading role) above
+  the first row of each group.
+- **Selection** is by key, so it survives filtering and re-sorting.
+- **The title (`row[2]`) is the row's `HostButton`**, and it is required.
+  Children nested inside a `HostButton` are dropped on seven of eight
+  backends today, with a clean degradation report, so the whole row
+  cannot yet be the button.
+- Optional fields are omitted rather than drawn blank.
+- Styles use only properties every native backend lowers. Text parts
+  carry only colour and size (#15276).
+
+**Stories:** titles only; a grouped journal timeline with a selection;
+search results; long text.
+
+**Verification:**
+- `package_compiles` pins the interface, including the nested list type.
+  It also pins the layout's gating, key selection, and that the button
+  has no children.
+- The native gate passes.
+- All eight backends emit it, and each binds the title as the button label.
+- The MosaicBook check passes: 59 components, 110 stories.
+
 ### Changed — options report the kernel selected state; `SegmentedControl.options` is `list<text>` (v0.15.0, UI86, #15420)
 
 **Breaking for `SegmentedControl` hosts.** `options` changes from

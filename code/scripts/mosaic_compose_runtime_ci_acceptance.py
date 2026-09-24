@@ -22,6 +22,9 @@ ACCEPTANCE_PACKAGES = frozenset(
         # it here, editing `host/compose/EngramEffects.kt` alone would skip the
         # only check that compiles it.
         "rust/engram-mosaic-app",
+        # Journal (J5b) is emitted and compiled by this lane.
+        "rust/journal-core",
+        "rust/journal-mosaic-app",
         "rust/mosaic-compile",
         "rust/mosaic-emit-compose",
         "rust/mosaic-package-artifact-builder",
@@ -30,6 +33,7 @@ ACCEPTANCE_PACKAGES = frozenset(
         "rust/mosstyle-compiler",
         "mosaic/programs/task-app",
         "mosaic/programs/engram-app",
+        "mosaic/programs/journal-app",
     }
 )
 ACCEPTANCE_PACKAGE_PREFIXES = ("mosaic/mosaic-pkg-",)

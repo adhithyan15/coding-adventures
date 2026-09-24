@@ -1,0 +1,56 @@
+{
+  "stories": [
+    {
+      "name": "Journal entry (title, body, save and cancel)",
+      "fixtures": {
+        "title-label": "Title",
+        "title-value": "First light",
+        "title-placeholder": "Untitled",
+        "body-label": "Entry",
+        "body-value": "Walked to the lighthouse before breakfast.\n\nThe fog had not lifted yet.",
+        "save-label": "Save",
+        "delete-label": "",
+        "cancel-label": "Cancel"
+      }
+    },
+    {
+      "name": "Editing a note (all three actions)",
+      "fixtures": {
+        "title-label": "Title",
+        "title-value": "Groceries",
+        "title-placeholder": "Title",
+        "body-label": "Note",
+        "body-value": "- oats\n- lemons\n- tea",
+        "save-label": "Save",
+        "delete-label": "Delete",
+        "cancel-label": "Cancel"
+      }
+    },
+    {
+      "name": "Body only (no title, no actions)",
+      "fixtures": {
+        "title-label": "",
+        "title-value": "",
+        "title-placeholder": "",
+        "body-label": "Front",
+        "body-value": "What is the capital of Australia?",
+        "save-label": "",
+        "delete-label": "",
+        "cancel-label": ""
+      }
+    },
+    {
+      "name": "Empty new entry",
+      "fixtures": {
+        "title-label": "Title",
+        "title-value": "",
+        "title-placeholder": "Untitled",
+        "body-label": "Entry",
+        "body-value": "",
+        "save-label": "Save",
+        "delete-label": "",
+        "cancel-label": "Cancel"
+      }
+    }
+  ]
+}

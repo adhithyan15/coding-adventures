@@ -112,6 +112,8 @@ pub struct StartContext {
     pub text_scale: f32,
     pub platform: Platform,
     pub restored_snapshot: Option<Snapshot>,
+    /// Minutes east of UTC at startup; `None` when the host does not say.
+    pub utc_offset_minutes: Option<i32>,
 }
 
 pub struct Event {
@@ -145,6 +147,23 @@ successful `AppUpdate` in an `Update` and assigns its revision.
 Every start, event, and update envelope carries `protocol_version`; the runtime
 rejects a mismatch before invoking application code. Snapshot schema versions
 remain independent. Startup also rejects a non-finite or non-positive `text_scale`.
+
+**Local time.** `utc_offset_minutes` (wire `utcOffsetMinutes`) is the host's
+UTC offset in minutes east of UTC when the app starts, for example `-300` in
+New York in winter or `330` in India. It lets an app decide which local day
+"now" falls on: a journal files an entry under the user's today, not
+Greenwich's. It is optional on the wire and defaults to `None`, so existing
+hosts and snapshots are unchanged. An app told nothing falls back to UTC.
+Startup rejects an offset outside −840..=840 (UTC−14:00 to UTC+14:00, the
+extremes in use). The value is a snapshot at start. A daylight-saving change
+during a session takes effect at the next start. A host that wants it sooner
+restarts the app, whose state survives through its snapshot. Every standard host sends it:
+- the five native binding templates, each through its platform's time zone
+  API (`TimeZone.current`, `java.util.TimeZone`, `QDateTime`,
+  `DateTime.timeZoneOffset`, `TimeZoneInfo.Local`);
+- the wasm loader `mosaic-host.mjs`, through `-getTimezoneOffset()`. The
+  loader leaves out an implausible value, and a caller's explicit context
+  overrides it.
 An application method returning an error must leave its observable state unchanged;
 the runtime does not consume sequence or revision state, so the host can retry.
 

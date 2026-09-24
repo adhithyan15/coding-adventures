@@ -5140,6 +5140,28 @@ fn swift_collection_index_expr(
 /// Lower the still-supported UI25 `Input` primitive. `HostInput` deliberately
 /// covers only the single-line kernel surface, while UI25 `Input` also carries
 /// the multiline text-editor contract used by Trestle Notes.
+/// The `.disabled(...)` modifier for a text field, shared by `HostInput`'s
+/// `TextField` and the legacy multiline `TextEditor`.
+///
+/// UI58: `disabled` is checked first. SwiftUI has no read-only text field, so
+/// `read-only` ALSO lowers to `.disabled(...)` — it over-restricts, stopping
+/// focus when the author asked only that the field not be edited (UI58 §4.3).
+fn text_field_disabled_modifier(node: &LayoutNode) -> Result<Option<String>, PipelineEmitError> {
+    for prop in ["disabled", "read-only"] {
+        if let Some(slot) = find_slot_ref_prop(node, prop) {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            return Ok(Some(format!(".disabled({camel})")));
+        }
+        if let Some(kw) = find_keyword_prop(node, prop) {
+            if kw == "true" || kw == "false" {
+                return Ok(Some(format!(".disabled({kw})")));
+            }
+        }
+    }
+    Ok(None)
+}
+
 fn emit_legacy_input(
     node: &LayoutNode,
     indent: usize,
@@ -5198,7 +5220,12 @@ fn emit_legacy_input(
         ));
     }
     output.push_str(&format!("{child_pad}TextEditor(text: {text_binding})"));
-    if !placeholder.is_empty() {
+    // The authored `a11y-label` is the name (UI29); the placeholder is only a
+    // fallback for an unlabelled editor. This path used to use the
+    // placeholder unconditionally and drop the authored name (J3b-pre).
+    if let Some(label) = swift_accessibility_label(node) {
+        output.push_str(&format!(".accessibilityLabel({label})"));
+    } else if !placeholder.is_empty() {
         output.push_str(&format!(".accessibilityLabel({placeholder_lit})"));
     }
     if let Some(part_name) = &node.part_name {
@@ -5207,14 +5234,10 @@ fn emit_legacy_input(
             escape_swift_string(part_name)
         ));
     }
-    if let Some(slot) = find_slot_ref_prop(node, "read-only") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        output.push_str(&format!(".disabled({camel})"));
-    } else if let Some(keyword) = find_keyword_prop(node, "read-only") {
-        if keyword == "true" || keyword == "false" {
-            output.push_str(&format!(".disabled({keyword})"));
-        }
+    // UI58 `disabled`, then the `read-only` approximation — the same order as
+    // HostInput. This path read only `read-only`, so `disabled` was dropped.
+    if let Some(modifier) = text_field_disabled_modifier(node)? {
+        output.push_str(&modifier);
     }
     output.push_str(&format!("\n{pad}}}\n"));
     Ok(output)
@@ -5340,22 +5363,8 @@ fn emit_host_input(
     // stopping focus when the author asked only that the field not be edited
     // (UI58 §4.3). `disabled` is checked first so a component that means
     // disabled says so, and only the genuinely-read-only case approximates.
-    if let Some(slot) = find_slot_ref_prop(node, "disabled") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        line.push_str(&format!(".disabled({camel})"));
-    } else if let Some(kw) = find_keyword_prop(node, "disabled") {
-        if kw == "true" || kw == "false" {
-            line.push_str(&format!(".disabled({kw})"));
-        }
-    } else if let Some(slot) = find_slot_ref_prop(node, "read-only") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        line.push_str(&format!(".disabled({camel})"));
-    } else if let Some(kw) = find_keyword_prop(node, "read-only") {
-        if kw == "true" || kw == "false" {
-            line.push_str(&format!(".disabled({kw})"));
-        }
+    if let Some(modifier) = text_field_disabled_modifier(node)? {
+        line.push_str(&modifier);
     }
 
     // The `onChange` handler is wired through the `text:` binding's setter
@@ -7711,6 +7720,28 @@ fn emit_for_swift(
 /// keeping Swift's constraint solver from absorbing the full `ViewBuilder`.
 /// The branches are recursed through [`emit_children`] so nested
 /// `If`/`Else` still pairs.
+///
+/// **The branch lives in a local function**, `func _mosaicBranch()`, inside
+/// the immediately-invoked closure, exactly as ordinary nodes use
+/// `func _mosaicNode()`. Swift type-checks a multi-statement closure together
+/// with the expression that contains it (SE-0326). With the `if`/`else`
+/// directly in the closure, an app shell's view chain
+/// (`If a { } Else { If b { } Else { … } }`) grew the solver's problem at
+/// every level. Trestle's seventh view tipped it over: "unable to type-check
+/// this expression in reasonable time" in its SwiftUI release build. A local
+/// function's body is checked on its own, so the chain's cost stops
+/// compounding (`tests/nested_if_chain_typechecks.rs` pins a 10-deep chain).
+///
+/// ```swift
+/// ({ () -> AnyView in
+/// func _mosaicBranch() -> AnyView {
+///     let _mosaicCondition: Bool = _mosaicTruthy(notesMode)
+///     if _mosaicCondition { return AnyView(Group { … }) }
+///     else { return AnyView(Group { … }) }
+/// }
+/// return _mosaicBranch()
+/// })()
+/// ```
 fn emit_if_swift(
     if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
@@ -7746,7 +7777,7 @@ fn emit_if_swift(
         None => vec!["let _mosaicCondition: Bool = false".to_string()],
     };
 
-    let mut out = format!("{pad}({{ () -> AnyView in\n");
+    let mut out = format!("{pad}({{ () -> AnyView in\n{pad}func _mosaicBranch() -> AnyView {{\n");
     for binding in cond_bindings {
         writeln!(out, "{closure_pad}{binding}").unwrap();
     }
@@ -7794,7 +7825,7 @@ fn emit_if_swift(
             "{closure_pad}}}\n{closure_pad}return AnyView(EmptyView())\n"
         ));
     }
-    out.push_str(&format!("{pad}}})()\n"));
+    out.push_str(&format!("{pad}}}\n{pad}return _mosaicBranch()\n{pad}}})()\n"));
 
     Ok(out)
 }
@@ -9333,6 +9364,46 @@ mod tests {
         assert!(out.contains("Text(\"Write something…\")"));
         assert!(out.contains(".accessibilityLabel(\"Write something…\")"));
         assert!(out.contains(".accessibilityIdentifier(\"notes-body-input\")"));
+    }
+
+    #[test]
+    fn a_labelled_disabled_multiline_input_keeps_its_name_and_state() {
+        // J3b-pre (#14416): the TextEditor path named itself with the
+        // placeholder even when an `a11y-label` was authored, and read only
+        // `read-only`, so `disabled` was dropped.
+        let input = LayoutNode {
+            tag: "Input".to_string(),
+            part_name: None,
+            props: vec![
+                prop_string("placeholder", "Write…"),
+                prop_string("a11y-label", "Entry body"),
+                prop_slot_ref("value", "body"),
+                prop_slot_ref("disabled", "locked"),
+                prop_keyword("multiline", "true"),
+            ],
+            children: vec![],
+        };
+        let out = from_pipeline(
+            &component(
+                "Draft",
+                vec![
+                    slot("body", SlotType::Text, true),
+                    slot("locked", SlotType::Bool, true),
+                ],
+                vec![],
+            ),
+            &layout_with("Draft", container_node("Box", vec![input])),
+            &empty_style("Draft"),
+        )
+        .unwrap()
+        .output;
+        assert!(out.contains("TextEditor("), "got:\n{out}");
+        assert!(
+            out.contains(".accessibilityLabel(Text(verbatim: \"Entry body\"))"),
+            "authored name:\n{out}"
+        );
+        assert!(!out.contains(".accessibilityLabel(\"Write…\")"), "not the placeholder:\n{out}");
+        assert!(out.contains(".disabled(locked)"), "disabled honoured:\n{out}");
     }
 
     // ---------------------------------------------------------------------

@@ -2685,7 +2685,8 @@ fn from_pipeline_with_runtime_policy(
 
     let name = &interface.component;
     let native_table_count = count_native_table_models(&layout.root);
-    let signal_names = allocate_qml_signal_names(interface)?;
+    let signal_names =
+        allocate_qml_signal_names(interface, &emit_call_scopes(&layout.root))?;
     let mut out = String::new();
 
     // 2. File header — banner + imports. Both QtQuick and
@@ -3287,6 +3288,7 @@ fn emit_qml_tree(
         if let Some(line) = build_text_attribute(node) {
             writeln!(out, "{pad}    {line}").unwrap();
         }
+        writeln!(out, "{pad}    {QML_PLAIN_TEXT}").unwrap();
         if let Some(line) = build_text_accessible_name_attribute(node) {
             writeln!(out, "{pad}    {line}").unwrap();
         }
@@ -3440,6 +3442,22 @@ struct QmlElement {
     /// from the `source` moslayout prop.
     is_image: bool,
 }
+
+/// Every `Text` that shows application data renders it as **plain text**.
+///
+/// A QtQuick `Text` defaults to `textFormat: Text.AutoText`: if the first line
+/// "might be rich text" (`Qt::mightBeRichText` finds something tag-like), Qt
+/// switches to `Text.StyledText` and *interprets* it. StyledText honours
+/// `<font>`, `<b>`, `<br>`, `<a href>` and `<img src>` — so a task name, journal
+/// title or search snippet containing `<img src="https://…">` would make the
+/// QML engine fetch that URL when the row renders (a tracking beacon), and
+/// `<font size=7 color=…>` could restyle or hide the text around it.
+///
+/// Every other backend already treats slot text as text (React/HTML escape,
+/// SwiftUI uses `Text(verbatim:)`, Compose/Flutter/XAML take plain strings);
+/// this line makes Qt agree. The one deliberate exception is `HostLink`, which
+/// builds its own entity-escaped `<a>` payload and sets `Text.RichText`.
+const QML_PLAIN_TEXT: &str = "textFormat: Text.PlainText";
 
 /// Map a moslayout primitive tag to its QML element decomposition.
 ///
@@ -4580,7 +4598,7 @@ fn emit_text_input_qml(
         writeln!(out, "{inner_pad}enabled: false").unwrap();
     }
 
-    match node
+    let named = match node
         .props
         .iter()
         .find(|prop| prop.name == "a11y-label")
@@ -4593,17 +4611,20 @@ fn emit_text_input_qml(
                 escape_qml_string(label)
             )
             .unwrap();
+            true
         }
         Some(LayoutPropValue::SlotRef(slot)) => {
             let camel = to_camel_case_first_lower(slot);
             validate_safe_identifier(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
             writeln!(out, "{inner_pad}Accessible.name: {camel}").unwrap();
+            true
         }
         Some(LayoutPropValue::Expr(expr)) => {
             writeln!(out, "{inner_pad}Accessible.name: {expr}").unwrap();
+            true
         }
-        _ => {}
-    }
+        _ => false,
+    };
 
     if find_keyword_prop(node, "auto-focus") == Some("true") {
         writeln!(out, "{inner_pad}Component.onCompleted: forceActiveFocus()").unwrap();
@@ -4612,7 +4633,12 @@ fn emit_text_input_qml(
     // Qt exposes TextArea's native editable-text role. Use its placeholder as
     // the default accessible name too, matching SwiftUI's legacy Input lowering
     // and ensuring the unlabeled legacy primitive is still announced usefully.
-    if multiline {
+    //
+    // Only as a *default*: an authored `a11y-label` already wrote
+    // `Accessible.name` above, and a second assignment to the same property
+    // is a hard `qmlcachegen` error — a multiline input with both a label and
+    // a placeholder failed the build (J3b-pre, #14416).
+    if multiline && !named {
         if let Some(value) = placeholder_line
             .as_deref()
             .and_then(|line| line.strip_prefix("placeholderText: "))
@@ -4996,6 +5022,10 @@ fn emit_host_button_qml(
     if let Some(line) = build_label_attribute(node) {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
+    // …drawn as plain text when it is application data.
+    for line in plain_label_content_item(node, PlainLabelKind::Button).unwrap_or_default() {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
 
     // Keep the authored accessible name independent from the compact visual
     // label. TaskApp uses an expression here so each repeated completion
@@ -5241,6 +5271,7 @@ fn emit_host_dialog_qml(
     if let Some(title_line) = build_dialog_title_text_line(node) {
         writeln!(out, "{content_pad}Text {{").unwrap();
         writeln!(out, "{content_pad}    {title_line}").unwrap();
+        writeln!(out, "{content_pad}    {QML_PLAIN_TEXT}").unwrap();
         writeln!(out, "{content_pad}    font.bold: true").unwrap();
         writeln!(out, "{content_pad}}}").unwrap();
     }
@@ -5300,6 +5331,10 @@ fn emit_host_checkbox_qml(
 
     // text: <label> — same builder as HostButton's label attr.
     if let Some(line) = build_label_attribute(node) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+    // …drawn as plain text when it is application data.
+    for line in plain_label_content_item(node, PlainLabelKind::Checkable).unwrap_or_default() {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
@@ -5450,6 +5485,10 @@ fn emit_host_radio_qml(
 
     // text: <label>.
     if let Some(line) = build_label_attribute(node) {
+        writeln!(out, "{inner_pad}{line}").unwrap();
+    }
+    // …drawn as plain text when it is application data.
+    for line in plain_label_content_item(node, PlainLabelKind::Checkable).unwrap_or_default() {
         writeln!(out, "{inner_pad}{line}").unwrap();
     }
 
@@ -7103,6 +7142,7 @@ fn emit_table_section_rows(
                 if let Some(line) = build_text_attribute(cell) {
                     writeln!(out, "{cell_pad}    {line}").unwrap();
                 }
+                writeln!(out, "{cell_pad}    {QML_PLAIN_TEXT}").unwrap();
                 if bold {
                     writeln!(out, "{cell_pad}    font.bold: true").unwrap();
                 }
@@ -7532,6 +7572,69 @@ fn build_placeholder_text_attribute(node: &LayoutNode) -> Option<String> {
 }
 
 /// Build the `text: ...` attribute for a `HostButton` from its `label` prop.
+/// Which Controls label a plain-text `contentItem` stands in for.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum PlainLabelKind {
+    /// `Button` — its Basic-style label is an `IconLabel`.
+    Button,
+    /// `CheckBox` / `RadioButton` — a `CheckLabel` beside the indicator.
+    Checkable,
+}
+
+/// A `contentItem` that draws a control's **data-bound** label as plain text.
+///
+/// [`QML_PLAIN_TEXT`] covers `Text`, but a Controls label is not a `Text` we
+/// emit: `Button`'s default `contentItem` is an `IconLabel`, and `CheckBox` /
+/// `RadioButton` use a `CheckLabel`. Both are `QQuickText` subclasses left at
+/// `AutoText` (qtdeclarative `quickcontrols/basic/*.qml`; `QQuickIconLabel`
+/// never calls `setTextFormat`). So a slot-bound label — `RecordList`'s row
+/// title, a task name on a button — would be interpreted as StyledText, and
+/// `<img src="https://…">` would fetch on render.
+///
+/// The replacement mirrors the Basic style's own label (the style the emitted
+/// shell forces): the control's `text`, `font`, and palette colour, centred on
+/// a Button, and padded past the indicator on a check control. The control's
+/// `text` and `Accessible.*` are untouched, so the accessibility tree and the
+/// runtime probes that read `text` see exactly what they did before.
+///
+/// Literal labels are written by the component author and keep the default
+/// label; only `slot:`, keyword and expression labels — application data — get
+/// the override. `parent` is the control (Controls reparents `contentItem`),
+/// guarded for the moment before that happens.
+fn plain_label_content_item(node: &LayoutNode, kind: PlainLabelKind) -> Option<Vec<String>> {
+    let prop = node.props.iter().find(|p| p.name == "label")?;
+    if !matches!(
+        prop.value,
+        LayoutPropValue::SlotRef(_) | LayoutPropValue::Keyword(_) | LayoutPropValue::Expr(_)
+    ) {
+        return None;
+    }
+    let mut lines = vec![
+        "contentItem: Text {".to_string(),
+        "    text: parent ? parent.text : \"\"".to_string(),
+        format!("    {QML_PLAIN_TEXT}"),
+        "    font: parent ? parent.font : Qt.application.font".to_string(),
+    ];
+    match kind {
+        PlainLabelKind::Button => lines.extend([
+            "    color: parent ? parent.palette.buttonText : \"black\"".to_string(),
+            "    horizontalAlignment: Text.AlignHCenter".to_string(),
+            "    verticalAlignment: Text.AlignVCenter".to_string(),
+            "    elide: Text.ElideRight".to_string(),
+        ]),
+        PlainLabelKind::Checkable => lines.extend([
+            "    color: parent ? parent.palette.windowText : \"black\"".to_string(),
+            "    leftPadding: parent && parent.indicator && !parent.mirrored ? parent.indicator.width + parent.spacing : 0"
+                .to_string(),
+            "    rightPadding: parent && parent.indicator && parent.mirrored ? parent.indicator.width + parent.spacing : 0"
+                .to_string(),
+            "    verticalAlignment: Text.AlignVCenter".to_string(),
+        ]),
+    }
+    lines.push("}".to_string());
+    Some(lines)
+}
+
 fn build_label_attribute(node: &LayoutNode) -> Option<String> {
     let prop = node.props.iter().find(|p| p.name == "label")?;
     Some(match &prop.value {
@@ -7855,7 +7958,14 @@ fn emit_payload_to_qml(t: &EmitPayloadType) -> &'static str {
 /// a deterministic numeric suffix rather than stealing it.
 fn allocate_qml_signal_names(
     interface: &MosmodelComponent,
+    call_scopes: &HashMap<String, HashSet<ControlScope>>,
 ) -> Result<HashMap<String, String>, PipelineEmitError> {
+    // Does `name` collide with a member of a control that calls `emit`?
+    let shadowed = |emit: &str, name: &str| {
+        call_scopes
+            .get(emit)
+            .is_some_and(|scopes| scopes.iter().any(|scope| scope.has_member(name)))
+    };
     let mut lowered = Vec::with_capacity(interface.emits.len());
     let mut frequencies: HashMap<String, usize> = HashMap::new();
 
@@ -7892,6 +8002,7 @@ fn allocate_qml_signal_names(
         if frequencies.get(base) == Some(&1)
             && !is_qml_reserved_identifier(base)
             && !is_qml_item_member(base)
+            && !shadowed(source, base)
             && !occupied.contains(base)
         {
             occupied.insert(base.clone());
@@ -7910,6 +8021,7 @@ fn allocate_qml_signal_names(
         while occupied.contains(&candidate)
             || is_qml_reserved_identifier(&candidate)
             || is_qml_item_member(&candidate)
+            || shadowed(&source, &candidate)
         {
             candidate = format!("{stem}{suffix}");
             suffix += 1;
@@ -8010,6 +8122,96 @@ fn is_qml_reserved_identifier(name: &str) -> bool {
             | "with"
             | "yield"
     )
+}
+
+/// The kind of Qt Quick control a signal call is written *inside*.
+///
+/// A handler such as `onClicked: toggle(i)` sits inside the Button, and QML
+/// resolves an unqualified name against that control's own members before the
+/// root's signals. So an emit lowering to `toggle`, called from a Button, called
+/// `Button.toggle()` and the component's signal never fired — the toolkit's
+/// Accordion, Select and DropdownMenu, and `ChecklistRun`'s `onToggle` (C2 of
+/// #14018), were inert on Qt; `onClicked: click()` re-fired `clicked`, and
+/// `onToggled: toggle()` flipped the box it came from.
+///
+/// Scoped per control rather than one global list, so only a *real* clash is
+/// renamed: `select` fired from a Button keeps its name (a Button has no
+/// `select`), and hosts that connect to such signals by name are unaffected.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+enum ControlScope {
+    /// `Button`, `CheckBox`, `RadioButton` (AbstractButton + Control).
+    Button,
+    /// `TextField` / `TextArea` (TextInput / TextEdit + Control).
+    TextInput,
+    /// A `Text` carrying a link (`HostLink`).
+    LinkText,
+    /// `Popup` (`HostDialog`).
+    Popup,
+    /// `Slider` / `SpinBox`.
+    Range,
+}
+
+impl ControlScope {
+    /// The control a layout tag lowers to, if its handlers run inside one.
+    fn of_tag(tag: &str) -> Option<ControlScope> {
+        match tag {
+            "HostButton" | "HostCheckbox" | "HostRadio" => Some(Self::Button),
+            // HostNumberInput lowers to a TextField, not a SpinBox.
+            "HostInput" | "Input" | "HostNumberInput" => Some(Self::TextInput),
+            "HostLink" => Some(Self::LinkText),
+            "HostDialog" => Some(Self::Popup),
+            "HostSlider" => Some(Self::Range),
+            _ => None,
+        }
+    }
+
+    /// Whether `name` is a member this control adds over `Item` (those are
+    /// [`is_qml_item_member`]'s job).
+    fn has_member(self, name: &str) -> bool {
+        const CONTROL: &[&str] = &[
+            "background", "contentItem", "font", "hoverEnabled", "hovered", "locale",
+            "mirrored", "padding", "palette", "spacing", "visualFocus",
+        ];
+        let own: &[&str] = match self {
+            Self::Button => &[
+                "action", "animateClick", "autoExclusive", "autoRepeat", "canceled",
+                "checkState", "checkable", "checked", "click", "clicked", "display",
+                "doubleClicked", "down", "icon", "indicator", "nextCheckState",
+                "pressAndHold", "pressed", "released", "text", "toggle", "toggled",
+                "tristate",
+            ],
+            Self::TextInput => &[
+                "accepted", "clear", "copy", "cut", "deselect", "editingFinished",
+                "ensureVisible", "getText", "insert", "length", "paste", "placeholderText",
+                "pressAndHold", "pressed", "readOnly", "redo", "released", "remove", "select",
+                "selectAll", "selectWord", "text", "textEdited", "undo",
+            ],
+            Self::LinkText => &["font", "linkActivated", "linkHovered", "text"],
+            Self::Popup => &[
+                "aboutToHide", "aboutToShow", "close", "closePolicy", "closed", "dim", "modal",
+                "open", "opened",
+            ],
+            Self::Range => &["decrease", "increase", "moved", "value", "valueModified"],
+        };
+        own.contains(&name) || (self != Self::LinkText && CONTROL.contains(&name))
+    }
+}
+
+/// For each emit, the controls whose handlers call it (walks the whole layout).
+fn emit_call_scopes(root: &LayoutNode) -> HashMap<String, HashSet<ControlScope>> {
+    let mut scopes: HashMap<String, HashSet<ControlScope>> = HashMap::new();
+    let mut stack = vec![root];
+    while let Some(node) = stack.pop() {
+        if let Some(scope) = ControlScope::of_tag(&node.tag) {
+            for prop in &node.props {
+                if let LayoutPropValue::EmitRef(emit) = &prop.value {
+                    scopes.entry(emit.clone()).or_default().insert(scope);
+                }
+            }
+        }
+        stack.extend(node.children.iter());
+    }
+    scopes
 }
 
 /// Root `Item` members that a generated component signal must not redeclare.
@@ -8890,6 +9092,77 @@ mod tests {
             !result.output.contains("text: \"displayName\""),
             "slot ref must be bare identifier, not string"
         );
+    }
+
+    /// Slot text is application data, so it must render as plain text. Qt's
+    /// default `Text.AutoText` would *interpret* a value like
+    /// `<img src="https://…">` as StyledText and fetch the URL (a tracking
+    /// beacon), or restyle the row with `<font>`. See [`QML_PLAIN_TEXT`].
+    #[test]
+    fn text_bound_to_a_slot_renders_as_plain_text() {
+        let m = component(
+            "Label",
+            vec![slot("display-name", SlotType::Text, true)],
+            vec![],
+        );
+        let l = LayoutDef {
+            component_name: "Label".to_string(),
+            root: LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::SlotRef("display-name".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Label")).unwrap().output;
+        assert!(
+            out.contains("textFormat: Text.PlainText"),
+            "slot text must not be interpreted as markup:\n{out}"
+        );
+        assert_eq!(out.matches("textFormat:").count(), 1, "exactly one format:\n{out}");
+    }
+
+    /// A Controls label is a `QQuickText` at `AutoText` too (Button's
+    /// `IconLabel`, CheckBox/RadioButton's `CheckLabel`), so a *data-bound*
+    /// label gets a plain-text `contentItem`; an author-written literal keeps
+    /// the default label. See [`plain_label_content_item`].
+    #[test]
+    fn data_bound_control_labels_render_as_plain_text_and_literals_do_not_change() {
+        fn one(tag: &str, label: LayoutPropValue) -> String {
+            let m = component("X", vec![slot("name", SlotType::Text, true)], vec![]);
+            let l = LayoutDef {
+                component_name: "X".to_string(),
+                root: LayoutNode {
+                    tag: tag.to_string(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "label".to_string(),
+                        value: label,
+                    }],
+                    children: Vec::new(),
+                },
+            };
+            from_pipeline(&m, &l, &empty_style("X")).unwrap().output
+        }
+        for tag in ["HostButton", "HostCheckbox", "HostRadio"] {
+            let bound = one(tag, LayoutPropValue::SlotRef("name".to_string()));
+            assert!(bound.contains("text: name"), "{tag} keeps its text:\n{bound}");
+            assert!(bound.contains("contentItem: Text {"), "{tag} overrides its label:\n{bound}");
+            assert!(bound.contains("textFormat: Text.PlainText"), "{tag}:\n{bound}");
+            assert!(bound.contains("text: parent ? parent.text"), "{tag}:\n{bound}");
+
+            let expr = one(tag, LayoutPropValue::Expr("( row [ 2 ] )".to_string()));
+            assert!(expr.contains("textFormat: Text.PlainText"), "{tag} expr:\n{expr}");
+
+            let literal = one(tag, LayoutPropValue::String("Save".to_string()));
+            assert!(literal.contains("text: \"Save\""));
+            assert!(!literal.contains("contentItem: Text"), "{tag} literal unchanged:\n{literal}");
+        }
+        let check = one("HostCheckbox", LayoutPropValue::SlotRef("name".to_string()));
+        assert!(check.contains("parent.indicator.width + parent.spacing"), "clears the indicator");
     }
 
     // -------- Test 9: Text content from string literal --------
@@ -9786,6 +10059,44 @@ mod tests {
     }
 
     #[test]
+    fn a_labelled_multiline_input_names_itself_once() {
+        // J3b-pre (#14416): with both `a11y-label` and a `placeholder`, the
+        // placeholder fallback wrote a second `Accessible.name` — a duplicate
+        // property assignment, which qmlcachegen rejects.
+        let m = component("Draft", vec![slot("body", SlotType::Text, true)], vec![]);
+        let l = LayoutDef {
+            component_name: "Draft".to_string(),
+            root: LayoutNode {
+                tag: "Input".to_string(),
+                part_name: None,
+                props: vec![
+                    LayoutProp {
+                        name: "value".to_string(),
+                        value: LayoutPropValue::SlotRef("body".to_string()),
+                    },
+                    LayoutProp {
+                        name: "placeholder".to_string(),
+                        value: LayoutPropValue::String("Write…".to_string()),
+                    },
+                    LayoutProp {
+                        name: "a11y-label".to_string(),
+                        value: LayoutPropValue::String("Entry body".to_string()),
+                    },
+                    LayoutProp {
+                        name: "multiline".to_string(),
+                        value: LayoutPropValue::Keyword("true".to_string()),
+                    },
+                ],
+                children: Vec::new(),
+            },
+        };
+        let out = from_pipeline(&m, &l, &empty_style("Draft")).unwrap().output;
+        assert_eq!(out.matches("Accessible.name:").count(), 1, "one name:\n{out}");
+        assert!(out.contains("Accessible.name: \"Entry body\""), "the authored name wins:\n{out}");
+        assert!(out.contains("placeholderText: \"Write…\""));
+    }
+
+    #[test]
     fn legacy_single_line_input_reuses_native_host_input_lowering() {
         let m = component("Search", vec![], vec![]);
         let l = LayoutDef {
@@ -9945,8 +10256,57 @@ mod tests {
         assert!(!r.output.contains("onClicked: tap(text)"));
     }
 
-    /// HostCheckbox's `onToggle` invocation must follow the
-    /// signal's declared arity.  Parameterless → `onToggled: x()`.
+    /// A signal whose name is a member of the control it is called from would
+    /// resolve to that member, not the root's signal: `onClicked: toggle(i)` in a
+    /// Button calls `Button.toggle()`. Such names get the `mosaicEmit…` spelling
+    /// (the toolkit's Accordion/Select/DropdownMenu and ChecklistRun hit this).
+    #[test]
+    fn signals_named_like_control_members_are_renamed() {
+        let interface = component(
+            "X",
+            vec![],
+            vec![
+                emit_decl("onToggle", vec![]),
+                emit_decl("onClick", vec![]),
+                emit_decl("onUndo", vec![]),
+                emit_decl("onClear", vec![]),
+                emit_decl("onToggleTask", vec![]),
+            ],
+        );
+        let button = |emit: &str| LayoutNode {
+            tag: "HostButton".to_string(),
+            part_name: None,
+            props: vec![lp("onClick", LayoutPropValue::EmitRef(emit.to_string()))],
+            children: vec![],
+        };
+        let input = |emit: &str| LayoutNode {
+            tag: "HostInput".to_string(),
+            part_name: None,
+            props: vec![lp("onCommit", LayoutPropValue::EmitRef(emit.to_string()))],
+            children: vec![],
+        };
+        let root = LayoutNode {
+            tag: "Column".to_string(),
+            part_name: None,
+            props: vec![],
+            children: vec![
+                button("onToggle"),
+                button("onClick"),
+                button("onUndo"),
+                input("onClear"),
+                button("onToggleTask"),
+            ],
+        };
+        let names = allocate_qml_signal_names(&interface, &emit_call_scopes(&root)).unwrap();
+        assert_eq!(names["onToggle"], "mosaicEmitToggle", "Button.toggle()");
+        assert_eq!(names["onClick"], "mosaicEmitClick", "Button.click()");
+        assert_eq!(names["onClear"], "mosaicEmitClear", "TextField.clear()");
+        // Only real clashes are renamed: a Button has no undo(), and hosts
+        // connect to such signals by name (Engram's `undo`).
+        assert_eq!(names["onUndo"], "undo");
+        assert_eq!(names["onToggleTask"], "toggleTask");
+    }
+
     #[test]
     fn host_button_on_click_parameterless_emits_no_args() {
         let m = component("X", vec![], vec![emit_decl("onClick", vec![])]);
@@ -9963,8 +10323,8 @@ mod tests {
             },
         };
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
-        assert!(r.output.contains("onClicked: click()"));
-        assert!(!r.output.contains("onClicked: click(text)"));
+        assert!(r.output.contains("onClicked: mosaicEmitClick()"));
+        assert!(!r.output.contains("onClicked: mosaicEmitClick(text)"));
     }
 
     #[test]
@@ -10146,6 +10506,8 @@ mod tests {
         );
     }
 
+    /// HostCheckbox's `onToggle` invocation must follow the
+    /// signal's declared arity.  Parameterless → `onToggled: x()`.
     #[test]
     fn host_checkbox_on_toggle_parameterless_emits_no_args() {
         let m = component("X", vec![], vec![emit_decl("onToggle", vec![])]);
@@ -10163,11 +10525,11 @@ mod tests {
         };
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(
-            r.output.contains("onToggled: toggle()"),
-            "missing onToggled: toggle() in:\n{}",
+            r.output.contains("onToggled: mosaicEmitToggle()"),
+            "missing onToggled: mosaicEmitToggle() in:\n{}",
             r.output
         );
-        assert!(!r.output.contains("onToggled: toggle(checked)"));
+        assert!(!r.output.contains("onToggled: mosaicEmitToggle(checked)"));
     }
 
     /// HostCheckbox with a one-param signal still emits the
@@ -10196,7 +10558,7 @@ mod tests {
             },
         };
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
-        assert!(r.output.contains("onToggled: toggle(checked)"));
+        assert!(r.output.contains("onToggled: mosaicEmitToggle(checked)"));
     }
 
     /// HostRadio with a parameterless `onSelect` must NOT pass the
@@ -12815,6 +13177,11 @@ mod tests {
             out.contains("Qt.openUrlExternally(link)"),
             "expected open-external handler, got:\n{out}"
         );
+        // HostLink is the one deliberate rich-text Text; the plain-text rule
+        // for data Text must not reach it (two textFormat lines would leave
+        // the winner up to QML's last-assignment order).
+        assert!(!out.contains("Text.PlainText"), "HostLink stays rich text:\n{out}");
+        assert_eq!(out.matches("textFormat:").count(), 1);
     }
 
     /// #13052: a `HostLink.href` literal using a disallowed URI scheme
