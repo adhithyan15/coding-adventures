@@ -30,6 +30,18 @@ const NATIVE_BACKENDS: &[Backend] = &[
 /// Style properties this package is currently known to lose, by backend.
 /// Every entry is measured and the inverse-ratchet test rejects stale pins.
 const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
+    // ---- Sizing the editor (#14416, found by rendering on Compose) ----
+    // The title and body fields fill the editor (`width: 100%`) and the body
+    // has a usable height (`min-height`); rendering Journal on Compose showed
+    // an empty entry as a 120px-wide box. The web, SwiftUI and XAML lower
+    // both. Compose lowers `min-height` but silently ignores a percentage
+    // `width` (not reported, so not pinned; lowering it safely in a Row is a
+    // separate emitter change). Qt and Flutter lower neither on a text field
+    // yet. Checked both ways below.
+    (Backend::Qt, "width"),
+    (Backend::Qt, "min-height"),
+    (Backend::Flutter, "width"),
+    (Backend::Flutter, "min-height"),
     // ---- Flutter (#12022) ----
     // Measured on first build, in both themes. None is on this package's own
     // parts (its styles use only properties Flutter lowers); all come from the

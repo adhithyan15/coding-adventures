@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `conformance/compose/JournalScreenshots.kt`: a screenshot harness for the
+  generated Compose Journal over this runtime. Set `MOSAIC_SHOT_DIR` and run
+  `gradle test --tests JournalScreenshots` in an emitted project. It checks
+  only that rendering succeeds; the images are for people to look at.
 - `js/wasm.test.mjs` creates every app at UTC (`utcOffsetMinutes: 0`). The
   Mosaic loader now sends the machine's own offset, and the day headings would
   otherwise depend on where the tests run.

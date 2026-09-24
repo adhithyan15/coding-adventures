@@ -6,6 +6,7 @@
 
 style JournalApp {
   part timeline {
+    min-height : "100vh" ;
     padding    : 12 ;
     gap        : 8 ;
     background : "#111827" ;
