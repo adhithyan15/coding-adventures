@@ -195,7 +195,8 @@ VisiCalc's host.
   also builds the wasm32 runtime and copies it into `public/`.
 - **Boot:** the page fetches the wasm, loads it through `mosaic-host.mjs` with
   the guarded clock shim, and creates the app with the preferred colour
-  scheme.
+  scheme and the browser's UTC offset (`utcOffsetMinutes`). An implausible
+  offset is left out, and the app falls back to UTC.
 - **Rendering:** props are passed through with kebab-case keys turned into
   camelCase, and the component's `dispatch({type, ...payload})` goes straight
   to `host.dispatch`. The host translates nothing and owns no state. The

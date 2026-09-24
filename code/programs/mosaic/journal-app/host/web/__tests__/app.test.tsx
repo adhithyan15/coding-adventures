@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it } from "vitest";
-import { App, hostClock, loadRuntime } from "../src/App";
+import { App, browserUtcOffsetMinutes, hostClock, loadRuntime } from "../src/App";
 import { keptAside, setAside, STATE_KEY } from "../src/persistence";
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
@@ -133,4 +133,27 @@ it("the clock shim never throws into the runtime", () => {
   expect(hostClock(() => {
     throw new Error("no clock");
   })()).toBeNaN();
+});
+
+it("files an entry under the browser's local day, not UTC's", async () => {
+  // 01:00 UTC on Thursday 24 September 2026 is still Wednesday evening in
+  // New York (UTC-5).
+  const now = () => Date.UTC(2026, 8, 24, 1);
+  const newYork = () => loadRuntime(wasm, false, { now, utcOffsetMinutes: -300 });
+  await act(async () => root.render(<App load={newYork} storage={memoryStorage()} />));
+  for (let waited = 0; container.textContent?.includes("Opening your journal"); waited += 10) {
+    if (waited > 5000) throw new Error("Journal did not start");
+    await act(async () => new Promise(resolve => setTimeout(resolve, 10)));
+  }
+  await writeEntry("Evening", "Local day.");
+  expect(container.textContent).toContain("Wednesday, 23 September 2026");
+});
+
+it("reads the browser's offset east of UTC, and leaves out an implausible one", () => {
+  const at = (minutesWest: number) => ({ getTimezoneOffset: () => minutesWest }) as unknown as Date;
+  expect(browserUtcOffsetMinutes(at(300))).toBe(-300); // New York in winter
+  expect(browserUtcOffsetMinutes(at(-330))).toBe(330); // India
+  expect(browserUtcOffsetMinutes(at(0))).toBe(0);
+  expect(browserUtcOffsetMinutes(at(900))).toBeUndefined();
+  expect(browserUtcOffsetMinutes(at(Number.NaN))).toBeUndefined();
 });

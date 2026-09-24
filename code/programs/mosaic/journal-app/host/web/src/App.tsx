@@ -33,9 +33,36 @@ export function hostClock(read: () => number = Date.now): () => number {
   };
 }
 
-export async function loadRuntime(bytes: BufferSource, dark = prefersDark()): Promise<MosaicHost> {
-  const module = await loadMosaicModule(bytes, { journal: { now_ms: hostClock() } });
-  return module.create({ protocolVersion: 2, colorScheme: dark ? "dark" : "light" });
+/**
+ * The browser's UTC offset in minutes EAST of UTC, for StartContext's
+ * utcOffsetMinutes (UI38 "Local time"): Journal files an entry under the
+ * user's local day, not Greenwich's. `getTimezoneOffset()` counts minutes
+ * WEST, hence the minus. The runtime refuses anything outside -840..=840 and
+ * would not start, so a value that is not a plausible offset is left out
+ * instead, and Journal falls back to UTC.
+ */
+export function browserUtcOffsetMinutes(date: Date = new Date()): number | undefined {
+  try {
+    // `0 - x`, not `-x`: UTC must read as 0, not -0.
+    const east = 0 - date.getTimezoneOffset();
+    return Number.isInteger(east) && east >= -840 && east <= 840 ? east : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+export async function loadRuntime(
+  bytes: BufferSource,
+  dark = prefersDark(),
+  { now = Date.now, utcOffsetMinutes = browserUtcOffsetMinutes() }: { now?: () => number; utcOffsetMinutes?: number } = {},
+): Promise<MosaicHost> {
+  const module = await loadMosaicModule(bytes, { journal: { now_ms: hostClock(now) } });
+  return module.create({
+    protocolVersion: 2,
+    colorScheme: dark ? "dark" : "light",
+    // Omitted when unknown, so the runtime falls back to UTC.
+    ...(utcOffsetMinutes === undefined ? {} : { utcOffsetMinutes }),
+  });
 }
 
 export async function loadApplication(): Promise<MosaicHost> {
