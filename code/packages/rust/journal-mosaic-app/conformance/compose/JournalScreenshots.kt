@@ -142,6 +142,17 @@ class JournalScreenshots {
             onNodeWithText("Save").performClick()
             waitForIdle()
             shot("12-moved-to-personal")
+
+            // Renaming and deleting a journal (J4i): rename Work to Office,
+            // then delete it; its entries move to Personal.
+            onNodeWithTag("journal-name-input").performTextReplacement("Office")
+            waitForIdle()
+            onNodeWithText("Rename").performClick()
+            waitForIdle()
+            shot("13-renamed-journal")
+            onNodeWithText("Delete journal").performClick()
+            waitForIdle()
+            shot("14-deleted-journal")
         }
     }
 }

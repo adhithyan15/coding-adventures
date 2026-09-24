@@ -59,6 +59,12 @@
 //!
 //! The editor's *Journal* picker says which journal the draft belongs to;
 //! Save files a new entry there, or moves an existing one (`MoveEntry`).
+//!
+//! ## Renaming and deleting a journal (J4i)
+//!
+//! *Rename* gives the selected journal the *New journal* field's name;
+//! *Delete journal* removes it and moves its entries to Personal (never
+//! deleting them). Personal cannot be deleted: a restore requires it.
 
 use std::error::Error;
 use std::fmt;
@@ -275,6 +281,10 @@ impl JournalMosaicApp {
                 .collect::<Vec<_>>(),
             "draft-journal-index": draft_journal_index,
             "has-journals": self.state.journal.journals.len() > 1,
+            "can-rename-journal": self.active_journal().is_some(),
+            "can-delete-journal": self
+                .active_journal()
+                .is_some_and(|id| id.as_str() != DEFAULT_JOURNAL),
             "draft-error": self.draft_error,
             "tag-options": tags.iter().map(|c| format!("#{} ({})", c.tag.display(), c.count)).collect::<Vec<_>>(),
             "selected-tag-index": active
@@ -502,7 +512,7 @@ impl JournalMosaicApp {
         if name != "onSaveEntry" {
             self.draft_error.clear();
         }
-        if name != "onAddJournal" {
+        if !matches!(name.as_ref(), "onAddJournal" | "onRenameJournal") {
             self.journal_error.clear();
         }
         match name.as_ref() {
@@ -624,6 +634,8 @@ impl JournalMosaicApp {
                 Ok(self.update())
             }
             "onAddJournal" => self.add_journal(),
+            "onRenameJournal" => self.rename_journal(),
+            "onDeleteJournal" => self.delete_journal(),
             // The editor's picker: only the draft changes; Save applies it.
             "onDraftJournalChange" => {
                 let index = index_payload(event, "index")?;
@@ -792,6 +804,45 @@ impl JournalMosaicApp {
         self.new_journal_name.clear();
         self.journal_filter = Some(id.as_str().to_string());
         Ok(self.announced("Journal added"))
+    }
+
+    /// *Rename*: give the selected journal the field's name. A blank name, or
+    /// no journal selected, does nothing; a refused name is said in
+    /// `journal-error`, in the same words as for *Add*.
+    fn rename_journal(&mut self) -> Result<AppUpdate, JournalAppError> {
+        let name = self.new_journal_name.trim().to_string();
+        let Some(id) = self.active_journal() else {
+            return Ok(self.update());
+        };
+        if name.is_empty() {
+            return Ok(self.update());
+        }
+        let now = (self.clock)();
+        if let Err(error) = apply(&mut self.state.journal, Command::RenameJournal { id, name }, now) {
+            let reason = journal_error_text(&error);
+            self.journal_error = reason.clone();
+            return Ok(self.announced(&reason));
+        }
+        self.new_journal_name.clear();
+        Ok(self.announced("Journal renamed"))
+    }
+
+    /// *Delete journal*: remove the selected journal, moving its entries to
+    /// Personal -- never deleting them. Personal itself is not offered (a
+    /// restore requires it), so asking to delete it is a bad event.
+    fn delete_journal(&mut self) -> Result<AppUpdate, JournalAppError> {
+        let Some(id) = self.active_journal() else {
+            return Err(JournalAppError::Engine("no journal selected".to_string()));
+        };
+        if id.as_str() == DEFAULT_JOURNAL {
+            return Err(JournalAppError::Engine("Personal cannot be deleted".to_string()));
+        }
+        self.run(Command::DeleteJournal {
+            id,
+            move_entries_to: Some(JournalId::from(DEFAULT_JOURNAL)),
+        })?;
+        self.journal_filter = None;
+        Ok(self.announced("Journal deleted; its entries are now in Personal"))
     }
 
     /// `journal-{n}`, the first not in use. The engine caps journals at
@@ -1327,6 +1378,8 @@ mod tests {
         assert_eq!(
             keys,
             [
+                "can-delete-journal",
+                "can-rename-journal",
                 "delete-label",
                 "draft-body",
                 "draft-date",
@@ -1361,6 +1414,64 @@ mod tests {
         assert_eq!(props["delete-label"], "");
         assert_eq!(props["searching"], false);
         assert_eq!(props["no-matches"], false);
+    }
+
+    // ── renaming and deleting a journal (J4i) ─────────────────────────────────
+
+    #[test]
+    fn rename_gives_the_selected_journal_the_fields_name() {
+        let mut a = app();
+        let props = a.props();
+        assert_eq!(props["can-rename-journal"], false, "All journals: nothing to rename");
+        assert_eq!(props["can-delete-journal"], false);
+        send(&mut a, "onNewJournalNameChange", json!({ "value": "Diary" })).unwrap();
+        let props = send(&mut a, "onRenameJournal", json!({})).unwrap().props;
+        assert_eq!(journal_options(&a), ["All journals", "Personal"], "no journal selected");
+        assert_eq!(props["new-journal-name"], "Diary");
+
+        send(&mut a, "onSelectJournal", json!({ "index": 1 })).unwrap();
+        let props = a.props();
+        assert_eq!(props["can-rename-journal"], true);
+        assert_eq!(props["can-delete-journal"], false, "Personal cannot be deleted");
+        let props = send(&mut a, "onRenameJournal", json!({})).unwrap().props;
+        assert_eq!(journal_options(&a), ["All journals", "Diary"]);
+        assert_eq!(props["new-journal-name"], "", "the field clears");
+        assert_eq!(props["selected-journal-index"], 1, "still selected");
+        assert!(a.state.journal.journal(&JournalId::from(DEFAULT_JOURNAL)).is_some(), "same id");
+
+        set_now(THU + 7_200_000);
+        add_journal(&mut a, "Work");
+        send(&mut a, "onNewJournalNameChange", json!({ "value": "diary" })).unwrap();
+        let props = send(&mut a, "onRenameJournal", json!({})).unwrap().props;
+        assert_eq!(props["journal-error"], "A journal named \u{201c}diary\u{201d} already exists.");
+        assert_eq!(journal_options(&a), ["All journals", "Diary", "Work"]);
+        send(&mut a, "onNewJournalNameChange", json!({ "value": "   " })).unwrap();
+        send(&mut a, "onRenameJournal", json!({})).unwrap();
+        assert_eq!(journal_options(&a), ["All journals", "Diary", "Work"], "blank does nothing");
+    }
+
+    #[test]
+    fn delete_moves_the_journals_entries_to_personal() {
+        let mut a = app();
+        write(&mut a, "Home", "body");
+        set_now(THU + 7_200_000);
+        add_journal(&mut a, "Work");
+        assert_eq!(a.props()["can-delete-journal"], true);
+        write(&mut a, "Standup", "body");
+        send(&mut a, "onDraftJournalChange", json!({ "index": 1 })).unwrap();
+
+        let props = send(&mut a, "onDeleteJournal", json!({})).unwrap().props;
+        assert_eq!(journal_options(&a), ["All journals", "Personal"]);
+        assert_eq!(props["selected-journal-index"], 0, "back to All journals");
+        assert_eq!(journal_of(&a, "Standup"), DEFAULT_JOURNAL, "moved, not deleted");
+        assert_eq!(titles(&a).len(), 2);
+        assert_eq!(props["draft-journal-index"], 0, "the open draft falls back to Personal");
+
+        // Personal and "All journals" cannot be deleted.
+        assert!(send(&mut a, "onDeleteJournal", json!({})).is_err());
+        send(&mut a, "onSelectJournal", json!({ "index": 1 })).unwrap();
+        assert!(send(&mut a, "onDeleteJournal", json!({})).is_err());
+        assert_eq!(journal_options(&a), ["All journals", "Personal"]);
     }
 
     // ── an empty journal (J4h) ────────────────────────────────────────────────

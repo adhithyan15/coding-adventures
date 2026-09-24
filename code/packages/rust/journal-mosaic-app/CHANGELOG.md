@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **Renaming and deleting a journal (J4i).** New events `onRenameJournal` and
+  `onDeleteJournal`. New slots `can-rename-journal` (a journal is selected) and
+  `can-delete-journal` (a journal other than Personal is selected).
+  - Rename runs `RenameJournal` with the *New journal* field's trimmed name
+    and clears the field. A blank name does nothing. Refusals appear in
+    `journal-error` in the same words as for Add, and that error survives
+    the event.
+  - Delete runs `DeleteJournal { move_entries_to: Personal }`, so entries
+    are never deleted, then shows "All journals". Asking to delete Personal
+    (a restore requires it) or "All journals" is a bad event.
+  - `JournalScreenshots` adds 13-renamed-journal and 14-deleted-journal.
 - **An empty journal (J4h).** A new slot, `journal-empty`, is set when a
   journal is selected, it has no entries, and there is no search. It is
   not set when no journal has any entries, which is `timeline-empty`, and it

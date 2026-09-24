@@ -167,4 +167,27 @@ style JournalApp {
     color     : "#6c757d" ;
     font-size : 12 ;
   }
+  // Renaming and deleting a journal (J4i): Rename wears Add's style;
+  // Delete journal the draft error's red, as DraftEditor's Delete.
+  part journal-actions {
+    gap : 6 ;
+  }
+  part rename-journal {
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part delete-journal {
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#b02a37" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
 }
