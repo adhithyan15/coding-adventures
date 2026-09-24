@@ -764,7 +764,7 @@ fn compose_component_with_model_and_style_options(
         &mut Vec::new(),
         &mut HashSet::new(),
     )?;
-    resolve_layout_package_references(
+    let renames = resolve_layout_package_references(
         component,
         &mut layout,
         &model.descriptor_json,
@@ -779,6 +779,7 @@ fn compose_component_with_model_and_style_options(
     )
     .map_err(|errs| pipeline_err(component, &errs[0]))?;
     let mut style = merge_dependency_styles(own_style.def, dependency_style_parts);
+    copy_styles_for_renamed_parts(&mut style, &renames);
 
     // #15169 -- resolve `currentColor` here, at the ONE place both entry
     // points build a `ComposedComponent`, so the answer cannot differ
@@ -5967,11 +5968,11 @@ fn resolve_layout_package_references(
     layout_out: &mut moslayout_compiler::CompileOutput,
     descriptor_json: &str,
     package_search_paths: &[PathBuf],
-) -> Result<(), BuildError> {
+) -> Result<Vec<mosaic_package_resolver::PartRename>, BuildError> {
     let resolver =
         mosaic_package_resolver::LayoutPackageResolver::new(package_search_paths.to_vec());
-    resolver
-        .resolve(&mut layout_out.def)
+    let renames = resolver
+        .resolve_with_renames(&mut layout_out.def)
         .map_err(|e| BuildError::PackageReferenceError {
             component: component.to_string(),
             error: e.to_string(),
@@ -5989,7 +5990,53 @@ fn resolve_layout_package_references(
     layout_out.parts = resolved_parts;
     layout_out.part_map_json =
         moslayout_compiler::emit_part_map_json(&layout_out.def.component_name, &layout_out.parts);
-    Ok(())
+    Ok(renames)
+}
+
+/// Give each part renamed for a second (third, …) mount a copy of the
+/// original part's style, every state included, so the n-th mount renders
+/// like the first (UI34 §5 step 4). A style the consumer wrote for the
+/// renamed part itself wins, and no copy is made. Each copy sits right after
+/// its source. With no renames (every component mounted once) the style is
+/// untouched.
+///
+/// One pass, linear in parts plus renames: a package can inline a component
+/// many times over, so this must not scan the style once per rename.
+fn copy_styles_for_renamed_parts(
+    style: &mut mosstyle_compiler::StyleDef,
+    renames: &[mosaic_package_resolver::PartRename],
+) {
+    if renames.is_empty() {
+        return;
+    }
+    let existing: HashSet<&str> = style.parts.iter().map(|part| part.name.as_str()).collect();
+    let mut copies: HashMap<&str, Vec<&str>> = HashMap::new();
+    let mut seen: HashSet<&str> = HashSet::new();
+    for rename in renames {
+        if existing.contains(rename.to.as_str()) || !seen.insert(rename.to.as_str()) {
+            continue;
+        }
+        copies
+            .entry(rename.from.as_str())
+            .or_default()
+            .push(rename.to.as_str());
+    }
+    let mut parts = Vec::with_capacity(style.parts.len() + seen.len());
+    let mut copied: HashSet<&str> = HashSet::new();
+    for part in &style.parts {
+        parts.push(part.clone());
+        // Only the first part of a name carries its copies.
+        if let Some(names) = copies.get(part.name.as_str()) {
+            if copied.insert(part.name.as_str()) {
+                for name in names {
+                    let mut copy = part.clone();
+                    copy.name = (*name).to_string();
+                    parts.push(copy);
+                }
+            }
+        }
+    }
+    style.parts = parts;
 }
 
 fn collect_dependency_style_parts(
