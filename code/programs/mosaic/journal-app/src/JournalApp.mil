@@ -1,0 +1,42 @@
+// JournalApp.mil — the Journal app's interface (J3c-2 of #14416).
+//
+// This is the contract every generated host is built against, and it mirrors
+// `journal-mosaic-app`'s props and events exactly (a test in this package pins
+// that the adapter's start props are these slots, and that every emit below
+// reaches the adapter). See code/specs/journal-mosaic-app.md.
+//
+//   ┌ Journal ─────────────┬──────────────────────────────────┐
+//   │ [ New entry ]        │ Title                            │
+//   │ Thursday, 24 Sep     │ ┌──────────────────────────────┐ │
+//   │ ┌ First light  ★ ┐   │ │ First light                  │ │
+//   │ └ Walked to the… ┘   │ └──────────────────────────────┘ │
+//   │ Wednesday, 23 Sep    │ Entry                            │
+//   │ ┌ Rain ──────────┐   │ ┌──────────────────────────────┐ │
+//   │ └────────────────┘   │ │ Walked to the lighthouse …   │ │
+//   │                      │ └──────────────────────────────┘ │
+//   │                      │ [ Save ] [ Delete ] [ Cancel ]   │
+//   └──────────────────────┴──────────────────────────────────┘
+//     RecordList (toolkit)          DraftEditor
+
+component JournalApp {
+  // RecordList rows [key, heading, title, subtitle, meta, badge], newest first;
+  // the day heading only on each day's first row.
+  slot timeline-rows : list<list<text>> ;
+  // Key of the entry being edited; "" while writing a new one.
+  slot selected-key : text ;
+  // No entries yet: show the empty state instead of the list.
+  slot timeline-empty : bool ;
+  // The editor's draft (host-owned; typing only changes the draft).
+  slot draft-title : text ;
+  slot draft-body : text ;
+  // "Delete" for an existing entry, "" for a new one (DraftEditor hides it).
+  slot delete-label : text ;
+
+  emit onSelectEntry ( index : number ) ;
+  emit onNewEntry ;
+  emit onTitleChange ( value : text ) ;
+  emit onBodyChange ( value : text ) ;
+  emit onSaveEntry ;
+  emit onDeleteEntry ;
+  emit onCancelEdit ;
+}

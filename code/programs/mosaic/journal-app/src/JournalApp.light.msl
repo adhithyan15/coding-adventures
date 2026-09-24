@@ -1,0 +1,25 @@
+// JournalApp.light.msl — light-theme styling for the app's own parts. The
+// timeline and editor style themselves (RecordList, DraftEditor); only the
+// two columns and the New-entry button are styled here (the shell has no
+// style: Flutter does not lower a background on the split view), with
+// properties every native backend lowers.
+
+style JournalApp {
+  part timeline {
+    padding    : 12 ;
+    gap        : 8 ;
+    background : "#f8f9fa" ;
+  }
+  part new-entry {
+    padding       : 8 ;
+    background    : "#0d6efd" ;
+    color         : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#0d6efd" ;
+    border-radius : 4 ;
+  }
+  part editor {
+    padding    : 16 ;
+    background : "#ffffff" ;
+  }
+}

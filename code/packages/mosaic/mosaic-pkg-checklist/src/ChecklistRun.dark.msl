@@ -1,0 +1,127 @@
+// ChecklistRun.dark.msl — dark-theme styling.
+//
+// Only properties every native backend lowers (the package's native gate pins
+// every drop). Text parts carry colour and size only (#15276); padding is one
+// uniform value (Qt fans a single value out, #15247).
+
+style ChecklistRun {
+  part checklist-run {
+    padding       : 16 ;
+    gap           : 8 ;
+    background    : "#111827" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+  }
+  part checklist-title {
+    color     : "#f9fafb" ;
+    font-size : 18 ;
+  }
+  part checklist-progress {
+    color     : "#9ca3af" ;
+    font-size : 13 ;
+  }
+  part checklist-row {
+    gap : 6 ;
+  }
+  part checklist-indent {
+    color     : "#9ca3af" ;
+    font-size : 14 ;
+  }
+  part checklist-decision {
+    gap : 8 ;
+  }
+  part checklist-question {
+    color     : "#f9fafb" ;
+    font-size : 14 ;
+  }
+  part checklist-item {
+    gap : 6 ;
+  }
+  part checklist-item-done {
+    gap : 6 ;
+  }
+  part checklist-box {
+    color     : "#9ca3af" ;
+    font-size : 16 ;
+  }
+  part checklist-box-done {
+    color     : "#15803d" ;
+    font-size : 16 ;
+  }
+  part checklist-actions {
+    gap : 8 ;
+  }
+  part checklist-item-button {
+    padding       : 6 ;
+    background    : "transparent" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#111827" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part checklist-item-button-done {
+    padding       : 6 ;
+    background    : "transparent" ;
+    color         : "#9ca3af" ;
+    border-width  : 1 ;
+    border-color  : "#111827" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part checklist-yes {
+    padding       : 6 ;
+    background    : "#111827" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part checklist-yes-on {
+    padding       : 6 ;
+    background    : "#1e3a8a" ;
+    color         : "#dbeafe" ;
+    border-width  : 1 ;
+    border-color  : "#3b82f6" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part checklist-no {
+    padding       : 6 ;
+    background    : "#111827" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part checklist-no-on {
+    padding       : 6 ;
+    background    : "#1e3a8a" ;
+    color         : "#dbeafe" ;
+    border-width  : 1 ;
+    border-color  : "#3b82f6" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part checklist-complete {
+    padding       : 6 ;
+    background    : "#15803d" ;
+    color         : "#ffffff" ;
+    border-width  : 1 ;
+    border-color  : "#15803d" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part checklist-abandon {
+    padding       : 6 ;
+    background    : "#111827" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+}
