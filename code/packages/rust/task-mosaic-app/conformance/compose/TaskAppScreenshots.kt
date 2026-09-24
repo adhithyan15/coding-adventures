@@ -1,6 +1,8 @@
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -83,6 +85,21 @@ class TaskAppScreenshots {
             onNodeWithTag("toggle").performClick()
             waitForIdle()
             shot("03-task-complete")
+
+            // Every other view, with the one task in it (#14798). A view tab
+            // is the toolkit SegmentedControl's `segmented-option` button; the
+            // tag matters because "Board" is also the top bar's complexity
+            // toggle, which would switch the tier instead of the view.
+            for ((label, name) in listOf(
+                "Board" to "03a-board",
+                "Sheet" to "03b-sheet",
+                "Calendar" to "03c-calendar",
+                "Notes" to "03d-notes",
+            )) {
+                onNode(hasTestTag("segmented-option") and hasText(label)).performClick()
+                waitForIdle()
+                shot(name)
+            }
 
             // Checklists (C3a-C3c): the library, a template with a question
             // and both its branches, and a run with the question answered.

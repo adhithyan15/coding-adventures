@@ -2,6 +2,11 @@
 
 ## 2026-09-24
 
+- **Percentage widths below 100%.** A percentage had no pixel value, so `width : "14.2857%"` was dropped without a report. Calendar rendered as one column of 42 full-width day cells under seven day names packed into "SunMonTueWedThuFriSat" (found with the extended Trestle screenshot harness). Now:
+  - a container outside a RowScope (a FlowRow's children included) takes `_mosaicFillFraction(f)`, a file-private layout modifier emitted only when used. It is `fillMaxWidth(f)` floored rather than rounded: rounding made each cell 141px of a 984px row, and the seventh wrapped;
+  - any percentage on a RowScope child is a share of the Row (`weight(f)`). `100%` stays weight 1. For a `Text` leaf the weight comes from a precomputed part set (`text_parts_row_weighted`), using the UI59 scope rule.
+  Measured before/after: Trestle changes on 9 lines, all in Calendar (the seven day names, the title, the cells). Engram, Journal and VisiCalc don't change. `TaskAppUiTest` passes. Still open: a `Text`'s `text-align`, and day rows of unequal height.
+
 - **Each `If` branch runs inside `_MosaicBranch { … }`**, a new file-private, non-inline composable, so its body compiles to its own JVM lambda method. A plain Kotlin `if` kept every branch in the enclosing lambda's bytecode, so an app shell's `If`/`Else` view chain piled every view into one method. Adding Trestle's seventh view (Checklists, C3a of #14018) broke its Compose build with `MethodTooLargeException: TaskAppKt.TaskApp$lambda$1$0$1`, the JVM's 64 KB method limit. The wrapper adds no layout node, and Row/Column scopes stay available as implicit receivers. Verified locally: TaskApp with Checklists fails `gradle compileKotlin` before the fix and builds after it.
 
 ## 2026-09-13
