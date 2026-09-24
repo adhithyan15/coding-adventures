@@ -1,0 +1,72 @@
+// Cell.light.msl — light theme style for the Cell component.
+//
+// The dark theme's parts and states, one for one, in the light palette of
+// VisiCalc's own Grid.light.msl, so a light-themed consumer (Trestle's Sheet
+// view) no longer embeds a dark grid. The design notes live in
+// Cell.dark.msl; this file differs from it only in colour.
+//
+// Colour palette (dark equivalent in brackets):
+//   #ffffff   — surface                         [#1e1e1e]
+//   #1f1f1f   — text                            [#cccccc]
+//   #c8c8c8   — cell borders                    [#3f3f46]
+//   #f1f3f5   — hovered row                     [#2a2d2e]
+//   #cce5ff   — selection                       [#094771 / #264f78]
+//   #ccf4d9   — active edit field               [#1f4f3f]
+//   #f3f3f3   — header band                     [#2d2d30]
+//   #555555   — header label                    [#9d9d9d]
+//   #007acc   — focus outline (unchanged)
+
+style Cell {
+  part cell {
+    padding:    4px ;
+    background: #ffffff ;
+    color:      #1f1f1f ;
+
+    // Selected cell — host's currently-focused cell.  The visicalc
+    // Grid.dark.msl palette uses the same colour shape for
+    // selection; pinning it here means a consumer that styles the
+    // grid via `pkg::mosaic-pkg-grid::Cell` gets a sensible default
+    // without re-declaring it at every call site.
+    state selected {
+      background: #cce5ff ;
+      color:      #000000 ;
+      outline:    1px solid #007acc ;
+    }
+
+    state editing {
+      outline:    1px solid #007acc ;
+      background: #ccf4d9 ;
+    }
+  }
+
+  // #15048 -- match the display row exactly.
+  //
+  // The editing branch swaps a `Text` for a `HostInput`, and a native
+  // input brings UA padding, a border and its own font that a `<span>`
+  // does not. Against this theme's own `part cell` that made the
+  // editing row 6px taller -- at 100%, 150% and 200% alike, measured in
+  // headless Chrome, not inferred -- which trips the 0.5px tolerance in
+  // `table_capacity.ts` and makes the grid refuse uniform viewport
+  // capacity, stranding it on the initial window.
+  //
+  // Zeroing the box and inheriting the font leaves the input
+  // contributing only its line box, exactly as the span does. Measured
+  // delta after: 0 at 100%, 150% and 200%.
+  part cell-editor {
+    padding:    0px ;
+    border:     0px ;
+    background: transparent ;
+    // Deliberately no `color`. This part exists to fix ROW HEIGHT, and a
+    // colour is not needed for that -- every backend already gives the
+    // editor one (Compose merges the cell's text style, Qt emits a
+    // state-aware `color` binding, Flutter a DefaultTextStyle). Setting
+    // one here only caused harm: `inherit` lowers to a transparent brush
+    // on Compose and SwiftUI (invisible text) and to an unconvertible
+    // `Foreground="Inherit"` on XAML, and an explicit literal makes Qt
+    // emit `color` twice on the same TextInput, which is a hard QML
+    // compile error. Both are filed as emitter defects.
+    font:       inherit ;
+    width:      100% ;
+    box-sizing: border-box ;
+  }
+}
