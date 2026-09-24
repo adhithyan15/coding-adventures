@@ -6,6 +6,9 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- `ProjectState::checklist_owned` is public (C3a, #14018), so an app that
+  lists tasks itself (Trestle's `task-mosaic-app`) can leave checklist items
+  out the same way task-core's views do.
 - **Checklist templates and runs** (C1 of #14018; spec
   `code/specs/task-app-checklists-v1.md`). The standalone Checklist app is folding
   into Trestle, and its yes/no decision node already existed here. What was

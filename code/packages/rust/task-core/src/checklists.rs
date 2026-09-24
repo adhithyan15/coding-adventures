@@ -323,8 +323,9 @@ impl ProjectState {
     /// Every task that belongs to some checklist (roots included). The general
     /// views — List/Sheet/Calendar, todos, board, flowchart, the legacy
     /// project-wide checklist — leave these out, or a template's items would show
-    /// up as open todos.
-    pub(crate) fn checklist_owned(&self) -> HashSet<TaskId> {
+    /// up as open todos. Public so an app that lists tasks itself (Trestle's
+    /// `task-mosaic-app`) can leave them out the same way.
+    pub fn checklist_owned(&self) -> HashSet<TaskId> {
         if self.checklists.is_empty() {
             return HashSet::new();
         }
