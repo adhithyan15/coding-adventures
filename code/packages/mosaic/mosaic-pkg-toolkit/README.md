@@ -72,6 +72,12 @@ for the architecture, component catalog, and phasing plan.
   list<text>`, `active-body`, `active-index`. The active header
   renders through a distinct `tabs-tab-active` part. Emit:
   `onSelect(index: number)`.
+- **`RecordList`** — rows that are small records: a key, an optional
+  group heading, a title (the row's button), and optional subtitle,
+  meta and badge fields, as positional `list<list<text>>` rows.
+  Selection is by key (`selected-key`), so it survives re-sorting.
+  Emit: `onSelect(index: number)`. Shared by Journal's timeline and
+  search, Trestle's lists, and Engram's deck list.
 - **`EmptyState`** — what a view shows when it has nothing yet: a
   heading (`title`, announced with the heading role), an optional
   `message`, and an optional action button that appears only when

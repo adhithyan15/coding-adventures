@@ -1,0 +1,45 @@
+{
+  "stories": [
+    {
+      "name": "Titles only",
+      "fixtures": {
+        "rows": [
+          ["d1", "", "Personal", "", "", ""],
+          ["d2", "", "Work", "", "", ""],
+          ["d3", "", "Travel", "", "", ""]
+        ],
+        "selected-key": ""
+      }
+    },
+    {
+      "name": "Journal timeline (grouped, one selected)",
+      "fixtures": {
+        "rows": [
+          ["e7", "Wednesday 23 September", "Rain", "Stayed in. Café au lait and the unfinished crossword.", "21:10", ""],
+          ["e6", "", "First light", "Walked to the lighthouse before breakfast.", "07:40", "★"],
+          ["e5", "Sunday 20 September", "Market", "", "10:05", ""]
+        ],
+        "selected-key": "e6"
+      }
+    },
+    {
+      "name": "Search results",
+      "fixtures": {
+        "rows": [
+          ["e6", "", "First light", "…walked to the lighthouse before breakfast. The fog had…", "2026-09-23", ""],
+          ["e2", "", "Lighthouse keeper", "…an interview with the last lighthouse keeper on the coast…", "2025-04-11", "★"]
+        ],
+        "selected-key": ""
+      }
+    },
+    {
+      "name": "Long text",
+      "fixtures": {
+        "rows": [
+          ["x1", "A group heading long enough to wrap onto a second line on a narrow window", "A title that keeps going well past the width of any reasonable sidebar", "A subtitle that is also far too long, to show how the row grows rather than clipping what the person wrote.", "12 September 2026", "In progress"]
+        ],
+        "selected-key": "x1"
+      }
+    }
+  ]
+}

@@ -38,7 +38,8 @@ const COMPONENTS: &[&str] = &[
     "Accordion", "Alert", "Badge", "Breadcrumb", "Button", "ButtonGroup",
     "Checkbox", "DropdownMenu", "EmptyState", "Field", "Input", "InputGroup",
     "ListGroup", "Modal", "Nav", "Navbar", "NumberInput", "Pagination",
-    "Radio", "SegmentedControl", "Select", "Spinner", "Tabs", "Toast", "Tooltip",
+    "Radio", "RecordList", "SegmentedControl", "Select", "Spinner", "Tabs", "Toast",
+    "Tooltip",
 ];
 
 /// Themes shipped per component. Both must compile.
@@ -83,8 +84,8 @@ fn manifest_declares_expected_exports() {
         .and_then(|v| v.as_str())
         .expect("[package].version must be set");
     assert_eq!(
-        version, "0.15.0",
-        "[package].version must be 0.15.0 for the selected-state release (UI86)"
+        version, "0.16.0",
+        "[package].version must be 0.16.0 for the RecordList release (J3a, #14416)"
     );
 
     let exports = value
@@ -917,6 +918,96 @@ fn tabs_active_header_part_compiles_and_is_styled() {
             background.value, expected_background,
             "{style_filename} active tab background mismatch"
         );
+    }
+}
+
+/// RecordList (J3a, #14416) — multi-field, groupable rows. The interface is
+/// the whole contract with every consumer (Journal, Trestle, Engram), so it is
+/// pinned exactly, including the nested list type.
+#[test]
+fn record_list_interface_matches_spec() {
+    let out = mosmodel_compiler::compile(&read_source("RecordList.mil")).unwrap();
+    let c = &out.component;
+    let slots: Vec<&str> = c.slots.iter().map(|s| s.name.as_str()).collect();
+    assert_eq!(slots, vec!["rows", "selected-key"]);
+    assert_eq!(
+        format!("{:?}", c.slots[0].r#type),
+        format!(
+            "{:?}",
+            mosmodel_compiler::SlotType::List(Box::new(mosmodel_compiler::ListInnerType::List(
+                Box::new(mosmodel_compiler::ListInnerType::Text)
+            )))
+        ),
+        "rows must be list<list<text>>"
+    );
+    assert_eq!(format!("{:?}", c.slots[1].r#type), "Text");
+    let emits: Vec<&str> = c.emits.iter().map(|e| e.name.as_str()).collect();
+    assert_eq!(emits, vec!["onSelect"]);
+}
+
+/// The properties that make RecordList worth sharing, pinned in the layout:
+/// a heading drawn only when row[1] is set (flattened grouping), selection by
+/// key rather than index, the title as the row's one button (so it is named by
+/// its own label), and optional fields omitted rather than drawn blank.
+///
+/// The button deliberately has NO children: children nested in a HostButton
+/// are dropped on seven of eight backends today (see RecordList.mll), so this
+/// also guards against someone "improving" the row into one big button.
+#[test]
+fn record_list_rows_are_grouped_selected_by_key_and_titled_by_a_button() {
+    let mil = mosmodel_compiler::compile(&read_source("RecordList.mil")).unwrap();
+    let mll = moslayout_compiler::compile(&read_source("RecordList.mll"), Some(&mil.descriptor_json))
+        .expect("RecordList.mll compiles");
+    let prop = |node: &moslayout_compiler::LayoutNode, name: &str| {
+        node.props
+            .iter()
+            .find(|p| p.name == name)
+            .map(|p| format!("{:?}", p.value))
+    };
+
+    let root = &mll.def.root;
+    assert_eq!(root.tag, "Column");
+    assert_eq!(root.children.len(), 1);
+    let each = &root.children[0];
+    assert_eq!(each.tag, "For");
+    assert_eq!(prop(each, "each").as_deref(), Some("SlotRef(\"rows\")"));
+
+    // Child 0: the group heading, gated on row[1] and announced as a heading.
+    let heading_gate = &each.children[0];
+    assert_eq!(heading_gate.tag, "If");
+    assert!(prop(heading_gate, "when").unwrap().contains('1'), "heading gated on row[1]");
+    let heading = &heading_gate.children[0];
+    assert_eq!(heading.part_name.as_deref(), Some("record-list-heading"));
+    assert_eq!(prop(heading, "a11y-role").as_deref(), Some("Keyword(\"heading\")"));
+
+    // Child 1: selected branch, compared by key against selectedKey.
+    let selected = &each.children[1];
+    assert_eq!(selected.tag, "If");
+    let when = prop(selected, "when").unwrap();
+    assert!(when.contains("selectedKey"), "selection is by key: {when}");
+    assert_eq!(each.children[2].tag, "Else");
+    assert_eq!(each.children.len(), 3, "nothing else is drawn per row");
+
+    for (branch, suffix, is_selected) in [(selected, "-selected", true), (&each.children[2], "", false)] {
+        assert_eq!(branch.children.len(), 1);
+        let row = &branch.children[0];
+        assert_eq!(row.tag, "Column");
+        assert_eq!(row.part_name.as_deref(), Some(format!("record-list-row{suffix}").as_str()));
+        let line = &row.children[0];
+        assert_eq!(line.tag, "Row");
+
+        let button = &line.children[0];
+        assert_eq!(button.tag, "HostButton");
+        assert!(button.children.is_empty(), "a HostButton's children are dropped on most backends");
+        assert!(prop(button, "label").unwrap().contains('2'), "the button is the title, row[2]");
+        assert_eq!(prop(button, "onClick").as_deref(), Some("EmitRef(\"onSelect\")"));
+        assert_eq!(prop(button, "selected").as_deref(), Some(format!("Keyword(\"{is_selected}\")").as_str()));
+
+        // Meta row[4], badge row[5] and subtitle row[3] are each gated.
+        assert_eq!(line.children[1].tag, "If");
+        assert_eq!(line.children[2].tag, "If");
+        assert_eq!(row.children[1].tag, "If");
+        assert_eq!(row.children.len(), 2);
     }
 }
 

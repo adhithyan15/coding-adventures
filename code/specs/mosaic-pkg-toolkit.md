@@ -170,6 +170,45 @@ the model.
 | `Select`       | uses `DropdownMenu` |
 | `EmptyState` | `Column { Text[title, heading], If message { Text }, If action-label { HostButton } }` |
 | `SegmentedControl` | `Row { For (options) { If selected { HostButton[option-selected] } Else { HostButton[option] } } }` |
+| `RecordList` | `Column { For (rows) { If heading { Text[heading] }, If key == selected-key { Column[row-selected] { … } } Else { Column[row] { Row { HostButton[title], If meta { Text }, If badge { Text } }, If subtitle { Text } } } } }` |
+
+#### `RecordList` — rows that are records (v0.16, J3a of #14416)
+
+`ListGroup` holds one string per row. Journal's timeline, search
+results and tag browser, Trestle's task list, and Engram's deck list and
+card browser all need rows with several fields, and each had grown its
+own shape. `RecordList` is the one shared answer.
+
+```
+slot rows         : list<list<text>> ;  // [key, heading, title, subtitle, meta, badge]
+slot selected-key : text ;              // key of the selected row; "" = none
+emit onSelect ( index : number ) ;
+```
+
+- **Positional rows, not records.** Mosaic has no record slot type
+  (UI38's open P1). Every multi-field list in the repo already uses
+  positional `list<list<text>>` (Grid, Calendar, ProjectNav, Notes,
+  DeckStatsPanel, TaskApp, Engram), so this adopts that idiom. Fields
+  are append-only: `row[n]` never changes meaning.
+- **Grouping is flattened.** `row[1]` is set only on the first row of
+  a group and draws a heading (heading role) above it: TaskApp's
+  idiom, with no second list and no nested `For` (a nested `For`
+  would lose the row index, UI37).
+- **Selection is by key.** The selected row is the one whose `row[0]`
+  equals `selected-key`, so selection survives filtering and
+  re-sorting. The click still reports an index, which the host maps
+  back through the rows it passed in.
+- **The title is the button.** The natural design, one `HostButton`
+  per row with the fields inside it, does not work today. Children
+  nested in a `HostButton` are dropped on seven of eight backends
+  (only XAML keeps them), and the degradation report stays silent;
+  children pass-through is the unwritten UI29-2 spec. So `row[2]` is
+  the button's label (and its accessible name), and it is
+  **required**. The other fields sit beside and below it. When UI29-2
+  lands, the whole row can become the target without an interface
+  change.
+- **Optional fields are omitted, not drawn blank**, so a title-only
+  row is one line tall.
 
 ### 3.3 Tier 3 — needs new infrastructure
 
