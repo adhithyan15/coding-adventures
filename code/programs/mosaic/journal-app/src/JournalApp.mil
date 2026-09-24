@@ -37,6 +37,17 @@ component JournalApp {
   slot searching : bool ;
   // Searching, and nothing matches (the journal itself is not empty).
   slot no-matches : bool ;
+  // Stars (J4b). "Star" / "Unstar" for the entry in the editor, "" for a new
+  // one (the button is hidden). `starred-only` is the pane's filter;
+  // `no-starred` is the filtered, unsearched timeline coming up empty.
+  slot star-label : text ;
+  slot starred-only : bool ;
+  slot no-starred : bool ;
+  // On this day (J4c): entries from today's date in earlier years, as
+  // RecordList rows headed "N years ago · date"; shown when set and not
+  // searching.
+  slot on-this-day-rows : list<list<text>> ;
+  slot has-on-this-day : bool ;
 
   emit onSelectEntry ( index : number ) ;
   emit onNewEntry ;
@@ -47,4 +58,8 @@ component JournalApp {
   emit onCancelEdit ;
   emit onSearchChange ( value : text ) ;
   emit onClearSearch ;
+  emit onToggleStar ;
+  emit onToggleStarredFilter ;
+  // A row of on-this-day-rows (each RecordList indexes its own rows).
+  emit onSelectOnThisDay ( index : number ) ;
 }

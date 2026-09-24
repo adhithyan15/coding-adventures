@@ -44,7 +44,45 @@ style JournalApp {
     border-radius : 4 ;
     font-size     : 14 ;
   }
+  // Stars (J4b): the filter off wears Clear's style; on, and the Star
+  // button, take the ★ badge's amber.
+  part starred-filter {
+    padding       : 8 ;
+    background    : "#111827" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part starred-filter-on {
+    padding       : 8 ;
+    background    : "#3b2f14" ;
+    color         : "#fbbf24" ;
+    border-width  : 1 ;
+    border-color  : "#92651a" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part star-toggle {
+    padding       : 8 ;
+    background    : "#111827" ;
+    color         : "#fbbf24" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  // On this day (J4c): the section's heading, in the stars' amber so the
+  // recall reads as set apart from the timeline below it.
+  part on-this-day-title {
+    color       : "#fbbf24" ;
+    font-size   : 14 ;
+  }
   part editor {
+    // Fills the window like the timeline pane (#15963); without it the dark
+    // editor stopped under its buttons and left the window's white below.
+    min-height : "100vh" ;
     padding    : 16 ;
     background : "#0b1220" ;
   }

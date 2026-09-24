@@ -2,6 +2,12 @@
 
 ## 0.1.0 — unreleased
 
+- **On this day (J4c)** needs no host code. A new test writes an entry under
+  a 24 Sep 2025 clock, reloads under 24 Sep 2026, and finds it recalled and
+  openable, through the real wasm.
+- **Stars (J4b)** need no host code either. A new test stars an entry and
+  toggles *Starred only* through the real wasm: first "No starred entries",
+  then only the starred entry.
 - **Search (J4a)** needs no host code: the generated component dispatches
   `searchChange` / `clearSearch` like every other event. A new test searches
   through the real wasm: two hits, then "No entries match", then *Clear*.

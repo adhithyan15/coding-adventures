@@ -39,6 +39,35 @@ layout JournalApp {
           )
         }
       }
+      // Stars (J4b): the filter is a toggle button. Two parts, so the "on"
+      // state wears its own style on every backend (as Trestle's outline).
+      If ( when: slot: starred-only ) {
+        HostButton [ starred-filter-on ] (
+          label : "Starred only" ,
+          selected : true ,
+          onClick : emit: onToggleStarredFilter
+        )
+      }
+      Else {
+        HostButton [ starred-filter ] (
+          label : "Starred only" ,
+          selected : false ,
+          onClick : emit: onToggleStarredFilter
+        )
+      }
+      // On this day (J4c): a second RecordList mount (#15959), above the
+      // timeline, only when earlier years have entries on today's date.
+      If ( when: slot: has-on-this-day ) {
+        Text [ on-this-day-title ] (
+          content : "On this day" ,
+          a11y-role : heading
+        )
+        pkg::mosaic-pkg-toolkit::RecordList (
+          rows : slot: on-this-day-rows ,
+          selected-key : slot: selected-key ,
+          onSelect : emit: onSelectOnThisDay
+        )
+      }
       If ( when: slot: timeline-empty ) {
         pkg::mosaic-pkg-toolkit::EmptyState (
           title : "No entries yet" ,
@@ -57,15 +86,32 @@ layout JournalApp {
           )
         }
         Else {
-          pkg::mosaic-pkg-toolkit::RecordList (
-            rows : slot: timeline-rows ,
-            selected-key : slot: selected-key ,
-            onSelect : emit: onSelectEntry
-          )
+          // A third EmptyState mount: the filter is on and nothing is starred.
+          If ( when: slot: no-starred ) {
+            pkg::mosaic-pkg-toolkit::EmptyState (
+              title : "No starred entries" ,
+              message : "Star an entry to keep it here." ,
+              action-label : ""
+            )
+          }
+          Else {
+            pkg::mosaic-pkg-toolkit::RecordList (
+              rows : slot: timeline-rows ,
+              selected-key : slot: selected-key ,
+              onSelect : emit: onSelectEntry
+            )
+          }
         }
       }
     }
     Column [ editor ] {
+      // Stars the entry in the editor; hidden for a new draft.
+      If ( when: slot: star-label ) {
+        HostButton [ star-toggle ] (
+          label : slot: star-label ,
+          onClick : emit: onToggleStar
+        )
+      }
       pkg::mosaic-pkg-draft-editor::DraftEditor (
         title-label : "Title" ,
         title-value : slot: draft-title ,

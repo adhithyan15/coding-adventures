@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- **On this day (J4c).** `on-this-day-rows` come from journal-core's
+  `on_this_day` for the user's LOCAL today (the same `today(clock, offset)`
+  that files entries), through the shared filter. Each year opens with a
+  "N years ago · 24 Sep 2025" heading. `has-on-this-day` is false during a
+  search. `onSelectOnThisDay { index }` opens a recalled entry; it has its
+  own event because each `RecordList` indexes its own rows.
+- **Stars (J4b).** `onToggleStar` flips `Entry::starred` for the entry in the
+  editor through `Command::SetStarred`. It is an error for a new draft. It
+  does NOT save the draft, so an unsaved edit stays unsaved. `starred_only`
+  (not persisted, like the query) feeds `EntryFilter::starred_only` to both
+  `timeline` and `search`. `no-starred` covers only the unsearched timeline,
+  so each empty state says the right thing. `JournalScreenshots` adds
+  07-starred-only.
 - **Search (J4a).** `search_query` (not in the snapshot; a restart opens the
   full timeline) and `onSearchChange` / `onClearSearch`. A query over the
   engine's 1,024 characters is refused as it is typed. While searching,
