@@ -2335,6 +2335,19 @@ jobs:
           # The gate: it builds.
           swift build --package-path "$engram_swift_output/swiftui"
 
+          # ---- Journal: emit and BUILD on SwiftUI (J5b, #14416). -------------
+          # The strict standard binding (native-complete + runtime library), no
+          # replaced generated files, zero degradations, and the package builds.
+          # Journal raises no effects, so there is no handler to grep for.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
+          journal_swift_runtime="$(pwd)/code/packages/rust/target/debug/libjournal_mosaic_app.dylib"
+          test -f "$journal_swift_runtime"
+          journal_swift_output="$RUNNER_TEMP/mosaic-swiftui-journal"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend swiftui --output "$journal_swift_output" --emit-project --profile native-complete --runtime-library "$journal_swift_runtime"
+          jq -e '.replacedGeneratedFiles == []' "$journal_swift_output/swiftui/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_swift_output/swiftui/mosaic-degradations.json"
+          swift build --package-path "$journal_swift_output/swiftui"
+
           ios_output="$RUNNER_TEMP/mosaic-swift-taskapp-ios-source"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_output" --emit-project
           jq -e '.nativeComplete == false and ([.degradations[].code] == ["runtime.sample-fallback"])' "$ios_output/swiftui/mosaic-degradations.json"
@@ -2992,6 +3005,18 @@ jobs:
           # exercises `createDistributable` on task-app, and what is new here is
           # the handler source, not the packaging.
           gradle --no-daemon --stacktrace -p "$engram_output/compose" compileKotlin
+
+          # ---- Journal: emit and COMPILE on Compose (J5b, #14416). -----------
+          # Same gate as Engram above, minus the effects handler Journal does
+          # not have.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app
+          journal_runtime_library="$(pwd)/code/packages/rust/target/debug/libjournal_mosaic_app.so"
+          test -f "$journal_runtime_library"
+          journal_output="$RUNNER_TEMP/mosaic-compose-journal"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/journal-app --backend compose --output "$journal_output" --emit-project --profile native-complete --runtime-library "$journal_runtime_library"
+          jq -e '.replacedGeneratedFiles == []' "$journal_output/compose/mosaic-degradations.json"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$journal_output/compose/mosaic-degradations.json"
+          gradle --no-daemon --stacktrace -p "$journal_output/compose" compileKotlin
 
           toolkit_output="$RUNNER_TEMP/mosaic-compose-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend compose --output "$toolkit_output" --emit-project

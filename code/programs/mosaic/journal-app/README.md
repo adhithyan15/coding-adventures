@@ -63,8 +63,12 @@ JournalApp.mll ── RecordList · EmptyState · DraftEditor
 
 The same lane also runs this package's tests.
 
+**SwiftUI and Compose** (J5b) build in CI: the SwiftUI lane runs `swift build`
+and the Compose lane runs `gradle compileKotlin`. Both use the same strict
+binding, with zero degradations.
+
 Not yet:
 
-- the other native lanes (Compose, SwiftUI, Flutter, XAML);
+- launching on SwiftUI or Compose, and the Flutter and XAML lanes;
 - the web host, which needs a wasm clock;
 - packaging and release (J5).
