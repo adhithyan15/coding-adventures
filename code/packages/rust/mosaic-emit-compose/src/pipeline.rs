@@ -2111,7 +2111,7 @@ fn percent_width_fraction(props: &[StyleProp]) -> Option<f64> {
     // The floor is what `kotlin_fraction` can still print as non-zero: a
     // smaller value would round to `weight(0f)`, which Compose rejects at
     // composition with an IllegalArgumentException.
-    (percent.is_finite() && percent >= 0.0001 && percent <= 100.0).then_some(percent / 100.0)
+    (percent.is_finite() && (0.0001..=100.0).contains(&percent)).then_some(percent / 100.0)
 }
 
 /// Print a fraction for Kotlin, to six places: `0.142857`, `0.5`, `1`.
