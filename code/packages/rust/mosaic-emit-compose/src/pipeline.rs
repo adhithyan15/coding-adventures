@@ -1882,8 +1882,6 @@ fn part_wants_flow_wrap(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
         .unwrap_or(false)
 }
 
-/// Whether any part in this layout authors `flex-wrap: wrap`, and so
-/// whether the file needs the `FlowRow` imports and opt-in (#14836).
 /// Whether any container authors a percentage width below 100, so the file
 /// needs [`emit_fill_fraction_helper`]. Looked up the same way
 /// [`container_default_fill`] decides, so the helper is present exactly
@@ -1928,6 +1926,8 @@ fn emit_fill_fraction_helper() -> String {
     .to_string()
 }
 
+/// Whether any part in this layout authors `flex-wrap: wrap`, and so
+/// whether the file needs the `FlowRow` imports and opt-in (#14836).
 fn layout_uses_flow_wrap(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
     (matches!(node.tag.as_str(), "Row" | "Column")
         && part_wants_flow_wrap(node, part_styles))
@@ -2096,11 +2096,6 @@ fn elevation_tier_for_value(value: &str) -> Option<ElevationTier> {
     }
 }
 
-/// The weight a `flex-grow` value resolves to, or `None` when it is unusable.
-///
-/// Split out so the drop reporter asks the SAME question the lowering asks
-/// (#14810). Invalid, non-finite, zero and negative values stay intrinsic and
-/// are therefore genuinely discarded; usable ones are consumed.
 /// An authored percentage `width` as a fraction of the parent, `0 < f <= 1`.
 ///
 /// Mosaic styles spell it `width : 100% ;` or, when the number needs a
@@ -2113,7 +2108,10 @@ fn percent_width_fraction(props: &[StyleProp]) -> Option<f64> {
     let prop = props.iter().rev().find(|prop| prop.name == "width")?;
     let value = prop.value.trim().trim_matches('"').trim();
     let percent = value.strip_suffix('%')?.trim().parse::<f64>().ok()?;
-    (percent.is_finite() && percent > 0.0 && percent <= 100.0).then_some(percent / 100.0)
+    // The floor is what `kotlin_fraction` can still print as non-zero: a
+    // smaller value would round to `weight(0f)`, which Compose rejects at
+    // composition with an IllegalArgumentException.
+    (percent.is_finite() && percent >= 0.0001 && percent <= 100.0).then_some(percent / 100.0)
 }
 
 /// Print a fraction for Kotlin, to six places: `0.142857`, `0.5`, `1`.
@@ -2145,6 +2143,11 @@ fn container_default_fill(node: &LayoutNode, part_styles: &PartStyleMap) -> Stri
     }
 }
 
+/// The weight a `flex-grow` value resolves to, or `None` when it is unusable.
+///
+/// Split out so the drop reporter asks the SAME question the lowering asks
+/// (#14810). Invalid, non-finite, zero and negative values stay intrinsic and
+/// are therefore genuinely discarded; usable ones are consumed.
 fn flex_grow_weight(value: &str) -> Option<String> {
     value
         .trim()
@@ -8792,7 +8795,10 @@ mod tests {
         assert_eq!(w("100%"), Some(1.0));
         assert_eq!(w("\"14.2857%\"").map(kotlin_fraction).as_deref(), Some("0.142857"));
         assert_eq!(w(" 50 % ").map(kotlin_fraction).as_deref(), Some("0.5"));
-        for bad in ["0%", "-5%", "150%", "NaN%", "inf%", "12px", "50", "%", "1e400%"] {
+        assert_eq!(w("0.0001%").map(kotlin_fraction).as_deref(), Some("0.000001"));
+        for bad in [
+            "0%", "-5%", "150%", "NaN%", "inf%", "12px", "50", "%", "1e400%", "0.00004%", "1e-320%",
+        ] {
             assert_eq!(w(bad), None, "{bad}");
         }
     }
