@@ -2,6 +2,71 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.16.0] - 2026-09-24
+
+### Added — resolve a member chain against an object/array literal (CLOC28)
+
+Per [CLOC28](../../specs/CLOC28-literal-property-propagation.md), the first
+slice of CCR-068 (#15837). Where the scalar path substitutes a `const`'s
+literal at each bare use of its name, this resolves a member *chain* rooted at
+a binding whose initializer is an object or array literal, and replaces the
+whole chain with the scalar it reads:
+
+```js
+var o = { a: { b: { c: 1 } } };
+console.log(o.a.b.c);            // => console.log(1)
+```
+
+`remove-unused-vars` then deletes the binding, as it already did for the
+scalar case. No new pass and no new pipeline slot.
+
+The unit of replacement is the chain rather than the identifier on purpose.
+Substituting the literal itself would construct a fresh object at every use
+site, so `o.a === o.a` would turn from `true` into `false`. What lands at the
+use site here is always a scalar — number, string, boolean, `null`, bigint —
+and scalars have no identity to preserve. A chain resolving to an object is
+walked *through*, never substituted.
+
+### The near-miss worth recording
+
+The structured path admits `var` and `let`, where the scalar path is
+`const`-only. That combination came within one test of shipping a miscompile:
+
+```js
+var o = { a: 1 };
+o = { a: 2 };
+console.log(o.a);     // prints 2; an early draft folded it to console.log(1)
+```
+
+Two independent blind spots lined up. `count_uses_*` does not count a bare
+identifier assignment target — correctly, for a `const`, which cannot be
+assigned, so nothing in the scalar path ever needed it. And the first
+eligibility gate counted occurrences by looking for `"type":"Identifier"` in
+the serialized AST, which does not appear for an assignment target because
+`AssignmentTarget` is `#[serde(untagged)]`. The write was invisible twice over,
+the single remaining read resolved, and the fold looked legitimate.
+
+The gate now counts every object carrying `"name": "<name>"` regardless of
+enum tagging, and accepts a rewrite only when the sole remaining mention is the
+declaration itself. Over-counting merely declines a candidate, so unfamiliar
+AST shapes fail closed. `refuses_a_binding_that_is_reassigned` pins it.
+
+### Guards, each checked against the pinned oracle
+
+An escaping object (`sink(o)`), a written property (`o.a = 2`, `o.a++`,
+`delete o.a`), an absent key, and a chain resolving to a non-scalar all leave
+the binding entirely alone — including its other, resolvable reads.
+`v20260915` declines in the same places: it renames rather than folds an
+escaped object, and it keeps `{}.b` and `typeof{}.toString` rather than
+folding a missing key to `undefined`, because such a read can resolve up the
+prototype chain.
+
+Deliberately behind upstream, and recorded in CLOC28 rather than left to be
+rediscovered: `a.length`, an out-of-range index, an array hole, a spread in
+the literal, and a getter are all folded by upstream and declined here.
+
+17 tests added.
+
 ## [0.15.1] - 2026-07-19
 
 ### Changed — test goldens updated for `closure-emitter` 0.55.0
