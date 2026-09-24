@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added — the loader sends the browser's UTC offset
+
+`mosaic-host.mjs` adds `utcOffsetMinutes` (`-getTimezoneOffset()`) to the
+default start context. It is left out when implausible, so an app never fails
+to start over it, and a caller's explicit context overrides it.
+
 - Add reusable browser file.open/file.save handlers with explicit outcomes,
   gesture-bound pickers, bounded opaque bytes and completion retry without I/O replay.
 

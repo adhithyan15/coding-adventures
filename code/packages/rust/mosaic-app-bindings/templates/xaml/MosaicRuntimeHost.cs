@@ -286,6 +286,8 @@ public static class MosaicRuntimeHost
                     ["locale"] = CultureInfo.CurrentCulture.Name,
                     ["colorScheme"] = "system",
                     ["textScale"] = 1.0,
+                    // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time").
+                    ["utcOffsetMinutes"] = (int)TimeZoneInfo.Local.GetUtcOffset(DateTime.Now).TotalMinutes,
                     ["platform"] = "windows",
                     ["restoredSnapshot"] = restoredSnapshot,
                 };

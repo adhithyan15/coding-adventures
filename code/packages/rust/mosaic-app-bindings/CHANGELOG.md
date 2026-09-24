@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Added — every native host sends its UTC offset (UI38 "Local time")
+
+The SwiftUI, Compose, Qt, Flutter and XAML host templates add
+`utcOffsetMinutes` to the start context, read from the platform's time zone
+API in minutes east of UTC. Apps such as Journal can then file work under the
+user's local day. Real offsets are always inside the runtime's −840..=840.
+The bindings test pins the line for each backend, and all five
+effect-completion drivers still build and run.
+
 ### Added -- the XAML host answers effects (UI47 §5.4 step 4, last of five)
 
 The fifth and final host template. `MosaicRuntimeHost` gains `EffectHandler`,

@@ -12,7 +12,9 @@ import { loadMosaicModule } from '../../mosaic-app-wasm/js/mosaic-host.mjs';
 
 const artifact = new URL('../../target/wasm32-unknown-unknown/debug/journal_mosaic_app.wasm', import.meta.url);
 
-// 2026-09-24T12:00:00Z: a fixed, known day for the timeline heading.
+// 2026-09-24T12:00:00Z: a fixed, known day for the timeline heading. Every
+// app is created at UTC (utcOffsetMinutes: 0): the loader otherwise sends the
+// machine's own offset, and the headings would depend on where tests run.
 const NOW = Date.UTC(2026, 8, 24, 12);
 
 // The host shim, as a web host should write it: it must RETURN. An exception
@@ -34,7 +36,7 @@ async function load(nowMs = () => NOW) {
 
 test('writes, saves and restores an entry through the Mosaic WASM host', async () => {
   const module = await load();
-  const app = module.create({ protocolVersion: 2, colorScheme: 'light' });
+  const app = module.create({ protocolVersion: 2, colorScheme: 'light', utcOffsetMinutes: 0 });
   assert.equal(app.update.props['timeline-empty'], true);
   assert.deepEqual(app.update.props['timeline-rows'], []);
 
@@ -55,18 +57,18 @@ test('writes, saves and restores an entry through the Mosaic WASM host', async (
   assert.equal(fresh.props['selected-key'], '');
 
   const snapshot = app.snapshot();
-  const restored = (await load()).create({ protocolVersion: 2, colorScheme: 'light' });
+  const restored = (await load()).create({ protocolVersion: 2, colorScheme: 'light', utcOffsetMinutes: 0 });
   const back = restored.restore(snapshot);
   assert.equal(back.props['timeline-rows'][0][2], 'First light');
 });
 
 test('an unknown event is refused and names what was sent', async () => {
-  const app = (await load()).create({ protocolVersion: 2, colorScheme: 'light' });
+  const app = (await load()).create({ protocolVersion: 2, colorScheme: 'light', utcOffsetMinutes: 0 });
   assert.throws(() => app.dispatch('notAJournalEvent'), /notAJournalEvent/);
 });
 
 test('an implausible host clock dates entries at the epoch, never traps', async () => {
-  const app = (await load(() => Number.NaN)).create({ protocolVersion: 2, colorScheme: 'light' });
+  const app = (await load(() => Number.NaN)).create({ protocolVersion: 2, colorScheme: 'light', utcOffsetMinutes: 0 });
   app.dispatch('newEntry');
   app.dispatch('titleChange', { value: 'No clock' });
   const saved = app.dispatch('saveEntry');
@@ -78,17 +80,17 @@ test('a clock past 9999 dates at the epoch, so the journal still restores', asyn
   // journal-core reads back only four-digit years: an entry dated there would
   // make the whole snapshot unrestorable.
   const module = await load(() => 8.64e15);
-  const app = module.create({ protocolVersion: 2, colorScheme: 'light' });
+  const app = module.create({ protocolVersion: 2, colorScheme: 'light', utcOffsetMinutes: 0 });
   app.dispatch('newEntry');
   app.dispatch('titleChange', { value: 'Far future' });
   const saved = app.dispatch('saveEntry');
   assert.equal(saved.props['timeline-rows'][0][1], 'Thursday, 1 January 1970');
-  const restored = (await load()).create({ protocolVersion: 2, colorScheme: 'light' });
+  const restored = (await load()).create({ protocolVersion: 2, colorScheme: 'light', utcOffsetMinutes: 0 });
   assert.equal(restored.restore(app.snapshot()).props['timeline-rows'][0][2], 'Far future');
 });
 
 test('a clock that throws is caught by the host shim and reads as the epoch', async () => {
-  const app = (await load(() => { throw new Error('no clock'); })).create({ protocolVersion: 2, colorScheme: 'light' });
+  const app = (await load(() => { throw new Error('no clock'); })).create({ protocolVersion: 2, colorScheme: 'light', utcOffsetMinutes: 0 });
   app.dispatch('newEntry');
   app.dispatch('titleChange', { value: 'Thrown' });
   assert.equal(app.dispatch('saveEntry').props['timeline-rows'][0][1], 'Thursday, 1 January 1970');

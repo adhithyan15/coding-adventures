@@ -784,5 +784,19 @@ mod tests {
         assert!(bindings[3].0.contains("MoveFileExW"));
         assert!(bindings[3].0.contains("temporary.renameSync(target.path)"));
         assert!(bindings[4].0.contains("QSaveFile file(path)"));
+
+        // Every native host tells the app its UTC offset (UI38 "Local time"),
+        // read from the platform's own time zone API, in minutes EAST of UTC.
+        let offsets = [
+            "put(\"utcOffsetMinutes\", java.util.TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 60_000)",
+            "\"utcOffsetMinutes\": TimeZone.current.secondsFromGMT() / 60,",
+            "[\"utcOffsetMinutes\"] = (int)TimeZoneInfo.Local.GetUtcOffset(DateTime.Now).TotalMinutes,",
+            "'utcOffsetMinutes': DateTime.now().timeZoneOffset.inMinutes,",
+            "{QStringLiteral(\"utcOffsetMinutes\"), QDateTime::currentDateTime().offsetFromUtc() / 60},",
+        ];
+        for ((source, ..), offset) in bindings.iter().zip(offsets) {
+            assert!(source.contains(offset), "missing {offset}");
+        }
+        assert!(bindings[4].0.contains("#include <QDateTime>"));
     }
 }

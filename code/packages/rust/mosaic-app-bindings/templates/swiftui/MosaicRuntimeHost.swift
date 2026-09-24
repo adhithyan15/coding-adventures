@@ -137,6 +137,8 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
         "locale": Locale.current.identifier,
         "colorScheme": "system",
         "textScale": 1.0,
+        // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time").
+        "utcOffsetMinutes": TimeZone.current.secondsFromGMT() / 60,
         "platform": "apple",
         "restoredSnapshot": snapshot ?? NSNull(),
       ]

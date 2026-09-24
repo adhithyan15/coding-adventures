@@ -2,6 +2,7 @@
 #include "MosaicHost.h"
 
 #include <QCoreApplication>
+#include <QDateTime>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
@@ -75,6 +76,8 @@ MosaicHost::MosaicHost(QObject *parent)
             {QStringLiteral("locale"), QLocale::system().name().replace('_', '-')},
             {QStringLiteral("colorScheme"), QStringLiteral("system")},
             {QStringLiteral("textScale"), 1.0},
+            // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time").
+            {QStringLiteral("utcOffsetMinutes"), QDateTime::currentDateTime().offsetFromUtc() / 60},
             {QStringLiteral("platform"), platformName()},
             {QStringLiteral("restoredSnapshot"), snapshot},
         };

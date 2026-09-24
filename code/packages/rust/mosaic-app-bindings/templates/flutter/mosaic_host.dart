@@ -246,6 +246,8 @@ final class _MosaicRuntime {
           'locale': Platform.localeName,
           'colorScheme': 'system',
           'textScale': 1.0,
+          // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time").
+          'utcOffsetMinutes': DateTime.now().timeZoneOffset.inMinutes,
           'platform': _platformName(),
           'restoredSnapshot': restoredSnapshot,
         }, (input, output) => _create(input, appOut, output)), 'startup update');
