@@ -31,6 +31,12 @@ component JournalApp {
   slot draft-body : text ;
   // "Delete" for an existing entry, "" for a new one (DraftEditor hides it).
   slot delete-label : text ;
+  // Search (J4a). While `searching`, timeline-rows holds the ranked hits
+  // (no day headings; the day is in each row's meta) instead of the days.
+  slot search-query : text ;
+  slot searching : bool ;
+  // Searching, and nothing matches (the journal itself is not empty).
+  slot no-matches : bool ;
 
   emit onSelectEntry ( index : number ) ;
   emit onNewEntry ;
@@ -39,4 +45,6 @@ component JournalApp {
   emit onSaveEntry ;
   emit onDeleteEntry ;
   emit onCancelEdit ;
+  emit onSearchChange ( value : text ) ;
+  emit onClearSearch ;
 }

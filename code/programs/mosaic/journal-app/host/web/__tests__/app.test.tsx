@@ -96,6 +96,30 @@ it("restores the journal on the next visit", async () => {
   expect(button("Kept")).toBeTruthy();
 });
 
+it("searches the journal, says when nothing matches, and clears back to the timeline", async () => {
+  await mount(memoryStorage());
+  await writeEntry("Harbour walk", "Fog over the water.");
+  await writeEntry("Groceries", "Bread, then the harbour.");
+  await writeEntry("Unrelated", "Nothing here.");
+  const search = container.querySelector('input[aria-label="Search entries"]') as HTMLInputElement;
+  expect(search).not.toBeNull();
+
+  await type(search, "harbour");
+  expect(button("Harbour walk")).toBeTruthy();
+  expect(button("Groceries")).toBeTruthy();
+  expect(() => button("Unrelated")).toThrow();
+  // Ranked results carry no day headings; each hit shows its day instead.
+  expect(container.textContent).toContain("Fog over the water.");
+
+  await type(search, "harbour sunshine");
+  expect(container.textContent).toContain("No entries match");
+  expect(container.textContent).not.toContain("No entries yet");
+
+  await act(async () => button("Clear").click());
+  expect(button("Unrelated")).toBeTruthy();
+  expect(() => button("Clear")).toThrow();
+});
+
 it("keeps an unreadable journal aside instead of losing it", async () => {
   const storage = memoryStorage();
   storage.setItem(STATE_KEY, '{"schema":"journal-mosaic-app/state","version":1,"text":"not json"}');

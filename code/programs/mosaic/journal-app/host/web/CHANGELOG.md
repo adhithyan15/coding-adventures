@@ -2,6 +2,9 @@
 
 ## 0.1.0 — unreleased
 
+- **Search (J4a)** needs no host code: the generated component dispatches
+  `searchChange` / `clearSearch` like every other event. A new test searches
+  through the real wasm: two hits, then "No entries match", then *Clear*.
 - **Entries are filed under the browser's local day.** The host passes the
   browser's UTC offset (`-new Date().getTimezoneOffset()`) as
   `StartContext.utcOffsetMinutes` (UI38 "Local time"). An offset outside
