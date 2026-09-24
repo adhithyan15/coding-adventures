@@ -1,12 +1,13 @@
 {
   "language": "malayalam",
   "chapter": 82,
-  "sourceHash": "fnv1a64:def9d135a0c47650",
+  "sourceHash": "fnv1a64:9cc26540f5108958",
   "lessonIds": [
     "ML-C82-chettaa",
     "ML-C82-chechi-address",
     "ML-C82-greeting-register",
-    "ML-R82-address-recall"
+    "ML-R82-address-recall",
+    "ML-R82-the-opening-second-pass"
   ],
   "tex": "malayalam/book/chapters/ch82-opening-a-conversation.tex"
 }

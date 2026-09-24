@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R80-what-came-once",
+    "language": "malayalam",
+    "chapter": 80,
+    "sequence": 2791,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:668b1153c990bada"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-R48-marks-above-and-below",
+    "language": "punjabi",
+    "chapter": 48,
+    "sequence": 2670,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07f10854167fb540",
+    "detachableSegments": [
+      "Script: where a mark sits is what it means"
+    ]
+  },
+  "findings": []
+}

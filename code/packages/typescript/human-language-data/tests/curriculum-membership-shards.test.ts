@@ -277,9 +277,46 @@ describe("direct curriculum lesson owners", () => {
     // plus its extension (`KA-PATH-81-LEFTOVERS` / `KA-EXT-81-LEFTOVERS`),
     // which follow the chapter 77-80 script-recall pattern this track already
     // uses rather than inventing a shape.
-    expect(digest).toBe("8fe09909a2ccac895d32aebd98af70916fb3e90289380f330fae20d22427cc9f");
+    //
+    // 7539 -> 7545 is HL-C437: SIX `review` lessons taking punjabi to zero pre-A1
+    // reinforcement debt. Punjabi is the opposite shape to kannada: its forty
+    // thin atoms sit on SEVENTEEN path segments, with no concentration any one
+    // earlier chapter could reach, so the tranche is a new chapter 48 appended at
+    // the end in three strands -- the form-field ladder, the Gurmukhi pieces, and
+    // the courtesy and parting words -- rather than lessons placed among the
+    // material they retrieve.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // 08f6a81a44 reproduced 8fe09909... and 7539 byte for byte. Dumping the
+    // loaded graph from both trees and diffing gives 84 changed lines and nothing
+    // that is not this change: the six lessons joining their segments' and
+    // extensions' derived `lessons` lists, THREE new segments and THREE new
+    // extensions for chapter 48, and those segment ids joining their spine nodes'
+    // derived lists. Three segments rather than one because a lesson's
+    // `spine_node` must equal its segment's, and the three strands serve three
+    // different nodes.
+    //
+    // 7545 -> 7550 is HL-C438: FIVE `review` lessons taking malayalam to zero
+    // pre-A1 reinforcement debt. Cheapest track of the programme: 44 thin atoms
+    // but only ONE with zero revisits, so 45 retrieval slots, and 18 of the 44
+    // sit on `ML-PATH-100` -- kannada's concentration rather than punjabi's
+    // spread.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // 96691b9dfc reproduced b22345f3... and 7545 byte for byte. Dumping the
+    // loaded graph from both trees and diffing gives THIRTY changed lines, the
+    // smallest in this pin's history, and nothing that is not this change: five
+    // lessons joining their segments' and extensions' derived `lessons` lists,
+    // twice each, with the previous last element gaining a trailing comma.
+    //
+    // It is also the FIRST entry here with no new graph node of any kind --
+    // no segment, no extension. Every one of the five was appended to an
+    // existing segment whose `spine_node` already matched its content, so
+    // malayalam needed no new chapter and none of the four-part chapter
+    // registration HL-C436 and HL-C437 required.
+    expect(digest).toBe("98e3031ab021e795e9b7c8aede41ccf38af1edbb321122efafcc1a4fa6b876b8");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7539);
+      .toHaveLength(7550);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "description": "Captured refusals of the pinned Closure oracle. Each entry is the result of running the manifest's `closure-flags-file-v1` command for that fixture - its own flags.txt, verbatim, from the package root - against the pinned JAR. This records only that upstream refuses the input AS INVOKED; it is not a claim that no invocation could produce the fixture's golden. Regenerate with code/scripts/capture-upstream-refusals.sh.",
+  "release": "v20260915",
+  "oracle_jar_sha256": "9c8af06056aa06f968b5a457540a85869c7ba2861c211c56d8d4ef6c35ddf36d",
+  "java_version": "21.0.10",
+  "java_version_deviation": "Captured on OpenJDK 21.0.10; the manifest pins 21.0.12. All twelve entries are parse-, policy- or module-resolution refusals, which are front-end decisions rather than codegen, so they are not expected to vary by JDK patch level - but that is a judgement, not a measurement, and this artifact should be recaptured on the pinned JVM. Tracked as CCR-089 (#15935).",
+  "command": "closure-flags-file-v1",
+  "refusals": {
+    "simple-export": {
+      "exit_status": 1,
+      "stdout_bytes": 0,
+      "diagnostic": "JSC_INVALID_MODULE_PATH",
+      "message": "Invalid module path \"y\" for resolution mode \"BROWSER\""
+    },
+    "simple-import": {
+      "exit_status": 1,
+      "stdout_bytes": 0,
+      "diagnostic": "JSC_INVALID_MODULE_PATH",
+      "message": "Invalid module path \"y\" for resolution mode \"BROWSER\""
+    },
+    "simple-importexpr": {
+      "exit_status": 1,
+      "stdout_bytes": 0,
+      "diagnostic": "JSC_INVALID_MODULE_PATH",
+      "message": "Invalid module path \"m\" for resolution mode \"BROWSER\""
+    },
+    "simple-importmeta": {
+      "exit_status": 1,
+      "stdout_bytes": 0,
+      "diagnostic": "JSC_CANNOT_CONVERT",
+      "message": "This code cannot be transpiled. import.meta. Use --chunk_output_type=ES_MODULES to allow passthrough support."
+    },
+    "simple-newtarget": {
+      "exit_status": 1,
+      "stdout_bytes": 0,
+      "diagnostic": "JSC_PARSE_ERROR",
+      "message": "Parse error. new.target must be inside a function"
+    },
+    "simple-private-field": {
+      "exit_status": 1,
+      "stdout_bytes": 0,
+      "diagnostic": "JSC_UNSUPPORTED_LANGUAGE_FEATURE",
+      "message": "This language feature is not currently supported by the compiler: Private elements."
+    },
+    "simple-private-generator-method": {
+      "exit_status": 1,
+      "stdout_bytes": 0,
+      "diagnostic": "JSC_UNSUPPORTED_LANGUAGE_FEATURE",
+      "message": "This language feature is not currently supported by the compiler: Private elements."
+    },
+    "simple-private-getter": {
+      "exit_status": 1,
+      "stdout_bytes": 0,
+      "diagnostic": "JSC_UNSUPPORTED_LANGUAGE_FEATURE",
+      "message": "This language feature is not currently supported by the compiler: Private elements."
+    },
+    "simple-private-method": {
+      "exit_status": 1,
+      "stdout_bytes": 0,
+      "diagnostic": "JSC_UNSUPPORTED_LANGUAGE_FEATURE",
+      "message": "This language feature is not currently supported by the compiler: Private elements."
+    },
+    "simple-super": {
+      "exit_status": 1,
+      "stdout_bytes": 0,
+      "diagnostic": "JSC_INVALID_SUPER_ACCESS",
+      "message": "'super' may only be accessed within a method"
+    },
+    "simple-try-catch": {
+      "exit_status": 1,
+      "stdout_bytes": 0,
+      "diagnostic": "JSC_PARSE_ERROR",
+      "message": "Parse error. return must be inside function"
+    },
+    "simple-with": {
+      "exit_status": 1,
+      "stdout_bytes": 0,
+      "diagnostic": "JSC_USE_OF_WITH",
+      "message": "The with statement cannot be used in strict mode."
+    }
+  }
+}
