@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-24
+
+- **`If` branches are local functions** (`func _mosaicBranch()`), as ordinary nodes already use `func _mosaicNode()`. Swift type-checks a multi-statement closure together with the expression that contains it, so a long `If`/`Else` view chain compounded the constraint solver's work at every level. Adding Trestle's seventh view (Checklists, C3a of #14018) made its SwiftUI release build fail with "unable to type-check this expression in reasonable time". A local function is checked on its own. New gate: `tests/nested_if_chain_typechecks.rs` typechecks a 10-deep chain with `swiftc`. It takes 0.3 s with the fix; without it, the solver gives up after about 18 s.
+
 ## 2026-09-23
 
 - The multiline `TextEditor` (legacy `Input`) now takes its accessible name from the authored `a11y-label`, with the placeholder only as a fallback. It also honours UI58 `disabled` before the `read-only` approximation, sharing `text_field_disabled_modifier` with `HostInput`. It used to use the placeholder unconditionally and read only `read-only` (J3b-pre, #14416).

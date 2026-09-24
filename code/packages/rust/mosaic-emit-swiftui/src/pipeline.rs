@@ -7720,6 +7720,28 @@ fn emit_for_swift(
 /// keeping Swift's constraint solver from absorbing the full `ViewBuilder`.
 /// The branches are recursed through [`emit_children`] so nested
 /// `If`/`Else` still pairs.
+///
+/// **The branch lives in a local function**, `func _mosaicBranch()`, inside
+/// the immediately-invoked closure, exactly as ordinary nodes use
+/// `func _mosaicNode()`. Swift type-checks a multi-statement closure together
+/// with the expression that contains it (SE-0326). With the `if`/`else`
+/// directly in the closure, an app shell's view chain
+/// (`If a { } Else { If b { } Else { … } }`) grew the solver's problem at
+/// every level. Trestle's seventh view tipped it over: "unable to type-check
+/// this expression in reasonable time" in its SwiftUI release build. A local
+/// function's body is checked on its own, so the chain's cost stops
+/// compounding (`tests/nested_if_chain_typechecks.rs` pins a 10-deep chain).
+///
+/// ```swift
+/// ({ () -> AnyView in
+/// func _mosaicBranch() -> AnyView {
+///     let _mosaicCondition: Bool = _mosaicTruthy(notesMode)
+///     if _mosaicCondition { return AnyView(Group { … }) }
+///     else { return AnyView(Group { … }) }
+/// }
+/// return _mosaicBranch()
+/// })()
+/// ```
 fn emit_if_swift(
     if_node: &LayoutNode,
     else_node: Option<&LayoutNode>,
@@ -7755,7 +7777,7 @@ fn emit_if_swift(
         None => vec!["let _mosaicCondition: Bool = false".to_string()],
     };
 
-    let mut out = format!("{pad}({{ () -> AnyView in\n");
+    let mut out = format!("{pad}({{ () -> AnyView in\n{pad}func _mosaicBranch() -> AnyView {{\n");
     for binding in cond_bindings {
         writeln!(out, "{closure_pad}{binding}").unwrap();
     }
@@ -7803,7 +7825,7 @@ fn emit_if_swift(
             "{closure_pad}}}\n{closure_pad}return AnyView(EmptyView())\n"
         ));
     }
-    out.push_str(&format!("{pad}}})()\n"));
+    out.push_str(&format!("{pad}}}\n{pad}return _mosaicBranch()\n{pad}}})()\n"));
 
     Ok(out)
 }
