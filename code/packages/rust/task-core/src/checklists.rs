@@ -258,6 +258,11 @@ impl ProjectState {
                     .run
                     .as_ref()
                     .map(|_| progress(&self.walk(&index, &c.root, Reveal::Answered))),
+                items: {
+                    let mut subtree = HashSet::new();
+                    collect_subtree(&index, &c.root, &mut subtree);
+                    subtree.len().saturating_sub(1)
+                },
                 created_at: c.created_at,
                 finished_at: c.run.as_ref().and_then(|r| r.finished_at),
             })
@@ -638,6 +643,10 @@ pub struct ChecklistSummary {
     pub status: Option<RunStatus>,
     /// For a run, its progress.
     pub progress: Option<ChecklistProgress>,
+    /// How many items it holds, every branch included (the root is not an
+    /// item). Counted from the same one-pass index, so a library of many
+    /// templates never re-walks the project per template.
+    pub items: usize,
     /// When it was created.
     pub created_at: u64,
     /// When a run finished.
@@ -905,6 +914,11 @@ mod tests {
             ]
         );
         let outline = p.checklist_outline(&c("tpl")).unwrap();
+        // `items` counts every item, both branches, never the root: the
+        // template's outline length, and the same for each copy of it.
+        for summary in p.checklists() {
+            assert_eq!(summary.items, outline.len(), "{}", summary.id.0);
+        }
         let shown: Vec<(&str, Option<bool>)> = outline
             .iter()
             .map(|r| (r.name.as_str(), r.branch))

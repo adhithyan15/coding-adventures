@@ -149,6 +149,16 @@ The wire names are the raw emit names. Every error leaves the app unchanged:
   (`task-10` sorts before `task-9`).
 - *Add item* is refused once the template holds `MAX_CHECKLIST_ITEMS`. A
   template the engine would refuse to instantiate can therefore never be built.
+- A row's indent is capped at 16 levels. A restored snapshot can nest items
+  arbitrarily deep, and N chained items would otherwise cost N² bytes of indent
+  on every render.
+- The library's item counts come from task-core's one-pass `checklists()`
+  (`ChecklistSummary.items`), not from an outline per template. The library is
+  rebuilt on every event in the view, keystrokes included.
+- Every minted id (task, project, label, note, checklist, run) uses the
+  checked counter. A counter at `u64::MAX` fails the event rather than wrapping.
+- Board and Calendar drops refuse a checklist item's key. Those views never
+  show one, and `set_constraint` has no checklist guard.
 
 Answering the same answer again clears it (`clear_decision_answer`), so a
 mis-tap can be undone. The TS app did this by tapping the chosen answer. In a

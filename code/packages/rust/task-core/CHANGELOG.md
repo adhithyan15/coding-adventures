@@ -6,6 +6,9 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- `ChecklistSummary.items` (C3a, #14018): the item count, both branches,
+  never the root. It is counted from `checklists()`'s single outline index,
+  so a library never re-walks the project per template.
 - `ProjectState::checklist_owned` is public (C3a, #14018), so an app that
   lists tasks itself (Trestle's `task-mosaic-app`) can leave checklist items
   out the same way task-core's views do.

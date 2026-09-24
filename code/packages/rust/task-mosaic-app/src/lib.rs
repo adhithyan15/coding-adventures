@@ -29,6 +29,15 @@ const PROJECT_START: Date = Date(20_458); // 2026-01-05, a Monday.
 /// state file without bound (task-app-checklists-view-v1.md, "Bounds").
 const MAX_CHECKLIST_TEXT_CHARS: usize = 512;
 
+/// The deepest indent a checklist row draws. Depth is unbounded in a restored
+/// snapshot (a chain of N items would make N² bytes of indent per render);
+/// past this, rows keep the deepest indent rather than growing without bound.
+const MAX_CHECKLIST_INDENT_DEPTH: usize = 16;
+
+fn checklist_indent(depth: u32) -> String {
+    "  ".repeat((depth as usize).min(MAX_CHECKLIST_INDENT_DEPTH))
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 enum ViewMode {
@@ -679,11 +688,7 @@ impl TaskMosaicApp {
                 };
                 let subtitle = match (summary.status, summary.progress) {
                     (Some(status), Some(progress)) => progress_label(status, &progress),
-                    _ => item_count_label(
-                        project
-                            .checklist_outline(&summary.id)
-                            .map_or(0, |rows| rows.len()),
-                    ),
+                    _ => item_count_label(summary.items),
                 };
                 let badge = match summary.status {
                     Some(RunStatus::Completed) => "✓",
@@ -716,7 +721,7 @@ impl TaskMosaicApp {
                     let marker = |on: bool| if on { "1" } else { "" }.to_string();
                     vec![
                         row.task.to_string(),
-                        "  ".repeat(row.depth as usize),
+                        checklist_indent(row.depth),
                         row.name.clone(),
                         marker(row.is_decision),
                         marker(if row.is_decision {
@@ -741,7 +746,7 @@ impl TaskMosaicApp {
                 .map(|row| {
                     vec![
                         row.task.to_string(),
-                        "  ".repeat(row.depth as usize),
+                        checklist_indent(row.depth),
                         row.name.clone(),
                     ]
                 })
@@ -775,17 +780,25 @@ impl TaskMosaicApp {
             })
     }
 
+    /// Advance the shared id counter. Checked: a counter at `u64::MAX` (only a
+    /// tampered snapshot gets there) fails the event instead of wrapping to
+    /// ids that already exist, or panicking in a build with overflow checks.
+    fn bump_next_id(&mut self) -> Result<u64, TaskAppError> {
+        self.state.next_id = self
+            .state
+            .next_id
+            .checked_add(1)
+            .ok_or_else(|| TaskAppError::Engine("id counter exhausted".to_string()))?;
+        Ok(self.state.next_id)
+    }
+
     /// The next free id `{prefix}-{n}` from the shared counter, skipping any
     /// id (or derived root id) already taken. Checked, so a tampered counter
     /// fails rather than wraps.
     fn next_checklist_id(&mut self, prefix: &str) -> Result<ChecklistId, TaskAppError> {
         loop {
-            self.state.next_id = self
-                .state
-                .next_id
-                .checked_add(1)
-                .ok_or_else(|| TaskAppError::Engine("id counter exhausted".to_string()))?;
-            let id = ChecklistId::from_raw(format!("{prefix}-{}", self.state.next_id));
+            let n = self.bump_next_id()?;
+            let id = ChecklistId::from_raw(format!("{prefix}-{n}"));
             let root = TaskId::from_raw(format!("{id}/root"));
             let taken = self
                 .state
@@ -842,7 +855,7 @@ impl TaskMosaicApp {
             .map(|task| task.order)
             .max()
             .map_or(0, |max| max.saturating_add(1));
-        let id = self.next_task_id();
+        let id = self.next_task_id()?;
         let project = self.active_project_mut();
         project
             .create_task(id.clone(), name.clone(), Some(root))
@@ -1435,7 +1448,7 @@ impl TaskMosaicApp {
             "addLabel" => return self.add_label(),
             "calendarEventDropped" => self.move_calendar_event(event)?,
             "selectNote" => self.select_note(index_payload(event, "index")?),
-            "newNote" => self.new_note(),
+            "newNote" => self.new_note()?,
             "saveNote" => return self.save_note(),
             "deleteNote" => return self.delete_note(),
             "selectChecklist" => self.select_checklist(index_payload(event, "index")?),
@@ -1477,7 +1490,7 @@ impl TaskMosaicApp {
         };
         self.state.new_task_due_error.clear();
         let previous = self.ordered_task_ids().last().cloned();
-        let id = self.next_task_id();
+        let id = self.next_task_id()?;
         let project_id = self.state.active_project.clone();
         self.state
             .workspace
@@ -1619,8 +1632,8 @@ impl TaskMosaicApp {
         if name.is_empty() {
             return Ok(self.update());
         }
-        self.state.next_id += 1;
-        let id = ProjectId::from_raw(format!("project-{}", self.state.next_id));
+        let n = self.bump_next_id()?;
+        let id = ProjectId::from_raw(format!("project-{n}"));
         let parent = nested.then(|| self.state.active_project.clone());
         self.state
             .workspace
@@ -1658,7 +1671,7 @@ impl TaskMosaicApp {
     fn move_card(&mut self, event: &Event) -> Result<(), TaskAppError> {
         let id = TaskId::from_raw(text_payload(event, "key")?);
         let target = text_payload(event, "targetKey")?;
-        if !self.active_project().tasks.contains_key(&id) {
+        if !self.is_listed_task(&id) {
             return Ok(());
         }
         match target.as_str() {
@@ -1768,8 +1781,8 @@ impl TaskMosaicApp {
         if name.is_empty() {
             return Ok(self.update());
         }
-        self.state.next_id += 1;
-        let id = LabelId::from_raw(format!("label-{}", self.state.next_id));
+        let n = self.bump_next_id()?;
+        let id = LabelId::from_raw(format!("label-{n}"));
         self.active_project_mut().upsert_label(Label {
             id,
             name: name.clone(),
@@ -1784,7 +1797,7 @@ impl TaskMosaicApp {
         let Some(date) = parse_date(&text_payload(event, "targetKey")?) else {
             return Ok(());
         };
-        if self.active_project().tasks.contains_key(&id) {
+        if self.is_listed_task(&id) {
             self.active_project_mut()
                 .set_constraint(&id, Constraint::MustStartOn(date))
                 .map_err(engine_error)?;
@@ -1792,13 +1805,23 @@ impl TaskMosaicApp {
         Ok(())
     }
 
-    fn new_note(&mut self) {
-        self.state.next_id += 1;
-        self.state.selected_note_id =
-            Some(NoteId::from_raw(format!("note-{}", self.state.next_id)));
+    /// A drop names its task by key, straight from the payload. Only a task the
+    /// views actually show may be moved: a checklist's items are not on the
+    /// board or the calendar, and `set_constraint` has no checklist guard, so a
+    /// crafted drop could otherwise stamp a template item (copied into every
+    /// run) or a finished run's record.
+    fn is_listed_task(&self, id: &TaskId) -> bool {
+        let project = self.active_project();
+        project.tasks.contains_key(id) && !project.checklist_owned().contains(id)
+    }
+
+    fn new_note(&mut self) -> Result<(), TaskAppError> {
+        let n = self.bump_next_id()?;
+        self.state.selected_note_id = Some(NoteId::from_raw(format!("note-{n}")));
         self.state.note_title.clear();
         self.state.note_body.clear();
         self.state.note_task_name.clear();
+        Ok(())
     }
 
     fn select_note(&mut self, index: usize) {
@@ -1867,12 +1890,12 @@ impl TaskMosaicApp {
         self.state.note_task_name.clear();
     }
 
-    fn next_task_id(&mut self) -> TaskId {
+    fn next_task_id(&mut self) -> Result<TaskId, TaskAppError> {
         loop {
-            self.state.next_id += 1;
-            let id = TaskId::from_raw(format!("task-{}", self.state.next_id));
+            let n = self.bump_next_id()?;
+            let id = TaskId::from_raw(format!("task-{n}"));
             if self.state.workspace.project_of_task(&id).is_none() {
-                return id;
+                return Ok(id);
             }
         }
     }
@@ -3241,5 +3264,79 @@ mod tests {
         assert_eq!(props["checklist-library-rows"], json!([]));
         assert_eq!(props["checklist-outline-rows"], json!([]));
         assert_eq!(props["checklist-library-empty"], false);
+    }
+
+    #[test]
+    fn a_deep_chain_draws_a_bounded_indent() {
+        let mut app = checklists_app();
+        template(&mut app, "Deep", &["Top"]);
+        // Chain 40 items under one another through the engine (the view only
+        // adds flat items; a restored snapshot can hold any depth).
+        let mut parent = TaskId::from_raw(
+            app.update().props["checklist-outline-rows"][0][0]
+                .as_str()
+                .unwrap(),
+        );
+        for n in 0..40 {
+            let id = TaskId::from_raw(format!("deep-{n}"));
+            app.active_project_mut()
+                .create_task(id.clone(), format!("Level {n}"), Some(parent))
+                .unwrap();
+            parent = id;
+        }
+        let props = app.update().props;
+        let indents = column(&props["checklist-outline-rows"], 1);
+        assert_eq!(indents.len(), 41);
+        let widest = indents.iter().map(String::len).max().unwrap();
+        assert_eq!(widest, 2 * MAX_CHECKLIST_INDENT_DEPTH);
+    }
+
+    #[test]
+    fn an_exhausted_id_counter_fails_the_event_instead_of_wrapping() {
+        let mut app = checklists_app();
+        template(&mut app, "Release", &[]);
+        app.state.next_id = u64::MAX;
+        send(&mut app, "newChecklistItemChange", json!({"value":"Step"}));
+        let before = app.snapshot().unwrap();
+        for name in ["addChecklistItem", "startChecklistRun", "newNote"] {
+            assert!(
+                matches!(
+                    app.dispatch(event(1, name, json!({}))),
+                    Err(TaskAppError::Engine(_))
+                ),
+                "{name}"
+            );
+            assert_eq!(app.snapshot().unwrap(), before, "{name} changed nothing");
+        }
+        send(&mut app, "newTaskNameChange", json!({"value":"Task"}));
+        assert!(app.dispatch(event(1, "addTask", json!({}))).is_err());
+    }
+
+    #[test]
+    fn drops_cannot_reach_checklist_items() {
+        let mut app = checklists_app();
+        template(&mut app, "Release", &["Step"]);
+        let item = app.update().props["checklist-outline-rows"][0][0]
+            .as_str()
+            .unwrap()
+            .to_string();
+        send(
+            &mut app,
+            "calendarEventDropped",
+            json!({"key": item, "kind":"task", "targetKey":"2026-02-02", "position":"inside"}),
+        );
+        send(
+            &mut app,
+            "cardDropped",
+            json!({"key": item, "kind":"task", "targetKey":"done", "position":"inside"}),
+        );
+        let task = &app.active_project().tasks[&TaskId::from_raw(item)];
+        assert!(
+            task.schedule
+                .as_ref()
+                .is_none_or(|s| s.constraint == Constraint::Asap),
+            "no constraint stamped"
+        );
+        assert!(!task.completed, "a template item is never ticked");
     }
 }

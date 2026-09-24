@@ -21,7 +21,13 @@ Spec: `code/specs/task-app-checklists-view-v1.md`.
   - composers refuse input over 512 characters;
   - *Add item* stops at the engine's `MAX_CHECKLIST_ITEMS`;
   - new items take the next sibling order;
-  - the id counter is checked, so it fails rather than wraps.
+  - **every** minted id (task, project, label, note, checklist, run) uses a
+    checked counter, so it fails rather than wraps or panics;
+  - row indents are capped at 16 levels, because depth in a restored
+    snapshot is unbounded;
+  - library item counts come from `ChecklistSummary.items` (one pass), not
+    from one outline per template on every event;
+  - Board and Calendar drops refuse checklist items' keys.
 - The selection and composers are `#[serde(default)]` in snapshot v1, so every
   earlier snapshot still restores. `repair()` drops a dangling selection and an
   oversized draft.
