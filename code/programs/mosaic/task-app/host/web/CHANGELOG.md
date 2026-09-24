@@ -4,6 +4,25 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added — the Checklists view (C3b, #14018)
+
+The web host now serves Checklists to the same contract as `task-mosaic-app`
+(spec `task-app-checklists-view-v1.md`):
+
+- It appears in the switcher before Timeline, at both tiers.
+- **Library:** templates by name, then runs newest first, with progress
+  subtitles and ✓/✗ badges.
+- **A selected template:** its outline, with *Add item* (numbered with the new
+  `setOrder`), Start run and Delete.
+- **A selected run:** tick, answer Yes/No (answering again clears it),
+  Complete (offered only once complete) and Abandon.
+- **Bounds:** 512-character composers, the engine's item cap, and indents
+  capped at 16 levels.
+- **Guards and runs:** switching project clears the selection, and a calendar
+  drop now refuses a key the views do not show. Runs are stamped with an
+  injectable `now` (`ControllerInit.now`).
+- `__tests__/checklists.test.ts` walks the same scenarios as the Rust tests.
+
 ### Added — inert Checklists slots (C3a, #14018)
 
 `TaskApp.mil` gained the Checklists view's slots, and the generated component

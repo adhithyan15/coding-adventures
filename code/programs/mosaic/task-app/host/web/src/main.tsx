@@ -295,6 +295,8 @@ export interface ControllerInit {
   initialCounter?: number;
   /** Deterministic UTC day used by the shared web/native behavior contract. */
   today?: number;
+  /** Milliseconds since the epoch; stamps checklist runs. Tests pin it. */
+  now?: () => number;
   // Called after every *structural* mutation with the data worth persisting.
   onMutate?: (
     snapshot: string,
@@ -313,6 +315,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
     initialOrder = [],
     initialCounter = 0,
     today = Math.floor(Date.now() / DAY_MS),
+    now = Date.now,
     onMutate,
   } = init;
   // task-core's bare workspace deliberately has no product-facing root name.
@@ -339,7 +342,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
   let newLabel = "";
   // Which view is showing. A string rather than a set of booleans, so the six
   // states can't contradict each other.
-  let view: "list" | "board" | "timeline" | "sheet" | "calendar" | "notes" = "list";
+  let view: "list" | "board" | "timeline" | "sheet" | "calendar" | "notes" | "checklists" = "list";
   // The view switcher's order (#14016), shared with task-mosaic-app's
   // ViewMode::SWITCHER_ORDER. Timeline is last and only offered to a Full
   // project, so leaving it out never shifts another view's index.
@@ -349,10 +352,11 @@ export function makeController(engine: any, init: ControllerInit = {}) {
     ["sheet", "Sheet"],
     ["calendar", "Calendar"],
     ["notes", "Notes"],
+    ["checklists", "Checklists"],
     ["timeline", "Timeline"],
   ] as const;
   const switcherViews = () =>
-    activeProjectComplexity() === "full" ? SWITCHER_VIEWS : SWITCHER_VIEWS.slice(0, 5);
+    activeProjectComplexity() === "full" ? SWITCHER_VIEWS : SWITCHER_VIEWS.slice(0, 6);
   // Sheet toolbar state.
   let sheetFilterText = "";
   let sheetSortField = ""; // a SHEET_FIELDS label, or "" for unsorted
@@ -374,6 +378,13 @@ export function makeController(engine: any, init: ControllerInit = {}) {
   // discipline the Sheet Labels column already uses. Empty means "no
   // attachment." See code/specs/task-app-notes-ui-v1.md's addendum.
   let noteTaskDraft = "";
+  // Checklists (C3b; spec task-app-checklists-view-v1.md). The same view and
+  // contract task-mosaic-app serves natively (C3a): the library selection
+  // (a template or a run id, "" for none) and the two composers. UI state,
+  // like the Notes drafts: not persisted.
+  let selectedChecklist = "";
+  let newChecklistName = "";
+  let newChecklistItem = "";
   // Grid's edit-cursor slots. -1/"" means "none", matching Grid's own contract
   // (see Grid.mil).
   let sheetSelectedRow = -1;
@@ -587,6 +598,127 @@ export function makeController(engine: any, init: ControllerInit = {}) {
       ids: entries.map((n) => n.id as string),
       rows: entries.map((n) => [n.id as string, String(n.title ?? "").trim() || "Untitled"]),
     };
+  };
+
+  // ── Checklists (C3b) ────────────────────────────────────────────────────
+  // A port of task-mosaic-app's checklist_props and handlers (C3a): the same
+  // slots, the same bounds, the same ids, so the web and native hosts agree.
+  const CHECKLIST_TEXT_MAX = 512; // characters, per composer
+  const CHECKLIST_ITEMS_MAX = 10_000; // task-core's MAX_CHECKLIST_ITEMS
+  const CHECKLIST_INDENT_MAX = 16; // depth in a restored snapshot is unbounded
+
+  const activeChecklists = (): Record<string, any> => {
+    const ws = engine.workspace().data;
+    const activeId = engine.activeProject().data as string;
+    return (ws.projects?.[activeId]?.checklists ?? {}) as Record<string, any>;
+  };
+
+  /// The library in display order: templates by name, then runs newest first.
+  /// Its rows and selectChecklist's index come from this ONE list.
+  const checklistLibrary = (): any[] => {
+    const all = ((engine.checklists().data ?? []) as any[]).slice();
+    const cmp = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+    all.sort((a, b) => {
+      const aRun = a.status != null;
+      const bRun = b.status != null;
+      if (aRun !== bRun) return aRun ? 1 : -1;
+      if (!aRun) {
+        return cmp(String(a.name).toLowerCase(), String(b.name).toLowerCase()) || cmp(a.id, b.id);
+      }
+      return (b.createdAt ?? 0) - (a.createdAt ?? 0) || cmp(b.id, a.id);
+    });
+    return all;
+  };
+
+  const progressLabel = (status: string, progress: any): string => {
+    if (status === "completed") return "Completed";
+    if (status === "abandoned") return "Abandoned";
+    const done = `${progress.checked} of ${progress.total} done`;
+    return progress.decisions > 0 ? `${done} · ${progress.answered} of ${progress.decisions} answered` : done;
+  };
+  const itemCountLabel = (n: number) => (n === 1 ? "1 item" : `${n} items`);
+  const displayName = (name: string) => (String(name).trim() ? String(name) : "Untitled checklist");
+  const checklistIndent = (depth: number) => "  ".repeat(Math.min(Math.max(depth, 0), CHECKLIST_INDENT_MAX));
+  const chars = (text: string) => [...text].length;
+
+  /// The selection, if it names a checklist of the wanted kind in THIS project.
+  const selectedOfKind = (wantRun: boolean): any | null => {
+    const c = selectedChecklist ? activeChecklists()[selectedChecklist] : undefined;
+    return c && (c.run != null) === wantRun ? c : null;
+  };
+
+  /// `{prefix}-{n}`, skipping any id (or derived root) already taken anywhere.
+  const nextChecklistId = (prefix: string): string => {
+    const projects = (engine.workspace().data.projects ?? {}) as Record<string, any>;
+    const taken = (id: string) =>
+      Object.values(projects).some((p: any) => p.checklists?.[id] || p.tasks?.[`${id}/root`]);
+    let id = `${prefix}-${++counter}`;
+    while (taken(id)) id = `${prefix}-${++counter}`;
+    return id;
+  };
+
+  /// The visible row at `index` of the selected run, as just rendered.
+  const runRow = (index: number): any | null => {
+    const run = selectedOfKind(true);
+    if (!run) return null;
+    const res = engine.checklistRun({ id: run.id });
+    return res?.ok === false ? null : (res.data?.rows?.[index] ?? null);
+  };
+
+  const checklistProps = () => {
+    const empty = {
+      libraryRows: [] as string[][],
+      templateMode: false,
+      runMode: false,
+      outlineRows: [] as string[][],
+      runTitle: "",
+      runProgress: "",
+      runRows: [] as string[][],
+      completeLabel: "",
+      abandonLabel: "",
+    };
+    if (view !== "checklists") return empty;
+    let lastHeading = "";
+    empty.libraryRows = checklistLibrary().map((c) => {
+      const group = c.status == null ? "Templates" : "Runs";
+      const heading = group === lastHeading ? "" : group;
+      lastHeading = group;
+      const subtitle = c.status == null ? itemCountLabel(c.items ?? 0) : progressLabel(c.status, c.progress);
+      const badge = c.status === "completed" ? "✓" : c.status === "abandoned" ? "✗" : "";
+      return [c.id, heading, displayName(c.name), subtitle, "", badge];
+    });
+    const run = selectedOfKind(true);
+    if (run) {
+      const res = engine.checklistRun({ id: run.id });
+      if (res?.ok !== false && res.data) {
+        const v = res.data;
+        const inProgress = v.status === "inProgress";
+        const marker = (on: boolean) => (on ? "1" : "");
+        empty.runMode = true;
+        empty.runTitle = displayName(v.name);
+        empty.runProgress = progressLabel(v.status, v.progress);
+        empty.runRows = (v.rows as any[]).map((r) => [
+          r.task,
+          checklistIndent(r.depth),
+          r.name,
+          marker(r.isDecision),
+          marker(r.isDecision ? r.answered === true : r.completed),
+          marker(r.isDecision && r.answered === false),
+        ]);
+        if (inProgress && v.progress.complete) empty.completeLabel = "Complete";
+        if (inProgress) empty.abandonLabel = "Abandon";
+      }
+      return empty;
+    }
+    const template = selectedOfKind(false);
+    if (template) {
+      const res = engine.checklistOutline({ id: template.id });
+      if (res?.ok !== false && res.data) {
+        empty.templateMode = true;
+        empty.outlineRows = (res.data as any[]).map((r) => [r.task, checklistIndent(r.depth), r.name]);
+      }
+    }
+    return empty;
   };
 
   // Existing labels, keyed by lowercased name — read straight off `workspace()`
@@ -825,6 +957,8 @@ export function makeController(engine: any, init: ControllerInit = {}) {
       const cal = view === "calendar" ? calendarData() : { cells: [], events: [] };
       // Computed only while the notes view is showing — same discipline.
       const notes = view === "notes" ? noteRows() : { ids: [], rows: [] };
+      // Computed only while the checklists view is showing — same discipline.
+      const lists = checklistProps();
       // The real Workflow/Status/kanban() engine, not the old completed/percent-
       // complete heuristic — see task-core's CHANGELOG and BACKLOG.md's Board
       // design-fidelity item. `ensureDefaultWorkflow` is idempotent and cheap
@@ -927,26 +1061,22 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         noteTitleValue: noteTitleDraft,
         noteBodyValue: noteBodyDraft,
         noteTaskValue: noteTaskDraft,
-        // Checklists (C3a) is served by the Rust app on the native hosts.
-        // This web host does not offer the view until C3b, so its slots stay
-        // inert: the switcher never selects it, and the generated component
-        // only reads them inside `If (checklists-mode)`. Its events fall
-        // through `apply` unhandled, like any other unknown event type.
-        checklistsMode: "",
+        // Checklists (C3b): the same slots task-mosaic-app fills natively.
+        checklistsMode: view === "checklists" ? "checklists" : "",
         checklistsTitle: "Checklists",
-        checklistLibraryRows: [],
-        checklistLibraryEmpty: true,
-        selectedChecklistKey: "",
-        newChecklistName: "",
-        checklistTemplateMode: false,
-        checklistRunMode: false,
-        checklistOutlineRows: [],
-        newChecklistItem: "",
-        checklistRunTitle: "",
-        checklistRunProgress: "",
-        checklistRunRows: [],
-        checklistCompleteLabel: "",
-        checklistAbandonLabel: "",
+        checklistLibraryRows: lists.libraryRows,
+        checklistLibraryEmpty: Object.keys(activeChecklists()).length === 0,
+        selectedChecklistKey: selectedChecklist,
+        newChecklistName,
+        checklistTemplateMode: lists.templateMode,
+        checklistRunMode: lists.runMode,
+        checklistOutlineRows: lists.outlineRows,
+        newChecklistItem,
+        checklistRunTitle: lists.runTitle,
+        checklistRunProgress: lists.runProgress,
+        checklistRunRows: lists.runRows,
+        checklistCompleteLabel: lists.completeLabel,
+        checklistAbandonLabel: lists.abandonLabel,
         timelineScale: tl.scale,
         timelineGrid: tl.grid,
         timelineRows: tl.rows,
@@ -1066,6 +1196,141 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         case "showNotes":
           view = "notes";
           break;
+        case "showChecklists":
+          view = "checklists";
+          break;
+        // ── Checklists (C3b) — task-mosaic-app's handlers, event for event ──
+        case "selectChecklist": {
+          const c = checklistLibrary()[event.index];
+          if (c) {
+            selectedChecklist = c.id;
+            newChecklistItem = "";
+          }
+          break;
+        }
+        case "newChecklistNameChange":
+          // Refused past the bound, as the native app refuses it.
+          if (chars(event.value) <= CHECKLIST_TEXT_MAX) newChecklistName = event.value;
+          break;
+        case "newChecklistItemChange":
+          if (chars(event.value) <= CHECKLIST_TEXT_MAX) newChecklistItem = event.value;
+          break;
+        case "createChecklist": {
+          const name = newChecklistName.trim();
+          if (!name) break;
+          const id = nextChecklistId("checklist");
+          const res = engine.createChecklistTemplate({ id, root: `${id}/root`, name, description: "", now: now() });
+          if (res?.ok === false) {
+            console.error("Could not create the checklist:", res.error ?? res);
+            break;
+          }
+          selectedChecklist = id;
+          newChecklistName = "";
+          newChecklistItem = "";
+          persist();
+          break;
+        }
+        case "addChecklistItem": {
+          const template = selectedOfKind(false);
+          const name = newChecklistItem.trim();
+          if (!template || !name) break;
+          const outline = engine.checklistOutline({ id: template.id });
+          const items = outline?.ok === false ? 0 : (outline.data?.length ?? 0);
+          // After this item the subtree is items + 2 tasks (root + this one);
+          // instantiate refuses more than task-core's cap.
+          if (items + 2 > CHECKLIST_ITEMS_MAX) {
+            console.error("This checklist is full.");
+            break;
+          }
+          const ws = engine.workspace().data;
+          const tasks = (ws.projects?.[engine.activeProject().data as string]?.tasks ?? {}) as Record<string, any>;
+          // Siblings sort by (order, id), and minted ids do not sort by number
+          // (t10 < t9), so each new item takes the next order.
+          const orders = Object.values(tasks)
+            .filter((t: any) => t.parent === template.root)
+            .map((t: any) => Number(t.order ?? 0));
+          const order = orders.length ? Math.max(...orders) + 1 : 0;
+          const projects = (ws.projects ?? {}) as Record<string, any>;
+          let id = `t${++counter}`;
+          while (Object.values(projects).some((p: any) => p.tasks?.[id])) id = `t${++counter}`;
+          const res = engine.createTask({ id, name, parent: template.root });
+          if (res?.ok === false) {
+            console.error("Could not add the item:", res.error ?? res);
+            break;
+          }
+          engine.setOrder({ id, order });
+          newChecklistItem = "";
+          persist();
+          break;
+        }
+        case "startChecklistRun": {
+          const template = selectedOfKind(false);
+          if (!template) break;
+          const run = nextChecklistId("run");
+          const res = engine.instantiateChecklist({ template: template.id, run, now: now() });
+          if (res?.ok === false) {
+            console.error("Could not start the run:", res.error ?? res);
+            break;
+          }
+          selectedChecklist = run;
+          persist();
+          break;
+        }
+        case "checklistToggle": {
+          const row = runRow(event.index);
+          if (!row || row.isDecision) break; // a question is answered, not ticked
+          const res = engine.setCompleted({ id: row.task, completed: !row.completed });
+          if (res?.ok === false) {
+            console.error("Could not tick the item:", res.error ?? res);
+            break;
+          }
+          persist();
+          break;
+        }
+        case "checklistAnswerYes":
+        case "checklistAnswerNo": {
+          const row = runRow(event.index);
+          if (!row || !row.isDecision) break; // an item is ticked, not answered
+          const answer = event.type === "checklistAnswerYes";
+          // Answering with the answer it already has clears it (undo a mis-tap).
+          const res =
+            row.answered === answer
+              ? engine.clearDecisionAnswer({ id: row.task })
+              : engine.answerDecision({ id: row.task, answer });
+          if (res?.ok === false) {
+            console.error("Could not answer:", res.error ?? res);
+            break;
+          }
+          persist();
+          break;
+        }
+        case "completeChecklistRun":
+        case "abandonChecklistRun": {
+          const run = selectedOfKind(true);
+          if (!run) break;
+          const res =
+            event.type === "completeChecklistRun"
+              ? engine.completeChecklistRun({ id: run.id, now: now() })
+              : engine.abandonChecklistRun({ id: run.id, now: now() });
+          if (res?.ok === false) {
+            console.error("Could not finish the run:", res.error ?? res);
+            break;
+          }
+          persist();
+          break;
+        }
+        case "deleteChecklist": {
+          if (!selectedChecklist || !activeChecklists()[selectedChecklist]) break;
+          const res = engine.deleteChecklist({ id: selectedChecklist });
+          if (res?.ok === false) {
+            console.error("Could not delete the checklist:", res.error ?? res);
+            break;
+          }
+          selectedChecklist = "";
+          newChecklistItem = "";
+          persist();
+          break;
+        }
         case "showView": {
           // An index into the views THIS project offers; anything else
           // (Timeline on a Board-tier project, a stale or bogus index) is
@@ -1109,6 +1374,9 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           // CPM pass already dated.
           const targetDay = isoToDays(event.targetKey);
           if (targetDay == null) break; // not a valid day-key
+          // Only a task the views show may move. A checklist's items are not
+          // on the calendar, and setConstraint has no checklist guard (C3a).
+          if (!rows().byTask.has(event.key)) break;
           const res = engine.setConstraint({
             id: event.key,
             constraint: { mustStartOn: targetDay },
@@ -1314,6 +1582,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           // Creating a project should land you in it — otherwise you'd have to hunt
           // for it, and an empty new project would look like nothing happened.
           engine.setActiveProject({ id });
+          selectedChecklist = "";
           newProject = "";
           persist();
           break;
@@ -1324,6 +1593,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           // first project and your tasks would look like they'd vanished.
           if (id && engine.setActiveProject({ id })?.ok !== false) {
             editingTask = null;
+            selectedChecklist = "";
             // A Board-tier project never shows Timeline (see the .mll's
             // allow-timeline gate) — switching INTO one while it's the
             // active view would otherwise leave the switcher unable to
