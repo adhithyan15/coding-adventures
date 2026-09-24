@@ -28,6 +28,7 @@ use journal_core::{
 };
 use mosaic_app_runtime::{
     Announcement, AppUpdate, Event, MosaicApp, Politeness, Snapshot, StartContext,
+    MAX_UTC_OFFSET_MINUTES, MIN_UTC_OFFSET_MINUTES,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -70,6 +71,10 @@ pub struct JournalMosaicApp {
     /// Milliseconds since the Unix epoch. A plain function so the app stays
     /// `Clone` (dispatch clones to roll back) and tests can pin time.
     clock: fn() -> u64,
+    /// The host's UTC offset from `StartContext` (UI38 "Local time"), in
+    /// minutes east of UTC; 0 (UTC) when the host did not say. Host context,
+    /// not journal state: it is not in the snapshot.
+    utc_offset_minutes: i32,
 }
 
 impl Default for JournalMosaicApp {
@@ -117,6 +122,7 @@ impl JournalMosaicApp {
         let journal = JournalState::new(JournalId::from(DEFAULT_JOURNAL), "Personal", clock())
             .expect("the built-in journal id and name are valid");
         Self {
+            utc_offset_minutes: 0,
             state: AppState {
                 journal,
                 target: Target::New,
@@ -271,7 +277,7 @@ impl JournalMosaicApp {
                 self.run(Command::CreateEntry {
                     id: id.clone(),
                     journal: JournalId::from(DEFAULT_JOURNAL),
-                    date: today((self.clock)()),
+                    date: today((self.clock)(), self.utc_offset_minutes),
                     title,
                     body,
                 })?;
@@ -330,6 +336,12 @@ impl MosaicApp for JournalMosaicApp {
     type Error = JournalAppError;
 
     fn start(&mut self, context: StartContext) -> Result<AppUpdate, Self::Error> {
+        // The runtime validates the range; clamp anyway, for a caller that
+        // drives the app directly.
+        self.utc_offset_minutes = context
+            .utc_offset_minutes
+            .unwrap_or(0)
+            .clamp(MIN_UTC_OFFSET_MINUTES, MAX_UTC_OFFSET_MINUTES);
         match context.restored_snapshot {
             Some(snapshot) => self.restore(snapshot),
             None => Ok(self.update()),
@@ -480,11 +492,23 @@ fn canonical_event_name(name: &str) -> std::borrow::Cow<'_, str> {
     }
 }
 
-/// Today's date in **UTC** — `StartContext` carries no time zone (see the spec).
-fn today(now_ms: u64) -> Date {
-    // Days since the epoch fit an i32 for any clock this side of year 5,000,000.
-    let days = i32::try_from(now_ms / MS_PER_DAY).unwrap_or(i32::MAX);
-    Date(days)
+/// The user's today: the local date at `now_ms`, `utc_offset_minutes` east
+/// of UTC. A host that gives no offset gets the UTC date.
+///
+/// The offset is applied BEFORE the last-writable clamp: a reading at the end
+/// of 9999 (UTC) plus a positive offset would otherwise fall on 10000-01-01,
+/// a date the journal could not read back (see [`LAST_WRITABLE_MS`]). A
+/// negative offset near the epoch gives 1969-12-31, which the engine stores
+/// and reads like any other day.
+fn today(now_ms: u64, utc_offset_minutes: i32) -> Date {
+    const MS_PER_MINUTE: i64 = 60_000;
+    let utc = i64::try_from(now_ms.min(LAST_WRITABLE_MS)).unwrap_or(i64::MAX);
+    let local = utc
+        .saturating_add(i64::from(utc_offset_minutes) * MS_PER_MINUTE)
+        .min(LAST_WRITABLE_MS as i64);
+    let days = local.div_euclid(MS_PER_DAY as i64);
+    // Within 0..=9999 (plus one day before the epoch), days fit an i32.
+    Date(i32::try_from(days).unwrap_or(i32::MAX))
 }
 
 /// `Thursday, 24 September 2026`.
@@ -982,11 +1006,56 @@ mod tests {
     }
 
     #[test]
-    fn today_is_the_utc_date_and_headings_handle_pre_epoch_days() {
-        assert_eq!(today(THU).to_iso(), "2026-09-24");
-        assert_eq!(today(THU + MS_PER_DAY - 1).to_iso(), "2026-09-24");
+    fn today_is_the_local_date_and_headings_handle_pre_epoch_days() {
+        // No offset: the UTC date.
+        assert_eq!(today(THU, 0).to_iso(), "2026-09-24");
+        assert_eq!(today(THU + MS_PER_DAY - 1, 0).to_iso(), "2026-09-24");
+        // 01:00 UTC on the 24th is still the 23rd in New York (UTC-5) ...
+        assert_eq!(today(THU + 3_600_000, -300).to_iso(), "2026-09-23");
+        // ... and 23:00 UTC on the 24th is already the 25th in India (UTC+5:30).
+        assert_eq!(today(THU + 23 * 3_600_000, 330).to_iso(), "2026-09-25");
+        // The extremes, either side of midnight UTC.
+        assert_eq!(today(THU, MIN_UTC_OFFSET_MINUTES).to_iso(), "2026-09-23");
+        assert_eq!(
+            today(THU - 1, MAX_UTC_OFFSET_MINUTES).to_iso(),
+            "2026-09-24"
+        );
+        // Near the epoch, west of Greenwich: the day before it.
+        assert_eq!(today(0, -300), Date(-1));
+        // Never past the last day the journal can read back, whatever the offset.
+        assert_eq!(
+            today(LAST_WRITABLE_MS, MAX_UTC_OFFSET_MINUTES).to_iso(),
+            "9999-12-31"
+        );
+        assert_eq!(
+            today(u64::MAX, MAX_UTC_OFFSET_MINUTES).to_iso(),
+            "9999-12-31"
+        );
         assert_eq!(day_heading(Date(0)), "Thursday, 1 January 1970");
         assert_eq!(day_heading(Date(-1)), "Wednesday, 31 December 1969");
+    }
+
+    /// End to end: the host's offset from `StartContext` decides the day an
+    /// entry is filed under, and survives neither into nor out of a snapshot.
+    #[test]
+    fn an_entry_is_filed_under_the_hosts_local_day() {
+        set_now(THU + 3_600_000); // 01:00 UTC, Thursday 24 September
+        let mut a = JournalMosaicApp::with_clock(test_clock);
+        let mut context = StartContext::new("en-US", Platform::Linux);
+        context.utc_offset_minutes = Some(-300); // New York: 20:00 on the 23rd
+        a.start(context).unwrap();
+        send(&mut a, "onNewEntry", json!({})).unwrap();
+        send(&mut a, "onTitleChange", json!({ "value": "Evening" })).unwrap();
+        let update = send(&mut a, "onSaveEntry", json!({})).unwrap();
+        assert_eq!(
+            update.props["timeline-rows"][0][1],
+            "Wednesday, 23 September 2026"
+        );
+
+        let snapshot = a.snapshot().unwrap().unwrap();
+        assert!(!String::from_utf8(snapshot.bytes)
+            .unwrap()
+            .contains("utcOffset"));
     }
 
     #[test]

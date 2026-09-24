@@ -55,7 +55,7 @@ Row fields:
 - `subtitle` — the first line of the body (markdown `#` markers stripped), at
   most 100 characters, cut on character boundaries; `""` when the title already
   came from the body.
-- `meta` — `""` for now (see *Time zones*).
+- `meta` — `""` for now: no time of day yet (see *Time zones*).
 - `badge` — `★` for a starred entry.
 
 ## Events
@@ -89,9 +89,14 @@ unsaveable, so it can never grow the state file without bound.
   a counter above 2^53 (a tampered one at `u64::MAX` used to spin forever).
 - The clock is a plain `fn() -> u64` (milliseconds since the epoch), defaulting
   to the system clock and replaced in tests.
-- **Time zones.** `StartContext` carries no time zone, so "today" is the **UTC**
-  date, and the row `meta` does not show a time of day (a UTC clock time would
-  read as wrong). Both change when the ABI carries a zone; tracked in the backlog.
+- **Time zones.** "Today" is the user's **local** date. The host passes its UTC
+  offset in `StartContext.utc_offset_minutes` (UI38 "Local time"), so an entry
+  written at 20:00 in New York is filed under that evening's date, not
+  tomorrow's in UTC. A host that passes no offset gets the UTC date, which was
+  the behaviour before. The offset is host context, not journal state, so it is
+  not in the snapshot. It is applied before the last-writable clamp, so no
+  offset can date an entry past 9999-12-31. The row `meta` still shows no time
+  of day, because times need the entry's own offset stored (J4).
 
 ## Persistence
 

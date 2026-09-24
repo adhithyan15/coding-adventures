@@ -100,7 +100,22 @@ pub struct StartContext {
     pub text_scale: f32,
     pub platform: Platform,
     pub restored_snapshot: Option<Snapshot>,
+    /// The host's UTC offset at startup, in minutes east of UTC (`-300` in
+    /// New York in winter, `330` in India). `None` when the host does not
+    /// say: optional on the wire, so earlier hosts decode unchanged, and an
+    /// app told nothing falls back to UTC. Validated at start to
+    /// [`MIN_UTC_OFFSET_MINUTES`]`..=`[`MAX_UTC_OFFSET_MINUTES`]. It is a
+    /// snapshot, not a clock: a daylight-saving change takes effect at the
+    /// next start (UI38 §4, "Local time").
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub utc_offset_minutes: Option<i32>,
 }
+
+/// The westernmost UTC offset in use (UTC−14:00 bounds it with room to spare;
+/// the real minimum is UTC−12:00), in minutes east of UTC.
+pub const MIN_UTC_OFFSET_MINUTES: i32 = -840;
+/// The easternmost UTC offset in use: UTC+14:00 (Line Islands).
+pub const MAX_UTC_OFFSET_MINUTES: i32 = 840;
 
 impl StartContext {
     /// Build a startup context using system appearance and the standard text scale.
@@ -112,6 +127,7 @@ impl StartContext {
             text_scale: 1.0,
             platform,
             restored_snapshot: None,
+            utc_offset_minutes: None,
         }
     }
 }
@@ -339,6 +355,11 @@ impl<A: MosaicApp> MosaicRuntime<A> {
         if !context.text_scale.is_finite() || context.text_scale <= 0.0 {
             return Err(RuntimeError::InvalidTextScale);
         }
+        if let Some(offset) = context.utc_offset_minutes {
+            if !(MIN_UTC_OFFSET_MINUTES..=MAX_UTC_OFFSET_MINUTES).contains(&offset) {
+                return Err(RuntimeError::InvalidUtcOffset);
+            }
+        }
         let version = context.protocol_version;
         let app_update = self.app.start(context).map_err(RuntimeError::Application)?;
         self.protocol_version = version;
@@ -524,6 +545,7 @@ fn validate_protocol<E>(received: u32) -> Result<(), RuntimeError<E>> {
 pub enum RuntimeError<E> {
     ProtocolVersionMismatch { expected: u32, received: u32 },
     InvalidTextScale,
+    InvalidUtcOffset,
     AlreadyStarted,
     NotStarted,
     UnexpectedSequence { expected: u64, received: u64 },
@@ -548,6 +570,9 @@ impl<E: fmt::Display> fmt::Display for RuntimeError<E> {
             Self::InvalidTextScale => {
                 f.write_str("Mosaic text scale must be finite and greater than zero")
             }
+            Self::InvalidUtcOffset => f.write_str(
+                "Mosaic UTC offset must be between -840 and 840 minutes (UTC-14:00 to UTC+14:00)",
+            ),
             Self::AlreadyStarted => f.write_str("Mosaic application has already started"),
             Self::NotStarted => f.write_str("Mosaic application has not started"),
             Self::UnexpectedSequence { expected, received } => write!(
@@ -849,6 +874,51 @@ mod tests {
             ));
             assert_eq!(runtime.app().starts, 0);
         }
+    }
+
+    #[test]
+    fn rejects_an_implausible_utc_offset_before_calling_the_app() {
+        for offset in [-841, 841, i32::MIN, i32::MAX] {
+            let mut runtime = MosaicRuntime::new(TestApp::default());
+            let mut context = start_context();
+            context.utc_offset_minutes = Some(offset);
+            assert!(matches!(
+                runtime.start(context),
+                Err(RuntimeError::InvalidUtcOffset)
+            ));
+            assert_eq!(runtime.app().starts, 0);
+        }
+        for offset in [
+            MIN_UTC_OFFSET_MINUTES,
+            -300,
+            0,
+            330,
+            345,
+            MAX_UTC_OFFSET_MINUTES,
+        ] {
+            let mut runtime = MosaicRuntime::new(TestApp::default());
+            let mut context = start_context();
+            context.utc_offset_minutes = Some(offset);
+            assert!(runtime.start(context).is_ok(), "{offset}");
+        }
+    }
+
+    /// Optional on the wire both ways: an earlier host's context (no key)
+    /// decodes to `None`, and `None` is not written, so an earlier app that
+    /// round-trips the context never sees an unknown key.
+    #[test]
+    fn the_utc_offset_is_optional_on_the_wire() {
+        let without = serde_json::to_value(start_context()).unwrap();
+        assert!(without.get("utcOffsetMinutes").is_none());
+        let decoded: StartContext = serde_json::from_value(without).unwrap();
+        assert_eq!(decoded.utc_offset_minutes, None);
+
+        let mut context = start_context();
+        context.utc_offset_minutes = Some(-300);
+        let with = serde_json::to_value(&context).unwrap();
+        assert_eq!(with["utcOffsetMinutes"], -300);
+        let decoded: StartContext = serde_json::from_value(with).unwrap();
+        assert_eq!(decoded.utc_offset_minutes, Some(-300));
     }
 
     #[test]

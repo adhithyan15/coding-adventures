@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Changed — entries are filed under the user's local day
+
+- "Today" is the local date at the host's `StartContext.utc_offset_minutes`,
+  so an evening entry in New York no longer lands on tomorrow's UTC date. A
+  host that passes no offset gets the UTC date, as before. The offset is not
+  in the snapshot, and it is applied before the last-writable clamp, so no
+  offset can date an entry past 9999-12-31.
+
 ### Added — Journal in the browser: the runtime (J5c-1 of #14416)
 
 - **wasm32 build:** `mosaic_app_wasm::export_mosaic_wasm!` exports the
