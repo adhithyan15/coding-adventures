@@ -196,7 +196,7 @@ impl JournalMosaicApp {
     // ── events ───────────────────────────────────────────────────────────────
 
     fn dispatch_inner(&mut self, event: &Event) -> Result<AppUpdate, JournalAppError> {
-        match event.name.as_str() {
+        match canonical_event_name(&event.name).as_ref() {
             "onSelectEntry" => {
                 let index = index_payload(event, "index")?;
                 let rows = self.timeline_rows();
@@ -255,7 +255,7 @@ impl JournalMosaicApp {
                 }
                 Ok(self.update())
             }
-            other => Err(JournalAppError::UnknownEvent(other.to_string())),
+            _ => Err(JournalAppError::UnknownEvent(event.name.clone())),
         }
     }
 
@@ -404,11 +404,80 @@ impl MosaicApp for JournalMosaicApp {
 
 // ── helpers ─────────────────────────────────────────────────────────────────────
 
+/// The last millisecond of 9999-12-31 (UTC). journal-core writes a date as a
+/// four-digit ISO year and reads back only years 0 to 9999. An entry dated
+/// later would snapshot fine and then make the WHOLE saved journal refuse to
+/// restore. So no clock reading past this is ever used to date an entry.
+const LAST_WRITABLE_MS: u64 = 253_402_300_799_999;
+
+/// The system clock, natively. `SystemTime` is the platform's; a reading past
+/// the last writable date (a badly set clock) reads as the epoch.
+#[cfg(not(target_arch = "wasm32"))]
 fn system_now_ms() -> u64 {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
-        .map(|d| u64::try_from(d.as_millis()).unwrap_or(u64::MAX))
+        .ok()
+        .and_then(|d| u64::try_from(d.as_millis()).ok())
+        .filter(|&ms| ms <= LAST_WRITABLE_MS)
         .unwrap_or(0)
+}
+
+// In the browser the clock is the HOST's. `wasm32-unknown-unknown` has no
+// clock, and `SystemTime::now()` panics there, so the module imports one:
+// `journal.now_ms() -> f64`, which the web host supplies as `Date.now`.
+#[cfg(target_arch = "wasm32")]
+#[link(wasm_import_module = "journal")]
+extern "C" {
+    fn now_ms() -> f64;
+}
+
+/// The host's clock, in the browser. The import crosses a trust boundary, so
+/// anything that is not a writable time (NaN, infinite, negative, or past
+/// 9999-12-31) reads as the epoch rather than panicking, wrapping, or dating
+/// an entry the journal could never read back.
+#[cfg(target_arch = "wasm32")]
+fn system_now_ms() -> u64 {
+    // SAFETY: the import takes no arguments and returns an f64, and a host
+    // function of another signature fails at instantiation. The precondition
+    // is that it RETURNS: a JS exception thrown out of it would unwind past
+    // these Rust frames without running their destructors. The documented
+    // host shim therefore catches everything and returns NaN (read as the
+    // epoch below). A re-entrant call from it into the bridge is refused by
+    // the bridge's RefCell (a trap, not aliasing).
+    let ms = unsafe { now_ms() };
+    clamp_host_ms(ms)
+}
+
+#[cfg_attr(not(target_arch = "wasm32"), allow(dead_code))]
+fn clamp_host_ms(ms: f64) -> u64 {
+    // Exact: LAST_WRITABLE_MS < 2^53, so the bound and every value below it
+    // convert between f64 and u64 without rounding.
+    if ms.is_finite() && ms >= 0.0 && ms <= LAST_WRITABLE_MS as f64 {
+        ms as u64
+    } else {
+        0
+    }
+}
+
+/// The emit name every handler matches: `onSelectEntry`. Native hosts send it
+/// as is. The generated React component dispatches the bare `selectEntry`,
+/// which is read as `on` plus that name capitalised. Anything else passes
+/// through unchanged, and is refused below as an unknown event.
+fn canonical_event_name(name: &str) -> std::borrow::Cow<'_, str> {
+    // Already an emit name: `on` then an upper-case letter.
+    let prefixed = name
+        .strip_prefix("on")
+        .and_then(|rest| rest.chars().next())
+        .is_some_and(|c| c.is_ascii_uppercase());
+    let mut chars = name.chars();
+    match chars.next() {
+        Some(first) if !prefixed && first.is_ascii_lowercase() => std::borrow::Cow::Owned(format!(
+            "on{}{}",
+            first.to_ascii_uppercase(),
+            chars.as_str()
+        )),
+        _ => std::borrow::Cow::Borrowed(name),
+    }
 }
 
 /// Today's date in **UTC** — `StartContext` carries no time zone (see the spec).
@@ -539,6 +608,7 @@ fn engine_error(error: OpError) -> JournalAppError {
 }
 
 mosaic_app_capi::export_mosaic_app!(JournalMosaicApp, JournalMosaicApp::default());
+mosaic_app_wasm::export_mosaic_wasm!(JournalMosaicApp, JournalMosaicApp::default());
 
 #[cfg(test)]
 mod tests {
@@ -917,5 +987,64 @@ mod tests {
         assert_eq!(today(THU + MS_PER_DAY - 1).to_iso(), "2026-09-24");
         assert_eq!(day_heading(Date(0)), "Thursday, 1 January 1970");
         assert_eq!(day_heading(Date(-1)), "Wednesday, 31 December 1969");
+    }
+
+    #[test]
+    fn bare_event_names_from_the_react_host_are_read_as_emit_names() {
+        assert_eq!(canonical_event_name("onSelectEntry"), "onSelectEntry");
+        assert_eq!(canonical_event_name("selectEntry"), "onSelectEntry");
+        assert_eq!(canonical_event_name("newEntry"), "onNewEntry");
+        // Not an emit name either way: passed through, refused as unknown.
+        assert_eq!(canonical_event_name("SelectEntry"), "SelectEntry");
+        assert_eq!(canonical_event_name(""), "");
+        assert_eq!(canonical_event_name("é"), "é");
+
+        let mut a = app();
+        send(&mut a, "newEntry", json!({})).unwrap();
+        send(&mut a, "titleChange", json!({ "value": "Bare" })).unwrap();
+        let update = send(&mut a, "saveEntry", json!({})).unwrap();
+        assert_eq!(update.props["timeline-rows"][0][2], "Bare");
+        let error = send(&mut a, "notAJournalEvent", json!({})).unwrap_err();
+        assert!(error.to_string().contains("notAJournalEvent"), "{error}");
+    }
+
+    #[test]
+    fn an_implausible_host_clock_reads_as_the_epoch() {
+        assert_eq!(clamp_host_ms(1_790_000_000_000.0), 1_790_000_000_000);
+        assert_eq!(clamp_host_ms(12.9), 12);
+        // The last writable instant, and the first one past it.
+        assert_eq!(clamp_host_ms(LAST_WRITABLE_MS as f64), LAST_WRITABLE_MS);
+        assert_eq!(clamp_host_ms(LAST_WRITABLE_MS as f64 + 1.0), 0);
+        // The largest value `Date.now()` can return (year 275760).
+        assert_eq!(clamp_host_ms(8.64e15), 0);
+        for bad in [
+            f64::NAN,
+            f64::INFINITY,
+            f64::NEG_INFINITY,
+            -1.0,
+            9_007_199_254_740_992.0,
+            1e300,
+        ] {
+            assert_eq!(clamp_host_ms(bad), 0, "{bad}");
+        }
+    }
+
+    /// The latest date the clock can give an entry still round-trips: an
+    /// entry dated 9999-12-31 snapshots and restores.
+    #[test]
+    fn an_entry_on_the_last_writable_day_survives_a_restore() {
+        let mut a = app();
+        set_now(LAST_WRITABLE_MS);
+        send(&mut a, "onNewEntry", json!({})).unwrap();
+        send(&mut a, "onTitleChange", json!({ "value": "Far" })).unwrap();
+        send(&mut a, "onSaveEntry", json!({})).unwrap();
+        let snapshot = a.snapshot().unwrap().unwrap();
+        let mut b = app();
+        let props = b.restore(snapshot).unwrap().props;
+        assert_eq!(props["timeline-rows"][0][2], "Far");
+        assert!(props["timeline-rows"][0][1]
+            .as_str()
+            .unwrap()
+            .contains("9999"));
     }
 }
