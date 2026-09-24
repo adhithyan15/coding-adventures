@@ -4,6 +4,29 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Added — the Checklists view (C3a, #14018)
+
+A seventh view, **Checklists**, sits beside List, Board, Sheet, Calendar and
+Notes (spec: `code/specs/task-app-checklists-view-v1.md`):
+
+- a library of the project's templates and runs (the toolkit `RecordList`),
+  with a *New checklist* composer;
+- beside it, the selection:
+  - a template's outline, with *Add item*, **Start run** and **Delete
+    checklist**;
+  - or a run, through `pkg::mosaic-pkg-checklist::ChecklistRun` (tick,
+    answer, Complete, Abandon), then **Delete run**.
+
+`TaskApp.mil` gains the 15 `checklist*` slots and 13 events, and the manifest
+depends on `mosaic-pkg-checklist`. The native hosts get the behaviour from
+`task-mosaic-app`. The web host passes inert values until C3b.
+
+Both empty states are plain text, not the toolkit `EmptyState`. The list view
+already mounts one, and an inlined component keeps its part names, so a
+second instance fails the package build with `DuplicatePart 'empty-state'`.
+`package_compiles` now builds the package on every backend, which catches this
+(the per-file compiles cannot).
+
 ### Fixed — Compose startup no longer fails outside the window (#15786)
 
 The generated Compose Desktop app now paints a themed loading state before its

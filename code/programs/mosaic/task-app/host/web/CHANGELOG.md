@@ -4,6 +4,14 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added — inert Checklists slots (C3a, #14018)
+
+`TaskApp.mil` gained the Checklists view's slots, and the generated component
+types them as required, so the host passes inert values. The view is not
+offered on the web until C3b (web parity); its events fall through `apply`
+unhandled. The presentation-contract test mirrors the Rust contract's
+`checklists` view mapping.
+
 ### Changed — `navOptions` is a list of labels (UI86, #15420)
 
 `switcherViews().map(([, label]) => label)`: the toolkit's SegmentedControl

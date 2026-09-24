@@ -218,6 +218,28 @@ component TaskApp {
   slot note-body-value     : text ;
   slot note-task-value     : text ;
 
+  // Checklists (C3a). `checklists-mode` is non-empty when the view is showing.
+  // The library is RecordList rows over the project's templates then runs; the
+  // selected run's slots are a straight pass-through to
+  // `pkg::mosaic-pkg-checklist::ChecklistRun`. See
+  // code/specs/task-app-checklists-view-v1.md for every slot's value.
+  slot checklists-mode          : text ;
+  slot checklists-title         : text ;
+  slot checklist-library-rows   : list<list<text>> ;
+  slot checklist-library-empty  : bool ;
+  slot selected-checklist-key   : text ;
+  slot new-checklist-name       : text ;
+  slot checklist-template-mode  : bool ;
+  slot checklist-run-mode       : bool ;
+  // [key, indent, name] per template item.
+  slot checklist-outline-rows   : list<list<text>> ;
+  slot new-checklist-item       : text ;
+  slot checklist-run-title      : text ;
+  slot checklist-run-progress   : text ;
+  slot checklist-run-rows       : list<list<text>> ;
+  slot checklist-complete-label : text ;
+  slot checklist-abandon-label  : text ;
+
   // One row per task, in schedule order. Each row is a list of pre-formatted cells:
   //
   //   [ 0 ] done-glyph      [ 5  ] expanded-marker  — non-empty for the ONE open row
@@ -284,7 +306,8 @@ component TaskApp {
   emit onShowSheet ;
   emit onShowCalendar ;
   emit onShowNotes ;
-  // The switcher's selection, as an index into nav-options. The six named
+  emit onShowChecklists ;
+  // The switcher's selection, as an index into nav-options. The seven named
   // events above stay for anything that names a view directly.
   emit onShowView ( index : number ) ;
 
@@ -321,6 +344,20 @@ component TaskApp {
   emit onSaveNote ;
   emit onDeleteNote ;
   emit onCancelNote ;
+
+  // Checklists emits (C3a). The run's are a pass-through from ChecklistRun.
+  emit onSelectChecklist ( index : number ) ;
+  emit onNewChecklistNameChange ( value : text ) ;
+  emit onCreateChecklist ;
+  emit onNewChecklistItemChange ( value : text ) ;
+  emit onAddChecklistItem ;
+  emit onStartChecklistRun ;
+  emit onChecklistToggle ( index : number ) ;
+  emit onChecklistAnswerYes ( index : number ) ;
+  emit onChecklistAnswerNo ( index : number ) ;
+  emit onCompleteChecklistRun ;
+  emit onAbandonChecklistRun ;
+  emit onDeleteChecklist ;
 
   // Expand (or collapse) a task row to reveal its scheduling detail.
   emit onExpandTask ( index : number ) ;

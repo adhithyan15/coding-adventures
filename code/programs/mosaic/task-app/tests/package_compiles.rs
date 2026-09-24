@@ -46,8 +46,50 @@ fn task_app_sources_compile() {
         "new-task-due-focus",
         "summary",
         "task-rows",
+        // Checklists (C3a, task-app-checklists-view-v1.md).
+        "checklists-mode",
+        "checklist-library-rows",
+        "checklist-library-empty",
+        "selected-checklist-key",
+        "checklist-template-mode",
+        "checklist-run-mode",
+        "checklist-outline-rows",
+        "checklist-run-rows",
+        "checklist-complete-label",
+        "checklist-abandon-label",
     ] {
         assert!(slots.contains(&expected), "missing slot: {expected}");
+    }
+}
+
+/// The package builds, dependencies inlined, on every backend.
+///
+/// The per-file compiles above cannot see what inlining does: a component
+/// mounted twice keeps its part names, so the layout compiles alone yet the
+/// package fails with DuplicatePart. This caught a second toolkit EmptyState
+/// in the Checklists view (C3a) before any CI lane did.
+#[test]
+fn builds_on_every_backend() {
+    use mosaic_package_artifact_builder::{build_package, Backend, BuildOptions};
+    for backend in [
+        Backend::React,
+        Backend::WebComponent,
+        Backend::Html,
+        Backend::SwiftUI,
+        Backend::Compose,
+        Backend::Flutter,
+        Backend::Qt,
+        Backend::Xaml,
+    ] {
+        let out = tempfile::TempDir::new().unwrap();
+        build_package(&BuildOptions {
+            package_root: PathBuf::from(env!("CARGO_MANIFEST_DIR")),
+            output_root: out.path().to_path_buf(),
+            backend,
+            emit_project: false,
+            theme: None,
+        })
+        .unwrap_or_else(|e| panic!("{backend:?} build failed: {e}"));
     }
 }
 

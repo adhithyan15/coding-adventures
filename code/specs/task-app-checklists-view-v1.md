@@ -49,8 +49,14 @@ This document specifies C3a in full and fixes the contract C3b must match.
   - For a **template**, its outline: `checklist_outline`, flat in C3a, so
     each row shows its indent and name. Below the outline are an *Add item*
     composer, **Start run** and **Delete**.
-  - For a **run**, `ChecklistRun` (C2), then **Delete**.
-  - With **nothing** selected, an `EmptyState`.
+  - For a **run**, `ChecklistRun` (C2), then **Delete run**.
+  - With **nothing** selected, a short prompt.
+
+  Both empty states (an empty library, and nothing selected) are plain text,
+  not the toolkit `EmptyState`. The list view already mounts one, and an
+  inlined component keeps its part names, so a second instance fails the
+  package build (`DuplicatePart 'empty-state'`). *Changed from the first
+  draft, which used `EmptyState` for both.*
 
 ## State (in `TaskAppState`)
 
