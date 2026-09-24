@@ -14,8 +14,8 @@ Three components, listed in `mosaic-package.toml`'s `[components].exports`:
 
 | Component | Role | File trio |
 |---|---|---|
-| `Grid`   | the spreadsheet itself — header row + data rows | `Grid.mil` / `Grid.mll` / `Grid.dark.msl` |
-| `Cell`   | one editable cell (read display ↔ edit input) | `Cell.mil` / `Cell.mll` / `Cell.dark.msl` |
+| `Grid`   | the spreadsheet itself — header row + data rows | `Grid.mil` / `Grid.mll` / `Grid.{light,dark}.msl` |
+| `Cell`   | one editable cell (read display ↔ edit input) | `Cell.mil` / `Cell.mll` / `Cell.{light,dark}.msl` |
 | `Column` | declarative column metadata (no rendered output) | `Column.mil` / `Column.mll` |
 
 Column ships no `.msl`: it produces no visible tree, so there is nothing
@@ -176,8 +176,9 @@ grow and this change is a no-op for you.
 * **Mosmodel record type.** When it lands, the parallel
   `column-headers` + `column-widths` slots collapse to
   `columns: list<column-meta>`.
-* **Multi-theme cascade.** Ships `dark.msl` only; light-mode and
-  host overrides arrive once the mosstyle cascade lands.
+* **Host overrides.** Ships a light and a dark theme (the light one mirrors
+  VisiCalc's own `Grid.light.msl` palette); a consumer cannot restyle these
+  parts until the mosstyle cascade lands (#14481).
 
 ## Usage (v0.2.0, working end-to-end)
 

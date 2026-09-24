@@ -223,8 +223,67 @@ VisiCalc's host.
   Journal and its `deploy-journal.yml` are untouched; retiring them is J5
   release work.
 
+## Search (J4a)
+
+A search field above the timeline turns it into search results. The engine
+already does the searching (`journal_core::projections::search`: every term
+must match, title and tag hits rank above body hits, then newest first, at most
+16 terms from the first 1,024 characters, a snippet of at most 160 characters).
+This adds the UI and nothing else.
+
+**State.** `search_query: String`. It is **not** in the snapshot: search is a
+way of looking at the journal, not part of it, so a restart opens the full
+timeline. A query longer than the engine reads (1,024 characters) is refused
+as it is typed, like an oversized draft, so it cannot grow the update echoed on
+every keystroke.
+
+**Slots** (added to the table above):
+
+| slot | type | value |
+| --- | --- | --- |
+| `search-query` | `text` | the field's value |
+| `searching` | `bool` | the query has a non-blank character |
+| `no-matches` | `bool` | `searching` and no entry matches |
+
+While `searching`, `timeline-rows` holds the hits in rank order instead of the
+day groups:
+
+- `heading` is `""`, because results are ranked, not grouped by day;
+- `title` and `badge` are as for a timeline row;
+- `subtitle` is the engine's snippet around the first body match;
+- `meta` is the entry's day in short form (`24 Sep 2026`), so a hit still says
+  when it was written. It is short because `meta` shares a line with the
+  title button in the 300px pane: rendered on Compose, the long heading form
+  ("Thursday, 24 September 2026") did not fit beside a title and was drawn
+  over it. *Changed from the first draft, which reused the heading form.*
+
+`timeline-empty` stays "the journal has no entries". A search that matches
+nothing is `no-matches`, not `timeline-empty`, so the two empty states can say
+different things.
+
+**Events** (added to the table above):
+
+| event | payload |
+| --- | --- |
+| `onSearchChange` | `{ value }` |
+| `onClearSearch` | — |
+
+`onSelectEntry`'s `index` is a row of whatever `timeline-rows` was last
+rendered: a result while searching, a timeline row otherwise. Selecting,
+saving and deleting do not clear the query. The results are recomputed, so an
+entry edited so that it no longer matches drops out.
+
+**Layout.** In the pane, under *New entry*:
+- a `Row [ search-bar ]` holds a `HostInput [ search-input ]` (placeholder
+  "Search", accessible name "Search entries") and, only while `searching`, a
+  *Clear* button;
+- then `EmptyState` "No entries yet" when `timeline-empty`;
+- else `EmptyState` "No entries match" when `no-matches` (a second
+  `EmptyState` mount, #15959);
+- else `RecordList`.
+
 ## Deferred
 
 The web host (J5c-2), launching on the remaining native lanes, packaging and release (J5); the markdown preview;
-search, on-this-day, tags and stars in the UI; the journal switcher; moving an
+on-this-day, tags and stars in the UI (search is J4a, above); the journal switcher; moving an
 entry to another day; importing the TypeScript app's entries.

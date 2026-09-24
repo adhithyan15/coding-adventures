@@ -609,13 +609,6 @@ style TaskApp {
       border-color : "#d8cdbd" ;
     }
   }
-  part cl-library-empty {
-    gap : 6 ;
-  }
-  part cl-detail-empty {
-    gap : 6 ;
-    padding : 24 ;
-  }
   // ── list ────────────────────────────────────────────────────────────────
   part list-wrap {
     max-width : 760 ;
