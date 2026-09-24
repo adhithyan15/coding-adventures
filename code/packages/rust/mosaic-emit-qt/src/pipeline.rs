@@ -8124,9 +8124,6 @@ fn is_qml_reserved_identifier(name: &str) -> bool {
     )
 }
 
-/// Root `Item` members that a generated component signal must not redeclare.
-/// The list covers the stable Item/QtObject surface used by Mosaic shells;
-/// backend-owned `mosaic…` members are reserved separately by the allocator.
 /// The kind of Qt Quick control a signal call is written *inside*.
 ///
 /// A handler such as `onClicked: toggle(i)` sits inside the Button, and QML
@@ -8142,7 +8139,7 @@ fn is_qml_reserved_identifier(name: &str) -> bool {
 /// `select`), and hosts that connect to such signals by name are unaffected.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum ControlScope {
-    /// `Button`, `CheckBox`, `RadioButton`, `Switch` (AbstractButton + Control).
+    /// `Button`, `CheckBox`, `RadioButton` (AbstractButton + Control).
     Button,
     /// `TextField` / `TextArea` (TextInput / TextEdit + Control).
     TextInput,
@@ -8158,11 +8155,12 @@ impl ControlScope {
     /// The control a layout tag lowers to, if its handlers run inside one.
     fn of_tag(tag: &str) -> Option<ControlScope> {
         match tag {
-            "HostButton" | "HostCheckbox" | "HostRadio" | "HostSwitch" => Some(Self::Button),
-            "HostInput" | "Input" => Some(Self::TextInput),
+            "HostButton" | "HostCheckbox" | "HostRadio" => Some(Self::Button),
+            // HostNumberInput lowers to a TextField, not a SpinBox.
+            "HostInput" | "Input" | "HostNumberInput" => Some(Self::TextInput),
             "HostLink" => Some(Self::LinkText),
             "HostDialog" => Some(Self::Popup),
-            "HostSlider" | "HostNumberInput" => Some(Self::Range),
+            "HostSlider" => Some(Self::Range),
             _ => None,
         }
     }
@@ -8183,12 +8181,16 @@ impl ControlScope {
                 "tristate",
             ],
             Self::TextInput => &[
-                "accepted", "clear", "copy", "cut", "deselect", "editingFinished", "insert",
-                "length", "paste", "placeholderText", "readOnly", "redo", "remove", "select",
+                "accepted", "clear", "copy", "cut", "deselect", "editingFinished",
+                "ensureVisible", "getText", "insert", "length", "paste", "placeholderText",
+                "pressAndHold", "pressed", "readOnly", "redo", "released", "remove", "select",
                 "selectAll", "selectWord", "text", "textEdited", "undo",
             ],
             Self::LinkText => &["font", "linkActivated", "linkHovered", "text"],
-            Self::Popup => &["close", "closed", "open", "opened"],
+            Self::Popup => &[
+                "aboutToHide", "aboutToShow", "close", "closePolicy", "closed", "dim", "modal",
+                "open", "opened",
+            ],
             Self::Range => &["decrease", "increase", "moved", "value", "valueModified"],
         };
         own.contains(&name) || (self != Self::LinkText && CONTROL.contains(&name))
@@ -8212,6 +8214,9 @@ fn emit_call_scopes(root: &LayoutNode) -> HashMap<String, HashSet<ControlScope>>
     scopes
 }
 
+/// Root `Item` members that a generated component signal must not redeclare.
+/// The list covers the stable Item/QtObject surface used by Mosaic shells;
+/// backend-owned `mosaic…` members are reserved separately by the allocator.
 fn is_qml_item_member(name: &str) -> bool {
     matches!(
         name,
@@ -10251,8 +10256,6 @@ mod tests {
         assert!(!r.output.contains("onClicked: tap(text)"));
     }
 
-    /// HostCheckbox's `onToggle` invocation must follow the
-    /// signal's declared arity.  Parameterless → `onToggled: x()`.
     /// A signal whose name is a member of the control it is called from would
     /// resolve to that member, not the root's signal: `onClicked: toggle(i)` in a
     /// Button calls `Button.toggle()`. Such names get the `mosaicEmit…` spelling
@@ -10503,6 +10506,8 @@ mod tests {
         );
     }
 
+    /// HostCheckbox's `onToggle` invocation must follow the
+    /// signal's declared arity.  Parameterless → `onToggled: x()`.
     #[test]
     fn host_checkbox_on_toggle_parameterless_emits_no_args() {
         let m = component("X", vec![], vec![emit_decl("onToggle", vec![])]);
