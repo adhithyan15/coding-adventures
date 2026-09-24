@@ -2489,8 +2489,11 @@ jobs:
             set -e
             cat "$journal_log"
             test "$journal_status" -eq 124
-            ! grep -F "Mosaic Rust runtime unavailable" "$journal_log"
-            ! grep -E "missing required MIL prop|ReferenceError|TypeError" "$journal_log"
+            # Explicit exits, not `! grep`: bash's `set -e` ignores a command
+            # whose status is inverted with `!`, so a bare `! grep` that
+            # matches would not fail this step.
+            if grep -F "Mosaic Rust runtime unavailable" "$journal_log"; then exit 1; fi
+            if grep -E "missing required MIL prop|ReferenceError|TypeError" "$journal_log"; then exit 1; fi
           done
 
           # Journal's own suite (the package opts out of the workspace).

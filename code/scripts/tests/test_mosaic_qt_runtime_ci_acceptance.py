@@ -206,9 +206,19 @@ class MosaicQtRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("libjournal_mosaic_app.so", journal_step)
         self.assertIn('cmp "$journal_runtime_library" "$installed_journal_runtime"', journal_step)
         self.assertIn('test "$journal_status" -eq 124', journal_step)
+        # Explicit exits: `set -e` ignores a `!`-inverted command, so a bare
+        # `! grep` would never fail the step.
         self.assertIn(
-            '! grep -E "missing required MIL prop|ReferenceError|TypeError" "$journal_log"',
+            'if grep -E "missing required MIL prop|ReferenceError|TypeError" "$journal_log"; then exit 1; fi',
             journal_step,
+        )
+        self.assertIn(
+            'if grep -F "Mosaic Rust runtime unavailable" "$journal_log"; then exit 1; fi',
+            journal_step,
+        )
+        self.assertFalse(
+            [line for line in journal_step.splitlines() if line.strip().startswith("! grep")],
+            "a `! grep` line would never fail the step",
         )
         self.assertIn(
             "cargo test --manifest-path code/programs/mosaic/journal-app/Cargo.toml",
