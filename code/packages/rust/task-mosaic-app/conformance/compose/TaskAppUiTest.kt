@@ -210,8 +210,15 @@ class TaskAppUiTest {
         onNodeWithText("fixture initialization failed").assertIsDisplayed()
 
         onNodeWithText("Try again").performClick()
-        waitUntil(timeoutMillis = 5_000) { attempts.get() == 2 }
+        // Wait for what the user sees, not for the second attempt to START:
+        // `attempts` reaches 2 as soon as loadHost is called, before the
+        // recovered host is returned and composed, so asserting the content
+        // right after that wait raced the recomposition (a CI flake).
+        waitUntil(timeoutMillis = 5_000) {
+            onAllNodesWithText("Recovered TaskApp").fetchSemanticsNodes().isNotEmpty()
+        }
         onNodeWithText("Recovered TaskApp").assertIsDisplayed()
+        assertEquals(2, attempts.get())
         assertEquals(1, recoveredHost.propsCalls.get())
     }
 

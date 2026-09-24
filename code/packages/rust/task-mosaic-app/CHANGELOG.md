@@ -1,5 +1,14 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — the Compose startup-recovery test no longer races (#15788 follow-up)
+
+`generatedStartupFailureIsVisibleAndRetryRerunsInitialization` waited for
+`attempts == 2`, then asserted that "Recovered TaskApp" was displayed. But the
+counter reaches 2 when the second `loadHost` call *starts*, before the
+recovered host is returned and composed. The assertion therefore raced the
+recomposition and failed intermittently in CI (seen on #15947 and #15951). It
+now waits for the recovered content itself, then checks the attempt count.
+
 ## [Unreleased] — acceptance uses TaskApp's declared window (#14789)
 
 The 1280 x 900 Compose acceptance viewport is now pinned to TaskApp's `[app]`
