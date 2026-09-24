@@ -2,6 +2,11 @@
 
 ## 0.1.0 — unreleased
 
+- **An entry's journal (J4g)** needs no host code. A new test checks that
+  the picker is hidden while there is one journal. It then moves an entry
+  from Personal to Work with the editor's picker, checks that Cancel after
+  Save keeps the move, and finds the entry only under Work, through the
+  real wasm.
 - **Journals (J4f)** need no host code. A new test is refused the name
   "personal" (Personal already exists), adds *Work*, files an entry there,
   and switches between Personal, Work and All journals, through the real

@@ -190,6 +190,37 @@ it("adds a journal, files new entries there and switches between journals", asyn
   expect(button("Standup")).toBeTruthy();
 });
 
+it("moves an entry to another journal from the editor's picker", async () => {
+  await mount(memoryStorage());
+  const field = (label: string) => container.querySelector(`input[aria-label="${label}"]`) as HTMLInputElement;
+  // The pane's switcher comes first in the DOM, so the editor's option is the last.
+  const pickerOption = (label: string) => {
+    const found = [...container.querySelectorAll("button")].filter(b => b.textContent === label);
+    if (found.length < 2) throw new Error(`no picker option "${label}"`);
+    return found[found.length - 1];
+  };
+  await act(async () => button("New entry").click());
+  await type(field("Title"), "At home");
+  await act(async () => button("Save").click());
+  const personal = () => [...container.querySelectorAll("button")].filter(b => b.textContent === "Personal");
+  expect(personal()).toHaveLength(1); // one journal: the pane's switcher only, no picker
+
+  await type(field("New journal name"), "Work");
+  await act(async () => button("Add").click());
+  await act(async () => button("All journals").click());
+  expect(personal()).toHaveLength(2);
+  await act(async () => button("At home").click());
+  await act(async () => pickerOption("Work").click());
+  await act(async () => button("Save").click());
+
+  await act(async () => pickerOption("Personal").click());
+  await act(async () => button("Cancel").click());
+  await act(async () => button("Personal").click());
+  expect(() => button("At home")).toThrow();
+  await act(async () => button("Work").click());
+  expect(button("At home")).toBeTruthy();
+});
+
 it("says why a bad date cannot be saved, then files the entry on the day typed", async () => {
   await mount(memoryStorage());
   const field = (label: string) => container.querySelector(`input[aria-label="${label}"]`) as HTMLInputElement;

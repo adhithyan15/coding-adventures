@@ -477,7 +477,37 @@ is later work.
 **Events:** `onSelectJournal { index }`, `onNewJournalNameChange { value }`,
 `onAddJournal`.
 
+## An entry's journal (J4g)
+
+The editor says which journal the draft belongs to, and Save can move it.
+The engine already has `MoveEntry`.
+
+**The picker.** Above the Date field, when there is more than one journal,
+the editor shows a *Journal* `SegmentedControl` (a third mount, after the
+pane's two). It lists each journal by name, in the pane's order but without
+"All journals", with the draft's journal selected. Choosing another option
+changes only the draft; choosing the selected one again does nothing.
+
+**The draft's journal.** `draft_journal` joins the draft (in the snapshot,
+`#[serde(default)]`, so older snapshots still load):
+- a new draft starts in the pane's selected journal, or Personal under "All
+  journals" (this replaces J4f's rule, and says the same thing);
+- opening an entry sets it to the entry's journal, and Cancel reloads it;
+- Save files a new entry there, and runs `MoveEntry` for an existing entry
+  whose journal changed. As with the date, the move is checked before
+  anything is written, so a refused Save writes nothing;
+- a draft whose journal no longer exists (a restored snapshot) falls back
+  to the entry's own journal, or Personal for a new draft.
+
+An entry moved out of the journal the pane is filtered to leaves the
+timeline but stays open in the editor, like unstarring under *Starred only*.
+
+**Slots:** `draft-journal-options` (`list<text>`), `draft-journal-index`
+(`number`), `has-journals` (`bool`, more than one journal).
+
+**Events:** `onDraftJournalChange { index }`.
+
 ## Deferred
 
 The web host (J5c-2), launching on the remaining native lanes, packaging and release (J5); the markdown preview;
-(search J4a, stars J4b, on-this-day J4c, tags J4d, an entry's day J4e and journals J4f are above); moving an entry between journals; export (needs a host file-save effect on native hosts); importing the TypeScript app's entries.
+(search J4a, stars J4b, on-this-day J4c, tags J4d, an entry's day J4e and journals J4f and an entry's journal J4g are above); renaming and deleting a journal; export (needs a host file-save effect on native hosts); importing the TypeScript app's entries.

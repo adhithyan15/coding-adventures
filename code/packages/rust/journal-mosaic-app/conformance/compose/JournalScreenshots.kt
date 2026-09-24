@@ -1,6 +1,9 @@
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
@@ -128,6 +131,15 @@ class JournalScreenshots {
             onNodeWithText("Add").performClick()
             waitForIdle()
             shot("11-journal-error")
+
+            // An entry's journal (J4g): the open entry is in Work; the
+            // editor's picker (the pane comes first, so its option is the
+            // last "Personal") moves it, and it leaves the Work list.
+            onAllNodes(hasText("Personal") and hasClickAction()).onLast().performClick()
+            waitForIdle()
+            onNodeWithText("Save").performClick()
+            waitForIdle()
+            shot("12-moved-to-personal")
         }
     }
 }

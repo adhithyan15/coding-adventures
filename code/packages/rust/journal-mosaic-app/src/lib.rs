@@ -54,6 +54,11 @@
 //! A switcher over the journal's journals ("All journals" first) filters every
 //! list; new entries are filed into the selected one. A *New journal* field
 //! creates one. The selection and the field are views, not persisted.
+//!
+//! ## An entry's journal (J4g)
+//!
+//! The editor's *Journal* picker says which journal the draft belongs to;
+//! Save files a new entry there, or moves an existing one (`MoveEntry`).
 
 use std::error::Error;
 use std::fmt;
@@ -62,7 +67,7 @@ use journal_core::projections::{on_this_day, search, tag_counts, timeline, MAX_Q
 use journal_core::tag::{normalize_tags, TagError, MAX_TAGS_PER_ENTRY, MAX_TAG_CHARS};
 use journal_core::{
     apply, Command, Date, Entry, EntryFilter, EntryId, Journal, JournalId, JournalState, OpError,
-    MAX_BODY_BYTES, MAX_JOURNALS, MAX_JOURNAL_NAME_CHARS, MAX_TITLE_CHARS,
+    MAX_BODY_BYTES, MAX_ID_BYTES, MAX_JOURNALS, MAX_JOURNAL_NAME_CHARS, MAX_TITLE_CHARS,
 };
 use mosaic_app_runtime::{
     Announcement, AppUpdate, Event, MosaicApp, Politeness, Snapshot, StartContext,
@@ -106,6 +111,10 @@ struct AppState {
     /// The editor's day, as typed: `2026-09-23`, or blank for today (J4e).
     #[serde(default)]
     draft_date: String,
+    /// The journal chosen in the editor's picker (J4g), or empty when none
+    /// was chosen; see [`JournalMosaicApp::draft_journal`].
+    #[serde(default)]
+    draft_journal: String,
     next_entry: u64,
 }
 
@@ -197,6 +206,7 @@ impl JournalMosaicApp {
                 draft_body: String::new(),
                 draft_tags: String::new(),
                 draft_date: String::new(),
+                draft_journal: String::new(),
                 next_entry: 1,
             },
             clock,
@@ -213,6 +223,12 @@ impl JournalMosaicApp {
         let recalled = self.on_this_day_rows();
         let tags = self.all_tags();
         let active = self.active_tag();
+        let draft_journal = self.draft_journal();
+        let draft_journal_index = self
+            .journals_ordered()
+            .iter()
+            .position(|j| j.id == draft_journal)
+            .map_or(0, |i| i as i64);
         json!({
             // "The journal has no entries", whatever the query. A search that
             // matches nothing is `no-matches`, so the two empty states can say
@@ -240,6 +256,13 @@ impl JournalMosaicApp {
                 .map_or(0, |i| i as i64 + 1),
             "new-journal-name": self.new_journal_name,
             "journal-error": self.journal_error,
+            "draft-journal-options": self
+                .journals_ordered()
+                .iter()
+                .map(|j| j.name.clone())
+                .collect::<Vec<_>>(),
+            "draft-journal-index": draft_journal_index,
+            "has-journals": self.state.journal.journals.len() > 1,
             "draft-error": self.draft_error,
             "tag-options": tags.iter().map(|c| format!("#{} ({})", c.tag.display(), c.count)).collect::<Vec<_>>(),
             "selected-tag-index": active
@@ -289,6 +312,24 @@ impl JournalMosaicApp {
     fn active_journal(&self) -> Option<JournalId> {
         let id = JournalId::from(self.journal_filter.as_deref()?);
         self.state.journal.journal(&id).map(|j| j.id.clone())
+    }
+
+    /// The draft's journal (J4g), always one that exists: the one chosen in
+    /// the picker; else the open entry's own; else, for a new draft, the
+    /// pane's selected journal, or Personal under "All journals". So an
+    /// unchosen new draft follows the pane, and a snapshot naming a journal
+    /// that is gone falls back instead of failing.
+    fn draft_journal(&self) -> JournalId {
+        let chosen = JournalId::from(self.state.draft_journal.as_str());
+        if self.state.journal.journal(&chosen).is_some() {
+            return chosen;
+        }
+        if let Target::Entry(id) = &self.state.target {
+            if let Some(entry) = self.state.journal.entry(id) {
+                return entry.journal.clone();
+            }
+        }
+        self.active_journal().unwrap_or_else(|| JournalId::from(DEFAULT_JOURNAL))
     }
 
     /// Every tag in the journal with its entry count, most used first. Counted
@@ -482,6 +523,7 @@ impl JournalMosaicApp {
                 self.state.draft_body.clear();
                 self.state.draft_tags.clear();
                 self.state.draft_date.clear();
+                self.state.draft_journal.clear();
                 Ok(self.update())
             }
             // Drafts are capped at the engine's own entry limits: an unsaveable
@@ -514,6 +556,7 @@ impl JournalMosaicApp {
                 self.state.draft_body.clear();
                 self.state.draft_tags.clear();
                 self.state.draft_date.clear();
+                self.state.draft_journal.clear();
                 Ok(self.announced("Entry deleted"))
             }
             // The query is capped at what the engine reads: a longer one could
@@ -569,6 +612,17 @@ impl JournalMosaicApp {
                 Ok(self.update())
             }
             "onAddJournal" => self.add_journal(),
+            // The editor's picker: only the draft changes; Save applies it.
+            "onDraftJournalChange" => {
+                let index = index_payload(event, "index")?;
+                let id = self
+                    .journals_ordered()
+                    .get(index)
+                    .map(|j| j.id.as_str().to_string())
+                    .ok_or_else(|| invalid(event, "index"))?;
+                self.state.draft_journal = id;
+                Ok(self.update())
+            }
             "onDateChange" => {
                 let value = text_payload(event, "value")?;
                 if value.chars().count() > MAX_DATE_CHARS {
@@ -616,6 +670,7 @@ impl JournalMosaicApp {
                         self.state.draft_body.clear();
                         self.state.draft_tags.clear();
                         self.state.draft_date.clear();
+                        self.state.draft_journal.clear();
                     }
                     Target::Entry(id) => self.target_entry(id),
                 }
@@ -654,10 +709,9 @@ impl JournalMosaicApp {
                 let id = self.mint_entry_id()?;
                 self.run(Command::CreateEntry {
                     id: id.clone(),
-                    // Filed where the person is looking; Personal from "All".
-                    journal: self
-                        .active_journal()
-                        .unwrap_or_else(|| JournalId::from(DEFAULT_JOURNAL)),
+                    // The picker's journal (J4g): where the person is looking
+                    // unless they chose another; Personal from "All".
+                    journal: self.draft_journal(),
                     date: date.unwrap_or(today),
                     title,
                     body,
@@ -674,6 +728,15 @@ impl JournalMosaicApp {
                     title: Some(title),
                     body: Some(body),
                 })?;
+                // The picker always names a journal that exists, so the move
+                // cannot be refused after the edit above was written.
+                let journal = self.draft_journal();
+                if self.state.journal.entry(&id).is_some_and(|e| e.journal != journal) {
+                    self.run(Command::MoveEntry {
+                        id: id.clone(),
+                        journal,
+                    })?;
+                }
                 // Blank keeps the entry's own day ("today" is for new ones).
                 if let Some(date) = date {
                     if self.state.journal.entry(&id).is_some_and(|e| e.date != date) {
@@ -689,6 +752,7 @@ impl JournalMosaicApp {
             if let Some(entry) = self.state.journal.entry(id) {
                 self.state.draft_tags = tags_text(entry);
                 self.state.draft_date = entry.date.to_iso();
+                self.state.draft_journal = entry.journal.as_str().to_string();
             }
         }
         self.draft_error.clear();
@@ -747,6 +811,7 @@ impl JournalMosaicApp {
                 self.state.draft_body = entry.body.clone();
                 self.state.draft_tags = tags_text(entry);
                 self.state.draft_date = entry.date.to_iso();
+                self.state.draft_journal = entry.journal.as_str().to_string();
                 self.state.target = Target::Entry(id);
             }
             None => {
@@ -755,6 +820,7 @@ impl JournalMosaicApp {
                 self.state.draft_body.clear();
                 self.state.draft_tags.clear();
                 self.state.draft_date.clear();
+                self.state.draft_journal.clear();
             }
         }
     }
@@ -865,6 +931,7 @@ impl MosaicApp for JournalMosaicApp {
             || !body_fits(&state.draft_body)
             || !tags_fit(&state.draft_tags)
             || state.draft_date.chars().count() > MAX_DATE_CHARS
+            || state.draft_journal.len() > MAX_ID_BYTES
         {
             return Err(JournalAppError::InvalidSnapshot);
         }
@@ -1252,8 +1319,11 @@ mod tests {
                 "draft-body",
                 "draft-date",
                 "draft-error",
+                "draft-journal-index",
+                "draft-journal-options",
                 "draft-tags",
                 "draft-title",
+                "has-journals",
                 "has-on-this-day",
                 "has-tags",
                 "journal-error",
@@ -1278,6 +1348,101 @@ mod tests {
         assert_eq!(props["delete-label"], "");
         assert_eq!(props["searching"], false);
         assert_eq!(props["no-matches"], false);
+    }
+
+    // ── an entry's journal (J4g) ──────────────────────────────────────────────
+
+    fn journal_of(app: &JournalMosaicApp, title: &str) -> String {
+        let entry = app.state.journal.entries.values().find(|e| e.title == title).unwrap();
+        entry.journal.as_str().to_string()
+    }
+
+    #[test]
+    fn the_picker_lists_the_journals_and_follows_the_pane_until_chosen() {
+        let mut a = app();
+        let props = a.props();
+        assert_eq!(props["has-journals"], false, "one journal: no picker");
+        assert_eq!(props["draft-journal-options"], json!(["Personal"]));
+        set_now(THU + 7_200_000);
+        add_journal(&mut a, "Work");
+        let props = a.props();
+        assert_eq!(props["has-journals"], true);
+        assert_eq!(props["draft-journal-options"], json!(["Personal", "Work"]));
+        assert_eq!(props["draft-journal-index"], 1, "a new draft starts in the pane's journal");
+        send(&mut a, "onSelectJournal", json!({ "index": 0 })).unwrap();
+        assert_eq!(a.props()["draft-journal-index"], 0, "All journals: Personal");
+
+        send(&mut a, "onSelectJournal", json!({ "index": 2 })).unwrap();
+        send(&mut a, "onDraftJournalChange", json!({ "index": 0 })).unwrap();
+        send(&mut a, "onTitleChange", json!({ "value": "Chosen" })).unwrap();
+        send(&mut a, "onSaveEntry", json!({})).unwrap();
+        assert_eq!(journal_of(&a, "Chosen"), DEFAULT_JOURNAL, "the choice beats the pane");
+        assert!(titles(&a).is_empty(), "filed outside the Work filter");
+        assert_eq!(a.props()["draft-title"], "Chosen", "but still open in the editor");
+        assert!(send(&mut a, "onDraftJournalChange", json!({ "index": 2 })).is_err());
+    }
+
+    #[test]
+    fn save_moves_an_entry_and_cancel_reverts_the_picker() {
+        let mut a = app();
+        write(&mut a, "Standup", "body");
+        set_now(THU + 7_200_000);
+        add_journal(&mut a, "Work");
+        send(&mut a, "onSelectJournal", json!({ "index": 1 })).unwrap();
+        send(&mut a, "onSelectEntry", json!({ "index": 0 })).unwrap();
+        assert_eq!(a.props()["draft-journal-index"], 0, "the entry's own journal");
+
+        send(&mut a, "onDraftJournalChange", json!({ "index": 1 })).unwrap();
+        send(&mut a, "onCancelEdit", json!({})).unwrap();
+        assert_eq!(a.props()["draft-journal-index"], 0);
+        assert_eq!(journal_of(&a, "Standup"), DEFAULT_JOURNAL);
+
+        send(&mut a, "onDraftJournalChange", json!({ "index": 1 })).unwrap();
+        let props = send(&mut a, "onSaveEntry", json!({})).unwrap().props;
+        assert_eq!(journal_of(&a, "Standup"), "journal-1");
+        assert_eq!(props["draft-journal-index"], 1);
+        assert!(titles(&a).is_empty(), "it left the Personal filter");
+        send(&mut a, "onSelectJournal", json!({ "index": 2 })).unwrap();
+        assert_eq!(titles(&a), ["Standup"]);
+    }
+
+    #[test]
+    fn a_refused_save_does_not_move_the_entry() {
+        let mut a = app();
+        write(&mut a, "Stay", "body");
+        set_now(THU + 7_200_000);
+        add_journal(&mut a, "Work");
+        send(&mut a, "onSelectJournal", json!({ "index": 0 })).unwrap();
+        send(&mut a, "onSelectEntry", json!({ "index": 0 })).unwrap();
+        send(&mut a, "onDraftJournalChange", json!({ "index": 1 })).unwrap();
+        send(&mut a, "onDateChange", json!({ "value": "2026-02-30" })).unwrap();
+        let props = send(&mut a, "onSaveEntry", json!({})).unwrap().props;
+        assert_ne!(props["draft-error"], "");
+        assert_eq!(journal_of(&a, "Stay"), DEFAULT_JOURNAL);
+    }
+
+    #[test]
+    fn a_snapshot_naming_a_missing_or_overlong_journal() {
+        let mut a = app();
+        write(&mut a, "Kept", "body");
+        let snapshot = a.snapshot().unwrap().unwrap();
+        let with = |journal: &str| {
+            let mut state: Value = serde_json::from_slice(&snapshot.bytes).unwrap();
+            state["draftJournal"] = json!(journal);
+            Snapshot { bytes: serde_json::to_vec(&state).unwrap(), ..snapshot.clone() }
+        };
+        let mut b = JournalMosaicApp::with_clock(test_clock);
+        let mut ctx = StartContext::new("en-US", Platform::Linux);
+        ctx.restored_snapshot = Some(with("journal-gone"));
+        let props = b.start(ctx).unwrap().props;
+        assert_eq!(props["draft-journal-index"], 0, "falls back to the entry's journal");
+        send(&mut b, "onSaveEntry", json!({})).unwrap();
+        assert_eq!(journal_of(&b, "Kept"), DEFAULT_JOURNAL);
+
+        let mut c = JournalMosaicApp::with_clock(test_clock);
+        let mut ctx = StartContext::new("en-US", Platform::Linux);
+        ctx.restored_snapshot = Some(with(&"j".repeat(MAX_ID_BYTES + 1)));
+        assert!(c.start(ctx).is_err(), "an overlong id is not ours");
     }
 
     // ── journals (J4f) ────────────────────────────────────────────────────────
@@ -1602,12 +1767,14 @@ mod tests {
         let snapshot = a.snapshot().unwrap().unwrap();
         let mut state: Value = serde_json::from_slice(&snapshot.bytes).unwrap();
         state.as_object_mut().unwrap().remove("draftTags");
+        state.as_object_mut().unwrap().remove("draftJournal");
         let old = Snapshot { bytes: serde_json::to_vec(&state).unwrap(), ..snapshot };
         let mut b = JournalMosaicApp::with_clock(test_clock);
         let mut ctx = StartContext::new("en-US", Platform::Linux);
         ctx.restored_snapshot = Some(old);
         let props = b.start(ctx).unwrap().props;
         assert_eq!(props["draft-tags"], "");
+        assert_eq!(props["draft-journal-index"], 0);
         assert_eq!(rows(&b).len(), 1);
     }
 

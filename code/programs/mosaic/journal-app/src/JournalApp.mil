@@ -67,6 +67,11 @@ component JournalApp {
   slot selected-journal-index : number ;
   slot new-journal-name : text ;
   slot journal-error : text ;
+  // An entry's journal (J4g): the editor's picker lists the journals (no
+  // "All journals"), the draft's selected; shown when there are several.
+  slot draft-journal-options : list<text> ;
+  slot draft-journal-index : number ;
+  slot has-journals : bool ;
 
   emit onSelectEntry ( index : number ) ;
   emit onNewEntry ;
@@ -89,4 +94,6 @@ component JournalApp {
   emit onSelectJournal ( index : number ) ;
   emit onNewJournalNameChange ( value : text ) ;
   emit onAddJournal ;
+  // An option of draft-journal-options; Save files or moves the entry there.
+  emit onDraftJournalChange ( index : number ) ;
 }

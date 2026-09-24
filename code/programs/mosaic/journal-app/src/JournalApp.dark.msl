@@ -158,4 +158,13 @@ style JournalApp {
     color     : "#f87171" ;
     font-size : 14 ;
   }
+  // An entry's journal (J4g): the picker's block mirrors the Date field's.
+  part journal-block {
+    gap : 4 ;
+    padding-bottom : 8 ;
+  }
+  part journal-label {
+    color     : "#9ca3af" ;
+    font-size : 12 ;
+  }
 }
