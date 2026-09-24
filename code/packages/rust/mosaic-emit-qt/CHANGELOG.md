@@ -25,6 +25,7 @@
   Qt's `PlaceholderText` at `AutoText`. Placeholders are author-written hints in
   every current consumer. Treat a data-bound placeholder as trusted text until
   this is lowered too.
+- A multiline `Input` with both an `a11y-label` and a `placeholder` wrote `Accessible.name` twice: the authored name, then the placeholder fallback. A duplicate property assignment is a hard `qmlcachegen` error. The placeholder is now only the default name for an unlabelled text area (J3b-pre, #14416).
 
 ## 2026-09-13
 

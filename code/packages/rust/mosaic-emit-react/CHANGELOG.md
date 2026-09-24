@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-23
+
+- The legacy `Input` path (including its `<textarea>` form for `multiline: true`) now carries the authored `a11y-label` as `aria-label`. It used to drop the name while `HostInput` kept it. Both paths share `push_text_field_aria_label` (J3b-pre, #14416).
+
 ## 2026-09-20
 
 - Prevent programmatic selection reveal and intermediate row-window geometry from feeding back into native table scrolling (#15753).

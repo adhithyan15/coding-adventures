@@ -5152,6 +5152,19 @@ fn emit_host_input(
     if find_keyword_prop(node, "auto-focus") == Some("true") {
         writeln!(out, "{input_pad}  autofocus: true,").unwrap();
     }
+    // UI25 `multiline: true` — the field grows with its text and Enter
+    // inserts a newline. Flutter never read this prop, so `Input [ … ] (
+    // multiline: true )` — Trestle's note body, the note-type editor's
+    // templates — rendered as a single-line TextField on Flutter while
+    // every other native backend drew a text area (J3b-pre, #14416).
+    // `minLines: 8` matches Compose's `BasicTextField(minLines = 8)`;
+    // `maxLines: null` removes the one-line cap.
+    if find_keyword_prop(node, "multiline") == Some("true") {
+        writeln!(out, "{input_pad}  keyboardType: TextInputType.multiline,").unwrap();
+        writeln!(out, "{input_pad}  textInputAction: TextInputAction.newline,").unwrap();
+        writeln!(out, "{input_pad}  minLines: 8,").unwrap();
+        writeln!(out, "{input_pad}  maxLines: null,").unwrap();
+    }
 
     // onChange — wraps the new value in a dispatched event.
     //
@@ -11494,6 +11507,40 @@ mod tests {
             "Input must not take the unresolved-component path, got:\n{out}"
         );
         assert!(out.contains("TextField"), "got:\n{out}");
+    }
+
+    #[test]
+    fn multiline_input_is_a_growing_text_area_not_a_single_line_field() {
+        // J3b-pre (#14416): Flutter never read `multiline`, so Trestle's note
+        // body rendered as one line here and as a text area everywhere else.
+        let m = component("Host", vec![slot("v", SlotType::Text, true)], vec![]);
+        let make = |multiline: Option<&str>| {
+            let mut props = vec![LayoutProp {
+                name: "value".into(),
+                value: LayoutPropValue::SlotRef("v".into()),
+            }];
+            if let Some(k) = multiline {
+                props.push(LayoutProp {
+                    name: "multiline".into(),
+                    value: LayoutPropValue::Keyword(k.into()),
+                });
+            }
+            from_pipeline(&m, &layout("Host", node_with("Input", props, vec![])), &empty_style("Host"))
+                .expect("ok")
+                .output
+        };
+        let multi = make(Some("true"));
+        for arg in [
+            "keyboardType: TextInputType.multiline,",
+            "textInputAction: TextInputAction.newline,",
+            "minLines: 8,",
+            "maxLines: null,",
+        ] {
+            assert!(multi.contains(arg), "missing `{arg}` in:\n{multi}");
+        }
+        for single in [make(None), make(Some("false"))] {
+            assert!(!single.contains("maxLines"), "single-line stays single-line:\n{single}");
+        }
     }
 
     /// A clean PascalCase component reference the resolver did not inline
