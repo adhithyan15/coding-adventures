@@ -95,7 +95,34 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn('--runtime-library "$journal_runtime_library"', journal_block)
         self.assertIn("'.replacedGeneratedFiles == []'", journal_block)
         self.assertIn('.degradations | type == "array" and length == 0', journal_block)
-        self.assertIn('gradle --no-daemon --stacktrace -p "$journal_output/compose" compileKotlin', journal_block)
+        # compileKotlin plus the distributable the UI launches load from.
+        self.assertIn(
+            '-p "$journal_output/compose" compileKotlin createDistributable',
+            journal_block,
+        )
+        self.assertIn('cmp "$journal_runtime_library" "$installed_journal_runtime"', journal_block)
+
+    def test_journal_is_driven_twice_on_one_state_file(self) -> None:
+        """JournalUiTest runs as a first launch and a restored launch against
+        the SAME state file, with the packaged runtime, so a regression in
+        write, save or restore fails CI rather than only compiling."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# Drive the generated app, not just compile it (J5, #14416)")
+        block = workflow[start:workflow.index("\n\n", start)]
+        self.assertIn(
+            "cp code/packages/rust/journal-mosaic-app/conformance/compose/JournalUiTest.kt",
+            block,
+        )
+        self.assertEqual(block.count("test --tests JournalUiTest"), 2)
+        self.assertEqual(block.count('MOSAIC_APP_STATE_PATH="$journal_ui_state"'), 2)
+        self.assertEqual(block.count("MOSAIC_EXPECT_RESTORED=1"), 1)
+        self.assertIn("--rerun-tasks", block)
+        self.assertEqual(
+            block.count('-Dcompose.application.resources.dir=$(dirname "$installed_journal_runtime")'),
+            2,
+        )
+        self.assertIn('rm -f "$journal_ui_state"', block)
 
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(
