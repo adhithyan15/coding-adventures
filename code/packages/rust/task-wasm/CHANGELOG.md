@@ -4,6 +4,13 @@ All notable changes to `task-wasm` are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added — `set_order` (C3b, #14018)
+
+- **`set_order {id, order}`** (JS `setOrder`) sets a task's sibling order.
+  Siblings sort by `(order, id)`, and minted ids don't sort by number
+  (`t10` < `t9`), so the web host numbers the items it appends to a
+  checklist template. `pkg/task_engine.wasm` is rebuilt.
+
 ### Added — checklist templates and runs (C1, #14018)
 
 - **New exports:**

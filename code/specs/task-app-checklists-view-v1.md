@@ -29,6 +29,19 @@ C3 is three PRs, so each can be reviewed alone:
 
 This document specifies C3a in full and fixes the contract C3b must match.
 
+**C3b (the web host).** `programs/mosaic/task-app/host/web` is its own
+TypeScript controller over `task-wasm`, not the Rust app. It implements this
+view to the same contract:
+
+- the same slots, events, ordering, bounds, id scheme and progress wording;
+- the same switcher position;
+- the same guards: a calendar drop refuses a key the views do not show.
+
+task-wasm gains the one op the port needed, `set_order`. The web host keeps
+no checklist state of its own beyond the selection and the composers, which
+are UI state and are not persisted, like its Notes drafts. Its Vitest suite,
+`__tests__/checklists.test.ts`, walks the same scenarios as the Rust tests.
+
 ## The screen
 
 ```

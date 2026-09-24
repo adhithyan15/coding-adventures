@@ -76,6 +76,7 @@ export function createTaskEngine(wasmBytes, options = {}) {
     reparent: op("reparent"),
     setKind: op("set_kind"),
     setCompleted: op("set_completed"),
+    setOrder: op("set_order"),
     setPercentComplete: op("set_percent_complete"),
     setStatus: op("set_status"),
     // Seeds the project's default 4-status workflow (idempotent) and

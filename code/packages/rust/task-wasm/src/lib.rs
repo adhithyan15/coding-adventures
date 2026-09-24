@@ -442,6 +442,21 @@ export_op!(
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
+struct OrderArgs {
+    id: String,
+    order: i64,
+}
+export_op!(
+    /// Set a task's sibling order. Siblings sort by `(order, id)`, and minted
+    /// ids do not sort by number (`t10` < `t9`), so a host that appends items
+    /// (a checklist template's, C3b of #14018) numbers them here.
+    set_order,
+    OrderArgs,
+    |s, a| s.set_order(&TaskId::from_raw(a.id), a.order)
+);
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 struct PercentArgs {
     id: String,
     percent: u8,
@@ -1688,5 +1703,31 @@ mod tests {
             out.contains(r#""ok":false"#) && out.contains(r#""code":1"#),
             "{out}"
         );
+    }
+
+    /// C3b: a host appending checklist items numbers them with set_order, so
+    /// `t10` sorts after `t9` in the template's outline.
+    #[test]
+    fn set_order_keeps_appended_items_in_the_order_they_were_added() {
+        reset();
+        call1(
+            create_checklist_template,
+            r#"{"id":"c","root":"c/root","name":"Release","now":1}"#,
+        );
+        for (n, id) in ["t9", "t10"].iter().enumerate() {
+            call1(
+                create_task,
+                &format!(r#"{{"id":"{id}","name":"{id}","parent":"c/root"}}"#),
+            );
+            let out = call1(set_order, &format!(r#"{{"id":"{id}","order":{n}}}"#));
+            assert!(out.contains(r#""ok":true"#), "{out}");
+        }
+        let outline = call1(checklist_outline, r#"{"id":"c"}"#);
+        let nine = outline.find(r#""t9""#).expect("t9 in the outline");
+        let ten = outline.find(r#""t10""#).expect("t10 in the outline");
+        assert!(nine < ten, "{outline}");
+
+        let missing = call1(set_order, r#"{"id":"ghost","order":1}"#);
+        assert!(missing.contains(r#""ok":false"#), "{missing}");
     }
 }
