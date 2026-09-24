@@ -5178,14 +5178,33 @@ fn emit_compose_tree(
                 "{pad}// Col (column-width hint — no Compose analog)\n"
             ))
         }
-        "Text" if find_prop_value(node, "font-size").is_some() => {
+        // A `Text` wears its OWN part's text style — `color`, `font-size`,
+        // `font-weight`, `font-family: monospace` — layered over whatever a
+        // container threaded down. Compose's `Text` inherits nothing from the
+        // `Column` around it, so a style the emitter does not write onto the
+        // call is simply lost. Until this arm read the part, it was: only a
+        // `Text` carrying a `font-size` *prop* (#15081) looked at its part,
+        // and every other label fell back to Material's default black — the
+        // toolkit EmptyState's heading and DraftEditor's field labels vanished
+        // into the dark theme's background, with no degradation reported.
+        //
+        //   part empty-state-title { color : "#f9fafb" ; }
+        //   Text [ empty-state-title ] ( content : slot: title )
+        //     → Text("No entries yet", …, color = Color(0xFFF9FAFB))
+        //
+        // With no styling in effect `text_call` keeps the labelled
+        // `Text(text = …)` shape, so unstyled text lowers byte-identically.
+        "Text" => {
             let inherited = text_ctx.cloned().unwrap_or_default();
             let style = compose_style_for_node(node, part_styles, None, (depth + 2) * 4, inherited.color.as_deref());
             let text = style.as_ref().map(|s| cell_text_style(&inherited, s)).unwrap_or(inherited);
-            let text = bound_text_style(node, text);
+            let text = if find_prop_value(node, "font-size").is_some() {
+                bound_text_style(node, text)
+            } else {
+                text
+            };
             emit_text(node, depth, Some(&text), for_payload, part_styles)
         },
-        "Text" => emit_text(node, depth, text_ctx, for_payload, part_styles),
         "Icon" => emit_icon_compose(node, depth, part_styles, text_ctx),
         "Path" => emit_path(node, depth, part_styles),
         "Spacer" => Ok(format!("{pad}Spacer(modifier = Modifier.weight(1f))\n")),
@@ -8700,6 +8719,72 @@ mod tests {
         for part in ["row-field", "shared-field", "plain-field"] {
             assert!(!modifier_of(part).contains("fillMaxWidth"), "{part}:\n{out}");
         }
+    }
+
+    /// A `Text`'s own part style reaches the `Text` call, with no `font-size`
+    /// prop needed. Before, a plain label ignored its part and fell back to
+    /// Material's black, invisible on a dark theme (the toolkit EmptyState
+    /// heading, DraftEditor's field labels). An unstyled `Text` keeps the
+    /// labelled `Text(text = …)` shape, and an inherited colour still loses
+    /// to the part's own.
+    #[test]
+    fn text_wears_its_own_part_style() {
+        let m = component("Labels", vec![], vec![]);
+        let content = |value: &str| LayoutProp {
+            name: "content".into(),
+            value: LayoutPropValue::String(value.into()),
+        };
+        let text = |part: &str, value: &str| styled_node("Text", part, vec![content(value)], vec![]);
+        let l = layout(
+            "Labels",
+            node(
+                "Column",
+                vec![],
+                vec![
+                    text("title", "Heading"),
+                    node("Text", vec![content("Plain")], vec![]),
+                    styled_node(
+                        "Column",
+                        "panel",
+                        vec![],
+                        vec![text("note", "Muted"), text("bare", "Inherited")],
+                    ),
+                ],
+            ),
+        );
+        let style = style_def(
+            "Labels",
+            vec![
+                part(
+                    "title",
+                    vec![
+                        sprop("color", "#f9fafb"),
+                        sprop("font-size", "18"),
+                        sprop("font-weight", "600"),
+                    ],
+                    vec![],
+                ),
+                part("panel", vec![sprop("color", "#111111")], vec![]),
+                part("note", vec![sprop("color", "#9ca3af")], vec![]),
+            ],
+        );
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        let line = |needle: &str| {
+            out.lines()
+                .find(|line| line.contains(needle))
+                .unwrap_or_else(|| panic!("no line with {needle}:\n{out}"))
+                .to_string()
+        };
+        let title = line("\"Heading\"");
+        assert!(title.contains("color = Color(0xFFF9FAFB)"), "{title}");
+        assert!(title.contains("fontSize = 18.sp"), "{title}");
+        assert!(title.contains("fontWeight = FontWeight."), "{title}");
+        assert!(out.contains("Text(text = \"Plain\")"), "{out}");
+        let muted = line("\"Muted\"");
+        assert!(muted.contains("color = Color(0xFF9CA3AF)"), "{muted}");
+        assert!(!muted.contains("0xFF111111"), "{muted}");
+        let inherited = line("\"Inherited\"");
+        assert!(inherited.contains("color = Color(0xFF111111)"), "{inherited}");
     }
 
     fn visicalc_grid_triple() -> (MosmodelComponent, LayoutDef, StyleDef) {
