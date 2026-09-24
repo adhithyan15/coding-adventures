@@ -1,7 +1,26 @@
 # Engram — rendering LaTeX and MathJax (plan for #13936)
 
-**Status:** plan. The first tier needs no decision and can be built. The
-second tier needs the owner's decision (§5).
+**Status:** plan. **Blocked on a prerequisite (§0).** Once that exists, Tier 1
+needs no decision; Tier 2 needs the owner's decision (§5).
+
+## 0. Prerequisite: no Engram build shows card HTML or images today
+
+Checked while starting Tier 1:
+
+- the Mosaic app hands the card's face to `ReviewCard` as `prompt : text` /
+  `answer : text`, drawn by a plain `Text` on every host;
+- the TypeScript web app (`code/programs/typescript/engram-app`) has no HTML
+  rendering path either.
+
+So images already embedded in fields (`<img src=…>`) are not shown, and a
+LaTeX tag rewritten to `<img src="latex-….png">` would only show more markup.
+Before either tier can "display formatted maths", Engram needs a card view
+that renders rich content. At minimum that means text runs plus images, in
+Mosaic terms a rich-content or image primitive. Journal photos are blocked on
+the same primitive.
+
+Tiers 1 and 2 below stay valid as the *content* half. That primitive is the
+*display* half, and it comes first.
 
 **Part of:** [the Anki parity goal](engram-anki-parity.md) §3.1 / §4.2, which
 ranks LaTeX first among the rendering gaps.
@@ -88,8 +107,11 @@ typeset.
 
 1. **Tier 2 backend:** (A), (B) or (C)? B is the only one that serves every
    host without a dependency, and it is the largest.
-2. **Order:** build Tier 1 now (no decision needed), or wait for the export
-   check in §3?
+2. **The display primitive (§0):** a Mosaic rich-content view (a small HTML
+   subset: text, `b/i/u`, `br`, `img`) or an image-only slot? Shared with
+   Journal photos.
+3. **Order:** the §0 primitive first, then Tier 1, then Tier 2. The export
+   check in §3 can run at any time.
 
 ## 6. Done when (Tier 1)
 
