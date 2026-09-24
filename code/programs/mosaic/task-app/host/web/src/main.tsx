@@ -927,6 +927,26 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         noteTitleValue: noteTitleDraft,
         noteBodyValue: noteBodyDraft,
         noteTaskValue: noteTaskDraft,
+        // Checklists (C3a) is served by the Rust app on the native hosts.
+        // This web host does not offer the view until C3b, so its slots stay
+        // inert: the switcher never selects it, and the generated component
+        // only reads them inside `If (checklists-mode)`. Its events fall
+        // through `apply` unhandled, like any other unknown event type.
+        checklistsMode: "",
+        checklistsTitle: "Checklists",
+        checklistLibraryRows: [],
+        checklistLibraryEmpty: true,
+        selectedChecklistKey: "",
+        newChecklistName: "",
+        checklistTemplateMode: false,
+        checklistRunMode: false,
+        checklistOutlineRows: [],
+        newChecklistItem: "",
+        checklistRunTitle: "",
+        checklistRunProgress: "",
+        checklistRunRows: [],
+        checklistCompleteLabel: "",
+        checklistAbandonLabel: "",
         timelineScale: tl.scale,
         timelineGrid: tl.grid,
         timelineRows: tl.rows,

@@ -13,14 +13,30 @@ use serde_json::{json, Value};
 use std::collections::BTreeSet;
 use std::error::Error;
 use std::fmt;
+use task_core::checklists::{ChecklistSummary, MAX_CHECKLIST_ITEMS};
 use task_core::{
-    Constraint, Date, DependencyKind, DependencyLink, Duration, Label, LabelId, LinkId, Note,
-    NoteId, Priority, ProjectComplexity, ProjectId, TaskId, Workspace, WorkspaceId,
+    ChecklistId, Constraint, Date, DependencyKind, DependencyLink, Duration, Label, LabelId,
+    LinkId, Note, NoteId, Priority, ProjectComplexity, ProjectId, RunStatus, TaskId, Workspace,
+    WorkspaceId,
 };
 
 const SNAPSHOT_SCHEMA: &str = "task-mosaic-app/state";
 const SNAPSHOT_VERSION: u32 = 1;
 const PROJECT_START: Date = Date(20_458); // 2026-01-05, a Monday.
+
+/// The longest a Checklists composer (a checklist's or an item's name) may
+/// grow. Longer input is refused as it is typed, so no draft can grow the
+/// state file without bound (task-app-checklists-view-v1.md, "Bounds").
+const MAX_CHECKLIST_TEXT_CHARS: usize = 512;
+
+/// The deepest indent a checklist row draws. Depth is unbounded in a restored
+/// snapshot (a chain of N items would make N² bytes of indent per render);
+/// past this, rows keep the deepest indent rather than growing without bound.
+const MAX_CHECKLIST_INDENT_DEPTH: usize = 16;
+
+fn checklist_indent(depth: u32) -> String {
+    "  ".repeat((depth as usize).min(MAX_CHECKLIST_INDENT_DEPTH))
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -31,18 +47,21 @@ enum ViewMode {
     Sheet,
     Calendar,
     Notes,
+    /// C3 (#14018). Appended: declaration order is snapshot history.
+    Checklists,
 }
 
 impl ViewMode {
     /// The view switcher's order (#14016). Not the declaration order above,
     /// which is snapshot history. Timeline is last so that leaving it out of
     /// a Board-tier project never shifts another view's index.
-    const SWITCHER_ORDER: [Self; 6] = [
+    const SWITCHER_ORDER: [Self; 7] = [
         Self::List,
         Self::Board,
         Self::Sheet,
         Self::Calendar,
         Self::Notes,
+        Self::Checklists,
         Self::Timeline,
     ];
 
@@ -53,17 +72,18 @@ impl ViewMode {
             Self::Sheet => "Sheet",
             Self::Calendar => "Calendar",
             Self::Notes => "Notes",
+            Self::Checklists => "Checklists",
             Self::Timeline => "Timeline",
         }
     }
 
-    /// The views the switcher offers: all six for a Full project, and all
-    /// but Timeline otherwise.
+    /// The views the switcher offers: all seven for a Full project, and all
+    /// but Timeline otherwise. Checklists is offered at both tiers.
     fn switcher_views(full: bool) -> &'static [Self] {
         if full {
             &Self::SWITCHER_ORDER
         } else {
-            &Self::SWITCHER_ORDER[..5]
+            &Self::SWITCHER_ORDER[..6]
         }
     }
 }
@@ -117,6 +137,13 @@ struct TaskAppState {
     note_title: String,
     note_body: String,
     note_task_name: String,
+    // Checklists (C3). Defaulted, so every earlier snapshot still restores.
+    #[serde(default)]
+    selected_checklist: Option<ChecklistId>,
+    #[serde(default)]
+    new_checklist_name: String,
+    #[serde(default)]
+    new_checklist_item: String,
 }
 
 impl Default for TaskAppState {
@@ -163,14 +190,36 @@ impl Default for TaskAppState {
             note_title: String::new(),
             note_body: String::new(),
             note_task_name: String::new(),
+            selected_checklist: None,
+            new_checklist_name: String::new(),
+            new_checklist_item: String::new(),
         }
     }
 }
 
 /// Concrete standard-ABI TaskApp implementation.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct TaskMosaicApp {
     state: TaskAppState,
+    /// Milliseconds since the Unix epoch. Checklist ops stamp runs with it;
+    /// tests replace it. Not part of the snapshot.
+    clock: fn() -> u64,
+}
+
+impl Default for TaskMosaicApp {
+    fn default() -> Self {
+        Self {
+            state: TaskAppState::default(),
+            clock: system_clock,
+        }
+    }
+}
+
+fn system_clock() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|elapsed| u64::try_from(elapsed.as_millis()).unwrap_or(u64::MAX))
+        .unwrap_or(0)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -199,6 +248,15 @@ impl fmt::Display for TaskAppError {
 impl Error for TaskAppError {}
 
 impl TaskMosaicApp {
+    /// An app whose clock is `clock` instead of the system's: for tests and
+    /// for hosts that replay a recorded session.
+    pub fn with_clock(clock: fn() -> u64) -> Self {
+        Self {
+            clock,
+            ..Self::default()
+        }
+    }
+
     fn update(&self) -> AppUpdate {
         AppUpdate::new(self.props())
     }
@@ -257,20 +315,38 @@ impl TaskMosaicApp {
         {
             self.state.view = ViewMode::List;
         }
+        if let Some(id) = &self.state.selected_checklist {
+            if !self.active_project().checklists.contains_key(id) {
+                self.state.selected_checklist = None;
+            }
+        }
+        for draft in [
+            &mut self.state.new_checklist_name,
+            &mut self.state.new_checklist_item,
+        ] {
+            if draft.chars().count() > MAX_CHECKLIST_TEXT_CHARS {
+                draft.clear();
+            }
+        }
     }
 
+    /// The project's tasks in list order. Checklist templates' and runs'
+    /// items are not tasks on the list: they belong to the Checklists view,
+    /// exactly as task-core's own views leave them out
+    /// (task-app-checklists-v1.md).
     fn ordered_task_ids(&self) -> Vec<TaskId> {
         let project = self.active_project();
+        let owned = project.checklist_owned();
         let mut ids: Vec<TaskId> = self
             .state
             .task_order
             .iter()
-            .filter(|id| project.tasks.contains_key(*id))
+            .filter(|id| project.tasks.contains_key(*id) && !owned.contains(*id))
             .cloned()
             .collect();
         let mut seen: BTreeSet<TaskId> = ids.iter().cloned().collect();
         for id in project.tasks.keys() {
-            if seen.insert(id.clone()) {
+            if !owned.contains(id) && seen.insert(id.clone()) {
                 ids.push(id.clone());
             }
         }
@@ -454,6 +530,8 @@ impl TaskMosaicApp {
             Vec::new()
         };
 
+        let checklists = self.checklist_props();
+
         let views = ViewMode::switcher_views(full);
         // One label per view for the toolkit SegmentedControl. The control
         // reports which view is selected through the kernel's selected state
@@ -539,8 +617,353 @@ impl TaskMosaicApp {
             "note-title-value": self.state.note_title,
             "note-body-value": self.state.note_body,
             "note-task-value": self.state.note_task_name,
+            "checklists-mode": if self.state.view == ViewMode::Checklists { "checklists" } else { "" },
+            "checklists-title": "Checklists",
+            "checklist-library-rows": checklists.library_rows,
+            "checklist-library-empty": project.checklists.is_empty(),
+            "selected-checklist-key": self.state.selected_checklist.as_ref().map(ToString::to_string).unwrap_or_default(),
+            "new-checklist-name": self.state.new_checklist_name,
+            "checklist-template-mode": checklists.template_mode,
+            "checklist-run-mode": checklists.run_mode,
+            "checklist-outline-rows": checklists.outline_rows,
+            "new-checklist-item": self.state.new_checklist_item,
+            "checklist-run-title": checklists.run_title,
+            "checklist-run-progress": checklists.run_progress,
+            "checklist-run-rows": checklists.run_rows,
+            "checklist-complete-label": checklists.complete_label,
+            "checklist-abandon-label": checklists.abandon_label,
             "task-rows": task_rows,
         })
+    }
+
+    // ── Checklists (C3, task-app-checklists-view-v1.md) ─────────────────────
+    //
+    // The view is a library of the project's templates and runs beside the
+    // selection: a template's outline with its composer, or a run through
+    // ChecklistRun (C2). All the rows are positional lists of text, like
+    // every other view's, and use only truthy markers.
+
+    /// The library in display order: templates by name, then runs newest
+    /// first. The library's rows, and `onSelectChecklist`'s index, both come
+    /// from this one list, so a click can only ever name a row just drawn.
+    fn checklist_library(&self) -> Vec<ChecklistSummary> {
+        let mut all = self.active_project().checklists();
+        all.sort_by(|a, b| match (&a.status, &b.status) {
+            (None, None) => a
+                .name
+                .to_lowercase()
+                .cmp(&b.name.to_lowercase())
+                .then_with(|| a.id.cmp(&b.id)),
+            (None, Some(_)) => std::cmp::Ordering::Less,
+            (Some(_), None) => std::cmp::Ordering::Greater,
+            (Some(_), Some(_)) => b
+                .created_at
+                .cmp(&a.created_at)
+                .then_with(|| b.id.cmp(&a.id)),
+        });
+        all
+    }
+
+    fn checklist_props(&self) -> ChecklistProps {
+        let mut props = ChecklistProps::default();
+        if self.state.view != ViewMode::Checklists {
+            return props;
+        }
+        let project = self.active_project();
+        let mut last_heading = "";
+        props.library_rows = self
+            .checklist_library()
+            .iter()
+            .map(|summary| {
+                let group = if summary.status.is_none() {
+                    "Templates"
+                } else {
+                    "Runs"
+                };
+                let heading = if group == last_heading {
+                    String::new()
+                } else {
+                    last_heading = group;
+                    group.to_string()
+                };
+                let subtitle = match (summary.status, summary.progress) {
+                    (Some(status), Some(progress)) => progress_label(status, &progress),
+                    _ => item_count_label(summary.items),
+                };
+                let badge = match summary.status {
+                    Some(RunStatus::Completed) => "✓",
+                    Some(RunStatus::Abandoned) => "✗",
+                    _ => "",
+                };
+                vec![
+                    summary.id.to_string(),
+                    heading,
+                    display_name(&summary.name),
+                    subtitle,
+                    String::new(),
+                    badge.to_string(),
+                ]
+            })
+            .collect();
+
+        let Some(id) = &self.state.selected_checklist else {
+            return props;
+        };
+        if let Some(run) = project.checklist_run(id) {
+            let in_progress = run.status == RunStatus::InProgress;
+            props.run_mode = true;
+            props.run_title = display_name(&run.name);
+            props.run_progress = progress_label(run.status, &run.progress);
+            props.run_rows = run
+                .rows
+                .iter()
+                .map(|row| {
+                    let marker = |on: bool| if on { "1" } else { "" }.to_string();
+                    vec![
+                        row.task.to_string(),
+                        checklist_indent(row.depth),
+                        row.name.clone(),
+                        marker(row.is_decision),
+                        marker(if row.is_decision {
+                            row.answered == Some(true)
+                        } else {
+                            row.completed
+                        }),
+                        marker(row.is_decision && row.answered == Some(false)),
+                    ]
+                })
+                .collect();
+            if in_progress && run.progress.complete {
+                props.complete_label = "Complete".to_string();
+            }
+            if in_progress {
+                props.abandon_label = "Abandon".to_string();
+            }
+        } else if let Some(outline) = project.checklist_outline(id) {
+            props.template_mode = true;
+            props.outline_rows = outline
+                .iter()
+                .map(|row| {
+                    vec![
+                        row.task.to_string(),
+                        checklist_indent(row.depth),
+                        row.name.clone(),
+                    ]
+                })
+                .collect();
+        }
+        props
+    }
+
+    fn select_checklist(&mut self, index: usize) {
+        if let Some(summary) = self.checklist_library().get(index) {
+            self.state.selected_checklist = Some(summary.id.clone());
+            self.state.new_checklist_item.clear();
+        }
+    }
+
+    /// The selection, if it is a template (`want_run == false`) or a run.
+    fn selected_checklist_of_kind(
+        &self,
+        event: &Event,
+        want_run: bool,
+    ) -> Result<ChecklistId, TaskAppError> {
+        self.state
+            .selected_checklist
+            .as_ref()
+            .and_then(|id| self.active_project().checklists.get(id))
+            .filter(|checklist| checklist.run.is_some() == want_run)
+            .map(|checklist| checklist.id.clone())
+            .ok_or_else(|| TaskAppError::InvalidPayload {
+                event: event.name.clone(),
+                field: "selection",
+            })
+    }
+
+    /// Advance the shared id counter. Checked: a counter at `u64::MAX` (only a
+    /// tampered snapshot gets there) fails the event instead of wrapping to
+    /// ids that already exist, or panicking in a build with overflow checks.
+    fn bump_next_id(&mut self) -> Result<u64, TaskAppError> {
+        self.state.next_id = self
+            .state
+            .next_id
+            .checked_add(1)
+            .ok_or_else(|| TaskAppError::Engine("id counter exhausted".to_string()))?;
+        Ok(self.state.next_id)
+    }
+
+    /// The next free id `{prefix}-{n}` from the shared counter, skipping any
+    /// id (or derived root id) already taken. Checked, so a tampered counter
+    /// fails rather than wraps.
+    fn next_checklist_id(&mut self, prefix: &str) -> Result<ChecklistId, TaskAppError> {
+        loop {
+            let n = self.bump_next_id()?;
+            let id = ChecklistId::from_raw(format!("{prefix}-{n}"));
+            let root = TaskId::from_raw(format!("{id}/root"));
+            let taken = self
+                .state
+                .workspace
+                .projects
+                .values()
+                .any(|project| project.checklists.contains_key(&id))
+                || self.state.workspace.project_of_task(&root).is_some();
+            if !taken {
+                return Ok(id);
+            }
+        }
+    }
+
+    fn create_checklist(&mut self) -> Result<AppUpdate, TaskAppError> {
+        let name = self.state.new_checklist_name.trim().to_string();
+        if name.is_empty() {
+            return Ok(self.update());
+        }
+        let id = self.next_checklist_id("checklist")?;
+        let root = TaskId::from_raw(format!("{id}/root"));
+        let now = (self.clock)();
+        self.active_project_mut()
+            .create_checklist_template(id.clone(), root, name.clone(), "", now)
+            .map_err(engine_error)?;
+        self.state.selected_checklist = Some(id);
+        self.state.new_checklist_name.clear();
+        self.state.new_checklist_item.clear();
+        Ok(self.announced_update(format!("Created checklist {name}")))
+    }
+
+    fn add_checklist_item(&mut self, event: &Event) -> Result<AppUpdate, TaskAppError> {
+        let template = self.selected_checklist_of_kind(event, false)?;
+        let name = self.state.new_checklist_item.trim().to_string();
+        if name.is_empty() {
+            return Ok(self.update());
+        }
+        let project = self.active_project();
+        let root = project.checklists[&template].root.clone();
+        let items = project
+            .checklist_outline(&template)
+            .map_or(0, |rows| rows.len());
+        // After this item the subtree is `items + 2` tasks (the root, the
+        // existing items, this one); instantiate refuses more than the cap.
+        if items + 2 > MAX_CHECKLIST_ITEMS {
+            return Err(TaskAppError::Engine("checklist is full".to_string()));
+        }
+        // Siblings sort by (order, id), and minted ids do not sort by number
+        // (`task-10` < `task-9`), so each new item takes the next order.
+        let order = project
+            .tasks
+            .values()
+            .filter(|task| task.parent.as_ref() == Some(&root))
+            .map(|task| task.order)
+            .max()
+            .map_or(0, |max| max.saturating_add(1));
+        let id = self.next_task_id()?;
+        let project = self.active_project_mut();
+        project
+            .create_task(id.clone(), name.clone(), Some(root))
+            .map_err(engine_error)?;
+        project.set_order(&id, order).map_err(engine_error)?;
+        self.state.new_checklist_item.clear();
+        Ok(self.announced_update(format!("Added {name}")))
+    }
+
+    fn start_checklist_run(&mut self, event: &Event) -> Result<AppUpdate, TaskAppError> {
+        let template = self.selected_checklist_of_kind(event, false)?;
+        let run = self.next_checklist_id("run")?;
+        let now = (self.clock)();
+        self.active_project_mut()
+            .instantiate_checklist(&template, run.clone(), now)
+            .map_err(engine_error)?;
+        self.state.selected_checklist = Some(run);
+        Ok(self.announced_update("Run started"))
+    }
+
+    /// The visible row at `index` of the selected run, as just rendered.
+    fn checklist_run_row(
+        &self,
+        event: &Event,
+    ) -> Result<task_core::projections::ChecklistRow, TaskAppError> {
+        let run = self.selected_checklist_of_kind(event, true)?;
+        let index = index_payload(event, "index")?;
+        self.active_project()
+            .checklist_run(&run)
+            .and_then(|view| view.rows.into_iter().nth(index))
+            .ok_or_else(|| TaskAppError::InvalidPayload {
+                event: event.name.clone(),
+                field: "index",
+            })
+    }
+
+    fn toggle_checklist_item(&mut self, event: &Event) -> Result<(), TaskAppError> {
+        let row = self.checklist_run_row(event)?;
+        if row.is_decision {
+            return Err(TaskAppError::InvalidPayload {
+                event: event.name.clone(),
+                field: "index",
+            });
+        }
+        self.active_project_mut()
+            .set_completed(&row.task, !row.completed)
+            .map_err(engine_error)
+    }
+
+    /// Answer a question; answering with the answer it already has clears it,
+    /// so a mis-tap can be undone (as in the standalone Checklist app).
+    fn answer_checklist_decision(
+        &mut self,
+        event: &Event,
+        answer: bool,
+    ) -> Result<(), TaskAppError> {
+        let row = self.checklist_run_row(event)?;
+        if !row.is_decision {
+            return Err(TaskAppError::InvalidPayload {
+                event: event.name.clone(),
+                field: "index",
+            });
+        }
+        let project = self.active_project_mut();
+        if row.answered == Some(answer) {
+            project.clear_decision_answer(&row.task)
+        } else {
+            project.answer_decision(&row.task, answer)
+        }
+        .map_err(engine_error)
+    }
+
+    fn finish_checklist_run(
+        &mut self,
+        event: &Event,
+        complete: bool,
+    ) -> Result<AppUpdate, TaskAppError> {
+        let run = self.selected_checklist_of_kind(event, true)?;
+        let now = (self.clock)();
+        let project = self.active_project_mut();
+        if complete {
+            project.complete_checklist_run(&run, now)
+        } else {
+            project.abandon_checklist_run(&run, now)
+        }
+        .map_err(engine_error)?;
+        Ok(self.announced_update(if complete {
+            "Run completed"
+        } else {
+            "Run abandoned"
+        }))
+    }
+
+    fn delete_checklist(&mut self, event: &Event) -> Result<AppUpdate, TaskAppError> {
+        let id =
+            self.state
+                .selected_checklist
+                .clone()
+                .ok_or_else(|| TaskAppError::InvalidPayload {
+                    event: event.name.clone(),
+                    field: "selection",
+                })?;
+        self.active_project_mut()
+            .delete_checklist(&id)
+            .map_err(engine_error)?;
+        self.state.selected_checklist = None;
+        self.state.new_checklist_item.clear();
+        Ok(self.announced_update("Checklist deleted"))
     }
 
     fn task_rows(
@@ -980,8 +1403,9 @@ impl TaskMosaicApp {
             "showSheet" => self.state.view = ViewMode::Sheet,
             "showCalendar" => self.state.view = ViewMode::Calendar,
             "showNotes" => self.state.view = ViewMode::Notes,
+            "showChecklists" => self.state.view = ViewMode::Checklists,
             // The switcher's selection. The index is into the views THIS
-            // project offers, so Timeline (index 5) is out of range for a
+            // project offers, so Timeline (index 6) is out of range for a
             // Board-tier project and refused, like any other bad index.
             "showView" => {
                 let index = index_payload(event, "index")?;
@@ -1024,9 +1448,25 @@ impl TaskMosaicApp {
             "addLabel" => return self.add_label(),
             "calendarEventDropped" => self.move_calendar_event(event)?,
             "selectNote" => self.select_note(index_payload(event, "index")?),
-            "newNote" => self.new_note(),
+            "newNote" => self.new_note()?,
             "saveNote" => return self.save_note(),
             "deleteNote" => return self.delete_note(),
+            "selectChecklist" => self.select_checklist(index_payload(event, "index")?),
+            "newChecklistNameChange" => {
+                self.state.new_checklist_name = bounded_text_payload(event, "value")?
+            }
+            "newChecklistItemChange" => {
+                self.state.new_checklist_item = bounded_text_payload(event, "value")?
+            }
+            "createChecklist" => return self.create_checklist(),
+            "addChecklistItem" => return self.add_checklist_item(event),
+            "startChecklistRun" => return self.start_checklist_run(event),
+            "checklistToggle" => self.toggle_checklist_item(event)?,
+            "checklistAnswerYes" => self.answer_checklist_decision(event, true)?,
+            "checklistAnswerNo" => self.answer_checklist_decision(event, false)?,
+            "completeChecklistRun" => return self.finish_checklist_run(event, true),
+            "abandonChecklistRun" => return self.finish_checklist_run(event, false),
+            "deleteChecklist" => return self.delete_checklist(event),
             _ => return Err(TaskAppError::UnknownEvent(event.name.clone())),
         }
         Ok(self.update())
@@ -1050,7 +1490,7 @@ impl TaskMosaicApp {
         };
         self.state.new_task_due_error.clear();
         let previous = self.ordered_task_ids().last().cloned();
-        let id = self.next_task_id();
+        let id = self.next_task_id()?;
         let project_id = self.state.active_project.clone();
         self.state
             .workspace
@@ -1192,14 +1632,15 @@ impl TaskMosaicApp {
         if name.is_empty() {
             return Ok(self.update());
         }
-        self.state.next_id += 1;
-        let id = ProjectId::from_raw(format!("project-{}", self.state.next_id));
+        let n = self.bump_next_id()?;
+        let id = ProjectId::from_raw(format!("project-{n}"));
         let parent = nested.then(|| self.state.active_project.clone());
         self.state
             .workspace
             .create_project(id.clone(), name.clone(), parent)
             .map_err(engine_error)?;
         self.state.active_project = id;
+        self.state.selected_checklist = None;
         self.state.new_project_name.clear();
         self.state.view = ViewMode::List;
         Ok(self.announced_update(format!("Created project {name}")))
@@ -1207,6 +1648,9 @@ impl TaskMosaicApp {
 
     fn select_project(&mut self, index: usize) {
         if let Some(id) = self.project_rows().0.get(index).cloned() {
+            if id != self.state.active_project {
+                self.state.selected_checklist = None;
+            }
             self.state.active_project = id;
             self.state.expanded_task = None;
             self.clear_task_edit(false);
@@ -1227,7 +1671,7 @@ impl TaskMosaicApp {
     fn move_card(&mut self, event: &Event) -> Result<(), TaskAppError> {
         let id = TaskId::from_raw(text_payload(event, "key")?);
         let target = text_payload(event, "targetKey")?;
-        if !self.active_project().tasks.contains_key(&id) {
+        if !self.is_listed_task(&id) {
             return Ok(());
         }
         match target.as_str() {
@@ -1337,8 +1781,8 @@ impl TaskMosaicApp {
         if name.is_empty() {
             return Ok(self.update());
         }
-        self.state.next_id += 1;
-        let id = LabelId::from_raw(format!("label-{}", self.state.next_id));
+        let n = self.bump_next_id()?;
+        let id = LabelId::from_raw(format!("label-{n}"));
         self.active_project_mut().upsert_label(Label {
             id,
             name: name.clone(),
@@ -1353,7 +1797,7 @@ impl TaskMosaicApp {
         let Some(date) = parse_date(&text_payload(event, "targetKey")?) else {
             return Ok(());
         };
-        if self.active_project().tasks.contains_key(&id) {
+        if self.is_listed_task(&id) {
             self.active_project_mut()
                 .set_constraint(&id, Constraint::MustStartOn(date))
                 .map_err(engine_error)?;
@@ -1361,13 +1805,23 @@ impl TaskMosaicApp {
         Ok(())
     }
 
-    fn new_note(&mut self) {
-        self.state.next_id += 1;
-        self.state.selected_note_id =
-            Some(NoteId::from_raw(format!("note-{}", self.state.next_id)));
+    /// A drop names its task by key, straight from the payload. Only a task the
+    /// views actually show may be moved: a checklist's items are not on the
+    /// board or the calendar, and `set_constraint` has no checklist guard, so a
+    /// crafted drop could otherwise stamp a template item (copied into every
+    /// run) or a finished run's record.
+    fn is_listed_task(&self, id: &TaskId) -> bool {
+        let project = self.active_project();
+        project.tasks.contains_key(id) && !project.checklist_owned().contains(id)
+    }
+
+    fn new_note(&mut self) -> Result<(), TaskAppError> {
+        let n = self.bump_next_id()?;
+        self.state.selected_note_id = Some(NoteId::from_raw(format!("note-{n}")));
         self.state.note_title.clear();
         self.state.note_body.clear();
         self.state.note_task_name.clear();
+        Ok(())
     }
 
     fn select_note(&mut self, index: usize) {
@@ -1436,12 +1890,12 @@ impl TaskMosaicApp {
         self.state.note_task_name.clear();
     }
 
-    fn next_task_id(&mut self) -> TaskId {
+    fn next_task_id(&mut self) -> Result<TaskId, TaskAppError> {
         loop {
-            self.state.next_id += 1;
-            let id = TaskId::from_raw(format!("task-{}", self.state.next_id));
+            let n = self.bump_next_id()?;
+            let id = TaskId::from_raw(format!("task-{n}"));
             if self.state.workspace.project_of_task(&id).is_none() {
-                return id;
+                return Ok(id);
             }
         }
     }
@@ -1504,6 +1958,65 @@ fn text_payload(event: &Event, field: &'static str) -> Result<String, TaskAppErr
             event: event.name.clone(),
             field,
         })
+}
+
+/// A composer value, refused past [`MAX_CHECKLIST_TEXT_CHARS`].
+fn bounded_text_payload(event: &Event, field: &'static str) -> Result<String, TaskAppError> {
+    let value = text_payload(event, field)?;
+    if value.chars().count() > MAX_CHECKLIST_TEXT_CHARS {
+        return Err(TaskAppError::InvalidPayload {
+            event: event.name.clone(),
+            field,
+        });
+    }
+    Ok(value)
+}
+
+/// The Checklists view's computed slot values; empty outside the view.
+#[derive(Default)]
+struct ChecklistProps {
+    library_rows: Vec<Vec<String>>,
+    template_mode: bool,
+    run_mode: bool,
+    outline_rows: Vec<Vec<String>>,
+    run_title: String,
+    run_progress: String,
+    run_rows: Vec<Vec<String>>,
+    complete_label: String,
+    abandon_label: String,
+}
+
+/// `"3 of 5 done"`, with `" · 1 of 2 answered"` when the run has questions;
+/// a finished run just says how it finished.
+fn progress_label(
+    status: RunStatus,
+    progress: &task_core::checklists::ChecklistProgress,
+) -> String {
+    match status {
+        RunStatus::Completed => "Completed".to_string(),
+        RunStatus::Abandoned => "Abandoned".to_string(),
+        RunStatus::InProgress if progress.decisions > 0 => format!(
+            "{} of {} done · {} of {} answered",
+            progress.checked, progress.total, progress.answered, progress.decisions
+        ),
+        RunStatus::InProgress => format!("{} of {} done", progress.checked, progress.total),
+    }
+}
+
+fn item_count_label(items: usize) -> String {
+    match items {
+        1 => "1 item".to_string(),
+        n => format!("{n} items"),
+    }
+}
+
+/// RecordList draws a row's title as its button: never let it be empty.
+fn display_name(name: &str) -> String {
+    if name.trim().is_empty() {
+        "Untitled checklist".to_string()
+    } else {
+        name.to_string()
+    }
 }
 
 fn normalize_event_name(name: &str) -> String {
@@ -1731,6 +2244,21 @@ mod tests {
         "note-title-value",
         "note-body-value",
         "note-task-value",
+        "checklists-mode",
+        "checklists-title",
+        "checklist-library-rows",
+        "checklist-library-empty",
+        "selected-checklist-key",
+        "new-checklist-name",
+        "checklist-template-mode",
+        "checklist-run-mode",
+        "checklist-outline-rows",
+        "new-checklist-item",
+        "checklist-run-title",
+        "checklist-run-progress",
+        "checklist-run-rows",
+        "checklist-complete-label",
+        "checklist-abandon-label",
         "task-rows",
     ];
 
@@ -1783,6 +2311,8 @@ mod tests {
             "calendar"
         } else if props["notes-mode"] == "notes" {
             "notes"
+        } else if props["checklists-mode"] == "checklists" {
+            "checklists"
         } else {
             "list"
         };
@@ -2076,14 +2606,14 @@ mod tests {
                 .collect()
         };
 
-        // A new project is Board tier: five views, no Timeline.
+        // A new project is Board tier: six views, no Timeline.
         let board = app
             .dispatch(event(1, "showView", json!({"index":1})))
             .unwrap()
             .props;
         assert_eq!(
             labels(&board),
-            ["List", "Board", "Sheet", "Calendar", "Notes"]
+            ["List", "Board", "Sheet", "Calendar", "Notes", "Checklists"]
         );
         assert_eq!(board["nav-selected-index"], 1);
         assert_eq!(board["board-mode"], "board");
@@ -2097,10 +2627,10 @@ mod tests {
             "every board column row must satisfy the four-cell layout contract"
         );
 
-        // Index 5 is Timeline, which a Board-tier project does not offer.
+        // Index 6 is Timeline, which a Board-tier project does not offer.
         let before = app.snapshot().unwrap();
         assert!(matches!(
-            app.dispatch(event(2, "showView", json!({"index":5}))),
+            app.dispatch(event(2, "showView", json!({"index":6}))),
             Err(TaskAppError::InvalidPayload { field: "index", .. })
         ));
         assert_eq!(
@@ -2116,7 +2646,15 @@ mod tests {
             .props;
         assert_eq!(
             labels(&full),
-            ["List", "Board", "Sheet", "Calendar", "Notes", "Timeline"]
+            [
+                "List",
+                "Board",
+                "Sheet",
+                "Calendar",
+                "Notes",
+                "Checklists",
+                "Timeline"
+            ]
         );
         let modes = [
             ("", ""),
@@ -2124,6 +2662,7 @@ mod tests {
             ("sheet-mode", "sheet"),
             ("calendar-mode", "calendar"),
             ("notes-mode", "notes"),
+            ("checklists-mode", "checklists"),
             ("timeline-mode", "timeline"),
         ];
         for (index, (slot, value)) in modes.iter().enumerate() {
@@ -2140,7 +2679,15 @@ mod tests {
             // is the control's to report (UI86), not a word in the name.
             assert_eq!(
                 labels(&props),
-                ["List", "Board", "Sheet", "Calendar", "Notes", "Timeline"],
+                [
+                    "List",
+                    "Board",
+                    "Sheet",
+                    "Calendar",
+                    "Notes",
+                    "Checklists",
+                    "Timeline"
+                ],
                 "index {index}"
             );
             if !slot.is_empty() {
@@ -2155,7 +2702,7 @@ mod tests {
             .unwrap()
             .props;
         assert_eq!(back["nav-selected-index"], 0);
-        assert_eq!(labels(&back).len(), 5);
+        assert_eq!(labels(&back).len(), 6);
     }
 
     #[test]
@@ -2178,6 +2725,7 @@ mod tests {
             ("showSheet", json!({})),
             ("showCalendar", json!({})),
             ("showNotes", json!({})),
+            ("showChecklists", json!({})),
             ("showView", json!({"index":0})),
             (
                 "cardDropped",
@@ -2337,5 +2885,458 @@ mod tests {
             .as_array()
             .expect("sheet-column-headers is a list");
         assert_eq!(widths.len(), headers.len(), "one width per column");
+    }
+
+    // ── Checklists (C3) ─────────────────────────────────────────────────────
+
+    const NOW: u64 = 1_790_000_000_000;
+
+    fn fixed_clock() -> u64 {
+        NOW
+    }
+
+    /// A started app in the Checklists view, with a fixed clock.
+    fn checklists_app() -> TaskMosaicApp {
+        let mut app = TaskMosaicApp::with_clock(fixed_clock);
+        app.start(context()).unwrap();
+        app.dispatch(event(1, "showChecklists", json!({}))).unwrap();
+        app
+    }
+
+    fn send(app: &mut TaskMosaicApp, name: &str, payload: Value) -> Value {
+        app.dispatch(event(1, name, payload))
+            .unwrap_or_else(|error| panic!("{name}: {error}"))
+            .props
+    }
+
+    /// Create a template named `name` holding `items`, left selected.
+    fn template(app: &mut TaskMosaicApp, name: &str, items: &[&str]) -> Value {
+        send(app, "newChecklistNameChange", json!({ "value": name }));
+        let mut props = send(app, "createChecklist", json!({}));
+        for item in items {
+            send(app, "newChecklistItemChange", json!({ "value": item }));
+            props = send(app, "addChecklistItem", json!({}));
+        }
+        props
+    }
+
+    fn column(rows: &Value, field: usize) -> Vec<String> {
+        rows.as_array()
+            .unwrap()
+            .iter()
+            .map(|row| row[field].as_str().unwrap().to_string())
+            .collect()
+    }
+
+    #[test]
+    fn checklists_view_starts_empty() {
+        let props = checklists_app().update().props;
+        assert_eq!(props["checklists-mode"], "checklists");
+        assert_eq!(props["checklist-library-empty"], true);
+        assert_eq!(props["checklist-library-rows"], json!([]));
+        assert_eq!(props["checklist-template-mode"], false);
+        assert_eq!(props["checklist-run-mode"], false);
+        assert_eq!(props["selected-checklist-key"], "");
+    }
+
+    #[test]
+    fn a_template_is_built_run_and_completed() {
+        let mut app = checklists_app();
+        // Twelve items: the eleventh and twelfth must still come after the
+        // ninth and tenth although their ids sort before them.
+        let names: Vec<String> = (1..=12).map(|n| format!("Step {n}")).collect();
+        let refs: Vec<&str> = names.iter().map(String::as_str).collect();
+        let props = template(&mut app, "Release", &refs);
+        assert_eq!(props["checklist-template-mode"], true);
+        assert_eq!(column(&props["checklist-outline-rows"], 2), names);
+        assert_eq!(props["new-checklist-item"], "", "the composer clears");
+        assert_eq!(props["checklist-library-rows"][0][1], "Templates");
+        assert_eq!(props["checklist-library-rows"][0][2], "Release");
+        assert_eq!(props["checklist-library-rows"][0][3], "12 items");
+        // Template items are not list tasks.
+        assert_eq!(props["task-rows"], json!([]));
+        assert_eq!(props["empty-list"], "empty");
+
+        let props = send(&mut app, "startChecklistRun", json!({}));
+        assert_eq!(props["checklist-run-mode"], true);
+        assert_eq!(props["checklist-run-title"], "Release");
+        assert_eq!(props["checklist-run-progress"], "0 of 12 done");
+        assert_eq!(props["checklist-complete-label"], "", "not complete yet");
+        assert_eq!(props["checklist-abandon-label"], "Abandon");
+        assert_eq!(column(&props["checklist-run-rows"], 2), names);
+        assert_eq!(props["checklist-run-rows"][0][3], "", "a check item");
+        // The library: the template, then the run, each group headed once.
+        assert_eq!(
+            column(&props["checklist-library-rows"], 1),
+            ["Templates", "Runs"]
+        );
+
+        let mut props = props;
+        for index in 0..12 {
+            props = send(&mut app, "checklistToggle", json!({ "index": index }));
+        }
+        assert_eq!(props["checklist-run-progress"], "12 of 12 done");
+        assert_eq!(props["checklist-run-rows"][0][4], "1", "ticked");
+        assert_eq!(props["checklist-complete-label"], "Complete");
+
+        // Unticking withdraws the offer; ticking again restores it.
+        let props = send(&mut app, "checklistToggle", json!({ "index": 3 }));
+        assert_eq!(props["checklist-complete-label"], "");
+        send(&mut app, "checklistToggle", json!({ "index": 3 }));
+
+        let props = send(&mut app, "completeChecklistRun", json!({}));
+        assert_eq!(props["checklist-run-progress"], "Completed");
+        assert_eq!(props["checklist-complete-label"], "");
+        assert_eq!(props["checklist-abandon-label"], "");
+        assert_eq!(props["checklist-library-rows"][1][5], "✓");
+        // Neither template nor run leaks into the other views.
+        assert_eq!(props["task-rows"], json!([]));
+        assert_eq!(
+            app.active_project().checklists[&ChecklistId::from_raw("run-14")]
+                .run
+                .as_ref()
+                .unwrap()
+                .finished_at,
+            Some(NOW)
+        );
+    }
+
+    #[test]
+    fn an_incomplete_run_cannot_be_completed() {
+        let mut app = checklists_app();
+        template(&mut app, "Release", &["Only step"]);
+        send(&mut app, "startChecklistRun", json!({}));
+        let before = app.snapshot().unwrap();
+        assert!(matches!(
+            app.dispatch(event(1, "completeChecklistRun", json!({}))),
+            Err(TaskAppError::Engine(_))
+        ));
+        assert_eq!(app.snapshot().unwrap(), before);
+    }
+
+    #[test]
+    fn a_decision_reveals_its_branch_and_a_repeat_answer_clears_it() {
+        let mut app = checklists_app();
+        template(
+            &mut app,
+            "Pre-flight",
+            &["Raining?", "Take umbrella", "Wear hat"],
+        );
+        // Decision authoring is C3c; build the branch through the engine.
+        let ids: Vec<TaskId> = {
+            let props = app.update().props;
+            column(&props["checklist-outline-rows"], 0)
+                .into_iter()
+                .map(TaskId::from_raw)
+                .collect()
+        };
+        app.active_project_mut()
+            .set_decision(
+                &ids[0],
+                Some(task_core::Decision {
+                    question: "Raining?".to_string(),
+                    answer: None,
+                    yes_children: vec![ids[1].clone()],
+                    no_children: vec![ids[2].clone()],
+                }),
+            )
+            .unwrap();
+        let props = app.update().props;
+        assert_eq!(
+            column(&props["checklist-outline-rows"], 1),
+            ["", "  ", "  "],
+            "the outline shows both branches, indented"
+        );
+
+        let props = send(&mut app, "startChecklistRun", json!({}));
+        assert_eq!(column(&props["checklist-run-rows"], 2), ["Raining?"]);
+        assert_eq!(props["checklist-run-rows"][0][3], "1", "a decision");
+        assert_eq!(
+            props["checklist-run-progress"],
+            "0 of 0 done · 0 of 1 answered"
+        );
+
+        let props = send(&mut app, "checklistAnswerYes", json!({"index":0}));
+        assert_eq!(
+            column(&props["checklist-run-rows"], 2),
+            ["Raining?", "Take umbrella"]
+        );
+        assert_eq!(props["checklist-run-rows"][0][4], "1");
+        assert_eq!(props["checklist-run-rows"][0][5], "");
+
+        let props = send(&mut app, "checklistAnswerNo", json!({"index":0}));
+        assert_eq!(
+            column(&props["checklist-run-rows"], 2),
+            ["Raining?", "Wear hat"]
+        );
+        assert_eq!(props["checklist-run-rows"][0][5], "1");
+
+        let props = send(&mut app, "checklistAnswerNo", json!({"index":0}));
+        assert_eq!(
+            column(&props["checklist-run-rows"], 2),
+            ["Raining?"],
+            "cleared"
+        );
+
+        // A decision is answered, not ticked; a check item is ticked, not answered.
+        assert!(app
+            .dispatch(event(1, "checklistToggle", json!({"index":0})))
+            .is_err());
+        send(&mut app, "checklistAnswerYes", json!({"index":0}));
+        assert!(app
+            .dispatch(event(1, "checklistAnswerYes", json!({"index":1})))
+            .is_err());
+        assert!(
+            app.dispatch(event(1, "checklistToggle", json!({"index":2})))
+                .is_err(),
+            "out of range"
+        );
+    }
+
+    #[test]
+    fn an_abandoned_run_is_read_only() {
+        let mut app = checklists_app();
+        template(&mut app, "Release", &["Step"]);
+        send(&mut app, "startChecklistRun", json!({}));
+        let props = send(&mut app, "abandonChecklistRun", json!({}));
+        assert_eq!(props["checklist-run-progress"], "Abandoned");
+        assert_eq!(props["checklist-abandon-label"], "");
+        assert_eq!(props["checklist-library-rows"][1][5], "✗");
+        let before = app.snapshot().unwrap();
+        assert!(app
+            .dispatch(event(1, "checklistToggle", json!({"index":0})))
+            .is_err());
+        assert!(app
+            .dispatch(event(1, "abandonChecklistRun", json!({})))
+            .is_err());
+        assert_eq!(app.snapshot().unwrap(), before);
+    }
+
+    #[test]
+    fn template_and_run_events_need_the_right_selection() {
+        let mut app = checklists_app();
+        for name in [
+            "addChecklistItem",
+            "startChecklistRun",
+            "completeChecklistRun",
+            "deleteChecklist",
+        ] {
+            assert!(
+                app.dispatch(event(1, name, json!({}))).is_err(),
+                "{name} with nothing selected"
+            );
+        }
+        template(&mut app, "Release", &["Step"]);
+        assert!(
+            app.dispatch(event(1, "completeChecklistRun", json!({})))
+                .is_err(),
+            "a template is not a run"
+        );
+        assert!(app
+            .dispatch(event(1, "checklistToggle", json!({"index":0})))
+            .is_err());
+        send(&mut app, "startChecklistRun", json!({}));
+        assert!(
+            app.dispatch(event(1, "startChecklistRun", json!({})))
+                .is_err(),
+            "a run is not a template"
+        );
+        assert!(app
+            .dispatch(event(1, "addChecklistItem", json!({})))
+            .is_err());
+    }
+
+    #[test]
+    fn empty_names_are_no_ops_and_long_ones_are_refused() {
+        let mut app = checklists_app();
+        send(&mut app, "newChecklistNameChange", json!({"value":"   "}));
+        let props = send(&mut app, "createChecklist", json!({}));
+        assert_eq!(props["checklist-library-empty"], true);
+
+        let long = "x".repeat(MAX_CHECKLIST_TEXT_CHARS + 1);
+        assert!(app
+            .dispatch(event(1, "newChecklistNameChange", json!({"value": long})))
+            .is_err());
+        assert!(app
+            .dispatch(event(1, "newChecklistItemChange", json!({"value": long})))
+            .is_err());
+        let fits = "é".repeat(MAX_CHECKLIST_TEXT_CHARS);
+        send(&mut app, "newChecklistNameChange", json!({"value": fits}));
+
+        template(&mut app, "Release", &[]);
+        send(&mut app, "newChecklistItemChange", json!({"value":"  "}));
+        let props = send(&mut app, "addChecklistItem", json!({}));
+        assert_eq!(props["checklist-outline-rows"], json!([]));
+    }
+
+    #[test]
+    fn selecting_and_deleting() {
+        let mut app = checklists_app();
+        template(&mut app, "Zulu", &["Z"]);
+        let props = template(&mut app, "alpha", &["A"]);
+        assert_eq!(
+            column(&props["checklist-library-rows"], 2),
+            ["alpha", "Zulu"],
+            "by name, ignoring case"
+        );
+        let props = send(&mut app, "selectChecklist", json!({"index":1}));
+        assert_eq!(column(&props["checklist-outline-rows"], 2), ["Z"]);
+        let zulu = props["selected-checklist-key"].clone();
+        assert_eq!(props["checklist-library-rows"][1][0], zulu);
+
+        let props = send(&mut app, "deleteChecklist", json!({}));
+        assert_eq!(props["selected-checklist-key"], "");
+        assert_eq!(column(&props["checklist-library-rows"], 2), ["alpha"]);
+        assert!(
+            app.dispatch(event(1, "selectChecklist", json!({"index":5})))
+                .is_ok(),
+            "a stale index selects nothing"
+        );
+        assert_eq!(app.update().props["selected-checklist-key"], "");
+    }
+
+    #[test]
+    fn switching_project_clears_the_selection() {
+        let mut app = checklists_app();
+        template(&mut app, "Release", &[]);
+        send(&mut app, "newProjectNameChange", json!({"value":"Other"}));
+        let props = send(&mut app, "addProject", json!({}));
+        assert_eq!(props["selected-checklist-key"], "");
+        assert_eq!(props["checklist-library-empty"], true);
+    }
+
+    #[test]
+    fn the_selection_and_drafts_survive_a_restore() {
+        let mut app = checklists_app();
+        template(&mut app, "Release", &["Step"]);
+        send(&mut app, "startChecklistRun", json!({}));
+        send(&mut app, "newChecklistNameChange", json!({"value":"Draft"}));
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut restored = TaskMosaicApp::with_clock(fixed_clock);
+        let props = restored.restore(snapshot).unwrap().props;
+        assert_eq!(props["checklist-run-mode"], true);
+        assert_eq!(props["checklist-run-title"], "Release");
+        assert_eq!(props["new-checklist-name"], "Draft");
+    }
+
+    #[test]
+    fn restore_repairs_a_dangling_selection_and_an_oversized_draft() {
+        let mut app = checklists_app();
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut state: Value = serde_json::from_slice(&snapshot.bytes).unwrap();
+        state["selectedChecklist"] = json!("missing");
+        state["newChecklistItem"] = json!("x".repeat(MAX_CHECKLIST_TEXT_CHARS + 1));
+        let props = app
+            .restore(Snapshot {
+                bytes: serde_json::to_vec(&state).unwrap(),
+                ..snapshot
+            })
+            .unwrap()
+            .props;
+        assert_eq!(props["selected-checklist-key"], "");
+        assert_eq!(props["new-checklist-item"], "");
+    }
+
+    #[test]
+    fn a_snapshot_from_before_checklists_restores() {
+        let mut app = checklists_app();
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut state: Value = serde_json::from_slice(&snapshot.bytes).unwrap();
+        for field in ["selectedChecklist", "newChecklistName", "newChecklistItem"] {
+            state.as_object_mut().unwrap().remove(field).expect(field);
+        }
+        app.restore(Snapshot {
+            bytes: serde_json::to_vec(&state).unwrap(),
+            ..snapshot
+        })
+        .unwrap();
+    }
+
+    #[test]
+    fn the_checklists_view_is_offered_at_both_tiers_and_by_index() {
+        let mut app = checklists_app();
+        let props = send(&mut app, "showView", json!({"index":5}));
+        assert_eq!(props["checklists-mode"], "checklists");
+        assert_eq!(props["nav-selected-index"], 5);
+        // Rows are computed only in the view.
+        template(&mut app, "Release", &["Step"]);
+        let props = send(&mut app, "showList", json!({}));
+        assert_eq!(props["checklist-library-rows"], json!([]));
+        assert_eq!(props["checklist-outline-rows"], json!([]));
+        assert_eq!(props["checklist-library-empty"], false);
+    }
+
+    #[test]
+    fn a_deep_chain_draws_a_bounded_indent() {
+        let mut app = checklists_app();
+        template(&mut app, "Deep", &["Top"]);
+        // Chain 40 items under one another through the engine (the view only
+        // adds flat items; a restored snapshot can hold any depth).
+        let mut parent = TaskId::from_raw(
+            app.update().props["checklist-outline-rows"][0][0]
+                .as_str()
+                .unwrap(),
+        );
+        for n in 0..40 {
+            let id = TaskId::from_raw(format!("deep-{n}"));
+            app.active_project_mut()
+                .create_task(id.clone(), format!("Level {n}"), Some(parent))
+                .unwrap();
+            parent = id;
+        }
+        let props = app.update().props;
+        let indents = column(&props["checklist-outline-rows"], 1);
+        assert_eq!(indents.len(), 41);
+        let widest = indents.iter().map(String::len).max().unwrap();
+        assert_eq!(widest, 2 * MAX_CHECKLIST_INDENT_DEPTH);
+    }
+
+    #[test]
+    fn an_exhausted_id_counter_fails_the_event_instead_of_wrapping() {
+        let mut app = checklists_app();
+        template(&mut app, "Release", &[]);
+        app.state.next_id = u64::MAX;
+        send(&mut app, "newChecklistItemChange", json!({"value":"Step"}));
+        let before = app.snapshot().unwrap();
+        for name in ["addChecklistItem", "startChecklistRun", "newNote"] {
+            assert!(
+                matches!(
+                    app.dispatch(event(1, name, json!({}))),
+                    Err(TaskAppError::Engine(_))
+                ),
+                "{name}"
+            );
+            assert_eq!(app.snapshot().unwrap(), before, "{name} changed nothing");
+        }
+        send(&mut app, "newTaskNameChange", json!({"value":"Task"}));
+        assert!(app.dispatch(event(1, "addTask", json!({}))).is_err());
+    }
+
+    #[test]
+    fn drops_cannot_reach_checklist_items() {
+        let mut app = checklists_app();
+        template(&mut app, "Release", &["Step"]);
+        let item = app.update().props["checklist-outline-rows"][0][0]
+            .as_str()
+            .unwrap()
+            .to_string();
+        send(
+            &mut app,
+            "calendarEventDropped",
+            json!({"key": item, "kind":"task", "targetKey":"2026-02-02", "position":"inside"}),
+        );
+        send(
+            &mut app,
+            "cardDropped",
+            json!({"key": item, "kind":"task", "targetKey":"done", "position":"inside"}),
+        );
+        let task = &app.active_project().tasks[&TaskId::from_raw(item)];
+        assert!(
+            task.schedule
+                .as_ref()
+                .is_none_or(|s| s.constraint == Constraint::Asap),
+            "no constraint stamped"
+        );
+        assert!(!task.completed, "a template item is never ticked");
     }
 }
