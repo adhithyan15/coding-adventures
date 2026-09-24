@@ -398,14 +398,15 @@ layout TaskApp {
                   HostButton [ cl-create-btn ] ( label : "Add checklist" , onClick : emit: onCreateChecklist )
                 }
                 If ( when: slot: checklist-library-empty ) {
-                  // Plain text, not the toolkit EmptyState: the list view
-                  // already mounts one, and an inlined component keeps its
-                  // part names, so a second collides (DuplicatePart
-                  // 'empty-state').
-                  Column [ cl-library-empty ] {
-                    Text [ cl-library-empty-title ] ( content : "No checklists yet" )
-                    Text [ cl-library-empty-message ] ( content : "Name one above, add its items, then start a run." )
-                  }
+                  // The toolkit EmptyState again. The List view mounts one
+                  // too; the resolver renames a second mount's parts
+                  // (empty-state-m2, …) so they no longer collide (#15959).
+                  // No action button: the name field above is the action.
+                  pkg::mosaic-pkg-toolkit::EmptyState (
+                    title : "No checklists yet" ,
+                    message : "Name one above, add its items, then start a run." ,
+                    action-label : ""
+                  )
                 }
                 Else {
                   pkg::mosaic-pkg-toolkit::RecordList (
@@ -499,11 +500,13 @@ layout TaskApp {
                     }
                   }
                   Else {
-                    // Plain text, for the reason given at cl-library-empty.
-                    Column [ cl-detail-empty ] {
-                      Text [ cl-detail-empty-title ] ( content : "Pick a checklist, or make one" )
-                      Text [ cl-detail-empty-message ] ( content : "Templates are reusable; each run is checked off on its own." )
-                    }
+                    // A third EmptyState mount (empty-state-m3, …); see the
+                    // library-pane one above.
+                    pkg::mosaic-pkg-toolkit::EmptyState (
+                      title : "Pick a checklist, or make one" ,
+                      message : "Templates are reusable; each run is checked off on its own." ,
+                      action-label : ""
+                    )
                   }
                 }
               }

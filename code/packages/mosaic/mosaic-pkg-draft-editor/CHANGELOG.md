@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Changed — the fields fill the editor, and the body has a height
+
+- The title and body fields take `width: 100%`, and the body takes
+  `min-height: 160`. Rendering Journal on Compose (#14416) showed an empty
+  entry as a 120px-wide box.
+- The web, SwiftUI and XAML lower both. Compose lowers the height and, for
+  now, silently ignores a percentage width; lowering it safely inside a Row
+  is a separate emitter change.
+- Qt and Flutter lower neither on a text field yet. Pinned in the native
+  gate, both ways.
+
 ### Added — `DraftEditor` (0.1.0, J3b of #14416)
 
 Journal's entry editor, Trestle's notes and Engram's focused field all need the
