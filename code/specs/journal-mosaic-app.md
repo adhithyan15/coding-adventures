@@ -134,8 +134,13 @@ through standard Qt binding" step, the same lane that launches TaskApp. It:
 5. runs the package's own `cargo test`.
 
 The lane is triggered by `journal-core`, `journal-mosaic-app` and the
-`journal-app` package (`mosaic_qt_runtime_ci_acceptance.py`). The other native
-backends follow in the same shape. The web host waits on a wasm clock:
+`journal-app` package (`mosaic_qt_runtime_ci_acceptance.py`).
+
+**SwiftUI and Compose (J5b)** emit with the same strict binding, pin the same
+empty reports, and then build: `swift build` on macOS and `gradle
+compileKotlin` on Linux. The same three packages trigger their lanes. Neither
+launches Journal yet; for both, a launch needs a harness like TaskApp's.
+Flutter and XAML follow. The web host waits on a wasm clock:
 `SystemTime::now()` panics on `wasm32-unknown-unknown`.
 
 ## The browser (J5c)

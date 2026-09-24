@@ -6,6 +6,9 @@
   `JournalApp` over the wasm runtime, persisted in `localStorage`.
   `scripts/build-web.sh` emits the React components and the wasm, and the new
   `journal-mosaic-web.yml` workflow tests it.
+- **Builds on SwiftUI and Compose (J5b).** Their CI lanes emit this package
+  with the strict standard binding, require zero degradations and no replaced
+  files, then run `swift build` (macOS) and `gradle compileKotlin` (Linux).
 - **Launches on Qt (J5a).** CI's Qt lane builds this package with the strict
   standard binding against `journal-mosaic-app`, installs it and launches it
   twice offscreen, restoring the second time. It also runs this package's

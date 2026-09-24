@@ -62,6 +62,41 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                     )
                 )
 
+    def test_journal_requires_acceptance(self) -> None:
+        # J5b: this lane emits and compiles Journal, so its engine, its app
+        # and its package all have to trigger it.
+        for package in (
+            "rust/journal-core",
+            "rust/journal-mosaic-app",
+            "mosaic/programs/journal-app",
+        ):
+            with self.subTest(package=package):
+                self.assertTrue(
+                    MODULE.requires_mosaic_compose_runtime(
+                        {"affected_packages": [package]}
+                    )
+                )
+
+    def test_journal_block_emits_strictly_and_builds(self) -> None:
+        """Journal's block (J5b): the strict binding, pinned-empty reports,
+        and the build gate, all inside the block itself."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn("# ---- Journal: emit and COMPILE on Compose", workflow)
+        start = workflow.index("# ---- Journal: emit and COMPILE on Compose")
+        journal_block = workflow[start:workflow.index("\n\n", start)]
+        self.assertIn(
+            "cargo build --manifest-path code/packages/rust/Cargo.toml -p journal-mosaic-app",
+            journal_block,
+        )
+        self.assertIn("libjournal_mosaic_app.so", journal_block)
+        self.assertIn("--backend compose", journal_block)
+        self.assertIn("--profile native-complete", journal_block)
+        self.assertIn('--runtime-library "$journal_runtime_library"', journal_block)
+        self.assertIn("'.replacedGeneratedFiles == []'", journal_block)
+        self.assertIn('.degradations | type == "array" and length == 0', journal_block)
+        self.assertIn('gradle --no-daemon --stacktrace -p "$journal_output/compose" compileKotlin', journal_block)
+
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_compose_runtime(
