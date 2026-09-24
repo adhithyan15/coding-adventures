@@ -1,0 +1,55 @@
+{
+  "stories": [
+    {
+      "name": "Just started (question unanswered)",
+      "fixtures": {
+        "title": "Pre-flight",
+        "progress-label": "0 of 2 done",
+        "rows": [
+          ["fuel", "", "Fuel checked", "", "", ""],
+          ["pax", "", "Passengers?", "1", "", ""],
+          ["doors", "", "Doors closed", "", "", ""]
+        ],
+        "yes-label": "Yes",
+        "no-label": "No",
+        "complete-label": "",
+        "abandon-label": "Abandon"
+      }
+    },
+    {
+      "name": "Answered yes (branch revealed, some ticked)",
+      "fixtures": {
+        "title": "Pre-flight",
+        "progress-label": "2 of 4 done",
+        "rows": [
+          ["fuel", "", "Fuel checked", "", "1", ""],
+          ["pax", "", "Passengers?", "1", "1", ""],
+          ["brief", "↳ ", "Brief passengers", "", "1", ""],
+          ["belts", "↳ ", "Seatbelts on", "", "", ""],
+          ["doors", "", "Doors closed", "", "", ""]
+        ],
+        "yes-label": "Yes",
+        "no-label": "No",
+        "complete-label": "",
+        "abandon-label": "Abandon"
+      }
+    },
+    {
+      "name": "Complete (ready to finish)",
+      "fixtures": {
+        "title": "Release",
+        "progress-label": "3 of 3 done",
+        "rows": [
+          ["tests", "", "Tests green", "", "1", ""],
+          ["notes", "", "Release notes written", "", "1", ""],
+          ["migrate", "", "Database migration needed?", "1", "", "1"],
+          ["tag", "", "Tag pushed", "", "1", ""]
+        ],
+        "yes-label": "Yes",
+        "no-label": "No",
+        "complete-label": "Complete",
+        "abandon-label": "Abandon"
+      }
+    }
+  ]
+}
