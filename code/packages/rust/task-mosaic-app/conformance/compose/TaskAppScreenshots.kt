@@ -2,6 +2,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.runSkikoComposeUiTest
@@ -82,6 +83,40 @@ class TaskAppScreenshots {
             onNodeWithTag("toggle").performClick()
             waitForIdle()
             shot("03-task-complete")
+
+            // Checklists (C3a-C3c): the library, a template with a question
+            // and both its branches, and a run with the question answered.
+            onNodeWithText("Checklists").performClick()
+            waitForIdle()
+            shot("04-checklists-empty")
+
+            onNodeWithTag("cl-name-input").performTextInput("Pre-flight")
+            waitForIdle()
+            onNodeWithTag("cl-create-btn").performClick()
+            waitForIdle()
+            for (item in listOf("Raining?", "Doors closed")) {
+                onNodeWithTag("cl-item-input").performTextInput(item)
+                waitForIdle()
+                onNodeWithTag("cl-item-add-btn").performClick()
+                waitForIdle()
+            }
+            onNodeWithText("Raining?").performClick()
+            waitForIdle()
+            onNodeWithTag("cl-toggle-question-btn").performClick()
+            waitForIdle()
+            onNodeWithTag("cl-item-input").performTextInput("Take umbrella")
+            waitForIdle()
+            onNodeWithTag("cl-add-yes-btn").performClick()
+            waitForIdle()
+            onNodeWithTag("cl-item-input").performTextInput("Wear hat")
+            waitForIdle()
+            onNodeWithTag("cl-add-no-btn").performClick()
+            waitForIdle()
+            shot("05-checklist-template-with-a-question")
+
+            onNodeWithTag("cl-start-btn").performClick()
+            waitForIdle()
+            shot("06-checklist-run")
         }
     }
 }

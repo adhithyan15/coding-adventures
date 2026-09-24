@@ -483,9 +483,12 @@ layout TaskApp {
                         onCommit : emit: onAddChecklistItem
                       )
                       HostButton [ cl-item-add-btn ] ( label : "Add item" , onClick : emit: onAddChecklistItem )
-                      // With a question selected, the item can go into one
-                      // of its branches instead of the top level.
-                      If ( when: slot: outline-question-selected ) {
+                    }
+                    // With a question selected, the composer's item can go
+                    // into one of its branches instead of the top level. Its
+                    // own row: beside the composer it overflowed the pane.
+                    If ( when: slot: outline-question-selected ) {
+                      Row [ cl-branch-actions ] {
                         HostButton [ cl-add-yes-btn ] ( label : "Add to Yes" , onClick : emit: onAddChecklistItemYes )
                         HostButton [ cl-add-no-btn ] ( label : "Add to No" , onClick : emit: onAddChecklistItemNo )
                       }
