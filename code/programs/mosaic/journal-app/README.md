@@ -63,8 +63,13 @@ JournalApp.mll ── RecordList · EmptyState · DraftEditor
 
 The same lane also runs this package's tests.
 
+**The browser** (J5c): `host/web` is a Vite and React page. It mounts the
+generated `JournalApp` over the `journal-mosaic-app` runtime built for wasm32,
+and it keeps the journal in `localStorage`. See [`host/web/README.md`](host/web/README.md).
+`scripts/build-web.sh` regenerates its inputs, and
+`.github/workflows/journal-mosaic-web.yml` tests it against the real wasm.
+
 Not yet:
 
 - the other native lanes (Compose, SwiftUI, Flutter, XAML);
-- the web host, which needs a wasm clock;
 - packaging and release (J5).

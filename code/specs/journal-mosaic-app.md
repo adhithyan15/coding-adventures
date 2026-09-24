@@ -174,6 +174,40 @@ J5c-1 is this runtime and a Node test that drives it through the real
 `mosaic-host.mjs` loader. The React web host that mounts `JournalApp` over it
 is J5c-2.
 
+### The web host (J5c-2)
+
+`code/programs/mosaic/journal-app/host/web` is a Vite and React page that
+mounts the generated `JournalApp` over this runtime, in the same shape as
+VisiCalc's host.
+
+- **Build:** `scripts/build-web.sh` compiles `journal-app` with the React
+  backend for both themes (into `src/components/{light,dark}`, git-ignored). It
+  also builds the wasm32 runtime and copies it into `public/`.
+- **Boot:** the page fetches the wasm, loads it through `mosaic-host.mjs` with
+  the guarded clock shim, and creates the app with the preferred colour
+  scheme.
+- **Rendering:** props are passed through with kebab-case keys turned into
+  camelCase, and the component's `dispatch({type, ...payload})` goes straight
+  to `host.dispatch`. The host translates nothing and owns no state. The
+  runtime's announcements go to a polite live region, and a refused event's
+  message to an alert.
+- **Persistence:** after each dispatch the host takes `snapshot()` and stores
+  it in `localStorage` under `journal-mosaic/state`. It stores the snapshot's
+  bytes as text, because they are the runtime's JSON. On boot, a stored
+  snapshot is restored. If the runtime refuses it, the stored value is **kept**
+  under `journal-mosaic/state.unreadable` (never deleted), the journal starts
+  empty, and an alert says so. If saving fails (quota, private mode), an alert
+  says so and the journal keeps working in memory.
+- **Tests (Vitest and jsdom):** they use the real wasm to check four things:
+  - the empty state renders;
+  - writing and saving an entry puts it on the timeline;
+  - a reload restores it;
+  - an unreadable stored value is kept aside rather than lost.
+- **CI:** `.github/workflows/journal-mosaic-web.yml`, modelled on
+  `visicalc.yml`, runs the tests and the production build. The old TypeScript
+  Journal and its `deploy-journal.yml` are untouched; retiring them is J5
+  release work.
+
 ## Deferred
 
 The web host (J5c-2), launching on the remaining native lanes, packaging and release (J5); the markdown preview;
