@@ -16,12 +16,12 @@
           <div style="display: flex; flex-direction: column; gap: 4px">
             <span style="color: #6c757d; font-size: 12px">{{titleLabel}}</span>
             <!-- emit "onTitleChange" dropped: HTML is static -->
-            <input type="text" aria-label="{{titleLabel}}" value="{{titleValue}}" placeholder="{{titlePlaceholder}}" data-on-change="onTitleChange" style="padding: 8px; background: #ffffff; color: #212529; border-width: 1px; border-color: #dee2e6; border-radius: 4px; font-size: 16px">
+            <input type="text" aria-label="{{titleLabel}}" value="{{titleValue}}" placeholder="{{titlePlaceholder}}" data-on-change="onTitleChange" style="width: 100%; padding: 8px; background: #ffffff; color: #212529; border-width: 1px; border-color: #dee2e6; border-radius: 4px; font-size: 16px">
           </div>
         <!-- /mosaic-if -->
         <span style="color: #6c757d; font-size: 12px">{{bodyLabel}}</span>
         <!-- emit "onBodyChange" dropped: HTML is static -->
-        <textarea aria-label="{{bodyLabel}}" data-on-change="onBodyChange" style="padding: 8px; background: #ffffff; color: #212529; border-width: 1px; border-color: #dee2e6; border-radius: 4px; font-size: 14px">{{bodyValue}}</textarea>
+        <textarea aria-label="{{bodyLabel}}" data-on-change="onBodyChange" style="width: 100%; min-height: 160px; padding: 8px; background: #ffffff; color: #212529; border-width: 1px; border-color: #dee2e6; border-radius: 4px; font-size: 14px">{{bodyValue}}</textarea>
         <div style="display: flex; flex-direction: row; gap: 8px">
           <!-- mosaic-if when="saveLabel" -->
             <!-- emit "onSave" dropped: HTML is static -->
