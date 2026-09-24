@@ -73,12 +73,20 @@ The wire name is the raw emit name (`onX`), as every generated host sends it.
 | `onCancelEdit` | — |
 
 An unknown event is an error naming it (UI38 §4.1), and any error leaves the app
-exactly as it was (the dispatch clones and restores), so the host can retry.
+exactly as it was, so the host can retry. Only the editor fields are saved for
+rollback: every journal change goes through `journal_core::apply`, which is
+already all-or-nothing, so the journal itself is never cloned per keystroke.
+
+**Drafts are capped at the engine's own limits** (title 512 characters, body
+1 MiB). A draft over the limit is refused as it is typed, not accepted and then
+unsaveable, so it can never grow the state file without bound.
 
 ## Ids and time
 
 - Entry ids are minted here, `entry-{n}`, skipping any already in use — the
-  core never mints (it validates: ≤ 64 printable ASCII bytes).
+  core never mints (it validates: ≤ 64 printable ASCII bytes). The counter
+  uses checked arithmetic and fails rather than repeats, and `restore` refuses
+  a counter above 2^53 (a tampered one at `u64::MAX` used to spin forever).
 - The clock is a plain `fn() -> u64` (milliseconds since the epoch), defaulting
   to the system clock and replaced in tests.
 - **Time zones.** `StartContext` carries no time zone, so "today" is the **UTC**
@@ -89,8 +97,9 @@ exactly as it was (the dispatch clones and restores), so the host can retry.
 
 `snapshot()` serialises the journal, the target and the draft (schema
 `journal-mosaic-app/state`, version 1), so an unsaved draft survives a restart.
-`restore` refuses a foreign schema, another version, corrupt bytes, or a journal
-that fails `JournalState::validate()`; a target naming a missing entry is
+`restore` refuses a foreign schema, another version, corrupt bytes, a journal
+that fails `JournalState::validate()`, an oversized draft, or an implausible id
+counter; a target naming a missing entry is
 repaired to `New`.
 
 ## Deferred

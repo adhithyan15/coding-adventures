@@ -24,6 +24,7 @@ use std::fmt;
 use journal_core::projections::timeline;
 use journal_core::{
     apply, Command, Date, Entry, EntryFilter, EntryId, JournalId, JournalState, OpError,
+    MAX_BODY_BYTES, MAX_TITLE_CHARS,
 };
 use mosaic_app_runtime::{
     Announcement, AppUpdate, Event, MosaicApp, Politeness, Snapshot, StartContext,
@@ -35,6 +36,9 @@ const SNAPSHOT_SCHEMA: &str = "journal-mosaic-app/state";
 const SNAPSHOT_VERSION: u32 = 1;
 const DEFAULT_JOURNAL: &str = "journal-personal";
 const MS_PER_DAY: u64 = 86_400_000;
+/// Highest entry counter a snapshot may carry. Well past any real journal, and
+/// far enough below `u64::MAX` that minting can never saturate and spin.
+const MAX_NEXT_ENTRY: u64 = 1 << 53;
 /// Longest subtitle (and body-derived title), in characters.
 const EXCERPT_CHARS: usize = 100;
 
@@ -211,12 +215,23 @@ impl JournalMosaicApp {
                 self.state.draft_body.clear();
                 Ok(self.update())
             }
+            // Drafts are capped at the engine's own entry limits: an unsaveable
+            // draft would otherwise be held in memory, echoed in every update and
+            // written to the state file at any size.
             "onTitleChange" => {
-                self.state.draft_title = text_payload(event, "value")?;
+                let value = text_payload(event, "value")?;
+                if !title_fits(&value) {
+                    return Err(invalid(event, "value"));
+                }
+                self.state.draft_title = value;
                 Ok(self.update())
             }
             "onBodyChange" => {
-                self.state.draft_body = text_payload(event, "value")?;
+                let value = text_payload(event, "value")?;
+                if !body_fits(&value) {
+                    return Err(invalid(event, "value"));
+                }
+                self.state.draft_body = value;
                 Ok(self.update())
             }
             "onSaveEntry" => self.save(),
@@ -252,7 +267,7 @@ impl JournalMosaicApp {
                 if title.trim().is_empty() && body.trim().is_empty() {
                     return Ok(self.announced("Nothing to save yet"));
                 }
-                let id = self.mint_entry_id();
+                let id = self.mint_entry_id()?;
                 self.run(Command::CreateEntry {
                     id: id.clone(),
                     journal: JournalId::from(DEFAULT_JOURNAL),
@@ -294,13 +309,18 @@ impl JournalMosaicApp {
         }
     }
 
-    /// `entry-{n}`, skipping ids already in use (e.g. after a restore).
-    fn mint_entry_id(&mut self) -> EntryId {
+    /// `entry-{n}`, skipping ids already in use (e.g. after a restore). Fails
+    /// rather than spins if the counter is exhausted — `saturating_add` would
+    /// repeat the last id forever once it reached `u64::MAX`.
+    fn mint_entry_id(&mut self) -> Result<EntryId, JournalAppError> {
         loop {
-            let id = EntryId::from_raw(format!("entry-{}", self.state.next_entry));
-            self.state.next_entry = self.state.next_entry.saturating_add(1);
+            let n = self.state.next_entry;
+            self.state.next_entry = n
+                .checked_add(1)
+                .ok_or_else(|| JournalAppError::Engine("entry ids exhausted".to_string()))?;
+            let id = EntryId::from_raw(format!("entry-{n}"));
             if self.state.journal.entry(&id).is_none() {
-                return id;
+                return Ok(id);
             }
         }
     }
@@ -317,10 +337,26 @@ impl MosaicApp for JournalMosaicApp {
     }
 
     /// Any error leaves the app exactly as it was, so the host can retry.
+    ///
+    /// Only the editor fields are saved for rollback, not the journal: every
+    /// journal change goes through `journal_core::apply`, which validates before
+    /// it writes and so is already all-or-nothing, and each event applies at most
+    /// one command. Cloning the whole journal instead cost ~20 ms per keystroke
+    /// at a few hundred large entries.
     fn dispatch(&mut self, event: Event) -> Result<AppUpdate, Self::Error> {
-        let before = self.state.clone();
+        let before = (
+            self.state.target.clone(),
+            self.state.draft_title.clone(),
+            self.state.draft_body.clone(),
+            self.state.next_entry,
+        );
         self.dispatch_inner(&event).inspect_err(|_| {
-            self.state = before;
+            (
+                self.state.target,
+                self.state.draft_title,
+                self.state.draft_body,
+                self.state.next_entry,
+            ) = before;
         })
     }
 
@@ -350,6 +386,9 @@ impl MosaicApp for JournalMosaicApp {
             .journal
             .journal(&JournalId::from(DEFAULT_JOURNAL))
             .is_none()
+            || state.next_entry > MAX_NEXT_ENTRY
+            || !title_fits(&state.draft_title)
+            || !body_fits(&state.draft_body)
         {
             return Err(JournalAppError::InvalidSnapshot);
         }
@@ -443,6 +482,21 @@ fn truncate(text: &str, max: usize) -> String {
     out.truncate(out.trim_end().len());
     out.push('…');
     out
+}
+
+fn title_fits(value: &str) -> bool {
+    value.chars().count() <= MAX_TITLE_CHARS
+}
+
+fn body_fits(value: &str) -> bool {
+    value.len() <= MAX_BODY_BYTES
+}
+
+fn invalid(event: &Event, field: &'static str) -> JournalAppError {
+    JournalAppError::InvalidPayload {
+        event: event.name.clone(),
+        field,
+    }
 }
 
 fn text_payload(event: &Event, field: &'static str) -> Result<String, JournalAppError> {
@@ -712,12 +766,15 @@ mod tests {
 
     #[test]
     fn an_engine_rejection_rolls_the_whole_event_back() {
+        // The engine refuses to edit an entry that is gone (a stale target the
+        // adapter did not repair); the event must leave no trace.
         let mut a = app();
-        send(&mut a, "onTitleChange", json!({ "value": "t".repeat(600) })).unwrap();
+        a.state.target = Target::Entry(EntryId::from_raw("entry-9"));
+        send(&mut a, "onTitleChange", json!({ "value": "orphaned edit" })).unwrap();
         let before = a.state.clone();
         let err = send(&mut a, "onSaveEntry", json!({})).unwrap_err();
         assert!(matches!(err, JournalAppError::Engine(_)), "{err:?}");
-        assert_eq!(a.state, before, "no entry, no consumed id");
+        assert_eq!(a.state, before);
     }
 
     #[test]
@@ -782,6 +839,60 @@ mod tests {
         let mut b = JournalMosaicApp::with_clock(test_clock);
         b.restore(snap).unwrap();
         assert_eq!(b.props()["selected-key"], "");
+    }
+
+    #[test]
+    fn an_exhausted_counter_is_an_error_not_a_hang() {
+        // Security review: next_entry = u64::MAX made saturating_add repeat one id
+        // forever. Minting now fails cleanly, and restore refuses such a counter.
+        let mut a = app();
+        a.state.next_entry = u64::MAX;
+        send(&mut a, "onTitleChange", json!({ "value": "x" })).unwrap();
+        let before = a.state.clone();
+        assert!(send(&mut a, "onSaveEntry", json!({})).is_err());
+        assert_eq!(a.state, before);
+
+        let good = app().snapshot().unwrap().unwrap();
+        let mut v: Value = serde_json::from_slice(&good.bytes).unwrap();
+        v["nextEntry"] = json!(u64::MAX);
+        let bad = Snapshot {
+            bytes: serde_json::to_vec(&v).unwrap(),
+            ..good
+        };
+        assert_eq!(app().restore(bad), Err(JournalAppError::InvalidSnapshot));
+    }
+
+    #[test]
+    fn drafts_are_capped_at_the_engines_limits() {
+        let mut a = app();
+        let err = send(
+            &mut a,
+            "onBodyChange",
+            json!({ "value": "b".repeat(MAX_BODY_BYTES + 1) }),
+        );
+        assert!(err.is_err());
+        assert_eq!(a.props()["draft-body"], "");
+        let err = send(
+            &mut a,
+            "onTitleChange",
+            json!({ "value": "t".repeat(MAX_TITLE_CHARS + 1) }),
+        );
+        assert!(err.is_err());
+        send(
+            &mut a,
+            "onTitleChange",
+            json!({ "value": "t".repeat(MAX_TITLE_CHARS) }),
+        )
+        .unwrap();
+
+        let good = app().snapshot().unwrap().unwrap();
+        let mut v: Value = serde_json::from_slice(&good.bytes).unwrap();
+        v["draftBody"] = json!("b".repeat(MAX_BODY_BYTES + 1));
+        let bad = Snapshot {
+            bytes: serde_json::to_vec(&v).unwrap(),
+            ..good
+        };
+        assert_eq!(app().restore(bad), Err(JournalAppError::InvalidSnapshot));
     }
 
     #[test]

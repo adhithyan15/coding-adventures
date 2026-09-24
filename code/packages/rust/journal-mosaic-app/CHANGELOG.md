@@ -19,4 +19,11 @@
   in use. "Today" is the UTC date, because `StartContext` carries no time zone.
 - **Snapshots** (`journal-mosaic-app/state` v1) include an unsaved draft. On
   restore the journal is validated and a stale target is repaired.
-- **Tests:** 15, at 95% line coverage.
+- **Hardening from the pre-push security review:**
+  - Id minting uses checked arithmetic, and restore refuses a counter above
+    2^53. A tampered `u64::MAX` made save spin forever.
+  - Drafts are capped at the engine's limits, both as they are typed and on
+    restore.
+  - Rollback saves only the editor fields, not the whole journal (about 20 ms
+    per keystroke at scale).
+- **Tests:** 17.
