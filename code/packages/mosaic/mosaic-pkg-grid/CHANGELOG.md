@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-09-24
+
+- **A light theme.** `Grid.light.msl`, `Cell.light.msl` and `RowHeaderGrid.light.msl` carry the dark theme's parts and states, one for one, in the light palette of VisiCalc's own `Grid.light.msl`. The package shipped only a dark theme, so every light-themed consumer embedded a VS Code-dark grid: Trestle's Sheet view, and VisiCalc's light build around its `RowHeaderGrid`.
+- **Column headings are styled and readable.** `sheet` now sets the table's text colour, and `header-cell` (plus RowHeaderGrid's `row-heading` and `row-corner`) gets a header band a notch off the body with a dimmer label, as in VisiCalc's Grid. Before, the headings had no colour anywhere in the cascade and fell back to each backend's default black, which was invisible on the dark surface. The Compose screenshot harness (#15968) showed it; the web backends inherit the same missing colour.
+- Header padding matches `Cell`'s 4px, so no row changes height. VisiCalc's web suite, including the row-height capacity checks, passes (42/42).
+
 ## 2026-09-20
 
 - Name inline cell editors through the shared grid editor-label slot and the Rust-selected absolute cell address (#15752).
