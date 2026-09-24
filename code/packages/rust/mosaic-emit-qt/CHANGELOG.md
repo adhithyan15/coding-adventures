@@ -1,5 +1,31 @@
 # Changelog
 
+## 2026-09-23
+
+- **Security: data `Text` renders as plain text.** Every `Text` that shows
+  application data now carries `textFormat: Text.PlainText`: the `Text`
+  primitive, dialog titles, and data-table cells. QtQuick's default
+  `Text.AutoText` switches to StyledText when a value looks like markup. A task
+  name or journal title such as `<img src="https://…">` would then make the QML
+  engine fetch that URL on render, a tracking beacon, and `<font>` could restyle
+  the text around it. `HostLink` keeps its deliberate, entity-escaped
+  `Text.RichText`, and a test pins that it carries exactly one `textFormat`.
+  This came from the pre-push security review of the toolkit's `RecordList`
+  (J3a of #14416), the first component built to carry user-written text.
+- **Security: data-bound control labels render as plain text.** A Controls
+  label is also a `QQuickText` left at `AutoText`: Button's `IconLabel`, and
+  CheckBox/RadioButton's `CheckLabel`. So a `HostButton`, `HostCheckbox` or
+  `HostRadio` whose `label` is a slot, keyword or expression now gets a
+  `contentItem: Text { …; textFormat: Text.PlainText }`. It mirrors the Basic
+  style's label: the control's `text`, `font` and palette colour, centred on a
+  button and padded past the indicator on a check control. The control's own
+  `text` and `Accessible.*` are unchanged. Literal labels are written by the
+  author, so they keep Qt's default label.
+- **Known, not fixed:** a slot-bound `HostInput` `placeholderText` still reaches
+  Qt's `PlaceholderText` at `AutoText`. Placeholders are author-written hints in
+  every current consumer. Treat a data-bound placeholder as trusted text until
+  this is lowered too.
+
 ## 2026-09-13
 
 - Project numeric typography on Text, HostInput, HostButton and HostTable through conditional native font bindings. Round to integer pixels and restore authored/inherited or platform defaults when live values are invalid. Include a generated-QML conformance fixture.
