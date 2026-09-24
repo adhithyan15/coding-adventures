@@ -3,6 +3,8 @@
 
 ## [Unreleased]
 
+- `tests/task_app_hover_compiles_to_xaml.rs` expects 14 native hover bindings, not 8, and names the Checklists targets (C3c, #14018). The test reads the app by path, so #15962 never ran it and main was red.
+
 ### Fixed — a quoted value no longer decides whether a button keeps its children (#15921)
 
 `host_content_control_children` checked for a `Content=` attribute with

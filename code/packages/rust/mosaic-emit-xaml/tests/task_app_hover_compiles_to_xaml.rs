@@ -78,14 +78,22 @@ fn task_app_hover_states_lower_to_native_row_local_xaml() {
 
     assert_eq!(
         output.matches("Binding IsPointerOver").count(),
-        8,
+        14,
         "each property-scoped hover state must use native pointer state:\n{output}"
     );
+    // The last five are the Checklists controls (C3c, #14018), which clone
+    // Trestle's add button and chip styles, hover included; the outline row
+    // (unselected) is mounted in two places, hence six bindings.
     for target in [
         "AddBtn",
         "Toggle",
         "TaskName",
         "DelBtn",
+        "ClCreateBtn",
+        "ClItemAddBtn",
+        "ClStartBtn",
+        "ClOutlineItem",
+        "ClOutlineItemSelected",
     ] {
         assert!(
             output.contains(&format!("ElementName={target}")),
