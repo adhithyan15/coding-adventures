@@ -2,6 +2,10 @@
 
 ## 0.1.0 — unreleased
 
+- **Journals (J4f)** need no host code. A new test is refused the name
+  "personal" (Personal already exists), adds *Work*, files an entry there,
+  and switches between Personal, Work and All journals, through the real
+  wasm.
 - **An entry's day (J4e)** needs no host code. A new test is refused a
   2026-02-30 date with the message, then files the entry on 2026-09-01,
   through the real wasm.

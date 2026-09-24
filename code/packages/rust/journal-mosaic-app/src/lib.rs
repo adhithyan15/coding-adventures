@@ -48,6 +48,12 @@
 //! The draft carries a `YYYY-MM-DD` day (blank = today). Save checks the day
 //! and the tags before writing anything and, when either is wrong, says so in
 //! `draft-error` instead of failing the event, so the person typing sees why.
+//!
+//! ## Journals (J4f)
+//!
+//! A switcher over the journal's journals ("All journals" first) filters every
+//! list; new entries are filed into the selected one. A *New journal* field
+//! creates one. The selection and the field are views, not persisted.
 
 use std::error::Error;
 use std::fmt;
@@ -55,8 +61,8 @@ use std::fmt;
 use journal_core::projections::{on_this_day, search, tag_counts, timeline, MAX_QUERY_CHARS};
 use journal_core::tag::{normalize_tags, TagError, MAX_TAGS_PER_ENTRY, MAX_TAG_CHARS};
 use journal_core::{
-    apply, Command, Date, Entry, EntryFilter, EntryId, JournalId, JournalState, OpError,
-    MAX_BODY_BYTES, MAX_TITLE_CHARS,
+    apply, Command, Date, Entry, EntryFilter, EntryId, Journal, JournalId, JournalState, OpError,
+    MAX_BODY_BYTES, MAX_JOURNALS, MAX_JOURNAL_NAME_CHARS, MAX_TITLE_CHARS,
 };
 use mosaic_app_runtime::{
     Announcement, AppUpdate, Event, MosaicApp, Politeness, Snapshot, StartContext,
@@ -124,6 +130,11 @@ pub struct JournalMosaicApp {
     /// Why the last Save refused the draft, or `""` (J4e). Not persisted: it
     /// describes the last attempt, not the journal.
     draft_error: String,
+    /// The selected journal's id, or `None` for all (J4f). Not persisted.
+    journal_filter: Option<String>,
+    /// The *New journal* field, and why the engine refused its last name.
+    new_journal_name: String,
+    journal_error: String,
 }
 
 impl Default for JournalMosaicApp {
@@ -176,6 +187,9 @@ impl JournalMosaicApp {
             starred_only: false,
             tag_filter: None,
             draft_error: String::new(),
+            journal_filter: None,
+            new_journal_name: String::new(),
+            journal_error: String::new(),
             state: AppState {
                 journal,
                 target: Target::New,
@@ -217,6 +231,15 @@ impl JournalMosaicApp {
             "on-this-day-rows": recalled,
             "draft-tags": self.state.draft_tags,
             "draft-date": self.state.draft_date,
+            "journal-options": std::iter::once("All journals".to_string())
+                .chain(self.journals_ordered().iter().map(|j| j.name.clone()))
+                .collect::<Vec<_>>(),
+            "selected-journal-index": self
+                .active_journal()
+                .and_then(|id| self.journals_ordered().iter().position(|j| j.id == id))
+                .map_or(0, |i| i as i64 + 1),
+            "new-journal-name": self.new_journal_name,
+            "journal-error": self.journal_error,
             "draft-error": self.draft_error,
             "tag-options": tags.iter().map(|c| format!("#{} ({})", c.tag.display(), c.count)).collect::<Vec<_>>(),
             "selected-tag-index": active
@@ -250,14 +273,34 @@ impl JournalMosaicApp {
         EntryFilter {
             starred_only: self.starred_only,
             tag: self.active_tag(),
-            ..EntryFilter::default()
+            journal: self.active_journal(),
         }
+    }
+
+    /// The journals in the order they were created (ties by id), as the
+    /// switcher lists them after "All journals".
+    fn journals_ordered(&self) -> Vec<&Journal> {
+        let mut journals: Vec<&Journal> = self.state.journal.journals.values().collect();
+        journals.sort_by(|a, b| a.created_at_ms.cmp(&b.created_at_ms).then(a.id.cmp(&b.id)));
+        journals
+    }
+
+    /// The selected journal, if it still exists.
+    fn active_journal(&self) -> Option<JournalId> {
+        let id = JournalId::from(self.journal_filter.as_deref()?);
+        self.state.journal.journal(&id).map(|j| j.id.clone())
     }
 
     /// Every tag in the journal with its entry count, most used first. Counted
     /// over ALL entries, so an option never vanishes under the filter it sets.
     fn all_tags(&self) -> Vec<journal_core::projections::TagCount> {
-        tag_counts(&self.state.journal, &EntryFilter::default())
+        tag_counts(
+            &self.state.journal,
+            &EntryFilter {
+                journal: self.active_journal(),
+                ..EntryFilter::default()
+            },
+        )
     }
 
     /// The selected tag, if it still exists: a tag whose last entry was
@@ -406,6 +449,9 @@ impl JournalMosaicApp {
         if name != "onSaveEntry" {
             self.draft_error.clear();
         }
+        if name != "onAddJournal" {
+            self.journal_error.clear();
+        }
         match name.as_ref() {
             "onSelectEntry" => {
                 let index = index_payload(event, "index")?;
@@ -500,6 +546,29 @@ impl JournalMosaicApp {
             }
             // Capped at what 64 tags of 64 characters, with separators, could
             // take: longer could never save, and would be echoed at any size.
+            // 0 is "All journals"; i is the i-th journal in creation order.
+            "onSelectJournal" => {
+                let index = index_payload(event, "index")?;
+                self.journal_filter = match index {
+                    0 => None,
+                    i => Some(
+                        self.journals_ordered()
+                            .get(i - 1)
+                            .map(|j| j.id.as_str().to_string())
+                            .ok_or_else(|| invalid(event, "index"))?,
+                    ),
+                };
+                Ok(self.update())
+            }
+            "onNewJournalNameChange" => {
+                let value = text_payload(event, "value")?;
+                if value.chars().count() > MAX_JOURNAL_NAME_CHARS {
+                    return Err(invalid(event, "value"));
+                }
+                self.new_journal_name = value;
+                Ok(self.update())
+            }
+            "onAddJournal" => self.add_journal(),
             "onDateChange" => {
                 let value = text_payload(event, "value")?;
                 if value.chars().count() > MAX_DATE_CHARS {
@@ -585,7 +654,10 @@ impl JournalMosaicApp {
                 let id = self.mint_entry_id()?;
                 self.run(Command::CreateEntry {
                     id: id.clone(),
-                    journal: JournalId::from(DEFAULT_JOURNAL),
+                    // Filed where the person is looking; Personal from "All".
+                    journal: self
+                        .active_journal()
+                        .unwrap_or_else(|| JournalId::from(DEFAULT_JOURNAL)),
                     date: date.unwrap_or(today),
                     title,
                     body,
@@ -621,6 +693,38 @@ impl JournalMosaicApp {
         }
         self.draft_error.clear();
         Ok(self.announced("Entry saved"))
+    }
+
+    /// *Add journal*: create the named journal and select it. A blank name does
+    /// nothing; a name the engine refuses is said in `journal-error`.
+    fn add_journal(&mut self) -> Result<AppUpdate, JournalAppError> {
+        let name = self.new_journal_name.trim().to_string();
+        if name.is_empty() {
+            return Ok(self.update());
+        }
+        let id = self.mint_journal_id();
+        let now = (self.clock)();
+        let command = Command::CreateJournal {
+            id: id.clone(),
+            name,
+        };
+        if let Err(error) = apply(&mut self.state.journal, command, now) {
+            let reason = journal_error_text(&error);
+            self.journal_error = reason.clone();
+            return Ok(self.announced(&reason));
+        }
+        self.new_journal_name.clear();
+        self.journal_filter = Some(id.as_str().to_string());
+        Ok(self.announced("Journal added"))
+    }
+
+    /// `journal-{n}`, the first not in use. The engine caps journals at
+    /// `MAX_JOURNALS`, so at most that many ids are ever tried.
+    fn mint_journal_id(&self) -> JournalId {
+        (1..=MAX_JOURNALS + 1)
+            .map(|n| JournalId::from(format!("journal-{n}").as_str()))
+            .find(|id| self.state.journal.journal(id).is_none())
+            .unwrap_or_else(|| JournalId::from("journal-overflow"))
     }
 
     /// Save refused the draft: the journal is untouched, and the reason is
@@ -707,6 +811,9 @@ impl MosaicApp for JournalMosaicApp {
             self.starred_only,
             self.tag_filter.clone(),
             self.draft_error.clone(),
+            self.journal_filter.clone(),
+            self.new_journal_name.clone(),
+            self.journal_error.clone(),
         );
         self.dispatch_inner(&event).inspect_err(|_| {
             (
@@ -720,6 +827,9 @@ impl MosaicApp for JournalMosaicApp {
                 self.starred_only,
                 self.tag_filter,
                 self.draft_error,
+                self.journal_filter,
+                self.new_journal_name,
+                self.journal_error,
             ) = before;
         })
     }
@@ -969,6 +1079,20 @@ fn split_tags(text: &str) -> Vec<String> {
 /// and bounded so a pasted essay is refused as it is typed.
 const MAX_DATE_CHARS: usize = 32;
 
+/// A journal the engine refused, in words for `journal-error`.
+fn journal_error_text(error: &OpError) -> String {
+    match error {
+        OpError::DuplicateJournalName(name) => {
+            format!("A journal named \u{201c}{name}\u{201d} already exists.")
+        }
+        OpError::TooManyJournals => format!("Journal can keep at most {MAX_JOURNALS} journals."),
+        OpError::InvalidJournalName | OpError::EmptyJournalName => format!(
+            "A journal name must be one line of at most {MAX_JOURNAL_NAME_CHARS} characters."
+        ),
+        _ => "That journal could not be created.".to_string(),
+    }
+}
+
 /// A tag error in words for `draft-error`. `index` is the 0-based position
 /// among the typed tags.
 fn tag_error_text(index: usize, reason: TagError) -> String {
@@ -1132,11 +1256,15 @@ mod tests {
                 "draft-title",
                 "has-on-this-day",
                 "has-tags",
+                "journal-error",
+                "journal-options",
+                "new-journal-name",
                 "no-matches",
                 "no-starred",
                 "on-this-day-rows",
                 "search-query",
                 "searching",
+                "selected-journal-index",
                 "selected-key",
                 "selected-tag-index",
                 "star-label",
@@ -1152,7 +1280,140 @@ mod tests {
         assert_eq!(props["no-matches"], false);
     }
 
-    // ── an entry's day, and draft errors (J4e) ────────────────────────────────
+    // ── journals (J4f) ────────────────────────────────────────────────────────
+
+    fn add_journal(app: &mut JournalMosaicApp, name: &str) -> Value {
+        send(app, "onNewJournalNameChange", json!({ "value": name })).unwrap();
+        send(app, "onAddJournal", json!({})).unwrap().props
+    }
+
+    fn journal_options(app: &JournalMosaicApp) -> Vec<String> {
+        serde_json::from_value(app.props()["journal-options"].clone()).unwrap()
+    }
+
+    #[test]
+    fn adding_a_journal_selects_it_and_files_new_entries_there() {
+        let mut a = app();
+        assert_eq!(journal_options(&a), ["All journals", "Personal"]);
+        assert_eq!(a.props()["selected-journal-index"], 0);
+        write(&mut a, "Home", "body");
+
+        set_now(THU + 7_200_000);
+        let props = add_journal(&mut a, "  Work ");
+        assert_eq!(props["journal-error"], "");
+        assert_eq!(props["new-journal-name"], "", "the field clears");
+        assert_eq!(props["selected-journal-index"], 2);
+        assert_eq!(journal_options(&a), ["All journals", "Personal", "Work"]);
+        assert!(titles(&a).is_empty(), "the new journal starts empty");
+
+        write(&mut a, "Standup", "body");
+        assert_eq!(titles(&a), ["Standup"]);
+        let entry = a.state.journal.entries.values().find(|e| e.title == "Standup").unwrap();
+        assert_eq!(entry.journal.as_str(), "journal-1");
+
+        send(&mut a, "onSelectJournal", json!({ "index": 1 })).unwrap();
+        assert_eq!(titles(&a), ["Home"]);
+        send(&mut a, "onSelectJournal", json!({ "index": 0 })).unwrap();
+        assert_eq!(titles(&a).len(), 2);
+        write(&mut a, "Unfiled", "body");
+        let entry = a.state.journal.entries.values().find(|e| e.title == "Unfiled").unwrap();
+        assert_eq!(entry.journal.as_str(), DEFAULT_JOURNAL, "All files into Personal");
+    }
+
+    #[test]
+    fn the_journal_filter_narrows_search_and_tag_counts() {
+        let mut a = app();
+        write_tagged(&mut a, "Beach trip", "travel");
+        add_journal(&mut a, "Work");
+        write_tagged(&mut a, "Work trip", "work");
+        let options: Vec<String> =
+            serde_json::from_value(a.props()["tag-options"].clone()).unwrap();
+        assert_eq!(options, ["#work (1)"]);
+        search_for(&mut a, "trip");
+        assert_eq!(titles(&a), ["Work trip"], "search stays inside the journal");
+        send(&mut a, "onSelectJournal", json!({ "index": 0 })).unwrap();
+        assert_eq!(titles(&a).len(), 2);
+    }
+
+    #[test]
+    fn blank_and_refused_names_change_no_journals() {
+        let mut a = app();
+        let props = add_journal(&mut a, "   ");
+        assert_eq!(props["journal-error"], "", "a blank name does nothing");
+        assert_eq!(journal_options(&a).len(), 2);
+
+        let props = add_journal(&mut a, "personal");
+        assert_eq!(
+            props["journal-error"],
+            "A journal named \u{201c}personal\u{201d} already exists."
+        );
+        assert_eq!(props["new-journal-name"], "personal", "the name stays to fix");
+        assert_eq!(props["selected-journal-index"], 0);
+        assert_eq!(journal_options(&a).len(), 2);
+
+        let props = send(&mut a, "onNewJournalNameChange", json!({ "value": "Pers" }))
+            .unwrap()
+            .props;
+        assert_eq!(props["journal-error"], "", "typing clears the error");
+
+        let long = "x".repeat(MAX_JOURNAL_NAME_CHARS + 1);
+        assert!(send(&mut a, "onNewJournalNameChange", json!({ "value": long })).is_err());
+        assert_eq!(a.props()["new-journal-name"], "Pers");
+        let props = add_journal(&mut a, "Two\nlines");
+        assert_eq!(
+            props["journal-error"],
+            format!(
+                "A journal name must be one line of at most {MAX_JOURNAL_NAME_CHARS} characters."
+            )
+        );
+        assert!(send(&mut a, "onSelectJournal", json!({ "index": 2 })).is_err());
+    }
+
+    #[test]
+    fn journal_ids_skip_ones_in_use_and_the_selection_is_not_persisted() {
+        let mut a = app();
+        apply(
+            &mut a.state.journal,
+            Command::CreateJournal {
+                id: JournalId::from("journal-1"),
+                name: "Seeded".into(),
+            },
+            THU + 7_200_000,
+        )
+        .unwrap();
+        set_now(THU + 10_800_000);
+        add_journal(&mut a, "Travel");
+        assert!(a.state.journal.journal(&JournalId::from("journal-2")).is_some());
+        assert_eq!(a.props()["selected-journal-index"], 3);
+
+        let snapshot = a.snapshot().unwrap().unwrap();
+        let mut b = JournalMosaicApp::with_clock(test_clock);
+        let mut ctx = StartContext::new("en-US", Platform::Linux);
+        ctx.restored_snapshot = Some(snapshot);
+        let props = b.start(ctx).unwrap().props;
+        assert_eq!(props["selected-journal-index"], 0);
+        assert_eq!(journal_options(&b), ["All journals", "Personal", "Seeded", "Travel"]);
+    }
+
+    #[test]
+    fn a_selected_journal_that_disappears_stops_filtering() {
+        let mut a = app();
+        write(&mut a, "Home", "body");
+        add_journal(&mut a, "Gone");
+        assert!(titles(&a).is_empty());
+        apply(
+            &mut a.state.journal,
+            Command::DeleteJournal {
+                id: JournalId::from("journal-1"),
+                move_entries_to: None,
+            },
+            THU,
+        )
+        .unwrap();
+        assert_eq!(a.props()["selected-journal-index"], 0);
+        assert_eq!(titles(&a), ["Home"]);
+    }
+
 
     #[test]
     fn a_new_entry_can_be_filed_under_another_day() {

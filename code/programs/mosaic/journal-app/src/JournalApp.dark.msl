@@ -130,4 +130,32 @@ style JournalApp {
     padding    : 16 ;
     background : "#0b1220" ;
   }
+  // Journals (J4f): the New journal field and Add wear the search bar's
+  // styles; a refused name, the draft error's red.
+  part journal-bar {
+    gap : 6 ;
+  }
+  part journal-name-input {
+    width         : 100% ;
+    padding       : 8 ;
+    background    : "#1f2937" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part add-journal {
+    padding       : 8 ;
+    background    : "#111827" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part journal-error {
+    color     : "#f87171" ;
+    font-size : 14 ;
+  }
 }
