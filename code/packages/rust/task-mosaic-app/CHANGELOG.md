@@ -9,6 +9,38 @@ recovered host is returned and composed. The assertion therefore raced the
 recomposition and failed intermittently in CI (seen on #15947 and #15951). It
 now waits for the recovered content itself, then checks the attempt count.
 
+## [Unreleased] — the Checklists view (C3a, #14018)
+
+Spec: `code/specs/task-app-checklists-view-v1.md`.
+
+- A seventh view, **Checklists**, sits before Timeline in the switcher and is
+  offered at both tiers. It shows a library of the active project's templates
+  (by name) and runs (newest first) beside the selection:
+  - a template's outline, with an *Add item* composer, Start run and Delete;
+  - a run's rows, in `mosaic-pkg-checklist`'s `ChecklistRun` shape, with
+    Complete (offered only once the run is complete) and Abandon.
+- New slots `checklists-mode` … `checklist-abandon-label` and 13 new events.
+  Answering a question with its current answer clears it.
+- **Checklist items no longer appear as tasks.** List, Board, Sheet, Calendar,
+  Timeline and the summary counts skip template and run items, as task-core's
+  own views already do.
+- `TaskMosaicApp::with_clock` injects the clock that stamps runs. The default
+  is the system clock; the clock is not part of the snapshot.
+- Bounds:
+  - composers refuse input over 512 characters;
+  - *Add item* stops at the engine's `MAX_CHECKLIST_ITEMS`;
+  - new items take the next sibling order;
+  - **every** minted id (task, project, label, note, checklist, run) uses a
+    checked counter, so it fails rather than wraps or panics;
+  - row indents are capped at 16 levels, because depth in a restored
+    snapshot is unbounded;
+  - library item counts come from `ChecklistSummary.items` (one pass), not
+    from one outline per template on every event;
+  - Board and Calendar drops refuse checklist items' keys.
+- The selection and composers are `#[serde(default)]` in snapshot v1, so every
+  earlier snapshot still restores. `repair()` drops a dangling selection and an
+  oversized draft.
+
 ## [Unreleased] — acceptance uses TaskApp's declared window (#14789)
 
 The 1280 x 900 Compose acceptance viewport is now pinned to TaskApp's `[app]`

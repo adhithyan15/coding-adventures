@@ -415,6 +415,39 @@ style TaskApp {
     font-size : 13 ;
     color : "#2b2723" ;
   }
+  // ── checklists (C3a) ───────────────────────────────────────────────────
+  // Spacing only: the library and the run are toolkit and checklist
+  // components that style themselves, and the headings inherit the app's
+  // text colour, so both themes read the same.
+  part cl-view {
+    gap : 24 ;
+  }
+  part cl-library {
+    gap : 12 ;
+    min-width : 260 ;
+  }
+  part cl-detail {
+    gap : 12 ;
+  }
+  part cl-composer {
+    gap : 8 ;
+  }
+  part cl-outline-row {
+    gap : 4 ;
+  }
+  part cl-item-composer {
+    gap : 8 ;
+  }
+  part cl-template-actions {
+    gap : 8 ;
+  }
+  part cl-library-empty {
+    gap : 6 ;
+  }
+  part cl-detail-empty {
+    gap : 6 ;
+    padding : 24 ;
+  }
   // ── list ────────────────────────────────────────────────────────────────
   part list-wrap {
     max-width : 760 ;

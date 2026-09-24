@@ -378,6 +378,98 @@ layout TaskApp {
             )
           }
           Else {
+          If ( when: slot: checklists-mode ) {
+            // Checklists (C3a, task-app-checklists-view-v1.md): the project's
+            // templates and runs beside the selection. The run itself is
+            // pkg::mosaic-pkg-checklist::ChecklistRun, a straight pass-through;
+            // the library is the toolkit RecordList. Part names are `cl-` so
+            // none collides with ChecklistRun's own `checklist-` parts.
+            Row [ cl-view ] {
+              Column [ cl-library ] {
+                Text [ cl-heading ] ( content : slot: checklists-title , a11y-role : heading )
+                Row [ cl-composer ] {
+                  HostInput [ cl-name-input ] (
+                    value : slot: new-checklist-name ,
+                    placeholder : "New checklist" ,
+                    a11y-label : "New checklist name" ,
+                    onChange : emit: onNewChecklistNameChange ,
+                    onCommit : emit: onCreateChecklist
+                  )
+                  HostButton [ cl-create-btn ] ( label : "Add checklist" , onClick : emit: onCreateChecklist )
+                }
+                If ( when: slot: checklist-library-empty ) {
+                  // Plain text, not the toolkit EmptyState: the list view
+                  // already mounts one, and an inlined component keeps its
+                  // part names, so a second collides (DuplicatePart
+                  // 'empty-state').
+                  Column [ cl-library-empty ] {
+                    Text [ cl-library-empty-title ] ( content : "No checklists yet" )
+                    Text [ cl-library-empty-message ] ( content : "Name one above, add its items, then start a run." )
+                  }
+                }
+                Else {
+                  pkg::mosaic-pkg-toolkit::RecordList (
+                    rows : slot: checklist-library-rows ,
+                    selected-key : slot: selected-checklist-key ,
+                    onSelect : emit: onSelectChecklist
+                  )
+                }
+              }
+              Column [ cl-detail ] {
+                If ( when: slot: checklist-run-mode ) {
+                  pkg::mosaic-pkg-checklist::ChecklistRun (
+                    title : slot: checklist-run-title ,
+                    progress-label : slot: checklist-run-progress ,
+                    rows : slot: checklist-run-rows ,
+                    yes-label : "Yes" ,
+                    no-label : "No" ,
+                    complete-label : slot: checklist-complete-label ,
+                    abandon-label : slot: checklist-abandon-label ,
+                    onToggle : emit: onChecklistToggle ,
+                    onAnswerYes : emit: onChecklistAnswerYes ,
+                    onAnswerNo : emit: onChecklistAnswerNo ,
+                    onComplete : emit: onCompleteChecklistRun ,
+                    onAbandon : emit: onAbandonChecklistRun
+                  )
+                  HostButton [ cl-delete-run-btn ] ( label : "Delete run" , onClick : emit: onDeleteChecklist )
+                }
+                Else {
+                  If ( when: slot: checklist-template-mode ) {
+                    // A template's outline: indent and name per item. Flat in
+                    // C3a; decision authoring (both branches) is C3c.
+                    For ( each: slot: checklist-outline-rows , as: item , index: ii ) {
+                      Row [ cl-outline-row ] {
+                        Text [ cl-outline-indent ] ( content : ( item[1] ) )
+                        Text [ cl-outline-name ] ( content : ( item[2] ) )
+                      }
+                    }
+                    Row [ cl-item-composer ] {
+                      HostInput [ cl-item-input ] (
+                        value : slot: new-checklist-item ,
+                        placeholder : "New item" ,
+                        a11y-label : "New item" ,
+                        onChange : emit: onNewChecklistItemChange ,
+                        onCommit : emit: onAddChecklistItem
+                      )
+                      HostButton [ cl-item-add-btn ] ( label : "Add item" , onClick : emit: onAddChecklistItem )
+                    }
+                    Row [ cl-template-actions ] {
+                      HostButton [ cl-start-btn ] ( label : "Start run" , onClick : emit: onStartChecklistRun )
+                      HostButton [ cl-delete-btn ] ( label : "Delete checklist" , onClick : emit: onDeleteChecklist )
+                    }
+                  }
+                  Else {
+                    // Plain text, for the reason given at cl-library-empty.
+                    Column [ cl-detail-empty ] {
+                      Text [ cl-detail-empty-title ] ( content : "Pick a checklist, or make one" )
+                      Text [ cl-detail-empty-message ] ( content : "Templates are reusable; each run is checked off on its own." )
+                    }
+                  }
+                }
+              }
+            }
+          }
+          Else {
           If ( when: slot: notes-mode ) {
             // Every notes-* slot/emit is a straight pass-through to the
             // package — TaskApp adds no shaping of its own, see Notes.mil
@@ -609,7 +701,8 @@ layout TaskApp {
               }
             }
           }
-          }
+                    }
+}
           }
           }
           }
