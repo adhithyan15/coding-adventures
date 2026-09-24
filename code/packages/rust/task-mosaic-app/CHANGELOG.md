@@ -1,5 +1,14 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — the screenshot harness visits every view
+
+- `conformance/compose/TaskAppScreenshots.kt` now also renders Board, Sheet,
+  Calendar and Notes with one task in them (`03a`–`03d`). It picks the view
+  tab by the SegmentedControl's `segmented-option` tag plus its label,
+  because "Board" is also the label of the top bar's complexity toggle,
+  which would switch the tier instead of the view. The Calendar render is
+  what showed Compose dropping percentage widths.
+
 ## [Unreleased] — writing questions into a checklist template (C3c, #14018)
 
 - Selecting an outline item (`onSelectOutlineItem`; clicking it again clears

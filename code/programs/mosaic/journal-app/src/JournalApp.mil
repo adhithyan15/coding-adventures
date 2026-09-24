@@ -48,6 +48,13 @@ component JournalApp {
   // searching.
   slot on-this-day-rows : list<list<text>> ;
   slot has-on-this-day : bool ;
+  // Tags (J4d). The editor's tags as typed ("travel, family"); the journal's
+  // tags as "#travel (3)" options, most used first; the selected option (-1
+  // for none); whether any entry has a tag.
+  slot draft-tags : text ;
+  slot tag-options : list<text> ;
+  slot selected-tag-index : number ;
+  slot has-tags : bool ;
 
   emit onSelectEntry ( index : number ) ;
   emit onNewEntry ;
@@ -62,4 +69,7 @@ component JournalApp {
   emit onToggleStarredFilter ;
   // A row of on-this-day-rows (each RecordList indexes its own rows).
   emit onSelectOnThisDay ( index : number ) ;
+  emit onTagsChange ( value : text ) ;
+  // An option of tag-options; the selected one clears the filter.
+  emit onSelectTag ( index : number ) ;
 }

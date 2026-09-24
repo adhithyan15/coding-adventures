@@ -363,8 +363,49 @@ highlighted in both lists, since both bind `selected-key`.
 mount. The layout already mounts `RecordList` once; the resolver renames the
 second mount's parts (#15959).
 
+## Tags (J4d)
+
+The engine stores an entry's tags (`Command::SetTags`, which tidies them and
+drops case-insensitive duplicates), counts them (`tag_counts`) and filters on
+one (`EntryFilter::tag`). J4d adds a way to write tags and a way to filter by
+them.
+
+**Writing.** The editor gains a *Tags* field. Tags are typed comma-separated
+("travel, family") and belong to the **draft**, like the title and body:
+- `draft_tags: String` is in the snapshot (`#[serde(default)]`, so older
+  version-1 snapshots still load);
+- selecting an entry loads its tags as `travel, family`, Cancel reverts them,
+  and Save writes them;
+- Save validates the tags with `normalize_tags` **before** writing anything, so
+  a bad tag (too long, a control character, more than 64 tags) fails the whole
+  Save and leaves the journal unchanged. Only then does it run
+  `CreateEntry` / `EditEntry`, followed by `SetTags`.
+
+The field is capped as it is typed at what 64 tags of 64 characters could
+take, so it cannot grow the update without bound.
+
+**Showing.** A timeline or On-this-day row's `meta` is its tags, as
+`#travel #family`, at most 24 characters (cut with `…`). It is short for the
+reason search `meta` is: `meta` shares a line with the title button in a 300px
+pane. A search row's `meta` stays the day.
+
+**Filtering.** When any entry has a tag, the pane shows the tags as a
+`SegmentedControl` of options such as `#travel (3)`, most used first
+(`tag_counts`). The options count every entry, not the filtered list, so they
+never vanish under the filter they set. Selecting a tag filters the timeline,
+search and On this day (`EntryFilter::tag`), and selecting it again clears the
+filter. `tag_filter` is a view, like `starred_only`, so it is not persisted. A
+selected tag that no longer exists (its last entry was deleted or retagged)
+stops filtering.
+
+**Slots:** `draft-tags` (`text`), `tag-options` (`list<text>`),
+`selected-tag-index` (`number`, `-1` for none), `has-tags` (`bool`).
+
+**Events:** `onTagsChange { value }`, `onSelectTag { index }`, where index is
+an option of the `tag-options` last rendered.
+
 ## Deferred
 
 The web host (J5c-2), launching on the remaining native lanes, packaging and release (J5); the markdown preview;
-tags in the UI (search is J4a, stars J4b and on-this-day J4c, above); the journal switcher; moving an
+(search J4a, stars J4b, on-this-day J4c and tags J4d are above); the journal switcher; moving an
 entry to another day; importing the TypeScript app's entries.
