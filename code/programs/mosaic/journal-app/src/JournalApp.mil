@@ -72,6 +72,9 @@ component JournalApp {
   slot draft-journal-options : list<text> ;
   slot draft-journal-index : number ;
   slot has-journals : bool ;
+  // An empty journal (J4h): a journal is selected, it has no entries, and
+  // there is no search. Shown before no-starred, the lesser reason.
+  slot journal-empty : bool ;
 
   emit onSelectEntry ( index : number ) ;
   emit onNewEntry ;

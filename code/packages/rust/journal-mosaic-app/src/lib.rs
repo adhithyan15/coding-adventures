@@ -220,6 +220,13 @@ impl JournalMosaicApp {
         let searching = self.searching();
         let rows = self.timeline_rows();
         let journal_empty = self.state.journal.entries.is_empty();
+        // J4h: a journal is selected and none of the entries are in it. Only
+        // shown without a search, and after `timeline-empty`, which says more.
+        let selected_journal_empty = !journal_empty
+            && !searching
+            && self.active_journal().is_some_and(|id| {
+                !self.state.journal.entries.values().any(|entry| entry.journal == id)
+            });
         let recalled = self.on_this_day_rows();
         let tags = self.all_tags();
         let active = self.active_tag();
@@ -241,7 +248,12 @@ impl JournalMosaicApp {
             "starred-only": self.starred_only,
             // Only the plain timeline: a search that finds nothing is
             // `no-matches` whether or not the filter is on.
-            "no-starred": self.starred_only && !searching && !journal_empty && rows.is_empty(),
+            "journal-empty": selected_journal_empty,
+            "no-starred": self.starred_only
+                && !searching
+                && !journal_empty
+                && !selected_journal_empty
+                && rows.is_empty(),
             // A search takes the whole pane; the recall is a timeline companion.
             "has-on-this-day": !searching && !recalled.is_empty(),
             "on-this-day-rows": recalled,
@@ -1326,6 +1338,7 @@ mod tests {
                 "has-journals",
                 "has-on-this-day",
                 "has-tags",
+                "journal-empty",
                 "journal-error",
                 "journal-options",
                 "new-journal-name",
@@ -1348,6 +1361,38 @@ mod tests {
         assert_eq!(props["delete-label"], "");
         assert_eq!(props["searching"], false);
         assert_eq!(props["no-matches"], false);
+    }
+
+    // ── an empty journal (J4h) ────────────────────────────────────────────────
+
+    #[test]
+    fn an_empty_journal_says_so_and_yields_to_the_other_empty_states() {
+        let mut a = app();
+        let props = a.props();
+        assert_eq!(props["timeline-empty"], true);
+        assert_eq!(props["journal-empty"], false, "no entries anywhere is timeline-empty");
+
+        write(&mut a, "Home", "body");
+        set_now(THU + 7_200_000);
+        let props = add_journal(&mut a, "Work");
+        assert_eq!(props["journal-empty"], true, "the new journal is selected and empty");
+        assert_eq!(props["timeline-empty"], false);
+
+        send(&mut a, "onToggleStarredFilter", json!({})).unwrap();
+        let props = a.props();
+        assert_eq!(props["journal-empty"], true);
+        assert_eq!(props["no-starred"], false, "an empty journal is the better reason");
+        send(&mut a, "onToggleStarredFilter", json!({})).unwrap();
+
+        let props = search_for(&mut a, "home");
+        assert_eq!(props["journal-empty"], false, "a search owns its own empty state");
+        assert_eq!(props["no-matches"], true);
+        send(&mut a, "onClearSearch", json!({})).unwrap();
+
+        write(&mut a, "Standup", "body");
+        assert_eq!(a.props()["journal-empty"], false);
+        send(&mut a, "onSelectJournal", json!({ "index": 0 })).unwrap();
+        assert_eq!(a.props()["journal-empty"], false, "All journals is never an empty journal");
     }
 
     // ── an entry's journal (J4g) ──────────────────────────────────────────────

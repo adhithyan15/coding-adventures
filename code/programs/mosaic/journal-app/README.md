@@ -9,7 +9,7 @@ behaviour of its own:
 | part | component | package |
 | --- | --- | --- |
 | the timeline | `RecordList` (rows grouped by day) | `mosaic-pkg-toolkit` |
-| the first-run state, and "No entries match", "No starred entries" | `EmptyState` (mounted three times) | `mosaic-pkg-toolkit` |
+| the first-run state, and "No entries match", "No entries in this journal", "No starred entries" | `EmptyState` (mounted four times) | `mosaic-pkg-toolkit` |
 | search (J4a) | a `HostInput` and a *Clear* button above the timeline | kernel primitives |
 | stars (J4b) | *Star* above the editor, *Starred only* under the search field | kernel primitives |
 | on this day (J4c) | a second `RecordList`, above the timeline, of earlier years' entries on today's date | `mosaic-pkg-toolkit` |

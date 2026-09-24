@@ -124,20 +124,31 @@ layout JournalApp {
           )
         }
         Else {
-          // A third EmptyState mount: the filter is on and nothing is starred.
-          If ( when: slot: no-starred ) {
+          // A fourth EmptyState mount (J4h): the selected journal is empty,
+          // which says more than "nothing starred" would.
+          If ( when: slot: journal-empty ) {
             pkg::mosaic-pkg-toolkit::EmptyState (
-              title : "No starred entries" ,
-              message : "Star an entry to keep it here." ,
+              title : "No entries in this journal" ,
+              message : "New entries you write while it is selected are filed here." ,
               action-label : ""
             )
           }
           Else {
-            pkg::mosaic-pkg-toolkit::RecordList (
-              rows : slot: timeline-rows ,
-              selected-key : slot: selected-key ,
-              onSelect : emit: onSelectEntry
-            )
+            // The last EmptyState mount: the filter is on and nothing is starred.
+            If ( when: slot: no-starred ) {
+              pkg::mosaic-pkg-toolkit::EmptyState (
+                title : "No starred entries" ,
+                message : "Star an entry to keep it here." ,
+                action-label : ""
+              )
+            }
+            Else {
+              pkg::mosaic-pkg-toolkit::RecordList (
+                rows : slot: timeline-rows ,
+                selected-key : slot: selected-key ,
+                onSelect : emit: onSelectEntry
+              )
+            }
           }
         }
       }
