@@ -286,11 +286,12 @@ public static class MosaicRuntimeHost
                     ["locale"] = CultureInfo.CurrentCulture.Name,
                     ["colorScheme"] = "system",
                     ["textScale"] = 1.0,
-                    // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time").
-                    ["utcOffsetMinutes"] = (int)TimeZoneInfo.Local.GetUtcOffset(DateTime.Now).TotalMinutes,
                     ["platform"] = "windows",
                     ["restoredSnapshot"] = restoredSnapshot,
                 };
+                // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time"). Left out when outside -840..=840 (a custom TZ string can say anything): the runtime would refuse it and the app would not start; without it the app uses UTC.
+                var utcOffsetMinutes = (int)TimeZoneInfo.Local.GetUtcOffset(DateTime.Now).TotalMinutes;
+                if (utcOffsetMinutes >= -840 && utcOffsetMinutes <= 840) start["utcOffsetMinutes"] = utcOffsetMinutes;
                 return Invoke(start, delegate(MosaicBytes input, out MosaicBuffer output)
                 {
                     return create(input, out app, out output);

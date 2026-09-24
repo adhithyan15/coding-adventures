@@ -246,8 +246,7 @@ final class _MosaicRuntime {
           'locale': Platform.localeName,
           'colorScheme': 'system',
           'textScale': 1.0,
-          // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time").
-          'utcOffsetMinutes': DateTime.now().timeZoneOffset.inMinutes,
+          ..._utcOffsetEntry(),
           'platform': _platformName(),
           'restoredSnapshot': restoredSnapshot,
         }, (input, output) => _create(input, appOut, output)), 'startup update');
@@ -963,6 +962,14 @@ final class _MosaicRuntime {
       return const <String>['libmosaic_app.dylib', 'mosaic_app.dylib'];
     }
     return const <String>['libmosaic_app.so', 'mosaic_app.so'];
+  }
+
+  // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time"). Left out when outside -840..=840 (a custom TZ string can say anything): the runtime would refuse it and the app would not start; without it the app uses UTC.
+  static Map<String, Object?> _utcOffsetEntry() {
+    final utcOffsetMinutes = DateTime.now().timeZoneOffset.inMinutes;
+    return utcOffsetMinutes >= -840 && utcOffsetMinutes <= 840
+        ? <String, Object?>{'utcOffsetMinutes': utcOffsetMinutes}
+        : const <String, Object?>{};
   }
 
   static String _platformName() {

@@ -786,13 +786,15 @@ mod tests {
         assert!(bindings[4].0.contains("QSaveFile file(path)"));
 
         // Every native host tells the app its UTC offset (UI38 "Local time"),
-        // read from the platform's own time zone API, in minutes EAST of UTC.
+        // read from the platform's own time zone API, in minutes EAST of UTC,
+        // and leaves it out when it is out of range (the runtime would refuse
+        // it and the app would not start).
         let offsets = [
-            "put(\"utcOffsetMinutes\", java.util.TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 60_000)",
-            "\"utcOffsetMinutes\": TimeZone.current.secondsFromGMT() / 60,",
-            "[\"utcOffsetMinutes\"] = (int)TimeZoneInfo.Local.GetUtcOffset(DateTime.Now).TotalMinutes,",
-            "'utcOffsetMinutes': DateTime.now().timeZoneOffset.inMinutes,",
-            "{QStringLiteral(\"utcOffsetMinutes\"), QDateTime::currentDateTime().offsetFromUtc() / 60},",
+            "if (utcOffsetMinutes in -840..840) put(\"utcOffsetMinutes\", utcOffsetMinutes)",
+            "if (-840...840).contains(utcOffsetMinutes) { start[\"utcOffsetMinutes\"] = utcOffsetMinutes }",
+            "if (utcOffsetMinutes >= -840 && utcOffsetMinutes <= 840) start[\"utcOffsetMinutes\"] = utcOffsetMinutes;",
+            "..._utcOffsetEntry(),",
+            "context.insert(QStringLiteral(\"utcOffsetMinutes\"), utcOffsetMinutes);",
         ];
         for ((source, ..), offset) in bindings.iter().zip(offsets) {
             assert!(source.contains(offset), "missing {offset}");
