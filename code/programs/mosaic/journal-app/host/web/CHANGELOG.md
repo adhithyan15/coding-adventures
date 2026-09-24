@@ -2,6 +2,9 @@
 
 ## 0.1.0 — unreleased
 
+- **Renaming and deleting a journal (J4i)** needs no host code. A new test
+  renames Work to Office, deletes it, finds its entry in Personal, and checks
+  that Personal offers no *Delete journal*, through the real wasm.
 - **An empty journal (J4h)** needs no host code. The journals test now
   checks that a newly added journal says "No entries in this journal"
   until an entry is written in it.

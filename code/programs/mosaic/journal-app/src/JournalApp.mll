@@ -90,6 +90,22 @@ layout JournalApp {
           onClick : emit: onAddJournal
         )
       }
+      // Renaming and deleting the selected journal (J4i). Rename takes the
+      // field's name; Delete moves the journal's entries to Personal.
+      Row [ journal-actions ] {
+        If ( when: slot: can-rename-journal ) {
+          HostButton [ rename-journal ] (
+            label : "Rename" ,
+            onClick : emit: onRenameJournal
+          )
+        }
+        If ( when: slot: can-delete-journal ) {
+          HostButton [ delete-journal ] (
+            label : "Delete journal" ,
+            onClick : emit: onDeleteJournal
+          )
+        }
+      }
       If ( when: slot: journal-error ) {
         Text [ journal-error ] ( content : slot: journal-error )
       }

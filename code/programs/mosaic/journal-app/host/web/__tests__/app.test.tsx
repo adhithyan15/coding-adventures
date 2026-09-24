@@ -223,6 +223,29 @@ it("moves an entry to another journal from the editor's picker", async () => {
   expect(button("At home")).toBeTruthy();
 });
 
+it("renames a journal, then deletes it and keeps its entries in Personal", async () => {
+  await mount(memoryStorage());
+  const field = (label: string) => container.querySelector(`input[aria-label="${label}"]`) as HTMLInputElement;
+  await type(field("New journal name"), "Work");
+  await act(async () => button("Add").click());
+  await act(async () => button("New entry").click());
+  await type(field("Title"), "Standup");
+  await act(async () => button("Save").click());
+  expect(() => button("Delete journal")).not.toThrow();
+
+  await type(field("New journal name"), "Office");
+  await act(async () => button("Rename").click());
+  expect(() => button("Work")).toThrow();
+  expect(button("Office")).toBeTruthy();
+
+  await act(async () => button("Delete journal").click());
+  expect(() => button("Office")).toThrow();
+  expect(button("Standup")).toBeTruthy(); // moved to Personal, shown under All journals
+  await act(async () => button("Personal").click());
+  expect(button("Standup")).toBeTruthy();
+  expect(() => button("Delete journal")).toThrow(); // Personal cannot be deleted
+});
+
 it("says why a bad date cannot be saved, then files the entry on the day typed", async () => {
   await mount(memoryStorage());
   const field = (label: string) => container.querySelector(`input[aria-label="${label}"]`) as HTMLInputElement;

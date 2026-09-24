@@ -75,6 +75,10 @@ component JournalApp {
   // An empty journal (J4h): a journal is selected, it has no entries, and
   // there is no search. Shown before no-starred, the lesser reason.
   slot journal-empty : bool ;
+  // Renaming and deleting a journal (J4i): offered while one is selected;
+  // Personal can be renamed but not deleted (a restore requires it).
+  slot can-rename-journal : bool ;
+  slot can-delete-journal : bool ;
 
   emit onSelectEntry ( index : number ) ;
   emit onNewEntry ;
@@ -99,4 +103,8 @@ component JournalApp {
   emit onAddJournal ;
   // An option of draft-journal-options; Save files or moves the entry there.
   emit onDraftJournalChange ( index : number ) ;
+  // Rename the selected journal to the New journal field's name; delete it,
+  // moving its entries to Personal.
+  emit onRenameJournal ;
+  emit onDeleteJournal ;
 }
