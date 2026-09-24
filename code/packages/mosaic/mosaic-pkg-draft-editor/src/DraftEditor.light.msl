@@ -1,6 +1,8 @@
 // DraftEditor.light.msl — light-theme styling.
 //
-// Only properties every native backend lowers; padding is one uniform value
+// Properties every native backend lowers, except the fields' `width` and the
+// body's `min-height` (Qt and Flutter keep their own field size; pinned in the
+// native gate). Padding is one uniform value
 // (Qt reads a single padding and fans it out, #15247). Text parts carry
 // colour and size only (#15276).
 
@@ -21,6 +23,7 @@ style DraftEditor {
     font-size : 12 ;
   }
   part draft-editor-title {
+    width         : 100% ;
     padding       : 8 ;
     background    : "#ffffff" ;
     color         : "#212529" ;
@@ -34,6 +37,8 @@ style DraftEditor {
     font-size : 12 ;
   }
   part draft-editor-body {
+    width         : 100% ;
+    min-height    : 160 ;
     padding       : 8 ;
     background    : "#ffffff" ;
     color         : "#212529" ;

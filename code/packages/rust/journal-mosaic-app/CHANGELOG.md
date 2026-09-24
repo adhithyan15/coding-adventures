@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- `conformance/compose/JournalScreenshots.kt`: a screenshot harness for the
+  generated Compose Journal over this runtime. Set `MOSAIC_SHOT_DIR` and run
+  `gradle test --tests JournalScreenshots` in an emitted project. It checks
+  only that rendering succeeds; the images are for people to look at.
+
 ### Changed — entries are filed under the user's local day
 
 - "Today" is the local date at the host's `StartContext.utc_offset_minutes`,
