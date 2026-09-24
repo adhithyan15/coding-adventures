@@ -5028,6 +5028,23 @@ fn emit_host_navigation_split(
         }
     };
 
+    // The split's OWN part style (#14798). Trestle's `app-shell` sets the
+    // window's background and its default text colour; before this the Box
+    // was written bare, so on Compose the dark theme had a white window and
+    // every unstyled label fell back to Material's black, with no drop
+    // reported. The chain follows `fillMaxSize()`, as a container's follows
+    // its default fill, and the part's text style is inherited by both the
+    // pane and the detail, as a container's is by its children.
+    let chain_indent = (depth + 2) * 4;
+    let inherited_color = text_ctx.and_then(|t| t.color.as_deref());
+    let style = compose_style_for_node(node, part_styles, None, chain_indent, inherited_color);
+    let chain = style.as_ref().map(|s| s.modifier.clone()).unwrap_or_default();
+    let child_text = match &style {
+        Some(style) => Some(cell_text_style(&text_ctx.cloned().unwrap_or_default(), style)),
+        None => text_ctx.cloned(),
+    };
+    let text_ctx = child_text.as_ref();
+
     let pad = "    ".repeat(depth);
     let arg_pad = "    ".repeat(depth + 1);
     let suite_pad = "    ".repeat(depth + 2);
@@ -5043,7 +5060,7 @@ fn emit_host_navigation_split(
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}Box(modifier = Modifier.fillMaxSize(){tag}) {{"
+        "{pad}Box(modifier = Modifier.fillMaxSize(){chain}{tag}) {{"
     )
     .unwrap();
     writeln!(out, "{arg_pad}NavigationSuiteScaffoldLayout(").unwrap();
@@ -11321,6 +11338,54 @@ mod tests {
         );
         assert!(out.contains("ExperimentalMaterial3AdaptiveNavigationSuiteApi::class"));
         assert!(out.contains("import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout"));
+    }
+
+    /// The split wears its OWN part style (#14798): Trestle's `app-shell`
+    /// background reaches the Box, and its `color` becomes the default text
+    /// colour of both the pane and the detail, so an unstyled label is not
+    /// Material's black on a dark window.
+    #[test]
+    fn navigation_split_wears_its_part_style_and_hands_text_colour_down() {
+        let m = component("Shell", vec![], vec![]);
+        let text = |content: &str| {
+            node(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::String(content.into()),
+                }],
+                vec![],
+            )
+        };
+        let l = layout(
+            "Shell",
+            styled_node(
+                "HostNavigationSplit",
+                "app-shell",
+                vec![],
+                vec![text("Pane"), text("Detail")],
+            ),
+        );
+        let style = style_def(
+            "Shell",
+            vec![part(
+                "app-shell",
+                vec![sprop("background", "#1a1714"), sprop("color", "#f1ebe1")],
+                vec![],
+            )],
+        );
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        let open = out.find("Box(modifier = Modifier.fillMaxSize()").expect("the split's Box");
+        let tag = out[open..].find(".testTag(\"app-shell\")").expect("its tag") + open;
+        assert!(
+            out[open..tag].contains(".background(Color(0xFF1A1714))"),
+            "{}",
+            &out[open..tag + 30]
+        );
+        for label in ["\"Pane\"", "\"Detail\""] {
+            let line = out.lines().find(|l| l.contains(label)).unwrap();
+            assert!(line.contains("color = Color(0xFFF1EBE1)"), "{line}");
+        }
     }
 
     #[test]

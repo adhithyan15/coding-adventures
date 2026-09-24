@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-24 (later)
+
+- **`HostNavigationSplit` wears its own part style (#14798).** The split's `Box` was written as a bare `Modifier.fillMaxSize()`, so its part's `background` never appeared and its `color` never reached its children, and nothing reported the drop. Trestle's `app-shell` sets both. On Compose the dark theme drew a white window, and every label without its own colour fell back to Material's black. Now the part's modifier chain follows `fillMaxSize()`, as a container's follows its default fill, and its text style (`cell_text_style`) becomes the inherited text context of both the pane and the detail. Rendered: dark Trestle shows the #1a1714 window with readable default text in every view. `TaskAppUiTest` passes, the gate reports 0 degradations, and Engram and Journal compile. Still open: text typed into a field (`BasicTextField`) keeps Material's black in the dark theme.
+
 ## 2026-09-24
 
 - **Percentage widths below 100%.** A percentage had no pixel value, so `width : "14.2857%"` was dropped without a report. Calendar rendered as one column of 42 full-width day cells under seven day names packed into "SunMonTueWedThuFriSat" (found with the extended Trestle screenshot harness). Now:
