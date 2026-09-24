@@ -150,6 +150,20 @@ layout JournalApp {
           onClick : emit: onToggleStar
         )
       }
+      // An entry's journal (J4g): a third SegmentedControl mount, only when
+      // there is more than one journal; Save below files or moves it there.
+      If ( when: slot: has-journals ) {
+        Column [ journal-block ] {
+          Text [ journal-label ] ( content : "Journal" )
+          pkg::mosaic-pkg-toolkit::SegmentedControl (
+            options : slot: draft-journal-options ,
+            selected-index : slot: draft-journal-index ,
+            vertical : false ,
+            disabled : false ,
+            onSelect : emit: onDraftJournalChange
+          )
+        }
+      }
       // An entry's day (J4e), blank for today; saved by Save below.
       Column [ date-block ] {
         Text [ date-label ] ( content : "Date" )

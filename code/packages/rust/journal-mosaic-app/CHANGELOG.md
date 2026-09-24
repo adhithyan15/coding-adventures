@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **An entry's journal (J4g).** `draft_journal` joins the draft (in the
+  snapshot with `#[serde(default)]`; empty means "not chosen", and a restored
+  id longer than `MAX_ID_BYTES` is refused). It is read through
+  `draft_journal()`, which always names a journal that exists: the one
+  chosen in the picker, else the open entry's own, else the pane's selected
+  journal, or Personal under "All journals".
+  - Save files a new entry there. For an existing entry whose journal
+    changed, Save runs `MoveEntry`, after the date and tags are checked, so a
+    refused Save moves nothing.
+  - Opening an entry loads its journal. Cancel reverts the choice, and New
+    entry and Delete clear it.
+  - New slots: `draft-journal-options` (journal names, no "All journals"),
+    `draft-journal-index`, and `has-journals`. New event:
+    `onDraftJournalChange`.
+  - `JournalScreenshots` adds 12-moved-to-personal.
 - **Journals (J4f).** New slots `journal-options` ("All journals", then each
   journal by name in creation order, ties by id), `selected-journal-index`,
   `new-journal-name` and `journal-error`. New events `onSelectJournal`,

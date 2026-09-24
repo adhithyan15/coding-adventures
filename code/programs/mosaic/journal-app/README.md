@@ -16,6 +16,7 @@ behaviour of its own:
 | tags (J4d) | a *Tags* field above the editor; a vertical `SegmentedControl` of the journal's tags as a filter | `mosaic-pkg-toolkit` |
 | an entry's day (J4e) | a *Date* field above Tags; a red line when Save refuses a draft | kernel primitives |
 | journals (J4f) | a second vertical `SegmentedControl` (All journals, then each journal), a *New journal* field and *Add* | `mosaic-pkg-toolkit` |
+| an entry's journal (J4g) | a *Journal* `SegmentedControl` above Date, when there are several journals | `mosaic-pkg-toolkit` |
 | the editor | `DraftEditor` (title, body, Save / Delete / Cancel) | `mosaic-pkg-draft-editor` |
 
 The layout is a `HostNavigationSplit`: a **New entry** button, the search field
