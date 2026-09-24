@@ -71,6 +71,8 @@ impl ProjectState {
             if !self.tasks.contains_key(p) {
                 return Err(OpError::NotFound);
             }
+            // A finished checklist run is a record: nothing is added to it.
+            self.ensure_checklist_structure_editable(p)?;
         }
         let mut t = Task::new(id.clone(), name);
         t.parent = parent;
@@ -95,9 +97,10 @@ impl ProjectState {
     pub fn delete_task(&mut self, id: &TaskId) -> Result<(), OpError> {
         // A checklist's root is its container, not an item: deleting it alone would
         // reparent the items into the project and strand the checklist.
-        if self.checklists.values().any(|c| &c.root == id) {
+        if self.is_checklist_root(id) {
             return Err(OpError::Invalid("delete the checklist, not its root task"));
         }
+        self.ensure_checklist_structure_editable(id)?;
         let removed = self.tasks.remove(id).ok_or(OpError::NotFound)?;
         for t in self.tasks.values_mut() {
             if t.parent.as_ref() == Some(id) {
@@ -140,6 +143,23 @@ impl ProjectState {
                 return Err(OpError::WouldCycle);
             }
         }
+        // Checklists (C1): a root is the checklist's container and stays put; a
+        // finished run is frozen; and nothing crosses a checklist boundary — or an
+        // answered decision could be moved into a template, or a run's root under
+        // its own template (which doubles the template on every instantiate).
+        if self.is_checklist_root(id) {
+            return Err(OpError::Invalid("a checklist's root cannot be moved"));
+        }
+        self.ensure_checklist_structure_editable(id)?;
+        if let Some(p) = &new_parent {
+            self.ensure_checklist_structure_editable(p)?;
+        }
+        let target = new_parent.as_ref().and_then(|p| self.checklist_id_of(p));
+        if self.checklist_id_of(id) != target {
+            return Err(OpError::Invalid(
+                "items cannot move across a checklist boundary",
+            ));
+        }
         self.tasks.get_mut(id).unwrap().parent = new_parent;
         Ok(())
     }
@@ -179,6 +199,9 @@ impl ProjectState {
     /// far more widely used op for a Board-view fidelity fix — out of scope here, and
     /// disclosed as a known limitation rather than silently half-done.
     pub fn set_status(&mut self, id: &TaskId, status: Option<StatusId>) -> Result<(), OpError> {
+        // A done status ticks the task, so the checklist rule for `set_completed`
+        // applies here too (templates and finished runs are not ticked).
+        self.ensure_checklist_item_editable(id)?;
         let old_status = self.tasks.get(id).ok_or(OpError::NotFound)?.status.clone();
         let was_done = old_status.as_ref().is_some_and(|s| self.is_done_status(s));
         let now_done = status.as_ref().is_some_and(|s| self.is_done_status(s));
@@ -243,8 +266,11 @@ impl ProjectState {
                 },
             );
         }
+        // Checklist items live outside the board (see `kanban`); stamping them
+        // with a status would also tick template items (`done` implies completed).
+        let owned = self.checklist_owned();
         for t in self.tasks.values_mut() {
-            if t.status.is_some() {
+            if t.status.is_some() || owned.contains(&t.id) {
                 continue;
             }
             t.status = Some(StatusId::from_raw(if t.completed {
@@ -551,6 +577,8 @@ impl ProjectState {
             self.task_mut(id)?.decision = None;
             return Ok(());
         };
+        // A finished run is a record; answers belong to runs, never templates.
+        self.ensure_checklist_structure_editable(id)?;
         if d.answer.is_some()
             && self
                 .checklist_containing(id)
@@ -560,7 +588,17 @@ impl ProjectState {
                 "templates are not answered; instantiate a run",
             ));
         }
-        let mut listed: Vec<&TaskId> = Vec::new();
+        // Children already claimed by some *other* decision, gathered once so the
+        // checks below are linear in the task count rather than quadratic.
+        let claimed_elsewhere: std::collections::HashSet<&TaskId> = self
+            .tasks
+            .values()
+            .filter(|t| &t.id != id)
+            .filter_map(|t| t.decision.as_ref())
+            .flat_map(|od| od.yes_children.iter().chain(od.no_children.iter()))
+            .collect();
+        let home = self.checklist_id_of(id);
+        let mut listed: std::collections::HashSet<&TaskId> = std::collections::HashSet::new();
         for c in d.yes_children.iter().chain(d.no_children.iter()) {
             if !self.tasks.contains_key(c) {
                 return Err(OpError::NotFound);
@@ -568,33 +606,38 @@ impl ProjectState {
             if c == id || is_ancestor(self, c, id) {
                 return Err(OpError::WouldCycle);
             }
-            if listed.contains(&c) {
+            if !listed.insert(c) {
                 return Err(OpError::Invalid("a branch child is listed twice"));
             }
-            listed.push(c);
-            let claimed_elsewhere = self.tasks.values().any(|t| {
-                &t.id != id
-                    && t.decision
-                        .as_ref()
-                        .is_some_and(|od| od.yes_children.contains(c) || od.no_children.contains(c))
-            });
-            if claimed_elsewhere {
+            if claimed_elsewhere.contains(c) {
                 return Err(OpError::Invalid(
                     "a branch child already belongs to another decision",
+                ));
+            }
+            // Reparenting under the decision must not pull an item across a
+            // checklist boundary (e.g. a template item into a run).
+            if self.is_checklist_root(c) || self.checklist_id_of(c) != home {
+                return Err(OpError::Invalid(
+                    "branch children must belong to the decision's checklist",
                 ));
             }
         }
         let stray = self
             .tasks
             .values()
-            .any(|t| t.parent.as_ref() == Some(id) && !listed.contains(&&t.id));
+            .any(|t| t.parent.as_ref() == Some(id) && !listed.contains(&t.id));
         if stray {
             return Err(OpError::Invalid(
                 "every outline child of a decision must be in its yes or no branch",
             ));
         }
         // All checks passed — now write.
-        let children: Vec<TaskId> = listed.into_iter().cloned().collect();
+        let children: Vec<TaskId> = d
+            .yes_children
+            .iter()
+            .chain(d.no_children.iter())
+            .cloned()
+            .collect();
         for c in &children {
             if let Some(t) = self.tasks.get_mut(c) {
                 t.parent = Some(id.clone());
@@ -839,6 +882,13 @@ impl Workspace {
         }
         if &from == to {
             return Ok(());
+        }
+        // A checklist item (or root) moving project would strand its checklist and
+        // spill its items into the destination's todos.
+        if self.projects[&from].checklist_containing(task).is_some() {
+            return Err(OpError::Invalid(
+                "checklist items cannot move between projects",
+            ));
         }
 
         // Move the task itself; detach it from its (source-project) WBS parent.

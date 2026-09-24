@@ -29,6 +29,18 @@ All notable changes to `task-core` are documented here.
   - **Templates are ticked and answered only in their runs,** and a finished run
     is read-only. `set_completed`, `answer_decision` and `set_decision` enforce
     this.
+  - **Boundaries, from the pre-push security review:**
+    - Checklist roots never move.
+    - Nothing crosses a checklist boundary (`reparent`, `set_decision`).
+      `move_task` refuses checklist items.
+    - Finished runs are frozen: no `create_task`, `delete_task`, `reparent`,
+      `set_decision` or `set_status` on them.
+    - `set_status` can't tick a template.
+    - `ensure_default_workflow` skips checklist items.
+    - At most 10,000 items per template.
+    - `set_decision` is linear, not quadratic.
+    - The library builds its outline index once, not once per run. 2,000 runs
+      took 28s before.
   - **Checklist items stay out of the general views:** `view::select` (List,
     Sheet and Calendar), `todos`, `kanban`, `flowchart` and the project-wide
     `checklist`.

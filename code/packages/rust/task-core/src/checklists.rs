@@ -27,6 +27,11 @@ use crate::projections::ChecklistRow;
 use crate::ProjectState;
 use crate::{Checklist, ChecklistId, ChecklistRun, RunStatus, Task, TaskId, TaskKind};
 
+/// Most items one checklist may hold. A run is a deep copy of its template, so an
+/// unbounded template would let one call allocate without limit; real checklists
+/// have tens of items.
+pub const MAX_CHECKLIST_ITEMS: usize = 10_000;
+
 /// How a checklist walk treats a decision's branches.
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Reveal {
@@ -92,7 +97,13 @@ impl ProjectState {
         if self.checklists.contains_key(&run) {
             return Err(OpError::Duplicate);
         }
+        if !self.tasks.contains_key(&tpl.root) {
+            return Err(OpError::NotFound);
+        }
         let subtree = self.subtree_of(&tpl.root);
+        if subtree.len() > MAX_CHECKLIST_ITEMS {
+            return Err(OpError::Invalid("checklist too large to instantiate"));
+        }
         let map: HashMap<TaskId, TaskId> = subtree
             .iter()
             .map(|t| {
@@ -224,6 +235,9 @@ impl ProjectState {
     /// Every template and run, for a checklist library: templates first, then runs,
     /// each newest first, ties broken by id.
     pub fn checklists(&self) -> Vec<ChecklistSummary> {
+        // One outline index for every run: rebuilding it per run made the library
+        // runs × tasks, which a few years of daily runs turns into seconds.
+        let index = self.children_index();
         let mut out: Vec<ChecklistSummary> = self
             .checklists
             .values()
@@ -235,7 +249,7 @@ impl ProjectState {
                 progress: c
                     .run
                     .as_ref()
-                    .map(|_| progress(&self.walk(&c.root, Reveal::Answered))),
+                    .map(|_| progress(&self.walk(&index, &c.root, Reveal::Answered))),
                 created_at: c.created_at,
                 finished_at: c.run.as_ref().and_then(|r| r.finished_at),
             })
@@ -256,7 +270,7 @@ impl ProjectState {
     pub fn checklist_run(&self, id: &ChecklistId) -> Option<ChecklistRunView> {
         let c = self.checklists.get(id)?;
         let run = c.run.as_ref()?;
-        let rows = self.walk(&c.root, Reveal::Answered);
+        let rows = self.walk(&self.children_index(), &c.root, Reveal::Answered);
         Some(ChecklistRunView {
             checklist: c.id.clone(),
             name: c.name.clone(),
@@ -283,7 +297,7 @@ impl ProjectState {
             })
             .collect();
         Some(
-            self.walk(&c.root, Reveal::Both)
+            self.walk(&self.children_index(), &c.root, Reveal::Both)
                 .into_iter()
                 .map(|r| ChecklistOutlineRow {
                     branch: branch_of.get(&r.task).copied(),
@@ -320,8 +334,21 @@ impl ProjectState {
         if self.checklists.is_empty() {
             return None;
         }
-        let roots: BTreeMap<&TaskId, &Checklist> =
-            self.checklists.values().map(|c| (&c.root, c)).collect();
+        // Two checklists sharing a root is malformed (only a hostile snapshot gets
+        // there), and the answer decides what may be edited — so the most
+        // restrictive owner wins: a template, then a finished run, then a live run.
+        let strictness = |c: &Checklist| match &c.run {
+            None => 0,
+            Some(r) if r.status != RunStatus::InProgress => 1,
+            Some(_) => 2,
+        };
+        let mut roots: BTreeMap<&TaskId, &Checklist> = BTreeMap::new();
+        for c in self.checklists.values() {
+            let slot = roots.entry(&c.root).or_insert(c);
+            if strictness(c) < strictness(slot) {
+                *slot = c;
+            }
+        }
         let mut cur = Some(task.clone());
         let mut guard = 0;
         while let Some(id) = cur {
@@ -354,8 +381,30 @@ impl ProjectState {
         }
     }
 
+    /// Reject changing the *structure* of a finished run — adding, deleting or
+    /// moving its items, or re-branching its decisions. A finished run is a record.
+    pub(crate) fn ensure_checklist_structure_editable(&self, task: &TaskId) -> Result<(), OpError> {
+        match self.checklist_containing(task).and_then(|c| c.run.as_ref()) {
+            Some(r) if r.status != RunStatus::InProgress => {
+                Err(OpError::Invalid("the run is finished"))
+            }
+            _ => Ok(()),
+        }
+    }
+
+    /// The id of the checklist containing `task`, if any — for "does this move
+    /// cross a checklist boundary" checks.
+    pub(crate) fn checklist_id_of(&self, task: &TaskId) -> Option<ChecklistId> {
+        self.checklist_containing(task).map(|c| c.id.clone())
+    }
+
+    /// Whether `task` is some checklist's root.
+    pub(crate) fn is_checklist_root(&self, task: &TaskId) -> bool {
+        self.checklists.values().any(|c| &c.root == task)
+    }
+
     /// Outline children per parent, in outline order.
-    fn children_index(&self) -> HashMap<TaskId, Vec<TaskId>> {
+    pub(crate) fn children_index(&self) -> HashMap<TaskId, Vec<TaskId>> {
         let mut index: HashMap<TaskId, Vec<TaskId>> = HashMap::new();
         for t in self.tasks.values() {
             if let Some(p) = &t.parent {
@@ -395,8 +444,12 @@ impl ProjectState {
     /// The rows under `root` (root itself excluded), honouring decisions per
     /// `reveal`. Iterative with a visited set, like [`ProjectState::checklist`], so
     /// depth is heap-bounded and a malformed cycle cannot loop.
-    fn walk(&self, root: &TaskId, reveal: Reveal) -> Vec<ChecklistRow> {
-        let index = self.children_index();
+    fn walk(
+        &self,
+        index: &HashMap<TaskId, Vec<TaskId>>,
+        root: &TaskId,
+        reveal: Reveal,
+    ) -> Vec<ChecklistRow> {
         let mut rows = Vec::new();
         let mut visited = HashSet::new();
         visited.insert(root.clone());
@@ -908,6 +961,118 @@ mod tests {
         p.delete_task(&t("brief")).unwrap();
         let d = p.tasks[&t("pax")].decision.as_ref().unwrap();
         assert_eq!(d.yes_children, vec![t("belts")]);
+    }
+
+    #[test]
+    fn finished_runs_are_frozen_through_every_op() {
+        // Security review: set_decision, set_status and the structural ops used to
+        // bypass the finished-run rule that set_completed/answer_decision enforced.
+        let mut p = preflight();
+        p.instantiate_checklist(&c("tpl"), c("r"), 1).unwrap();
+        p.abandon_checklist_run(&c("r"), 2).unwrap();
+        let finished = Err(OpError::Invalid("the run is finished"));
+        let mut d = p.tasks[&t("r/pax")].decision.clone().unwrap();
+        d.answer = Some(true);
+        assert_eq!(p.set_decision(&t("r/pax"), Some(d)), finished);
+        assert_eq!(p.create_task(t("new"), "x", Some(t("r/root"))), finished);
+        assert_eq!(p.delete_task(&t("r/fuel")), finished);
+        assert_eq!(p.reparent(&t("r/doors"), Some(t("r/pax"))), finished);
+        assert_eq!(
+            p.set_status(&t("r/fuel"), Some(crate::StatusId::from_raw("done"))),
+            finished
+        );
+    }
+
+    #[test]
+    fn templates_cannot_be_ticked_through_a_status() {
+        let mut p = preflight();
+        assert_eq!(
+            p.set_status(&t("fuel"), Some(crate::StatusId::from_raw("done"))),
+            Err(OpError::Invalid(
+                "templates are not ticked or answered; instantiate a run"
+            ))
+        );
+        // The default workflow's backfill skips checklist items.
+        p.ensure_default_workflow().unwrap();
+        assert!(p.tasks[&t("fuel")].status.is_none());
+        assert!(!p.tasks[&t("fuel")].completed);
+        assert!(p.tasks[&t("loose")].status.is_some());
+    }
+
+    #[test]
+    fn nothing_crosses_a_checklist_boundary_and_roots_stay_put() {
+        let mut p = preflight();
+        p.instantiate_checklist(&c("tpl"), c("r"), 1).unwrap();
+        p.answer_decision(&t("r/pax"), true).unwrap();
+        let boundary = Err(OpError::Invalid(
+            "items cannot move across a checklist boundary",
+        ));
+        // An answered run decision cannot be moved into a template…
+        assert_eq!(p.reparent(&t("r/pax"), Some(t("root"))), boundary);
+        // …an ordinary task cannot slip into one, nor an item out of one…
+        assert_eq!(p.reparent(&t("loose"), Some(t("root"))), boundary);
+        assert_eq!(p.reparent(&t("fuel"), None), boundary);
+        // …and a root never moves (reparenting a run's root under its template
+        // doubled the template on every instantiate).
+        assert_eq!(
+            p.reparent(&t("r/root"), Some(t("root"))),
+            Err(OpError::Invalid("a checklist's root cannot be moved"))
+        );
+        // A decision cannot claim a branch child from another checklist.
+        let mut d = p.tasks[&t("r/pax")].decision.clone().unwrap();
+        d.no_children.push(t("fuel"));
+        assert_eq!(
+            p.set_decision(&t("r/pax"), Some(d)),
+            Err(OpError::Invalid(
+                "branch children must belong to the decision's checklist"
+            ))
+        );
+        // Moving within one checklist is fine.
+        p.reparent(&t("doors"), Some(t("fuel"))).unwrap();
+    }
+
+    #[test]
+    fn instantiating_a_template_with_a_missing_root_is_not_found() {
+        let mut p = preflight();
+        p.checklists.get_mut(&c("tpl")).unwrap().root = t("ghost");
+        assert_eq!(
+            p.instantiate_checklist(&c("tpl"), c("r"), 1),
+            Err(OpError::NotFound)
+        );
+    }
+
+    #[test]
+    fn a_shared_root_is_governed_by_its_strictest_owner() {
+        // Malformed (hostile-snapshot) state: a live run claiming the template's
+        // root must not unlock the template's items.
+        let mut p = preflight();
+        let mut rogue = p.checklists[&c("tpl")].clone();
+        rogue.id = c("zz");
+        rogue.run = Some(ChecklistRun {
+            template: c("tpl"),
+            status: RunStatus::InProgress,
+            finished_at: None,
+        });
+        p.checklists.insert(c("zz"), rogue);
+        assert!(p.set_completed(&t("fuel"), true).is_err());
+    }
+
+    #[test]
+    fn the_library_scales_with_runs() {
+        // Security review: the library walked once per run and rebuilt the outline
+        // index each time (runs × tasks). 300 runs of this template must be quick.
+        let mut p = preflight();
+        for i in 0..300 {
+            p.instantiate_checklist(&c("tpl"), c(&format!("r{i}")), i)
+                .unwrap();
+        }
+        let start = std::time::Instant::now();
+        assert_eq!(p.checklists().len(), 301);
+        assert!(
+            start.elapsed() < std::time::Duration::from_secs(2),
+            "{:?}",
+            start.elapsed()
+        );
     }
 
     #[cfg(feature = "serde")]

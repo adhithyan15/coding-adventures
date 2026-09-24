@@ -85,6 +85,28 @@ on a template item are rejected, as is `set_decision` with an answer; answers
 belong to runs. A run's items can be ticked and answered but a finished
 (completed or abandoned) run is read-only.
 
+**Boundaries.** Every op that could move work into, out of, or within a
+checklist respects it (added after the pre-push security review found each of
+these reachable):
+
+- A checklist's **root never moves** (`reparent`, `move_task`) and is never
+  deleted on its own. Reparenting a run's root under its own template doubled
+  the template on every instantiate.
+- **Nothing crosses a checklist boundary.** `reparent` and `set_decision`'s
+  reparenting refuse to move an item between checklists, or between a
+  checklist and the project. Otherwise an answered decision could be moved
+  into a template. `move_task` refuses checklist items altogether.
+- **A finished run is frozen:** no `create_task` under it, and no
+  `delete_task`, `reparent`, `set_decision` or `set_status` on its items.
+  `set_status` counts as ticking, because a done status sets `completed`.
+- `ensure_default_workflow` does not stamp checklist items, since stamping would
+  tick template items.
+- A template holds at most 10,000 items (`MAX_CHECKLIST_ITEMS`), so one
+  `instantiate_checklist` cannot allocate without limit. A template whose root
+  is missing cannot be instantiated.
+- On a malformed snapshot where two checklists share a root, the most
+  restrictive owner governs editing: template, then finished run, then live run.
+
 **Hidden branches keep their state.** Switching an answer from yes to no hides
 the yes branch without unticking it, exactly as the TS app did, so switching
 back restores the work.
