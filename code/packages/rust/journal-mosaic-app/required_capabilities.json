@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/journal-mosaic-app",
   "capabilities": [],
-  "justification": "Pure in-memory application adapter over journal-core; reads the system clock through std::time only. No filesystem, network, process, or environment access (the generated host owns persistence)."
+  "justification": "Pure in-memory application adapter over journal-core. Reads the clock: natively through std::time, and in the browser through the host-supplied journal.now_ms import (wasm32 has no clock). No filesystem, network, process, or environment access (the generated host owns persistence)."
 }

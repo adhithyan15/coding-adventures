@@ -138,8 +138,34 @@ The lane is triggered by `journal-core`, `journal-mosaic-app` and the
 backends follow in the same shape. The web host waits on a wasm clock:
 `SystemTime::now()` panics on `wasm32-unknown-unknown`.
 
+## The browser (J5c)
+
+The same crate is the browser runtime. It is built for `wasm32-unknown-unknown`
+and exported through `mosaic_app_wasm::export_mosaic_wasm!`, the standard
+lifecycle bridge VisiCalc uses: `create`, `dispatch`, `snapshot`, `restore`
+and `destroy` over `mosaic_wasm_call`. The native C ABI is unchanged.
+
+**The clock is the host's.** `std::time::SystemTime::now()` panics on
+`wasm32-unknown-unknown`, which has no clock of its own. On wasm32 the clock is
+a module import, `journal.now_ms() -> f64` (milliseconds since the epoch).
+The browser host passes `{ journal: { now_ms: Date.now } }`. A value that is
+not finite, is negative, or is at least 2^53 reads as 0 (the epoch), never as
+a panic or a wrapped huge date. The module needs the import to instantiate.
+Native builds keep `SystemTime`.
+
+**Event names, bare or prefixed.** Native hosts send the raw emit name
+(`onSelectEntry`). The generated React component dispatches `type:
+"selectEntry"`. Journal accepts both: a bare name whose first letter is
+lower-case is read as `on` plus that name capitalised. This is the same
+normalisation task-, VisiCalc- and SPICE-mosaic-app apply in the other
+direction. An unknown event is still an error that names what was sent.
+
+J5c-1 is this runtime and a Node test that drives it through the real
+`mosaic-host.mjs` loader. The React web host that mounts `JournalApp` over it
+is J5c-2.
+
 ## Deferred
 
-The web host and the remaining native lanes, packaging and release (J5); the markdown preview;
+The web host (J5c-2), launching on the remaining native lanes, packaging and release (J5); the markdown preview;
 search, on-this-day, tags and stars in the UI; the journal switcher; moving an
 entry to another day; importing the TypeScript app's entries.

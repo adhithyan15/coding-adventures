@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+### Added — Journal in the browser: the runtime (J5c-1 of #14416)
+
+- **wasm32 build:** `mosaic_app_wasm::export_mosaic_wasm!` exports the
+  standard lifecycle bridge next to the native C ABI.
+- **The clock is a host import on wasm32** (`journal.now_ms() -> f64`).
+  `SystemTime::now()` panics on `wasm32-unknown-unknown`. A non-finite,
+  negative or ≥ 2^53 value reads as the epoch. Native builds keep `SystemTime`.
+- **Bare event names** (`selectEntry`, as the generated React component
+  dispatches them) are read as their emit names. An unknown event's error
+  still names what was sent.
+- `js/wasm.test.mjs` drives the real wasm through `mosaic-host.mjs`: write,
+  save, restore; bare and prefixed names; a hostile clock; and a module loaded
+  without the clock import, which must fail to instantiate.
+
 ### Added — Journal on the standard Mosaic ABI (0.1.0, J3c-1 of #14416)
 
 - **`JournalMosaicApp`** implements `MosaicApp` over `journal-core` and is

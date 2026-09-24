@@ -30,8 +30,28 @@ engine's state, and `dispatch` turns the package's events into engine commands.
 - **Snapshots include an unsaved draft.** Restoring validates the journal and
   refuses anything it did not write.
 
+## In the browser (J5c)
+
+The same crate is the browser runtime. Built for `wasm32-unknown-unknown`, it
+exports the standard Mosaic lifecycle bridge
+(`mosaic_app_wasm::export_mosaic_wasm!`), which the web host loads with
+`mosaic-host.mjs`.
+
+- **The clock comes from the host.** wasm32 has no clock, so the module imports
+  `journal.now_ms() -> f64`, and the host passes `Date.now`. A value that isn't
+  a plausible time reads as the epoch.
+
+  ```js
+  const module = await loadMosaicModule(bytes, { journal: { now_ms: Date.now } });
+  ```
+
+- **Bare event names work too.** The generated React component dispatches
+  `selectEntry`, which is read as `onSelectEntry`.
+
 ## Testing
 
 ```sh
 cargo test -p journal-mosaic-app
+cargo build -p journal-mosaic-app --target wasm32-unknown-unknown
+node --test js/wasm.test.mjs   # the real wasm through mosaic-host.mjs
 ```
