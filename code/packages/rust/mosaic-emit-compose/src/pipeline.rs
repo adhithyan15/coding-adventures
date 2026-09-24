@@ -612,6 +612,10 @@ pub fn from_pipeline(
         out.push_str(&emit_fill_fraction_helper());
         writeln!(out).unwrap();
     }
+    if !part_styles.wrap_rows.is_empty() {
+        out.push_str(&emit_wrap_row_helper());
+        writeln!(out).unwrap();
+    }
     if uses_drag {
         out.push_str(&emit_drag_helpers());
         writeln!(out).unwrap();
@@ -2027,6 +2031,16 @@ fn flow_wrapped_composable<'a>(
     }
 }
 
+/// `_MosaicWrapRow` in place of `FlowRow` for a qualifying wrapping Row
+/// ([`wrap_rows_and_items`]); otherwise the composable unchanged.
+fn wrap_row_composable<'a>(node: &LayoutNode, part_styles: &PartStyleMap, composable: &'a str) -> &'a str {
+    let wraps = node
+        .part_name
+        .as_deref()
+        .is_some_and(|part| part_styles.is_wrap_row(part));
+    if composable == "FlowRow" && wraps { "_MosaicWrapRow" } else { composable }
+}
+
 /// Whether a part authors `flex-wrap: wrap`.
 fn part_wants_flow_wrap(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
     let Some(part) = node.part_name.as_deref() else {
@@ -2047,7 +2061,12 @@ fn part_wants_flow_wrap(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
 /// [`container_default_fill`] decides, so the helper is present exactly
 /// when a call to it can be emitted.
 fn layout_uses_fill_fraction(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
+    let wrap_item = node
+        .part_name
+        .as_deref()
+        .is_some_and(|part| part_styles.wrap_item_fraction(part).is_some());
     (container_composable_for_tag(&node.tag).is_some()
+        && !wrap_item
         && node
             .part_name
             .as_deref()
@@ -2084,6 +2103,177 @@ fn emit_fill_fraction_helper() -> String {
     }
 "
     .to_string()
+}
+
+/// `_MosaicWrapRow`: CSS `flex-wrap: wrap` with the default
+/// `align-items: stretch`, for rows whose items are all sized as a fraction
+/// of the row ([`wrap_rows_and_items`]).
+///
+/// `FlowRow` cannot do this. Its items keep their own heights, so Calendar's
+/// week with an event was ragged: the event's day ran ~55px below its
+/// neighbours, whose borders stopped at their 96px `min-height`. The obvious
+/// `fillMaxRowHeight()` measures an item against the line's *remaining*
+/// width, which collapsed the fraction-width cells into one line (see
+/// `lessons.d/compose-flowrow-measures-fillmaxrowheight-…`).
+///
+/// This layout measures each item exactly once, as Compose requires:
+///
+///   width   = floor(rowWidth * fraction), from the item's parent data,
+///             not from any measurement;
+///   lines   break when the next width would overflow the row;
+///   height  of a line = the tallest item's `maxIntrinsicHeight(width)`,
+///             an intrinsic query, not a measurement;
+///   measure each item at `Constraints.fixed(width, lineHeight)`.
+///
+/// Names are fully qualified so the helper needs no imports of its own.
+fn emit_wrap_row_helper() -> String {
+    "private class _MosaicWrapItemData(val fraction: Float) : androidx.compose.ui.layout.ParentDataModifier {
+    override fun androidx.compose.ui.unit.Density.modifyParentData(parentData: Any?): Any? = this@_MosaicWrapItemData
+}
+
+private fun Modifier._mosaicWrapItem(fraction: Float): Modifier = this.then(_MosaicWrapItemData(fraction))
+
+@Composable
+private fun _MosaicWrapRow(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    androidx.compose.ui.layout.Layout(content = content, modifier = modifier) { measurables, constraints ->
+        val rowWidth = if (constraints.hasBoundedWidth) constraints.maxWidth else 0
+        val widths = measurables.map { measurable ->
+            val fraction = (measurable.parentData as? _MosaicWrapItemData)?.fraction ?: 1f
+            kotlin.math.floor(rowWidth * fraction).toInt().coerceIn(0, rowWidth)
+        }
+        val lineOf = IntArray(measurables.size)
+        val lineHeights = mutableListOf<Int>()
+        var used = 0
+        var tallest = 0
+        measurables.forEachIndexed { index, measurable ->
+            if (used > 0 && used + widths[index] > rowWidth) {
+                lineHeights.add(tallest)
+                used = 0
+                tallest = 0
+            }
+            lineOf[index] = lineHeights.size
+            used += widths[index]
+            tallest = maxOf(tallest, measurable.maxIntrinsicHeight(widths[index]))
+        }
+        if (measurables.isNotEmpty()) lineHeights.add(tallest)
+        val placeables = measurables.mapIndexed { index, measurable ->
+            measurable.measure(androidx.compose.ui.unit.Constraints.fixed(widths[index], lineHeights[lineOf[index]]))
+        }
+        val maxHeight = if (constraints.hasBoundedHeight) constraints.maxHeight else Int.MAX_VALUE
+        val height = lineHeights.sum().coerceIn(constraints.minHeight, maxHeight)
+        layout(rowWidth, height) {
+            var x = 0
+            var y = 0
+            var line = 0
+            placeables.forEachIndexed { index, placeable ->
+                if (lineOf[index] != line) {
+                    y += lineHeights[line]
+                    line = lineOf[index]
+                    x = 0
+                }
+                placeable.place(x, y)
+                x += placeable.width
+            }
+        }
+    }
+}
+"
+    .to_string()
+}
+
+/// Wrapping Rows that lower to [`emit_wrap_row_helper`]'s `_MosaicWrapRow`,
+/// and their item parts mapped to the Kotlin fraction each takes.
+///
+/// Only the case `FlowRow` gets wrong and this layout gets right: a wrapping
+/// Row with no `gap` / `row-gap` / `column-gap` / `justify-content` /
+/// `align-items` / `text-align` of its own (the helper takes no arrangement),
+/// whose direct children (through `For` / `If` / `Else`) are ALL containers
+/// with a percentage width below 100% and no `height`. Anything else keeps
+/// `FlowRow`. An item part used anywhere outside such a row disqualifies the
+/// whole set, because `_mosaicWrapItem` means nothing elsewhere and the part
+/// would render two ways.
+fn wrap_rows_and_items(
+    root: &LayoutNode,
+    part_styles: &PartStyleMap,
+) -> (HashSet<String>, HashMap<String, String>) {
+    fn children_through_meta(node: &LayoutNode) -> Vec<&LayoutNode> {
+        let mut out = Vec::new();
+        for child in &node.children {
+            if matches!(child.tag.as_str(), "For" | "If" | "Else") {
+                out.extend(children_through_meta(child));
+            } else {
+                out.push(child);
+            }
+        }
+        out
+    }
+    fn row_qualifies(node: &LayoutNode, part_styles: &PartStyleMap) -> Option<Vec<(String, String)>> {
+        if node.tag != "Row" || !part_wants_flow_wrap(node, part_styles) {
+            return None;
+        }
+        let props = part_styles.get(node.part_name.as_deref()?)?;
+        let arranged = props.iter().any(|prop| {
+            matches!(
+                prop.name.as_str(),
+                "gap" | "row-gap" | "column-gap" | "justify-content" | "align-items" | "text-align"
+            )
+        });
+        if arranged {
+            return None;
+        }
+        let children = children_through_meta(node);
+        if children.is_empty() {
+            return None;
+        }
+        let mut items = Vec::new();
+        for child in children {
+            container_composable_for_tag(&child.tag)?;
+            let part = child.part_name.as_deref()?;
+            let props = part_styles.get(part)?;
+            if props.iter().any(|prop| prop.name == "height") {
+                return None;
+            }
+            let fraction = percent_width_fraction(props).filter(|f| *f < 1.0)?;
+            items.push((part.to_string(), kotlin_fraction(fraction)));
+        }
+        Some(items)
+    }
+    fn walk(
+        node: &LayoutNode,
+        in_wrap_row: bool,
+        part_styles: &PartStyleMap,
+        rows: &mut HashSet<String>,
+        items: &mut HashMap<String, String>,
+        outside: &mut HashSet<String>,
+    ) {
+        if !in_wrap_row {
+            if let Some(part) = node.part_name.as_deref() {
+                outside.insert(part.to_string());
+            }
+        }
+        let qualifies = row_qualifies(node, part_styles);
+        if let Some(found) = &qualifies {
+            if let Some(part) = node.part_name.as_deref() {
+                rows.insert(part.to_string());
+            }
+            items.extend(found.iter().cloned());
+        }
+        let here = match node.tag.as_str() {
+            "For" | "If" | "Else" => in_wrap_row,
+            _ => qualifies.is_some(),
+        };
+        for child in &node.children {
+            walk(child, here, part_styles, rows, items, outside);
+        }
+    }
+    let mut rows = HashSet::new();
+    let mut items = HashMap::new();
+    let mut outside = HashSet::new();
+    walk(root, false, part_styles, &mut rows, &mut items, &mut outside);
+    if items.keys().any(|part| outside.contains(part)) {
+        return (HashSet::new(), HashMap::new());
+    }
+    (rows, items)
 }
 
 /// Whether any part in this layout authors `flex-wrap: wrap`, and so
@@ -2290,6 +2480,14 @@ fn kotlin_fraction(fraction: f64) -> String {
 /// of the FlowRow's width, which is what CSS means, so seven fit a line --
 /// floored rather than rounded ([`emit_fill_fraction_helper`]).
 fn container_default_fill(node: &LayoutNode, part_styles: &PartStyleMap) -> String {
+    // A `_MosaicWrapRow` item: the row gives it its width, from this fraction.
+    if let Some(fraction) = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.wrap_item_fraction(part))
+    {
+        return format!("_mosaicWrapItem({fraction}f)");
+    }
     match node
         .part_name
         .as_deref()
@@ -3052,6 +3250,10 @@ struct PartStyleMap {
     /// fill their parent's width; see [`text_parts_aligned`].
     text_align: HashMap<String, &'static str>,
     text_align_fill: HashSet<String>,
+    /// Wrapping Rows lowered to `_MosaicWrapRow`, and their items' fractions;
+    /// see [`wrap_rows_and_items`].
+    wrap_rows: HashSet<String>,
+    wrap_items: HashMap<String, String>,
 }
 
 impl PartStyleMap {
@@ -3075,6 +3277,17 @@ impl PartStyleMap {
         self.fill_width = parts_filling_width(root, self);
         self.row_weighted_leaf = leaf_parts_row_weighted(root, self);
         (self.text_align, self.text_align_fill) = text_parts_aligned(root, self);
+        (self.wrap_rows, self.wrap_items) = wrap_rows_and_items(root, self);
+    }
+
+    /// Does this wrapping Row lower to `_MosaicWrapRow`?
+    fn is_wrap_row(&self, part: &str) -> bool {
+        self.wrap_rows.contains(part)
+    }
+
+    /// The fraction a `_MosaicWrapRow` item takes, if this part is one.
+    fn wrap_item_fraction(&self, part: &str) -> Option<&str> {
+        self.wrap_items.get(part).map(String::as_str)
     }
 
     /// The `TextAlign` a `Text` part takes, if it authors `text-align`.
@@ -3167,6 +3380,8 @@ fn build_part_style_map(style: &StyleDef, slots: &[SlotDecl]) -> PartStyleMap {
         row_weighted_leaf: HashMap::new(),
         text_align: HashMap::new(),
         text_align_fill: HashSet::new(),
+        wrap_rows: HashSet::new(),
+        wrap_items: HashMap::new(),
     }
 }
 
@@ -5870,7 +6085,7 @@ fn emit_container_frame(
         wheel_modifier,
     } = *frame_ctx;
     let pad = "    ".repeat(depth);
-    let composable = flow_wrapped_composable(node, part_styles, composable);
+    let composable = wrap_row_composable(node, part_styles, flow_wrapped_composable(node, part_styles, composable));
     let mut opener = String::new();
     let chain_indent = (depth + 2) * 4;
     let inherited_color = text_ctx.and_then(|t| t.color.as_deref());
@@ -6139,7 +6354,7 @@ fn emit_container(
     in_row_scope: bool,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
-    let composable = flow_wrapped_composable(node, part_styles, composable);
+    let composable = wrap_row_composable(node, part_styles, flow_wrapped_composable(node, part_styles, composable));
     let mut out = String::new();
 
     // Build the part-style chain for this node (if any).  The chain
@@ -9347,6 +9562,7 @@ mod tests {
                         vec![],
                         vec![styled_node("Column", "cell", vec![], vec![])],
                     ),
+                    styled_node("Column", "half", vec![], vec![]),
                     styled_node("Column", "too-wide", vec![], vec![]),
                     styled_node("Column", "not-a-number", vec![], vec![]),
                 ],
@@ -9360,6 +9576,7 @@ mod tests {
                 part("name-b", vec![seventh()], vec![]),
                 part("grid", vec![sprop("flex-wrap", "wrap")], vec![]),
                 part("cell", vec![seventh(), sprop("padding", "6")], vec![]),
+                part("half", vec![sprop("width", "50%"), sprop("padding", "1")], vec![]),
                 part("too-wide", vec![sprop("width", "150%"), sprop("padding", "1")], vec![]),
                 part("not-a-number", vec![sprop("width", "x%"), sprop("padding", "1")], vec![]),
             ],
@@ -9367,8 +9584,14 @@ mod tests {
         let out = from_pipeline(&m, &l, &style).unwrap().output;
         assert!(out.contains("Text(text = \"Sun\", modifier = Modifier.weight(0.142857f))"), "{out}");
         assert!(out.contains("Text(text = \"Mon\", modifier = Modifier.weight(0.142857f))"), "{out}");
-        assert!(out.contains("FlowRow("), "{out}");
-        assert!(out.contains("modifier = Modifier._mosaicFillFraction(0.142857f)"), "{out}");
+        // A wrapping Row of fraction-width cells is `_MosaicWrapRow`, whose
+        // items take their width from the row (`wrap_rows_and_items`).
+        assert!(out.contains("_MosaicWrapRow("), "{out}");
+        assert!(!out.contains("FlowRow("), "{out}");
+        assert!(out.contains("modifier = Modifier._mosaicWrapItem(0.142857f)"), "{out}");
+        assert!(out.contains("private fun _MosaicWrapRow("), "{out}");
+        // Outside a Row, a percentage fills a floored fraction of the parent.
+        assert!(out.contains("modifier = Modifier._mosaicFillFraction(0.5f)"), "{out}");
         assert!(out.contains("private fun Modifier._mosaicFillFraction(fraction: Float)"), "{out}");
         assert!(out.contains("kotlin.math.floor(constraints.maxWidth * fraction)"), "{out}");
         assert!(out.contains("import androidx.compose.ui.layout.layout"), "{out}");
@@ -9379,6 +9602,7 @@ mod tests {
         let plain = style_def("Month", vec![part("cell", vec![sprop("padding", "6")], vec![])]);
         let out = from_pipeline(&m, &l, &plain).unwrap().output;
         assert!(!out.contains("_mosaicFillFraction"), "{out}");
+        assert!(!out.contains("_MosaicWrapRow"), "{out}");
         assert!(!out.contains("import androidx.compose.ui.layout.layout"), "{out}");
     }
 

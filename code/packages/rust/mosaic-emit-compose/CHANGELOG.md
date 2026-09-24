@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-24 (wrap rows)
+
+- **A wrapping Row of fraction-width items stretches each line, as CSS does.** CSS lays `flex-wrap: wrap` out in lines, and `align-items` defaults to `stretch`, so every item on a line is as tall as the tallest. `FlowRow` leaves items at their own heights. In Calendar, the week with an event was ragged: the event's day ran about 55px below its neighbours, whose borders stopped at their 96px `min-height`. `fillMaxRowHeight()` cannot fix it, because it measures an item against the line's *remaining* width and so collapsed the cells into one line (see the lesson in `lessons.d`).
+  - Such a Row now lowers to `_MosaicWrapRow`, a file-private `Layout` emitted only when used. Each item takes `floor(rowWidth × fraction)` from its `_mosaicWrapItem(f)` parent data. Lines break on those widths. A line's height is its tallest item's `maxIntrinsicHeight`, and every item is measured once at `Constraints.fixed(width, lineHeight)`.
+  - It applies only where it is exactly right: a wrapping Row with no gap, `justify-content`, `align-items` or `text-align` of its own, whose children (through `For` / `If` / `Else`) are all containers with a percentage width below 100% and no `height`. Everything else keeps `FlowRow`.
+  - Measured: across every Mosaic program only Trestle's output changes, in Calendar. The rendered week shares one bottom border, and every other Trestle view is byte-identical. `TaskAppUiTest`, the emitted-control contract and native-complete (0) pass.
+
 ## 2026-09-24 (text box)
 
 - **A `Text` wears its part's box.** The `Text` arm built the part's whole `ComposeStyle` but passed only its text style to `emit_text`. The modifier chain was thrown away: padding, background, rounded corners, size and border. Calendar's today badge (a 21px amber pill) was never drawn, and Trestle's "Up next" count and due-date pills were bare text. The drop reporter lowers the same properties through the container path, so it reported 0 degradations. Now the chain follows the width decision (`fillMaxWidth()` / `weight` / the UI59 floor, which comes first as it does for containers) and precedes the semantics. The previous semantics-first order is gone. The reporter's answer is now true, and a lesson records the gap.
