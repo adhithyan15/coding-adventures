@@ -69,10 +69,20 @@ fn task_app_pressed_state_lowers_to_native_swiftui_press_state() {
             output
                 .matches("let _mosaicPressContent: (Bool) -> AnyView = { __mosaicPressActive in")
                 .count(),
-            2,
-            "{theme} has two authored pressed surfaces:\n{output}"
+            6,
+            "{theme} has six authored pressed surfaces:\n{output}"
         );
-        for action in ["dispatch(.addLabel)", "dispatch(.addTask)"] {
+        // Add task and + Label, then the four Checklists controls that clone
+        // `add-btn`'s look, pressed state included (C3c, #14018): New
+        // checklist, Add item, Start run, and the selected outline item.
+        for action in [
+            "dispatch(.addLabel)",
+            "dispatch(.addTask)",
+            "dispatch(.createChecklist)",
+            "dispatch(.addChecklistItem)",
+            "dispatch(.startChecklistRun)",
+            "dispatch(.selectOutlineItem(",
+        ] {
             assert!(
                 output.match_indices(action).any(|(action_start, _)| {
                     output[..action_start]

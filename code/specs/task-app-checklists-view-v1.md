@@ -65,11 +65,15 @@ are UI state and are not persisted, like its Notes drafts. Its Vitest suite,
   - For a **run**, `ChecklistRun` (C2), then **Delete run**.
   - With **nothing** selected, a short prompt.
 
-  Both empty states (an empty library, and nothing selected) are plain text,
-  not the toolkit `EmptyState`. The list view already mounts one, and an
-  inlined component keeps its part names, so a second instance fails the
-  package build (`DuplicatePart 'empty-state'`). *Changed from the first
-  draft, which used `EmptyState` for both.*
+  Both empty states (an empty library, and nothing selected) use the toolkit
+  `EmptyState` with no action button, as the List view does. The List view
+  mounts the first one; the package resolver gives the second and third
+  mounts their own part names (`empty-state-m2`, `empty-state-m3`, #15959),
+  so all three share one heading semantics and one set of styles.
+  *History: the first draft used `EmptyState`; C3a shipped plain text
+  because a second mount then failed the build (`DuplicatePart
+  'empty-state'`); multi-mount (#15959) lifted that, and this returned to
+  `EmptyState`.*
 
 ## State (in `TaskAppState`)
 
