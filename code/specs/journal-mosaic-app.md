@@ -530,7 +530,31 @@ reason: with no entries there is nothing to star.
 
 **Slots:** `journal-empty` (`bool`).
 
+## Renaming and deleting a journal (J4i)
+
+The engine has `RenameJournal` and `DeleteJournal { move_entries_to }`.
+Under the *New journal* row, while a journal (not "All journals") is
+selected, a row offers **Rename** and **Delete journal**.
+
+**Rename** gives the selected journal the name in the *New journal* field,
+trimmed, and clears the field. A blank name does nothing. A name the engine
+refuses (a duplicate, too long, or several lines) is said in
+`journal-error`, the same words as for Add. Personal can be renamed; its id
+does not change.
+
+**Delete journal** removes the selected journal and **moves its entries to
+Personal**. It never deletes entries, so no confirmation is needed. The
+pane then shows "All journals", and a draft filed in the deleted journal
+falls back as J4g's `draft_journal()` already does. Personal itself cannot
+be deleted: restoring a snapshot requires it, so the button is not offered
+while Personal is selected.
+
+**Slots:** `can-rename-journal` (`bool`: a journal is selected),
+`can-delete-journal` (`bool`: a journal other than Personal is selected).
+
+**Events:** `onRenameJournal`, `onDeleteJournal`.
+
 ## Deferred
 
 The web host (J5c-2), launching on the remaining native lanes, packaging and release (J5); the markdown preview;
-(search J4a, stars J4b, on-this-day J4c, tags J4d, an entry's day J4e and journals J4f and an entry's journal J4g are above); renaming and deleting a journal; export (needs a host file-save effect on native hosts); importing the TypeScript app's entries.
+(search J4a, stars J4b, on-this-day J4c, tags J4d, an entry's day J4e and journals J4f an entry's journal J4g, an empty journal J4h and renaming and deleting a journal J4i are above); export (needs a host file-save effect on native hosts); importing the TypeScript app's entries.
