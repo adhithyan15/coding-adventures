@@ -399,7 +399,34 @@ export function makeController(engine: any, init: ControllerInit = {}) {
   // per-project view falls out for free: `rows()` keeps only the ids the ACTIVE
   // project's table() knows about.
   const order: string[] = [...initialOrder]; // task ids in creation order
-  let counter = initialCounter;
+  // The one id counter every minted id draws from. It is restored from
+  // storage, so it is validated: a counter that is not a safe non-negative
+  // integer (NaN, or at 2^53 where ++ stops advancing) would make every
+  // "skip taken ids" loop below spin forever. A bad one is RECOVERED from the
+  // highest number already used in the workspace, never reset to 0, which
+  // would re-mint ids that exist.
+  const recoverCounter = (): number => {
+    let max = 0;
+    const projects = (engine.workspace().data.projects ?? {}) as Record<string, any>;
+    for (const p of Object.values(projects) as any[]) {
+      for (const kind of ["tasks", "notes", "labels", "checklists"]) {
+        for (const id of Object.keys(p?.[kind] ?? {})) {
+          const m = /^(?:t|n|l|p|checklist-|run-)(\d{1,15})$/.exec(id);
+          if (m) max = Math.max(max, Number(m[1]));
+        }
+      }
+    }
+    return max;
+  };
+  let counter =
+    Number.isSafeInteger(initialCounter) && initialCounter >= 0 ? initialCounter : recoverCounter();
+  /// The next number, or null once the counter can no longer advance safely
+  /// (it fails, as the native app's checked counter does, instead of looping).
+  const bumpCounter = (): number | null => {
+    if (!Number.isSafeInteger(counter) || counter < 0 || counter >= Number.MAX_SAFE_INTEGER - 1) return null;
+    counter += 1;
+    return counter;
+  };
   // Calendar nav state: the first day (UTC) of the currently shown month,
   // seeded to the current month.
   let calendarMonthStart = monthStartDays(today);
@@ -647,14 +674,18 @@ export function makeController(engine: any, init: ControllerInit = {}) {
     return c && (c.run != null) === wantRun ? c : null;
   };
 
-  /// `{prefix}-{n}`, skipping any id (or derived root) already taken anywhere.
-  const nextChecklistId = (prefix: string): string => {
+  /// `{prefix}-{n}`, skipping any id (or derived root) already taken
+  /// anywhere; null when the counter cannot advance.
+  const nextChecklistId = (prefix: string): string | null => {
     const projects = (engine.workspace().data.projects ?? {}) as Record<string, any>;
     const taken = (id: string) =>
       Object.values(projects).some((p: any) => p.checklists?.[id] || p.tasks?.[`${id}/root`]);
-    let id = `${prefix}-${++counter}`;
-    while (taken(id)) id = `${prefix}-${++counter}`;
-    return id;
+    for (;;) {
+      const n = bumpCounter();
+      if (n === null) return null;
+      const id = `${prefix}-${n}`;
+      if (!taken(id)) return id;
+    }
   };
 
   /// The visible row at `index` of the selected run, as just rendered.
@@ -1219,6 +1250,10 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           const name = newChecklistName.trim();
           if (!name) break;
           const id = nextChecklistId("checklist");
+          if (id === null) {
+            console.error("Could not create the checklist: the id counter is exhausted.");
+            break;
+          }
           const res = engine.createChecklistTemplate({ id, root: `${id}/root`, name, description: "", now: now() });
           if (res?.ok === false) {
             console.error("Could not create the checklist:", res.error ?? res);
@@ -1251,8 +1286,17 @@ export function makeController(engine: any, init: ControllerInit = {}) {
             .map((t: any) => Number(t.order ?? 0));
           const order = orders.length ? Math.max(...orders) + 1 : 0;
           const projects = (ws.projects ?? {}) as Record<string, any>;
-          let id = `t${++counter}`;
-          while (Object.values(projects).some((p: any) => p.tasks?.[id])) id = `t${++counter}`;
+          let id: string | null = null;
+          for (let n = bumpCounter(); n !== null; n = bumpCounter()) {
+            if (!Object.values(projects).some((p: any) => p.tasks?.[`t${n}`])) {
+              id = `t${n}`;
+              break;
+            }
+          }
+          if (id === null) {
+            console.error("Could not add the item: the id counter is exhausted.");
+            break;
+          }
           const res = engine.createTask({ id, name, parent: template.root });
           if (res?.ok === false) {
             console.error("Could not add the item:", res.error ?? res);
@@ -1267,6 +1311,10 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           const template = selectedOfKind(false);
           if (!template) break;
           const run = nextChecklistId("run");
+          if (run === null) {
+            console.error("Could not start the run: the id counter is exhausted.");
+            break;
+          }
           const res = engine.instantiateChecklist({ template: template.id, run, now: now() });
           if (res?.ok === false) {
             console.error("Could not start the run:", res.error ?? res);
@@ -1408,7 +1456,14 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         case "newNote":
           // Mint the id now, not on Save — see selectedNoteId's own comment
           // on why the editor needs a non-empty id to stay open at all.
-          selectedNoteId = `n${++counter}`;
+          {
+            const n = bumpCounter();
+            if (n === null) {
+              console.error("Could not start a note: the id counter is exhausted.");
+              break;
+            }
+            selectedNoteId = `n${n}`;
+          }
           noteTitleDraft = "";
           noteBodyDraft = "";
           noteTaskDraft = "";
@@ -1543,7 +1598,12 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           // Label ids share the same monotonic counter tasks/notes already mint from
           // (`t${n}`/`n${n}`) — the "l" prefix keeps the namespace distinct, so no
           // collision is possible across entity kinds.
-          const id = `l${++counter}`;
+          const n = bumpCounter();
+          if (n === null) {
+            console.error("Could not add the label: the id counter is exhausted.");
+            break;
+          }
+          const id = `l${n}`;
           // No colour picker in v1 (see BACKLOG.md) — a fixed empty string. The
           // engine only ever round-trips this field verbatim; nothing reads it yet.
           const res = engine.upsertLabel({ id, name, color: "" });
@@ -1632,7 +1692,12 @@ export function makeController(engine: any, init: ControllerInit = {}) {
             break;
           }
           newDueError = "";
-          const id = `t${++counter}`;
+          const n = bumpCounter();
+          if (n === null) {
+            console.error("Could not add the task: the id counter is exhausted.");
+            break;
+          }
+          const id = `t${n}`;
           engine.createTask({ id, name });
           // A default one working-day duration makes the task schedulable.
           engine.setDuration({ id, duration: { workingMinutes: 8 * 60, elapsed: false } });

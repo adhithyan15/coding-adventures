@@ -22,6 +22,11 @@ The web host now serves Checklists to the same contract as `task-mosaic-app`
   drop now refuses a key the views do not show. Runs are stamped with an
   injectable `now` (`ControllerInit.now`).
 - `__tests__/checklists.test.ts` walks the same scenarios as the Rust tests.
+- **The id counter is checked everywhere** (tasks, notes, labels, checklists,
+  runs). A stored counter that isn't a safe non-negative integer (NaN, or at
+  2^53, where `++` stops advancing) is recovered from the highest id already
+  in use. It is never reset to 0, which would reuse ids. Minting fails
+  rather than looping once the counter can't advance.
 
 ### Added — inert Checklists slots (C3a, #14018)
 

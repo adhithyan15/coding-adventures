@@ -176,6 +176,31 @@ describe("Checklists on the web host", () => {
   });
 });
 
+describe("a corrupted stored id counter", () => {
+  it("is recovered from the ids in use, never reset to reuse them", () => {
+    const engine = createTaskEngine(wasm);
+    const first = makeController(engine, { now: () => NOW });
+    send(first, "newTaskNameChange", { value: "Existing" });
+    send(first, "addTask");
+    // A reload whose stored counter is garbage: minting must not hang, and
+    // must not reuse t1.
+    const controller = makeController(engine, { now: () => NOW, initialCounter: Number.NaN });
+    send(controller, "newTaskNameChange", { value: "Next" });
+    send(controller, "addTask");
+    const tasks = Object.keys(engine.workspace().data.projects.project.tasks);
+    expect(tasks.sort()).toEqual(["t1", "t2"]);
+  });
+
+  it("fails instead of looping once the counter cannot advance", () => {
+    const engine = createTaskEngine(wasm);
+    const controller = makeController(engine, { now: () => NOW, initialCounter: Number.MAX_SAFE_INTEGER });
+    send(controller, "showChecklists");
+    send(controller, "newChecklistNameChange", { value: "Release" });
+    send(controller, "createChecklist");
+    expect((controller.getProps() as any).checklistLibraryEmpty).toBe(true);
+  });
+});
+
 function chars(text: string) {
   return [...text].length;
 }
