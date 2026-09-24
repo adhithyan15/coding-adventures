@@ -117,6 +117,7 @@ pub fn from_pipeline(
     // when something actually wraps, so a project that does not keeps a
     // byte-identical header.
     let uses_flow = layout_uses_flow_wrap(&layout.root, &part_styles);
+    let uses_fill_fraction = layout_uses_fill_fraction(&layout.root, &part_styles);
     if uses_flow {
         opt_ins.push("androidx.compose.foundation.layout.ExperimentalLayoutApi::class");
     }
@@ -221,6 +222,9 @@ pub fn from_pipeline(
     if uses_flow {
         writeln!(out, "import androidx.compose.foundation.layout.FlowColumn").unwrap();
         writeln!(out, "import androidx.compose.foundation.layout.FlowRow").unwrap();
+    }
+    if uses_fill_fraction {
+        writeln!(out, "import androidx.compose.ui.layout.layout").unwrap();
     }
     if uses_wheel {
         writeln!(out, "import androidx.compose.runtime.mutableStateOf").unwrap();
@@ -599,6 +603,10 @@ pub fn from_pipeline(
     }
     if uses_auto_focus {
         out.push_str(&emit_auto_focus_helper());
+        writeln!(out).unwrap();
+    }
+    if uses_fill_fraction {
+        out.push_str(&emit_fill_fraction_helper());
         writeln!(out).unwrap();
     }
     if uses_drag {
@@ -1815,6 +1823,61 @@ fn parts_filling_width(root: &LayoutNode, part_styles: &PartStyleMap) -> HashSet
     outside
 }
 
+/// `Text` parts that sit directly in a RowScope and author a percentage
+/// width, mapped to the `weight` that percentage becomes there.
+///
+/// A container in a Row already gets its weight from `emit_container`; a
+/// `Text` is a leaf with no `in_row_scope` of its own, so the answer is
+/// precomputed here from the same scope rule as [`parts_width_guarded`] (and
+/// that set leaves these parts out, because [`compose_row_weight`] is `Some`
+/// for them -- a weighted child absorbs slack instead of holding width).
+///
+///   Row [ calendar-dow ] {
+///     Text [ calendar-dow-sun ] ( content : "Sun" )   // width "14.2857%"
+///     …                                               // ×7
+///   }
+///     → Text("Sun", modifier = Modifier.weight(0.142857f), …) ×7
+///
+/// Before, the seven names measured to their text and sat packed at the
+/// Row's start ("SunMonTueWedThuFriSat") above a seven-column grid. A part
+/// that is also used outside a Row is left out: `weight` does not resolve
+/// outside RowScope, and half-applying would render one part two ways.
+fn text_parts_row_weighted(root: &LayoutNode, part_styles: &PartStyleMap) -> HashMap<String, String> {
+    fn walk(
+        node: &LayoutNode,
+        in_row_scope: bool,
+        part_styles: &PartStyleMap,
+        weighted: &mut HashMap<String, String>,
+        outside: &mut HashSet<String>,
+    ) {
+        if node.tag == "Text" {
+            if let Some(part) = node.part_name.as_deref() {
+                if !in_row_scope {
+                    outside.insert(part.to_string());
+                } else if let Some(weight) = part_styles
+                    .get(part)
+                    .and_then(|props| percent_width_fraction(props))
+                    .map(kotlin_fraction)
+                {
+                    weighted.insert(part.to_string(), weight);
+                }
+            }
+        }
+        let row_here = match node.tag.as_str() {
+            "For" | "If" | "Else" => in_row_scope,
+            _ => row_scoped_children(node, part_styles),
+        };
+        for child in &node.children {
+            walk(child, row_here, part_styles, weighted, outside);
+        }
+    }
+    let mut weighted = HashMap::new();
+    let mut outside = HashSet::new();
+    walk(root, false, part_styles, &mut weighted, &mut outside);
+    weighted.retain(|part, _| !outside.contains(part));
+    weighted
+}
+
 fn part_container_composables(root: &LayoutNode) -> HashMap<String, BTreeSet<&'static str>> {
     fn walk(node: &LayoutNode, out: &mut HashMap<String, BTreeSet<&'static str>>) {
         if let (Some(part), Some(composable)) = (
@@ -1879,6 +1942,50 @@ fn part_wants_flow_wrap(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
                 .any(|prop| prop.name == "flex-wrap" && prop.value.trim() == "wrap")
         })
         .unwrap_or(false)
+}
+
+/// Whether any container authors a percentage width below 100, so the file
+/// needs [`emit_fill_fraction_helper`]. Looked up the same way
+/// [`container_default_fill`] decides, so the helper is present exactly
+/// when a call to it can be emitted.
+fn layout_uses_fill_fraction(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
+    (container_composable_for_tag(&node.tag).is_some()
+        && node
+            .part_name
+            .as_deref()
+            .and_then(|part| part_styles.get(part))
+            .and_then(|props| percent_width_fraction(props))
+            .is_some_and(|fraction| fraction < 1.0))
+        || node
+            .children
+            .iter()
+            .any(|child| layout_uses_fill_fraction(child, part_styles))
+}
+
+/// `_mosaicFillFraction(f)`: `fillMaxWidth(f)`, but FLOORED.
+///
+/// Compose's `fillMaxWidth(f)` rounds `maxWidth * f` to the nearest pixel.
+/// For Calendar's seven `14.2857%` cells in a 984px FlowRow that is 141px
+/// each, 987px a line, so the seventh wrapped and the month rendered six
+/// columns wide. Flooring gives 140px, 980px a line: seven fit, and at most
+/// six pixels are left at the end, never an overflow. An unbounded width
+/// (inside a horizontal scroll) has nothing to take a fraction of, so the
+/// child is measured as it was.
+fn emit_fill_fraction_helper() -> String {
+    "private fun Modifier._mosaicFillFraction(fraction: Float): Modifier =
+    this.layout { measurable, constraints ->
+        val bounded = if (constraints.hasBoundedWidth) {
+            val width = kotlin.math.floor(constraints.maxWidth * fraction).toInt()
+                .coerceIn(constraints.minWidth, constraints.maxWidth)
+            constraints.copy(minWidth = width, maxWidth = width)
+        } else {
+            constraints
+        }
+        val placeable = measurable.measure(bounded)
+        layout(placeable.width, placeable.height) { placeable.place(0, 0) }
+    }
+"
+    .to_string()
 }
 
 /// Whether any part in this layout authors `flex-wrap: wrap`, and so
@@ -2048,6 +2155,53 @@ fn elevation_tier_for_value(value: &str) -> Option<ElevationTier> {
         "raised" => Some(ElevationTier::Raised),
         "overlay" => Some(ElevationTier::Overlay),
         _ => None,
+    }
+}
+
+/// An authored percentage `width` as a fraction of the parent, `0 < f <= 1`.
+///
+/// Mosaic styles spell it `width : 100% ;` or, when the number needs a
+/// decimal point the lexer would otherwise split, `width : "14.2857%" ;`.
+/// Both forms are read; anything that is not a finite percentage in
+/// `(0, 100]` is `None` and keeps whatever the caller did before. The result
+/// is a parsed `f64`, so what reaches the generated Kotlin is a number this
+/// function printed ([`kotlin_fraction`]), never authored text.
+fn percent_width_fraction(props: &[StyleProp]) -> Option<f64> {
+    let prop = props.iter().rev().find(|prop| prop.name == "width")?;
+    let value = prop.value.trim().trim_matches('"').trim();
+    let percent = value.strip_suffix('%')?.trim().parse::<f64>().ok()?;
+    // The floor is what `kotlin_fraction` can still print as non-zero: a
+    // smaller value would round to `weight(0f)`, which Compose rejects at
+    // composition with an IllegalArgumentException.
+    (percent.is_finite() && (0.0001..=100.0).contains(&percent)).then_some(percent / 100.0)
+}
+
+/// Print a fraction for Kotlin, to six places: `0.142857`, `0.5`, `1`.
+fn kotlin_fraction(fraction: f64) -> String {
+    ((fraction * 1_000_000.0).round() / 1_000_000.0).to_string()
+}
+
+/// The fill a container outside a RowScope gets by default:
+/// `fillMaxWidth()`, or `fillMaxWidth(f)` when its part authors a percentage
+/// below 100.
+///
+/// Calendar's day cells are the case (`width : "14.2857%"`, 42 of them in a
+/// wrapping Row, i.e. a `FlowRow`, whose children are NOT RowScope). With
+/// the plain default every cell took the whole row, so the month rendered as
+/// one column of 42 full-width cells. `fillMaxWidth(0.142857f)` is a fraction
+/// of the FlowRow's width, which is what CSS means, so seven fit a line --
+/// floored rather than rounded ([`emit_fill_fraction_helper`]).
+fn container_default_fill(node: &LayoutNode, part_styles: &PartStyleMap) -> String {
+    match node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .and_then(|props| percent_width_fraction(props))
+    {
+        Some(fraction) if fraction < 1.0 => {
+            format!("_mosaicFillFraction({}f)", kotlin_fraction(fraction))
+        }
+        _ => "fillMaxWidth()".to_string(),
     }
 }
 
@@ -2793,6 +2947,9 @@ struct PartStyleMap {
     /// [`parts_filling_width`]. Precomputed for the same reason as
     /// `width_guarded`: leaf writers have no `in_row_scope` of their own.
     fill_width: HashSet<String>,
+    /// `Text` parts that take a RowScope `weight` from a percentage width;
+    /// see [`text_parts_row_weighted`]. Part name → weight.
+    row_weighted_text: HashMap<String, String>,
 }
 
 impl PartStyleMap {
@@ -2814,6 +2971,12 @@ impl PartStyleMap {
     fn resolve_width_guards(&mut self, root: &LayoutNode) {
         self.width_guarded = parts_width_guarded(root, self);
         self.fill_width = parts_filling_width(root, self);
+        self.row_weighted_text = text_parts_row_weighted(root, self);
+    }
+
+    /// The RowScope weight a `Text` part takes, if any.
+    fn text_row_weight(&self, part: &str) -> Option<&str> {
+        self.row_weighted_text.get(part).map(String::as_str)
     }
 
     /// Does this leaf control's `width: 100%` lower to `fillMaxWidth()`?
@@ -2883,6 +3046,7 @@ fn build_part_style_map(style: &StyleDef, slots: &[SlotDecl]) -> PartStyleMap {
         slot_states,
         width_guarded: HashSet::new(),
         fill_width: HashSet::new(),
+        row_weighted_text: HashMap::new(),
     }
 }
 
@@ -5657,14 +5821,12 @@ fn emit_container_frame(
             if chain_sets_own_width(chain) {
                 write!(opener, "{modifier_pad}modifier = Modifier{chain}").unwrap();
             } else {
-                write!(
-                    opener,
-                    "{modifier_pad}modifier = Modifier.fillMaxWidth(){chain}"
-                )
-                .unwrap();
+                let fill = container_default_fill(node, part_styles);
+                write!(opener, "{modifier_pad}modifier = Modifier.{fill}{chain}").unwrap();
             }
         } else {
-            write!(opener, "{modifier_pad}modifier = Modifier.fillMaxWidth()").unwrap();
+            let fill = container_default_fill(node, part_styles);
+            write!(opener, "{modifier_pad}modifier = Modifier.{fill}").unwrap();
         }
         if let Some(semantics) = &semantic_modifier {
             write!(opener, "\n{}.{semantics}", " ".repeat(chain_indent)).unwrap();
@@ -5700,22 +5862,16 @@ fn emit_container_frame(
         }
         writeln!(opener, "{pad}) {{").unwrap();
     } else if node.children.is_empty() {
-        writeln!(
-            opener,
-            "{pad}{composable}(modifier = Modifier.fillMaxWidth()) {{ }}"
-        )
-        .unwrap();
+        let fill = container_default_fill(node, part_styles);
+        writeln!(opener, "{pad}{composable}(modifier = Modifier.{fill}) {{ }}").unwrap();
         return ContainerFrame {
             opener,
             closer: String::new(),
             child_text,
         };
     } else {
-        writeln!(
-            opener,
-            "{pad}{composable}(modifier = Modifier.fillMaxWidth()) {{"
-        )
-        .unwrap();
+        let fill = container_default_fill(node, part_styles);
+        writeln!(opener, "{pad}{composable}(modifier = Modifier.{fill}) {{").unwrap();
     }
 
     ContainerFrame {
@@ -5793,10 +5949,11 @@ fn compose_row_weight(props: &[StyleProp]) -> Option<String> {
     {
         return Some(value);
     }
-    props
-        .iter()
-        .any(|prop| prop.name == "width" && prop.value.trim() == "100%")
-        .then(|| "1".to_string())
+    // A percentage in a Row is a SHARE of it: seven `14.2857%` day names
+    // split the Row seven ways, and `100%` takes what is left (weight 1, as
+    // before). `weight` divides the remaining space by the ratios, so equal
+    // percentages come out equal whatever they sum to.
+    percent_width_fraction(props).map(kotlin_fraction)
 }
 
 fn collect_grouped_radio_keys(node: &LayoutNode, out: &mut HashSet<String>) {
@@ -6035,17 +6192,14 @@ fn emit_container(
             if in_row_scope || chain_sets_own_width(chain) {
                 write!(out, "{modifier_pad}modifier = Modifier{chain}").unwrap();
             } else {
-                write!(
-                    out,
-                    "{modifier_pad}modifier = Modifier.fillMaxWidth(){chain}"
-                )
-                .unwrap();
+                let fill = container_default_fill(node, part_styles);
+                write!(out, "{modifier_pad}modifier = Modifier.{fill}{chain}").unwrap();
             }
         } else {
             let modifier = if in_row_scope {
-                "Modifier"
+                "Modifier".to_string()
             } else {
-                "Modifier.fillMaxWidth()"
+                format!("Modifier.{}", container_default_fill(node, part_styles))
             };
             write!(out, "{modifier_pad}modifier = {modifier}").unwrap();
         }
@@ -6082,9 +6236,9 @@ fn emit_container(
         // A Row child is intrinsic unless its style produced a weight/size.
         // Outside RowScope, retain the v0.1.0 fill-width fallback.
         let modifier = if in_row_scope {
-            "Modifier"
+            "Modifier".to_string()
         } else {
-            "Modifier.fillMaxWidth()"
+            format!("Modifier.{}", container_default_fill(node, part_styles))
         };
         if node.children.is_empty() {
             writeln!(out, "{pad}{composable}(modifier = {modifier}) {{ }}").unwrap();
@@ -6647,6 +6801,18 @@ fn emit_text(
             (None, true) => Some("Modifier.semantics { heading() }".to_string()),
             (None, false) => None,
         }
+    };
+    // A percentage width in a Row is a share of it (`text_parts_row_weighted`).
+    let modifier = match node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.text_row_weight(part))
+    {
+        Some(weight) => {
+            let base = modifier.unwrap_or_else(|| "Modifier".to_string());
+            Some(format!("{base}.weight({weight}f)"))
+        }
+        None => modifier,
     };
     // UI59 §4 -- a bare `Text` is a leaf, so `emit_container`'s floor never
     // reaches it. Trestle's schedule text measured ZERO WIDTH at 700 in the
@@ -8785,6 +8951,92 @@ mod tests {
         assert!(!muted.contains("0xFF111111"), "{muted}");
         let inherited = line("\"Inherited\"");
         assert!(inherited.contains("color = Color(0xFF111111)"), "{inherited}");
+    }
+
+    /// Calendar's shape: seven `14.2857%` day names in a Row become equal
+    /// weights, and `14.2857%` cells in a wrapping Row (a FlowRow, not
+    /// RowScope) take a FLOORED fraction of it, so seven fit a line. A
+    /// malformed or out-of-range percentage keeps the plain default, and a
+    /// file with no fraction carries no helper.
+    #[test]
+    fn percentage_widths_share_rows_and_fill_fractions() {
+        let m = component("Month", vec![], vec![]);
+        let day = |part: &str, name: &str| {
+            styled_node(
+                "Text",
+                part,
+                vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::String(name.into()),
+                }],
+                vec![],
+            )
+        };
+        let l = layout(
+            "Month",
+            node(
+                "Column",
+                vec![],
+                vec![
+                    styled_node(
+                        "Row",
+                        "names",
+                        vec![],
+                        vec![day("name-a", "Sun"), day("name-b", "Mon")],
+                    ),
+                    styled_node(
+                        "Row",
+                        "grid",
+                        vec![],
+                        vec![styled_node("Column", "cell", vec![], vec![])],
+                    ),
+                    styled_node("Column", "too-wide", vec![], vec![]),
+                    styled_node("Column", "not-a-number", vec![], vec![]),
+                ],
+            ),
+        );
+        let seventh = || sprop("width", "\"14.2857%\"");
+        let style = style_def(
+            "Month",
+            vec![
+                part("name-a", vec![seventh()], vec![]),
+                part("name-b", vec![seventh()], vec![]),
+                part("grid", vec![sprop("flex-wrap", "wrap")], vec![]),
+                part("cell", vec![seventh(), sprop("padding", "6")], vec![]),
+                part("too-wide", vec![sprop("width", "150%"), sprop("padding", "1")], vec![]),
+                part("not-a-number", vec![sprop("width", "x%"), sprop("padding", "1")], vec![]),
+            ],
+        );
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        assert!(out.contains("Text(text = \"Sun\", modifier = Modifier.weight(0.142857f))"), "{out}");
+        assert!(out.contains("Text(text = \"Mon\", modifier = Modifier.weight(0.142857f))"), "{out}");
+        assert!(out.contains("FlowRow("), "{out}");
+        assert!(out.contains("modifier = Modifier._mosaicFillFraction(0.142857f)"), "{out}");
+        assert!(out.contains("private fun Modifier._mosaicFillFraction(fraction: Float)"), "{out}");
+        assert!(out.contains("kotlin.math.floor(constraints.maxWidth * fraction)"), "{out}");
+        assert!(out.contains("import androidx.compose.ui.layout.layout"), "{out}");
+        // Out of range and malformed: the plain default, nothing interpolated.
+        assert_eq!(out.matches("_mosaicFillFraction(").count(), 2, "{out}");
+        assert!(!out.contains("1.5f") && !out.contains("x%"), "{out}");
+
+        let plain = style_def("Month", vec![part("cell", vec![sprop("padding", "6")], vec![])]);
+        let out = from_pipeline(&m, &l, &plain).unwrap().output;
+        assert!(!out.contains("_mosaicFillFraction"), "{out}");
+        assert!(!out.contains("import androidx.compose.ui.layout.layout"), "{out}");
+    }
+
+    #[test]
+    fn percent_width_fraction_reads_only_finite_percentages_in_range() {
+        let w = |value: &str| percent_width_fraction(&[sprop("width", value)]);
+        assert_eq!(w("100%"), Some(1.0));
+        assert_eq!(w("\"14.2857%\"").map(kotlin_fraction).as_deref(), Some("0.142857"));
+        assert_eq!(w(" 50 % ").map(kotlin_fraction).as_deref(), Some("0.5"));
+        assert_eq!(w("0.0001%").map(kotlin_fraction).as_deref(), Some("0.000001"));
+        for bad in [
+            "0%", "-5%", "150%", "NaN%", "inf%", "12px", "50", "%", "1e400%", "0.00004%", "1e-320%",
+        ] {
+            assert_eq!(w(bad), None, "{bad}");
+        }
     }
 
     fn visicalc_grid_triple() -> (MosmodelComponent, LayoutDef, StyleDef) {
