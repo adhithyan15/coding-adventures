@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- `conformance/compose/JournalUiTest.kt`: Journal on Compose is DRIVEN in CI,
+  not only compiled. The first launch writes and saves two entries through
+  the generated editor, reopens one from the timeline and deletes it; a
+  second launch on the same state file (`MOSAIC_EXPECT_RESTORED=1`) must find
+  the survivor, delete it and show the empty journal. It also sends a
+  malformed `onTitleChange` through the binding and checks that the snapshot
+  is unchanged. The Linux Compose lane now builds the distributable, checks
+  that it bundles this runtime, and runs both launches.
 - `conformance/compose/JournalScreenshots.kt`: a screenshot harness for the
   generated Compose Journal over this runtime. Set `MOSAIC_SHOT_DIR` and run
   `gradle test --tests JournalScreenshots` in an emitted project. It checks
