@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-09-24
+
+- **Fixed: a signal named like a control member no longer calls that member.**
+  A handler such as `onClicked: toggle(i)` is written *inside* the Button, and
+  QML resolves an unqualified name against the control's own members first. So
+  an emit that lowered to `toggle` called `Button.toggle()`, and the component's
+  signal never fired. This made the toolkit's `Accordion`, `Select` and
+  `DropdownMenu`, and `ChecklistRun`'s `onToggle` (C2 of #14018), inert on Qt.
+  `onClicked: click()` re-fires `clicked`, and `onToggled: toggle()` flips the
+  box it came from. `allocate_qml_signal_names` now learns, per emit, which
+  controls call it (`emit_call_scopes`: button, text input, link text, popup,
+  range). A signal that collides with a member of one of *those* controls gets
+  the `mosaicEmit…` spelling, exactly like an `Item`-member clash. Only real
+  clashes are renamed: `select` fired from a button keeps its name, and so does
+  Engram's `undo`, whose host contract pins it. The host still receives the raw
+  event name. Tests that pinned the broken `click`/`toggle` spellings are
+  updated; a new test covers scoped allocation.
+
 ## 2026-09-23
 
 - **Security: data `Text` renders as plain text.** Every `Text` that shows
