@@ -66,7 +66,7 @@ wants the strict-Flux store/dispatcher contract.
 | Text         | `Text(text = ...)`                        |
 | Icon         | native font glyph / progress indicator    |
 | Spacer       | `Spacer(modifier = Modifier.weight(1f))`  |
-| HostInput    | `BasicTextField(value, onValueChange...)` |
+| HostInput    | `BasicTextField(value, onValueChange...)`; `width: 100%` outside a Row adds `Modifier.fillMaxWidth()` (also HostButton) |
 | Input        | multiline-capable `BasicTextField`        |
 | HostButton   | `Button(onClick) { Text(label) }`         |
 | HostSlider   | native adjustable `Slider`                |
