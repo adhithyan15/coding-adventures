@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-24 (text box)
+
+- **A `Text` wears its part's box.** The `Text` arm built the part's whole `ComposeStyle` but passed only its text style to `emit_text`. The modifier chain was thrown away: padding, background, rounded corners, size and border. Calendar's today badge (a 21px amber pill) was never drawn, and Trestle's "Up next" count and due-date pills were bare text. The drop reporter lowers the same properties through the container path, so it reported 0 degradations. Now the chain follows the width decision (`fillMaxWidth()` / `weight` / the UI59 floor, which comes first as it does for containers) and precedes the semantics. The previous semantics-first order is gone. The reporter's answer is now true, and a lesson records the gap.
+  - Measured before/after across every Mosaic program:
+    - Trestle changes on 57 lines: pills, padded labels, and the day-name row's padding.
+    - Engram changes on 172, across both of its generated files: 41 paddings, and a 56px width on each of two stat labels.
+    - Venture changes on 8 lines: the view-source panel gets its authored max width, height, background, border and padding, and the page title's modifiers are reordered.
+    - Journal and VisiCalc don't change.
+  - Verified: Trestle's dark renders (every view changes only by padding and pills), `TaskAppUiTest`, the emitted-control contract and native-complete (0) pass. Engram and Venture compile.
+  - `taskapp_native_control_contract.py`'s two error-text markers are now `Text(newTaskNameError, ` and `Text(newTaskDueError, `, because those texts now carry their `padding-left` modifier before `color`.
+
 ## 2026-09-24 (text-align)
 
 - **A `Text`'s own `text-align` reaches its `Text` call.** Until now `text-align` was lowered only on containers, as content alignment. On a `Text` leaf it was ignored, and the drop wasn't reported. Calendar's day names stayed at the start of their now-weighted columns (#15968), while the web centres them. Now a `Text` part's base `text-align` becomes `textAlign = TextAlign.Start/Center/End`, and the `TextAlign` import is added only when used.

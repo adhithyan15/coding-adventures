@@ -5517,7 +5517,8 @@ fn emit_compose_tree(
             } else {
                 text
             };
-            emit_text(node, depth, Some(&text), for_payload, part_styles)
+            let box_chain = style.as_ref().map(|s| s.modifier.as_str()).filter(|c| !c.is_empty());
+            emit_text(node, depth, Some(&text), for_payload, part_styles, box_chain)
         },
         "Icon" => emit_icon_compose(node, depth, part_styles, text_ctx),
         "Path" => emit_path(node, depth, part_styles),
@@ -6920,6 +6921,8 @@ fn emit_text(
     text_ctx: Option<&TextStyleCtx>,
     for_payload: Option<ForPayloadScope<'_>>,
     part_styles: &PartStyleMap,
+    // The part's own box modifiers (`ComposeStyle::modifier`), if styled.
+    box_chain: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let value_expr = match find_prop_value(node, "content") {
@@ -6933,8 +6936,44 @@ fn emit_text(
     // args appended (`Text(( v ), color = ..., fontFamily = ...)`).
     // With no styling, keep the labelled `Text(text = ...)` shape so the
     // styleless passthrough (e.g. FormulaBar) is byte-identical to before.
-    let modifier = if layout_node_is_accessibility_hidden(node) {
-        Some("Modifier.clearAndSetSemantics { }".to_string())
+    // The modifier, in one order for every `Text`:
+    //
+    //   Modifier
+    //     .fillMaxWidth() | .weight(f) | .wrapContentWidth(unbounded = true)
+    //     <the part's own box chain: padding, background, clip, size, border>
+    //     <semantics: a11y label / heading / hidden>
+    //
+    // The width decision goes first, as `emit_container` puts its UI59
+    // floor first, so the part's padding and background sit inside the box
+    // that decision sizes. At most one of the three applies: a part in a
+    // Row takes a weight or the floor, one outside every Row may fill.
+    let part = node.part_name.as_deref();
+    let mut chain = String::from("Modifier");
+    if part.is_some_and(|part| part_styles.text_align_fills(part)) {
+        // A centred or end-aligned `Text` outside a Row is as wide as its
+        // parent, as the stretched flex item it is on the web
+        // (`text_parts_aligned`).
+        chain.push_str(".fillMaxWidth()");
+    } else if let Some(weight) = part.and_then(|part| part_styles.leaf_row_weight(part)) {
+        // A percentage width in a Row is a share of it
+        // (`leaf_parts_row_weighted`).
+        write!(chain, ".weight({weight}f)").unwrap();
+    } else if part.is_some_and(|part| part_styles.is_width_guarded(part)) {
+        // UI59 §4 -- a bare `Text` is a leaf, so `emit_container`'s floor
+        // never reaches it. Trestle's schedule text measured ZERO WIDTH at
+        // 700 in the Board view for exactly that reason.
+        chain.push_str(".wrapContentWidth(unbounded = true)");
+    }
+    // The part's own box: before, only its text style reached the `Text`,
+    // and its padding, background, rounded corners, size and border were
+    // dropped -- unreported, because the drop reporter lowers the same
+    // properties for containers. Calendar's today badge (a 21px amber pill)
+    // was never drawn on Compose.
+    if let Some(box_chain) = box_chain {
+        chain.push_str(box_chain);
+    }
+    if layout_node_is_accessibility_hidden(node) {
+        chain.push_str(".clearAndSetSemantics { }");
     } else {
         let label = text_prop_expr(node, "a11y-label")?;
         let is_heading = matches!(
@@ -6942,60 +6981,20 @@ fn emit_text(
             Some(LayoutPropValue::Keyword(value)) if value == "heading"
         );
         match (label, is_heading) {
-            (Some(label), true) => Some(format!(
-                "Modifier.clearAndSetSemantics {{ contentDescription = {label}; heading() }}"
-            )),
-            (Some(label), false) => Some(format!(
-                "Modifier.clearAndSetSemantics {{ contentDescription = {label} }}"
-            )),
-            (None, true) => Some("Modifier.semantics { heading() }".to_string()),
-            (None, false) => None,
+            (Some(label), true) => write!(
+                chain,
+                ".clearAndSetSemantics {{ contentDescription = {label}; heading() }}"
+            )
+            .unwrap(),
+            (Some(label), false) => {
+                write!(chain, ".clearAndSetSemantics {{ contentDescription = {label} }}").unwrap()
+            }
+            (None, true) => chain.push_str(".semantics { heading() }"),
+            (None, false) => {}
         }
-    };
-    // A percentage width in a Row is a share of it (`leaf_parts_row_weighted`).
-    let modifier = match node
-        .part_name
-        .as_deref()
-        .and_then(|part| part_styles.leaf_row_weight(part))
-    {
-        Some(weight) => {
-            let base = modifier.unwrap_or_else(|| "Modifier".to_string());
-            Some(format!("{base}.weight({weight}f)"))
-        }
-        None => modifier,
-    };
-    // A centred or end-aligned `Text` outside a Row is as wide as its parent,
-    // as the stretched flex item it is on the web (`text_parts_aligned`).
-    let text_align = node
-        .part_name
-        .as_deref()
-        .and_then(|part| part_styles.text_align(part));
-    let modifier = if node
-        .part_name
-        .as_deref()
-        .is_some_and(|part| part_styles.text_align_fills(part))
-    {
-        Some(match modifier {
-            Some(chain) => chain.replacen("Modifier", "Modifier.fillMaxWidth()", 1),
-            None => "Modifier.fillMaxWidth()".to_string(),
-        })
-    } else {
-        modifier
-    };
-    // UI59 §4 -- a bare `Text` is a leaf, so `emit_container`'s floor never
-    // reaches it. Trestle's schedule text measured ZERO WIDTH at 700 in the
-    // Board view for exactly that reason.
-    let modifier = if node
-        .part_name
-        .as_deref()
-        .map(|part| part_styles.is_width_guarded(part))
-        .unwrap_or(false)
-    {
-        let base = modifier.unwrap_or_else(|| "Modifier".to_string());
-        Some(format!("{base}.wrapContentWidth(unbounded = true)"))
-    } else {
-        modifier
-    };
+    }
+    let modifier = (chain != "Modifier").then_some(chain);
+    let text_align = part.and_then(|part| part_styles.text_align(part));
     Ok(format!(
         "{pad}{}\n",
         text_call_aligned(&value_expr, text_ctx, modifier.as_deref(), text_align)
@@ -9026,6 +9025,81 @@ mod tests {
         assert!(matches!(from_pipeline(&m, &l, &style), Err(PipelineEmitError::InvalidTypography(_))));
     }
 
+    /// A `Text` wears its part's box: padding, background, rounded corners,
+    /// size and border reach its modifier, after any width decision (as a
+    /// container's UI59 floor comes first) and before its semantics. Before,
+    /// only the text style did, so Calendar's today badge -- a 21px amber
+    /// pill -- was never drawn, and the drop reporter did not say so.
+    #[test]
+    fn text_wears_its_parts_box() {
+        let m = component("Month", vec![], vec![]);
+        let text = |part: &str, props: Vec<LayoutProp>| styled_node("Text", part, props, vec![]);
+        let content = |value: &str| LayoutProp {
+            name: "content".into(),
+            value: LayoutPropValue::String(value.into()),
+        };
+        let heading = LayoutProp {
+            name: "a11y-role".into(),
+            value: LayoutPropValue::Keyword("heading".into()),
+        };
+        let l = layout(
+            "Month",
+            node(
+                "Column",
+                vec![],
+                vec![
+                    text("today", vec![content("24")]),
+                    text("title", vec![content("January"), heading]),
+                    styled_node("Row", "names", vec![], vec![text("chip", vec![content("Done")])]),
+                ],
+            ),
+        );
+        let style = style_def(
+            "Month",
+            vec![
+                part(
+                    "today",
+                    vec![
+                        sprop("width", "21"),
+                        sprop("height", "21"),
+                        sprop("border-radius", "20"),
+                        sprop("background", "#eaa63f"),
+                        sprop("color", "#1a1714"),
+                    ],
+                    vec![],
+                ),
+                part("title", vec![sprop("padding", "8")], vec![]),
+                part(
+                    "chip",
+                    vec![sprop("padding", "4"), sprop("border-width", "1"), sprop("border-color", "#333333")],
+                    vec![],
+                ),
+            ],
+        );
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        // The whole `Text(...)` call starting at `needle` (it may span lines).
+        let call = |needle: &str| {
+            let start = out.find(needle).unwrap_or_else(|| panic!("no {needle}:\n{out}"));
+            // Each Text here is its section's last line, closed by `}`.
+            let end = out[start..].find("\n}").map_or(out.len(), |i| start + i);
+            out[start..end].to_string()
+        };
+        let today = call("Text(\"24\"");
+        for piece in [".width(21.dp)", ".height(21.dp)", "0xFFEAA63F", "RoundedCornerShape(20.dp)"] {
+            assert!(today.contains(piece), "{piece} in {today}\n{out}");
+        }
+        assert!(today.contains("color = Color(0xFF1A1714)"), "the text colour stays a Text arg: {today}");
+        let title = call("Text(text = \"January\"");
+        let padding = title.find(".padding(8.dp)").expect(&title);
+        let semantics = title.find(".semantics { heading() }").expect(&title);
+        assert!(padding < semantics, "the box comes before the semantics: {title}");
+        // In a Row the UI59 floor comes first, then the box.
+        let chip = call("Text(text = \"Done\"");
+        let floor = chip.find(".wrapContentWidth(unbounded = true)").expect(&chip);
+        assert!(floor < chip.find(".padding(4.dp)").expect(&chip), "{chip}");
+        assert!(chip.contains(".border(1.dp, Color(0xFF333333))"), "{chip}");
+    }
+
     /// A `Text` part's own `text-align` reaches the `Text` call as
     /// `textAlign`. In a Row the text already has its share's width; in a
     /// Column a centred or end-aligned text also fills, as the stretched
@@ -9074,7 +9148,8 @@ mod tests {
         let out = from_pipeline(&m, &l, &style).unwrap().output;
         assert!(out.contains("import androidx.compose.ui.text.style.TextAlign"), "{out}");
         // A sized text centres inside its own width; it does not fill.
-        assert!(out.contains("Text(\"21\", textAlign = TextAlign.Center)"), "{out}");
+        assert!(out.contains(".width(21.dp), textAlign = TextAlign.Center)"), "{out}");
+        assert!(!out.contains("fillMaxWidth()\n            .width(21.dp)"), "{out}");
         assert!(
             out.contains("Text(\"Sun\", modifier = Modifier.weight(0.142857f), textAlign = TextAlign.Center)"),
             "{out}"
@@ -9089,7 +9164,7 @@ mod tests {
         assert!(!out.contains("fillMaxWidth(), textAlign = TextAlign.Center"), "shared: {out}");
         let guarded = "Text(\"S\", modifier = Modifier.wrapContentWidth(unbounded = true), textAlign = TextAlign.Center)";
         assert_eq!(out.matches(guarded).count(), 2, "{out}");
-        assert!(out.contains("Text(text = \"Plain\")"), "{out}");
+        assert!(out.contains("Text(text = \"Plain\", modifier = Modifier\n            .padding(2.dp))"), "{out}");
 
         let plain = style_def("Month", vec![part("plain", vec![sprop("padding", "2")], vec![])]);
         let out = from_pipeline(&m, &l, &plain).unwrap().output;
