@@ -276,11 +276,32 @@ analyzing the consumer's `.mll`:
      the called component's same-named slots — this is how the
      existing same-file component-reference path already works
      (UI14 §6).
-   - The called component's part names are prefixed with
-     `<P>__<C>__` to avoid colliding with the consumer's part names
-     (`sheet` → `mosaic-pkg-grid__Grid__sheet`).  The mosstyle
-     compiler picks up the rewritten names through the same part-map
-     JSON the unqualified path produces today.
+   - **Part names.** *As built:* the called component's part names
+     are inlined **as authored** (`sheet` stays `sheet`), so the
+     consumer, its tests, and every backend's accessibility id,
+     test tag or object name see the package's own names. The
+     `<P>__<C>__` prefix this section first proposed was never
+     implemented. A part name written at the call site replaces the
+     component root's.
+   - **Mounting a component more than once.** The resolver counts
+     mounts per `(P, C)` across the whole resolved tree, including
+     mounts nested inside other packages. The **first** mount keeps
+     its authored names, so single-mount output is unchanged. The
+     n-th mount (n ≥ 2) gets every inlined part name suffixed `-m<n>`
+     (`empty-state` → `empty-state-m2`, `empty-state-title-m2`). It
+     is `-m2`, not `-2`, because a Mosaic identifier segment cannot
+     start with a digit, and a consumer `.msl` must be able to name
+     the part.
+     Excluded from the suffix: a root name the caller wrote, and
+     children the caller splices in, which are the caller's own
+     parts. The artifact builder gives each renamed part a copy of
+     the original part's style, all states included, so the n-th
+     mount renders like the first. A consumer `.msl` may style
+     `empty-state-m2` directly, and that style replaces the copy. A
+     suffixed name that clashes with a real part is still a
+     `DuplicatePart` error. Before this, a second mount always failed
+     with `DuplicatePart` (Trestle's Checklists view had to fall back
+     to plain text, task-app-checklists-view-v1.md).
    - The called component's slot-binding sites that reference
      SlotRefs use the consumer's slot names directly — the resolver
      has already substituted them at step 4.1.
@@ -451,9 +472,10 @@ needed.
   (we re-resolve C from source every time).  Once we add a build cache
   the cache key includes C's package root, so identical C resolves to
   identical AST — no diamond hazard.
-- **Cross-package style overrides.**  Today the consumer's `.msl`
-  can target the resolved sub-tree's parts via the prefixed part name
-  (`mosaic-pkg-grid__Grid__cell`).  Whether to also allow a friendlier
+- **Cross-package style overrides.**  The consumer's `.msl` can target
+  the resolved sub-tree's parts by their inlined names: the authored
+  name for the first mount (`cell`), and the suffixed name for later
+  ones (`cell-m2`, §5 step 4). Whether to also allow a friendlier
   re-export syntax is left for UI35.
 
 ---

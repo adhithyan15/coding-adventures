@@ -764,7 +764,7 @@ fn compose_component_with_model_and_style_options(
         &mut Vec::new(),
         &mut HashSet::new(),
     )?;
-    resolve_layout_package_references(
+    let renames = resolve_layout_package_references(
         component,
         &mut layout,
         &model.descriptor_json,
@@ -779,6 +779,7 @@ fn compose_component_with_model_and_style_options(
     )
     .map_err(|errs| pipeline_err(component, &errs[0]))?;
     let mut style = merge_dependency_styles(own_style.def, dependency_style_parts);
+    copy_styles_for_renamed_parts(&mut style, &renames);
 
     // #15169 -- resolve `currentColor` here, at the ONE place both entry
     // points build a `ComposedComponent`, so the answer cannot differ
@@ -5967,11 +5968,11 @@ fn resolve_layout_package_references(
     layout_out: &mut moslayout_compiler::CompileOutput,
     descriptor_json: &str,
     package_search_paths: &[PathBuf],
-) -> Result<(), BuildError> {
+) -> Result<Vec<mosaic_package_resolver::PartRename>, BuildError> {
     let resolver =
         mosaic_package_resolver::LayoutPackageResolver::new(package_search_paths.to_vec());
-    resolver
-        .resolve(&mut layout_out.def)
+    let renames = resolver
+        .resolve_with_renames(&mut layout_out.def)
         .map_err(|e| BuildError::PackageReferenceError {
             component: component.to_string(),
             error: e.to_string(),
@@ -5989,7 +5990,30 @@ fn resolve_layout_package_references(
     layout_out.parts = resolved_parts;
     layout_out.part_map_json =
         moslayout_compiler::emit_part_map_json(&layout_out.def.component_name, &layout_out.parts);
-    Ok(())
+    Ok(renames)
+}
+
+/// Give each part renamed for a second (third, …) mount a copy of the
+/// original part's style, every state included, so the n-th mount renders
+/// like the first (UI34 §5 step 4). A style the consumer wrote for the
+/// renamed part itself wins, and no copy is made. Each copy sits right after
+/// its source. With no renames (every component mounted once) the style is
+/// untouched.
+fn copy_styles_for_renamed_parts(
+    style: &mut mosstyle_compiler::StyleDef,
+    renames: &[mosaic_package_resolver::PartRename],
+) {
+    for rename in renames {
+        if style.parts.iter().any(|part| part.name == rename.to) {
+            continue;
+        }
+        let Some(index) = style.parts.iter().position(|part| part.name == rename.from) else {
+            continue;
+        };
+        let mut copy = style.parts[index].clone();
+        copy.name = rename.to.clone();
+        style.parts.insert(index + 1, copy);
+    }
 }
 
 fn collect_dependency_style_parts(

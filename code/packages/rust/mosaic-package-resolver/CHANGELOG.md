@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+### Added — a component can be mounted more than once (UI34 §5 step 4)
+
+- The resolver counts mounts per `(package, component)` across the whole
+  resolved tree, including mounts nested inside other packages.
+  - The **first** mount keeps its authored part names, so single-mount
+    output is unchanged.
+  - The n-th mount (n ≥ 2) gets every inlined part suffixed `-m<n>`
+    (`empty-state` → `empty-state-m2`). It is not `-2`, because a Mosaic
+    identifier segment cannot start with a digit, and a consumer `.msl`
+    must be able to name the part.
+  - A root name the caller wrote and children the caller splices in are
+    the caller's own parts, and are never suffixed.
+- Before this, a second mount always failed with `DuplicatePart`.
+- New `LayoutPackageResolver::resolve_with_renames` returns the renames
+  (`PartRename { package, component, from, to }`). `resolve` keeps its
+  signature.
+
 ### Added — `HostNavigationSplit` in `KERNEL_PRIMITIVES` (UI29-6, #15481)
 
 The 35th kernel primitive: the adaptive navigation container UI48 §5.4 asked
