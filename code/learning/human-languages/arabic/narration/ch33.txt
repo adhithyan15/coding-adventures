@@ -1,8 +1,8 @@
 Arabic, chapter 33: Asking for a Drink.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 شاي (shāy) — "tea," and a word with no root.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -42,7 +42,7 @@ Wrap-up Recall.
 Why can you not build a word family from شاي? (It has no Arabic root — it was borrowed, and borrowed words arrive without one.) Name what ك-ت-ب builds, for contrast. (Kitāb, kātib, maktab, maktaba.) Which language handed shāy to Arabic, and which language did that one take it from? (Persian, from Chinese.) Is English tea a relative? (Yes — the same Chinese word, carried by sea rather than overland.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 حليب (ḥalīb) — "milk," and the verb underneath it.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -85,7 +85,7 @@ Wrap-up Recall.
 What does the root ح-ل-ب mean as a verb? (To milk — so ḥalīb is the milked thing.) Which earlier word works the same way? (Khubz — bread, from kh-b-z, to bake.) Which of the chapter's words so far has no root at all? (Shāy — it was borrowed.) Is Aleppo named for milk? (No — the name is far older than Arabic; that story is folk etymology.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 سكر (sukkar) — "sugar," and an Arabic article stuck to a Spanish word.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -128,7 +128,7 @@ Wrap-up Recall.
 Which letter in سكر refuses to join what follows? (Rā.) What is the shadda doing here, and which earlier verb used it the same way? (Only spelling a doubled letter — as in ʾaḥabba, not as in fakkara.) What language did sukkar come from before Persian? (Sanskrit — śarkarā, "grit.") What is hiding at the front of Spanish azúcar? (Arabic al-, said as- before a sun letter.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 قهوة (qahwa) — "coffee," the tied tāʾ, and asking for all of it.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -172,3 +172,43 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which of this chapter's words is feminine, and how can you tell? (Qahwa — it ends in ة.) Name two earlier words with that ending. (Maktaba and as-salāma.) Ask for each drink politely. (Shāy, qahwa, ḥalīb, sukkar — each with min faḍlik, "from your grace.") What do you answer when someone thanks you? (ʿAfwan.) Which word here was built from a verb? (Ḥalīb, from ḥalaba — the others travelled in.)
+
+
+Lesson 5 of 5.
+The courtesies, doing real work — the courtesy kit's second outing, now doing real work — ordering a drink politely, accepting, apologising, and thanking, with the age question along for the ride.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: shapes inside the words above until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 4 seconds]
+Order tea politely, accept when it is offered, and thank them. Three words you have met and one you met in this chapter. No reading first.
+
+Guided Practice.
+[your turn — say: tea, please — shāy, min faḍlik]
+[pause 8 seconds for the answer]
+[your turn — say: coffee with milk and sugar, please — qahwa maʿa ḥalīb wa-sukkar, min faḍlik]
+[pause 8 seconds for the answer]
+[your turn — say: accept — naʿam]
+[pause 8 seconds for the answer]
+[your turn — say: thank them, and hear the reply — shukran … ʿafwan]
+[pause 8 seconds for the answer]
+[your turn — say: a man apologises, then a woman — āsif … āsifa]
+[pause 8 seconds for the answer]
+The courtesy kit was four separate single-word lessons long ago. This is the first time it has had to carry a real transaction.
+
+How to answer: the reply that erases the debt.
+Say شكرا and what comes back is عفوا — it is nothing, from a root about forgiving and waiving. English accepts thanks; Arabic waves them away. The exchange has two halves and you now own both.
+آسف is a gendered adjective, so it changes with the speaker. When you want a quick, ungendered excuse me — squeezing past somebody in a café — the word is معذرة maʿdhira.
+
+You'll want to know: the invisible bend.
+من فضلك changes with whom you address and the page does not show it: only the unwritten short vowel moves, faḍlak to a man and faḍlik to a woman.
+كم عمرك؟ hides the same suffix, and hides a verb too — literally how much is your lifetime. Arabic neither has its years nor is them; it owns them, as a noun, with nothing in between.
+
+Script: shapes inside the words above.
+[once you have stopped driving — write: شكرا — shīn with its three dots, then kāf, rāʾ, alif]
+[once you have stopped driving — write: شاي (shāy) — the same shīn, then alif, then yāʾ]
+ش is س carrying three dots, and ك is kāf. Both words start with the same letter, and in both the letter keeps its skeleton while the connectors at its edges change to suit its neighbours.
+
+Wrap-up Recall.
+[pause 4 seconds]
+Give the reply to thanks and its literal force. (عفوا — it is nothing.) Say what a woman says for sorry. (آسفة.) Say why من فضلك looks identical for both genders. (Only the unwritten vowel moves.) And say what stays constant when a letter joins its neighbours. (Its skeleton.)

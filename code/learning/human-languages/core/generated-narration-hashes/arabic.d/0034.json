@@ -1,18 +1,19 @@
 {
   "language": "arabic",
   "chapter": 34,
-  "sourceHash": "fnv1a64:bbdf458104246edd",
+  "sourceHash": "fnv1a64:100827ede2262e1b",
   "lessonIds": [
     "AR-C34-milh",
     "AR-C34-lahm",
     "AR-C34-jubn",
-    "AR-C34-taam"
+    "AR-C34-taam",
+    "AR-R34-pardon-and-until-tomorrow"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "arabic/narration/ch34.txt",
   "json": "arabic/narration/ch34.json",
-  "textHash": "fnv1a64:e8a2785242d78fca",
-  "jsonHash": "fnv1a64:6bbd2d917dbc218f",
+  "textHash": "fnv1a64:ee41d72800a734b0",
+  "jsonHash": "fnv1a64:29a829c2d1e202a4",
   "findings": []
 }

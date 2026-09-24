@@ -1,8 +1,8 @@
 Arabic, chapter 40: Why, That, and When.
-5 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+6 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 لماذا (limādhā) — why.
 
 Warm-up.
@@ -35,7 +35,7 @@ What are the three pieces of لماذا? (لـ for, ما what, ذا this.) Which
 Source: Unicode Arabic chart.
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 لأن (li-anna) — because.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -72,7 +72,7 @@ Which letter do limādhā and لأن (li-anna) share, and what does it mean? (ل
 Source: Unicode Arabic chart.
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 أنّ (anna) — that.
 
 Warm-up.
@@ -105,7 +105,7 @@ Where have you already read أنّ (anna)? (Inside لأنّ, in the lesson befor
 Source: Unicode Arabic chart.
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 حينما (ḥīnamā) — when.
 
 Warm-up.
@@ -138,7 +138,7 @@ What are the two pieces of حينما (ḥīnamā)? (حين, a moment, and ما.
 Source: Unicode Arabic chart.
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 Why, that, and when — a question, its answer, a reported thought and a moment in time — and the first three-clause Arabic sentence in this book.
 
 Warm-up.
@@ -163,3 +163,38 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which two of this chapter's words begin with the same لـ? (limādhā and لأن (li-anna).) Which particle sits inside لأن (li-anna)? (أنّ (anna).) And which of the four hangs a clause off a moment rather than off a verb? (حينما (ḥīnamā).)
+
+
+Lesson 6 of 6.
+Words that carry their own reason — five words that carry their own reason inside them — a licking-tool, a covering-dish, a day named after dawn, a night that wishes you the morning — now that the book can ask why and answer because.
+
+Warm-up.
+[pause 4 seconds]
+Name the plate and the spoon in Arabic and spell each one aloud. Then use this chapter's why and because to explain where the spoon got its name.
+
+Why it's said this way: a tool named for what it does.
+[a table of 2 rows, read aloud]
+word, spelled out: ملعقة milʿaqa — mīm, lām, ʿayn, qāf, ة. root: ل-ع-ق. what the root means: he licked, he lapped.
+word, spelled out: طبق ṭabaq — ṭāʾ, bāʾ, qāf. root: ط-ب-ق. what the root means: to cover, to fit over.
+So a spoon is the licking-thing and a plate is the covering-thing. Nothing in either word had to be learned as an arbitrary noise: the root says what the object is for, and the shape says it is an object.
+أطباق is the plural of طبق, in the same broken shape as أكواب. One broken plural is a surprise; two in the same shape is a pattern, and a pattern is something you can use on the next word.
+
+Guided Practice: because, and when.
+[your turn — say: ask why the spoon is called that, then answer — limādhā? … li-anna …]
+[pause 8 seconds for the answer]
+[your turn — say: until tomorrow — ilā l-ghad]
+[pause 8 seconds for the answer]
+[your turn — say: the other farewell built on the same word — ilā l-liqāʾ]
+[pause 8 seconds for the answer]
+إلى الغد is the same ilā, until, with a new word in the slot. And الغد has its reason inside it too: the root gh-d-w means to set out at dawn, so tomorrow in Arabic is named after the hour you begin it.
+
+Why it's said this way: a night that points at the morning.
+تصبح على خير is the everyday good night, and it says nothing about the night. Literally: may you wake up into goodness.
+English, French, German and Spanish all wish the sleeper a quiet night. Arabic looks past the night to the far side of it — tuṣbiḥ carries the morning root, and خير is the goodness the wellbeing answer already uses. The phrase is built entirely from two things met long before bedtime came up.
+
+How to answer: the word that erases what was owed.
+عفوا ʿafwan answers thanks as you are welcome, and the same word, on a different tone, means excuse me and pardon. The reason is the root ʿ-f-w, to erase: a debt, an intrusion or a mistake, all wiped away by one word.
+
+Wrap-up Recall.
+[pause 4 seconds]
+Say what the root under ملعقة means. (He licked.) Say what the root under الغد means. (To set out at dawn.) Give the literal wish inside تصبح على خير. (That you wake into goodness.) And give the root under عفوا. (ʿ-f-w, to erase.)

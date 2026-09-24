@@ -1,0 +1,11 @@
+{
+  "id": "AR-R22-the-head-and-the-hand",
+  "pathSegment": "AR-PATH-022",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-022-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

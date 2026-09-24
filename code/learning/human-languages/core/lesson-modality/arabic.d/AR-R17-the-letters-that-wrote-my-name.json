@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-R17-the-letters-that-wrote-my-name",
+    "language": "arabic",
+    "chapter": 17,
+    "sequence": 611,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91d165ff4ece4610",
+    "detachableSegments": [
+      "Script: one bowl, four letters",
+      "Script: the letter with three jobs",
+      "Script: the marks everyday text leaves off",
+      "Script: خير, taken apart"
+    ]
+  },
+  "findings": []
+}

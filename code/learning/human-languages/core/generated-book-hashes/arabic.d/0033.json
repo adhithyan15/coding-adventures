@@ -1,12 +1,13 @@
 {
   "language": "arabic",
   "chapter": 33,
-  "sourceHash": "fnv1a64:de697af6bd1c8647",
+  "sourceHash": "fnv1a64:ef6734ab26d6546e",
   "lessonIds": [
     "AR-C33-shay",
     "AR-C33-halib",
     "AR-C33-sukkar",
-    "AR-C33-qahwa"
+    "AR-C33-qahwa",
+    "AR-R33-the-courtesies-again"
   ],
   "tex": "arabic/book/chapters/ch33-asking-for-a-drink.tex"
 }

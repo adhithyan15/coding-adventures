@@ -1,17 +1,18 @@
 {
   "language": "arabic",
   "chapter": 35,
-  "sourceHash": "fnv1a64:16ba0fd31eaabd66",
+  "sourceHash": "fnv1a64:67a5ed4583b13bde",
   "lessonIds": [
     "AR-C35-jar",
     "AR-C35-ibn-bint",
-    "AR-C35-sadiq"
+    "AR-C35-sadiq",
+    "AR-R35-the-name-exchange-again"
   ],
-  "voiceLessons": 0,
+  "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "arabic/narration/ch35.txt",
   "json": "arabic/narration/ch35.json",
-  "textHash": "fnv1a64:20ab0ec36923c3d4",
-  "jsonHash": "fnv1a64:089bc5906b0006fc",
+  "textHash": "fnv1a64:aede991164e84234",
+  "jsonHash": "fnv1a64:a461d77b8cdfb7fb",
   "findings": []
 }

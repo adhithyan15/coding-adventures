@@ -1,11 +1,12 @@
 {
   "language": "arabic",
   "chapter": 35,
-  "sourceHash": "fnv1a64:05477d145c95356d",
+  "sourceHash": "fnv1a64:637613dc511ed67b",
   "lessonIds": [
     "AR-C35-jar",
     "AR-C35-ibn-bint",
-    "AR-C35-sadiq"
+    "AR-C35-sadiq",
+    "AR-R35-the-name-exchange-again"
   ],
   "tex": "arabic/book/chapters/ch35-people-you-introduce.tex"
 }

@@ -34,7 +34,17 @@ it("pins Arabic lesson-content budgets", () =>
     // SPINE-SAY-WHY node where li-anna already lives. No new atoms in any of
     // them -- they practise wa, lakin and li-anna, which the track already
     // teaches, and add only what the stages themselves are.
-    lessons: 129,
+    //
+    // 129 -> 144: the reinforcement tranche (HL-C441) adds fifteen `type: review`
+    // lessons and no vocabulary at all. Arabic was the last of twenty-three tracks
+    // still carrying pre-A1 atoms revisited fewer than twice; seventy-eight of them,
+    // sixty-eight never revisited, which is (68 x 2) + 10 = 146 retrieval slots.
+    // RE-MEASURED against the tree. Idioms, senses and culture claims stay at
+    // 2 / 3 / 14: a retrieval page introduces nothing, so there is nothing for the
+    // per-lesson budgets to count. Every one of the fifteen went onto an EXISTING
+    // path segment whose spine_node already matched, so no new chapter, segment or
+    // extension either.
+    lessons: 144,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,

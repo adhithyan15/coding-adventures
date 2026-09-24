@@ -1,15 +1,16 @@
 {
   "language": "arabic",
   "chapter": 22,
-  "sourceHash": "fnv1a64:40963c413843c8b4",
+  "sourceHash": "fnv1a64:3b35dcce3c18bed3",
   "lessonIds": [
-    "AR-C22-akhdar-asfar"
+    "AR-C22-akhdar-asfar",
+    "AR-R22-the-head-and-the-hand"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "arabic/narration/ch22.txt",
   "json": "arabic/narration/ch22.json",
-  "textHash": "fnv1a64:cc1c4f5b913e4424",
-  "jsonHash": "fnv1a64:05e51958e551c646",
+  "textHash": "fnv1a64:3b7ec969732373ac",
+  "jsonHash": "fnv1a64:3ce136c9efcdb3bd",
   "findings": []
 }

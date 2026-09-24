@@ -1,10 +1,11 @@
 {
   "language": "arabic",
   "chapter": 10,
-  "sourceHash": "fnv1a64:2cfb9ad1025fc84a",
+  "sourceHash": "fnv1a64:6d6ff067608d60d3",
   "lessonIds": [
     "AR-C10-ab-umm",
-    "AR-C10-akh-ukht"
+    "AR-C10-akh-ukht",
+    "AR-R10-the-name-exchange-cold"
   ],
   "tex": "arabic/book/chapters/ch10-family.tex"
 }

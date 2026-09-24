@@ -1,9 +1,10 @@
 {
   "language": "arabic",
   "chapter": 17,
-  "sourceHash": "fnv1a64:f9f05e7a018d9add",
+  "sourceHash": "fnv1a64:021d340d76ad1353",
   "lessonIds": [
-    "AR-C17-kam-umruka"
+    "AR-C17-kam-umruka",
+    "AR-R17-the-letters-that-wrote-my-name"
   ],
   "tex": "arabic/book/chapters/ch17-age.tex"
 }

@@ -1,0 +1,11 @@
+{
+  "id": "AR-R40-the-plate-and-the-spoon",
+  "pathSegment": "AR-PATH-037",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-037-WHY-THAT-WHEN",
+      "order": 5
+    }
+  ]
+}

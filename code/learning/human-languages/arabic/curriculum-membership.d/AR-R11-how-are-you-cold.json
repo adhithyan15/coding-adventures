@@ -1,0 +1,11 @@
+{
+  "id": "AR-R11-how-are-you-cold",
+  "pathSegment": "AR-PATH-015",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-015-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

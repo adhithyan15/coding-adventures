@@ -1,0 +1,11 @@
+{
+  "id": "AR-R38-how-are-you-again",
+  "pathSegment": "AR-PATH-035",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-035-JOINING",
+      "order": 5
+    }
+  ]
+}

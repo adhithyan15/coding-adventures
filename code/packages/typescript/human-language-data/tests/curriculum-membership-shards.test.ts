@@ -364,9 +364,34 @@ describe("direct curriculum lesson owners", () => {
     // `forwardReferences`: tamil sits at 8 against a ceiling of 8, and
     // `lessonsEarly > 1` at 4 against 4, so a retrieval page printing any word
     // the course teaches later would have failed the build. It held at 8 and 4.
-    expect(digest).toBe("297f88ff2b3ca8a7316bd061a18ede57cbbdc1eaf20f6359b5c96e2e710b916d");
+    //
+    // 7564 -> 7579 is HL-C441: FIFTEEN `review` lessons taking arabic to zero
+    // pre-A1 reinforcement debt, which takes the CORPUS to zero -- arabic was the
+    // last of twenty-three tracks still carrying any. 78 thin atoms, 68 of them
+    // never revisited, so (68 x 2) + 10 = 146 retrieval slots: the largest number
+    // in the programme, and it came from the SHAPE of the debt rather than its
+    // size. Arabic's pre-A1 has almost no review layer, so 87% of its thin atoms
+    // had no later revisit at all, against tamil's 21% and malayalam's 2%. An atom
+    // at zero revisits costs two lessons; one at one costs one. That ratio, not the
+    // atom count, is what set this tranche at fifteen lessons.
+    //
+    // The debt was also CONCENTRATED -- three segments carried 52 of the 78 -- so
+    // as with HL-C438, HL-C439 and HL-C440, every one of the fifteen went onto an
+    // EXISTING segment whose `spine_node` already matched. No new chapter, segment
+    // or extension. Six sit mid-book (chapters 10-24) to give the opening chapters
+    // a first pass at a reachable distance, and nine sit late (33-45) for the
+    // second, which is why the closing page of the book is a retrieval page.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // c5b37e048e reproduced 297f88ff... and 7564 byte for byte. Dumping the loaded
+    // graph from both trees and diffing gives exactly THIRTY removed lines and
+    // SIXTY added ones, and nothing that is not this change: each of the fifteen
+    // lessons joins its segment's and its extension's derived `lessons` list, which
+    // is thirty new entries, and the thirty previous last elements each gain a
+    // trailing comma.
+    expect(digest).toBe("7a0bc9d7f03bce2c84f6d9f11685008253737dc2b39eec2288f88b21e9bf2331");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7564);
+      .toHaveLength(7579);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

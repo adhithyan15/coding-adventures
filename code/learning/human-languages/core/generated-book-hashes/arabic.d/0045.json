@@ -1,9 +1,10 @@
 {
   "language": "arabic",
   "chapter": 45,
-  "sourceHash": "fnv1a64:b23c1e9f47a77edd",
+  "sourceHash": "fnv1a64:128397b1d9fad8b5",
   "lessonIds": [
-    "AR-W04-arbaa-sutur"
+    "AR-W04-arbaa-sutur",
+    "AR-R45-the-last-page"
   ],
   "tex": "arabic/book/chapters/ch45-ar-arbaa-sutur.tex"
 }

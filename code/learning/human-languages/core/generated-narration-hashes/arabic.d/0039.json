@@ -1,19 +1,20 @@
 {
   "language": "arabic",
   "chapter": 39,
-  "sourceHash": "fnv1a64:e56ea075c3b727c7",
+  "sourceHash": "fnv1a64:b02f845b03b8ca33",
   "lessonIds": [
     "AR-C39-laysa",
     "AR-C39-ma",
     "AR-C39-la-wala",
     "AR-C39-hal",
-    "AR-R39-denying-and-asking"
+    "AR-R39-denying-and-asking",
+    "AR-R39-every-way-to-leave-again"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
   "text": "arabic/narration/ch39.txt",
   "json": "arabic/narration/ch39.json",
-  "textHash": "fnv1a64:b0b23677a3e86e28",
-  "jsonHash": "fnv1a64:32e8f8ebcf7c93a3",
+  "textHash": "fnv1a64:bf1e7f95d8f7d0af",
+  "jsonHash": "fnv1a64:3eb45cdc1c5abd67",
   "findings": []
 }

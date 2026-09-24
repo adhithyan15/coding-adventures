@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Writing --- Four Lines, And The Joiner That Is Not A Word",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:27f3d5ff2b740945",
+  "sourceHash": "fnv1a64:b313db2672a54086",
   "lessons": [
     {
       "id": "AR-W04-arbaa-sutur",
@@ -171,6 +171,150 @@
             {
               "kind": "speech",
               "text": "Then look at every و (wa) you wrote. Is there a space after it? There should not be."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R45-the-last-page",
+      "sequence": 1271,
+      "title": "The last page",
+      "headword": "خير · ء · كرّر من فضلك",
+      "romanization": "khayr · hamza · karrir min faḍlik",
+      "gloss": "the closing page — write the first word the book ever assembled, name the catch that is a consonant and not a vowel, and keep the one sentence that rescues every conversation",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a09ba75ea3455821",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Writing: the hook family, and the word it builds",
+          "Script: the mark that is not a vowel"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Writing: the hook family, and the word it builds and Script: the mark that is not a vowel until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write خير by hand, right to left, and say the one sentence that gets a lost conversation moving. Both were taught once, at opposite ends of this book."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing: the hook family, and the word it builds",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ح ح خ ج share one body: a rounded hook flowing into a tail that drops below the line. Only the dot tells them apart — ح has none, خ takes one above, ج one below."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "خير — khāʾ with its dot above, reaching left into yāʾ, then rā, and lift",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **خير** — *khāʾ* with its dot above, reaching left into *yāʾ*, then *rā*, and lift]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "بخير — glue بـ on the front, one dot below, joining into the khāʾ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **بخير** — glue **بـ** on the front, one dot below, joining into the *khāʾ*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing joins after ر, which is why the pen lifts. And خير is the word that was hiding inside the morning greeting before anyone told you it was there; adding بـ, in, turns good into the answer in goodness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: the mark that is not a vowel",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say English uh-oh slowly and feel the catch between the halves. That catch is a glottal stop, and Arabic writes it as a real consonant: ء, the hamza. It is not one of the short-vowel marks. Sitting on an alif seat it becomes أ, which is how the word for you begins."
+            },
+            {
+              "kind": "speech",
+              "text": "The short-vowel marks do something else entirely, and the clearest proof is the word for you: أنت is one consonant skeleton, and a single mark that ordinary print omits decides whether you have addressed أنتَ, a man, or أنتِ, a woman."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice: the sentence to keep",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كرّر من فضلك — karrir min faḍlik."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "you have not understood, then ask for the sentence back — lā afham. karrir min faḍlik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: you have not understood, then ask for the sentence back — *lā afham. karrir min faḍlik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "call somebody first, then ask — yā …, karrir min faḍlik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: call somebody first, then ask — *yā …, karrir min faḍlik*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Of everything in this book, that is the line to carry out of it. The marks Arabic leaves off the page are the ones a beginner most needs, so a beginner will miss words — and the fix is not a better memory. It is four syllables asking for another pass."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say whether hamza is a vowel mark and what it writes. (No — a glottal stop.) Say what tells ح, خ and ج apart. (The dot — none, one above, one below.) Say what بـ adds to خير. (In — in goodness.) And give the sentence that rescues a conversation. (Karrir min faḍlik.)"
             }
           ]
         }
