@@ -435,12 +435,43 @@ layout TaskApp {
                 }
                 Else {
                   If ( when: slot: checklist-template-mode ) {
-                    // A template's outline: indent and name per item. Flat in
-                    // C3a; decision authoring (both branches) is C3c.
+                    // A template's outline (C3c): each item is a toggle button
+                    // that selects it for editing (selected = UI86), with a
+                    // question marker and, inside a question, its branch.
+                    // item = [key, indent, name, question-marker, branch-label,
+                    //         selected-marker].
                     For ( each: slot: checklist-outline-rows , as: item , index: ii ) {
                       Row [ cl-outline-row ] {
                         Text [ cl-outline-indent ] ( content : ( item[1] ) )
-                        Text [ cl-outline-name ] ( content : ( item[2] ) )
+                        If ( when: ( item[4] ) ) {
+                          Text [ cl-outline-branch ] ( content : ( item[4] ) )
+                        }
+                        // item[5] is the selected marker: truthy markers only,
+                        // never a string comparison, which reaches Swift and
+                        // Kotlin as a raw expression.
+                        If ( when: ( item[5] ) ) {
+                          HostButton [ cl-outline-item-selected ] (
+                            label : ( item[2] ) ,
+                            selected : true ,
+                            onClick : emit: onSelectOutlineItem
+                          )
+                        }
+                        Else {
+                          HostButton [ cl-outline-item ] (
+                            label : ( item[2] ) ,
+                            selected : false ,
+                            onClick : emit: onSelectOutlineItem
+                          )
+                        }
+                        If ( when: ( item[3] ) ) {
+                          Text [ cl-outline-question ] ( content : "Question" )
+                        }
+                      }
+                    }
+                    If ( when: slot: outline-item-selected ) {
+                      Row [ cl-outline-actions ] {
+                        HostButton [ cl-toggle-question-btn ] ( label : slot: outline-toggle-label , onClick : emit: onToggleOutlineQuestion )
+                        HostButton [ cl-delete-item-btn ] ( label : "Delete item" , onClick : emit: onDeleteOutlineItem )
                       }
                     }
                     Row [ cl-item-composer ] {
@@ -452,6 +483,12 @@ layout TaskApp {
                         onCommit : emit: onAddChecklistItem
                       )
                       HostButton [ cl-item-add-btn ] ( label : "Add item" , onClick : emit: onAddChecklistItem )
+                      // With a question selected, the item can go into one
+                      // of its branches instead of the top level.
+                      If ( when: slot: outline-question-selected ) {
+                        HostButton [ cl-add-yes-btn ] ( label : "Add to Yes" , onClick : emit: onAddChecklistItemYes )
+                        HostButton [ cl-add-no-btn ] ( label : "Add to No" , onClick : emit: onAddChecklistItemNo )
+                      }
                     }
                     Row [ cl-template-actions ] {
                       HostButton [ cl-start-btn ] ( label : "Start run" , onClick : emit: onStartChecklistRun )

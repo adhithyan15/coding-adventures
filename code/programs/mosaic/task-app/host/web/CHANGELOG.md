@@ -4,6 +4,14 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added — writing questions into a checklist template (C3c, #14018)
+
+The web host serves the same authoring as `task-mosaic-app`: selecting outline
+items, question/step toggling, Add to Yes/No and subtree delete, with the same
+rows and props. "Add to Yes/No" deletes the item it created if extending the
+branch fails, because this controller has no engine-level rollback. Tested in
+`__tests__/checklists.test.ts`.
+
 ### Added — the Checklists view (C3b, #14018)
 
 The web host now serves Checklists to the same contract as `task-mosaic-app`

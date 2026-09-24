@@ -435,6 +435,9 @@ style TaskApp {
   part cl-template-actions {
     gap : 8 ;
   }
+  part cl-outline-actions {
+    gap : 8 ;
+  }
   part cl-library-empty {
     gap : 6 ;
   }

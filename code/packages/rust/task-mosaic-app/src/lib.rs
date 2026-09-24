@@ -13,11 +13,11 @@ use serde_json::{json, Value};
 use std::collections::BTreeSet;
 use std::error::Error;
 use std::fmt;
-use task_core::checklists::{ChecklistSummary, MAX_CHECKLIST_ITEMS};
+use task_core::checklists::{ChecklistOutlineRow, ChecklistSummary, MAX_CHECKLIST_ITEMS};
 use task_core::{
-    ChecklistId, Constraint, Date, DependencyKind, DependencyLink, Duration, Label, LabelId,
-    LinkId, Note, NoteId, Priority, ProjectComplexity, ProjectId, RunStatus, TaskId, Workspace,
-    WorkspaceId,
+    ChecklistId, Constraint, Date, Decision, DependencyKind, DependencyLink, Duration, Label,
+    LabelId, LinkId, Note, NoteId, Priority, ProjectComplexity, ProjectId, RunStatus, TaskId,
+    Workspace, WorkspaceId,
 };
 
 const SNAPSHOT_SCHEMA: &str = "task-mosaic-app/state";
@@ -144,6 +144,9 @@ struct TaskAppState {
     new_checklist_name: String,
     #[serde(default)]
     new_checklist_item: String,
+    /// The template outline item selected for editing (C3c).
+    #[serde(default)]
+    selected_outline_item: Option<TaskId>,
 }
 
 impl Default for TaskAppState {
@@ -193,6 +196,7 @@ impl Default for TaskAppState {
             selected_checklist: None,
             new_checklist_name: String::new(),
             new_checklist_item: String::new(),
+            selected_outline_item: None,
         }
     }
 }
@@ -318,7 +322,11 @@ impl TaskMosaicApp {
         if let Some(id) = &self.state.selected_checklist {
             if !self.active_project().checklists.contains_key(id) {
                 self.state.selected_checklist = None;
+                self.state.selected_outline_item = None;
             }
+        }
+        if self.state.selected_outline_item.is_some() && self.selected_outline_row().is_none() {
+            self.state.selected_outline_item = None;
         }
         for draft in [
             &mut self.state.new_checklist_name,
@@ -626,6 +634,10 @@ impl TaskMosaicApp {
             "checklist-template-mode": checklists.template_mode,
             "checklist-run-mode": checklists.run_mode,
             "checklist-outline-rows": checklists.outline_rows,
+            "selected-outline-key": self.state.selected_outline_item.as_ref().map(ToString::to_string).unwrap_or_default(),
+            "outline-item-selected": checklists.outline_item_selected,
+            "outline-question-selected": checklists.outline_question_selected,
+            "outline-toggle-label": checklists.outline_toggle_label,
             "new-checklist-item": self.state.new_checklist_item,
             "checklist-run-title": checklists.run_title,
             "checklist-run-progress": checklists.run_progress,
@@ -748,9 +760,32 @@ impl TaskMosaicApp {
                         row.task.to_string(),
                         checklist_indent(row.depth),
                         row.name.clone(),
+                        if row.is_decision { "1" } else { "" }.to_string(),
+                        match row.branch {
+                            Some(true) => "Yes",
+                            Some(false) => "No",
+                            None => "",
+                        }
+                        .to_string(),
+                        if self.state.selected_outline_item.as_ref() == Some(&row.task) {
+                            "1"
+                        } else {
+                            ""
+                        }
+                        .to_string(),
                     ]
                 })
                 .collect();
+            if let Some(selected) = self.selected_outline_row() {
+                props.outline_item_selected = true;
+                props.outline_question_selected = selected.is_decision;
+                props.outline_toggle_label = if selected.is_decision {
+                    "Make it a step"
+                } else {
+                    "Make it a question"
+                }
+                .to_string();
+            }
         }
         props
     }
@@ -758,6 +793,7 @@ impl TaskMosaicApp {
     fn select_checklist(&mut self, index: usize) {
         if let Some(summary) = self.checklist_library().get(index) {
             self.state.selected_checklist = Some(summary.id.clone());
+            self.state.selected_outline_item = None;
             self.state.new_checklist_item.clear();
         }
     }
@@ -825,6 +861,7 @@ impl TaskMosaicApp {
             .create_checklist_template(id.clone(), root, name.clone(), "", now)
             .map_err(engine_error)?;
         self.state.selected_checklist = Some(id);
+        self.state.selected_outline_item = None;
         self.state.new_checklist_name.clear();
         self.state.new_checklist_item.clear();
         Ok(self.announced_update(format!("Created checklist {name}")))
@@ -832,12 +869,42 @@ impl TaskMosaicApp {
 
     fn add_checklist_item(&mut self, event: &Event) -> Result<AppUpdate, TaskAppError> {
         let template = self.selected_checklist_of_kind(event, false)?;
+        let root = self.active_project().checklists[&template].root.clone();
+        self.add_item_under(template, root, None)
+    }
+
+    /// C3c: the composer's text as a new item in the selected question's Yes
+    /// (`true`) or No branch.
+    fn add_checklist_branch_item(
+        &mut self,
+        event: &Event,
+        branch: bool,
+    ) -> Result<AppUpdate, TaskAppError> {
+        let template = self.selected_checklist_of_kind(event, false)?;
+        let question = self
+            .selected_outline_row()
+            .filter(|row| row.is_decision)
+            .ok_or_else(|| TaskAppError::InvalidPayload {
+                event: event.name.clone(),
+                field: "selection",
+            })?;
+        self.add_item_under(template, question.task, Some(branch))
+    }
+
+    /// Add the composer's text as a new item under `parent`: at the next
+    /// sibling order, and, for `Some(branch)`, listed in that branch of the
+    /// question `parent`. `dispatch` rolls every step back if one fails.
+    fn add_item_under(
+        &mut self,
+        template: ChecklistId,
+        parent: TaskId,
+        branch: Option<bool>,
+    ) -> Result<AppUpdate, TaskAppError> {
         let name = self.state.new_checklist_item.trim().to_string();
         if name.is_empty() {
             return Ok(self.update());
         }
         let project = self.active_project();
-        let root = project.checklists[&template].root.clone();
         let items = project
             .checklist_outline(&template)
             .map_or(0, |rows| rows.len());
@@ -851,18 +918,141 @@ impl TaskMosaicApp {
         let order = project
             .tasks
             .values()
-            .filter(|task| task.parent.as_ref() == Some(&root))
+            .filter(|task| task.parent.as_ref() == Some(&parent))
             .map(|task| task.order)
             .max()
             .map_or(0, |max| max.saturating_add(1));
+        let decision = project.tasks.get(&parent).and_then(|t| t.decision.clone());
         let id = self.next_task_id()?;
         let project = self.active_project_mut();
         project
-            .create_task(id.clone(), name.clone(), Some(root))
+            .create_task(id.clone(), name.clone(), Some(parent.clone()))
             .map_err(engine_error)?;
         project.set_order(&id, order).map_err(engine_error)?;
+        if let Some(yes) = branch {
+            let mut decision = decision.ok_or_else(|| {
+                TaskAppError::Engine("the selected item is not a question".to_string())
+            })?;
+            if yes {
+                decision.yes_children.push(id.clone());
+            } else {
+                decision.no_children.push(id.clone());
+            }
+            project
+                .set_decision(&parent, Some(decision))
+                .map_err(engine_error)?;
+        }
         self.state.new_checklist_item.clear();
         Ok(self.announced_update(format!("Added {name}")))
+    }
+
+    /// The selected template's outline row for the selected item, if both
+    /// still exist.
+    fn selected_outline_row(&self) -> Option<ChecklistOutlineRow> {
+        let item = self.state.selected_outline_item.as_ref()?;
+        let template = self.state.selected_checklist.as_ref()?;
+        let project = self.active_project();
+        if project.checklists.get(template)?.run.is_some() {
+            return None;
+        }
+        project
+            .checklist_outline(template)?
+            .into_iter()
+            .find(|row| &row.task == item)
+    }
+
+    fn select_outline_item(&mut self, event: &Event) -> Result<(), TaskAppError> {
+        let template = self.selected_checklist_of_kind(event, false)?;
+        let index = index_payload(event, "index")?;
+        let row = self
+            .active_project()
+            .checklist_outline(&template)
+            .and_then(|rows| rows.into_iter().nth(index))
+            .ok_or_else(|| TaskAppError::InvalidPayload {
+                event: event.name.clone(),
+                field: "index",
+            })?;
+        // Clicking the selected item again clears the selection.
+        self.state.selected_outline_item =
+            if self.state.selected_outline_item.as_ref() == Some(&row.task) {
+                None
+            } else {
+                Some(row.task)
+            };
+        Ok(())
+    }
+
+    /// A step becomes a question (its sub-items, if any, its Yes branch);
+    /// a question becomes a step again (its branch items, sub-items).
+    fn toggle_outline_question(&mut self, event: &Event) -> Result<AppUpdate, TaskAppError> {
+        self.selected_checklist_of_kind(event, false)?;
+        let row = self
+            .selected_outline_row()
+            .ok_or_else(|| TaskAppError::InvalidPayload {
+                event: event.name.clone(),
+                field: "selection",
+            })?;
+        let project = self.active_project_mut();
+        if row.is_decision {
+            project
+                .set_decision(&row.task, None)
+                .map_err(engine_error)?;
+            return Ok(self.announced_update(format!("{} is a step", row.name)));
+        }
+        let mut children: Vec<&task_core::Task> = project
+            .tasks
+            .values()
+            .filter(|task| task.parent.as_ref() == Some(&row.task))
+            .collect();
+        children.sort_by(|a, b| a.order.cmp(&b.order).then_with(|| a.id.cmp(&b.id)));
+        let yes_children = children.into_iter().map(|task| task.id.clone()).collect();
+        project
+            .set_decision(
+                &row.task,
+                Some(Decision {
+                    question: row.name.clone(),
+                    answer: None,
+                    yes_children,
+                    no_children: Vec::new(),
+                }),
+            )
+            .map_err(engine_error)?;
+        Ok(self.announced_update(format!("{} is a question", row.name)))
+    }
+
+    /// Delete the selected item and everything under it, deepest first:
+    /// `delete_task` only reparents, and a question's branch items reparented
+    /// onto its parent would break the decision invariant.
+    fn delete_outline_item(&mut self, event: &Event) -> Result<AppUpdate, TaskAppError> {
+        let template = self.selected_checklist_of_kind(event, false)?;
+        let selected = self
+            .selected_outline_row()
+            .ok_or_else(|| TaskAppError::InvalidPayload {
+                event: event.name.clone(),
+                field: "selection",
+            })?;
+        let outline = self
+            .active_project()
+            .checklist_outline(&template)
+            .unwrap_or_default();
+        // Outline rows are depth-first preorder: the subtree is the selected
+        // row and the rows after it that sit deeper.
+        let start = outline
+            .iter()
+            .position(|row| row.task == selected.task)
+            .unwrap_or(outline.len());
+        let subtree: Vec<TaskId> = outline[start..]
+            .iter()
+            .enumerate()
+            .take_while(|(i, row)| *i == 0 || row.depth > selected.depth)
+            .map(|(_, row)| row.task.clone())
+            .collect();
+        let project = self.active_project_mut();
+        for id in subtree.iter().rev() {
+            project.delete_task(id).map_err(engine_error)?;
+        }
+        self.state.selected_outline_item = None;
+        Ok(self.announced_update(format!("Deleted {}", selected.name)))
     }
 
     fn start_checklist_run(&mut self, event: &Event) -> Result<AppUpdate, TaskAppError> {
@@ -873,6 +1063,7 @@ impl TaskMosaicApp {
             .instantiate_checklist(&template, run.clone(), now)
             .map_err(engine_error)?;
         self.state.selected_checklist = Some(run);
+        self.state.selected_outline_item = None;
         Ok(self.announced_update("Run started"))
     }
 
@@ -962,6 +1153,7 @@ impl TaskMosaicApp {
             .delete_checklist(&id)
             .map_err(engine_error)?;
         self.state.selected_checklist = None;
+        self.state.selected_outline_item = None;
         self.state.new_checklist_item.clear();
         Ok(self.announced_update("Checklist deleted"))
     }
@@ -1460,6 +1652,11 @@ impl TaskMosaicApp {
             }
             "createChecklist" => return self.create_checklist(),
             "addChecklistItem" => return self.add_checklist_item(event),
+            "selectOutlineItem" => self.select_outline_item(event)?,
+            "toggleOutlineQuestion" => return self.toggle_outline_question(event),
+            "addChecklistItemYes" => return self.add_checklist_branch_item(event, true),
+            "addChecklistItemNo" => return self.add_checklist_branch_item(event, false),
+            "deleteOutlineItem" => return self.delete_outline_item(event),
             "startChecklistRun" => return self.start_checklist_run(event),
             "checklistToggle" => self.toggle_checklist_item(event)?,
             "checklistAnswerYes" => self.answer_checklist_decision(event, true)?,
@@ -1641,6 +1838,7 @@ impl TaskMosaicApp {
             .map_err(engine_error)?;
         self.state.active_project = id;
         self.state.selected_checklist = None;
+        self.state.selected_outline_item = None;
         self.state.new_project_name.clear();
         self.state.view = ViewMode::List;
         Ok(self.announced_update(format!("Created project {name}")))
@@ -1650,6 +1848,7 @@ impl TaskMosaicApp {
         if let Some(id) = self.project_rows().0.get(index).cloned() {
             if id != self.state.active_project {
                 self.state.selected_checklist = None;
+                self.state.selected_outline_item = None;
             }
             self.state.active_project = id;
             self.state.expanded_task = None;
@@ -1979,6 +2178,9 @@ struct ChecklistProps {
     template_mode: bool,
     run_mode: bool,
     outline_rows: Vec<Vec<String>>,
+    outline_item_selected: bool,
+    outline_question_selected: bool,
+    outline_toggle_label: String,
     run_title: String,
     run_progress: String,
     run_rows: Vec<Vec<String>>,
@@ -2253,6 +2455,10 @@ mod tests {
         "checklist-template-mode",
         "checklist-run-mode",
         "checklist-outline-rows",
+        "selected-outline-key",
+        "outline-item-selected",
+        "outline-question-selected",
+        "outline-toggle-label",
         "new-checklist-item",
         "checklist-run-title",
         "checklist-run-progress",
@@ -3338,5 +3544,172 @@ mod tests {
             "no constraint stamped"
         );
         assert!(!task.completed, "a template item is never ticked");
+    }
+
+    // ── C3c: writing questions into a template ──────────────────────────────
+
+    fn outline(app: &TaskMosaicApp) -> Vec<Vec<String>> {
+        serde_json::from_value(app.update().props["checklist-outline-rows"].clone()).unwrap()
+    }
+
+    fn select_item(app: &mut TaskMosaicApp, name: &str) -> Value {
+        let index = outline(app)
+            .iter()
+            .position(|row| row[2] == name)
+            .expect(name);
+        send(app, "selectOutlineItem", json!({ "index": index }))
+    }
+
+    fn add_to(app: &mut TaskMosaicApp, branch: &str, name: &str) -> Value {
+        send(app, "newChecklistItemChange", json!({ "value": name }));
+        send(app, branch, json!({}))
+    }
+
+    #[test]
+    fn a_question_gets_yes_and_no_items_and_a_run_reveals_one_branch() {
+        let mut app = checklists_app();
+        template(&mut app, "Pre-flight", &["Raining?", "Doors closed"]);
+        let props = select_item(&mut app, "Raining?");
+        assert_eq!(props["outline-item-selected"], true);
+        assert_eq!(
+            props["checklist-outline-rows"][0][5], "1",
+            "the selected marker"
+        );
+        assert_eq!(props["checklist-outline-rows"][1][5], "");
+        assert_eq!(props["outline-toggle-label"], "Make it a question");
+        let props = send(&mut app, "toggleOutlineQuestion", json!({}));
+        assert_eq!(props["outline-question-selected"], true);
+        assert_eq!(props["outline-toggle-label"], "Make it a step");
+
+        add_to(&mut app, "addChecklistItemYes", "Take umbrella");
+        add_to(&mut app, "addChecklistItemNo", "Wear hat");
+        add_to(&mut app, "addChecklistItemYes", "Close windows");
+        let rows = outline(&app);
+        let shape: Vec<(&str, &str, &str, &str)> = rows
+            .iter()
+            .map(|r| (r[1].as_str(), r[2].as_str(), r[3].as_str(), r[4].as_str()))
+            .collect();
+        assert_eq!(
+            shape,
+            [
+                ("", "Raining?", "1", ""),
+                ("  ", "Take umbrella", "", "Yes"),
+                ("  ", "Close windows", "", "Yes"),
+                ("  ", "Wear hat", "", "No"),
+                ("", "Doors closed", "", ""),
+            ]
+        );
+
+        let props = send(&mut app, "startChecklistRun", json!({}));
+        assert_eq!(
+            column(&props["checklist-run-rows"], 2),
+            ["Raining?", "Doors closed"]
+        );
+        let props = send(&mut app, "checklistAnswerYes", json!({"index":0}));
+        assert_eq!(
+            column(&props["checklist-run-rows"], 2),
+            ["Raining?", "Take umbrella", "Close windows", "Doors closed"]
+        );
+    }
+
+    #[test]
+    fn a_question_can_become_a_step_and_a_step_with_items_a_question() {
+        let mut app = checklists_app();
+        template(&mut app, "T", &["Q"]);
+        select_item(&mut app, "Q");
+        send(&mut app, "toggleOutlineQuestion", json!({}));
+        add_to(&mut app, "addChecklistItemNo", "N");
+        // Back to a step: its branch item becomes an ordinary sub-item.
+        let props = send(&mut app, "toggleOutlineQuestion", json!({}));
+        assert_eq!(props["outline-question-selected"], false);
+        let rows = outline(&app);
+        assert_eq!((rows[1][2].as_str(), rows[1][4].as_str()), ("N", ""));
+        // And a question again: that sub-item becomes its Yes branch.
+        send(&mut app, "toggleOutlineQuestion", json!({}));
+        let rows = outline(&app);
+        assert_eq!((rows[1][2].as_str(), rows[1][4].as_str()), ("N", "Yes"));
+    }
+
+    #[test]
+    fn deleting_an_item_deletes_everything_under_it() {
+        let mut app = checklists_app();
+        template(&mut app, "T", &["Q", "After"]);
+        select_item(&mut app, "Q");
+        send(&mut app, "toggleOutlineQuestion", json!({}));
+        add_to(&mut app, "addChecklistItemYes", "Y");
+        select_item(&mut app, "Y");
+        send(&mut app, "toggleOutlineQuestion", json!({}));
+        add_to(&mut app, "addChecklistItemNo", "Deep");
+        assert_eq!(
+            column(&json!(outline(&app)), 2),
+            ["Q", "Y", "Deep", "After"]
+        );
+
+        // Deleting a branch item takes it out of its question's branch.
+        select_item(&mut app, "Deep");
+        send(&mut app, "deleteOutlineItem", json!({}));
+        assert_eq!(column(&json!(outline(&app)), 2), ["Q", "Y", "After"]);
+
+        // Deleting a question deletes its branches too; nothing is stranded.
+        select_item(&mut app, "Q");
+        let props = send(&mut app, "deleteOutlineItem", json!({}));
+        assert_eq!(props["selected-outline-key"], "");
+        assert_eq!(column(&json!(outline(&app)), 2), ["After"]);
+        send(&mut app, "startChecklistRun", json!({}));
+        assert_eq!(
+            column(&app.update().props["checklist-run-rows"], 2),
+            ["After"]
+        );
+    }
+
+    #[test]
+    fn the_outline_selection_toggles_and_is_cleared_with_its_checklist() {
+        let mut app = checklists_app();
+        template(&mut app, "T", &["A"]);
+        select_item(&mut app, "A");
+        let props = select_item(&mut app, "A");
+        assert_eq!(
+            props["outline-item-selected"], false,
+            "a second click clears it"
+        );
+        select_item(&mut app, "A");
+        template(&mut app, "Other", &[]);
+        assert_eq!(app.update().props["selected-outline-key"], "");
+        // Without a selection (or a question), the authoring events are refused.
+        for name in [
+            "toggleOutlineQuestion",
+            "deleteOutlineItem",
+            "addChecklistItemYes",
+        ] {
+            send(&mut app, "newChecklistItemChange", json!({"value":"x"}));
+            assert!(app.dispatch(event(1, name, json!({}))).is_err(), "{name}");
+        }
+        // The library lists templates by name: "Other", then "T".
+        send(&mut app, "selectChecklist", json!({"index":1}));
+        select_item(&mut app, "A");
+        send(&mut app, "newChecklistItemChange", json!({"value":"x"}));
+        assert!(
+            app.dispatch(event(1, "addChecklistItemYes", json!({})))
+                .is_err(),
+            "A is a step"
+        );
+    }
+
+    #[test]
+    fn restore_drops_a_dangling_outline_selection() {
+        let mut app = checklists_app();
+        template(&mut app, "T", &["A"]);
+        select_item(&mut app, "A");
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut state: Value = serde_json::from_slice(&snapshot.bytes).unwrap();
+        state["selectedOutlineItem"] = json!("missing");
+        let props = app
+            .restore(Snapshot {
+                bytes: serde_json::to_vec(&state).unwrap(),
+                ..snapshot
+            })
+            .unwrap()
+            .props;
+        assert_eq!(props["selected-outline-key"], "");
     }
 }

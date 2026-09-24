@@ -218,12 +218,18 @@ Clicking one selects it, and clicking it again clears the selection
 changes, when the item is deleted, and by `repair()` when it no longer names
 an item of the selected template.
 
-**Outline rows** gain two fields:
-`[key, indent, name, question-marker, branch-label]`.
+**Outline rows** gain three fields:
+`[key, indent, name, question-marker, branch-label, selected-marker]`.
 
 - **question-marker** is `"1"` for a question.
 - **branch-label** is `"Yes"` or `"No"` for an item directly in a question's
   branch, else `""`. `checklist_outline(..).branch` supplies it.
+- **selected-marker** is `"1"` for the selected item.
+
+These are truthy markers only, like ChecklistRun's (C2). The layout never
+compares strings. An expression such as `item[0] == selected-outline-key`
+reaches the Swift and Kotlin output verbatim, and those languages read the
+kebab-case slot as a subtraction.
 
 **New props:**
 
@@ -239,7 +245,7 @@ an item of the selected template.
 | event | effect |
 | --- | --- |
 | `onSelectOutlineItem` `{index}` | select that outline row; the same row again clears the selection |
-| `onToggleOutlineQuestion` | a step becomes a question (`set_decision` with empty branches, question text = the item's name); a question becomes a step again (`set_decision(None)`), and its branch items become ordinary sub-items |
+| `onToggleOutlineQuestion` | a step becomes a question (`set_decision`, question text = the item's name). Any sub-items it already has become its **Yes** branch, because a question may have no outline child outside its branches. A question becomes a step again (`set_decision(None)`), and its branch items become ordinary sub-items |
 | `onAddChecklistItemYes` / `onAddChecklistItemNo` | the *Add item* composer's text becomes a new item in the selected question's Yes or No branch: `create_task` under the question, then `set_decision` with the branch extended, next `order` among its siblings. Refused (and rolled back) unless a question is selected |
 | `onDeleteOutlineItem` | delete the selected item **and everything under it**, deepest first. Deleting a question alone would leave its branch items as stray children of its parent, which breaks the decision invariant, and `delete_task` only reparents |
 
