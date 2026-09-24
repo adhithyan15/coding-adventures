@@ -34,10 +34,12 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // The title and body fields fill the editor (`width: 100%`) and the body
     // has a usable height (`min-height`); rendering Journal on Compose showed
     // an empty entry as a 120px-wide box. The web, SwiftUI and XAML lower
-    // both. Compose lowers `min-height` but silently ignores a percentage
-    // `width` (not reported, so not pinned; lowering it safely in a Row is a
-    // separate emitter change). Qt and Flutter lower neither on a text field
-    // yet. Checked both ways below.
+    // both, and so does Compose: `min-height`, and since #15967 a text field's
+    // `width: 100%` outside a Row (the editor's fields sit in a Column). The
+    // search field (J4a) is a text field INSIDE a Row, where Compose still
+    // keeps its intrinsic width; that is not reported, so it is not pinned
+    // here (tracked as a separate emitter change). Qt and Flutter lower
+    // neither on a text field yet. Checked both ways below.
     (Backend::Qt, "width"),
     (Backend::Qt, "min-height"),
     (Backend::Flutter, "width"),

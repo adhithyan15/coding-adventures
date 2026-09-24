@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- The native gate's comment now says Compose lowers the fields'
+  `width: 100%` (since #15967, a text field outside a Row fills its parent).
+
 ### Changed — the fields fill the editor, and the body has a height
 
 - The title and body fields take `width: 100%`, and the body takes
