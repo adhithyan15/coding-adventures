@@ -73,6 +73,12 @@ style JournalApp {
     border-radius : 4 ;
     font-size     : 14 ;
   }
+  // On this day (J4c): the section's heading, in the stars' amber so the
+  // recall reads as set apart from the timeline below it.
+  part on-this-day-title {
+    color       : "#b45309" ;
+    font-size   : 14 ;
+  }
   part editor {
     // Fills the window like the timeline pane (#15963); without it the dark
     // editor stopped under its buttons and left the window's white below.

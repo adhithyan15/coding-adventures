@@ -12,6 +12,7 @@ behaviour of its own:
 | the first-run state, and "No entries match", "No starred entries" | `EmptyState` (mounted three times) | `mosaic-pkg-toolkit` |
 | search (J4a) | a `HostInput` and a *Clear* button above the timeline | kernel primitives |
 | stars (J4b) | *Star* above the editor, *Starred only* under the search field | kernel primitives |
+| on this day (J4c) | a second `RecordList`, above the timeline, of earlier years' entries on today's date | `mosaic-pkg-toolkit` |
 | the editor | `DraftEditor` (title, body, Save / Delete / Cancel) | `mosaic-pkg-draft-editor` |
 
 The layout is a `HostNavigationSplit`: a **New entry** button, the search field

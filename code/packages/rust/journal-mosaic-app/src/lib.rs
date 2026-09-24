@@ -30,11 +30,16 @@
 //! The editor's Star button sets `Entry::starred` directly (it does not save
 //! the draft), and a *Starred only* filter narrows the timeline and search
 //! alike. The filter is a view, like the query, and is not persisted.
+//!
+//! ## On this day (J4c)
+//!
+//! Above the timeline, the engine's `on_this_day` recall: what was written on
+//! today's month and day in earlier years. Hidden while searching.
 
 use std::error::Error;
 use std::fmt;
 
-use journal_core::projections::{search, timeline, MAX_QUERY_CHARS};
+use journal_core::projections::{on_this_day, search, timeline, MAX_QUERY_CHARS};
 use journal_core::{
     apply, Command, Date, Entry, EntryFilter, EntryId, JournalId, JournalState, OpError,
     MAX_BODY_BYTES, MAX_TITLE_CHARS,
@@ -161,6 +166,7 @@ impl JournalMosaicApp {
         let searching = self.searching();
         let rows = self.timeline_rows();
         let journal_empty = self.state.journal.entries.is_empty();
+        let recalled = self.on_this_day_rows();
         json!({
             // "The journal has no entries", whatever the query. A search that
             // matches nothing is `no-matches`, so the two empty states can say
@@ -174,6 +180,9 @@ impl JournalMosaicApp {
             // Only the plain timeline: a search that finds nothing is
             // `no-matches` whether or not the filter is on.
             "no-starred": self.starred_only && !searching && !journal_empty && rows.is_empty(),
+            // A search takes the whole pane; the recall is a timeline companion.
+            "has-on-this-day": !searching && !recalled.is_empty(),
+            "on-this-day-rows": recalled,
             "star-label": match &self.state.target {
                 Target::New => "",
                 Target::Entry(id) => match self.state.journal.entry(id) {
@@ -217,6 +226,47 @@ impl JournalMosaicApp {
         } else {
             self.day_rows()
         }
+    }
+
+    /// The engine's recall for the user's today, as `RecordList` rows:
+    ///
+    /// ```text
+    ///   [key, "1 year ago · 24 Sep 2025", title, subtitle, "", badge]
+    ///   [key, "",                          title, subtitle, "", badge]   same year
+    ///   [key, "3 years ago · 24 Sep 2023", title, subtitle, "", badge]
+    /// ```
+    ///
+    /// The heading opens each year; `meta` stays empty because the heading
+    /// already says when. Today is the LOCAL day, as for filing entries.
+    fn on_this_day_rows(&self) -> Vec<[String; 6]> {
+        let today = today((self.clock)(), self.utc_offset_minutes);
+        let mut rows = Vec::new();
+        for group in on_this_day(&self.state.journal, today, &self.filter()) {
+            let heading = format!(
+                "{} · {}",
+                if group.years_ago == 1 {
+                    "1 year ago".to_string()
+                } else {
+                    format!("{} years ago", group.years_ago)
+                },
+                short_date(group.date)
+            );
+            for (i, id) in group.entries.iter().enumerate() {
+                let Some(entry) = self.state.journal.entry(id) else {
+                    continue;
+                };
+                let (title, subtitle) = row_text(entry);
+                rows.push([
+                    id.as_str().to_string(),
+                    if i == 0 { heading.clone() } else { String::new() },
+                    title,
+                    subtitle,
+                    String::new(),
+                    star_badge(entry),
+                ]);
+            }
+        }
+        rows
     }
 
     /// Search hits in rank order, as rows:
@@ -302,6 +352,17 @@ impl JournalMosaicApp {
                         field: "index",
                     }
                 })?;
+                self.target_entry(EntryId::from_raw(key));
+                Ok(self.update())
+            }
+            // Its own event because each RecordList indexes its own rows.
+            "onSelectOnThisDay" => {
+                let index = index_payload(event, "index")?;
+                let key = self
+                    .on_this_day_rows()
+                    .get(index)
+                    .map(|r| r[0].clone())
+                    .ok_or_else(|| invalid(event, "index"))?;
                 self.target_entry(EntryId::from_raw(key));
                 Ok(self.update())
             }
@@ -849,8 +910,10 @@ mod tests {
                 "delete-label",
                 "draft-body",
                 "draft-title",
+                "has-on-this-day",
                 "no-matches",
                 "no-starred",
+                "on-this-day-rows",
                 "search-query",
                 "searching",
                 "selected-key",
@@ -864,6 +927,87 @@ mod tests {
         assert_eq!(props["delete-label"], "");
         assert_eq!(props["searching"], false);
         assert_eq!(props["no-matches"], false);
+    }
+
+    // ── on this day (J4c) ─────────────────────────────────────────────────────
+
+    const YEAR_MS: u64 = 365 * MS_PER_DAY;
+
+    fn on_this_day_rows_of(app: &JournalMosaicApp) -> Vec<Vec<String>> {
+        serde_json::from_value(app.props()["on-this-day-rows"].clone()).unwrap()
+    }
+
+    #[test]
+    fn earlier_years_on_this_date_are_recalled_above_the_timeline() {
+        let mut a = app();
+        assert_eq!(a.props()["has-on-this-day"], false);
+        // 24 Sep 2025 and 24 Sep 2023 (2024 is a leap year: 366 days back).
+        set_now(THU + 3_600_000 - YEAR_MS);
+        write(&mut a, "A year ago", "the old harbour");
+        set_now(THU + 3_600_000 - 3 * YEAR_MS - MS_PER_DAY);
+        write(&mut a, "Three years ago", "first entry");
+        set_now(THU + 3_600_000);
+        write(&mut a, "Today", "not recalled: this year");
+
+        let props = a.props();
+        assert_eq!(props["has-on-this-day"], true);
+        let recalled = on_this_day_rows_of(&a);
+        let titles: Vec<&str> = recalled.iter().map(|r| r[2].as_str()).collect();
+        assert_eq!(titles, ["A year ago", "Three years ago"], "most recent year first");
+        assert_eq!(recalled[0][1], "1 year ago · 24 Sep 2025");
+        assert_eq!(recalled[1][1], "3 years ago · 24 Sep 2023");
+        assert_eq!(recalled[0][4], "", "the heading already says when");
+    }
+
+    #[test]
+    fn selecting_a_recalled_entry_opens_it_and_bad_indexes_change_nothing() {
+        let mut a = app();
+        set_now(THU + 3_600_000 - YEAR_MS);
+        write(&mut a, "Last year", "body");
+        set_now(THU + 3_600_000);
+        send(&mut a, "onNewEntry", json!({})).unwrap();
+        let props = send(&mut a, "onSelectOnThisDay", json!({ "index": 0 }))
+            .unwrap()
+            .props;
+        assert_eq!(props["draft-title"], "Last year");
+        assert!(send(&mut a, "onSelectOnThisDay", json!({ "index": 1 })).is_err());
+        assert!(send(&mut a, "onSelectOnThisDay", json!({ "index": -1 })).is_err());
+        assert_eq!(a.props()["draft-title"], "Last year");
+    }
+
+    #[test]
+    fn the_recall_hides_during_a_search_and_follows_the_starred_filter() {
+        let mut a = app();
+        set_now(THU + 3_600_000 - YEAR_MS);
+        write(&mut a, "Last year", "harbour");
+        set_now(THU + 3_600_000);
+        send(&mut a, "onSearchChange", json!({ "value": "harbour" })).unwrap();
+        assert_eq!(a.props()["has-on-this-day"], false);
+        send(&mut a, "onClearSearch", json!({})).unwrap();
+        send(&mut a, "onToggleStarredFilter", json!({})).unwrap();
+        assert_eq!(a.props()["has-on-this-day"], false, "nothing recalled is starred");
+    }
+
+    #[test]
+    fn the_recall_follows_the_local_day() {
+        // 23:30 on 23 Sep in New York is 03:30 on 24 Sep UTC.
+        let mut a = JournalMosaicApp::with_clock(test_clock);
+        let mut ctx = StartContext::new("en-US", Platform::Linux);
+        ctx.utc_offset_minutes = Some(-240);
+        set_now(THU - YEAR_MS - MS_PER_DAY + 23 * 3_600_000);
+        a.start(ctx).unwrap();
+        write(&mut a, "23 Sep, local", "body");
+        // 03:30 on 24 Sep UTC is still 23:30 on 23 Sep in New York, so the
+        // entry filed on 23 Sep 2025 is recalled...
+        set_now(THU + 3 * 3_600_000 + 1_800_000);
+        assert_eq!(a.props()["has-on-this-day"], true);
+        // ...but a host that gives no offset is on 24 Sep (UTC) already.
+        let snapshot = a.snapshot().unwrap().unwrap();
+        let mut utc = JournalMosaicApp::with_clock(test_clock);
+        let mut ctx = StartContext::new("en-US", Platform::Linux);
+        ctx.restored_snapshot = Some(snapshot);
+        utc.start(ctx).unwrap();
+        assert_eq!(utc.props()["has-on-this-day"], false);
     }
 
     // ── stars (J4b) ───────────────────────────────────────────────────────────
