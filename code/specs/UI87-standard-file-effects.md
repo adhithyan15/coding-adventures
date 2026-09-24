@@ -88,12 +88,13 @@ payloads the same way.
 ## 4. Where the handler lives
 
 One built-in handler per template, installed by the generated entry point
-**before** the package's own `[host_effects]` handler:
+**alongside** the package's own `[host_effects]` handler. The package's
+handler is asked first; the built-in is the fallback:
 
-- the built-in answers only `file.save` / `file.open`;
-- a package handler still sees every other kind;
-- a package that needs different behaviour for those two kinds can still
-  claim them first.
+- a package handler still sees every kind, and one that needs different
+  behaviour for `file.save` / `file.open` can answer them itself;
+- the built-in answers only those two kinds, and only when the package's
+  handler did not.
 
 UI47 §5.5 allows one handler per backend, so this is a chain of two: the
 package handler, then the built-in fallback. It is not a list.
