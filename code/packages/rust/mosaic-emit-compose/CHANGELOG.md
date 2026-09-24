@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-09-24 (text-align)
+
+- **A `Text`'s own `text-align` reaches its `Text` call.** Until now `text-align` was lowered only on containers, as content alignment. On a `Text` leaf it was ignored, and the drop wasn't reported. Calendar's day names stayed at the start of their now-weighted columns (#15968), while the web centres them. Now a `Text` part's base `text-align` becomes `textAlign = TextAlign.Start/Center/End`, and the `TextAlign` import is added only when used.
+  - On its own, `textAlign` aligns only within the `Text`'s box, which wraps its content. In a Row the box already has its share (`weight`). Outside a Row, a `center` or `end` text also gets `fillMaxWidth()`, as the stretched flex item it is on the web.
+  - A part that authors its own `width` / `min-width` / `max-width` never fills: Calendar's today badge is a 21px pill. Neither does a part used in a Row even once (the `parts_filling_width` rule), nor `start`.
+  - Measured before/after across every Mosaic program: Trestle changes on its 7 day names (now centred), Engram on 2 stat labels, and VisiCalc on its address label. Those last three sit in Rows under the width guard, so they get `textAlign` and no fill, and their layout doesn't move. Trestle's Calendar render changed, and every other view is byte-identical.
+  - Verified: `TaskAppUiTest` passes, the emitted-control contract passes, and the native-complete report shows 0 degradations. Engram and VisiCalc compile.
+  - Still open: `calendar-daynum-today`'s `width`, `height`, `background` and `border-radius` don't reach its `Text` at all, so today's pill isn't drawn, and that isn't reported either.
+
 ## 2026-09-24 (row controls)
 
 - **A control's percentage width in a Row is its share of the Row.** Since #15968 a `Text` in a RowScope took `weight(f)` from a percentage width, but `HostInput`, `Input` and `HostButton` didn't. Their `width: 100%` fills only outside a Row, so in a Row it was dropped without a report. Journal's search field, beside *Clear*, stayed at its intrinsic ~120px in a 276px pane. The precomputed set (renamed `leaf_parts_row_weighted`) now covers the three controls, and their modifier chain starts with `.weight(f)`, unless the chain already decides the width (a `max-width`). A part used both in and out of a Row still gets neither the weight nor the fill.

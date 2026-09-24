@@ -482,6 +482,9 @@ pub fn from_pipeline(
         writeln!(out, "import androidx.compose.ui.graphics.drawscope.Stroke").unwrap();
     }
     writeln!(out, "import androidx.compose.ui.text.TextStyle").unwrap();
+    if part_styles.uses_text_align() {
+        writeln!(out, "import androidx.compose.ui.text.style.TextAlign").unwrap();
+    }
     writeln!(out, "import androidx.compose.ui.text.font.FontFamily").unwrap();
     writeln!(out, "import androidx.compose.ui.text.input.ImeAction").unwrap();
     writeln!(out, "import androidx.compose.ui.text.input.KeyboardType").unwrap();
@@ -1890,6 +1893,89 @@ fn leaf_parts_row_weighted(root: &LayoutNode, part_styles: &PartStyleMap) -> Has
     weighted
 }
 
+/// The `TextAlign` a part's own base `text-align` becomes on a `Text`, or
+/// `None` for no (or an unknown) value. Quotes are tolerated, as the
+/// packages author both `center` and `"center"`.
+fn text_align_expr(props: &[StyleProp]) -> Option<&'static str> {
+    let value = props.iter().rev().find(|prop| prop.name == "text-align")?;
+    match value.value.trim().trim_matches('"').trim() {
+        "left" | "start" => Some("TextAlign.Start"),
+        "center" => Some("TextAlign.Center"),
+        "right" | "end" => Some("TextAlign.End"),
+        _ => None,
+    }
+}
+
+/// `Text` parts that author `text-align`, mapped to the `TextAlign` it
+/// becomes, and the subset that must also fill their parent's width.
+///
+/// `textAlign` aligns the text inside the `Text`'s own box, which wraps its
+/// content, so on its own it moves nothing. On the web the same text sits in
+/// a flex item that is as wide as its share of a Row (`weight`, see
+/// [`leaf_parts_row_weighted`]) or, in a Column, stretched to the Column's
+/// width (`align-items` defaults to `stretch`). The Row case already has its
+/// width; the Column case is given it with `fillMaxWidth()`:
+///
+///   part calendar-dow-sun { width : "14.2857%" ; text-align : "center" ; }
+///     → Text("Sun", modifier = Modifier.weight(0.142857f), …,
+///            textAlign = TextAlign.Center)
+///   part empty-title { text-align : center ; }          // in a Column
+///     → Text("No tasks", modifier = Modifier.fillMaxWidth(), …,
+///            textAlign = TextAlign.Center)
+///
+/// Only `center` and `end` fill: `start` is where the text already sits. A
+/// part that authors its own `width` / `min-width` / `max-width` never fills
+/// either: Calendar's today badge is a 21px pill (`width : 21`) whose number
+/// is centred inside it, not a bar across the cell. A part used in a
+/// RowScope even once never fills (`fillMaxWidth()` would
+/// take the whole Row before its siblings measure), the rule
+/// [`parts_filling_width`] uses for controls.
+fn text_parts_aligned(
+    root: &LayoutNode,
+    part_styles: &PartStyleMap,
+) -> (HashMap<String, &'static str>, HashSet<String>) {
+    fn walk(
+        node: &LayoutNode,
+        in_row_scope: bool,
+        part_styles: &PartStyleMap,
+        aligned: &mut HashMap<String, &'static str>,
+        outside: &mut HashSet<String>,
+        inside: &mut HashSet<String>,
+    ) {
+        if node.tag == "Text" {
+            if let Some(part) = node.part_name.as_deref() {
+                let props = part_styles.get(part);
+                if let Some(align) = props.and_then(|props| text_align_expr(props)) {
+                    let sized = props.is_some_and(|props| {
+                        props
+                            .iter()
+                            .any(|prop| matches!(prop.name.as_str(), "width" | "min-width" | "max-width"))
+                    });
+                    aligned.insert(part.to_string(), align);
+                    if in_row_scope {
+                        inside.insert(part.to_string());
+                    } else if align != "TextAlign.Start" && !sized {
+                        outside.insert(part.to_string());
+                    }
+                }
+            }
+        }
+        let row_here = match node.tag.as_str() {
+            "For" | "If" | "Else" => in_row_scope,
+            _ => row_scoped_children(node, part_styles),
+        };
+        for child in &node.children {
+            walk(child, row_here, part_styles, aligned, outside, inside);
+        }
+    }
+    let mut aligned = HashMap::new();
+    let mut outside = HashSet::new();
+    let mut inside = HashSet::new();
+    walk(root, false, part_styles, &mut aligned, &mut outside, &mut inside);
+    outside.retain(|part| !inside.contains(part));
+    (aligned, outside)
+}
+
 fn part_container_composables(root: &LayoutNode) -> HashMap<String, BTreeSet<&'static str>> {
     fn walk(node: &LayoutNode, out: &mut HashMap<String, BTreeSet<&'static str>>) {
         if let (Some(part), Some(composable)) = (
@@ -2962,6 +3048,10 @@ struct PartStyleMap {
     /// Leaf parts that take a RowScope `weight` from a percentage width;
     /// see [`leaf_parts_row_weighted`]. Part name → weight.
     row_weighted_leaf: HashMap<String, String>,
+    /// `Text` parts' own `text-align` as a `TextAlign`, and those that also
+    /// fill their parent's width; see [`text_parts_aligned`].
+    text_align: HashMap<String, &'static str>,
+    text_align_fill: HashSet<String>,
 }
 
 impl PartStyleMap {
@@ -2984,6 +3074,22 @@ impl PartStyleMap {
         self.width_guarded = parts_width_guarded(root, self);
         self.fill_width = parts_filling_width(root, self);
         self.row_weighted_leaf = leaf_parts_row_weighted(root, self);
+        (self.text_align, self.text_align_fill) = text_parts_aligned(root, self);
+    }
+
+    /// The `TextAlign` a `Text` part takes, if it authors `text-align`.
+    fn text_align(&self, part: &str) -> Option<&'static str> {
+        self.text_align.get(part).copied()
+    }
+
+    /// Does this `Text` part fill its parent so its `text-align` can act?
+    fn text_align_fills(&self, part: &str) -> bool {
+        self.text_align_fill.contains(part)
+    }
+
+    /// Does any `Text` use `TextAlign` (so the file needs its import)?
+    fn uses_text_align(&self) -> bool {
+        !self.text_align.is_empty()
     }
 
     /// The RowScope weight a leaf part takes, if any.
@@ -3059,6 +3165,8 @@ fn build_part_style_map(style: &StyleDef, slots: &[SlotDecl]) -> PartStyleMap {
         width_guarded: HashSet::new(),
         fill_width: HashSet::new(),
         row_weighted_leaf: HashMap::new(),
+        text_align: HashMap::new(),
+        text_align_fill: HashSet::new(),
     }
 }
 
@@ -5128,7 +5236,20 @@ fn emit_host_navigation_split(
 }
 
 fn text_call(value_expr: &str, text_ctx: Option<&TextStyleCtx>, modifier: Option<&str>) -> String {
-    let args = text_ctx.map(TextStyleCtx::text_args).unwrap_or_default();
+    text_call_aligned(value_expr, text_ctx, modifier, None)
+}
+
+/// [`text_call`] with the part's own `textAlign` (see [`text_parts_aligned`]).
+fn text_call_aligned(
+    value_expr: &str,
+    text_ctx: Option<&TextStyleCtx>,
+    modifier: Option<&str>,
+    text_align: Option<&str>,
+) -> String {
+    let mut args = text_ctx.map(TextStyleCtx::text_args).unwrap_or_default();
+    if let Some(align) = text_align {
+        write!(args, ", textAlign = {align}").unwrap();
+    }
     let modifier_arg = modifier
         .map(|value| format!(", modifier = {value}"))
         .unwrap_or_default();
@@ -6843,6 +6964,24 @@ fn emit_text(
         }
         None => modifier,
     };
+    // A centred or end-aligned `Text` outside a Row is as wide as its parent,
+    // as the stretched flex item it is on the web (`text_parts_aligned`).
+    let text_align = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.text_align(part));
+    let modifier = if node
+        .part_name
+        .as_deref()
+        .is_some_and(|part| part_styles.text_align_fills(part))
+    {
+        Some(match modifier {
+            Some(chain) => chain.replacen("Modifier", "Modifier.fillMaxWidth()", 1),
+            None => "Modifier.fillMaxWidth()".to_string(),
+        })
+    } else {
+        modifier
+    };
     // UI59 §4 -- a bare `Text` is a leaf, so `emit_container`'s floor never
     // reaches it. Trestle's schedule text measured ZERO WIDTH at 700 in the
     // Board view for exactly that reason.
@@ -6859,7 +6998,7 @@ fn emit_text(
     };
     Ok(format!(
         "{pad}{}\n",
-        text_call(&value_expr, text_ctx, modifier.as_deref())
+        text_call_aligned(&value_expr, text_ctx, modifier.as_deref(), text_align)
     ))
 }
 
@@ -8885,6 +9024,76 @@ mod tests {
         assert!(from_pipeline(&m, &l, &style).unwrap().output.contains("fontSize = (19.5).toFloat().sp"));
         let l = layout("Scaled", node("Box", vec![prop], vec![]));
         assert!(matches!(from_pipeline(&m, &l, &style), Err(PipelineEmitError::InvalidTypography(_))));
+    }
+
+    /// A `Text` part's own `text-align` reaches the `Text` call as
+    /// `textAlign`. In a Row the text already has its share's width; in a
+    /// Column a centred or end-aligned text also fills, as the stretched
+    /// flex item it is on the web. `start` never fills, a part used in a
+    /// Row never fills, and a file with no aligned text has no import.
+    #[test]
+    fn text_align_reaches_text_and_centres_in_its_own_width() {
+        let m = component("Month", vec![], vec![]);
+        let text = |part: &str, value: &str| {
+            styled_node(
+                "Text",
+                part,
+                vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::String(value.into()),
+                }],
+                vec![],
+            )
+        };
+        let l = layout(
+            "Month",
+            node(
+                "Column",
+                vec![],
+                vec![
+                    styled_node("Row", "names", vec![], vec![text("name-a", "Sun"), text("shared", "S")]),
+                    text("title", "January"),
+                    text("lead", "Left"),
+                    text("shared", "S"),
+                    text("plain", "Plain"),
+                    text("badge", "21"),
+                ],
+            ),
+        );
+        let style = style_def(
+            "Month",
+            vec![
+                part("name-a", vec![sprop("width", "\"14.2857%\""), sprop("text-align", "\"center\"")], vec![]),
+                part("title", vec![sprop("text-align", "right")], vec![]),
+                part("lead", vec![sprop("text-align", "left")], vec![]),
+                part("shared", vec![sprop("text-align", "center")], vec![]),
+                part("plain", vec![sprop("padding", "2")], vec![]),
+                part("badge", vec![sprop("width", "21"), sprop("text-align", "center")], vec![]),
+            ],
+        );
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        assert!(out.contains("import androidx.compose.ui.text.style.TextAlign"), "{out}");
+        // A sized text centres inside its own width; it does not fill.
+        assert!(out.contains("Text(\"21\", textAlign = TextAlign.Center)"), "{out}");
+        assert!(
+            out.contains("Text(\"Sun\", modifier = Modifier.weight(0.142857f), textAlign = TextAlign.Center)"),
+            "{out}"
+        );
+        assert!(
+            out.contains("Text(\"January\", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.End)"),
+            "{out}"
+        );
+        assert!(out.contains("Text(\"Left\", textAlign = TextAlign.Start)"), "{out}");
+        // Shared: aligned in both places, filling in neither. It keeps its
+        // UI59 width guard, which is decided per part, so in both places.
+        assert!(!out.contains("fillMaxWidth(), textAlign = TextAlign.Center"), "shared: {out}");
+        let guarded = "Text(\"S\", modifier = Modifier.wrapContentWidth(unbounded = true), textAlign = TextAlign.Center)";
+        assert_eq!(out.matches(guarded).count(), 2, "{out}");
+        assert!(out.contains("Text(text = \"Plain\")"), "{out}");
+
+        let plain = style_def("Month", vec![part("plain", vec![sprop("padding", "2")], vec![])]);
+        let out = from_pipeline(&m, &l, &plain).unwrap().output;
+        assert!(!out.contains("TextAlign"), "{out}");
     }
 
     /// `width: 100%` on a leaf control fills its parent outside a RowScope,
