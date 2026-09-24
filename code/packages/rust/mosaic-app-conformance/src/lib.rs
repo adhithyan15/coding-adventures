@@ -228,6 +228,7 @@ mod tests {
             text_scale: 1.0,
             platform: Platform::Windows,
             restored_snapshot: None,
+            utc_offset_minutes: None,
         }
     }
 
