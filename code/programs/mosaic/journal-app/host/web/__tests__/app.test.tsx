@@ -120,6 +120,25 @@ it("searches the journal, says when nothing matches, and clears back to the time
   expect(() => button("Clear")).toThrow();
 });
 
+it("stars an entry and filters the timeline to starred entries", async () => {
+  await mount(memoryStorage());
+  await writeEntry("Plain day", "Nothing special.");
+  expect(container.textContent).not.toContain("No starred entries");
+  await act(async () => button("Starred only").click());
+  expect(container.textContent).toContain("No starred entries");
+  expect(() => button("Plain day")).toThrow();
+
+  await act(async () => button("Starred only").click());
+  await writeEntry("Good day", "Worth keeping.");
+  await act(async () => button("Star").click());
+  expect(button("Unstar")).toBeTruthy();
+  expect(container.textContent).toContain("★");
+
+  await act(async () => button("Starred only").click());
+  expect(button("Good day")).toBeTruthy();
+  expect(() => button("Plain day")).toThrow();
+});
+
 it("keeps an unreadable journal aside instead of losing it", async () => {
   const storage = memoryStorage();
   storage.setItem(STATE_KEY, '{"schema":"journal-mosaic-app/state","version":1,"text":"not json"}');
