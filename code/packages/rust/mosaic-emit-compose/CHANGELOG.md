@@ -2,6 +2,8 @@
 
 ## 2026-09-24
 
+- **`width: 100%` fills on a leaf control outside a Row.** `HostInput`, `Input` and `HostButton` wrap their content, and a percentage has no pixel value, so an authored `width: 100%` was dropped without a report. DraftEditor's fields measured 120px in a 750px editor. Such a control now gets `fillMaxWidth()`, first in its modifier chain like the container default, unless the chain already decides the width (a `max-width` keeps its own `widthIn(max).fillMaxWidth()` order). Inside a RowScope `fillMaxWidth()` would take the whole Row before its siblings are measured, so a part used in a Row even once keeps its intrinsic width everywhere; the set is precomputed once (`parts_filling_width`), like the UI59 width guards. Measured before/after: Trestle changes on 12 controls (composer, edit fields, Notes, sheet cell editor), Engram on none; Trestle's `TaskAppUiTest` passes and its renders are unchanged where the field already sat in a filling container. Other percentages (Calendar's 14.2857% cells, which sit in a Row) are still not lowered.
+
 - **Each `If` branch runs inside `_MosaicBranch { … }`**, a new file-private, non-inline composable, so its body compiles to its own JVM lambda method. A plain Kotlin `if` kept every branch in the enclosing lambda's bytecode, so an app shell's `If`/`Else` view chain piled every view into one method. Adding Trestle's seventh view (Checklists, C3a of #14018) broke its Compose build with `MethodTooLargeException: TaskAppKt.TaskApp$lambda$1$0$1`, the JVM's 64 KB method limit. The wrapper adds no layout node, and Row/Column scopes stay available as implicit receivers. Verified locally: TaskApp with Checklists fails `gradle compileKotlin` before the fix and builds after it.
 
 ## 2026-09-13
