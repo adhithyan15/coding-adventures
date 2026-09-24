@@ -2,6 +2,8 @@
 
 ## 0.1.0 — unreleased
 
+- **Tags (J4d)** need no host code. A new test tags two entries, then
+  filters by one tag and clears the filter, through the real wasm.
 - **On this day (J4c)** needs no host code. A new test writes an entry under
   a 24 Sep 2025 clock, reloads under 24 Sep 2026, and finds it recalled and
   openable, through the real wasm.

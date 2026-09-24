@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Tags (J4d).** `draft_tags` joins the draft (in the snapshot with
+  `#[serde(default)]`, so older version-1 snapshots still load; a test pins
+  it). Save checks the tags with `normalize_tags` BEFORE writing, then runs
+  `CreateEntry`/`EditEntry` and `SetTags`, so a bad tag fails the whole Save
+  with the journal unchanged. After Save the field shows the tags as the
+  engine tidied them. Row `meta` is `#a #b`, at most 24 characters.
+  `tag_filter` (not persisted) feeds `EntryFilter::tag` to the timeline,
+  search and On this day. The options count every entry, and a tag that no
+  longer exists stops filtering. `JournalScreenshots` now finds fields by
+  tag rather than position, and adds 08-tag-filter.
 - **On this day (J4c).** `on-this-day-rows` come from journal-core's
   `on_this_day` for the user's LOCAL today (the same `today(clock, offset)`
   that files entries), through the shared filter. Each year opens with a

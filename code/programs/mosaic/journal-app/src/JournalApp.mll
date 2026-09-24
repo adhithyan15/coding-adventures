@@ -55,6 +55,17 @@ layout JournalApp {
           onClick : emit: onToggleStarredFilter
         )
       }
+      // Tags (J4d): one option per tag, stacked (the pane is 300px wide);
+      // selecting filters every list, selecting it again clears the filter.
+      If ( when: slot: has-tags ) {
+        pkg::mosaic-pkg-toolkit::SegmentedControl (
+          options : slot: tag-options ,
+          selected-index : slot: selected-tag-index ,
+          vertical : true ,
+          disabled : false ,
+          onSelect : emit: onSelectTag
+        )
+      }
       // On this day (J4c): a second RecordList mount (#15959), above the
       // timeline, only when earlier years have entries on today's date.
       If ( when: slot: has-on-this-day ) {
@@ -110,6 +121,17 @@ layout JournalApp {
         HostButton [ star-toggle ] (
           label : slot: star-label ,
           onClick : emit: onToggleStar
+        )
+      }
+      // Tags (J4d), comma-separated, saved with the entry by Save below.
+      Column [ tags-block ] {
+        Text [ tags-label ] ( content : "Tags" )
+        HostInput [ tags-input ] (
+          value : slot: draft-tags ,
+          placeholder : "travel, family" ,
+          a11y-label : "Tags" ,
+          disabled : false ,
+          onChange : emit: onTagsChange
         )
       }
       pkg::mosaic-pkg-draft-editor::DraftEditor (

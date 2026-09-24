@@ -79,6 +79,26 @@ style JournalApp {
     color       : "#b45309" ;
     font-size   : 14 ;
   }
+  // Tags (J4d): the editor's tag field wears the search field's style;
+  // its label sits above it like DraftEditor's.
+  part tags-block {
+    gap : 4 ;
+    padding-bottom : 8 ;
+  }
+  part tags-label {
+    color     : "#6c757d" ;
+    font-size : 12 ;
+  }
+  part tags-input {
+    width         : 100% ;
+    padding       : 8 ;
+    background    : "#ffffff" ;
+    color         : "#212529" ;
+    border-width  : 1 ;
+    border-color  : "#dee2e6" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
   part editor {
     // Fills the window like the timeline pane (#15963); without it the dark
     // editor stopped under its buttons and left the window's white below.
