@@ -1,11 +1,15 @@
 {
   "language": "tamil",
   "chapter": 84,
-  "sourceHash": "fnv1a64:ba51f577cece8d51",
+  "sourceHash": "fnv1a64:01652c976c6985d9",
   "lessonIds": [
     "TA-C84-words",
     "TA-C84-lines",
-    "TA-C84-mudhal-vaasippu"
+    "TA-C84-mudhal-vaasippu",
+    "TA-R84-letters-that-look-alike",
+    "TA-R84-vowels-signs-and-the-dot",
+    "TA-R84-words-the-script-pages-built",
+    "TA-R84-the-u-family-completed"
   ],
   "tex": "tamil/book/chapters/ch84-reading-words-lines-and-a-passage.tex"
 }

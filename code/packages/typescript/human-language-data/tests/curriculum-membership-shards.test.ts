@@ -340,9 +340,33 @@ describe("direct curriculum lesson owners", () => {
     // Like HL-C438 and unlike HL-C436 and HL-C437, no new graph node of any kind
     // -- no segment, no extension, no chapter. Every one of the five was appended
     // to an existing segment whose `spine_node` already matched its content.
-    expect(digest).toBe("998a8193731e307f593e26679988fec8f413411439ba9b0e6e785b8c47257ac4");
+    //
+    // 7555 -> 7564 is HL-C440: NINE `review` lessons taking tamil to zero pre-A1
+    // reinforcement debt, and the LAST of the large ones. 73 thin atoms, 15 of
+    // them never revisited, so (15 x 2) + 58 = 88 retrieval slots -- the biggest
+    // of the programme, but concentrated rather than spread: 42 of the 73 sat on
+    // just TWO segments.
+    //
+    // Nine rather than eight because one planned 16-atom page was split; slots
+    // are a floor, not a cap, and the duration ceiling is the real constraint.
+    // All nine went onto EXISTING segments in chapters 84-86 -- the far end of a
+    // track whose debt is concentrated in chapters 1-39 -- so no new chapter,
+    // segment or extension, as for HL-C438 and HL-C439.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // d9b659429b reproduced 998a8193... and 7555 byte for byte. Dumping the
+    // loaded graph from both trees and diffing gives THIRTY changed lines and
+    // nothing that is not this change: nine lessons joining their segments' and
+    // extensions' derived `lessons` lists, twice each, with three previous last
+    // elements gaining a trailing comma on each side.
+    //
+    // The gate that shaped this tranche was NOT the digest but
+    // `forwardReferences`: tamil sits at 8 against a ceiling of 8, and
+    // `lessonsEarly > 1` at 4 against 4, so a retrieval page printing any word
+    // the course teaches later would have failed the build. It held at 8 and 4.
+    expect(digest).toBe("297f88ff2b3ca8a7316bd061a18ede57cbbdc1eaf20f6359b5c96e2e710b916d");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7555);
+      .toHaveLength(7564);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

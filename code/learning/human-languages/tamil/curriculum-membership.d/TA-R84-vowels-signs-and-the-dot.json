@@ -1,0 +1,11 @@
+{
+  "id": "TA-R84-vowels-signs-and-the-dot",
+  "pathSegment": "TA-PATH-84-READING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-84-READING",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-R85-the-opening-courtesies",
+  "pathSegment": "TA-PATH-85-THIRD-PERSON",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-85-THIRD-PERSON",
+      "order": 4
+    }
+  ]
+}
