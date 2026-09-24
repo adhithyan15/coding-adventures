@@ -430,8 +430,9 @@ journal is unchanged, and a `draft-error` slot says what to fix:
 - "Tag 2 is too long (64 characters at most)."
 
 J4d returned an error from `dispatch` instead. That was correct for the
-journal, which stayed unchanged, but silent for the person typing. Any edit
-to the draft, New, Cancel, or selecting an entry clears the message.
+journal, which stayed unchanged, but silent for the person typing. Any event
+other than Save clears the message, and the next Save sets or clears it
+again.
 
 **Slots:** `draft-date` (`text`), `draft-error` (`text`, `""` when there is
 nothing to fix).

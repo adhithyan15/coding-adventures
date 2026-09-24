@@ -2,6 +2,11 @@
 
 ## 0.1.0 — unreleased
 
+- **An entry's day (J4e).** A *Date* field (`YYYY-MM-DD`, blank for today)
+  above the Tags field moves an entry to another day, or files a new one on a
+  past day. A red line above the editor says why Save refused a draft ("Use a
+  real date in YYYY-MM-DD format.", "Tag 2 is too long …"). New slots:
+  `draft-date`, `draft-error`. New event: `onDateChange`.
 - **Tags (J4d).** A labelled *Tags* field above the editor (comma-separated,
   saved by Save), each row's tags as its `meta`, and, when any entry has a
   tag, a vertical `SegmentedControl` of options like "#travel (3)" (the first

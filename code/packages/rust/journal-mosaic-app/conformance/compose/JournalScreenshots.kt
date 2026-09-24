@@ -4,6 +4,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runSkikoComposeUiTest
 import java.io.File
@@ -101,6 +102,13 @@ class JournalScreenshots {
             onNodeWithText("#travel (1)").performClick()
             waitForIdle()
             shot("08-tag-filter")
+
+            // An entry's day (J4e): an impossible date is refused in words.
+            onNodeWithTag("date-input").performTextReplacement("2026-02-30")
+            waitForIdle()
+            onNodeWithText("Save").performClick()
+            waitForIdle()
+            shot("09-draft-error")
         }
     }
 }
