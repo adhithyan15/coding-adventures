@@ -435,6 +435,174 @@ style TaskApp {
   part cl-template-actions {
     gap : 8 ;
   }
+  part cl-outline-actions {
+    gap : 8 ;
+  }
+  part cl-branch-actions {
+    gap : 8 ;
+  }
+  // Checklists controls (C3a-C3c) wear Trestle's own styles rather than the
+  // backend default (Material purple on Compose): the bordered edit field for
+  // inputs, the add button for primary actions, the outline cancel button for
+  // secondary ones, and the chip for outline items, with the accent for the
+  // selected item. Cloned from those parts so the two stay in step.
+  part cl-name-input {
+    width : 220 ;
+    background : "#1d1916" ;
+    color : "#eee7dc" ;
+    font-size : 14 ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#4b4037" ;
+    border-radius : 8 ;
+  }
+  part cl-item-input {
+    width : 220 ;
+    background : "#1d1916" ;
+    color : "#eee7dc" ;
+    font-size : 14 ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#4b4037" ;
+    border-radius : 8 ;
+  }
+  part cl-create-btn {
+    background : "#eaa63f" ;
+    color : "#1a1714" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 8 ;
+    padding-right : 16 ;
+    padding-bottom : 8 ;
+    padding-left : 16 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#d4922f" ;
+    }
+    state pressed {
+      background : "#b87822" ;
+    }
+  }
+  part cl-item-add-btn {
+    background : "#eaa63f" ;
+    color : "#1a1714" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 8 ;
+    padding-right : 16 ;
+    padding-bottom : 8 ;
+    padding-left : 16 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#d4922f" ;
+    }
+    state pressed {
+      background : "#b87822" ;
+    }
+  }
+  part cl-start-btn {
+    background : "#eaa63f" ;
+    color : "#1a1714" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 8 ;
+    padding-right : 16 ;
+    padding-bottom : 8 ;
+    padding-left : 16 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#d4922f" ;
+    }
+    state pressed {
+      background : "#b87822" ;
+    }
+  }
+  part cl-outline-item-selected {
+    background : "#eaa63f" ;
+    color : "#1a1714" ;
+    font-size : 13 ;
+    font-weight : bold ;
+    padding-top : 8 ;
+    padding-right : 16 ;
+    padding-bottom : 8 ;
+    padding-left : 16 ;
+    border-width : 0 ;
+    border-radius : 8 ;
+    state hover {
+      background : "#d4922f" ;
+    }
+    state pressed {
+      background : "#b87822" ;
+    }
+  }
+  part cl-add-yes-btn {
+    background : "transparent" ;
+    color : "#c8bfb4" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#4b4037" ;
+    border-radius : 8 ;
+  }
+  part cl-add-no-btn {
+    background : "transparent" ;
+    color : "#c8bfb4" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#4b4037" ;
+    border-radius : 8 ;
+  }
+  part cl-toggle-question-btn {
+    background : "transparent" ;
+    color : "#c8bfb4" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#4b4037" ;
+    border-radius : 8 ;
+  }
+  part cl-delete-item-btn {
+    background : "transparent" ;
+    color : "#c8bfb4" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#4b4037" ;
+    border-radius : 8 ;
+  }
+  part cl-delete-btn {
+    background : "transparent" ;
+    color : "#c8bfb4" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#4b4037" ;
+    border-radius : 8 ;
+  }
+  part cl-delete-run-btn {
+    background : "transparent" ;
+    color : "#c8bfb4" ;
+    padding : 8 ;
+    border-width : 1 ;
+    border-color : "#4b4037" ;
+    border-radius : 8 ;
+  }
+  part cl-outline-item {
+    background : "#2d271f" ;
+    color : "#b3a99c" ;
+    font-size : 12 ;
+    font-weight : bold ;
+    padding-top : 3 ;
+    padding-right : 10 ;
+    padding-bottom : 3 ;
+    padding-left : 10 ;
+    border-width : 1 ;
+    border-color : "#352e25" ;
+    border-radius : 20 ;
+    state hover {
+      color : "#f1ebe1" ;
+      border-color : "#443b2f" ;
+    }
+  }
   part cl-library-empty {
     gap : 6 ;
   }

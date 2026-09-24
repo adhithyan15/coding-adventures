@@ -1,5 +1,21 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — writing questions into a checklist template (C3c, #14018)
+
+- Selecting an outline item (`onSelectOutlineItem`; clicking it again clears
+  the selection) enables four actions:
+  - toggle it between a step and a question (`onToggleOutlineQuestion`). A
+    step's existing sub-items become the question's Yes branch.
+  - add the composer's text to the question's Yes or No branch
+    (`onAddChecklistItemYes`, `onAddChecklistItemNo`);
+  - delete it with everything under it, deepest first (`onDeleteOutlineItem`).
+    `delete_task` alone would strand a question's branch items.
+- Outline rows gain a question marker, a branch label ("Yes" or "No") and a
+  selected marker. New props: `selected-outline-key`, `outline-item-selected`,
+  `outline-question-selected` and `outline-toggle-label`.
+- The selection is serde-defaulted, cleared with the checklist selection, and
+  dropped by `repair()` when it no longer names an item.
+
 ## [Unreleased] — the Compose startup-recovery test no longer races (#15788 follow-up)
 
 `generatedStartupFailureIsVisibleAndRetryRerunsInitialization` waited for

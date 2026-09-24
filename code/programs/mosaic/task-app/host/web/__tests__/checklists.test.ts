@@ -176,6 +176,104 @@ describe("Checklists on the web host", () => {
   });
 });
 
+describe("writing questions into a template (C3c)", () => {
+  const outline = (c: Controller) => (c.getProps() as any).checklistOutlineRows as string[][];
+  const selectItem = (c: Controller, name: string) => {
+    const index = outline(c).findIndex((row) => row[2] === name);
+    expect(index).toBeGreaterThanOrEqual(0);
+    send(c, "selectOutlineItem", { index });
+  };
+  const addTo = (c: Controller, type: string, name: string) => {
+    send(c, "newChecklistItemChange", { value: name });
+    send(c, type);
+  };
+
+  it("gives a question Yes and No items, and a run reveals one branch", () => {
+    const { controller } = setup();
+    template(controller, "Pre-flight", ["Raining?", "Doors closed"]);
+    selectItem(controller, "Raining?");
+    let p = controller.getProps() as any;
+    expect(p.outlineItemSelected).toBe(true);
+    expect(p.outlineToggleLabel).toBe("Make it a question");
+    expect(p.checklistOutlineRows[0][5]).toBe("1");
+    send(controller, "toggleOutlineQuestion");
+    p = controller.getProps();
+    expect(p.outlineQuestionSelected).toBe(true);
+    expect(p.outlineToggleLabel).toBe("Make it a step");
+
+    addTo(controller, "addChecklistItemYes", "Take umbrella");
+    addTo(controller, "addChecklistItemNo", "Wear hat");
+    addTo(controller, "addChecklistItemYes", "Close windows");
+    expect(outline(controller).map((r) => [r[1], r[2], r[3], r[4]])).toEqual([
+      ["", "Raining?", "1", ""],
+      ["  ", "Take umbrella", "", "Yes"],
+      ["  ", "Close windows", "", "Yes"],
+      ["  ", "Wear hat", "", "No"],
+      ["", "Doors closed", "", ""],
+    ]);
+
+    send(controller, "startChecklistRun");
+    expect(column((controller.getProps() as any).checklistRunRows, 2)).toEqual(["Raining?", "Doors closed"]);
+    send(controller, "checklistAnswerYes", { index: 0 });
+    expect(column((controller.getProps() as any).checklistRunRows, 2)).toEqual([
+      "Raining?",
+      "Take umbrella",
+      "Close windows",
+      "Doors closed",
+    ]);
+  });
+
+  it("turns a question back into a step and a step with items into a question", () => {
+    const { controller } = setup();
+    template(controller, "T", ["Q"]);
+    selectItem(controller, "Q");
+    send(controller, "toggleOutlineQuestion");
+    addTo(controller, "addChecklistItemNo", "N");
+    send(controller, "toggleOutlineQuestion");
+    expect([outline(controller)[1][2], outline(controller)[1][4]]).toEqual(["N", ""]);
+    send(controller, "toggleOutlineQuestion");
+    expect([outline(controller)[1][2], outline(controller)[1][4]]).toEqual(["N", "Yes"]);
+  });
+
+  it("deletes an item with everything under it", () => {
+    const { controller } = setup();
+    template(controller, "T", ["Q", "After"]);
+    selectItem(controller, "Q");
+    send(controller, "toggleOutlineQuestion");
+    addTo(controller, "addChecklistItemYes", "Y");
+    selectItem(controller, "Y");
+    send(controller, "toggleOutlineQuestion");
+    addTo(controller, "addChecklistItemNo", "Deep");
+    expect(column(outline(controller), 2)).toEqual(["Q", "Y", "Deep", "After"]);
+    selectItem(controller, "Deep");
+    send(controller, "deleteOutlineItem");
+    expect(column(outline(controller), 2)).toEqual(["Q", "Y", "After"]);
+    selectItem(controller, "Q");
+    send(controller, "deleteOutlineItem");
+    expect((controller.getProps() as any).selectedOutlineKey).toBe("");
+    expect(column(outline(controller), 2)).toEqual(["After"]);
+    send(controller, "startChecklistRun");
+    expect(column((controller.getProps() as any).checklistRunRows, 2)).toEqual(["After"]);
+  });
+
+  it("toggles the selection, clears it with the checklist, and refuses without one", () => {
+    const { engine, controller } = setup();
+    template(controller, "T", ["A"]);
+    selectItem(controller, "A");
+    selectItem(controller, "A");
+    expect((controller.getProps() as any).outlineItemSelected).toBe(false);
+    selectItem(controller, "A");
+    template(controller, "Other", []);
+    expect((controller.getProps() as any).selectedOutlineKey).toBe("");
+    const before = JSON.stringify(engine.workspace().data);
+    send(controller, "newChecklistItemChange", { value: "x" });
+    send(controller, "addChecklistItemYes");
+    send(controller, "toggleOutlineQuestion");
+    send(controller, "deleteOutlineItem");
+    expect(JSON.stringify(engine.workspace().data)).toBe(before);
+  });
+});
+
 describe("a corrupted stored id counter", () => {
   it("is recovered from the ids in use, never reset to reuse them", () => {
     const engine = createTaskEngine(wasm);

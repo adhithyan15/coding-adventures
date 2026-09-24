@@ -231,8 +231,16 @@ component TaskApp {
   slot new-checklist-name       : text ;
   slot checklist-template-mode  : bool ;
   slot checklist-run-mode       : bool ;
-  // [key, indent, name] per template item.
+  // [key, indent, name, question-marker, branch-label, selected-marker] per
+  // template item (C3c): the question marker is "1" for a question; the label
+  // is "Yes"/"No" for an item directly in a question's branch; the selected
+  // marker is "1" for the item selected for editing.
   slot checklist-outline-rows   : list<list<text>> ;
+  // The outline item selected for editing (C3c), and what it allows.
+  slot selected-outline-key       : text ;
+  slot outline-item-selected      : bool ;
+  slot outline-question-selected  : bool ;
+  slot outline-toggle-label       : text ;
   slot new-checklist-item       : text ;
   slot checklist-run-title      : text ;
   slot checklist-run-progress   : text ;
@@ -358,6 +366,12 @@ component TaskApp {
   emit onCompleteChecklistRun ;
   emit onAbandonChecklistRun ;
   emit onDeleteChecklist ;
+  // Writing questions into a template (C3c).
+  emit onSelectOutlineItem ( index : number ) ;
+  emit onToggleOutlineQuestion ;
+  emit onAddChecklistItemYes ;
+  emit onAddChecklistItemNo ;
+  emit onDeleteOutlineItem ;
 
   // Expand (or collapse) a task row to reveal its scheduling detail.
   emit onExpandTask ( index : number ) ;

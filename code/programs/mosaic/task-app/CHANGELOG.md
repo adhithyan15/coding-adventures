@@ -4,6 +4,30 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Added — writing questions into a checklist template (C3c, #14018)
+
+- **Looked at, not just asserted.** The Compose screenshot harness
+  (`TaskAppScreenshots`, #14798) now renders three more states: the empty
+  Checklists library, a template with a question and both branches, and a
+  run. The renders showed three defects no test had caught, all fixed:
+  - the composer fields were invisible, their placeholders reading as labels;
+  - every Checklists button fell back to the backend's Material purple;
+  - the selected outline item looked like the rest, and "Add to No"
+    overflowed the pane.
+  The controls now clone Trestle's own styles: the edit field, the add
+  button, the outline cancel button, and the chip with the accent for the
+  selected item. The branch buttons get their own row.
+
+- A template's outline rows are toggle buttons (`selected`, UI86) that select
+  an item. Each row shows its branch ("Yes"/"No") and a "Question" marker.
+- With an item selected, **Make it a question / Make it a step** and
+  **Delete item** appear. With a question selected, **Add to Yes** and
+  **Add to No** appear beside the composer.
+- The rows carry a selected marker instead of the layout comparing strings.
+  `item[0] == selected-outline-key` compiled verbatim into Swift and Kotlin,
+  where `selected-outline-key` reads as a subtraction. The local
+  `swift build -c release` and `gradle compileKotlin` caught this.
+
 ### Added — the Checklists view (C3a, #14018)
 
 A seventh view, **Checklists**, sits beside List, Board, Sheet, Calendar and

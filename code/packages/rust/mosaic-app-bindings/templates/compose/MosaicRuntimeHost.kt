@@ -173,6 +173,9 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
                 put("locale", Locale.getDefault().toLanguageTag())
                 put("colorScheme", "system")
                 put("textScale", 1.0)
+                // Minutes east of UTC, so an app can tell the user's local day (UI38 "Local time"). Left out when outside -840..=840 (a custom TZ string can say anything): the runtime would refuse it and the app would not start; without it the app uses UTC.
+                val utcOffsetMinutes = java.util.TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 60_000
+                if (utcOffsetMinutes in -840..840) put("utcOffsetMinutes", utcOffsetMinutes)
                 put("platform", mosaicPlatform())
                 put("restoredSnapshot", snapshot ?: JsonNull)
             }
