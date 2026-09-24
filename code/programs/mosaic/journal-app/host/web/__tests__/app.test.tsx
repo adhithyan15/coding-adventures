@@ -161,6 +161,23 @@ it("tags entries and filters the timeline by a tag", async () => {
   expect(button("Office")).toBeTruthy();
 });
 
+it("says why a bad date cannot be saved, then files the entry on the day typed", async () => {
+  await mount(memoryStorage());
+  const field = (label: string) => container.querySelector(`input[aria-label="${label}"]`) as HTMLInputElement;
+  await act(async () => button("New entry").click());
+  await type(field("Title"), "Back-dated");
+  await type(field("Date"), "2026-02-30");
+  await act(async () => button("Save").click());
+  expect(container.textContent).toContain("Use a real date in YYYY-MM-DD format.");
+  expect(container.textContent).toContain("No entries yet");
+
+  await type(field("Date"), "2026-09-01");
+  expect(container.textContent).not.toContain("Use a real date");
+  await act(async () => button("Save").click());
+  expect(container.textContent).toContain("Tuesday, 1 September 2026");
+  expect(field("Date").value).toBe("2026-09-01");
+});
+
 it("keeps an unreadable journal aside instead of losing it", async () => {
   const storage = memoryStorage();
   storage.setItem(STATE_KEY, '{"schema":"journal-mosaic-app/state","version":1,"text":"not json"}');

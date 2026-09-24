@@ -42,12 +42,18 @@
 //! AFTER being validated, so a bad tag leaves the journal untouched. A
 //! SegmentedControl of the journal's tags filters every list; the choice is
 //! a view, not persisted.
+//!
+//! ## An entry's day, and draft errors (J4e)
+//!
+//! The draft carries a `YYYY-MM-DD` day (blank = today). Save checks the day
+//! and the tags before writing anything and, when either is wrong, says so in
+//! `draft-error` instead of failing the event, so the person typing sees why.
 
 use std::error::Error;
 use std::fmt;
 
 use journal_core::projections::{on_this_day, search, tag_counts, timeline, MAX_QUERY_CHARS};
-use journal_core::tag::{normalize_tags, MAX_TAGS_PER_ENTRY, MAX_TAG_CHARS};
+use journal_core::tag::{normalize_tags, TagError, MAX_TAGS_PER_ENTRY, MAX_TAG_CHARS};
 use journal_core::{
     apply, Command, Date, Entry, EntryFilter, EntryId, JournalId, JournalState, OpError,
     MAX_BODY_BYTES, MAX_TITLE_CHARS,
@@ -91,6 +97,9 @@ struct AppState {
     /// so a version-1 snapshot written before tags still loads.
     #[serde(default)]
     draft_tags: String,
+    /// The editor's day, as typed: `2026-09-23`, or blank for today (J4e).
+    #[serde(default)]
+    draft_date: String,
     next_entry: u64,
 }
 
@@ -112,6 +121,9 @@ pub struct JournalMosaicApp {
     starred_only: bool,
     /// The selected tag's key (J4d). Not in the snapshot, like the filter.
     tag_filter: Option<String>,
+    /// Why the last Save refused the draft, or `""` (J4e). Not persisted: it
+    /// describes the last attempt, not the journal.
+    draft_error: String,
 }
 
 impl Default for JournalMosaicApp {
@@ -163,12 +175,14 @@ impl JournalMosaicApp {
             search_query: String::new(),
             starred_only: false,
             tag_filter: None,
+            draft_error: String::new(),
             state: AppState {
                 journal,
                 target: Target::New,
                 draft_title: String::new(),
                 draft_body: String::new(),
                 draft_tags: String::new(),
+                draft_date: String::new(),
                 next_entry: 1,
             },
             clock,
@@ -202,6 +216,8 @@ impl JournalMosaicApp {
             "has-on-this-day": !searching && !recalled.is_empty(),
             "on-this-day-rows": recalled,
             "draft-tags": self.state.draft_tags,
+            "draft-date": self.state.draft_date,
+            "draft-error": self.draft_error,
             "tag-options": tags.iter().map(|c| format!("#{} ({})", c.tag.display(), c.count)).collect::<Vec<_>>(),
             "selected-tag-index": active
                 .as_ref()
@@ -384,7 +400,13 @@ impl JournalMosaicApp {
     // ── events ───────────────────────────────────────────────────────────────
 
     fn dispatch_inner(&mut self, event: &Event) -> Result<AppUpdate, JournalAppError> {
-        match canonical_event_name(&event.name).as_ref() {
+        let name = canonical_event_name(&event.name);
+        // A draft error describes the last Save; anything else the person does
+        // moves on from it (and a new Save sets or clears it again).
+        if name != "onSaveEntry" {
+            self.draft_error.clear();
+        }
+        match name.as_ref() {
             "onSelectEntry" => {
                 let index = index_payload(event, "index")?;
                 let rows = self.timeline_rows();
@@ -413,6 +435,7 @@ impl JournalMosaicApp {
                 self.state.draft_title.clear();
                 self.state.draft_body.clear();
                 self.state.draft_tags.clear();
+                self.state.draft_date.clear();
                 Ok(self.update())
             }
             // Drafts are capped at the engine's own entry limits: an unsaveable
@@ -444,6 +467,7 @@ impl JournalMosaicApp {
                 self.state.draft_title.clear();
                 self.state.draft_body.clear();
                 self.state.draft_tags.clear();
+                self.state.draft_date.clear();
                 Ok(self.announced("Entry deleted"))
             }
             // The query is capped at what the engine reads: a longer one could
@@ -476,6 +500,14 @@ impl JournalMosaicApp {
             }
             // Capped at what 64 tags of 64 characters, with separators, could
             // take: longer could never save, and would be echoed at any size.
+            "onDateChange" => {
+                let value = text_payload(event, "value")?;
+                if value.chars().count() > MAX_DATE_CHARS {
+                    return Err(invalid(event, "value"));
+                }
+                self.state.draft_date = value;
+                Ok(self.update())
+            }
             "onTagsChange" => {
                 let value = text_payload(event, "value")?;
                 if !tags_fit(&value) {
@@ -514,6 +546,7 @@ impl JournalMosaicApp {
                         self.state.draft_title.clear();
                         self.state.draft_body.clear();
                         self.state.draft_tags.clear();
+                        self.state.draft_date.clear();
                     }
                     Target::Entry(id) => self.target_entry(id),
                 }
@@ -530,8 +563,20 @@ impl JournalMosaicApp {
         // tags are two commands, and a bad tag must not leave an entry saved
         // without them.
         let tags = split_tags(&self.state.draft_tags);
-        normalize_tags(&tags)
-            .map_err(|(index, reason)| engine_error(OpError::InvalidTag { index, reason }))?;
+        // Checked BEFORE anything is written, and reported in `draft-error`
+        // rather than as a failed event: the journal must not change, and the
+        // person typing must see why.
+        let today = today((self.clock)(), self.utc_offset_minutes);
+        let date = match self.state.draft_date.trim() {
+            "" => None,
+            typed => match Date::parse_iso(typed) {
+                Some(date) => Some(date),
+                None => return Ok(self.refused("Use a real date in YYYY-MM-DD format.")),
+            },
+        };
+        if let Err((index, reason)) = normalize_tags(&tags) {
+            return Ok(self.refused(&tag_error_text(index, reason)));
+        }
         match self.state.target.clone() {
             Target::New => {
                 if title.trim().is_empty() && body.trim().is_empty() {
@@ -541,7 +586,7 @@ impl JournalMosaicApp {
                 self.run(Command::CreateEntry {
                     id: id.clone(),
                     journal: JournalId::from(DEFAULT_JOURNAL),
-                    date: today((self.clock)(), self.utc_offset_minutes),
+                    date: date.unwrap_or(today),
                     title,
                     body,
                 })?;
@@ -557,6 +602,12 @@ impl JournalMosaicApp {
                     title: Some(title),
                     body: Some(body),
                 })?;
+                // Blank keeps the entry's own day ("today" is for new ones).
+                if let Some(date) = date {
+                    if self.state.journal.entry(&id).is_some_and(|e| e.date != date) {
+                        self.run(Command::SetEntryDate { id: id.clone(), date })?;
+                    }
+                }
                 self.run(Command::SetTags { id, tags })?;
             }
         }
@@ -565,9 +616,18 @@ impl JournalMosaicApp {
         if let Target::Entry(id) = &self.state.target {
             if let Some(entry) = self.state.journal.entry(id) {
                 self.state.draft_tags = tags_text(entry);
+                self.state.draft_date = entry.date.to_iso();
             }
         }
+        self.draft_error.clear();
         Ok(self.announced("Entry saved"))
+    }
+
+    /// Save refused the draft: the journal is untouched, and the reason is
+    /// shown and announced.
+    fn refused(&mut self, reason: &str) -> AppUpdate {
+        self.draft_error = reason.to_string();
+        self.announced(reason)
     }
 
     fn run(&mut self, command: Command) -> Result<(), JournalAppError> {
@@ -582,6 +642,7 @@ impl JournalMosaicApp {
                 self.state.draft_title = entry.title.clone();
                 self.state.draft_body = entry.body.clone();
                 self.state.draft_tags = tags_text(entry);
+                self.state.draft_date = entry.date.to_iso();
                 self.state.target = Target::Entry(id);
             }
             None => {
@@ -589,6 +650,7 @@ impl JournalMosaicApp {
                 self.state.draft_title.clear();
                 self.state.draft_body.clear();
                 self.state.draft_tags.clear();
+                self.state.draft_date.clear();
             }
         }
     }
@@ -639,10 +701,12 @@ impl MosaicApp for JournalMosaicApp {
             self.state.draft_title.clone(),
             self.state.draft_body.clone(),
             self.state.draft_tags.clone(),
+            self.state.draft_date.clone(),
             self.state.next_entry,
             self.search_query.clone(),
             self.starred_only,
             self.tag_filter.clone(),
+            self.draft_error.clone(),
         );
         self.dispatch_inner(&event).inspect_err(|_| {
             (
@@ -650,10 +714,12 @@ impl MosaicApp for JournalMosaicApp {
                 self.state.draft_title,
                 self.state.draft_body,
                 self.state.draft_tags,
+                self.state.draft_date,
                 self.state.next_entry,
                 self.search_query,
                 self.starred_only,
                 self.tag_filter,
+                self.draft_error,
             ) = before;
         })
     }
@@ -688,6 +754,7 @@ impl MosaicApp for JournalMosaicApp {
             || !title_fits(&state.draft_title)
             || !body_fits(&state.draft_body)
             || !tags_fit(&state.draft_tags)
+            || state.draft_date.chars().count() > MAX_DATE_CHARS
         {
             return Err(JournalAppError::InvalidSnapshot);
         }
@@ -898,6 +965,23 @@ fn split_tags(text: &str) -> Vec<String> {
         .collect()
 }
 
+/// The longest Date field kept: generous for `YYYY-MM-DD` plus stray spaces,
+/// and bounded so a pasted essay is refused as it is typed.
+const MAX_DATE_CHARS: usize = 32;
+
+/// A tag error in words for `draft-error`. `index` is the 0-based position
+/// among the typed tags.
+fn tag_error_text(index: usize, reason: TagError) -> String {
+    let n = index + 1;
+    match reason {
+        TagError::TooLong => format!("Tag {n} is too long ({MAX_TAG_CHARS} characters at most)."),
+        TagError::ControlCharacter => format!("Tag {n} contains a line break or other control character."),
+        TagError::TooMany => format!("An entry can have at most {MAX_TAGS_PER_ENTRY} tags."),
+        TagError::Empty => format!("Tag {n} is empty."),
+        TagError::Duplicate => format!("Tag {n} repeats another tag."),
+    }
+}
+
 /// The most the Tags field can hold: 64 tags of 64 characters, each with a
 /// `, ` separator. Anything longer could never be saved.
 fn tags_fit(value: &str) -> bool {
@@ -1042,6 +1126,8 @@ mod tests {
             [
                 "delete-label",
                 "draft-body",
+                "draft-date",
+                "draft-error",
                 "draft-tags",
                 "draft-title",
                 "has-on-this-day",
@@ -1064,6 +1150,64 @@ mod tests {
         assert_eq!(props["delete-label"], "");
         assert_eq!(props["searching"], false);
         assert_eq!(props["no-matches"], false);
+    }
+
+    // ── an entry's day, and draft errors (J4e) ────────────────────────────────
+
+    #[test]
+    fn a_new_entry_can_be_filed_under_another_day() {
+        let mut a = app();
+        send(&mut a, "onTitleChange", json!({ "value": "About yesterday" })).unwrap();
+        send(&mut a, "onDateChange", json!({ "value": " 2026-09-23 " })).unwrap();
+        let props = send(&mut a, "onSaveEntry", json!({})).unwrap().props;
+        assert_eq!(props["draft-error"], "");
+        assert_eq!(props["draft-date"], "2026-09-23", "the field shows the saved day");
+        assert_eq!(rows(&a)[0][1], "Wednesday, 23 September 2026");
+    }
+
+    #[test]
+    fn a_blank_date_is_today_for_a_new_entry_and_unchanged_for_an_old_one() {
+        let mut a = app();
+        write(&mut a, "Today's", "body");
+        assert_eq!(a.props()["draft-date"], "2026-09-24");
+        send(&mut a, "onDateChange", json!({ "value": "" })).unwrap();
+        send(&mut a, "onTitleChange", json!({ "value": "Still today's" })).unwrap();
+        send(&mut a, "onSaveEntry", json!({})).unwrap();
+        assert_eq!(rows(&a)[0][1], "Thursday, 24 September 2026");
+        assert_eq!(a.props()["draft-date"], "2026-09-24");
+    }
+
+    #[test]
+    fn moving_an_entry_refiles_it_and_cancel_reverts_the_field() {
+        let mut a = app();
+        write(&mut a, "Movable", "body");
+        send(&mut a, "onDateChange", json!({ "value": "2020-02-29" })).unwrap();
+        let props = send(&mut a, "onCancelEdit", json!({})).unwrap().props;
+        assert_eq!(props["draft-date"], "2026-09-24", "Cancel reverts the day");
+
+        send(&mut a, "onDateChange", json!({ "value": "2020-02-29" })).unwrap();
+        send(&mut a, "onSaveEntry", json!({})).unwrap();
+        assert_eq!(rows(&a)[0][1], "Saturday, 29 February 2020");
+        let props = send(&mut a, "onNewEntry", json!({})).unwrap().props;
+        assert_eq!(props["draft-date"], "", "a new draft starts on today (blank)");
+    }
+
+    #[test]
+    fn a_bad_date_is_shown_and_writes_nothing() {
+        let mut a = app();
+        send(&mut a, "onTitleChange", json!({ "value": "Draft" })).unwrap();
+        for bad in ["2026-02-30", "24/09/2026", "10000-01-01", "yesterday"] {
+            send(&mut a, "onDateChange", json!({ "value": bad })).unwrap();
+            let props = send(&mut a, "onSaveEntry", json!({})).unwrap().props;
+            assert_eq!(props["draft-error"], "Use a real date in YYYY-MM-DD format.", "{bad}");
+            assert_eq!(props["timeline-empty"], true, "{bad}");
+        }
+        let props = send(&mut a, "onDateChange", json!({ "value": "2026-09-01" }))
+            .unwrap()
+            .props;
+        assert_eq!(props["draft-error"], "", "typing again clears the message");
+        let long = "9".repeat(MAX_DATE_CHARS + 1);
+        assert!(send(&mut a, "onDateChange", json!({ "value": long })).is_err());
     }
 
     // ── tags (J4d) ────────────────────────────────────────────────────────────
@@ -1109,14 +1253,17 @@ mod tests {
         send(&mut a, "onTitleChange", json!({ "value": "Never saved" })).unwrap();
         let long = "x".repeat(MAX_TAG_CHARS + 1);
         send(&mut a, "onTagsChange", json!({ "value": format!("ok, {long}") })).unwrap();
-        assert!(send(&mut a, "onSaveEntry", json!({})).is_err());
-        assert_eq!(a.props()["timeline-empty"], true, "no entry without its tags");
-        assert_eq!(a.props()["draft-title"], "Never saved", "the draft is kept to fix");
+        // Refused in words (J4e), not as a failed event the person never sees.
+        let props = send(&mut a, "onSaveEntry", json!({})).unwrap().props;
+        assert_eq!(props["draft-error"], "Tag 2 is too long (64 characters at most).");
+        assert_eq!(props["timeline-empty"], true, "no entry without its tags");
+        assert_eq!(props["draft-title"], "Never saved", "the draft is kept to fix");
 
         write_tagged(&mut a, "Saved", "fine");
         send(&mut a, "onTagsChange", json!({ "value": "bad\ntag" })).unwrap();
         send(&mut a, "onTitleChange", json!({ "value": "Renamed" })).unwrap();
-        assert!(send(&mut a, "onSaveEntry", json!({})).is_err());
+        let props = send(&mut a, "onSaveEntry", json!({})).unwrap().props;
+        assert_eq!(props["draft-error"], "Tag 1 contains a line break or other control character.");
         assert_eq!(titles(&a), ["Saved"], "an edit with a bad tag writes nothing either");
     }
 

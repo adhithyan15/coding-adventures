@@ -81,6 +81,30 @@ style JournalApp {
   }
   // Tags (J4d): the editor's tag field wears the search field's style;
   // its label sits above it like DraftEditor's.
+  // An entry's day (J4e): the Date field mirrors the Tags field; the
+  // error is DraftEditor's Delete red.
+  part date-block {
+    gap : 4 ;
+    padding-bottom : 8 ;
+  }
+  part date-label {
+    color     : "#9ca3af" ;
+    font-size : 12 ;
+  }
+  part date-input {
+    width         : 100% ;
+    padding       : 8 ;
+    background    : "#1f2937" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+  part draft-error {
+    color     : "#f87171" ;
+    font-size : 14 ;
+  }
   part tags-block {
     gap : 4 ;
     padding-bottom : 8 ;

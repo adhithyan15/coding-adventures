@@ -55,6 +55,10 @@ component JournalApp {
   slot tag-options : list<text> ;
   slot selected-tag-index : number ;
   slot has-tags : bool ;
+  // An entry's day (J4e): YYYY-MM-DD as typed, blank for today. And why the
+  // last Save refused the draft ("" when there is nothing to fix).
+  slot draft-date : text ;
+  slot draft-error : text ;
 
   emit onSelectEntry ( index : number ) ;
   emit onNewEntry ;
@@ -69,6 +73,7 @@ component JournalApp {
   emit onToggleStarredFilter ;
   // A row of on-this-day-rows (each RecordList indexes its own rows).
   emit onSelectOnThisDay ( index : number ) ;
+  emit onDateChange ( value : text ) ;
   emit onTagsChange ( value : text ) ;
   // An option of tag-options; the selected one clears the filter.
   emit onSelectTag ( index : number ) ;

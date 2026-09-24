@@ -10,6 +10,16 @@
   malformed `onTitleChange` through the binding and checks that the snapshot
   is unchanged. The Linux Compose lane now builds the distributable, checks
   that it bundles this runtime, and runs both launches.
+- **An entry's day (J4e).** `draft_date` joins the draft (`#[serde(default)]`).
+  Save parses it with `Date::parse_iso` BEFORE writing, then runs
+  `CreateEntry` with that day, or `EditEntry` plus `SetEntryDate` when the
+  day changed. A blank date is today for a new entry and the entry's own day
+  for an old one.
+- **Draft errors are shown, not thrown.** A bad date or tag now returns a
+  normal update with `draft-error` set (and announced), and the journal is
+  untouched. J4d returned an error from `dispatch`, which no host showed.
+  Any other event clears the message. `JournalScreenshots` adds
+  09-draft-error.
 - **Tags (J4d).** `draft_tags` joins the draft (in the snapshot with
   `#[serde(default)]`, so older version-1 snapshots still load; a test pins
   it). Save checks the tags with `normalize_tags` BEFORE writing, then runs

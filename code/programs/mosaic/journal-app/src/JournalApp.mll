@@ -123,6 +123,17 @@ layout JournalApp {
           onClick : emit: onToggleStar
         )
       }
+      // An entry's day (J4e), blank for today; saved by Save below.
+      Column [ date-block ] {
+        Text [ date-label ] ( content : "Date" )
+        HostInput [ date-input ] (
+          value : slot: draft-date ,
+          placeholder : "YYYY-MM-DD (blank for today)" ,
+          a11y-label : "Date" ,
+          disabled : false ,
+          onChange : emit: onDateChange
+        )
+      }
       // Tags (J4d), comma-separated, saved with the entry by Save below.
       Column [ tags-block ] {
         Text [ tags-label ] ( content : "Tags" )
@@ -133,6 +144,11 @@ layout JournalApp {
           disabled : false ,
           onChange : emit: onTagsChange
         )
+      }
+      // Why Save refused the draft (J4e): a bad date or tag. Nothing was
+      // written; any other action clears it.
+      If ( when: slot: draft-error ) {
+        Text [ draft-error ] ( content : slot: draft-error )
       }
       pkg::mosaic-pkg-draft-editor::DraftEditor (
         title-label : "Title" ,
