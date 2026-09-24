@@ -2,6 +2,9 @@
 
 ## 0.1.0 — unreleased
 
+- The native gate's comment no longer says Compose ignores the editor
+  fields' `width: 100%`; it lowers it since #15967. The search field, a text
+  field inside a Row, is the case Compose still leaves at intrinsic width.
 - **On this day (J4c).** Above the timeline, when earlier years have entries on
   today's date: an "On this day" heading in the stars' amber, and a second
   `RecordList` mount grouped as "1 year ago · 24 Sep 2025". It follows the
