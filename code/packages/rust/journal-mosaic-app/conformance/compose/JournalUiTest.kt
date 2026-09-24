@@ -4,7 +4,8 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
@@ -34,8 +35,11 @@ import org.junit.Test
 //
 // Timeline rows are the toolkit RecordList's buttons, tagged
 // `record-list-title` (or `-selected` for the entry open in the editor).
-// The editor's title field holds the same text as its row, so rows are
-// matched by tag AND text rather than by text alone.
+// RecordList is mounted more than once (On this day, J4c, sits above the
+// timeline), and the resolver suffixes a later mount's parts (`-m2`,
+// #15959), so rows are matched by tag PREFIX. The editor's title field holds
+// the same text as its row, so rows are matched by tag AND text rather than
+// by text alone.
 
 private const val UI_DRAFT_TITLE = "Drafted on Compose"
 private const val UI_KEPT_TITLE = "Kept across a relaunch"
@@ -46,8 +50,9 @@ private const val UI_EMPTY = "No entries yet"
 private val ACCEPTANCE_VIEWPORT = Size(1100f, 760f)
 
 private fun timelineRow(title: String): SemanticsMatcher =
-    (hasTestTag("record-list-title") or hasTestTag("record-list-title-selected")) and
-        hasText(title)
+    SemanticsMatcher("a RecordList row button") { node ->
+        node.config.getOrNull(SemanticsProperties.TestTag)?.startsWith("record-list-title") == true
+    } and hasText(title)
 
 @OptIn(ExperimentalTestApi::class)
 private fun ComposeUiTest.write(title: String, body: String) {
