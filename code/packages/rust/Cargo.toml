@@ -1197,6 +1197,7 @@ members = [
   "markdown-docx",
   "task-core",
   "journal-core",
+  "journal-wasm",
   "task-mosaic-app",
   "visicalc-mosaic-app",
   "task-wasm",
