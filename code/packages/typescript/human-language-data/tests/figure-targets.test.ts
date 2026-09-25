@@ -59,7 +59,7 @@ describe("which lessons are filmstrip candidates", () => {
   it("only draws candidates from switched-on tracks, into that track's own book", () => {
     const candidates = filmstripCandidates([
       lesson("TA-S1"),
-      lesson("HI-S1", { language: "hindi", headword: "आ" }),
+      lesson("BN-S1", { language: "bengali", headword: "অ" }),
     ]);
     expect(candidates).toEqual([
       {
@@ -139,6 +139,21 @@ describe("the real corpus", () => {
     const tamil = targets.filter((target) => target.lessonId.startsWith("TA-"));
     expect(tamil).toHaveLength(20);
     expect(new Set(tamil.map((target) => target.glyph)).size).toBe(19);
+  });
+
+  it("draws the Devanagari tracks from one shared, cited ductus", () => {
+    // Second rollout: hindi, marathi, sanskrit and marwadi all write Devanagari
+    // and share its 44 cited letters, so a letter drawn once serves four books.
+    const count = (prefix: string) =>
+      targets.filter((target) => target.lessonId.startsWith(`${prefix}-`)).length;
+    expect({ HI: count("HI"), MR: count("MR"), SA: count("SA"), MW: count("MW") }).toEqual({
+      HI: 36,
+      MR: 37,
+      SA: 39,
+      MW: 6,
+    });
+    const devanagari = targets.filter((target) => target.script === "devanagari");
+    expect(new Set(devanagari.map((target) => target.glyph)).size).toBeLessThanOrEqual(44);
   });
 
   it("prints every resolved filmstrip in its chapter", () => {

@@ -59,6 +59,11 @@ import type { ParsedLesson } from "./parse.js";
  */
 export const DERIVED_FILMSTRIP_SCRIPTS: Readonly<Record<string, string>> = {
   tamil: "tamil",
+  // HL-C443 second rollout: the four Devanagari tracks share one cited ductus.
+  hindi: "devanagari",
+  marathi: "devanagari",
+  sanskrit: "devanagari",
+  marwadi: "devanagari",
 };
 
 const GRAPHEMES = new Intl.Segmenter("und", { granularity: "grapheme" });
