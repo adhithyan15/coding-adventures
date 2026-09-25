@@ -43,20 +43,3 @@ pub enum InsertionMode {
     AfterAfterBody,
     AfterAfterFrameset,
 }
-
-impl InsertionMode {
-    /// Modes whose rules are not written yet (BR03 §5 step 2, tables). The
-    /// builder handles their tokens with the `InBody` rules and reports it.
-    pub fn is_implemented(self) -> bool {
-        !matches!(
-            self,
-            InsertionMode::InTable
-                | InsertionMode::InTableText
-                | InsertionMode::InCaption
-                | InsertionMode::InColumnGroup
-                | InsertionMode::InTableBody
-                | InsertionMode::InRow
-                | InsertionMode::InCell
-        )
-    }
-}

@@ -5,6 +5,15 @@ documented in this file.
 
 ## Unreleased
 
+- **BR03 step 2: tables.** The seven table insertion modes — in table, in
+  table text, in caption, in column group, in table body, in row, in cell —
+  with foster parenting and the "clear the stack back to a context" steps.
+  Every insertion mode is now written; the `tree-builder-mode-not-implemented`
+  fallback is gone. 2,138 of 2,655 corpus cases pass (255 more), and every
+  remaining failure needs foreign content, fragment parsing, the html-lexer
+  script-data fix or a real DOM. Robustness tests cover foster-parenting
+  floods and deeply nested tables.
+
 - **New crate: BR03 step 1.** Tree construction as the WHATWG specification
   writes it, beside `html-parser`:
   - an arena tree with parent links that converts to `dom_core::Document`
