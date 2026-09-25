@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:91da995d15f1ec92",
+  "lessonIds": [
+    "LA-C106-triginta",
+    "LA-C106-quadraginta",
+    "LA-C106-quinquaginta",
+    "LA-C106-centum",
+    "LA-C106-mille"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch106.txt",
+  "json": "latin/narration/ch106.json",
+  "textHash": "fnv1a64:01acd08e0012b4b2",
+  "jsonHash": "fnv1a64:03790e8b99267983",
+  "findings": []
+}

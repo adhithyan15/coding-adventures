@@ -1,0 +1,11 @@
+{
+  "id": "LA-C93-longus",
+  "pathSegment": "LA-PATH-93-MAGNUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-93-MAGNUS",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:231d114ed277150e",
+  "lessonIds": [
+    "LA-C68-aeger",
+    "LA-C68-fessus",
+    "LA-C68-fames",
+    "LA-C68-sitis",
+    "LA-C68-cura"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch68.txt",
+  "json": "latin/narration/ch68.json",
+  "textHash": "fnv1a64:7ae6068a280fd709",
+  "jsonHash": "fnv1a64:b6ff5ccc5754adbe",
+  "findings": []
+}

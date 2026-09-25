@@ -1,0 +1,11 @@
+{
+  "id": "LA-C100-tango",
+  "pathSegment": "LA-PATH-100-VERBA6",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-100-VERBA6",
+      "order": 3
+    }
+  ]
+}

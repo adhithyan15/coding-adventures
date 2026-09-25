@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Bridge, Farmhouse, Clothes, Tunic, Shoe",
+  "label": "ch:la-bridge-farmhouse-clothes-tunic-shoe",
+  "canDo": "I can name a bridge, a farmhouse, clothing, a tunic and a shoe.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "LA-R108-second-pass-verbs-time-numbers-and-the-town",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can name a bridge, a farmhouse, clothing, a tunic and a shoe.",
+    "assesses": [
+      "LA-LEX-C108-VESTIS-03",
+      "LA-LEX-C108-VESTIS-04",
+      "LA-LEX-C108-VESTIS-05"
+    ]
+  }
+}

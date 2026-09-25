@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C92-elephantus",
+    "language": "latin",
+    "chapter": 92,
+    "sequence": 3240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7a0c9a014ce939e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C70-avia",
+  "pathSegment": "LA-PATH-70-FAMILIA1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-70-FAMILIA1",
+      "order": 3
+    }
+  ]
+}

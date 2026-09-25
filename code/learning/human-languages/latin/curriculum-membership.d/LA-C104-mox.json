@@ -1,0 +1,11 @@
+{
+  "id": "LA-C104-mox",
+  "pathSegment": "LA-PATH-104-SEMPER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-104-SEMPER",
+      "order": 4
+    }
+  ]
+}

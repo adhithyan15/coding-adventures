@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:fdd994ea104545fa",
+  "lessonIds": [
+    "LA-C98-dives",
+    "LA-C98-pauper",
+    "LA-C98-stultus",
+    "LA-C98-satis",
+    "LA-C98-nimis"
+  ],
+  "tex": "latin/book/chapters/ch98-rich-poor-foolish-enough-too-much.tex"
+}

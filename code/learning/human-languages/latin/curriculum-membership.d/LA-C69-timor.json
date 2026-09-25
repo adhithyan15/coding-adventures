@@ -1,0 +1,11 @@
+{
+  "id": "LA-C69-timor",
+  "pathSegment": "LA-PATH-69-AFFECTUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-69-AFFECTUS",
+      "order": 2
+    }
+  ]
+}

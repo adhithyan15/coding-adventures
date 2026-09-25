@@ -1,0 +1,11 @@
+{
+  "id": "LA-C92-gallina",
+  "pathSegment": "LA-PATH-92-ANIMALIA3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-92-ANIMALIA3",
+      "order": 1
+    }
+  ]
+}

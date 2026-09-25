@@ -1,0 +1,11 @@
+{
+  "id": "LA-C69-ira",
+  "pathSegment": "LA-PATH-69-AFFECTUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-69-AFFECTUS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:fa275d26b110bc20",
+  "lessonIds": [
+    "LA-C88-lapis",
+    "LA-C88-harena",
+    "LA-C88-collis",
+    "LA-C88-vallis",
+    "LA-C88-spelunca"
+  ],
+  "tex": "latin/book/chapters/ch88-stone-sand-hill-valley-cave.tex"
+}

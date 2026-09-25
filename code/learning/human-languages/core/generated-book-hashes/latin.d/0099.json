@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:d8cd0724454641a4",
+  "lessonIds": [
+    "LA-C99-cognosco",
+    "LA-C99-curo",
+    "LA-C99-narro",
+    "LA-C99-laudo",
+    "LA-C99-moveo"
+  ],
+  "tex": "latin/book/chapters/ch99-get-to-know-care-for-tell-praise-move.tex"
+}

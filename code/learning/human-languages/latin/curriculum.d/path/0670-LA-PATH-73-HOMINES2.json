@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-73-HOMINES2",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "LA-EXT-73-HOMINES2"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-103-ANNUS",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "LA-EXT-103-ANNUS"
+  ],
+  "after": []
+}

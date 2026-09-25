@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Get Up, Wander, Run Away, At Once, Then",
+  "label": "ch:la-get-up-wander-run-away-at-once-then",
+  "canDo": "I can say to rise, to wander and to flee, and at once and then.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C101-deinde",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say to rise, to wander and to flee, and at once and then.",
+    "assesses": [
+      "LA-LEX-C101-VERBA7-03",
+      "LA-LEX-C101-VERBA7-04",
+      "LA-LEX-C101-VERBA7-05"
+    ]
+  }
+}

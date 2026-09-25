@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C94-vetus",
+    "language": "latin",
+    "chapter": 94,
+    "sequence": 3320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:608ae1b8c52173f0"
+  },
+  "findings": []
+}

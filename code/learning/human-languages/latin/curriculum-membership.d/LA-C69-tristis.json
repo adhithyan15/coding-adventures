@@ -1,0 +1,11 @@
+{
+  "id": "LA-C69-tristis",
+  "pathSegment": "LA-PATH-69-AFFECTUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-69-AFFECTUS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "River, Lake, Stream, Spring, Coast",
+  "label": "ch:la-river-lake-stream-spring-coast",
+  "canDo": "I can name a river, a lake, a stream, a spring and a coast.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C87-ora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can name a river, a lake, a stream, a spring and a coast.",
+    "assesses": [
+      "LA-LEX-C87-AQUA-03",
+      "LA-LEX-C87-AQUA-04",
+      "LA-LEX-C87-AQUA-05"
+    ]
+  }
+}

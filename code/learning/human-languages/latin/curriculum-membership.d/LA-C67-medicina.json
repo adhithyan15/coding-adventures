@@ -1,0 +1,11 @@
+{
+  "id": "LA-C67-medicina",
+  "pathSegment": "LA-PATH-67-MORBUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-67-MORBUS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C102-extra",
+  "pathSegment": "LA-PATH-102-LOCUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-102-LOCUS",
+      "order": 4
+    }
+  ]
+}

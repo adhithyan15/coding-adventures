@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "Horse, Ox, Sheep, Goat, Pig",
+  "label": "ch:la-horse-ox-sheep-goat-pig",
+  "canDo": "I can name a horse, an ox, a sheep, a goat and a pig.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C90-porcus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 90: i can name a horse, an ox, a sheep, a goat and a pig.",
+    "assesses": [
+      "LA-LEX-C90-ANIMALIA1-03",
+      "LA-LEX-C90-ANIMALIA1-04",
+      "LA-LEX-C90-ANIMALIA1-05"
+    ]
+  }
+}

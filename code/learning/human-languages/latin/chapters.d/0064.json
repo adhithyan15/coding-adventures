@@ -1,0 +1,19 @@
+{
+  "chapter": 64,
+  "title": "Neck, Shoulder, Knee, Heart",
+  "label": "ch:la-neck-shoulder-knee-heart",
+  "canDo": "I can name the neck, a shoulder, a knee, the heart and blood.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C64-sanguis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 64: i can name the neck, a shoulder, a knee, the heart and blood.",
+    "assesses": [
+      "LA-LEX-C64-CORPUS2-03",
+      "LA-LEX-C64-CORPUS2-04",
+      "LA-LEX-C64-CORPUS2-05"
+    ]
+  }
+}

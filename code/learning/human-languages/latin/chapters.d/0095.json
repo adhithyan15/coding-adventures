@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Hot, Cold, Dry, Wet, Sweet",
+  "label": "ch:la-hot-cold-dry-wet-sweet",
+  "canDo": "I can say hot, cold, dry, wet and sweet.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C95-dulcis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say hot, cold, dry, wet and sweet.",
+    "assesses": [
+      "LA-LEX-C95-CALIDUS-03",
+      "LA-LEX-C95-CALIDUS-04",
+      "LA-LEX-C95-CALIDUS-05"
+    ]
+  }
+}

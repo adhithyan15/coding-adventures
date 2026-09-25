@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:22046663f917d919",
+  "lessonIds": [
+    "LA-C84-arca",
+    "LA-C84-charta",
+    "LA-C84-stilus",
+    "LA-C84-tabula",
+    "LA-C84-speculum"
+  ],
+  "tex": "latin/book/chapters/ch84-chest-paper-pen-tablet-mirror.tex"
+}

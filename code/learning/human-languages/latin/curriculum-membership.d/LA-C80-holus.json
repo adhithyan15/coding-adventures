@@ -1,0 +1,11 @@
+{
+  "id": "LA-C80-holus",
+  "pathSegment": "LA-PATH-80-CIBUS2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-80-CIBUS2",
+      "order": 3
+    }
+  ]
+}

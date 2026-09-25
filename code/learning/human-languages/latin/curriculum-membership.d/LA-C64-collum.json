@@ -1,0 +1,11 @@
+{
+  "id": "LA-C64-collum",
+  "pathSegment": "LA-PATH-64-CORPUS2",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-64-CORPUS2",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C100-traho",
+  "pathSegment": "LA-PATH-100-VERBA6",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-100-VERBA6",
+      "order": 4
+    }
+  ]
+}

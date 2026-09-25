@@ -1,0 +1,11 @@
+{
+  "id": "LA-C97-difficilis",
+  "pathSegment": "LA-PATH-97-FACILIS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-97-FACILIS",
+      "order": 1
+    }
+  ]
+}

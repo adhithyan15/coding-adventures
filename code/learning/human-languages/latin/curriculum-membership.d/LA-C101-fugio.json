@@ -1,0 +1,11 @@
+{
+  "id": "LA-C101-fugio",
+  "pathSegment": "LA-PATH-101-VERBA7",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-101-VERBA7",
+      "order": 2
+    }
+  ]
+}

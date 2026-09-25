@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-93-MAGNUS",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "LA-EXT-93-MAGNUS"
+  ],
+  "after": []
+}

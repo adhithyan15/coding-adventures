@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-108-VESTIS",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "LA-EXT-108-VESTIS"
+  ],
+  "after": []
+}
