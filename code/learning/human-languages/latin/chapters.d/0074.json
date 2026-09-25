@@ -1,0 +1,19 @@
+{
+  "chapter": 74,
+  "title": "Citizen, Cook, Merchant, Farmer",
+  "label": "ch:la-citizen-cook-merchant-farmer",
+  "canDo": "I can name a citizen, a cook, a merchant, a farmer and a field.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "LA-C74-ager",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: i can name a citizen, a cook, a merchant, a farmer and a field.",
+    "assesses": [
+      "LA-LEX-C74-OPUS-03",
+      "LA-LEX-C74-OPUS-04",
+      "LA-LEX-C74-OPUS-05"
+    ]
+  }
+}

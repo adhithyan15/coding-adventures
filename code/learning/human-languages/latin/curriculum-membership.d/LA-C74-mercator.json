@@ -1,0 +1,11 @@
+{
+  "id": "LA-C74-mercator",
+  "pathSegment": "LA-PATH-74-OPUS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-74-OPUS",
+      "order": 2
+    }
+  ]
+}

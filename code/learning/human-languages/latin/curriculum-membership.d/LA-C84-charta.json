@@ -1,0 +1,11 @@
+{
+  "id": "LA-C84-charta",
+  "pathSegment": "LA-PATH-84-RES1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-84-RES1",
+      "order": 1
+    }
+  ]
+}

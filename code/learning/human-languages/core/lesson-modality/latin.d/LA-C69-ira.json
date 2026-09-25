@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C69-ira",
+    "language": "latin",
+    "chapter": 69,
+    "sequence": 2050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bcd18bb26dcfe431"
+  },
+  "findings": []
+}

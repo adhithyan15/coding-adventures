@@ -1,0 +1,11 @@
+{
+  "id": "LA-C104-numquam",
+  "pathSegment": "LA-PATH-104-SEMPER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-104-SEMPER",
+      "order": 2
+    }
+  ]
+}

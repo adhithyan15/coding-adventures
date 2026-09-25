@@ -1,0 +1,11 @@
+{
+  "id": "LA-C75-salto",
+  "pathSegment": "LA-PATH-75-VERBA1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-75-VERBA1",
+      "order": 2
+    }
+  ]
+}

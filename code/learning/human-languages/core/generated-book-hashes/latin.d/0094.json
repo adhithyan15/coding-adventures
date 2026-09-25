@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:dca6977629e63d73",
+  "lessonIds": [
+    "LA-C94-novus",
+    "LA-C94-vetus",
+    "LA-C94-levis",
+    "LA-C94-celer",
+    "LA-C94-lentus"
+  ],
+  "tex": "latin/book/chapters/ch94-new-old-light-fast-slow.tex"
+}

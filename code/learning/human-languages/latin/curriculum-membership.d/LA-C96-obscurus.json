@@ -1,0 +1,11 @@
+{
+  "id": "LA-C96-obscurus",
+  "pathSegment": "LA-PATH-96-PULCHER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-96-PULCHER",
+      "order": 4
+    }
+  ]
+}

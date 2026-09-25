@@ -1,0 +1,11 @@
+{
+  "id": "LA-C75-rideo",
+  "pathSegment": "LA-PATH-75-VERBA1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-75-VERBA1",
+      "order": 3
+    }
+  ]
+}

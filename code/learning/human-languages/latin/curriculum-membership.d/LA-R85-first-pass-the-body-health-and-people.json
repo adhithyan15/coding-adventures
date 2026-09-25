@@ -1,0 +1,11 @@
+{
+  "id": "LA-R85-first-pass-the-body-health-and-people",
+  "pathSegment": "LA-PATH-85-RES2",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-85-RES2",
+      "order": 5
+    }
+  ]
+}

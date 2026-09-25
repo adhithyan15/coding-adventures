@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "Aunt, Neighbour, Guest, Man, Woman",
+  "label": "ch:la-aunt-neighbour-guest-man-woman",
+  "canDo": "I can name an aunt, a neighbour, a guest, a man and a woman.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "LA-C72-femina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can name an aunt, a neighbour, a guest, a man and a woman.",
+    "assesses": [
+      "LA-LEX-C72-HOMINES1-03",
+      "LA-LEX-C72-HOMINES1-04",
+      "LA-LEX-C72-HOMINES1-05"
+    ]
+  }
+}

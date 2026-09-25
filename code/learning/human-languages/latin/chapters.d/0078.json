@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Live, Enter, Return, Fear, Rejoice",
+  "label": "ch:la-live-enter-return-fear-rejoice",
+  "canDo": "I can say to live, to enter, to return, to fear and to rejoice.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C78-gaudeo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can say to live, to enter, to return, to fear and to rejoice.",
+    "assesses": [
+      "LA-LEX-C78-VERBA4-03",
+      "LA-LEX-C78-VERBA4-04",
+      "LA-LEX-C78-VERBA4-05"
+    ]
+  }
+}

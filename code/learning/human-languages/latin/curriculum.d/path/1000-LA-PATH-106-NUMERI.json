@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-106-NUMERI",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "LA-EXT-106-NUMERI"
+  ],
+  "after": []
+}

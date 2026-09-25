@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "Tree, Flower, Leaf, Forest, Mountain",
+  "label": "ch:la-tree-flower-leaf-forest-mountain",
+  "canDo": "I can name a tree, a flower, a leaf, a forest and a mountain.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C86-mons",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can name a tree, a flower, a leaf, a forest and a mountain.",
+    "assesses": [
+      "LA-LEX-C86-ARBOR-03",
+      "LA-LEX-C86-ARBOR-04",
+      "LA-LEX-C86-ARBOR-05"
+    ]
+  }
+}

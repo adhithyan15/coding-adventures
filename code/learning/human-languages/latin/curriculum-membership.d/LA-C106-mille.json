@@ -1,0 +1,11 @@
+{
+  "id": "LA-C106-mille",
+  "pathSegment": "LA-PATH-106-NUMERI",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-106-NUMERI",
+      "order": 4
+    }
+  ]
+}

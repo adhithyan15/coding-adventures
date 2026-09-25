@@ -1,0 +1,11 @@
+{
+  "id": "LA-C84-tabula",
+  "pathSegment": "LA-PATH-84-RES1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-84-RES1",
+      "order": 3
+    }
+  ]
+}

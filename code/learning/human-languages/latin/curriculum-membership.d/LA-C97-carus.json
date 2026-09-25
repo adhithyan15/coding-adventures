@@ -1,0 +1,11 @@
+{
+  "id": "LA-C97-carus",
+  "pathSegment": "LA-PATH-97-FACILIS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-97-FACILIS",
+      "order": 2
+    }
+  ]
+}

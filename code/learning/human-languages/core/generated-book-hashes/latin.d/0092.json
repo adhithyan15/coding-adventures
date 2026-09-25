@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:502d94b7040fe66e",
+  "lessonIds": [
+    "LA-C92-mus",
+    "LA-C92-gallina",
+    "LA-C92-asinus",
+    "LA-C92-elephantus",
+    "LA-C92-cervus"
+  ],
+  "tex": "latin/book/chapters/ch92-mouse-hen-donkey-elephant-deer.tex"
+}

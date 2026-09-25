@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "City, Town, Forum, Temple, Shop",
+  "label": "ch:la-city-town-forum-temple-shop",
+  "canDo": "I can name a city, a town, the forum, a temple and a shop.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "LA-C107-taberna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can name a city, a town, the forum, a temple and a shop.",
+    "assesses": [
+      "LA-LEX-C107-URBS-03",
+      "LA-LEX-C107-URBS-04",
+      "LA-LEX-C107-URBS-05"
+    ]
+  }
+}

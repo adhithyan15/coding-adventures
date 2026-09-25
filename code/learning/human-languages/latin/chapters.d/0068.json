@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Sick, Tired, Hungry, Thirsty",
+  "label": "ch:la-sick-tired-hungry-thirsty",
+  "canDo": "I can say sick and tired, and name hunger, thirst and worry.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C68-cura",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can say sick and tired, and name hunger, thirst and worry.",
+    "assesses": [
+      "LA-LEX-C68-AEGER-03",
+      "LA-LEX-C68-AEGER-04",
+      "LA-LEX-C68-AEGER-05"
+    ]
+  }
+}

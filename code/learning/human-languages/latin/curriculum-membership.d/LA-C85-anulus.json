@@ -1,0 +1,11 @@
+{
+  "id": "LA-C85-anulus",
+  "pathSegment": "LA-PATH-85-RES2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-85-RES2",
+      "order": 4
+    }
+  ]
+}

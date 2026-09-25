@@ -1,0 +1,19 @@
+{
+  "chapter": 63,
+  "title": "Arm, Finger, Tooth",
+  "label": "ch:la-arm-finger-tooth",
+  "canDo": "I can name an arm, a finger, a tooth, the tongue and the nose.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C63-nasus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 63: i can name an arm, a finger, a tooth, the tongue and the nose.",
+    "assesses": [
+      "LA-LEX-C63-CORPUS1-03",
+      "LA-LEX-C63-CORPUS1-04",
+      "LA-LEX-C63-CORPUS1-05"
+    ]
+  }
+}

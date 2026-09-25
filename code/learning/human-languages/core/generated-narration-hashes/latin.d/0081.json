@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:a5e6454babc56eff",
+  "lessonIds": [
+    "LA-C81-frumentum",
+    "LA-C81-farina",
+    "LA-C81-pirum",
+    "LA-C81-ficus",
+    "LA-C81-nux"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch81.txt",
+  "json": "latin/narration/ch81.json",
+  "textHash": "fnv1a64:0e4dddaea37f241f",
+  "jsonHash": "fnv1a64:6d6e9caa2d780ab8",
+  "findings": []
+}

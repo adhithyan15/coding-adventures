@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-104-SEMPER",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "LA-EXT-104-SEMPER"
+  ],
+  "after": []
+}

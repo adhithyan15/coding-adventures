@@ -1,0 +1,19 @@
+{
+  "chapter": 91,
+  "title": "Bird, Wolf, Lion, Bear, Snake",
+  "label": "ch:la-bird-wolf-lion-bear-snake",
+  "canDo": "I can name a bird, a wolf, a lion, a bear and a snake.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C91-serpens",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 91: i can name a bird, a wolf, a lion, a bear and a snake.",
+    "assesses": [
+      "LA-LEX-C91-ANIMALIA2-03",
+      "LA-LEX-C91-ANIMALIA2-04",
+      "LA-LEX-C91-ANIMALIA2-05"
+    ]
+  }
+}

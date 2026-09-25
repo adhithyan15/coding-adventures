@@ -1,0 +1,19 @@
+{
+  "chapter": 94,
+  "title": "New, Old, Light, Fast, Slow",
+  "label": "ch:la-new-old-light-fast-slow",
+  "canDo": "I can say new, old, light, fast and slow.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C94-lentus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 94: i can say new, old, light, fast and slow.",
+    "assesses": [
+      "LA-LEX-C94-NOVUS-03",
+      "LA-LEX-C94-NOVUS-04",
+      "LA-LEX-C94-NOVUS-05"
+    ]
+  }
+}

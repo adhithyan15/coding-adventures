@@ -1,0 +1,11 @@
+{
+  "id": "LA-C93-altus",
+  "pathSegment": "LA-PATH-93-MAGNUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-93-MAGNUS",
+      "order": 4
+    }
+  ]
+}

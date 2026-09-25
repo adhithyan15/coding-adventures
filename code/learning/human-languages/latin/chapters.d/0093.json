@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Big and Small, Long and Short, High",
+  "label": "ch:la-big-and-small-long-and-short-high",
+  "canDo": "I can say big, small, long, short and high.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C93-altus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say big, small, long, short and high.",
+    "assesses": [
+      "LA-LEX-C93-MAGNUS-03",
+      "LA-LEX-C93-MAGNUS-04",
+      "LA-LEX-C93-MAGNUS-05"
+    ]
+  }
+}

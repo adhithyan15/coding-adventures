@@ -1,0 +1,11 @@
+{
+  "id": "LA-C86-folium",
+  "pathSegment": "LA-PATH-86-ARBOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-86-ARBOR",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C82-cubiculum",
+    "language": "latin",
+    "chapter": 82,
+    "sequence": 2730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7cbdd7d91db411a2"
+  },
+  "findings": []
+}

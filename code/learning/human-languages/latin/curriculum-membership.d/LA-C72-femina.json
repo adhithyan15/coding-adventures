@@ -1,0 +1,11 @@
+{
+  "id": "LA-C72-femina",
+  "pathSegment": "LA-PATH-72-HOMINES1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-72-HOMINES1",
+      "order": 4
+    }
+  ]
+}

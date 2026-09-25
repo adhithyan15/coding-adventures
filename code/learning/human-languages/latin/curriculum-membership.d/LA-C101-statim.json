@@ -1,0 +1,11 @@
+{
+  "id": "LA-C101-statim",
+  "pathSegment": "LA-PATH-101-VERBA7",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-101-VERBA7",
+      "order": 3
+    }
+  ]
+}

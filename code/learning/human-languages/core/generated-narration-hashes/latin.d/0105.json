@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:d743cf54fd68b964",
+  "lessonIds": [
+    "LA-C105-raro",
+    "LA-C105-iam",
+    "LA-C105-tum",
+    "LA-C105-multum",
+    "LA-C105-parum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch105.txt",
+  "json": "latin/narration/ch105.json",
+  "textHash": "fnv1a64:6a526f412b427de0",
+  "jsonHash": "fnv1a64:5b1e7b97517c5010",
+  "findings": []
+}

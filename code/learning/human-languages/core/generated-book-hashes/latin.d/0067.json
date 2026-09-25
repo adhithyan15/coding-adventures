@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:9228a20d7e1e6f42",
+  "lessonIds": [
+    "LA-C67-febris",
+    "LA-C67-tussis",
+    "LA-C67-dolor",
+    "LA-C67-medicina",
+    "LA-C67-morbus"
+  ],
+  "tex": "latin/book/chapters/ch67-fever-cough-pain.tex"
+}

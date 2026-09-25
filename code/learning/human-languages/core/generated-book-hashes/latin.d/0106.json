@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:5e9174465bf922b3",
+  "lessonIds": [
+    "LA-C106-triginta",
+    "LA-C106-quadraginta",
+    "LA-C106-quinquaginta",
+    "LA-C106-centum",
+    "LA-C106-mille"
+  ],
+  "tex": "latin/book/chapters/ch106-thirty-to-a-thousand.tex"
+}

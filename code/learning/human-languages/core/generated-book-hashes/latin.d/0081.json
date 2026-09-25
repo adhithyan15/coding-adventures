@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:5bf18087f30475a8",
+  "lessonIds": [
+    "LA-C81-frumentum",
+    "LA-C81-farina",
+    "LA-C81-pirum",
+    "LA-C81-ficus",
+    "LA-C81-nux"
+  ],
+  "tex": "latin/book/chapters/ch81-grain-flour-pear-fig-nut.tex"
+}

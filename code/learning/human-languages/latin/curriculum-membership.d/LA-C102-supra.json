@@ -1,0 +1,11 @@
+{
+  "id": "LA-C102-supra",
+  "pathSegment": "LA-PATH-102-LOCUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-102-LOCUS",
+      "order": 1
+    }
+  ]
+}

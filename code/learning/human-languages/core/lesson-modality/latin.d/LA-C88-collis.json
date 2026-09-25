@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C88-collis",
+    "language": "latin",
+    "chapter": 88,
+    "sequence": 3030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b835d30fc19b3313"
+  },
+  "findings": []
+}

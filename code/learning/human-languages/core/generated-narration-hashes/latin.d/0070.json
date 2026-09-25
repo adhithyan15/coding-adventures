@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:f09dc3dacbe2d4ab",
+  "lessonIds": [
+    "LA-C70-filius",
+    "LA-C70-filia",
+    "LA-C70-avus",
+    "LA-C70-avia",
+    "LA-C70-familia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch70.txt",
+  "json": "latin/narration/ch70.json",
+  "textHash": "fnv1a64:bb674265daea2130",
+  "jsonHash": "fnv1a64:9e6dd262c0c61ffd",
+  "findings": []
+}

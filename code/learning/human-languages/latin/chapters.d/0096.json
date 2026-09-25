@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Beautiful, Round, Empty, Bright, Dark",
+  "label": "ch:la-beautiful-round-empty-bright-dark",
+  "canDo": "I can say beautiful, round, empty, bright and dark.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C96-obscurus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: i can say beautiful, round, empty, bright and dark.",
+    "assesses": [
+      "LA-LEX-C96-PULCHER-03",
+      "LA-LEX-C96-PULCHER-04",
+      "LA-LEX-C96-PULCHER-05"
+    ]
+  }
+}

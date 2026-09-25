@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:d5486bbabeaf6555",
+  "lessonIds": [
+    "LA-C100-pugno",
+    "LA-C100-navigo",
+    "LA-C100-paro",
+    "LA-C100-tango",
+    "LA-C100-traho"
+  ],
+  "tex": "latin/book/chapters/ch100-fight-sail-prepare-touch-pull.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C94-lentus",
+  "pathSegment": "LA-PATH-94-NOVUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-94-NOVUS",
+      "order": 4
+    }
+  ]
+}
