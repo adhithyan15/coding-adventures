@@ -356,6 +356,51 @@ pub fn adjust_svg_attribute(name: &str) -> Option<&'static str> {
     })
 }
 
+/// §13.2.6.5: SVG element names are camelCase, and the tokenizer lowercases
+/// tag names.
+pub fn adjust_svg_tag_name(name: &str) -> Option<&'static str> {
+    Some(match name {
+        "altglyph" => "altGlyph",
+        "altglyphdef" => "altGlyphDef",
+        "altglyphitem" => "altGlyphItem",
+        "animatecolor" => "animateColor",
+        "animatemotion" => "animateMotion",
+        "animatetransform" => "animateTransform",
+        "clippath" => "clipPath",
+        "feblend" => "feBlend",
+        "fecolormatrix" => "feColorMatrix",
+        "fecomponenttransfer" => "feComponentTransfer",
+        "fecomposite" => "feComposite",
+        "feconvolvematrix" => "feConvolveMatrix",
+        "fediffuselighting" => "feDiffuseLighting",
+        "fedisplacementmap" => "feDisplacementMap",
+        "fedistantlight" => "feDistantLight",
+        "fedropshadow" => "feDropShadow",
+        "feflood" => "feFlood",
+        "fefunca" => "feFuncA",
+        "fefuncb" => "feFuncB",
+        "fefuncg" => "feFuncG",
+        "fefuncr" => "feFuncR",
+        "fegaussianblur" => "feGaussianBlur",
+        "feimage" => "feImage",
+        "femerge" => "feMerge",
+        "femergenode" => "feMergeNode",
+        "femorphology" => "feMorphology",
+        "feoffset" => "feOffset",
+        "fepointlight" => "fePointLight",
+        "fespecularlighting" => "feSpecularLighting",
+        "fespotlight" => "feSpotLight",
+        "fetile" => "feTile",
+        "feturbulence" => "feTurbulence",
+        "foreignobject" => "foreignObject",
+        "glyphref" => "glyphRef",
+        "lineargradient" => "linearGradient",
+        "radialgradient" => "radialGradient",
+        "textpath" => "textPath",
+        _ => return None,
+    })
+}
+
 /// §13.2.6.1 "adjust foreign attributes": `xlink:href` and friends become
 /// namespaced attributes. `dom_core` has no attribute namespaces, so the
 /// adjusted name is written the way the html5lib format prints it —

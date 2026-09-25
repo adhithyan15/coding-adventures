@@ -23,7 +23,7 @@
 use crate::active_formatting::{ActiveFormatting, Entry, FormattingToken};
 use crate::arena::{Arena, Namespace, NodeId, NodeKind};
 use crate::elements::{
-    adjust_foreign_attribute, adjust_mathml_attribute, adjust_svg_attribute,
+    adjust_foreign_attribute, adjust_mathml_attribute, adjust_svg_attribute, adjust_svg_tag_name,
     document_mode_for_doctype, has_implied_end_tag, has_implied_end_tag_thoroughly, is_formatting,
     is_heading, is_html_whitespace, is_special, DocumentMode,
 };
@@ -147,6 +147,7 @@ pub struct TreeBuilder {
     ignore_next_line_feed: bool,
     self_closing_acknowledged: bool,
     tokenizer_request: Option<HtmlLexContext>,
+    input_finished: bool,
     position: SourcePosition,
     stopped: bool,
     pub(crate) diagnostics: Vec<TreeDiagnostic>,
@@ -172,6 +173,7 @@ impl TreeBuilder {
             ignore_next_line_feed: false,
             self_closing_acknowledged: false,
             tokenizer_request: None,
+            input_finished: false,
             position: SourcePosition::default(),
             stopped: false,
             diagnostics: Vec::new(),
@@ -185,6 +187,13 @@ impl TreeBuilder {
     /// The tokenizer state the last token asked for, if any (§13.2.6: the tree
     /// builder switches the tokenizer into RCDATA, RAWTEXT, script data or
     /// PLAINTEXT after certain start tags, and back to data at their end).
+    /// Tell the builder the tokenizer has seen the end of the input: tokens
+    /// drained after this were ended by the end of file, not by `>`. A CDATA
+    /// section read back from a bogus comment needs to know which.
+    pub fn input_finished(&mut self) {
+        self.input_finished = true;
+    }
+
     pub fn take_tokenizer_request(&mut self) -> Option<HtmlLexContext> {
         self.tokenizer_request.take()
     }
@@ -298,10 +307,52 @@ impl TreeBuilder {
         self.error("tree-builder-reprocess-limit");
     }
 
-    /// §13.2.6 "tree construction dispatcher". Foreign content is not written
-    /// yet (BR03 §5 step 3), so every token takes the HTML-content branch.
+    /// §13.2.6 "tree construction dispatcher": HTML content, or foreign
+    /// content (SVG and MathML) when the adjusted current node is a foreign
+    /// element that is not an integration point for this token.
     fn dispatch(&mut self, token: Tok) -> Flow {
-        self.process_in(self.mode, token)
+        if self.uses_html_rules(&token) {
+            self.process_in(self.mode, token)
+        } else {
+            self.foreign_content(token)
+        }
+    }
+
+    /// "The adjusted current node": the fragment's context element while the
+    /// stack holds only the root, the current node otherwise.
+    fn adjusted_current_node(&self) -> Option<NodeId> {
+        match self.fragment_context {
+            Some(context) if self.open.len() == 1 => Some(context),
+            _ => self.current(),
+        }
+    }
+
+    fn uses_html_rules(&self, token: &Tok) -> bool {
+        let Some(node) = self.adjusted_current_node() else {
+            return true;
+        };
+        let Some(element) = self.arena.element(node) else {
+            return true;
+        };
+        if element.namespace == Namespace::Html || matches!(token, Tok::Eof) {
+            return true;
+        }
+        let text_integration = is_mathml_text_integration_point(element);
+        match token {
+            Tok::StartTag(tag) if text_integration => {
+                !matches!(tag.name.as_str(), "mglyph" | "malignmark")
+            }
+            Tok::Text(..) if text_integration => true,
+            Tok::StartTag(tag)
+                if element.namespace == Namespace::MathMl
+                    && element.name == "annotation-xml"
+                    && tag.name == "svg" =>
+            {
+                true
+            }
+            Tok::StartTag(_) | Tok::Text(..) => is_html_integration_point(element),
+            _ => false,
+        }
     }
 
     /// "Process the token using the rules for the `mode` insertion mode".
@@ -2294,6 +2345,156 @@ impl TreeBuilder {
     }
 
     // ----------------------------------------------------------------------
+    // §13.2.6.5 The rules for parsing tokens in foreign content
+    // ----------------------------------------------------------------------
+
+    fn foreign_content(&mut self, token: Tok) -> Flow {
+        match token {
+            Tok::Text(TextKind::Null, text) => {
+                self.error("unexpected-null-character");
+                self.insert_text(&"\u{FFFD}".repeat(text.chars().count()));
+            }
+            Tok::Text(TextKind::Whitespace, text) => self.insert_text(&text),
+            Tok::Text(TextKind::Other, text) => {
+                self.insert_text(&text);
+                self.frameset_ok = false;
+            }
+            Tok::Comment(ref data) if data.starts_with("[CDATA[") => {
+                let Tok::Comment(data) = token else {
+                    unreachable!("matched a comment")
+                };
+                self.cdata_section(&data);
+            }
+            Tok::Comment(_) | Tok::ProcessingInstruction { .. } => {
+                self.insert_comment_like(token, None)
+            }
+            Tok::Doctype { .. } => self.error("unexpected-doctype"),
+            Tok::StartTag(ref tag) if breaks_out_of_foreign_content(tag) => {
+                return self.leave_foreign_content(token);
+            }
+            Tok::EndTag(ref name) if matches!(name.as_str(), "br" | "p") => {
+                return self.leave_foreign_content(token);
+            }
+            Tok::StartTag(tag) => self.foreign_start_tag(tag),
+            Tok::EndTag(name) => return self.foreign_end_tag(name),
+            // The dispatcher sends end of file to the HTML rules.
+            Tok::Eof => return self.process_in(self.mode, Tok::Eof),
+        }
+        Flow::Done
+    }
+
+    /// An HTML tag inside SVG or MathML: close the foreign elements and let the
+    /// HTML rules of the current insertion mode handle it.
+    fn leave_foreign_content(&mut self, token: Tok) -> Flow {
+        self.error("unexpected-html-element-in-foreign-content");
+        while let Some(current) = self.current() {
+            let Some(element) = self.arena.element(current) else {
+                break;
+            };
+            if element.namespace == Namespace::Html
+                || is_mathml_text_integration_point(element)
+                || is_html_integration_point(element)
+            {
+                break;
+            }
+            self.open.pop(&self.arena);
+        }
+        // Straight to the HTML rules, not back through the dispatcher: the
+        // node now current may be an integration point, where the dispatcher
+        // would send an end tag back here.
+        self.process_in(self.mode, token)
+    }
+
+    fn foreign_start_tag(&mut self, mut tag: Tag) {
+        let namespace = self
+            .adjusted_current_node()
+            .and_then(|node| self.arena.element(node))
+            .map_or(Namespace::Html, |element| element.namespace);
+        match namespace {
+            Namespace::MathMl => adjust_attributes(&mut tag, adjust_mathml_attribute),
+            Namespace::Svg => {
+                if let Some(name) = adjust_svg_tag_name(&tag.name) {
+                    tag.name = name.to_string();
+                }
+                adjust_attributes(&mut tag, adjust_svg_attribute);
+            }
+            Namespace::Html => {}
+        }
+        adjust_attributes(&mut tag, adjust_foreign_attribute);
+        self.insert_element(namespace, &tag);
+        if tag.self_closing {
+            // An SVG <script/> is closed the same way: this parser runs no
+            // scripts, so its end-tag steps reduce to the pop.
+            self.open.pop(&self.arena);
+            self.self_closing_acknowledged = true;
+        }
+    }
+
+    fn foreign_end_tag(&mut self, name: String) -> Flow {
+        let tag_name = |builder: &Self, node: NodeId| {
+            builder
+                .arena
+                .element(node)
+                .map(|element| element.name.to_ascii_lowercase())
+                .unwrap_or_default()
+        };
+        let Some(mut index) = self.open.len().checked_sub(1) else {
+            return Flow::Done;
+        };
+        let current = self.open.get(index).expect("index is in range");
+        if name == "script" && self.arena.is(current, Namespace::Svg, "script") {
+            self.open.pop(&self.arena);
+            return Flow::Done;
+        }
+        if tag_name(self, current) != name {
+            self.error("unexpected-end-tag");
+        }
+        loop {
+            if index == 0 {
+                return Flow::Done;
+            }
+            let node = self.open.get(index).expect("index is in range");
+            if tag_name(self, node) == name {
+                self.open.pop_until_node(&self.arena, node);
+                return Flow::Done;
+            }
+            index -= 1;
+            let node = self.open.get(index).expect("index is in range");
+            if self
+                .arena
+                .element(node)
+                .is_some_and(|element| element.namespace == Namespace::Html)
+            {
+                return self.process_in(self.mode, Tok::EndTag(name));
+            }
+        }
+    }
+
+    /// A CDATA section in foreign content. `html-lexer` does not know the
+    /// namespace it is in, so it reads `<![CDATA[` as a bogus comment ending at
+    /// the first `>`; this reads that comment back as the section it was.
+    ///
+    /// - `[CDATA[text]]`, ended by `>`: the whole section, `text`.
+    /// - `[CDATA[text`, ended by `>`: the section goes on past that `>`, so
+    ///   `text>` is its first part and the tokenizer continues in the CDATA
+    ///   section state until `]]>`.
+    /// - ended by the end of the input: everything after `[CDATA[`.
+    fn cdata_section(&mut self, data: &str) {
+        let content = &data["[CDATA[".len()..];
+        let text = if self.input_finished {
+            content.to_string()
+        } else if let Some(complete) = content.strip_suffix("]]") {
+            complete.to_string()
+        } else {
+            self.tokenizer_request = Some(HtmlLexContext::cdata_section());
+            format!("{content}>")
+        };
+        for (kind, run) in split_runs(&text) {
+            self.run(Tok::Text(kind, run));
+        }
+    }
+
+    // ----------------------------------------------------------------------
     // §13.2.6.4.16 The "in template" insertion mode
     // ----------------------------------------------------------------------
 
@@ -2493,6 +2694,83 @@ impl TreeBuilder {
             }
         }
     }
+}
+
+/// "A MathML text integration point": `mi`, `mo`, `mn`, `ms`, `mtext`.
+fn is_mathml_text_integration_point(element: &crate::arena::ElementData) -> bool {
+    element.namespace == Namespace::MathMl
+        && matches!(element.name.as_str(), "mi" | "mo" | "mn" | "ms" | "mtext")
+}
+
+/// "An HTML integration point": `annotation-xml` declaring HTML or XHTML
+/// content, and SVG `foreignObject`, `desc` and `title`.
+fn is_html_integration_point(element: &crate::arena::ElementData) -> bool {
+    match element.namespace {
+        Namespace::MathMl => {
+            element.name == "annotation-xml"
+                && element.attribute("encoding").is_some_and(|encoding| {
+                    encoding.eq_ignore_ascii_case("text/html")
+                        || encoding.eq_ignore_ascii_case("application/xhtml+xml")
+                })
+        }
+        Namespace::Svg => matches!(element.name.as_str(), "foreignObject" | "desc" | "title"),
+        Namespace::Html => false,
+    }
+}
+
+/// The start tags that leave foreign content (§13.2.6.5): HTML elements an
+/// author plainly meant as HTML, and `<font>` with a presentational attribute.
+fn breaks_out_of_foreign_content(tag: &Tag) -> bool {
+    matches!(
+        tag.name.as_str(),
+        "b" | "big"
+            | "blockquote"
+            | "body"
+            | "br"
+            | "center"
+            | "code"
+            | "dd"
+            | "div"
+            | "dl"
+            | "dt"
+            | "em"
+            | "embed"
+            | "h1"
+            | "h2"
+            | "h3"
+            | "h4"
+            | "h5"
+            | "h6"
+            | "head"
+            | "hr"
+            | "i"
+            | "img"
+            | "li"
+            | "listing"
+            | "menu"
+            | "meta"
+            | "nobr"
+            | "ol"
+            | "p"
+            | "pre"
+            | "ruby"
+            | "s"
+            | "small"
+            | "span"
+            | "strong"
+            | "strike"
+            | "sub"
+            | "sup"
+            | "table"
+            | "tt"
+            | "u"
+            | "ul"
+            | "var"
+    ) || (tag.name == "font"
+        && tag
+            .attributes
+            .iter()
+            .any(|attribute| matches!(attribute.name.as_str(), "color" | "face" | "size")))
 }
 
 /// Rename attributes by one of the adjustment tables in `elements`.

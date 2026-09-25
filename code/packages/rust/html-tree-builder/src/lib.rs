@@ -21,8 +21,8 @@
 //! | §13.2.6 tree construction | [`tree_builder::TreeBuilder`], one method per mode |
 //! | §13.2.6.4.7 adoption agency algorithm | `TreeBuilder::adoption_agency` |
 //!
-//! **Not written yet** (BR03 §5): foreign content, fragment parsing, and
-//! parse errors by specification code. The corpus cases that need them are
+//! **Not written yet** (BR03 §5): fragment parsing, and parse errors by
+//! specification code. The corpus cases that need them are
 //! listed in `tests/fixtures/expected-failures.txt`.
 //!
 //! ```
@@ -121,6 +121,7 @@ pub fn parse_document(
         drain(&mut lexer, &mut builder)?;
     }
     lexer.finish()?;
+    builder.input_finished();
     drain(&mut lexer, &mut builder)?;
     builder.process(Token::Eof, lexer.position());
 

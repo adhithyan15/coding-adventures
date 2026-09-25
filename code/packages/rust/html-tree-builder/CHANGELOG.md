@@ -5,6 +5,20 @@ documented in this file.
 
 ## Unreleased
 
+- **BR03 step 3: foreign content.** The tree construction dispatcher now
+  sends tokens to the foreign-content rules (§13.2.6.5) when the adjusted
+  current node is SVG or MathML, except at MathML text integration points,
+  HTML integration points (`foreignObject`, `desc`, `title`, HTML
+  `annotation-xml`) and `<svg>` in `annotation-xml`. The rules: HTML tags that
+  break out of foreign content, SVG tag-name and attribute case, MathML and
+  foreign (`xlink:`, `xml:`, `xmlns`) attributes, self-closing foreign
+  elements, and the end-tag walk. CDATA sections are read back from the
+  bogus comment `html-lexer` makes of them, switching the tokenizer to the
+  CDATA section state when a section runs past its first `>`.
+  **2,415 of 2,655** corpus cases pass (277 more). Every remaining failure is
+  a fragment case (step 4), the html-lexer script-data bug, a scripted case,
+  or `<selectedcontent>`.
+
 - **BR03 step 2: tables.** The seven table insertion modes — in table, in
   table text, in caption, in column group, in table body, in row, in cell —
   with foster parenting and the "clear the stack back to a context" steps.
