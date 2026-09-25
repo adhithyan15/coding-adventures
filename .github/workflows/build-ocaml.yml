@@ -85,7 +85,7 @@ jobs:
 
       - name: Set up the reviewed OCaml compiler and repository
         # ocaml/setup-ocaml v3.7.0 -- SHA is contract-bound in ocaml_toolchain_lock.py
-        uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
+        uses: ocaml/setup-ocaml@93303b622b2522e4411e295f9e77411a24912ac7
         # Avoid opam/opam#7031 while opam inspects its Git-backed repository.
         env:
           GIT_CONFIG_COUNT: '1'
@@ -211,7 +211,7 @@ jobs:
 
       - name: Set up the reviewed OCaml compiler and repository
         # ocaml/setup-ocaml v3.7.0 -- SHA is contract-bound in ocaml_toolchain_lock.py
-        uses: ocaml/setup-ocaml@15d660006c1d3110d77c34b7faa3bddefe8b82f0
+        uses: ocaml/setup-ocaml@93303b622b2522e4411e295f9e77411a24912ac7
         # Avoid opam/opam#7031 while opam inspects its Git-backed repository.
         env:
           GIT_CONFIG_COUNT: '1'
