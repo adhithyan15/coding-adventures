@@ -32,9 +32,15 @@ pub struct HtmlParseOptions {
 }
 
 impl Default for HtmlParseOptions {
+    /// Scripting is **off** by default. The scripting flag tells the parser
+    /// whether scripts will run, and nothing that parses through these
+    /// defaults -- Venture included -- has a script engine yet (BR02 P1). With
+    /// it on, `<noscript>` content became raw text instead of the fallback
+    /// markup a script-less browser must show. Callers that model a scripting
+    /// user agent (the `#script-on` conformance cases) opt in explicitly.
     fn default() -> Self {
         Self {
-            scripting: HtmlScriptingMode::Enabled,
+            scripting: HtmlScriptingMode::Disabled,
             initial_tokenizer_context: HtmlInitialTokenizerContext::Data,
             fragment_document_mode: HtmlDocumentMode::Quirks,
             fragment_has_form_ancestor: false,
@@ -4557,7 +4563,6 @@ pub struct HtmlParser {
     form_element_pointer_set: bool,
     cdata_diagnostic_permissions: Vec<bool>,
     current_token_emission_position: Option<SourcePosition>,
-    scripted_parser_suspended: bool,
     needs_table_cell_fostered_nobr_adoption_repair: bool,
     needs_insanely_badly_nested_table_sequence_repair: bool,
 }
@@ -4592,7 +4597,6 @@ impl Default for HtmlParser {
             form_element_pointer_set: false,
             cdata_diagnostic_permissions: Vec::new(),
             current_token_emission_position: None,
-            scripted_parser_suspended: false,
             needs_table_cell_fostered_nobr_adoption_repair: false,
             needs_insanely_badly_nested_table_sequence_repair: false,
         }
@@ -4658,7 +4662,6 @@ impl HtmlParser {
             form_element_pointer_set: false,
             cdata_diagnostic_permissions: Vec::new(),
             current_token_emission_position: None,
-            scripted_parser_suspended: false,
             needs_table_cell_fostered_nobr_adoption_repair: false,
             needs_insanely_badly_nested_table_sequence_repair: false,
         }
@@ -4711,7 +4714,6 @@ impl HtmlParser {
             form_element_pointer_set,
             cdata_diagnostic_permissions: Vec::new(),
             current_token_emission_position: None,
-            scripted_parser_suspended: false,
             needs_table_cell_fostered_nobr_adoption_repair: false,
             needs_insanely_badly_nested_table_sequence_repair: false,
         }
@@ -4860,17 +4862,10 @@ impl HtmlParser {
     }
 
     fn finish_document(&mut self) -> Document {
-        let mut document = normalize_document_shell(std::mem::take(&mut self.document));
-        if self.options.scripting == HtmlScriptingMode::Enabled {
-            apply_scripted_tree_construction_side_effects(&mut document, !self.is_fragment);
-        }
-        document
+        normalize_document_shell(std::mem::take(&mut self.document))
     }
 
     fn process_token(&mut self, token: Token) {
-        if self.scripted_parser_suspended {
-            return;
-        }
         self.process_initial_insertion_mode(&token);
         if self.process_document_tail_mode(&token) {
             return;
@@ -6465,13 +6460,7 @@ impl HtmlParser {
                 if !before.is_empty() {
                     self.append_text_to_current(before);
                 }
-                let suspend_after_end_tag =
-                    self.current_script_requests_document_root_table_replacement();
                 self.close_element("script");
-                if suspend_after_end_tag {
-                    self.scripted_parser_suspended = true;
-                    return;
-                }
                 if end_tag_end < text.len() {
                     self.append_text(text[end_tag_end..].to_string());
                 }
@@ -7788,8 +7777,6 @@ impl HtmlParser {
             self.explicit_body_end_seen = true;
             return;
         }
-        let suspend_after_end_tag = name == "script"
-            && self.current_script_requests_document_root_table_replacement();
         let targets_marked_html_context =
             name == "html" && self.open_marked_fragment_shell_element_matches(name);
         if targets_marked_html_context {
@@ -8847,9 +8834,6 @@ impl HtmlParser {
                 );
             }
             _ => self.close_element(name),
-        }
-        if suspend_after_end_tag {
-            self.scripted_parser_suspended = true;
         }
     }
 
@@ -11917,21 +11901,6 @@ impl HtmlParser {
             && rfind_ascii_case_insensitive(&text.data, "</script>").is_none()
     }
 
-    fn current_script_requests_document_root_table_replacement(&self) -> bool {
-        if self.is_fragment
-            || self.options.scripting != HtmlScriptingMode::Enabled
-            || !self.current_element_is("script")
-        {
-            return false;
-        }
-        let Some(path) = self.open_elements.last() else {
-            return false;
-        };
-        element_ref_at_path(&self.document, path).is_some_and(|element| {
-            element_text_content(element) == SCRIPTED_DOCUMENT_ROOT_TABLE_REPLACEMENT
-        })
-    }
-
     fn append_to_last_head_noscript_text_ending(&mut self, suffix: &str, text: &str) -> bool {
         append_to_last_element_text_ending(&mut self.document.children, "noscript", suffix, text)
     }
@@ -12590,161 +12559,16 @@ fn is_element_named(node: &Node, name: &str) -> bool {
     matches!(node, Node::Element(element) if element.name == name)
 }
 
-const SCRIPTED_DOCUMENT_ROOT_TABLE_REPLACEMENT: &str = "var t=document.querySelector('table');document.documentElement.remove();document.appendChild(t)";
-
-fn apply_scripted_tree_construction_side_effects(
-    document: &mut Document,
-    allow_document_root_replacement: bool,
-) {
-    apply_scripted_id_mutation(&mut document.children);
-    apply_scripted_font_attribute_mutation(&mut document.children);
-    apply_scripted_document_write(&mut document.children);
-    if allow_document_root_replacement {
-        apply_scripted_document_root_table_replacement(document);
-    }
-    coalesce_adjacent_text_nodes(&mut document.children);
-}
-
-fn apply_scripted_document_root_table_replacement(document: &mut Document) {
-    if let Some(table) = take_table_containing_script(
-        &mut document.children,
-        SCRIPTED_DOCUMENT_ROOT_TABLE_REPLACEMENT,
-    ) {
-        document.children = vec![table];
-    }
-}
-
-fn take_table_containing_script(nodes: &mut Vec<Node>, script: &str) -> Option<Node> {
-    if let Some(index) = nodes.iter().position(|node| {
-        matches!(node, Node::Element(element) if element.name == "table" && element_contains_script_text(element, script))
-    }) {
-        return Some(nodes.remove(index));
-    }
-
-    for node in nodes {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        if let Some(table) = take_table_containing_script(&mut element.children, script) {
-            return Some(table);
-        }
-    }
-    None
-}
-
-fn apply_scripted_id_mutation(nodes: &mut [Node]) {
-    for node in nodes {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        if element.attribute("id") == Some("A")
-            && element_contains_script_text(element, "document.getElementById(\"A\").id = \"B\"")
-        {
-            set_attribute_value(&mut element.attributes, "id", "B");
-        }
-        apply_scripted_id_mutation(&mut element.children);
-    }
-}
-
-fn apply_scripted_font_attribute_mutation(nodes: &mut [Node]) {
-    if !nodes.iter().any(|node| {
-        node_contains_script_text(
-            node,
-            "document.getElementsByTagName(\"font\")[2].setAttribute(\"size\", \"5\")",
-        )
-    }) {
-        return;
-    }
-
-    let mut font_index = 0;
-    set_nth_font_size(nodes, &mut font_index, 2, "5");
-}
-
-fn set_nth_font_size(
-    nodes: &mut [Node],
-    font_index: &mut usize,
-    target_index: usize,
-    value: &str,
-) -> bool {
-    for node in nodes {
-        let Node::Element(element) = node else {
-            continue;
-        };
-        if element.name == "font" {
-            if *font_index == target_index {
-                set_attribute_value(&mut element.attributes, "size", value);
-                return true;
-            }
-            *font_index += 1;
-        }
-        if set_nth_font_size(&mut element.children, font_index, target_index, value) {
-            return true;
-        }
-    }
-    false
-}
-
-fn apply_scripted_document_write(nodes: &mut Vec<Node>) {
-    let mut index = 0;
-    while index < nodes.len() {
-        if let Node::Element(element) = &mut nodes[index] {
-            apply_scripted_document_write(&mut element.children);
-            if element.name == "script" {
-                let insertions = scripted_document_write_nodes(&element_text_content(element));
-                if !insertions.is_empty() {
-                    nodes.splice(index + 1..index + 1, insertions);
-                }
-            }
-        }
-        index += 1;
-    }
-}
-
-fn scripted_document_write_nodes(script_text: &str) -> Vec<Node> {
-    match script_text {
-        "document.write(\"2\")" => vec![Node::text("2")],
-        "document.write(\"<script>document.write('2')</scr\"+ \"ipt><script>document.write('3')</scr\" + \"ipt>\")" =>
-        {
-            vec![
-                script_node("document.write('2')"),
-                Node::text("2"),
-                script_node("document.write('3')"),
-                Node::text("3"),
-            ]
-        }
-        _ => Vec::new(),
-    }
-}
-
-fn script_node(text: &str) -> Node {
-    let mut script = Node::element("script".to_string(), Vec::new());
-    if let Node::Element(element) = &mut script {
-        element.children.push(Node::text(text));
-    }
-    script
-}
-
-fn element_contains_script_text(element: &Element, needle: &str) -> bool {
-    element
-        .children
-        .iter()
-        .any(|child| node_contains_script_text(child, needle))
-}
-
-fn node_contains_script_text(node: &Node, needle: &str) -> bool {
-    let Node::Element(element) = node else {
-        return false;
-    };
-    (element.name == "script" && element_text_content(element).contains(needle))
-        || element_contains_script_text(element, needle)
-}
-
+/// An element's text, depth-first. Test-only: production code never inspects
+/// a script's text (BR02 §3 -- no code path may recognise a test input).
+#[cfg(test)]
 fn element_text_content(element: &Element) -> String {
     let mut text = String::new();
     collect_text_content(&element.children, &mut text);
     text
 }
 
+#[cfg(test)]
 fn collect_text_content(nodes: &[Node], text: &mut String) {
     for node in nodes {
         match node {
@@ -12752,20 +12576,6 @@ fn collect_text_content(nodes: &[Node], text: &mut String) {
             Node::Element(element) => collect_text_content(&element.children, text),
             Node::Comment(_) | Node::ProcessingInstruction(_) | Node::DocumentType(_) => {}
         }
-    }
-}
-
-fn set_attribute_value(attributes: &mut Vec<Attribute>, name: &str, value: &str) {
-    if let Some(attribute) = attributes
-        .iter_mut()
-        .find(|attribute| attribute.name == name)
-    {
-        attribute.value = value.to_string();
-    } else {
-        attributes.push(Attribute {
-            name: name.to_string(),
-            value: value.to_string(),
-        });
     }
 }
 
@@ -29249,6 +29059,54 @@ fn is_browser_invisible_element(name: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    // Scripting is off by default (BR02 P1). These helpers parse as a user
+    // agent with scripting on, for the tests that pin scripting-on behaviour
+    // (`<noscript>` as raw text, and positions measured in those inputs).
+    fn scripting_on() -> HtmlParseOptions {
+        HtmlParseOptions {
+            scripting: HtmlScriptingMode::Enabled,
+            ..HtmlParseOptions::default()
+        }
+    }
+
+    fn scripted_parse_html(source: &str) -> Result<Document, ParseError> {
+        parse_html_with_options(source, scripting_on())
+    }
+
+    fn scripted_parse_html_with_diagnostics(source: &str) -> Result<ParseOutput, ParseError> {
+        parse_html_with_diagnostics_and_options(source, scripting_on())
+    }
+
+    fn scripted_parse_html_fragment_with_diagnostics(
+        source: &str,
+    ) -> Result<FragmentOutput, ParseError> {
+        parse_html_fragment_with_diagnostics_and_options(source, scripting_on())
+    }
+
+    fn scripted_parse_html_fragment_for_context(
+        source: &str,
+        context: &str,
+    ) -> Result<Vec<Node>, ParseError> {
+        parse_html_fragment_for_context_with_options(source, context, scripting_on())
+    }
+
+    /// BR02 P1: nothing that parses through the defaults runs scripts, so a
+    /// `<noscript>` fallback is markup -- here a real `<p>` -- not raw text.
+    #[test]
+    fn default_parse_shows_noscript_fallback_markup() {
+        let source = "<body><noscript><p>Enable JavaScript</p></noscript>";
+        let document = parse_html(source).unwrap();
+        let noscript = element(&body(&document).children[0]);
+        assert_eq!(noscript.name, "noscript");
+        let paragraph = element(&noscript.children[0]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("Enable JavaScript")]);
+
+        let scripted = scripted_parse_html(source).unwrap();
+        let noscript = element(&body(&scripted).children[0]);
+        assert_eq!(noscript.children, vec![Node::text("<p>Enable JavaScript</p>")]);
+    }
     use dom_core::Element;
 
     fn element(node: &Node) -> &Element {
@@ -44876,7 +44734,7 @@ mod tests {
     #[test]
     fn self_closing_noscript_uses_scripting_sensitive_handoff() {
         let source = "<!doctype html><noscript/><p>&amp;</p></noscript><p>x</p>";
-        let enabled = parse_html_with_diagnostics(source).unwrap();
+        let enabled = scripted_parse_html_with_diagnostics(source).unwrap();
 
         let enabled_noscript = element(&head(&enabled.document).children[0]);
         assert_eq!(enabled_noscript.name, "noscript");
@@ -45539,7 +45397,7 @@ mod tests {
     #[test]
     fn foreign_noscript_names_do_not_block_html_rawtext_at_integration_points() {
         let source = "<!doctype html><!--é-->\r\n<svg><noscript><foreignObject><noscript id=inner><p>A</noscript><p id=after>B</foreignObject></noscript></svg>";
-        let output = parse_html_with_diagnostics(source).unwrap();
+        let output = scripted_parse_html_with_diagnostics(source).unwrap();
         let integration =
             find_first_element_in_nodes(&output.document.children, "foreignObject").unwrap();
         assert_eq!(integration.children.len(), 2);
@@ -45554,7 +45412,7 @@ mod tests {
         assert_eq!(after.children, vec![Node::text("B")]);
         assert!(source.len() > source.chars().count());
 
-        let fragment = parse_html_fragment_for_context(
+        let fragment = scripted_parse_html_fragment_for_context(
             "<svg><noscript><foreignObject><noscript><b>fragment</noscript><p>after</foreignObject></noscript></svg>",
             "body",
         )
@@ -45565,7 +45423,7 @@ mod tests {
         assert_eq!(inner.children, vec![Node::text("<b>fragment")]);
         assert_eq!(element(&integration.children[1]).name, "p");
 
-        let ordinary = parse_html(
+        let ordinary = scripted_parse_html(
             "<!doctype html><svg><noscript><noscript id=foreign>ordinary</noscript></noscript></svg>",
         )
         .unwrap();
@@ -46795,7 +46653,7 @@ mod tests {
             "<noscript>x</noscript>",
         ] {
             let source = format!("<!doctype html>{markup}<frameset><frame></frameset>");
-            let document = parse_html(&source).unwrap();
+            let document = scripted_parse_html(&source).unwrap();
             assert_eq!(element(&html(&document).children[1]).name, "frameset", "{markup}");
         }
 
@@ -46818,7 +46676,7 @@ mod tests {
             "<p>x</p>",
         ] {
             let source = format!("<!doctype html>{markup}<frameset><frame></frameset>");
-            let document = parse_html(&source).unwrap();
+            let document = scripted_parse_html(&source).unwrap();
             assert_eq!(element(&html(&document).children[1]).name, "body", "{markup}");
         }
     }
@@ -47573,79 +47431,8 @@ mod tests {
     }
 
     #[test]
-    fn applies_scripted_document_root_table_replacement() {
-        const PREFIX: &str = "<table><tr><script>var t=document.querySelector('table');document.documentElement.remove();document.appendChild(t)</script>";
-
-        for suffix in ["<b>", "FOSTERTEXT"] {
-            let source = format!("{PREFIX}{suffix}");
-            let output = parse_html_with_diagnostics(&source).unwrap();
-            assert_eq!(
-                output
-                    .parser_diagnostics
-                    .iter()
-                    .map(|diagnostic| diagnostic.code.as_str())
-                    .collect::<Vec<_>>(),
-                vec!["missing-doctype"],
-                "source {source:?}"
-            );
-            assert_eq!(output.document.children.len(), 1, "source {source:?}");
-            let table = element(&output.document.children[0]);
-            assert_eq!(table.name, "table", "source {source:?}");
-            let tbody = element(&table.children[0]);
-            let row = element(&tbody.children[0]);
-            let script = element(&row.children[0]);
-            assert_eq!(script.name, "script", "source {source:?}");
-            assert_eq!(
-                script.children,
-                vec![Node::text(
-                    "var t=document.querySelector('table');document.documentElement.remove();document.appendChild(t)"
-                )],
-                "source {source:?}"
-            );
-
-            let disabled = parse_html_with_options(
-                &source,
-                HtmlParseOptions {
-                    scripting: HtmlScriptingMode::Disabled,
-                    ..HtmlParseOptions::default()
-                },
-            )
-            .unwrap();
-            let disabled_body = body(&disabled);
-            assert_eq!(
-                element(disabled_body.children.last().unwrap()).name,
-                "table",
-                "source {source:?}"
-            );
-            match suffix {
-                "<b>" => assert_eq!(element(&disabled_body.children[0]).name, "b"),
-                "FOSTERTEXT" => {
-                    assert_eq!(disabled_body.children[0], Node::text("FOSTERTEXT"))
-                }
-                _ => unreachable!(),
-            }
-
-            let fragment = parse_html_fragment_with_options(
-                &source,
-                HtmlParseOptions {
-                    scripting: HtmlScriptingMode::Enabled,
-                    ..HtmlParseOptions::default()
-                },
-            )
-            .unwrap();
-            assert_eq!(fragment.len(), 2, "source {source:?}");
-            match suffix {
-                "<b>" => assert_eq!(element(&fragment[0]).name, "b"),
-                "FOSTERTEXT" => assert_eq!(fragment[0], Node::text("FOSTERTEXT")),
-                _ => unreachable!(),
-            }
-            assert_eq!(element(&fragment[1]).name, "table", "source {source:?}");
-        }
-    }
-
-    #[test]
     fn parser_drives_noscript_rawtext_when_scripting_is_enabled() {
-        let document = parse_html("<noscript><p>&amp;</p></noscript><p>x</p>").unwrap();
+        let document = scripted_parse_html("<noscript><p>&amp;</p></noscript><p>x</p>").unwrap();
 
         let noscript = element(&head(&document).children[0]);
         assert_eq!(noscript.name, "noscript");
@@ -47662,7 +47449,7 @@ mod tests {
             let source = format!(
                 "<!doctype html><noscript><!--</noscript>\r\n{marker}<noscript>--></noscript>"
             );
-            let output = parse_html_with_diagnostics(&source).unwrap();
+            let output = scripted_parse_html_with_diagnostics(&source).unwrap();
 
             let head = head(&output.document);
             assert_eq!(
@@ -47690,7 +47477,7 @@ mod tests {
             let source = format!(
                 "<!doctype html><noscript><!--</noscript>{marker}<noscript>--></noscript>"
             );
-            let document = parse_html(&source).unwrap();
+            let document = scripted_parse_html(&source).unwrap();
             assert_eq!(
                 head(&document)
                     .children
@@ -47706,7 +47493,7 @@ mod tests {
         }
 
         let incomplete =
-            parse_html("<!doctype html><noscript><!--</noscript>\u{00A0}<noscript>tail").unwrap();
+            scripted_parse_html("<!doctype html><noscript><!--</noscript>\u{00A0}<noscript>tail").unwrap();
         assert!(body(&incomplete)
             .children
             .iter()
@@ -54999,9 +54786,9 @@ mod tests {
         let names = ["noscript", "plaintext"];
         let source =
             "<!doctype html></noscript></plaintext><!--é-->\r\n</noscript><p>tail</p>";
-        let output = parse_html_with_diagnostics(source).unwrap();
+        let output = scripted_parse_html_with_diagnostics(source).unwrap();
         let clean =
-            parse_html_with_diagnostics("<!doctype html><!--é-->\r\n<p>tail</p>").unwrap();
+            scripted_parse_html_with_diagnostics("<!doctype html><!--é-->\r\n<p>tail</p>").unwrap();
         assert!(source.len() > source.chars().count());
         assert_eq!(output.document, clean.document);
         assert_eq!(
@@ -55019,8 +54806,8 @@ mod tests {
         );
 
         let fragment_source = "</noscript></plaintext>tail";
-        let fragment = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
-        let clean_fragment = parse_html_fragment_with_diagnostics("tail").unwrap();
+        let fragment = scripted_parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        let clean_fragment = scripted_parse_html_fragment_with_diagnostics("tail").unwrap();
         assert_eq!(fragment.nodes, clean_fragment.nodes);
         assert_eq!(
             fragment.parser_diagnostics,
@@ -55056,7 +54843,7 @@ mod tests {
             let foreign_source = format!(
                 "<!doctype html><svg><foreignObject></{name}>X</foreignObject></svg>"
             );
-            let foreign = parse_html_with_diagnostics(&foreign_source).unwrap();
+            let foreign = scripted_parse_html_with_diagnostics(&foreign_source).unwrap();
             assert_eq!(
                 foreign.parser_diagnostics,
                 vec![
@@ -55101,7 +54888,7 @@ mod tests {
                 .all(|diagnostic| diagnostic.position.is_none()));
 
             let incomplete_source = format!("<!doctype html></{name}");
-            let incomplete = parse_html_with_diagnostics(&incomplete_source).unwrap();
+            let incomplete = scripted_parse_html_with_diagnostics(&incomplete_source).unwrap();
             assert!(incomplete
                 .parser_diagnostics
                 .iter()
@@ -55111,7 +54898,7 @@ mod tests {
         let seeded_noscript = parse_html_fragment_for_context_with_diagnostics_and_options(
             "</noscript>",
             "noscript",
-            HtmlParseOptions::default(),
+            scripting_on(),
         )
         .unwrap();
         assert!(seeded_noscript.parser_diagnostics.is_empty());
@@ -55140,13 +54927,13 @@ mod tests {
         assert!(seeded_plaintext.parser_diagnostics.is_empty());
 
         let matched_noscript =
-            parse_html_with_diagnostics("<!doctype html><noscript>fallback</noscript>").unwrap();
+            scripted_parse_html_with_diagnostics("<!doctype html><noscript>fallback</noscript>").unwrap();
         assert!(matched_noscript
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-end-tag"));
         let matched_plaintext =
-            parse_html_with_diagnostics("<!doctype html><plaintext></plaintext>").unwrap();
+            scripted_parse_html_with_diagnostics("<!doctype html><plaintext></plaintext>").unwrap();
         assert!(matched_plaintext
             .parser_diagnostics
             .iter()
@@ -61738,7 +61525,7 @@ mod tests {
             "<!doctype html><noscript>fallback",
             "<!doctype html><frameset></frameset><noframes>fallback",
         ] {
-            let output = parse_html_with_diagnostics(source).unwrap();
+            let output = scripted_parse_html_with_diagnostics(source).unwrap();
             let diagnostics = output
                 .parser_diagnostics
                 .iter()
@@ -61762,7 +61549,7 @@ mod tests {
         }
 
         let fragment_source = "<script>fragment";
-        let output = parse_html_fragment_with_diagnostics(fragment_source).unwrap();
+        let output = scripted_parse_html_fragment_with_diagnostics(fragment_source).unwrap();
         let diagnostic = output
             .parser_diagnostics
             .iter()
@@ -61779,7 +61566,7 @@ mod tests {
         );
 
         let unicode_source = "<!doctype html><!--é-->\r\n<title>té";
-        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        let unicode = scripted_parse_html_with_diagnostics(unicode_source).unwrap();
         let diagnostic = unicode
             .parser_diagnostics
             .iter()
@@ -61797,7 +61584,7 @@ mod tests {
         assert!(unicode_source.len() > unicode_source.chars().count());
 
         let escaped_script_source = "<!doctype html><script><!--é";
-        let escaped_script = parse_html_with_diagnostics(escaped_script_source).unwrap();
+        let escaped_script = scripted_parse_html_with_diagnostics(escaped_script_source).unwrap();
         assert!(escaped_script
             .lexer_diagnostics
             .iter()
@@ -61822,7 +61609,7 @@ mod tests {
             "<!doctype html><script>closed</script>",
             "<!doctype html><plaintext>plain",
         ] {
-            let output = parse_html_with_diagnostics(source).unwrap();
+            let output = scripted_parse_html_with_diagnostics(source).unwrap();
             assert!(
                 output
                     .parser_diagnostics

@@ -5,6 +5,36 @@ use coding_adventures_html_parser::{
     parse_html_with_options, HtmlParseOptions,
 };
 use dom_core::{Document, DocumentType, Element, Node};
+use std::collections::BTreeMap;
+
+/// Tree-construction cases this parser is known not to pass, as
+/// `source -> reason` (`fixtures/tree-construction-expected-failures.txt`).
+/// BR02 §3: a case we cannot pass is listed, visibly, and never special-cased
+/// in the parser. Every test that runs corpus cases consults this one list.
+const EXPECTED_FAILURES: &str = include_str!("../fixtures/tree-construction-expected-failures.txt");
+
+#[allow(dead_code)]
+pub fn expected_failures() -> BTreeMap<&'static str, &'static str> {
+    EXPECTED_FAILURES
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty() && !line.starts_with('#'))
+        .map(|line| {
+            let (source, reason) = line
+                .split_once(" — ")
+                .unwrap_or_else(|| panic!("expected-failure line needs `<source> — <reason>`: {line:?}"));
+            assert!(!reason.trim().is_empty(), "expected failure {source} has no reason");
+            (source.trim(), reason.trim())
+        })
+        .collect()
+}
+
+/// Whether `source` (e.g. `scripted/webkit01.dat:1`) is a declared expected
+/// failure. Callers assert such a case still fails, so the list cannot go stale.
+#[allow(dead_code)]
+pub fn is_expected_failure(source: &str) -> bool {
+    expected_failures().contains_key(source)
+}
 
 #[derive(Debug)]
 pub struct TreeConstructionCase {

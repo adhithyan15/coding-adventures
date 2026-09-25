@@ -1,29 +1,59 @@
 mod common;
 
+use std::collections::BTreeSet;
+
 use common::{
-    actual_diagnostic_codes_for_tree_case, actual_dom_dump_for_tree_case,
+    actual_diagnostic_codes_for_tree_case, actual_dom_dump_for_tree_case, expected_failures,
     parse_tree_construction_cases,
 };
 
 const TREE_CONSTRUCTION_SMOKE: &str = include_str!("fixtures/html5lib-tree-construction-smoke.dat");
 
+/// Every case matches the expected DOM, except the declared expected
+/// failures -- which must still fail. A case that starts passing has to be
+/// taken off the list, so the list cannot go stale.
 #[test]
 fn html5lib_tree_construction_smoke_cases_match_dom_dump() {
     let cases = parse_tree_construction_cases(TREE_CONSTRUCTION_SMOKE);
     assert!(!cases.is_empty(), "fixture should contain cases");
+    let expected = expected_failures();
 
+    let mut unexpected_failures = Vec::new();
+    let mut unexpected_passes = Vec::new();
+    let mut seen = BTreeSet::new();
     for (index, case) in cases.iter().enumerate() {
         let actual = actual_dom_dump_for_tree_case(case)
             .expect("parser should accept any HTML or HTML fragment input");
-        assert_eq!(
-            actual,
-            case.document,
-            "tree-construction smoke case {} ({}) failed for input {:?}",
-            index + 1,
-            case.source,
-            case.data
-        );
+        let passes = actual == case.document;
+        if expected.contains_key(case.source.as_str()) {
+            seen.insert(case.source.as_str());
+            if passes {
+                unexpected_passes.push(case.source.clone());
+            }
+        } else if !passes {
+            unexpected_failures.push(format!(
+                "case {} ({}) for input {:?}\n  expected: {:#?}\n  actual:   {:#?}",
+                index + 1,
+                case.source,
+                case.data,
+                case.document,
+                actual
+            ));
+        }
     }
+
+    let unknown: Vec<_> = expected.keys().filter(|source| !seen.contains(*source)).collect();
+    assert!(unknown.is_empty(), "expected failures name no corpus case: {unknown:?}");
+    assert!(
+        unexpected_passes.is_empty(),
+        "these now pass; remove them from tree-construction-expected-failures.txt: {unexpected_passes:?}"
+    );
+    assert!(
+        unexpected_failures.is_empty(),
+        "{} tree-construction case(s) failed:\n{}",
+        unexpected_failures.len(),
+        unexpected_failures.join("\n")
+    );
 }
 
 #[test]

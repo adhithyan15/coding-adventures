@@ -2,6 +2,18 @@
 
 Last audited: 2026-08-09
 
+> **What the pass count does and does not show (2026-09-25, BR02 §2).** Every
+> checked corpus case produces the expected tree **except six declared expected
+> failures** (`tests/fixtures/tree-construction-expected-failures.txt`): the
+> `scripted/*` and `scripted_foster01` cases, which run a script mid-parse.
+> Until 2026-09-25 the parser "passed" them by matching their exact script
+> text and rewriting the tree; that code is removed, and they stay expected
+> failures until Venture has a JavaScript engine (BR02 P9). Two further limits
+> stand: the tree builder is not yet organised on the specification's
+> insertion modes (post-parse repair passes remain, BR02 P2), and parse errors
+> are checked only as "at least one", not by code and position. The parser's
+> default is now **scripting off**, which is what a script-less user agent is.
+
 ## Completion Boundary
 
 The parser conformance loop is complete when a fresh audit against current WPT
