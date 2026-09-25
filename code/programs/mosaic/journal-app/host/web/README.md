@@ -33,6 +33,16 @@ npm run build   # production build into dist/
 ```
 
 `npm run components` (`../../scripts/build-web.sh`) regenerates the
-git-ignored `src/components/` and `public/journal_mosaic_app.wasm`.
+git-ignored `src/components/` and `public/journal_mosaic_app.wasm`. Set
+`JOURNAL_WASM_PROFILE=release` for an optimised runtime.
 
-Spec: `code/specs/journal-mosaic-app.md`, "The browser (J5c)".
+## Published
+
+Every merge that touches Journal publishes it to
+<https://adhithyan15.github.io/coding-adventures/journal/>
+(`.github/workflows/deploy-journal.yml`). The bundle is relocatable
+(`base: "./"`, and the wasm is fetched relative to the page), so it works from
+that subdirectory.
+
+Spec: `code/specs/journal-mosaic-app.md`, "The browser (J5c)" and
+"Published at /journal/ (J5d)".

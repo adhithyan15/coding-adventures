@@ -1,86 +1,119 @@
-# Deploy Journal App to GitHub Pages
+# Publish Journal (the Mosaic app) to GitHub Pages under /journal/.
 #
-# Builds the Vite SPA and deploys to the /journal/ subdirectory on
-# GitHub Pages. Triggered on pushes to main that modify journal-app files.
-
+# Why this changed (J5d of #14416)
+# --------------------------------
+# This workflow used to build the OLD TypeScript Journal
+# (code/programs/typescript/journal-app) and publish it with
+# `actions/deploy-pages`, as a Pages *artifact*. This site is not built from
+# artifacts: it is built from the `gh-pages` branch, where every other app is
+# published into its own directory. So /journal/ was never served -- it
+# returned 404 while every run reported success -- and an artifact deployment
+# names the whole site as its target, which is the wrong mechanism for one
+# subdirectory.
+#
+# The owner decided the Mosaic Journal replaces the old app on the web. This
+# publishes it exactly the way deploy-task-app.yml publishes Trestle. The old
+# app's code and its Electron release (release-journal.yml) are unchanged.
+#
+# The bundle is relocatable -- Vite `base: "./"` and a page-relative wasm URL --
+# which is what makes serving from /journal/ work. A change to the React
+# emitter can break that without touching Journal, so the Mosaic toolchain is
+# in the path filter.
 name: Deploy Journal
 
 on:
   push:
     branches: [main]
     paths:
-      - "code/programs/typescript/journal-app/**"
-      - "code/packages/typescript/gfm/**"
-      - "code/packages/typescript/gfm-parser/**"
-      - "code/packages/typescript/document-ast/**"
-      - "code/packages/typescript/document-ast-to-html/**"
-      - "code/packages/typescript/document-ast-sanitizer/**"
-      - "code/packages/typescript/storage/**"
-      - "code/packages/typescript/indexeddb/**"
-      - "code/packages/typescript/store/**"
-      - "code/packages/typescript/ui-components/**"
+      - "code/programs/mosaic/journal-app/**"
+      - "code/packages/rust/journal-core/**"
+      - "code/packages/rust/journal-mosaic-app/**"
+      - "code/packages/mosaic/mosaic-pkg-**"
+      - "code/packages/rust/mosaic-emit-react/**"
+      - "code/packages/rust/mosaic-app-wasm/**"
+      - "code/scripts/verify_relocatable_bundle.py"
+      - ".github/workflows/deploy-journal.yml"
+  workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: deploy-journal
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-deploy:
+    name: Build the Mosaic Journal web app and publish it
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup Node.js
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
           node-version: 22
 
-      - name: Install dependencies
+      # `mosaic-compile` links cairo through the paint backend, and the runner
+      # has no system cairo. apt-install.sh drops the unused vendor
+      # repositories first, so an unrelated repository outage cannot fail the
+      # deploy (#13982).
+      - name: Install Linux build dependencies
+        shell: bash
+        run: bash code/scripts/ci/apt-install.sh libcairo2-dev
+
+      - name: Build the production web bundle (release wasm)
+        shell: bash
+        working-directory: code/programs/mosaic/journal-app/host/web
+        env:
+          JOURNAL_WASM_PROFILE: release
+        run: |
+          set -euo pipefail
+          npm ci --no-audit --no-fund
+          npm run build
+
+      - name: Verify the bundle works when served from a subdirectory
         shell: bash
         run: |
-          cd code/packages/typescript/directed-graph && npm install
-          cd ../grammar-tools && npm install
-          cd ../lexer && npm install
-          cd ../state-machine && npm install
-          cd ../parser && npm install
-          cd ../document-ast && npm install
-          cd ../document-ast-to-html && npm install
-          cd ../document-ast-sanitizer && npm install
-          cd ../gfm-parser && npm install
-          cd ../gfm && npm install
-          cd ../sql-lexer && npm install
-          cd ../sql-parser && npm install
-          cd ../sql-execution-engine && npm install
-          cd ../storage && npm install
-          cd ../indexeddb && npm install
-          cd ../store && npm install
-          cd ../ui-components && npm install
-          cd ../../../programs/typescript/journal-app && npm install
+          set -euo pipefail
+          dist=code/programs/mosaic/journal-app/host/web/dist
+          # Pages serves this from /journal/, not from the root. An absolute
+          # asset path loads fine locally and 404s in production (#13832).
+          python3 code/scripts/verify_relocatable_bundle.py "$dist"
+          # The runtime is fetched by the page, not referenced by index.html,
+          # so the check above cannot see it. It must be in the bundle, and
+          # the page must not ask for it from the site root.
+          test -s "$dist/journal_mosaic_app.wasm"
+          if grep -q '"/journal_mosaic_app.wasm"' "$dist"/assets/*.js; then
+            echo "the page fetches the wasm from the site root; it must be page-relative" >&2
+            exit 1
+          fi
 
-      - name: Build
-        working-directory: code/programs/typescript/journal-app
-        run: npm run build
-        env:
-          VITE_BASE: /coding-adventures/journal/
+      - name: Stage the bundle for publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf public-journal
+          cp -R code/programs/mosaic/journal-app/host/web/dist public-journal
+          # Stops Pages' Jekyll pass from dropping files whose names begin with
+          # an underscore.
+          touch public-journal/.nojekyll
+          ls -la public-journal
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
+      # `keep_files: true`, like every other deploy workflow here: they all
+      # publish into the SAME `gh-pages` branch under different
+      # `destination_dir`s, and turning it off risks removing sibling sites.
+      - name: Deploy to GitHub Pages (journal/ subdirectory)
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
         with:
-          path: code/programs/typescript/journal-app/dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: public-journal
+          destination_dir: journal
+          keep_files: true
