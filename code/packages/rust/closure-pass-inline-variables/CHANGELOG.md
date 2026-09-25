@@ -34,20 +34,24 @@ accepted path could have short-circuited, and it reads exactly as `.` would.
 Every CLOC28 guard carries over untouched, because they live in `resolve` and
 in candidate eligibility rather than in the spine walk.
 
-Where a `?.` *would* short-circuit, the walk stops and nothing folds:
+Where a `?.` *would* short-circuit, the walk stops — but it still resolves
+the longest prefix it can, so the binding goes and a shorter chain remains:
 
 ```js
 var o = { a: null };
-console.log(o?.a?.b);     // left alone; upstream folds it to void 0
+console.log(o?.a?.b);     // => console.log(null?.b)
 ```
 
-Behind the oracle, never ahead of it.
+Correct (`null?.b` is `undefined`, as the source computes) and still behind
+the oracle, which folds the whole thing to `void 0`. The `ChainExpression`
+wrapper survives the prefix rewrite, which is what keeps a later `?.`
+short-circuiting rather than throwing.
 
 ### Internals
 
-`chain_of` keeps its `MemberExpression` signature; a new `chain_of_expr`
-accepts `MemberExpression`, `OptionalMemberExpression` and `ChainExpression`
-at every step. `key_of` became `key_of_parts(computed, property)`, since both
+`chain_of` is deleted and replaced by `chain_of_expr`, which accepts
+`MemberExpression`, `OptionalMemberExpression` and `ChainExpression` at every
+step. `key_of` became `key_of_parts(computed, property)`, since both
 member kinds carry the same pair.
 
 7 tests added.

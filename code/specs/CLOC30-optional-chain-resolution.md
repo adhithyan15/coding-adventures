@@ -40,21 +40,30 @@ guard — escape, write, absent key, non-scalar result, spread, hole — carries
 over unchanged, because they all sit in `resolve` and in the candidate
 eligibility proof rather than in the spine walk.
 
-The cases where a `?.` **would** short-circuit decline instead of folding:
+Where a `?.` **would** short-circuit, the walk stops — but "stops" is not
+"leaves the program alone", and an earlier draft of this spec said the wrong
+one. The walker descends and resolves the longest prefix it can, so the
+binding still disappears and a shorter chain is left behind:
 
 ```js
 var o = { a: null };
-console.log(o?.a?.b);     // stops at the NullLiteral; we leave the chain
+console.log(o?.a?.b);     // => console.log(null?.b)
 ```
 
-Upstream folds that to `void 0`. Declining is a gap in the safe direction —
-behind the oracle, never ahead of it.
+That is correct — `null?.b` is `undefined`, exactly what the source computes —
+and it is still behind the oracle, which folds the whole thing to `void 0`.
+The `ChainExpression` wrapper survives the prefix rewrite, which is what keeps
+a later `?.` short-circuiting to the end of the chain rather than throwing.
+
+The distinction matters for review: a reader told "we decline" would not think
+to check that the residual chain still short-circuits correctly.
 
 ## Implementation
 
-`chain_of` kept its `MemberExpression` signature; a new `chain_of_expr` takes
-any expression and accepts `MemberExpression`, `OptionalMemberExpression` and
-`ChainExpression` at every step. `key_of` became `key_of_parts(computed,
+`chain_of` is **deleted** and replaced by `chain_of_expr`, which takes any
+expression and accepts `MemberExpression`, `OptionalMemberExpression` and
+`ChainExpression` at every step. (An earlier draft said the two coexist; they
+do not — clippy flagged the old one as dead the moment nothing called it.) `key_of` became `key_of_parts(computed,
 property)` because both member kinds carry the same pair and read the same
 way.
 
@@ -69,7 +78,7 @@ Two neighbouring behaviours were measured against `v20260915` and left alone:
 
 | input | upstream | us | why |
 |---|---|---|---|
-| `var o=null; o?.a` | `console.log(void 0)` | unchanged | short-circuit folding of a nullish root — needs CLOC29 scalar propagation plus a nullish fold, not chain resolution |
+| `var o=null; o?.a` | `console.log(void 0)` | `console.log(null?.a)` | CLOC29 already places the scalar; what is missing is a *fold* of a nullish-based optional chain, which belongs in `closure-pass-constant-fold` |
 | `var o={a:1}; o?.b` | `console.log({a:1}?.b)` | unchanged | upstream inlines the object but does **not** fold the absent key, exactly as CLOC28 records for `o.b`: an absent key can resolve up the prototype chain |
 
 The second is worth naming explicitly: it looks like the same gap and is not.

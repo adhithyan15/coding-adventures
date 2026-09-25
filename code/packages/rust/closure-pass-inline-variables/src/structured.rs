@@ -40,7 +40,6 @@ pub enum Key {
     Index(usize),
 }
 
-
 /// Peel a member chain to its root identifier and the key path read from
 /// it, outermost expression in, returning the path in *access* order.
 ///
@@ -69,11 +68,13 @@ pub enum Key {
 /// produces a path that `resolve` accepts, no `?.` on it could have
 /// short-circuited, and `?.` reads exactly as `.` would.
 ///
-/// The cases where a `?.` *would* short-circuit therefore decline rather
-/// than fold: `var o={a:null}; o?.a?.b` stops at the `NullLiteral`,
-/// because a null is not a structure to step into. Upstream folds that one
-/// to `void 0`; we leave it, which is a gap and not a divergence in the
-/// dangerous direction.
+/// Where a `?.` *would* short-circuit the walk stops, but the caller still
+/// rewrites the longest prefix that resolves: `var o={a:null}; o?.a?.b`
+/// becomes `null?.b`, not nothing. That is correct — `null?.b` is
+/// `undefined`, as the source computes — and still behind upstream, which
+/// folds the whole chain to `void 0`. The `ChainExpression` wrapper
+/// survives the prefix rewrite, so a later `?.` still short-circuits to the
+/// end of the chain instead of throwing.
 pub fn chain_of_expr(e: &Expression) -> Option<(String, Vec<Key>)> {
     // A chain expression is a transparent wrapper around its spine.
     let mut cur = match e {
@@ -121,7 +122,11 @@ fn key_of_parts(computed: bool, property: &Expression) -> Option<Key> {
         // an array object, not element reads, so they are not modelled.
         (true, Expression::NumericLiteral(n)) => {
             let v = n.value;
-            if v.is_finite() && v >= 0.0 && v.fract() == 0.0 && v <= usize::MAX as f64 {
+            // `<`, not `<=`: `usize::MAX as f64` rounds UP to 2^64, so `<=`
+            // admits 2^64 itself, `v as usize` then saturates to `usize::MAX`,
+            // and the `*i + 1` in the array arm overflows — a panic in any
+            // overflow-checked build, which includes the test profile.
+            if v.is_finite() && v >= 0.0 && v.fract() == 0.0 && v < usize::MAX as f64 {
                 Some(Key::Index(v as usize))
             } else {
                 None
@@ -210,7 +215,7 @@ fn step<'a>(cur: &'a Expression, k: &Key) -> Option<&'a Expression> {
             if arr
                 .elements
                 .iter()
-                .take(*i + 1)
+                .take(i.saturating_add(1))
                 .any(|e| matches!(e, Some(Expression::SpreadElement(_))))
             {
                 return None;
