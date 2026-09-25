@@ -109,6 +109,18 @@ layout JournalApp {
       If ( when: slot: journal-error ) {
         Text [ journal-error ] ( content : slot: journal-error )
       }
+      // Export (J6a): the whole journal to a file the person chooses, through
+      // Mosaic's standard files.save effect -- no host code in this app.
+      Row [ export-bar ] {
+        HostButton [ export-journal ] (
+          label : "Export" ,
+          disabled : slot: exporting ,
+          onClick : emit: onExportJournal
+        )
+      }
+      If ( when: slot: export-status ) {
+        Text [ export-status ] ( content : slot: export-status )
+      }
       // On this day (J4c): a second RecordList mount (#15959), above the
       // timeline, only when earlier years have entries on today's date.
       If ( when: slot: has-on-this-day ) {

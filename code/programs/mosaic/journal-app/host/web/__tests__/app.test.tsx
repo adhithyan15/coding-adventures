@@ -38,8 +38,8 @@ afterEach(async () => {
   container.remove();
 });
 
-async function mount(storage: Storage) {
-  await act(async () => root.render(<App load={load} storage={storage} />));
+async function mount(storage: Storage, environment?: typeof globalThis) {
+  await act(async () => root.render(<App load={load} storage={storage} environment={environment} />));
   // The wasm compiles and loads asynchronously (slowest the first time):
   // wait until the app has started, not for a fixed number of ticks.
   for (let waited = 0; container.textContent?.includes("Opening your journal"); waited += 10) {
@@ -350,4 +350,44 @@ it("reads the browser's offset east of UTC, and leaves out an implausible one", 
   expect(browserUtcOffsetMinutes(at(0))).toBe(0);
   expect(browserUtcOffsetMinutes(at(900))).toBeUndefined();
   expect(browserUtcOffsetMinutes(at(Number.NaN))).toBeUndefined();
+});
+
+// J6a: Export saves the whole journal through the standard files.save effect,
+// answered by the browser platform library (mosaic-file-effects.mjs).
+it("exports the journal to a file the person chooses, and says where", async () => {
+  const written: Uint8Array[] = [];
+  const picked: { suggestedName?: string; types?: unknown }[] = [];
+  const environment = {
+    ...globalThis,
+    isSecureContext: true,
+    navigator: { userActivation: { isActive: true } },
+    showSaveFilePicker: async (options: { suggestedName?: string; types?: unknown }) => {
+      picked.push(options);
+      return {
+        name: options.suggestedName,
+        createWritable: async () => ({
+          write: async (bytes: Uint8Array) => void written.push(bytes),
+          close: async () => {},
+          abort: async () => {},
+        }),
+      };
+    },
+  } as unknown as typeof globalThis;
+  const storage = memoryStorage();
+  await mount(storage, environment);
+  await writeEntry("Exported", "Kept in a file.");
+  await act(async () => button("Export").click());
+  for (let waited = 0; !container.textContent?.includes("Exported to"); waited += 10) {
+    if (waited > 2000) throw new Error("export never finished");
+    await act(async () => new Promise(resolve => setTimeout(resolve, 10)));
+  }
+  expect(picked[0].suggestedName).toMatch(/^journal-\d{4}-\d{2}-\d{2}\.json$/);
+  expect(picked[0].types).toEqual([{ accept: { "application/json": [".json"] } }]);
+  const file = JSON.parse(new TextDecoder().decode(written[0]));
+  expect(file.format).toBe("coding-adventures-journal");
+  expect(file.schema).toBe("journal-mosaic-app/state");
+  expect(JSON.stringify(file.state)).toContain("Exported");
+  expect(container.textContent).toContain(`Exported to ${picked[0].suggestedName}`);
+  // Saved again once the export was answered, with the same journal.
+  expect(storage.getItem(STATE_KEY)).toContain("Exported");
 });

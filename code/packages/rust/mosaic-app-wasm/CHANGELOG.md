@@ -20,6 +20,8 @@
   Names may not contain runs of spaces (the `Invoice.pdf<spaces>.exe`
   disguise). `file.save` keeps its explicit degradation.
 - Five new tests (15 total), run in the VisiCalc workflow.
+- The type declaration for `createBrowserFileEffects` includes its optional
+  `environment` argument (a test passes a fake with the pickers).
 
 ### Added — the loader sends the browser's UTC offset
 
