@@ -1,0 +1,19 @@
+{
+  "chapter": 49,
+  "title": "Letters From Food, Noon and Going",
+  "label": "ch:ar-letters-from-food-noon-going",
+  "canDo": "I can write ta, za and dhal, and I have now written every letter the words of this book use.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-R49-letters-second-pass",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 49: i can write ta, za and dhal, and I have now written every letter the words of this book use.",
+    "assesses": [
+      "AR-SCRIPT-C49-TA-EMPHATIC-01",
+      "AR-SCRIPT-C49-ZA-EMPHATIC-01",
+      "AR-SCRIPT-C49-DHAL-01"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 46,
+  "output": "arabic/book/chapters/ch46-ar-letters-from-greetings.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

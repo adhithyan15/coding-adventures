@@ -58,7 +58,9 @@
 // one-grapheme headword, and a Writing or Script block. A LETTER SET counts
 // too: a writing lesson whose headword lists single letters, like "வ, க" or
 // "௧ ௨ ௩". It writes a few letters side by side rather than one, and each of
-// its letters counts as written. Other writing lessons (a whole word copied, a
+// its letters counts as written. The letters may be followed by the word they
+// build, as in Arabic "ا م — سلام" or Tamil "ி, நன்றி"; the leading letters
+// are what the lesson writes one at a time. Other writing lessons (a whole word copied, a
 // dictation) are neither letters nor words here. They practise writing, but
 // they do not make a word "known" to read.
 //
@@ -139,10 +141,18 @@ export function writtenLettersOf(lesson: ParsedLesson): string[] | undefined {
   const letter = writingLetterOf(lesson);
   if (letter !== undefined) return [letter];
   if (lesson.realization.type !== "writing" || letterBlockIndex(lesson) === -1) return undefined;
-  const pieces = (lesson.realization.headword ?? "").split(/[\s,\u00B7\u060C\u3001]+/u).filter(Boolean);
+  const pieces = (lesson.realization.headword ?? "")
+    .split(/[\s,\u00B7\u060C\u3001\u2013\u2014]+/u)
+    .filter(Boolean);
   if (pieces.length < 2) return undefined;
-  if (pieces.some((piece) => [...GRAPHEMES.segment(piece)].length !== 1)) return undefined;
-  return pieces;
+  // The letters lead; a word they build may follow ("ا م — سلام", "ி, நன்றி").
+  // A headword that opens with a word ("ஏழு ௭") is a word lesson, not letters.
+  const letters: string[] = [];
+  for (const piece of pieces) {
+    if ([...GRAPHEMES.segment(piece)].length !== 1) break;
+    letters.push(piece);
+  }
+  return letters.length > 0 ? letters : undefined;
 }
 
 function chapterOf(lesson: ParsedLesson): number | null {
@@ -151,8 +161,15 @@ function chapterOf(lesson: ParsedLesson): number | null {
 }
 
 /** The target-script glyphs in a string, in order, deduplicated. */
+/**
+ * ARABIC TATWEEL (U+0640) is a joining stroke that stretches a connection, or
+ * shows where a mark sits ("ـَ"). It is not a letter anyone learns to write, so
+ * it is never read, written or owed.
+ */
+const NOT_A_LETTER = new Set(["\u0640"]);
+
 function glyphsIn(text: string, target: ReadonlySet<string>): string[] {
-  return [...new Set([...text].filter((ch) => belongsToAny(ch, target)))];
+  return [...new Set([...text].filter((ch) => !NOT_A_LETTER.has(ch) && belongsToAny(ch, target)))];
 }
 
 /** Measure both halves of the rule for every non-Latin track. */

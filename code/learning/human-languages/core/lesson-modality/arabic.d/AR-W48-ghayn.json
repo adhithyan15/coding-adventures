@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W48-ghayn",
+    "language": "arabic",
+    "chapter": 48,
+    "sequence": 1380,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0209b87e0d654755",
+    "detachableSegments": [
+      "Script you'll notice: غ",
+      "Writing: غ"
+    ]
+  },
+  "findings": []
+}

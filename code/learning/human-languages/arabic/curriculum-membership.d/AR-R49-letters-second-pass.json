@@ -1,0 +1,11 @@
+{
+  "id": "AR-R49-letters-second-pass",
+  "pathSegment": "AR-PATH-049-LETTERS-FOOD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-049-LETTERS-FOOD",
+      "order": 4
+    }
+  ]
+}
