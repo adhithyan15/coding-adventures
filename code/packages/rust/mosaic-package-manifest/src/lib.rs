@@ -251,6 +251,14 @@ pub struct HostEffectHandler {
     /// or nothing at all where the symbol is already in scope.
     pub include: Option<String>,
     pub install: String,
+    /// The effect kinds this handler answers (UI87 §7.2), or `None` for the
+    /// original meaning: every kind that is not a standard platform kind.
+    ///
+    /// The generated entry point routes each effect by kind: a claimed kind
+    /// goes to this handler; a standard kind (`files.open`, `files.save`) to
+    /// the platform library Mosaic ships; anything else is failed by the host.
+    /// Claiming a standard kind overrides the platform library for it.
+    pub kinds: Option<Vec<String>>,
 }
 
 /// The `[kernel]` table: which ABI version of the primitive kernel this
@@ -296,6 +304,12 @@ pub enum ManifestError {
     /// It is interpolated verbatim into generated source as a call expression,
     /// so an unshaped string is an arbitrary statement in someone's entry point.
     InvalidHostEffectSymbol(String),
+    /// A `[host_effects]` handler's `kinds` entry was not a plausible effect
+    /// kind, the list was empty, or it named a kind twice.
+    ///
+    /// Kinds are interpolated into generated source as string literals, so
+    /// they are held to a shape as tight as `install`'s.
+    InvalidHostEffectKind(String),
     /// A `[host_effects]` `include` was not a plausible header or import.
     ///
     /// It lands inside `#include "..."`, so a quote and a newline rewrite the
@@ -370,6 +384,12 @@ impl std::fmt::Display for ManifestError {
             Self::InvalidStylePath(path) => write!(
                 f,
                 "invalid style resource path `{path}` (must be a package-relative .json path without `.` or `..` components)"
+            ),
+            Self::InvalidHostEffectKind(value) => write!(
+                f,
+                "invalid `[host_effects]` handler kind `{value}` (kinds are dotted \
+                 names such as `files.save`, listed once each, and the list may not \
+                 be empty)"
             ),
             Self::InvalidHostEffectSymbol(value) => write!(
                 f,
@@ -490,6 +510,7 @@ struct RawHostEffectHandler {
     backend: Option<String>,
     include: Option<String>,
     install: Option<String>,
+    kinds: Option<Vec<String>>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -542,6 +563,15 @@ fn pascal_case_re() -> &'static Regex {
     // PascalCase: uppercase letter start, then any alphanumerics.
     // (We do *not* require an internal uppercase — `A` is valid PascalCase.)
     RE.get_or_init(|| Regex::new(r"^[A-Z][a-zA-Z0-9]*$").unwrap())
+}
+
+fn host_effect_kind_re() -> &'static Regex {
+    static RE: OnceLock<Regex> = OnceLock::new();
+    // A kind is written into generated source as a string literal (the set a
+    // router checks), so it gets the same treatment as `install`: a shape with
+    // no quote, backslash or newline in it. Dotted segments, as in
+    // `files.save`; camelCase, as in Engram's `importAnki`.
+    RE.get_or_init(|| Regex::new(r"^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$").unwrap())
 }
 
 fn host_effect_symbol_re() -> &'static Regex {
@@ -918,10 +948,26 @@ fn validate_host_effects(raw: Option<RawHostEffects>) -> Result<HostEffectsSecti
         if !host_effect_symbol_re().is_match(&install) {
             return Err(ManifestError::InvalidHostEffectSymbol(install));
         }
+        let kinds = match handler.kinds {
+            None => None,
+            Some(kinds) => {
+                if kinds.is_empty() {
+                    return Err(ManifestError::InvalidHostEffectKind(String::new()));
+                }
+                let mut seen = HashSet::with_capacity(kinds.len());
+                for kind in &kinds {
+                    if !host_effect_kind_re().is_match(kind) || !seen.insert(kind.as_str()) {
+                        return Err(ManifestError::InvalidHostEffectKind(kind.clone()));
+                    }
+                }
+                Some(kinds)
+            }
+        };
         handlers.push(HostEffectHandler {
             backend,
             include,
             install,
+            kinds,
         });
     }
 
@@ -1665,6 +1711,55 @@ handlers = [
             pkg.host_effects.handlers[0].include.as_deref(),
             Some("effects.h")
         );
+    }
+
+    /// UI87 §7.2: a handler may name the kinds it answers; without `kinds` it
+    /// keeps the original meaning (every non-standard kind).
+    #[test]
+    fn a_handler_may_claim_the_kinds_it_answers() {
+        let pkg = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [
+  { backend = "compose", install = "installProbeEffects", kinds = ["importAnki", "files.save"] },
+]
+"#,
+        ))
+        .expect("a handler with kinds must parse");
+        assert_eq!(
+            pkg.host_effects.handlers[0].kinds.as_deref(),
+            Some(&["importAnki".to_string(), "files.save".to_string()][..])
+        );
+
+        let legacy = parse(&manifest_with(
+            r#"
+[host_effects]
+handlers = [ { backend = "compose", install = "installProbeEffects" } ]
+"#,
+        ))
+        .expect("a handler without kinds must parse");
+        assert!(legacy.host_effects.handlers[0].kinds.is_none());
+    }
+
+    /// Kinds are written into generated source as string literals, so an
+    /// unshaped one, an empty list, or a repeated kind is refused.
+    #[test]
+    fn a_kind_outside_the_shape_is_refused() {
+        for kinds in [
+            r#"[]"#,
+            r#"["files.save", "files.save"]"#,
+            r#"['bad"kind']"#,
+            r#"["files..save"]"#,
+            r#"[".save"]"#,
+            r#"["9lives"]"#,
+            r#"["has space"]"#,
+        ] {
+            let err = parse(&manifest_with(&format!(
+                "\n[host_effects]\nhandlers = [ {{ backend = \"compose\", install = \"installProbeEffects\", kinds = {kinds} }} ]\n"
+            )))
+            .expect_err(kinds);
+            assert!(matches!(err, ManifestError::InvalidHostEffectKind(_)), "{kinds}: {err:?}");
+        }
     }
 
     #[test]
