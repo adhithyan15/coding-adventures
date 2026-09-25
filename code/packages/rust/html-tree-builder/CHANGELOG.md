@@ -13,6 +13,12 @@ documented in this file.
   remaining failure needs foreign content, fragment parsing, the html-lexer
   script-data fix or a real DOM. Robustness tests cover foster-parenting
   floods and deeply nested tables.
+- **Children are a doubly linked list** (first/last child, previous/next
+  sibling), so inserting before a node, finding the node before one, and
+  detaching are O(1). The security review of step 2 found foster parenting
+  quadratic with a child vector: every stray node goes in front of the open
+  table, and each insert scanned for it (1 MB of `<table>` + `a<br>`... took
+  38 s; now 0.85 s).
 
 - **New crate: BR03 step 1.** Tree construction as the WHATWG specification
   writes it, beside `html-parser`:

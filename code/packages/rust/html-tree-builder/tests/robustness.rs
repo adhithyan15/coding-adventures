@@ -183,3 +183,12 @@ fn table_structure_tokens_in_every_mode() {
     let noise = "<caption><col><colgroup><tbody><tr><td><th></td></tr></tbody></caption></table>";
     parse(&("<table>".to_string() + &noise.repeat(5_000)));
 }
+
+#[test]
+fn foster_parenting_stays_linear() {
+    // Security review of step 2: every foster-parented node goes in front of
+    // the open table, and with a child vector each insert scanned for it.
+    let output = parse(&("<table>".to_string() + &"a<br>".repeat(100_000)));
+    let body_children = output.document.children.len();
+    assert_eq!(body_children, 1);
+}
