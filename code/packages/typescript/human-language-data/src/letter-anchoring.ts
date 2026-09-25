@@ -69,6 +69,10 @@
 // learned. Glyphs that only appear in body text are the business of
 // script-closure.ts.
 //
+// A voiced kana (が, ぽ) is a combination of a letter and a mark, so it is
+// measured by its parts: it counts as written once its base kana and the mark
+// have each been written.
+//
 // letter-ledger.ts asks a neighbouring question: does a script's AUTHORED
 // letter order (data/scripts/<script>-ledger.json) still match the corpus? This
 // module needs no ledger. It reads the order the lessons actually run in, so it
@@ -160,7 +164,6 @@ function chapterOf(lesson: ParsedLesson): number | null {
   return typeof chapter === "number" && Number.isFinite(chapter) ? chapter : null;
 }
 
-/** The target-script glyphs in a string, in order, deduplicated. */
 /**
  * ARABIC TATWEEL (U+0640) is a joining stroke that stretches a connection, or
  * shows where a mark sits ("ـَ"). It is not a letter anyone learns to write, so
@@ -168,8 +171,36 @@ function chapterOf(lesson: ParsedLesson): number | null {
  */
 const NOT_A_LETTER = new Set(["\u0640"]);
 
+/**
+ * A voiced kana is a COMBINATION, not a new letter: が is か with the dakuten,
+ * ぽ is ほ with the handakuten. Unicode stores it precomposed, as one code
+ * point, so without this step が would be owed a lesson of its own even when
+ * the reader has written か and ゛ separately. That is the gentle-writing rule
+ * backwards: one letter at a time, THEN combinations.
+ *
+ * So a voiced kana is split into its base and the SPACING mark a lesson
+ * teaches: U+3099 becomes ゛ (U+309B), and U+309A becomes ゜ (U+309C).
+ */
+const SPACING_MARK: ReadonlyMap<string, string> = new Map([
+  ["\u3099", "\u309B"],
+  ["\u309A", "\u309C"],
+]);
+
+function combinationParts(ch: string): string[] {
+  const parts = [...ch.normalize("NFD")];
+  const mark = parts.length === 2 ? SPACING_MARK.get(parts[1]!) : undefined;
+  return mark === undefined ? [ch] : [parts[0]!, mark];
+}
+
+/** The target-script glyphs in a string, in order, deduplicated. */
 function glyphsIn(text: string, target: ReadonlySet<string>): string[] {
-  return [...new Set([...text].filter((ch) => !NOT_A_LETTER.has(ch) && belongsToAny(ch, target)))];
+  return [
+    ...new Set(
+      [...text]
+        .flatMap(combinationParts)
+        .filter((ch) => !NOT_A_LETTER.has(ch) && belongsToAny(ch, target)),
+    ),
+  ];
 }
 
 /** Measure both halves of the rule for every non-Latin track. */
