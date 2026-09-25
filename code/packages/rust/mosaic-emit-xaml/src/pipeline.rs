@@ -10074,7 +10074,18 @@ fn emit_host_checkbox(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsChecked=\"False\"");
         }
-        // #13040
+        // #13040. Inside a `For` a row marker such as `row[4]` ("1"/"") is
+        // read by truthiness exactly as `If ( when: … )` reads it there, so
+        // it binds to the row's own Boolean first (UI29-2 §2.1).
+        Some(LayoutPropValue::Expr(src))
+            if try_lower_for_template_predicate(strip_balanced_outer_parens(src.trim()), ctx)
+                .is_some() =>
+        {
+            let path =
+                try_lower_for_template_predicate(strip_balanced_outer_parens(src.trim()), ctx)
+                    .expect("guarded above");
+            attrs.push_str(&format!(" IsChecked=\"{{x:Bind {path}, Mode=OneWay}}\""));
+        }
         Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
             ExprLowering::Bindable(path) => {
                 attrs.push_str(&format!(" IsChecked=\"{{x:Bind {path}, Mode=OneWay}}\""));
@@ -10153,7 +10164,40 @@ fn emit_host_checkbox(
     // matching `checked: bool` payload value (true for Checked, false
     // for Unchecked) so the kernel-canonical UI29-2 §2.2 emit signature
     // is satisfied.
-    if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onToggle") {
+    //
+    // An `( index : number )` emit inside a `For` is the exception (UI29-2
+    // §2.1.1): it carries the row index, like a HostButton, and is wired to
+    // `Click` instead. `Checked`/`Unchecked` also fire when the app's own
+    // state moves `IsChecked` through the binding, which is harmless for an
+    // idempotent "now checked" payload but would flip a row straight back
+    // for a toggle-by-index. `Click` fires for user input only.
+    let row_index_payload = match find_prop_value(node, "onToggle") {
+        Some(LayoutPropValue::EmitRef(emit_name))
+            if ctx
+                .emit_payloads
+                .get(emit_name.as_str())
+                .is_some_and(|params| matches!(params.as_slice(), [(_, ty)] if ty == "double")) =>
+        {
+            host_button_click_payload_expr(emit_name, ctx).map(|payload| (emit_name, payload))
+        }
+        _ => None,
+    };
+    if let Some((emit_name, payload_expr)) = row_index_payload {
+        let handler = format!("{x_name}_Click");
+        let case_pascal = kebab_to_pascal_case(&strip_on_prefix(emit_name));
+        let component = ctx.component_name;
+        if payload_expr_uses_row_tag(&payload_expr) {
+            attrs.push_str(" Tag=\"{x:Bind}\"");
+        }
+        let body = format!(
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)\n    {{\n        Dispatch?.Invoke(this, new {component}Event.{case_pascal}({payload_expr}));\n    }}"
+        );
+        ctx.add_host_handler(HostHandler {
+            name: handler.clone(),
+            source: body,
+        });
+        attrs.push_str(&format!(" Click=\"{handler}\""));
+    } else if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop_value(node, "onToggle") {
         let emit_case = strip_on_prefix(emit_name);
         let case_pascal = kebab_to_pascal_case(&emit_case);
         let component = ctx.component_name;
@@ -16338,6 +16382,65 @@ mod tests {
         assert!(
             r.code_behind.contains(
                 "new FooEvent.Select((sender as Microsoft.UI.Xaml.FrameworkElement)?.Tag is Foo_ItemVm row ? (double)row.Index : -1.0)"
+            ),
+            "got:\n{}",
+            r.code_behind
+        );
+    }
+
+    /// UI29-2 §2.1.1: in a `For`, an `( index : number )` `onToggle` carries
+    /// the row index and is wired to `Click` (user input only) — not to
+    /// `Checked`/`Unchecked`, which also fire when the binding moves
+    /// `IsChecked` and would flip the row straight back.
+    #[test]
+    fn host_checkbox_inside_indexed_for_dispatches_index_on_click() {
+        let c = component(
+            "Foo",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit(
+                "onToggle",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let checkbox = LayoutNode {
+            tag: "HostCheckbox".to_string(),
+            part_name: None,
+            props: vec![
+                LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::Keyword("item".to_string()),
+                },
+                LayoutProp {
+                    name: "onToggle".to_string(),
+                    value: LayoutPropValue::EmitRef("onToggle".to_string()),
+                },
+            ],
+            children: Vec::new(),
+        };
+        let l = layout_with_root(
+            "Foo",
+            for_node(
+                LayoutPropValue::SlotRef("items".to_string()),
+                "item",
+                Some("i"),
+                vec![checkbox],
+            ),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("Tag=\"{x:Bind}\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Click=\""), "got:\n{}", r.xaml);
+        assert!(
+            !r.xaml.contains("Checked=\""),
+            "an index toggle must not fire on binding-driven Checked, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            r.code_behind.contains(
+                "new FooEvent.Toggle((sender as Microsoft.UI.Xaml.FrameworkElement)?.Tag is Foo_ItemVm row ? (double)row.Index : -1.0)"
             ),
             "got:\n{}",
             r.code_behind
