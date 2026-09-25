@@ -61,7 +61,7 @@ positions are searched from the end, where the builder's targets are.
 
 ## Progress
 
-`tests/corpus.rs` runs html-parser's html5lib corpus (2,654 cases). **1,883
+`tests/corpus.rs` runs html-parser's html5lib corpus (2,655 cases). **1,883
 pass.** Every failing case is listed in `tests/fixtures/expected-failures.txt`;
 the test fails on an unlisted failure and on a listed case that passes, so the
 list only shrinks. Most of what remains is tables, foreign content and

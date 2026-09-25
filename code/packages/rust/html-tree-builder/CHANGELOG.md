@@ -28,4 +28,4 @@ documented in this file.
     formatting list. Hostile inputs that took 2.8 to 452 s (or crashed on
     drop) now parse 250-900 KB in under a second.
 - The html5lib corpus harness with a shrink-only expected-failure list:
-  1,883 of 2,654 cases pass.
+  1,883 of 2,655 cases pass.
