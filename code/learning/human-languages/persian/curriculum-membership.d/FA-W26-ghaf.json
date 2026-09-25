@@ -1,0 +1,11 @@
+{
+  "id": "FA-W26-ghaf",
+  "pathSegment": "FA-PATH-026-LETTERS-LAST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-026-LETTERS-LAST",
+      "order": 1
+    }
+  ]
+}

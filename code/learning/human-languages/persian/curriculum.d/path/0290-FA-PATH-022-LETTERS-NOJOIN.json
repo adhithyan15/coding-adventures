@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-022-LETTERS-NOJOIN",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "FA-EXT-022-LETTERS-NOJOIN"
+  ],
+  "after": []
+}

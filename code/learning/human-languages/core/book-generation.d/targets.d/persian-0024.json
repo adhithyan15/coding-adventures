@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 24,
+  "output": "persian/book/chapters/ch24-fa-letters-from-asking-and-saying.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

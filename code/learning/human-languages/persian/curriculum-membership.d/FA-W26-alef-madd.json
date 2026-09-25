@@ -1,0 +1,11 @@
+{
+  "id": "FA-W26-alef-madd",
+  "pathSegment": "FA-PATH-026-LETTERS-LAST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-026-LETTERS-LAST",
+      "order": 2
+    }
+  ]
+}

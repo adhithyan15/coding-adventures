@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-024-LETTERS-NAMES",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "FA-EXT-024-LETTERS-NAMES"
+  ],
+  "after": []
+}

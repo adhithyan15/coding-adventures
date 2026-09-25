@@ -1,0 +1,17 @@
+{
+  "language": "persian",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:619a98cddb2a5807",
+  "lessonIds": [
+    "FA-W22-re",
+    "FA-W22-ze",
+    "FA-W22-dal"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "persian/narration/ch22.txt",
+  "json": "persian/narration/ch22.json",
+  "textHash": "fnv1a64:31db890c54b7cf95",
+  "jsonHash": "fnv1a64:d186965654e0c1ec",
+  "findings": []
+}

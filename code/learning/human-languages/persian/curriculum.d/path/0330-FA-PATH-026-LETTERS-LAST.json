@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-026-LETTERS-LAST",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "FA-EXT-026-LETTERS-LAST"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-W22-ze",
+  "pathSegment": "FA-PATH-022-LETTERS-NOJOIN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-022-LETTERS-NOJOIN",
+      "order": 1
+    }
+  ]
+}

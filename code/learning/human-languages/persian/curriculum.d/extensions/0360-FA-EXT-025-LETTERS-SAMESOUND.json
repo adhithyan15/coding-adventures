@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-025-LETTERS-SAMESOUND",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write shin, sad, ta and za, and say which letter I already know sounds the same.",
+  "prerequisites": []
+}

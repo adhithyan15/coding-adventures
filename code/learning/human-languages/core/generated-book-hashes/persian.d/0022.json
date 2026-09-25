@@ -1,0 +1,11 @@
+{
+  "language": "persian",
+  "chapter": 22,
+  "sourceHash": "fnv1a64:3baea3829060e4d5",
+  "lessonIds": [
+    "FA-W22-re",
+    "FA-W22-ze",
+    "FA-W22-dal"
+  ],
+  "tex": "persian/book/chapters/ch22-fa-letters-that-never-join-forward.tex"
+}
