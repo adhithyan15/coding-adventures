@@ -2,6 +2,123 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.17.0] - 2026-09-25
+
+### Added — propagate a scalar `let`/`var` to its use sites (CLOC29)
+
+Per [CLOC29](../../specs/CLOC29-scalar-let-var-propagation.md), the second
+slice of CCR-068 (#15837). A top-level scalar `let` or `var` now propagates
+into its reads under the closed-world gate:
+
+```js
+var x = 1;
+if (x) { console.log(1); } else { console.log(2); }   // => console.log(1);
+
+var a = null;
+console.log(a ?? 2);                                   // => console.log(2);
+```
+
+No new folding was needed. Constant folding already reduced `1 ? A : B` and
+`null ?? 2`; the pass simply never put the literal there, because the scalar
+path admitted `const` and nothing else. Four ladder rungs close, and the
+ledger goes 64 → 60.
+
+### Why the gate was not simply lifted
+
+The scalar path sizes its rewrite with `count_uses_*`, which deliberately does
+not count a bare identifier in assignment position. For a `const` that is
+correct — it cannot be assigned. Admit `var` on that counter and:
+
+```js
+var X = 1;
+X = 2;
+console.log(X);          // prints 2; the tally sees ONE use and folds to 1
+```
+
+That is the same miscompile CLOC28 hit from the other direction, where the
+write was invisible because `AssignmentTarget` is `#[serde(untagged)]`.
+
+So a scalar `let`/`var` candidate is marked `strong_proof` and routed through
+CLOC28's whole-program proof instead: count every mention over the serialized
+AST, refuse on any write or self-reference in the initializer, rewrite on a
+clone, and commit only if the declaration's own binding target is the single
+surviving mention. Over-counting only declines, so unmodelled AST shapes fail
+closed. `const` keeps the cheap counter it has always used.
+
+### Renamed: `with_structured_literals` → `closed_world`
+
+The flag now gates two capabilities that share one justification — CLOC28's
+chain resolution and CLOC29's scalar propagation are both unsound in an
+open world, because a top-level binding is a property of the global object.
+Measured at both levels:
+
+```text
+                            SIMPLE                     ADVANCED
+var x=1; console.log(x)     var x=1;console.log(x);    console.log(1);
+```
+
+`does_not_propagate_let_or_var` became
+`does_not_propagate_let_or_var_in_the_open_world`, with a new
+`does_propagate_let_or_var_in_the_closed_world` pinning the other side. The
+old test asserted the blanket claim "`let`/`var` are never propagated", which
+is no longer true at ADVANCED; pinning both configurations keeps the gate from
+being widened or dropped without a test moving.
+
+### Known blind spot, shared with upstream
+
+`eval` can write a binding from inside a string, where no AST scan reaches it:
+
+```js
+var x = 1;
+eval("x = 9");
+console.log(x);      // node prints 9; we emit eval("x=9");console.log(1)
+```
+
+`v20260915` emits byte-identical output, so this is exact parity, not a
+divergence — Closure at ADVANCED documents that it does not support `eval`
+modifying locals. Recorded so it is not rediscovered as a bug.
+
+### Fixed — `with` could make propagation unsound, on any binding kind
+
+Found in review. A `with` block resolves identifiers against a runtime object,
+so `var x=1; with(JSON.parse('{"x":9}')) console.log(x)` prints `9`, and
+folding `x` to `1` is wrong. The oracle rejects `with` outright, but closurec
+compiles it, so the exposure was ours. The pass now declines every candidate in
+a program containing a `WithStatement` — including on the `const` path, where
+the hole predates this release.
+
+### Fixed — the strong-proof path bypassed the multi-use size budget
+
+Also found in review, and new in this release. The `strong_proof` branch
+returned before the `literal_cost(..) > MAX_MULTIUSE_LITERAL_LEN` check, so a
+long literal read at several sites was duplicated into all of them — meaning a
+`var` optimized *worse* than the same program written with `const`, which is
+backwards. The budget now applies to a scalar strong-proof candidate too. A
+structured candidate stays exempt: what it plants is the scalar a chain
+resolved to, never the literal.
+
+### Fixed — propagation was quadratic in the number of candidates
+
+New in this release and the reason it mattered: `propagate_structured` did two
+whole-program `serde_json::to_value` calls plus a full `Program::clone()` for
+every candidate. CLOC28 only sent rare object/array literals down that path;
+CLOC29 sends every top-level scalar `let`/`var`, which is the common case.
+
+Measured on N separate top-level bindings each read once, at ADVANCED:
+
+| N | before | after | `const` baseline |
+|---|---|---|---|
+| 200 | 0.57s | 0.26s | 0.14s |
+| 800 | 10.56s | 1.89s | 0.65s |
+
+The program is now serialized once per sweep and shared across candidates, and
+the post-rewrite count is derived arithmetically — `propagate_all` returns how
+many sites it rewrote, and each rewrite removes exactly one mention, so
+`remaining == total - replaced`. The residual growth is the per-candidate
+clone, tracked separately.
+
+10 tests added.
+
 ## [0.16.0] - 2026-09-24
 
 ### Added — resolve a member chain against an object/array literal (CLOC28)

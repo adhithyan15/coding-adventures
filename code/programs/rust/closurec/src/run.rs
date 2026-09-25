@@ -417,7 +417,7 @@ fn run_typed_pipeline(
     // structured half is enabled only here, with the other closed-world
     // passes.
     pipeline.add(Box::new(if advanced.is_some() {
-        InlineVariablesPass::with_structured_literals()
+        InlineVariablesPass::closed_world()
     } else {
         InlineVariablesPass::new()
     }));
