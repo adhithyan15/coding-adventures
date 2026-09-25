@@ -1,0 +1,11 @@
+{
+  "id": "TA-C100-boy",
+  "pathSegment": "TA-PATH-100-FAMILY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-100-FAMILY",
+      "order": 1
+    }
+  ]
+}

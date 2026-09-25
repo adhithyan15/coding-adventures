@@ -1,0 +1,11 @@
+{
+  "id": "HI-C118-patni",
+  "pathSegment": "HI-PATH-118-SPOUSE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-118-SPOUSE",
+      "order": 3
+    }
+  ]
+}

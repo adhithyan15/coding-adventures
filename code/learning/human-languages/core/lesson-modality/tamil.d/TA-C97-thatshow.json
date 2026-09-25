@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C97-thatshow",
+    "language": "tamil",
+    "chapter": 97,
+    "sequence": 4090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ea0c32a3b50b672"
+  },
+  "findings": []
+}

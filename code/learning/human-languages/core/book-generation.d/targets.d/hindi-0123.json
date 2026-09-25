@@ -1,0 +1,6 @@
+{
+  "language": "hindi",
+  "chapter": 123,
+  "output": "hindi/book/chapters/ch123-hows-it-going.tex",
+  "scriptSet": "hindi-main"
+}

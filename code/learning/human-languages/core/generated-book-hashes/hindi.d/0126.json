@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:6f3950243615eec4",
+  "lessonIds": [
+    "HI-C126-phirse",
+    "HI-C126-samajhnahin",
+    "HI-C126-kyakaha",
+    "HI-C126-nahinpata",
+    "HI-C126-ekbaraur"
+  ],
+  "tex": "hindi/book/chapters/ch126-what-did-you-say.tex"
+}

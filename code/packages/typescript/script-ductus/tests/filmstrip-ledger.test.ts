@@ -26,12 +26,14 @@
 // plus one regeneration rather than an edit here.
 // ---------------------------------------------------------------------------
 
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { SCRIPTS } from "../src/scriptdata.ts";
+import { loadLessons } from "@coding-adventures/human-language-data/src/loader.ts";
+import { filmstripCandidates } from "@coding-adventures/human-language-data/src/figure-targets.ts";
 import { ductusFor, boundsOf, parseFont } from "../src/index.ts";
 import type { GlyphOutline } from "../src/ductusview.ts";
 import {
@@ -55,6 +57,15 @@ interface FigureTarget {
   glyph?: string;
 }
 
+// Loading every lesson is the slow part of building the ledger (seconds, not
+// milliseconds), and the candidate list cannot change during one test run, so
+// it is read once per file rather than once per generation.
+let candidateCache: ReturnType<typeof filmstripCandidates> | undefined;
+function letterLessonCandidates(): ReturnType<typeof filmstripCandidates> {
+  candidateCache ??= filmstripCandidates(loadLessons(CURRICULUM_ROOT));
+  return candidateCache;
+}
+
 function filmstripTargets(): Array<{ script: string; glyph: string }> {
   const config = JSON.parse(
     readFileSync(join(CURRICULUM_ROOT, "core", "figure-generation.json"), "utf8"),
@@ -70,6 +81,17 @@ function filmstripTargets(): Array<{ script: string; glyph: string }> {
     wanted.set(`${target.script}:${target.glyph}`, {
       script: target.script,
       glyph: target.glyph,
+    });
+  }
+  // HL-C443: single-letter writing lessons on switched-on tracks are candidates
+  // too. A DECLARED target without a cited ductus is an authoring error and
+  // throws below; a derived candidate without one is simply not drawn, because
+  // the candidate list is every letter lesson, cited or not.
+  for (const candidate of letterLessonCandidates()) {
+    if (ductusFor(candidate.glyph, candidate.script) === undefined) continue;
+    wanted.set(`${candidate.script}:${candidate.glyph}`, {
+      script: candidate.script,
+      glyph: candidate.glyph,
     });
   }
   return [...wanted.values()];
@@ -122,8 +144,21 @@ function currentLedgerBytes(): string {
   return serialiseFilmstripLedger(buildFilmstripLedger(entries));
 }
 
-describe("the printed filmstrip ledger", () => {
+// These tests assert BYTES, not speed. Building the ledger renders every printed
+// letter (21 since HL-C443 derived Tamil's letter lessons) and the first build
+// also loads the whole curriculum to find those lessons; on a shared CI runner
+// that is several times slower than a laptop, and it broke vitest's default 5 s
+// per-test budget on the first CI run. So the curriculum load is done once in
+// `beforeAll` with its own budget, and each test is given a budget sized to the
+// work it does rather than to a wall-clock guess that measures runner load.
+const LEDGER_BUILD_TIMEOUT_MS = 60_000;
+
+describe("the printed filmstrip ledger", { timeout: LEDGER_BUILD_TIMEOUT_MS }, () => {
   const path = join(CURRICULUM_ROOT, FILMSTRIP_LEDGER_PATH);
+
+  beforeAll(() => {
+    letterLessonCandidates();
+  }, 120_000);
 
   it("matches the pen paths and fonts it was generated from", () => {
     const expected = currentLedgerBytes();

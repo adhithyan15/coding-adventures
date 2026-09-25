@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C94-write",
+    "language": "tamil",
+    "chapter": 94,
+    "sequence": 3950,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7a13be1ecc00bc66"
+  },
+  "findings": []
+}

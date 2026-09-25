@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C108-udas",
+    "language": "hindi",
+    "chapter": 108,
+    "sequence": 4720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e89eca6e8dc4f429"
+  },
+  "findings": []
+}

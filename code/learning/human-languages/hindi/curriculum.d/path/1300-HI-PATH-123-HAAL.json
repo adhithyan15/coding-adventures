@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-123-HAAL",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "HI-EXT-123-HAAL"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C92-slowly",
+    "language": "tamil",
+    "chapter": 92,
+    "sequence": 3840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f82cf69f792c931"
+  },
+  "findings": []
+}

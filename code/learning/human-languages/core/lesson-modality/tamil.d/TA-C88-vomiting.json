@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C88-vomiting",
+    "language": "tamil",
+    "chapter": 88,
+    "sequence": 3660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfc9873ae30231a9"
+  },
+  "findings": []
+}

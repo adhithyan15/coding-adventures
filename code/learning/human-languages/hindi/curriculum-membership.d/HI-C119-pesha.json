@@ -1,0 +1,11 @@
+{
+  "id": "HI-C119-pesha",
+  "pathSegment": "HI-PATH-119-ABOUT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-119-ABOUT",
+      "order": 1
+    }
+  ]
+}

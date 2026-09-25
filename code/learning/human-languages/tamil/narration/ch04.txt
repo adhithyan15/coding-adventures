@@ -113,7 +113,7 @@ What does the phrase mean, and which of its two words is the Sanskrit loan? ("We
 Lesson 5 of 6.
 Tamil's curves — the writing surface leaves a trace.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: The script is the shape of its writing surface and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: The script is the shape of its writing surface, Script you'll notice: The vowel you get for free and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
@@ -127,8 +127,15 @@ A palm leaf has a grain, like wood. Draw a long straight line along that grain a
 Treat that as the standard explanation rather than a settled fact. The earliest Tamil writing — Tamil-Brahmi, cut into stone and pottery — is noticeably angular; the rounding came later, through the Vaṭṭeḻuttu ("round script") stage. And Devanagari was written on the same leaves without going round. So the leaf is one pressure among several, not a complete answer.
 It is still worth carrying, because it makes the right general point: the tool leaves fingerprints on the letters. Latin's straight strokes suit a wax tablet and a chisel; Tamil's curves suit a stylus and a leaf.
 
+Script you'll notice: The vowel you get for free.
+Tamil is an abugida, like Devanagari: a consonant already contains a vowel.
+க is not "k". க is "ka".
+Every consonant carries a built-in a until a later mark removes or replaces it.
+
 Guided Practice.
 [pause 1 second]
+[your turn — say: "a consonant carries a built-in a"]
+[pause 8 seconds for the answer]
 [once you have stopped driving — trace: a curve crossing the imagined grain of a palm leaf]
 [your turn — contrast: angular Tamil-Brahmi, later rounded Vaṭṭeḻuttu]
 [pause 8 seconds for the answer]

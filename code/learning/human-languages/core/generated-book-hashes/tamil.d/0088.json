@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:3d7b244dd083f749",
+  "lessonIds": [
+    "TA-C88-hospital",
+    "TA-C88-vomiting",
+    "TA-C88-headache",
+    "TA-C88-health",
+    "TA-C88-sweat"
+  ],
+  "tex": "tamil/book/chapters/ch88-at-the-hospital.tex"
+}

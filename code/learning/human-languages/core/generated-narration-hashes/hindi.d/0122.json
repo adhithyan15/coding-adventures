@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:65dac95b649c45b0",
+  "lessonIds": [
+    "HI-C122-chhutti",
+    "HI-C122-derhogai",
+    "HI-C122-aramse",
+    "HI-C122-ijazat",
+    "HI-C122-janahai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch122.txt",
+  "json": "hindi/narration/ch122.json",
+  "textHash": "fnv1a64:b83a6adf3c38095e",
+  "jsonHash": "fnv1a64:fe71cf4e6d13dd5b",
+  "findings": []
+}

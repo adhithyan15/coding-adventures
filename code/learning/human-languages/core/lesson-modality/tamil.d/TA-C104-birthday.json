@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C104-birthday",
+    "language": "tamil",
+    "chapter": 104,
+    "sequence": 4450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cfd29ac48f5d759"
+  },
+  "findings": []
+}

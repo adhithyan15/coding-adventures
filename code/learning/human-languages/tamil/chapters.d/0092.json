@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Slowly, Again, Louder",
+  "label": "ch:ta-slowly-again-louder",
+  "canDo": "I can ask someone to speak slowly, say it again, speak louder, and wait a minute.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TA-C92-wait",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can ask someone to speak slowly, say it again, speak louder, and wait a minute.",
+    "assesses": [
+      "TA-LEX-C92-AGAIN-03",
+      "TA-LEX-C92-AGAIN-04",
+      "TA-LEX-C92-AGAIN-05"
+    ]
+  }
+}

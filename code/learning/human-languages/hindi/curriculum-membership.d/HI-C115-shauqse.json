@@ -1,0 +1,11 @@
+{
+  "id": "HI-C115-shauqse",
+  "pathSegment": "HI-PATH-115-COMEIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-115-COMEIN",
+      "order": 3
+    }
+  ]
+}

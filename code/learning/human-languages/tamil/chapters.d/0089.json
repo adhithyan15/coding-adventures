@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "Sad, Worried, Calm",
+  "label": "ch:ta-sad-worried-calm",
+  "canDo": "I can say I am sad, worried, nervous or shivering, and ask someone to stay calm.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-C89-shivering",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can say I am sad, worried, nervous or shivering, and ask someone to stay calm.",
+    "assesses": [
+      "TA-LEX-C89-FEEL-03",
+      "TA-LEX-C89-FEEL-04",
+      "TA-LEX-C89-FEEL-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-117-AUNT",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "HI-EXT-117-AUNT"
+  ],
+  "after": []
+}

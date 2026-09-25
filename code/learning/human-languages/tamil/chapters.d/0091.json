@@ -1,0 +1,19 @@
+{
+  "chapter": 91,
+  "title": "Sun, Heat, and Sleep",
+  "label": "ch:ta-sun-heat-sleep",
+  "canDo": "I can say it is sunny or hot, that I am sleepy, and that I am well.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-C91-well",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 91: i can say it is sunny or hot, that I am sleepy, and that I am well.",
+    "assesses": [
+      "TA-LEX-C91-WEATHER-02",
+      "TA-LEX-C91-WEATHER-03",
+      "TA-LEX-C91-WEATHER-04"
+    ]
+  }
+}

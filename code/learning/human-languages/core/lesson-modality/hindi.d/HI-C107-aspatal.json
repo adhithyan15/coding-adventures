@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C107-aspatal",
+    "language": "hindi",
+    "chapter": 107,
+    "sequence": 4660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0ab5df34c0ba0e7"
+  },
+  "findings": []
+}

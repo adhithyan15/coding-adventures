@@ -1,0 +1,11 @@
+{
+  "id": "TA-C100-wife",
+  "pathSegment": "TA-PATH-100-FAMILY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-100-FAMILY",
+      "order": 3
+    }
+  ]
+}

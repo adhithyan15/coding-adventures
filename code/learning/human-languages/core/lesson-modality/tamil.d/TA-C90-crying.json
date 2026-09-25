@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C90-crying",
+    "language": "tamil",
+    "chapter": 90,
+    "sequence": 3760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d7523e824302c83"
+  },
+  "findings": []
+}

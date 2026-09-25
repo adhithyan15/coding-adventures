@@ -1,0 +1,11 @@
+{
+  "id": "HI-C122-aramse",
+  "pathSegment": "HI-PATH-122-LATE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-122-LATE",
+      "order": 2
+    }
+  ]
+}

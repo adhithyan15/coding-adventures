@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-113-NOTHING",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer with nothing, not yet, that's enough, that's the one, and maybe.",
+  "prerequisites": []
+}

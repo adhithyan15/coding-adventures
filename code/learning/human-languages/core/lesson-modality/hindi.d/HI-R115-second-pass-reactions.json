@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R115-second-pass-reactions",
+    "language": "hindi",
+    "chapter": 115,
+    "sequence": 5110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8bc1dd726f42c98d"
+  },
+  "findings": []
+}

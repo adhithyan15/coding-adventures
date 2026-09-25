@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-118-SPOUSE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about a boy or a girl, a husband or a wife, and a relative.",
+  "prerequisites": []
+}

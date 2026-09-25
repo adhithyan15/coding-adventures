@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-112-RIGHT",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "HI-EXT-112-RIGHT"
+  ],
+  "after": []
+}

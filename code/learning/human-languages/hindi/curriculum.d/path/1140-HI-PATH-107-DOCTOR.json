@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-107-DOCTOR",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "HI-EXT-107-DOCTOR"
+  ],
+  "after": []
+}

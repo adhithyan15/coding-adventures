@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-126-WHAT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask what someone said, ask for it once more, and say I did not understand or do not know.",
+  "prerequisites": []
+}

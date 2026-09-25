@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-106-CARE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "TA-EXT-106-CARE"
+  ],
+  "after": []
+}

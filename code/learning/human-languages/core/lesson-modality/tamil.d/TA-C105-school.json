@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C105-school",
+    "language": "tamil",
+    "chapter": 105,
+    "sequence": 4490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:496509b11053c445"
+  },
+  "findings": []
+}

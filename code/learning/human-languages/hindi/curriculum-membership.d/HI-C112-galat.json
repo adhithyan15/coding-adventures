@@ -1,0 +1,11 @@
+{
+  "id": "HI-C112-galat",
+  "pathSegment": "HI-PATH-112-RIGHT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-112-RIGHT",
+      "order": 1
+    }
+  ]
+}

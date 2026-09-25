@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:36e77b552ab1263f",
+  "lessonIds": [
+    "TA-C105-signature",
+    "TA-C105-occupation",
+    "TA-C105-college",
+    "TA-C105-school"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "tamil/narration/ch105.txt",
+  "json": "tamil/narration/ch105.json",
+  "textHash": "fnv1a64:21c42a988e47d9df",
+  "jsonHash": "fnv1a64:ac0ed10a691ef56a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:432449ad0bcacc3a",
+  "lessonIds": [
+    "TA-C93-meaning",
+    "TA-C93-intamil",
+    "TA-C93-howsay",
+    "TA-C93-show",
+    "TA-C93-didnthear"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch93.txt",
+  "json": "tamil/narration/ch93.json",
+  "textHash": "fnv1a64:d1fc0aa48174ea28",
+  "jsonHash": "fnv1a64:d8a8bbc159b92b6f",
+  "findings": []
+}

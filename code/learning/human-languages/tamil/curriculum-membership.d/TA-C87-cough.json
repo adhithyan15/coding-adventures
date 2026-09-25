@@ -1,0 +1,11 @@
+{
+  "id": "TA-C87-cough",
+  "pathSegment": "TA-PATH-87-UNWELL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-87-UNWELL",
+      "order": 2
+    }
+  ]
+}

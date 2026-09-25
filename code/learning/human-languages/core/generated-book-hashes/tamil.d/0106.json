@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:85eac6470214c94a",
+  "lessonIds": [
+    "TA-C106-takecare",
+    "TA-C106-safely",
+    "TA-C106-late",
+    "TA-C106-letsgo",
+    "TA-C106-holiday"
+  ],
+  "tex": "tamil/book/chapters/ch106-take-care.tex"
+}

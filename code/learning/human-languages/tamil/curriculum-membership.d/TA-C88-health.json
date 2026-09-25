@@ -1,0 +1,11 @@
+{
+  "id": "TA-C88-health",
+  "pathSegment": "TA-PATH-88-DOCTOR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-88-DOCTOR",
+      "order": 3
+    }
+  ]
+}

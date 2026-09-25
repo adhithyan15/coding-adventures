@@ -1,0 +1,11 @@
+{
+  "id": "TA-C96-isthatso",
+  "pathSegment": "TA-PATH-96-NOTATALL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-96-NOTATALL",
+      "order": 1
+    }
+  ]
+}

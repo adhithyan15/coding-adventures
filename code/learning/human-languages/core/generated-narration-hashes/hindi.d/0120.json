@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:add56ff3646b3034",
+  "lessonIds": [
+    "HI-C120-hastakshar",
+    "HI-C120-pahchan",
+    "HI-C120-parichay",
+    "HI-C120-insan",
+    "HI-C120-milkar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch120.txt",
+  "json": "hindi/narration/ch120.json",
+  "textHash": "fnv1a64:d4ff81a4807cb94f",
+  "jsonHash": "fnv1a64:c34e15206f091e54",
+  "findings": []
+}

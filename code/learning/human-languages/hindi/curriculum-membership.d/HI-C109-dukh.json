@@ -1,0 +1,11 @@
+{
+  "id": "HI-C109-dukh",
+  "pathSegment": "HI-PATH-109-MOOD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-109-MOOD",
+      "order": 2
+    }
+  ]
+}

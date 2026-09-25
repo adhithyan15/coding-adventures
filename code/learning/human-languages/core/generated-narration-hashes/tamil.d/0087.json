@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:71d51d6ebd145267",
+  "lessonIds": [
+    "TA-C87-tiredness",
+    "TA-C87-cold",
+    "TA-C87-cough",
+    "TA-C87-weariness",
+    "TA-C87-rest"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch87.txt",
+  "json": "tamil/narration/ch87.json",
+  "textHash": "fnv1a64:b569221817e58b1b",
+  "jsonHash": "fnv1a64:893b6612c210c4c9",
+  "findings": []
+}

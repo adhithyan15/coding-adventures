@@ -1,0 +1,11 @@
+{
+  "id": "HI-C126-ekbaraur",
+  "pathSegment": "HI-PATH-126-WHAT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-126-WHAT",
+      "order": 4
+    }
+  ]
+}

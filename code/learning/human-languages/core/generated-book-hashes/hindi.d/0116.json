@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:c5db29c3d7258bff",
+  "lessonIds": [
+    "HI-C116-dada",
+    "HI-C116-dadi",
+    "HI-C116-nana",
+    "HI-C116-nani",
+    "HI-C116-chacha"
+  ],
+  "tex": "hindi/book/chapters/ch116-grandparents.tex"
+}

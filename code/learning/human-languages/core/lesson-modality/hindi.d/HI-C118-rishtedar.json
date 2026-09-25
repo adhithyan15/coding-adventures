@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C118-rishtedar",
+    "language": "hindi",
+    "chapter": 118,
+    "sequence": 5260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8272f69f05832a4"
+  },
+  "findings": []
+}

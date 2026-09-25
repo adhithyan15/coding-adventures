@@ -1,0 +1,11 @@
+{
+  "id": "HI-C115-aie",
+  "pathSegment": "HI-PATH-115-COMEIN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-115-COMEIN",
+      "order": 0
+    }
+  ]
+}

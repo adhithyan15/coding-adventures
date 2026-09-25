@@ -1,0 +1,21 @@
+{
+  "chapter": 108,
+  "title": "Greetings People Actually Say",
+  "label": "ch:ta-greetings-people-say",
+  "canDo": "I can greet someone the way Tamil speakers do day to day: have you eaten, long time, what's new, are you well, how are you.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TA-R108-second-pass-leave-greet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can greet someone the way Tamil speakers do day to day: have you eaten, long time, what's new, are you well, how are you.",
+    "assesses": [
+      "TA-LEX-C108-GREET-01",
+      "TA-LEX-C108-GREET-02",
+      "TA-LEX-C108-GREET-03",
+      "TA-LEX-C108-GREET-04",
+      "TA-LEX-C108-GREET-05"
+    ]
+  }
+}

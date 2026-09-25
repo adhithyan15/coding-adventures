@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:d52e1114d25a4ec8",
+  "lessonIds": [
+    "TA-C103-grandson",
+    "TA-C103-granddaughter",
+    "TA-C103-neighbour",
+    "TA-C103-familyname",
+    "TA-C103-petname"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch103.txt",
+  "json": "tamil/narration/ch103.json",
+  "textHash": "fnv1a64:fe7b30ebdfdc5d25",
+  "jsonHash": "fnv1a64:e42ed458dac244c6",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:7aee9dff41d0ae4f",
+  "lessonIds": [
+    "TA-C100-children",
+    "TA-C100-boy",
+    "TA-C100-husband",
+    "TA-C100-wife",
+    "TA-C100-relative"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch100.txt",
+  "json": "tamil/narration/ch100.json",
+  "textHash": "fnv1a64:55f9586712fd1f16",
+  "jsonHash": "fnv1a64:d6a67a5c096c10a6",
+  "findings": []
+}

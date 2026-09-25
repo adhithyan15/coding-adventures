@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:928035655e3588ff",
+  "lessonIds": [
+    "HI-C125-shant",
+    "HI-C125-ghabrahat",
+    "HI-C125-bechain",
+    "HI-C125-mannahin",
+    "HI-C125-maza"
+  ],
+  "tex": "hindi/book/chapters/ch125-calm-and-restless.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C121-chalie",
+  "pathSegment": "HI-PATH-121-CARE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-121-CARE",
+      "order": 4
+    }
+  ]
+}

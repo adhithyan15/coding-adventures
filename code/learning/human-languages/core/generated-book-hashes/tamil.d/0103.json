@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:5bfb54412218b111",
+  "lessonIds": [
+    "TA-C103-grandson",
+    "TA-C103-granddaughter",
+    "TA-C103-neighbour",
+    "TA-C103-familyname",
+    "TA-C103-petname"
+  ],
+  "tex": "tamil/book/chapters/ch103-grandchildren-names.tex"
+}

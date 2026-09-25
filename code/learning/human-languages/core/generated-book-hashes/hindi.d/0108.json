@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:d25276f27d6c9851",
+  "lessonIds": [
+    "HI-C108-dar",
+    "HI-C108-gussa",
+    "HI-C108-udas",
+    "HI-C108-pareshan",
+    "HI-C108-chinta"
+  ],
+  "tex": "hindi/book/chapters/ch108-fear-anger-sadness.tex"
+}

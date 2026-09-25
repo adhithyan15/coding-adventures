@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:9156ed5d41840620",
+  "lessonIds": [
+    "HI-C113-kuchnahin",
+    "HI-C113-abhinahin",
+    "HI-C113-kafi",
+    "HI-C113-vahi",
+    "HI-C113-hosakta"
+  ],
+  "tex": "hindi/book/chapters/ch113-nothing-not-yet.tex"
+}

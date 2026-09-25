@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:507ff6d10561d8af",
+  "lessonIds": [
+    "TA-C90-laughter",
+    "TA-C90-crying",
+    "TA-C90-tears",
+    "TA-C90-alone",
+    "TA-C90-hungry"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch90.txt",
+  "json": "tamil/narration/ch90.json",
+  "textHash": "fnv1a64:e12a0522ae16e0af",
+  "jsonHash": "fnv1a64:3ecb7e15a5509212",
+  "findings": []
+}

@@ -69,9 +69,7 @@ Warm-up.
 Tamil's letters do not join and they carry many curves. Now learn the sound that arrives for free inside every consonant.
 
 Script you'll notice: The vowel you get for free.
-Tamil is an abugida, like Devanagari: a consonant already contains a vowel.
-க is not "k". க is "ka".
-Every consonant carries a built-in a until a later mark removes or replaces it.
+The last lesson showed that Tamil is an abugida: a consonant already carries a built-in a. Here are the first two consonants that carry it.
 
 Script you'll notice: வ — "va".
 a near-closed loop on the left.

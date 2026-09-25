@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-91-WEATHER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say it is sunny or hot, that I am sleepy, and that I am well.",
+  "prerequisites": []
+}

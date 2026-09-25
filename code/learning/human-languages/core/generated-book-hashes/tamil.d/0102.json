@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:041fd3b519f8b865",
+  "lessonIds": [
+    "TA-C102-fatherselderbrother",
+    "TA-C102-periyamma",
+    "TA-C102-motherinlaw",
+    "TA-C102-daughterinlaw",
+    "TA-C102-soninlaw"
+  ],
+  "tex": "tamil/book/chapters/ch102-elders-and-in-laws.tex"
+}

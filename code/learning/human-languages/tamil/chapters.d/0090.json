@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "Laughter and Tears",
+  "label": "ch:ta-laughter-and-tears",
+  "canDo": "I can talk about laughter, crying and tears, say I am alone, and say I am hungry.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-C90-hungry",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 90: i can talk about laughter, crying and tears, say I am alone, and say I am hungry.",
+    "assesses": [
+      "TA-LEX-C90-MOOD-03",
+      "TA-LEX-C90-MOOD-04",
+      "TA-LEX-C90-MOOD-05"
+    ]
+  }
+}

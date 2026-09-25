@@ -1,0 +1,11 @@
+{
+  "id": "HI-C115-jinahin",
+  "pathSegment": "HI-PATH-115-COMEIN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-115-COMEIN",
+      "order": 4
+    }
+  ]
+}

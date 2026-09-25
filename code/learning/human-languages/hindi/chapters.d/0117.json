@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Aunts, Uncles, In-Laws",
+  "label": "ch:hi-aunts-uncles",
+  "canDo": "I can name aunts and uncles on both sides, a brother's wife, and the home of the in-laws.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-C117-sasural",
+    "kind": "production",
+    "summary": "Complete HI-C117-sasural: the rest of the family, named by side.",
+    "assesses": [
+      "HI-LEX-C117-AUNT-03",
+      "HI-LEX-C117-AUNT-04",
+      "HI-LEX-C117-AUNT-05"
+    ]
+  }
+}

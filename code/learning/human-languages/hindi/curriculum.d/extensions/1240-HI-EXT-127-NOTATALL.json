@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-127-NOTATALL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer with don't know, not at all, truly, is that so, and that'll do.",
+  "prerequisites": []
+}

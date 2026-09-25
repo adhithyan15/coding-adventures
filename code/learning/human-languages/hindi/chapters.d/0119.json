@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Work and Marriage",
+  "label": "ch:hi-work-and-marriage",
+  "canDo": "I can ask and answer about a job, a profession, a wedding, being married, and a birthday.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-C119-janmdin",
+    "kind": "production",
+    "summary": "Complete HI-C119-janmdin: the questions that come after a name.",
+    "assesses": [
+      "HI-LEX-C119-ABOUT-03",
+      "HI-LEX-C119-ABOUT-04",
+      "HI-LEX-C119-ABOUT-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C125-maza",
+  "pathSegment": "HI-PATH-125-CALM",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-125-CALM",
+      "order": 4
+    }
+  ]
+}

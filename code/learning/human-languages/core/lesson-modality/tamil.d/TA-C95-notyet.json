@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C95-notyet",
+    "language": "tamil",
+    "chapter": 95,
+    "sequence": 4010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b173c31365d60df"
+  },
+  "findings": []
+}

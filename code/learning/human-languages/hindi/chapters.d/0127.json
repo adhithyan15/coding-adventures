@@ -1,0 +1,21 @@
+{
+  "chapter": 127,
+  "title": "Not at All",
+  "label": "ch:hi-not-at-all",
+  "canDo": "I can answer with don't know, not at all, truly, is that so, and that'll do.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "HI-R127-second-pass-repair",
+    "kind": "production",
+    "summary": "Complete HI-R127-second-pass-repair: repair and short answers, from cold.",
+    "assesses": [
+      "HI-LEX-C127-NOTATALL-01",
+      "HI-LEX-C127-NOTATALL-02",
+      "HI-LEX-C127-NOTATALL-03",
+      "HI-LEX-C127-NOTATALL-04",
+      "HI-LEX-C127-NOTATALL-05"
+    ]
+  }
+}

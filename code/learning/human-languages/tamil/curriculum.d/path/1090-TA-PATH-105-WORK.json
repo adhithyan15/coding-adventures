@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-105-WORK",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "TA-EXT-105-WORK"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C114-mafi",
+    "language": "hindi",
+    "chapter": 114,
+    "sequence": 5000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eec70dfd62a737f2"
+  },
+  "findings": []
+}
