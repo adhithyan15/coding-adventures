@@ -70,6 +70,6 @@ if [[ "$with_macos" == "--with-macos" ]]; then
   args+=(-library "$(build aarch64-apple-darwin)")
 fi
 
-rm -rf "$output"
+rm -rf -- "$output"
 xcodebuild -create-xcframework "${args[@]}" -output "$output"
 echo "wrote $output"
