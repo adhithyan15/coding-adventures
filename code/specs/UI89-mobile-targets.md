@@ -68,8 +68,12 @@ Venture scale from one generator rather than four hand-made projects.
   function from a small description to project text, unit-tested without
   Xcode). The artifact builder calls it for the SwiftUI backend whenever
   `--runtime-library` is an `.xcframework`, and writes
-  `swiftui/App.xcodeproj/project.pbxproj` beside the Swift package, which
-  still builds as before.
+  `swiftui/iOS/App.xcodeproj/project.pbxproj` beside the Swift package, which
+  still builds as before. The project sits in `iOS/`, not beside `Package.swift`: `xcodebuild` in a
+  directory holding an `.xcodeproj` builds that project, so the Swift
+  package's own `xcodebuild -scheme App` builds would silently start building
+  the app instead. Its `projectDirPath` is `..`, so its paths are the
+  package's.
 - **What the target compiles:** the same generated files the Swift package
   compiles: `Sources/App/*.swift`, and the C loader
   `Sources/CMosaicRuntime/CMosaicRuntime.c` with `MOSAIC_RUNTIME_STATIC`. It

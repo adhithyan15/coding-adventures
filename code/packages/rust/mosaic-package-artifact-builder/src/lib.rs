@@ -2856,7 +2856,7 @@ fn build_package_inner(
     })
 }
 
-/// Write `App.xcodeproj/project.pbxproj` for a SwiftUI package built with a
+/// Write `iOS/App.xcodeproj/project.pbxproj` for a SwiftUI package built with a
 /// static runtime, plus the module map that lets Swift import the C loader in
 /// both the Xcode project and the Swift package (UI89 §2.2).
 fn write_ios_app_project(
@@ -2901,10 +2901,13 @@ fn write_ios_app_project(
         swift_include_paths: vec![LOADER_INCLUDE.to_string()],
         preprocessor_definitions: vec!["MOSAIC_RUNTIME_STATIC=1".to_string()],
         xcframeworks: vec![mosaic_app_bindings::SWIFT_STATIC_RUNTIME_PATH.to_string()],
+        // The project lives in iOS/, so `xcodebuild` in the package directory
+        // still builds the Swift package rather than picking this project up.
+        source_root: "..".to_string(),
     };
     let project = mosaic_ios_project::project_pbxproj(&app)
         .map_err(|error| BuildError::Io(format!("iOS app project: {error}")))?;
-    let project_path = backend_dir.join("App.xcodeproj/project.pbxproj");
+    let project_path = backend_dir.join("iOS/App.xcodeproj/project.pbxproj");
     if let Some(parent) = project_path.parent() {
         create_dir_all(parent)?;
     }
@@ -10558,7 +10561,7 @@ layout NativeEvents {
         )
         .expect("SwiftUI shell with a static runtime");
 
-        let project_path = out.path().join("swiftui/App.xcodeproj/project.pbxproj");
+        let project_path = out.path().join("swiftui/iOS/App.xcodeproj/project.pbxproj");
         assert!(result.artifacts.contains(&project_path));
         let project = fs::read_to_string(&project_path).unwrap();
         for source in [
@@ -10598,7 +10601,7 @@ layout NativeEvents {
         )
         .expect("SwiftUI shell with a static runtime");
         let project =
-            fs::read_to_string(out.path().join("swiftui/App.xcodeproj/project.pbxproj")).unwrap();
+            fs::read_to_string(out.path().join("swiftui/iOS/App.xcodeproj/project.pbxproj")).unwrap();
         assert!(project.contains("INFOPLIST_KEY_CFBundleDisplayName = \"Card Studio\";"));
         assert!(project.contains("PRODUCT_BUNDLE_IDENTIFIER = \"com.example.cards\";"));
     }
@@ -10608,7 +10611,7 @@ layout NativeEvents {
         let pkg = card_package();
         let out = TempDir::new().unwrap();
         build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).expect("SwiftUI shell");
-        assert!(!out.path().join("swiftui/App.xcodeproj").exists());
+        assert!(!out.path().join("swiftui/iOS").exists());
         assert!(!out
             .path()
             .join("swiftui/Sources/CMosaicRuntime/include/module.modulemap")

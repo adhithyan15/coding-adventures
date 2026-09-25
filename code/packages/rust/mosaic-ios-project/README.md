@@ -16,7 +16,7 @@ test it.
 mosaic-compile pkg --backend swiftui --emit-project --runtime-library <X>.xcframework
   └── mosaic-package-artifact-builder
         ├── Package.swift, Sources/…            (the Swift package, as before)
-        └── mosaic-ios-project ──▶ App.xcodeproj/project.pbxproj
+        └── mosaic-ios-project ──▶ iOS/App.xcodeproj/project.pbxproj
 ```
 
 It is shared Mosaic infrastructure: every app built with a static runtime —
@@ -62,6 +62,6 @@ let text = project_pbxproj(&app)?;
 Then build and run it:
 
 ```bash
-xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator CODE_SIGNING_ALLOWED=NO build
+cd iOS && xcodebuild -project App.xcodeproj -target App -sdk iphonesimulator CODE_SIGNING_ALLOWED=NO build
 xcrun simctl install booted build/Debug-iphonesimulator/App.app
 ```

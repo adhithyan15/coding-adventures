@@ -12,7 +12,7 @@
 //! ```text
 //!   swiftui/
 //!     Package.swift                         ← still builds, as before
-//!     App.xcodeproj/project.pbxproj         ← this crate
+//!     iOS/App.xcodeproj/project.pbxproj     ← this crate (source root "..")
 //!     Sources/App/*.swift                   ← compiled by both
 //!     Sources/CMosaicRuntime/CMosaicRuntime.c
 //!     Sources/CMosaicRuntime/include/{CMosaicRuntime.h, module.modulemap}
@@ -76,6 +76,12 @@ pub struct IosApp {
     pub preprocessor_definitions: Vec<String>,
     /// `.xcframework`s to link.
     pub xcframeworks: Vec<String>,
+    /// Where the paths above are relative to, from the directory holding
+    /// `App.xcodeproj`: `""` for that directory, `".."` for its parent. The
+    /// Mosaic builder puts the project in `iOS/` beside the Swift package, so
+    /// that `xcodebuild` run in the package directory still builds the
+    /// package, and passes `".."`.
+    pub source_root: String,
 }
 
 /// Why a description cannot become a project.
@@ -168,6 +174,12 @@ fn validate(app: &IosApp) -> Result<(), ProjectError> {
         return Err(ProjectError::InvalidText {
             field: "product_name",
             value: app.product_name.clone(),
+        });
+    }
+    if !matches!(app.source_root.as_str(), "" | "..") {
+        return Err(ProjectError::InvalidPath {
+            field: "source_root",
+            value: app.source_root.clone(),
         });
     }
     for definition in &app.preprocessor_definitions {
@@ -492,7 +504,7 @@ impl<'a> Builder<'a> {
                 ("knownRegions", "(en, Base)".to_string()),
                 ("mainGroup", main_group),
                 ("productRefGroup", products_group),
-                ("projectDirPath", quote("")),
+                ("projectDirPath", quote(&app.source_root)),
                 ("projectRoot", quote("")),
                 ("targets", format!("({target})")),
             ],
@@ -603,6 +615,7 @@ mod tests {
             swift_include_paths: vec!["Sources/CMosaicRuntime/include".into()],
             preprocessor_definitions: vec!["MOSAIC_RUNTIME_STATIC=1".into()],
             xcframeworks: vec!["Runtime/MosaicAppRuntime.xcframework".into()],
+            source_root: String::new(),
         }
     }
 
@@ -700,6 +713,13 @@ mod tests {
     }
 
     #[test]
+    fn the_source_root_becomes_the_project_dir_path() {
+        let mut app = trestle();
+        app.source_root = "..".into();
+        assert!(project_pbxproj(&app).unwrap().contains("projectDirPath = \"..\";"));
+    }
+
+    #[test]
     fn output_is_deterministic() {
         assert_eq!(
             project_pbxproj(&trestle()).unwrap(),
@@ -737,6 +757,9 @@ mod tests {
         assert!(refused(|app| app.c_sources.push("$(HOME)/evil.c".into())));
         assert!(refused(|app| app.header_search_paths.push("~/include".into())));
         assert!(refused(|app| app.swift_sources.push("Sources/App/App.swift".into())));
+        assert!(refused(|app| app.source_root = "../..".into()));
+        assert!(refused(|app| app.source_root = "/tmp".into()));
+        assert!(!refused(|app| app.source_root = "..".into()));
         assert!(!refused(|_| {}));
     }
 }

@@ -9,5 +9,7 @@
   `module_map` makes the loader importable from Swift in both the Xcode
   project and the Swift package; `default_bundle_identifier` derives an
   identity from a package name. Strings are quoted and escaped, and absolute
-  paths, `..`, `$(…)` and control characters are refused. Verified: Trestle
+  paths, `..`, `$(…)` and control characters are refused. `source_root`
+  (`""` or `".."`) becomes `projectDirPath`, so the project can live in a
+  subdirectory of the sources. Verified: Trestle
   built from the generated project installs and runs on the iPhone simulator.
