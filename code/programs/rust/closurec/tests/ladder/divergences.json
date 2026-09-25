@@ -587,17 +587,6 @@
    "upstream_exit": 0,
    "upstream_stdout": "console.log(new function(){return typeof new.target});\n"
   },
-  "ladder_t7_optional_chain_advanced": {
-   "closurec_exit": 0,
-   "closurec_stdout": "var o={a:{b:1}};console.log(o?.a?.b);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "ADVANCED",
-   "reason": "closurec does not propagate a single-use value or function into its use site and eliminate the binding; upstream reduces the program to its observable effect. This is the CCR-068 value-propagation gap.",
-   "rung": "optional_chain",
-   "tier": 7,
-   "upstream_exit": 0,
-   "upstream_stdout": "console.log(1);\n"
-  },
   "ladder_t7_private_field_advanced": {
    "closurec_exit": 0,
    "closurec_stdout": "class A{#x=1;get(){return this.#x}}console.log((new A).get());\n",

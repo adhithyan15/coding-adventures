@@ -1532,8 +1532,18 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> usize {
     // and the eligibility check in `inline_variables_program` will have
     // rejected the candidate before we get here if one exists).
     if cand.structured {
-        if let Expression::MemberExpression(m) = expr {
-            if let Some((root, keys)) = structured::chain_of(m) {
+        // CLOC30: the spine may mix `.` and `?.` and sit under a
+        // `ChainExpression`, so all three shapes go through one walker.
+        // `?.` cannot short-circuit on a path `resolve` accepts — the root
+        // is an object/array literal and every step lands on another one —
+        // so an optional chain reads exactly as a plain one here.
+        if matches!(
+            expr,
+            Expression::MemberExpression(_)
+                | Expression::OptionalMemberExpression(_)
+                | Expression::ChainExpression(_)
+        ) {
+            if let Some((root, keys)) = structured::chain_of_expr(expr) {
                 if root == cand.name {
                     if let Some(v) = structured::resolve(&cand.value, &keys) {
                         if is_literal(v) {
@@ -1976,6 +1986,73 @@ mod tests {
         assert_eq!(
             propagate_source("var x = x;console.log(x);"),
             "var x=x;console.log(x);"
+        );
+    }
+
+    // ---- CLOC30: optional chains resolve like plain ones ----------------
+    //
+    // `?.` cannot short-circuit on a path `resolve` accepts: the root is an
+    // object/array literal (never nullish) and every step lands on another
+    // one. So these read exactly as their `.` equivalents.
+
+    #[test]
+    fn resolves_an_all_optional_chain() {
+        assert_eq!(
+            propagate_source("var o = { a: { b: 1 } };console.log(o?.a?.b);"),
+            "var o={a:{b:1}};console.log(1);"
+        );
+    }
+
+    #[test]
+    fn resolves_a_chain_that_starts_plain_and_turns_optional() {
+        assert_eq!(
+            propagate_source("var o = { a: { b: 1 } };console.log(o.a?.b);"),
+            "var o={a:{b:1}};console.log(1);"
+        );
+    }
+
+    #[test]
+    fn resolves_a_chain_that_starts_optional_and_turns_plain() {
+        assert_eq!(
+            propagate_source("var o = { a: { b: 1 } };console.log(o?.a.b);"),
+            "var o={a:{b:1}};console.log(1);"
+        );
+    }
+
+    #[test]
+    fn resolves_an_optional_computed_subscript() {
+        assert_eq!(
+            propagate_source(r#"var o = { a: 1 };console.log(o?.["a"]);"#),
+            r#"var o={a:1};console.log(1);"#
+        );
+    }
+
+    #[test]
+    fn resolves_an_optional_index_into_an_array() {
+        assert_eq!(
+            propagate_source("var a = [1, 2, 3];console.log(a?.[1]);"),
+            "var a=[1,2,3];console.log(2);"
+        );
+    }
+
+    /// A step onto a scalar stops the walk, so the chain is left for the
+    /// folder rather than resolved here. Upstream folds this to `void 0`;
+    /// declining is a gap, not a divergence in the dangerous direction.
+    #[test]
+    fn refuses_an_optional_chain_through_a_null_intermediate() {
+        assert_eq!(
+            propagate_source("var o = { a: null };console.log(o?.a?.b);"),
+            "var o={a:null};console.log(null?.b);"
+        );
+    }
+
+    /// Every CLOC28 guard still applies when the chain is optional — the
+    /// write makes the whole binding ineligible, `?.` or not.
+    #[test]
+    fn refuses_an_optional_chain_when_the_property_is_written() {
+        assert_eq!(
+            propagate_source("var o = { a: 1 };o.a = 9;console.log(o?.a);"),
+            "var o={a:1};o.a=9;console.log(o?.a);"
         );
     }
 
