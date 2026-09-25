@@ -1,0 +1,854 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 89,
+  "title": "Take Care on the Way",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:5ed5c5bfef6d8049",
+  "lessons": [
+    {
+      "id": "KA-C89-takecare",
+      "sequence": 3340,
+      "title": "ಹುಷಾರು (huṣāru) — take care, careful",
+      "headword": "ಹುಷಾರು",
+      "romanization": "huṣāru",
+      "gloss": "take care, careful",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d637f01cb8d028f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for come in, then the Kannada for welcome."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹುಷಾರು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹುಷಾರು (huṣāru) — \"careful, take care\". Said at parting it means \"look after yourself\"; said on its own it can also mean \"well again\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A warm word at the door."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huṣāru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huṣāru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huṣāru, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huṣāru*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say huṣāru!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *huṣāru!*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for come in, then the Kannada for welcome, then say huṣāru again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for come in, then the Kannada for welcome, then say *huṣāru* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹುಷಾರು (huṣāru) mean? (\"Take care, careful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C89-safely",
+      "sequence": 3350,
+      "title": "ಜೋಪಾನ (jōpāna) — carefully, safely",
+      "headword": "ಜೋಪಾನ",
+      "romanization": "jōpāna",
+      "gloss": "carefully, safely",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9ad1f7332d11535",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for welcome, then the Kannada for take care."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಜೋಪಾನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜೋಪಾನ (jōpāna) — \"carefully, safely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಜೋಪಾನವಾಗಿ ಹೋಗಿ (jōpānavāgi hōgi) — \"go safely\", with the same ‑ಆಗಿ ending as ನಿಧಾನವಾಗಿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The second half of a caring goodbye."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōpāna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōpāna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jōpāna, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jōpāna*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say jōpānavāgi hōgi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *jōpānavāgi hōgi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for welcome, then the Kannada for take care, then say jōpāna again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for welcome, then the Kannada for take care, then say *jōpāna* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಜೋಪಾನ (jōpāna) mean? (\"Carefully, safely\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C89-late",
+      "sequence": 3360,
+      "title": "ತಡವಾಯಿತು (taḍavāyitu) — it's late, it got late",
+      "headword": "ತಡವಾಯಿತು",
+      "romanization": "taḍavāyitu",
+      "gloss": "it's late, it got late",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0247c48e2113dee4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for take care, then the Kannada for safely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ತಡವಾಯಿತು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ತಡವಾಯಿತು (taḍavāyitu) — \"it's late\", literally \"it has become late\". ತಡ (taḍa) is \"delay, lateness\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The reason people stand up to leave."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍavāyitu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍavāyitu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taḍavāyitu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taḍavāyitu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say taḍavāyitu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *taḍavāyitu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for take care, then the Kannada for safely, then say taḍavāyitu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for take care, then the Kannada for safely, then say *taḍavāyitu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ತಡವಾಯಿತು (taḍavāyitu) mean? (\"It's late, it got late\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C89-letsgo",
+      "sequence": 3370,
+      "title": "ಹೋಗೋಣ (hōgōṇa) — let's go",
+      "headword": "ಹೋಗೋಣ",
+      "romanization": "hōgōṇa",
+      "gloss": "let's go",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b616e6d576f01a0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for safely, then the Kannada for it's late."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೋಗೋಣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೋಗೋಣ (hōgōṇa) — \"let's go\". The ending ‑ಓಣ (-ōṇa) means \"let's\", the same one you know from ಸಿಗೋಣ (sigōṇa), \"let's meet\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A known ending on a known verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōgōṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōgōṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hōgōṇa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hōgōṇa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say taḍavāyitu, hōgōṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *taḍavāyitu, hōgōṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for safely, then the Kannada for it's late, then say hōgōṇa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for safely, then the Kannada for it's late, then say *hōgōṇa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೋಗೋಣ (hōgōṇa) mean? (\"Let's go\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C89-holiday",
+      "sequence": 3380,
+      "title": "ರಜೆ (raje) — a holiday, leave",
+      "headword": "ರಜೆ",
+      "romanization": "raje",
+      "gloss": "a holiday, leave",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1eda344594520c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for it's late, then the Kannada for let's go."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ರಜೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ರಜೆ (raje) — \"a holiday, time off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾಳೆ ರಜೆ (nāḷe raje) — \"tomorrow is a holiday\", with ನಾಳೆ, \"tomorrow\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A good reason to say goodbye cheerfully."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raje",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raje*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raje, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raje*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nāḷe raje",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nāḷe raje*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for it's late, then the Kannada for let's go, then say raje again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for it's late, then the Kannada for let's go, then say *raje* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ರಜೆ (raje) mean? (\"A holiday, leave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R89-first-pass-unwell-feelings",
+      "sequence": 3390,
+      "title": "How are you, really? — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over feeling unwell, feelings and the body",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5059cacb72b915b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tomorrow is a holiday, and it is time to go. Say both."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "you are tired, you have a cold, a cough and a headache",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: you are tired, you have a cold, a cough and a headache]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tell a friend to take rest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tell a friend to take rest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "name sadness, worry, fear, anger and laughter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: name sadness, worry, fear, anger and laughter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "you are thirsty and worn out; ask where the hospital is; ask for a tablet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: you are thirsty and worn out; ask where the hospital is; ask for a tablet]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tiredness? (ಆಯಾಸ.) A cold? (ಶೀತ.) A cough? (ಕೆಮ್ಮು.) A headache? (ತಲೆನೋವು.) Rest? (ವಿಶ್ರಾಂತಿ.) Sadness, worry, fear, anger, laughter? (ದುಃಖ, ಚಿಂತೆ, ಭಯ, ಕೋಪ, ನಗು.) Thirst? (ಬಾಯಾರಿಕೆ.) Worn out? (ಸುಸ್ತು.) Sweat? (ಬೆವರು.) Hospital? (ಆಸ್ಪತ್ರೆ.) A tablet? (ಮಾತ್ರೆ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R89-second-pass-repair-replies-welcome",
+      "sequence": 3400,
+      "title": "Talking it through — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over repair, replies, welcome and leaving",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f30697ba3d294f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Someone speaks too fast. Ask them to speak slowly, and to say it once more."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a little louder; what is the meaning of this?; please write it down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a little louder; what is the meaning of this?; please write it down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one minute; please wait; please show me the way",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one minute; please wait; please show me the way]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I didn't hear; I didn't understand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I didn't hear; I didn't understand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "really?; nothing; oh no!; is that so?; that's the one!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: really?; nothing; oh no!; is that so?; that's the one!]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "congratulations; an invitation for you; a gift for you; please come in; welcome",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: congratulations; an invitation for you; a gift for you; please come in; welcome]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "take care; go safely; it's late; let's go; tomorrow is a holiday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: take care; go safely; it's late; let's go; tomorrow is a holiday]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Slowly? (ನಿಧಾನವಾಗಿ.) Once more? (ಮತ್ತೊಮ್ಮೆ.) Loudly? (ಜೋರಾಗಿ.) Meaning? (ಅರ್ಥ.) Write it down? (ಬರೆದು ಕೊಡಿ.) One minute? (ಒಂದು ನಿಮಿಷ.) Please wait? (ಕಾಯಿರಿ.) Show me? (ತೋರಿಸಿ.) I didn't hear? (ಕೇಳಿಸಲಿಲ್ಲ.) I didn't understand? (ಅರ್ಥವಾಗಲಿಲ್ಲ.) Really? (ನಿಜವಾಗಲೂ?) Nothing? (ಏನೂ ಇಲ್ಲ.) Oh no? (ಅಯ್ಯೋ.) Is that so? (ಹೌದಾ?) The same? (ಅದೇ.) Congratulations? (ಅಭಿನಂದನೆಗಳು.) Invitation? (ಆಹ್ವಾನ.) Gift? (ಉಡುಗೊರೆ.) Come in? (ಒಳಗೆ ಬನ್ನಿ.) Welcome? (ಸ್ವಾಗತ.) Take care? (ಹುಷಾರು (huṣāru).) Safely? (ಜೋಪಾನ (jōpāna).) It's late? (ತಡವಾಯಿತು (taḍavāyitu).) Let's go? (ಹೋಗೋಣ (hōgōṇa).) Holiday? (ರಜೆ (raje).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

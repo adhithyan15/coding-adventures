@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "How You Feel Inside",
+  "label": "ch:ka-how-you-feel-inside",
+  "canDo": "I can name sadness, worry, fear, anger and laughter.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C83-laughter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can name sadness, worry, fear, anger and laughter.",
+    "assesses": [
+      "KA-LEX-C83-FEELINGS-03",
+      "KA-LEX-C83-FEELINGS-04",
+      "KA-LEX-C83-FEELINGS-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "One Minute, Please",
+  "label": "ch:ka-one-minute-please",
+  "canDo": "I can ask for a minute, ask someone to wait or show me, and say I did not hear or did not understand.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "KA-C86-didntunderstand",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can ask for a minute, ask someone to wait or show me, and say I did not hear or did not understand.",
+    "assesses": [
+      "KA-LEX-C86-WAIT-03",
+      "KA-LEX-C86-WAIT-04",
+      "KA-LEX-C86-WAIT-05"
+    ]
+  }
+}

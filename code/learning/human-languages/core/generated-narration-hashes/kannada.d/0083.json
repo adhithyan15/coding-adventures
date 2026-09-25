@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:ee9888370886a46a",
+  "lessonIds": [
+    "KA-C83-sadness",
+    "KA-C83-worry",
+    "KA-C83-fear",
+    "KA-C83-anger",
+    "KA-C83-laughter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch83.txt",
+  "json": "kannada/narration/ch83.json",
+  "textHash": "fnv1a64:de7d902c77f57ff8",
+  "jsonHash": "fnv1a64:2a2c2031fa80df29",
+  "findings": []
+}

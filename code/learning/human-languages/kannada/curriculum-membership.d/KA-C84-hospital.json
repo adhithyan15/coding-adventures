@@ -1,0 +1,11 @@
+{
+  "id": "KA-C84-hospital",
+  "pathSegment": "KA-PATH-84-BODY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-84-BODY",
+      "order": 3
+    }
+  ]
+}

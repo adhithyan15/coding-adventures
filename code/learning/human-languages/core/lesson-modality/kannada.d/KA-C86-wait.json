@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C86-wait",
+    "language": "kannada",
+    "chapter": 86,
+    "sequence": 3200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffd1baf8be6bc135"
+  },
+  "findings": []
+}

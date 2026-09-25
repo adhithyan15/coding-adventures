@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-87-REPLIES",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "KA-EXT-87-REPLIES"
+  ],
+  "after": []
+}

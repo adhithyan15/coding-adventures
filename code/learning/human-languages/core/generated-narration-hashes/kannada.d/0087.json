@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:f7fd862ac6ee2fab",
+  "lessonIds": [
+    "KA-C87-really",
+    "KA-C87-nothing",
+    "KA-C87-ohno",
+    "KA-C87-isthatso",
+    "KA-C87-thesame"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch87.txt",
+  "json": "kannada/narration/ch87.json",
+  "textHash": "fnv1a64:6ad4b812d4d9fa86",
+  "jsonHash": "fnv1a64:9a72f680e4de0b9c",
+  "findings": []
+}

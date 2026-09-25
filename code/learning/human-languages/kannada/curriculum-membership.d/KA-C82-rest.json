@@ -1,0 +1,11 @@
+{
+  "id": "KA-C82-rest",
+  "pathSegment": "KA-PATH-82-UNWELL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-82-UNWELL",
+      "order": 4
+    }
+  ]
+}

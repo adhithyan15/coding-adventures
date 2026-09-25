@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C87-really",
+    "language": "kannada",
+    "chapter": 87,
+    "sequence": 3240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e40e387c3953f30a"
+  },
+  "findings": []
+}

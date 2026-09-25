@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-86-WAIT",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "KA-EXT-86-WAIT"
+  ],
+  "after": []
+}

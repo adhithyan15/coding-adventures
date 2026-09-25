@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:d3ab6b88c4a926f8",
+  "lessonIds": [
+    "KA-C89-takecare",
+    "KA-C89-safely",
+    "KA-C89-late",
+    "KA-C89-letsgo",
+    "KA-C89-holiday",
+    "KA-R89-first-pass-unwell-feelings",
+    "KA-R89-second-pass-repair-replies-welcome"
+  ],
+  "tex": "kannada/book/chapters/ch89-take-care-on-the-way.tex"
+}

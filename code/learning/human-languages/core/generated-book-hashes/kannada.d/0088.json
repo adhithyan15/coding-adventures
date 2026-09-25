@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:ec9cf8249f604344",
+  "lessonIds": [
+    "KA-C88-congratulations",
+    "KA-C88-invitation",
+    "KA-C88-gift",
+    "KA-C88-comein",
+    "KA-C88-welcome"
+  ],
+  "tex": "kannada/book/chapters/ch88-welcome-and-congratulations.tex"
+}

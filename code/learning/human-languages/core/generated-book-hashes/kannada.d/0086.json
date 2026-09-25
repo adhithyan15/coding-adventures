@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:323f727049d308f5",
+  "lessonIds": [
+    "KA-C86-oneminute",
+    "KA-C86-wait",
+    "KA-C86-show",
+    "KA-C86-didnthear",
+    "KA-C86-didntunderstand"
+  ],
+  "tex": "kannada/book/chapters/ch86-one-minute-please.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:4d69533b1fd8043c",
+  "lessonIds": [
+    "KA-C85-slowly",
+    "KA-C85-oncemore",
+    "KA-C85-loudly",
+    "KA-C85-meaning",
+    "KA-C85-writeit"
+  ],
+  "tex": "kannada/book/chapters/ch85-slowly-once-more.tex"
+}
