@@ -126,9 +126,10 @@ fn tree_construction_diagnostic_coverage_is_ratcheted() {
         }
     }
 
-    assert_eq!(expected_error_rows, 6275);
-    assert_eq!(expected_error_cases, 2197);
+    // +2 rows / +1 case: template.dat:124 (BR02 P1.3).
+    assert_eq!(expected_error_rows, 6277);
+    assert_eq!(expected_error_cases, 2198);
     assert_eq!(missing_diagnostic_cases, 0);
-    assert_eq!(expected_error_cases - missing_diagnostic_cases, 2197);
+    assert_eq!(expected_error_cases - missing_diagnostic_cases, 2198);
     assert_eq!(undeclared_diagnostic_cases, 142);
 }
