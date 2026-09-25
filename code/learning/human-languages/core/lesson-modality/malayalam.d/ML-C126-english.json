@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C126-english",
+    "language": "malayalam",
+    "chapter": 126,
+    "sequence": 4870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a6764a52b4cef9a"
+  },
+  "findings": []
+}

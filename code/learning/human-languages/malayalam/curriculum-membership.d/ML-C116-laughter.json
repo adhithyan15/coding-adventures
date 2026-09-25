@@ -1,0 +1,11 @@
+{
+  "id": "ML-C116-laughter",
+  "pathSegment": "ML-PATH-116-FEELINGS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-116-FEELINGS",
+      "order": 3
+    }
+  ]
+}

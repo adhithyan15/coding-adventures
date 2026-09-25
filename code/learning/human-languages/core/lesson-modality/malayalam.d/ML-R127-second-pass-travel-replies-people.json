@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R127-second-pass-travel-replies-people",
+    "language": "malayalam",
+    "chapter": 127,
+    "sequence": 4950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e1f79a7abd3b0f9"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C125-relative",
+  "pathSegment": "ML-PATH-125-KIN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-125-KIN",
+      "order": 1
+    }
+  ]
+}

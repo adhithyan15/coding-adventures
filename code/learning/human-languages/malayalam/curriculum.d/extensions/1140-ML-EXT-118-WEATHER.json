@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-118-WEATHER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say it is cold or hot, name sleep, mist, and thunder and lightning.",
+  "prerequisites": []
+}

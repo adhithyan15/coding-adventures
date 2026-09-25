@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-117-BODY",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "ML-EXT-117-BODY"
+  ],
+  "after": []
+}

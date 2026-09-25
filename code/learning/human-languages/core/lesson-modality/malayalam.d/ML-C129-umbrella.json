@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C129-umbrella",
+    "language": "malayalam",
+    "chapter": 129,
+    "sequence": 5030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10f1e8bc04bcf7e1"
+  },
+  "findings": []
+}

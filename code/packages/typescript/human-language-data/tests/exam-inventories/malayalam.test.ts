@@ -112,7 +112,10 @@ describe("the committed Malayalam A1 inventory", () => {
     // holds at 69 -- the eleven lessons print no glyph the track had not shown.
     // The nine, with the counts they carried when they closed (fields/tokens):
     // ള 25/19, ശ 19/14, ങ 15/13, ർ 12/12, ധ 8/7, ബ 6/5, ൈ 6/6, ഖ 3/3, ഛ 2/2.
-    expect(lessons).toHaveLength(504);
+    // 504 -> 643: chapters 115-141, 135 vocabulary lessons and four reviews.
+    // Every headword was chosen from glyphs the track already teaches, so
+    // `shown` and the directly-owned overlap both hold at 69.
+    expect(lessons).toHaveLength(643);
     expect(shown.size).toBe(69);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(69);
     expect(open).toEqual([]);

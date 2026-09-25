@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:05dff8ccaf80eaf5",
+  "lessonIds": [
+    "ML-C135-market",
+    "ML-C135-temple",
+    "ML-C135-church",
+    "ML-C135-bridge",
+    "ML-C135-village"
+  ],
+  "tex": "malayalam/book/chapters/ch135-around-town.tex"
+}

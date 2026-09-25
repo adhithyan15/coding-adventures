@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:c248fc402007b4a1",
+  "lessonIds": [
+    "ML-C116-sadness",
+    "ML-C116-fear",
+    "ML-C116-anger",
+    "ML-C116-laughter",
+    "ML-C116-worry"
+  ],
+  "tex": "malayalam/book/chapters/ch116-how-you-feel-inside.tex"
+}

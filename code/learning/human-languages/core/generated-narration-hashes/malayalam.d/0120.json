@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:ad4b3a458625ddce",
+  "lessonIds": [
+    "ML-C120-show",
+    "ML-C120-didnthear",
+    "ML-C120-didntunderstand",
+    "ML-C120-help",
+    "ML-C120-stop"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch120.txt",
+  "json": "malayalam/narration/ch120.json",
+  "textHash": "fnv1a64:18b8d2acef141590",
+  "jsonHash": "fnv1a64:80dd053099f35da9",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C127-holiday",
+    "language": "malayalam",
+    "chapter": 127,
+    "sequence": 4920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a53bb16224019fca"
+  },
+  "findings": []
+}

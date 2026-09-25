@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Hot, Cold and Sleepy",
+  "label": "ch:ml-hot-cold-sleepy",
+  "canDo": "I can say it is cold or hot, name sleep, mist, and thunder and lightning.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C118-thunder",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say it is cold or hot, name sleep, mist, and thunder and lightning.",
+    "assesses": [
+      "ML-LEX-C118-WEATHER-03",
+      "ML-LEX-C118-WEATHER-04",
+      "ML-LEX-C118-WEATHER-05"
+    ]
+  }
+}

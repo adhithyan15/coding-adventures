@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:51e5db5ac3040066",
+  "lessonIds": [
+    "ML-C123-notpossible",
+    "ML-C123-notlikethat",
+    "ML-C123-maybe",
+    "ML-C123-other",
+    "ML-C123-wrong"
+  ],
+  "tex": "malayalam/book/chapters/ch123-maybe-and-not.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:c8e74ed1897491a7",
+  "lessonIds": [
+    "ML-C141-onam",
+    "ML-C141-vishu",
+    "ML-C141-christmas",
+    "ML-C141-eid",
+    "ML-C141-utsavam",
+    "ML-R141-first-pass-home-food-table",
+    "ML-R141-second-pass-town-travel-time"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch141.txt",
+  "json": "malayalam/narration/ch141.json",
+  "textHash": "fnv1a64:43543552936a1170",
+  "jsonHash": "fnv1a64:0c3544f9df0d31ad",
+  "findings": []
+}

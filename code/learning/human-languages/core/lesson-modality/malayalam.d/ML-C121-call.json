@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C121-call",
+    "language": "malayalam",
+    "chapter": 121,
+    "sequence": 4590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94bd1b3826fb8150"
+  },
+  "findings": []
+}

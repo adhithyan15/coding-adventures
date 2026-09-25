@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C116-anger",
+    "language": "malayalam",
+    "chapter": 116,
+    "sequence": 4360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4decfe2ca9d1ab8"
+  },
+  "findings": []
+}

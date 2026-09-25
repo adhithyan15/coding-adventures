@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:581fe41bab31a8d9",
+  "lessonIds": [
+    "ML-C115-cold",
+    "ML-C115-headache",
+    "ML-C115-rest",
+    "ML-C115-dizzy",
+    "ML-C115-notwell"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch115.txt",
+  "json": "malayalam/narration/ch115.json",
+  "textHash": "fnv1a64:25cd98d330d1c4b3",
+  "jsonHash": "fnv1a64:e996ce3721931f39",
+  "findings": []
+}

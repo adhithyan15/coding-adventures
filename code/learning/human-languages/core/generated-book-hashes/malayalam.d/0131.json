@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:0e87f7b3468f4ec7",
+  "lessonIds": [
+    "ML-C131-fish",
+    "ML-C131-meat",
+    "ML-C131-egg",
+    "ML-C131-vegetables",
+    "ML-C131-onion"
+  ],
+  "tex": "malayalam/book/chapters/ch131-what-is-cooking.tex"
+}

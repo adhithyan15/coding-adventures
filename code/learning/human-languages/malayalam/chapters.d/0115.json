@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Not Feeling Well",
+  "label": "ch:ml-not-feeling-well",
+  "canDo": "I can say I have a cold, a headache or dizziness, that I am not well, and that I need rest.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C115-notwell",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: i can say I have a cold, a headache or dizziness, that I am not well, and that I need rest.",
+    "assesses": [
+      "ML-LEX-C115-UNWELL-03",
+      "ML-LEX-C115-UNWELL-04",
+      "ML-LEX-C115-UNWELL-05"
+    ]
+  }
+}

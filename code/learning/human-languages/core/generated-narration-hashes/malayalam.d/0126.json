@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:090b2a1e1bb7053c",
+  "lessonIds": [
+    "ML-C126-address",
+    "ML-C126-wedding",
+    "ML-C126-language",
+    "ML-C126-english",
+    "ML-C126-office"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch126.txt",
+  "json": "malayalam/narration/ch126.json",
+  "textHash": "fnv1a64:7dc0210e6c103a09",
+  "jsonHash": "fnv1a64:027c4ec3d7659983",
+  "findings": []
+}

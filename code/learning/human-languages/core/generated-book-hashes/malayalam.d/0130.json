@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:6c325b10cd231ac2",
+  "lessonIds": [
+    "ML-C130-breakfast",
+    "ML-C130-lunch",
+    "ML-C130-dinner",
+    "ML-C130-feast",
+    "ML-C130-payasam"
+  ],
+  "tex": "malayalam/book/chapters/ch130-three-meals-and-a-feast.tex"
+}

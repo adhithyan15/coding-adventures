@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-123-MAYBE",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "ML-EXT-123-MAYBE"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C137-auto",
+  "pathSegment": "ML-PATH-137-RIDE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-137-RIDE",
+      "order": 4
+    }
+  ]
+}

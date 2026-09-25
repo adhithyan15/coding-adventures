@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:cb83504f6a0cda71",
+  "lessonIds": [
+    "ML-C139-time",
+    "ML-C139-minute",
+    "ML-C139-hour",
+    "ML-C139-month",
+    "ML-C139-year"
+  ],
+  "tex": "malayalam/book/chapters/ch139-how-long.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:de13a670ad760369",
+  "lessonIds": [
+    "ML-C136-sea",
+    "ML-C136-beach",
+    "ML-C136-pond",
+    "ML-C136-well",
+    "ML-C136-harbour"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch136.txt",
+  "json": "malayalam/narration/ch136.json",
+  "textHash": "fnv1a64:3b28c751d3ba25d7",
+  "jsonHash": "fnv1a64:b3c88c3272149d67",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C141-eid",
+    "language": "malayalam",
+    "chapter": 141,
+    "sequence": 5640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea9ccf1c660f55dc"
+  },
+  "findings": []
+}

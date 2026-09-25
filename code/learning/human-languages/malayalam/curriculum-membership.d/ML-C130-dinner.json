@@ -1,0 +1,11 @@
+{
+  "id": "ML-C130-dinner",
+  "pathSegment": "ML-PATH-130-MEALS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-130-MEALS",
+      "order": 2
+    }
+  ]
+}

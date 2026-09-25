@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:47d3b1b248338c24",
+  "lessonIds": [
+    "ML-C137-vehicle",
+    "ML-C137-car",
+    "ML-C137-train",
+    "ML-C137-plane",
+    "ML-C137-auto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch137.txt",
+  "json": "malayalam/narration/ch137.json",
+  "textHash": "fnv1a64:f42e04121c5c02ed",
+  "jsonHash": "fnv1a64:a32ec9a25a2faec2",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Take Care, See You",
+  "label": "ch:ml-take-care-see-you",
+  "canDo": "I can tell someone to take care, say it is late, suggest we go, name a holiday, and promise to call.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ML-R127-second-pass-travel-replies-people",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can tell someone to take care, say it is late, suggest we go, name a holiday, and promise to call.",
+    "assesses": [
+      "ML-LEX-C127-CARE-03",
+      "ML-LEX-C127-CARE-04",
+      "ML-LEX-C127-CARE-05"
+    ]
+  }
+}

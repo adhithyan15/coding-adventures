@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C128-room",
+    "language": "malayalam",
+    "chapter": 128,
+    "sequence": 4970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8334a9b566fafd3"
+  },
+  "findings": []
+}

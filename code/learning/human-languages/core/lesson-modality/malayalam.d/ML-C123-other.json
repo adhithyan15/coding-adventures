@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C123-other",
+    "language": "malayalam",
+    "chapter": 123,
+    "sequence": 4720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:703b42fc856b9bbf"
+  },
+  "findings": []
+}

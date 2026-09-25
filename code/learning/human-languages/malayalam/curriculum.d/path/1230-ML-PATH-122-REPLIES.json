@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-122-REPLIES",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "ML-EXT-122-REPLIES"
+  ],
+  "after": []
+}

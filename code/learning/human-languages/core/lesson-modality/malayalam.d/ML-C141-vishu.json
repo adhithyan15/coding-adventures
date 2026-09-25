@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C141-vishu",
+    "language": "malayalam",
+    "chapter": 141,
+    "sequence": 5620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca3c462a62ed2a40"
+  },
+  "findings": []
+}

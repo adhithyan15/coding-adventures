@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-120-HELP",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask someone to show me or help me, ask them to stop, and say I did not hear or did not understand.",
+  "prerequisites": []
+}

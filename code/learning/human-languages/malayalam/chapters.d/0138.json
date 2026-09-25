@@ -1,0 +1,19 @@
+{
+  "chapter": 138,
+  "title": "Animals of Kerala",
+  "label": "ch:ml-animals-of-kerala",
+  "canDo": "I can name a bird, a snake, a monkey, a tiger and a rabbit.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ML-C138-rabbit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 138: i can name a bird, a snake, a monkey, a tiger and a rabbit.",
+    "assesses": [
+      "ML-LEX-C138-ANIMALS-03",
+      "ML-LEX-C138-ANIMALS-04",
+      "ML-LEX-C138-ANIMALS-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Quick Replies",
+  "label": "ch:ml-quick-replies",
+  "canDo": "I can say really?, nothing, oh no!, the same, and oh I see.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ML-C122-ohisee",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say really?, nothing, oh no!, the same, and oh I see.",
+    "assesses": [
+      "ML-LEX-C122-REPLIES-03",
+      "ML-LEX-C122-REPLIES-04",
+      "ML-LEX-C122-REPLIES-05"
+    ]
+  }
+}

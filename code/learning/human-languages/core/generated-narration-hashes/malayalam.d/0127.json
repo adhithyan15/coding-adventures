@@ -1,0 +1,21 @@
+{
+  "language": "malayalam",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:fa395196717b697c",
+  "lessonIds": [
+    "ML-C127-takecare",
+    "ML-C127-late",
+    "ML-C127-letsgo",
+    "ML-C127-holiday",
+    "ML-C127-illcall",
+    "ML-R127-first-pass-body-feelings-repair",
+    "ML-R127-second-pass-travel-replies-people"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "malayalam/narration/ch127.txt",
+  "json": "malayalam/narration/ch127.json",
+  "textHash": "fnv1a64:433508ffcc54d670",
+  "jsonHash": "fnv1a64:eb44880438f54570",
+  "findings": []
+}

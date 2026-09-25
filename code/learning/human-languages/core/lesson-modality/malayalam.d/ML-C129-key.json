@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C129-key",
+    "language": "malayalam",
+    "chapter": 129,
+    "sequence": 5020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed639e0593c11f12"
+  },
+  "findings": []
+}

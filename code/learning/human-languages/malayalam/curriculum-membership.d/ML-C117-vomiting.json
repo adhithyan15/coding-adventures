@@ -1,0 +1,11 @@
+{
+  "id": "ML-C117-vomiting",
+  "pathSegment": "ML-PATH-117-BODY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-117-BODY",
+      "order": 3
+    }
+  ]
+}

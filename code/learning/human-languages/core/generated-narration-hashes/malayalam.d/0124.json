@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:3db7b8b18efa3f0d",
+  "lessonIds": [
+    "ML-C124-congratulations",
+    "ML-C124-invitation",
+    "ML-C124-gift",
+    "ML-C124-welcome",
+    "ML-C124-wishes"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch124.txt",
+  "json": "malayalam/narration/ch124.json",
+  "textHash": "fnv1a64:4c9d11829ac0ed51",
+  "jsonHash": "fnv1a64:b844d44daf881c05",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C125-uncle",
+    "language": "malayalam",
+    "chapter": 125,
+    "sequence": 4820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4da54f381a308b10"
+  },
+  "findings": []
+}

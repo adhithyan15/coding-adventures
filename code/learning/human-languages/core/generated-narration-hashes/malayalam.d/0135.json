@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:267fd8632a5f7bc2",
+  "lessonIds": [
+    "ML-C135-market",
+    "ML-C135-temple",
+    "ML-C135-church",
+    "ML-C135-bridge",
+    "ML-C135-village"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch135.txt",
+  "json": "malayalam/narration/ch135.json",
+  "textHash": "fnv1a64:5c45290d91c520ad",
+  "jsonHash": "fnv1a64:94a9eacdab1cd515",
+  "findings": []
+}

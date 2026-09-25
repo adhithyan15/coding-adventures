@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-117-BODY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I am thirsty, name sweat, a tablet, vomiting and a wound.",
+  "prerequisites": []
+}

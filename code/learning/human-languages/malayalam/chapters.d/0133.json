@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Sweet and Sour",
+  "label": "ch:ml-sweet-and-sour",
+  "canDo": "I can name a mango, a jackfruit, a lemon, ginger and sugar.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ML-C133-sugar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can name a mango, a jackfruit, a lemon, ginger and sugar.",
+    "assesses": [
+      "ML-LEX-C133-SWEETSOUR-03",
+      "ML-LEX-C133-SWEETSOUR-04",
+      "ML-LEX-C133-SWEETSOUR-05"
+    ]
+  }
+}

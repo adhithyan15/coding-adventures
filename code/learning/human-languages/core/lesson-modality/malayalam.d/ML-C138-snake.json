@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C138-snake",
+    "language": "malayalam",
+    "chapter": 138,
+    "sequence": 5470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e04bde283576e047"
+  },
+  "findings": []
+}
