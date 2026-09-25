@@ -849,9 +849,14 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
     _require_workflow_keys(
         triggers, {"push", "pull_request", "workflow_dispatch"}, "on"
     )
+    # OCaml sources, the toolchain contract and this workflow -- not ci.yml.
+    # A ci.yml edit is validated by ci.yml itself: its ungated contracts job
+    # runs test_ocaml_toolchain_lock.py, which checks ci.yml's OCaml bootstrap,
+    # and _require_generic_ci_runs_lock_tests keeps that step in place. Listing
+    # ci.yml here ran the whole three-OS matrix for unrelated CI changes
+    # (OCAML03 "Triggers").
     expected_paths = [
         ".github/workflows/build-ocaml.yml",
-        ".github/workflows/ci.yml",
         "code/scripts/ocaml_toolchain_lock.py",
         "code/scripts/tests/test_ocaml_toolchain_lock.py",
         "code/specs/OCAML0*.md",
@@ -860,8 +865,10 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
         "code/packages/ocaml/**",
         "code/programs/ocaml/**",
     ]
+    # Pushes to main and pull requests into it: a push trigger on every branch
+    # ran each pull request's matrix twice.
     for trigger_name, expected_branches in (
-        ("push", "['**']"),
+        ("push", "[main]"),
         ("pull_request", "[main]"),
     ):
         trigger = _workflow_mapping(triggers[trigger_name], f"on.{trigger_name}")
@@ -1124,10 +1131,86 @@ def _extract_workflow_job(workflow_text: str, job_name: str) -> Mapping[str, obj
     return _workflow_mapping(jobs.get(job_name), f"jobs.{job_name}")
 
 
+GENERIC_CI_LOCK_TEST_COMMAND = (
+    "python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_toolchain_lock.py'"
+)
+GENERIC_CI_LOCK_TEST_STEP = "Verify repo-wide metadata contracts"
+
+
+def _require_generic_ci_runs_lock_tests(workflow_text: str) -> None:
+    """ci.yml must keep validating itself (OCAML03 "Triggers").
+
+    build-ocaml.yml no longer runs when ci.yml changes, so the only check of
+    ci.yml's OCaml bootstrap on such a change is this test, run by ci.yml's own
+    ``contracts`` job. A ci.yml edit that dropped the line, or gated the job or
+    step behind a condition, would otherwise pass unchecked. Text-level on
+    purpose: the contracts job uses YAML the restricted parser does not accept.
+    """
+
+    lines = workflow_text.splitlines()
+    try:
+        start = lines.index("  contracts:")
+    except ValueError as exc:
+        raise ContractError("generic CI omits jobs.contracts") from exc
+    end = next(
+        (
+            index
+            for index in range(start + 1, len(lines))
+            if re.fullmatch(r"  [A-Za-z0-9_-]+:", lines[index])
+        ),
+        len(lines),
+    )
+    job = lines[start + 1 : end]
+    steps_at = next(
+        (index for index, line in enumerate(job) if line == "    steps:"), None
+    )
+    if steps_at is None:
+        raise ContractError("generic CI jobs.contracts has no steps")
+    # Job keys sit at four spaces wherever they appear (YAML key order is free),
+    # so the whole job is scanned: a condition or a tolerated failure makes the
+    # test's result meaningless.
+    for key in ("if:", "continue-on-error:"):
+        if any(line.startswith(f"    {key}") for line in job):
+            raise ContractError(
+                f"generic CI jobs.contracts must not set {key[:-1]}"
+            )
+
+    step_header = f"      - name: {GENERIC_CI_LOCK_TEST_STEP}"
+    try:
+        step_start = job.index(step_header, steps_at)
+    except ValueError as exc:
+        raise ContractError(
+            f"generic CI jobs.contracts omits the {GENERIC_CI_LOCK_TEST_STEP!r} step"
+        ) from exc
+    step_end = next(
+        (
+            index
+            for index in range(step_start + 1, len(job))
+            if job[index].startswith("      - ")
+        ),
+        len(job),
+    )
+    step = job[step_start:step_end]
+    # A condition skips the test; continue-on-error ignores its failure; a
+    # custom shell (e.g. `bash {0}`) drops `-e`, so a failing command no longer
+    # fails the step.
+    for key in ("if:", "continue-on-error:", "shell:"):
+        if any(line.startswith(f"        {key}") for line in step):
+            raise ContractError(
+                f"generic CI {GENERIC_CI_LOCK_TEST_STEP!r} step must not set {key[:-1]}"
+            )
+    if not any(line.strip() == GENERIC_CI_LOCK_TEST_COMMAND for line in step):
+        raise ContractError(
+            "generic CI contracts step must run test_ocaml_toolchain_lock.py"
+        )
+
+
 def validate_generic_ci_workflow_text(
     manifest: Mapping[str, Any], workflow_text: str
 ) -> None:
     """Validate the narrowly reviewed OCaml bootstrap in generic CI."""
+
+    _require_generic_ci_runs_lock_tests(workflow_text)
 
     detect = _extract_workflow_job(workflow_text, "detect")
     detect_steps = _steps_by_name(detect, "detect")
