@@ -10074,18 +10074,9 @@ fn emit_host_checkbox(
         Some(LayoutPropValue::Keyword(k)) if k == "false" => {
             attrs.push_str(" IsChecked=\"False\"");
         }
-        // #13040. Inside a `For` a row marker such as `row[4]` ("1"/"") is
-        // read by truthiness exactly as `If ( when: … )` reads it there, so
-        // it binds to the row's own Boolean first (UI29-2 §2.1).
-        Some(LayoutPropValue::Expr(src))
-            if try_lower_for_template_predicate(strip_balanced_outer_parens(src.trim()), ctx)
-                .is_some() =>
-        {
-            let path =
-                try_lower_for_template_predicate(strip_balanced_outer_parens(src.trim()), ctx)
-                    .expect("guarded above");
-            attrs.push_str(&format!(" IsChecked=\"{{x:Bind {path}, Mode=OneWay}}\""));
-        }
+        // #13040. `IsChecked` is a typed `bool?` binding, so the expression
+        // must be Boolean-typed here; a "1"/"" text marker (UI29-2 §2.1) would
+        // need a truthy converter, which XAML does not have yet.
         Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
             ExprLowering::Bindable(path) => {
                 attrs.push_str(&format!(" IsChecked=\"{{x:Bind {path}, Mode=OneWay}}\""));

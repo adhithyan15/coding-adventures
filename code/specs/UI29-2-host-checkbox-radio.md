@@ -79,7 +79,10 @@ growth after UI29-1.
 
 `checked`, `disabled` and `indeterminate` also accept an expression, such as
 `( row[4] )` inside a `For`. The value is read by truthiness, the same rule
-`If ( when: … )` uses, so a text marker `"1"` / `""` works.
+`If ( when: … )` uses, so a text marker `"1"` / `""` works. XAML is the
+exception for now: `IsChecked` is a typed `bool?` binding, so a text marker
+there needs a truthy converter the emitter does not have yet; a Boolean
+expression or a literal works.
 
 #### 2.1.1 The `onToggle` payload (revision 2026-09-25)
 
