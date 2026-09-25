@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C67-goat",
+    "language": "gujarati",
+    "chapter": 67,
+    "sequence": 3410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b54f20f178c1183"
+  },
+  "findings": []
+}

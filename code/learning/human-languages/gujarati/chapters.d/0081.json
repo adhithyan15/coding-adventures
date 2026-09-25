@@ -1,0 +1,19 @@
+{
+  "chapter": 81,
+  "title": "Eleven to Sixteen",
+  "label": "ch:gu-eleven-to-sixteen",
+  "canDo": "I can count eleven, twelve, thirteen, fifteen and sixteen.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C81-sixteen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: i can count eleven, twelve, thirteen, fifteen and sixteen.",
+    "assesses": [
+      "GU-LEX-C81-NUM1-03",
+      "GU-LEX-C81-NUM1-04",
+      "GU-LEX-C81-NUM1-05"
+    ]
+  }
+}

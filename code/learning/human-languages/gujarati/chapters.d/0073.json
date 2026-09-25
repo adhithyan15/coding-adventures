@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "Light, New, Old, Hot, Cheap",
+  "label": "ch:gu-light-new-old-hot-cheap",
+  "canDo": "I can say light, new, old, hot and cheap.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C73-cheap",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can say light, new, old, hot and cheap.",
+    "assesses": [
+      "GU-LEX-C73-QUALITY-03",
+      "GU-LEX-C73-QUALITY-04",
+      "GU-LEX-C73-QUALITY-05"
+    ]
+  }
+}

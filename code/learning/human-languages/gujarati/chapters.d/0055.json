@@ -1,0 +1,19 @@
+{
+  "chapter": 55,
+  "title": "Cook, Wash, Give, Bring, Drink",
+  "label": "ch:gu-cook-wash-give-bring-drink",
+  "canDo": "I can say to cook, to wash, to give, to bring and to drink.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C55-pivu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 55: i can say to cook, to wash, to give, to bring and to drink.",
+    "assesses": [
+      "GU-LEX-C55-HOUSEWORK-03",
+      "GU-LEX-C55-HOUSEWORK-04",
+      "GU-LEX-C55-HOUSEWORK-05"
+    ]
+  }
+}

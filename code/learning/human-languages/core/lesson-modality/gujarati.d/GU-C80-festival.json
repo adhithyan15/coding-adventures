@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C80-festival",
+    "language": "gujarati",
+    "chapter": 80,
+    "sequence": 4090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:904399da41f75ef9"
+  },
+  "findings": []
+}

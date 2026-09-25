@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:5f9951c8eaef7c7b",
+  "lessonIds": [
+    "GU-C53-wife",
+    "GU-C53-son",
+    "GU-C53-daughter",
+    "GU-C53-relative",
+    "GU-C53-guest"
+  ],
+  "tex": "gujarati/book/chapters/ch53-wife-son-daughter-and-guests.tex"
+}

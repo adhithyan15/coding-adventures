@@ -1,0 +1,11 @@
+{
+  "id": "GU-C89-bhanvu",
+  "pathSegment": "GU-PATH-89-SCHOOL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-89-SCHOOL",
+      "order": 3
+    }
+  ]
+}

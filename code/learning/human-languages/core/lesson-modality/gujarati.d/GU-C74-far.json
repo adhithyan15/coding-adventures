@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C74-far",
+    "language": "gujarati",
+    "chapter": 74,
+    "sequence": 3780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c55e9971950004d"
+  },
+  "findings": []
+}

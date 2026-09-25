@@ -1,0 +1,11 @@
+{
+  "id": "GU-C79-saturday",
+  "pathSegment": "GU-PATH-79-WEEK2",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-79-WEEK2",
+      "order": 0
+    }
+  ]
+}

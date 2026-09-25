@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "Questions and Answers",
+  "label": "ch:gu-questions-and-answers",
+  "canDo": "I can talk about a student, a question and an answer, and say to study and to teach.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C89-shikhavvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can talk about a student, a question and an answer, and say to study and to teach.",
+    "assesses": [
+      "GU-LEX-C89-SCHOOL-03",
+      "GU-LEX-C89-SCHOOL-04",
+      "GU-LEX-C89-SCHOOL-05"
+    ]
+  }
+}

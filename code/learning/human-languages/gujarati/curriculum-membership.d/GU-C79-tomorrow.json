@@ -1,0 +1,11 @@
+{
+  "id": "GU-C79-tomorrow",
+  "pathSegment": "GU-PATH-79-WEEK2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-79-WEEK2",
+      "order": 2
+    }
+  ]
+}

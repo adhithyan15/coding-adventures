@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C89-student",
+    "language": "gujarati",
+    "chapter": 89,
+    "sequence": 4510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ff7c22191f98e1c"
+  },
+  "findings": []
+}

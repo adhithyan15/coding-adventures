@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-79-WEEK2",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "GU-EXT-79-WEEK2"
+  ],
+  "after": []
+}

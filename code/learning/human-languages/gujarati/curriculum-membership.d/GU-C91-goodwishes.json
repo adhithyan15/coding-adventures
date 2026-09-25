@@ -1,0 +1,11 @@
+{
+  "id": "GU-C91-goodwishes",
+  "pathSegment": "GU-PATH-91-COURTESY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-91-COURTESY",
+      "order": 2
+    }
+  ]
+}

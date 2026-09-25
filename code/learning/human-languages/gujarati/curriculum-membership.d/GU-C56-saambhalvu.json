@@ -1,0 +1,11 @@
+{
+  "id": "GU-C56-saambhalvu",
+  "pathSegment": "GU-PATH-56-VOICE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-56-VOICE",
+      "order": 3
+    }
+  ]
+}

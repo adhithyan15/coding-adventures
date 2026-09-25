@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:17d69eabf3d1b846",
+  "lessonIds": [
+    "GU-C61-plate",
+    "GU-C61-bowl",
+    "GU-C61-spoon",
+    "GU-C61-cup",
+    "GU-C61-pot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch61.txt",
+  "json": "gujarati/narration/ch61.json",
+  "textHash": "fnv1a64:346f6afbb30ce1f0",
+  "jsonHash": "fnv1a64:5608e94d937ada14",
+  "findings": []
+}

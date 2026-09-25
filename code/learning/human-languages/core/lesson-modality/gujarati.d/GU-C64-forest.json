@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C64-forest",
+    "language": "gujarati",
+    "chapter": 64,
+    "sequence": 3270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfb5916b3e33cbc6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C70-yellow",
+  "pathSegment": "GU-PATH-70-COLOUR1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-70-COLOUR1",
+      "order": 1
+    }
+  ]
+}

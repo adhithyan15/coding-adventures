@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:39a114b535bd814c",
+  "lessonIds": [
+    "GU-C62-bed",
+    "GU-C62-cot",
+    "GU-C62-table",
+    "GU-C62-fan",
+    "GU-C62-lock"
+  ],
+  "tex": "gujarati/book/chapters/ch62-bed-table-fan-and-lock.tex"
+}

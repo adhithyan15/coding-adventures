@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "On a Journey",
+  "label": "ch:gu-on-a-journey",
+  "canDo": "I can talk about a journey, a ticket, a map, a phone and the post.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "GU-C86-post",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can talk about a journey, a ticket, a map, a phone and the post.",
+    "assesses": [
+      "GU-LEX-C86-JOURNEY-03",
+      "GU-LEX-C86-JOURNEY-04",
+      "GU-LEX-C86-JOURNEY-05"
+    ]
+  }
+}

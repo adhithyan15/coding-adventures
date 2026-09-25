@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C64-leaf",
+    "language": "gujarati",
+    "chapter": 64,
+    "sequence": 3250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b114be2553f1e3f6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C46-leg",
+  "pathSegment": "GU-PATH-46-BODY1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-46-BODY1",
+      "order": 1
+    }
+  ]
+}

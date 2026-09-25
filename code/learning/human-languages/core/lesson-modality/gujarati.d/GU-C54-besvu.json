@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C54-besvu",
+    "language": "gujarati",
+    "chapter": 54,
+    "sequence": 2740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61146408f88a788c"
+  },
+  "findings": []
+}

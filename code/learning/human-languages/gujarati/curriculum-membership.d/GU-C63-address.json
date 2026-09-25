@@ -1,0 +1,11 @@
+{
+  "id": "GU-C63-address",
+  "pathSegment": "GU-PATH-63-HOUSE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-63-HOUSE",
+      "order": 4
+    }
+  ]
+}

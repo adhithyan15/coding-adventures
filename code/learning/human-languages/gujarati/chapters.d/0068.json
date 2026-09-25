@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Tiger, Lion and Elephant",
+  "label": "ch:gu-tiger-lion-and-elephant",
+  "canDo": "I can name a tiger, a lion, an elephant, a monkey and a snake.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "GU-R68-second-pass-food-the-land-and-animals",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can name a tiger, a lion, an elephant, a monkey and a snake.",
+    "assesses": [
+      "GU-LEX-C68-ANIMALS2-03",
+      "GU-LEX-C68-ANIMALS2-04",
+      "GU-LEX-C68-ANIMALS2-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C75-outside",
+  "pathSegment": "GU-PATH-75-WHERE2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-75-WHERE2",
+      "order": 3
+    }
+  ]
+}

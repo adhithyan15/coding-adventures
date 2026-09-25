@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C63-garden",
+    "language": "gujarati",
+    "chapter": 63,
+    "sequence": 3220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43b07d7b84ff873a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:2fbf3b4b0f0c8493",
+  "lessonIds": [
+    "GU-C91-welcome",
+    "GU-C91-congratulations",
+    "GU-C91-goodwishes",
+    "GU-C91-apology",
+    "GU-C91-okay",
+    "GU-R91-first-pass-colours-size-and-place",
+    "GU-R91-second-pass-time-numbers-town-and-people"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch91.txt",
+  "json": "gujarati/narration/ch91.json",
+  "textHash": "fnv1a64:3164e93ebea49f32",
+  "jsonHash": "fnv1a64:b01bbab468ef9411",
+  "findings": []
+}

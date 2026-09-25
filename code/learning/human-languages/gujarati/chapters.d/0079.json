@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "The Weekend, Tomorrow and Yesterday",
+  "label": "ch:gu-the-weekend-tomorrow-and-yesterday",
+  "canDo": "I can name Saturday and Sunday, and say tomorrow, yesterday and time.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "GU-C79-time",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can name Saturday and Sunday, and say tomorrow, yesterday and time.",
+    "assesses": [
+      "GU-LEX-C79-WEEK2-03",
+      "GU-LEX-C79-WEEK2-04",
+      "GU-LEX-C79-WEEK2-05"
+    ]
+  }
+}

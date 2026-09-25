@@ -1,0 +1,19 @@
+{
+  "chapter": 65,
+  "title": "Sea, Lake and Well",
+  "label": "ch:gu-sea-lake-and-well",
+  "canDo": "I can name the sea, a lake, a well, sand and soil.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C65-soil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: i can name the sea, a lake, a well, sand and soil.",
+    "assesses": [
+      "GU-LEX-C65-WATER-03",
+      "GU-LEX-C65-WATER-04",
+      "GU-LEX-C65-WATER-05"
+    ]
+  }
+}

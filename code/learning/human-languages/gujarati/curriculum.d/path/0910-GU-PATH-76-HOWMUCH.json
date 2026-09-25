@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-76-HOWMUCH",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "GU-EXT-76-HOWMUCH"
+  ],
+  "after": []
+}

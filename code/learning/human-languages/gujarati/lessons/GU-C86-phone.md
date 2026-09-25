@@ -1,0 +1,63 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: GU-C86-phone
+spine_node: SPINE-MEET-GREET
+sequence: 4390
+chapter: 86
+type: word
+headword: "ફોન"
+gloss: "a phone"
+romanization: "phon"
+concept_tag: GU-JOURNEY-PHONE
+prerequisites: [GU-C86-ticket, GU-C86-map]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [GU-LEX-C86-JOURNEY-02, GU-LEX-C86-JOURNEY-03]
+introduces:
+  knowledge: [GU-LEX-C86-JOURNEY-04]
+practises:
+  knowledge: [GU-LEX-C86-JOURNEY-04, GU-LEX-C86-JOURNEY-02, GU-LEX-C86-JOURNEY-03]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-gujarati
+reviews_of: [GU-C86-map]
+---
+
+# ફોન (phon) — a phone
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C86-JOURNEY-02, GU-LEX-C86-JOURNEY-03] -->
+
+[PAUSE 2s] Before the new one: say the Gujarati for a ticket, then the Gujarati for a map.
+
+## You'll want to know: ફોન
+<!-- hl-knowledge: introduces=[GU-LEX-C86-JOURNEY-04]; assesses=[] -->
+
+**ફોન** (*phon*) — "a phone".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for on a journey.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C86-JOURNEY-04, GU-LEX-C86-JOURNEY-02, GU-LEX-C86-JOURNEY-03] -->
+
+[PAUSE 1s]
+- [YOU SAY: *phon*]
+- [YOU SAY: *phon*, once more]
+- [YOU SAY: say *phon*]
+- [YOU RECALL: say the Gujarati for a ticket, then the Gujarati for a map, then say *phon* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-C86-JOURNEY-04, GU-LEX-C86-JOURNEY-02, GU-LEX-C86-JOURNEY-03] -->
+
+[PAUSE 3s] What does ફોન mean? ("A phone".) Say it once more.

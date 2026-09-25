@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "Fifty to a Thousand, and How Much",
+  "label": "ch:gu-fifty-to-a-thousand-and-how-much",
+  "canDo": "I can say fifty, a hundred and a thousand, and ask how much and which one.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C83-which",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can say fifty, a hundred and a thousand, and ask how much and which one.",
+    "assesses": [
+      "GU-LEX-C83-NUM3-03",
+      "GU-LEX-C83-NUM3-04",
+      "GU-LEX-C83-NUM3-05"
+    ]
+  }
+}

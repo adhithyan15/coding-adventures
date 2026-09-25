@@ -1,0 +1,11 @@
+{
+  "id": "GU-C47-lip",
+  "pathSegment": "GU-PATH-47-BODY2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-47-BODY2",
+      "order": 3
+    }
+  ]
+}

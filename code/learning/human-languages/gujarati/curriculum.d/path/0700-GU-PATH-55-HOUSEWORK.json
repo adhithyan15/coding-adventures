@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-55-HOUSEWORK",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "GU-EXT-55-HOUSEWORK"
+  ],
+  "after": []
+}

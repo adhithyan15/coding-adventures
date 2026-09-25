@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "What We Wear",
+  "label": "ch:gu-what-we-wear",
+  "canDo": "I can name a dhoti, a shirt, sandals, a cap and an umbrella.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GU-C87-umbrella",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can name a dhoti, a shirt, sandals, a cap and an umbrella.",
+    "assesses": [
+      "GU-LEX-C87-CLOTHES-03",
+      "GU-LEX-C87-CLOTHES-04",
+      "GU-LEX-C87-CLOTHES-05"
+    ]
+  }
+}

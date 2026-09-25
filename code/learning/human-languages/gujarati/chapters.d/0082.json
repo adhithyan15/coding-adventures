@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "Seventeen to Forty",
+  "label": "ch:gu-seventeen-to-forty",
+  "canDo": "I can count seventeen, eighteen, twenty, thirty and forty.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C82-forty",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can count seventeen, eighteen, twenty, thirty and forty.",
+    "assesses": [
+      "GU-LEX-C82-NUM2-03",
+      "GU-LEX-C82-NUM2-04",
+      "GU-LEX-C82-NUM2-05"
+    ]
+  }
+}

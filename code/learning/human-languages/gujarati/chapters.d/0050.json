@@ -1,0 +1,19 @@
+{
+  "chapter": 50,
+  "title": "How It Feels",
+  "label": "ch:gu-how-it-feels",
+  "canDo": "I can name happiness, anger, fear, worry and tiredness.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GU-C50-tiredness",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 50: i can name happiness, anger, fear, worry and tiredness.",
+    "assesses": [
+      "GU-LEX-C50-FEEL-03",
+      "GU-LEX-C50-FEEL-04",
+      "GU-LEX-C50-FEEL-05"
+    ]
+  }
+}

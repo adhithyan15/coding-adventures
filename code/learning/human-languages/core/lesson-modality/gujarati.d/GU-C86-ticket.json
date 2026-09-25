@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C86-ticket",
+    "language": "gujarati",
+    "chapter": 86,
+    "sequence": 4370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4bb78f6d285efaf0"
+  },
+  "findings": []
+}

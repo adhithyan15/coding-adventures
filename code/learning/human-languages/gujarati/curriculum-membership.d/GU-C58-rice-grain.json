@@ -1,0 +1,11 @@
+{
+  "id": "GU-C58-rice-grain",
+  "pathSegment": "GU-PATH-58-PANTRY",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GU-EXT-58-PANTRY",
+      "order": 0
+    }
+  ]
+}

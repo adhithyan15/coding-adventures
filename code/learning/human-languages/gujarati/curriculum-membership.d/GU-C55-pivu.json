@@ -1,0 +1,11 @@
+{
+  "id": "GU-C55-pivu",
+  "pathSegment": "GU-PATH-55-HOUSEWORK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-55-HOUSEWORK",
+      "order": 4
+    }
+  ]
+}

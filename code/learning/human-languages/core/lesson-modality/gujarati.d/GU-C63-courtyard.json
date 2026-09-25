@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C63-courtyard",
+    "language": "gujarati",
+    "chapter": 63,
+    "sequence": 3210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a64105b26ad6f76d"
+  },
+  "findings": []
+}

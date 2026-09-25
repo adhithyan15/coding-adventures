@@ -1,0 +1,11 @@
+{
+  "id": "GU-C65-soil",
+  "pathSegment": "GU-PATH-65-WATER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-65-WATER",
+      "order": 4
+    }
+  ]
+}

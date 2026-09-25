@@ -1,0 +1,19 @@
+{
+  "chapter": 52,
+  "title": "Uncles, Aunts and a Husband",
+  "label": "ch:gu-uncles-aunts-and-a-husband",
+  "canDo": "I can name uncles and aunts on both sides, and a husband.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "GU-C52-husband",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 52: i can name uncles and aunts on both sides, and a husband.",
+    "assesses": [
+      "GU-LEX-C52-FAMILY2-03",
+      "GU-LEX-C52-FAMILY2-04",
+      "GU-LEX-C52-FAMILY2-05"
+    ]
+  }
+}
