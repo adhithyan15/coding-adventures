@@ -8170,12 +8170,16 @@ fn emit_host_checkbox(
             if !style.modifier.is_empty() {
                 writeln!(out, "{pad}Row(").unwrap();
                 writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+                // The label sits beside the control's centre, as an inline
+                // `<label>` does on the web -- not at the top of Material's
+                // 48dp touch target (Engram's leech-action radios).
+                writeln!(out, "{inner}verticalAlignment = Alignment.CenterVertically,").unwrap();
                 writeln!(out, "{pad}) {{").unwrap();
             } else {
-                writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+                writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {{").unwrap();
             }
         } else {
-            writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+            writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {{").unwrap();
         }
         for line in checkbox_lines {
             writeln!(out, "{line}").unwrap();
@@ -8255,12 +8259,16 @@ fn emit_host_radio(
             if !style.modifier.is_empty() {
                 writeln!(out, "{pad}Row(").unwrap();
                 writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+                // The label sits beside the control's centre, as an inline
+                // `<label>` does on the web -- not at the top of Material's
+                // 48dp touch target (Engram's leech-action radios).
+                writeln!(out, "{inner}verticalAlignment = Alignment.CenterVertically,").unwrap();
                 writeln!(out, "{pad}) {{").unwrap();
             } else {
-                writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+                writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {{").unwrap();
             }
         } else {
-            writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+            writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {{").unwrap();
         }
         for line in radio_lines {
             writeln!(out, "{line}").unwrap();
@@ -11589,7 +11597,9 @@ mod tests {
             .unwrap()
             .output;
         assert!(out.contains("import androidx.compose.material.Checkbox"));
-        assert!(out.contains("Row(modifier = Modifier.fillMaxWidth()) {"));
+        assert!(out.contains(
+            "Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {"
+        ), "the label is centred on the control:\n{out}");
         assert!(out.contains("Checkbox("));
         assert!(out.contains("checked = _mosaicTruthy(buryNewValue),"));
         assert!(out.contains(
@@ -11759,7 +11769,9 @@ mod tests {
             .unwrap()
             .output;
         assert!(out.contains("import androidx.compose.material.RadioButton"));
-        assert!(out.contains("Row(modifier = Modifier.fillMaxWidth()) {"));
+        assert!(out.contains(
+            "Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {"
+        ), "the label is centred on the control:\n{out}");
         assert!(out.contains("RadioButton("));
         assert!(out.contains("selected = _mosaicTruthy(suspendSelected),"));
         assert!(out
