@@ -1,0 +1,11 @@
+{
+  "id": "HI-R128-letters-first-pass",
+  "pathSegment": "HI-PATH-128-LETTERS-LAST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-128-LETTERS-LAST",
+      "order": 3
+    }
+  ]
+}

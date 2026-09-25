@@ -320,7 +320,9 @@ describe("real curriculum", () => {
       // bounded by vocabulary rather than by the alphabet -- it had already
       // taught every letter it needed, which is what twenty-six chapters of
       // script work buys.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]);
+      // 27 -> 28: HL-C443, the small я. The word for I is written small inside a
+      // sentence, and only the capital Я had a lesson of its own.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]);
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

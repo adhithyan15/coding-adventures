@@ -1,0 +1,12 @@
+{
+  "language": "gujarati",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:554302c7e2ee4f23",
+  "lessonIds": [
+    "GU-W45-gha",
+    "GU-W45-ai-sign",
+    "GU-R45-letters-first-pass",
+    "GU-R45-letters-second-pass"
+  ],
+  "tex": "gujarati/book/chapters/ch45-letters-from-home-and-money.tex"
+}

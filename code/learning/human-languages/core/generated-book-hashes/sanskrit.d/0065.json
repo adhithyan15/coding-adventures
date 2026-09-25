@@ -1,0 +1,11 @@
+{
+  "language": "sanskrit",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:4c72f050c9241f24",
+  "lessonIds": [
+    "SA-W65-letter-nga",
+    "SA-R65-letters-first-pass",
+    "SA-R65-letters-second-pass"
+  ],
+  "tex": "sanskrit/book/chapters/ch65-the-last-letter-read.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R65-letters-second-pass",
+    "language": "sanskrit",
+    "chapter": 65,
+    "sequence": 3010,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1f1ae83f3b38d362"
+  },
+  "findings": []
+}

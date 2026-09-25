@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 28,
+  "output": "russian/book/chapters/ch28-the-small-ya.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

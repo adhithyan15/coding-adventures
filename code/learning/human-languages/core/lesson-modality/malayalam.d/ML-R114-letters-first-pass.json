@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-R114-letters-first-pass",
+    "language": "malayalam",
+    "chapter": 114,
+    "sequence": 4270,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6834aec89b6840b1"
+  },
+  "findings": []
+}

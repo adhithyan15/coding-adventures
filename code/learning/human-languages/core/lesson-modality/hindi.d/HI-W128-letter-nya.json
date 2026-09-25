@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "HI-W128-letter-nya",
+    "language": "hindi",
+    "chapter": 128,
+    "sequence": 5760,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dd4355be7ef5bfb7",
+    "detachableSegments": [
+      "Script you'll notice: ञ",
+      "Writing: ञ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

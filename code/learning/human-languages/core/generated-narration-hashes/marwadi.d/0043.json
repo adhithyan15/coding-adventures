@@ -1,0 +1,17 @@
+{
+  "language": "marwadi",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:8fcfa4e806f02ef9",
+  "lessonIds": [
+    "MW-W43-ma",
+    "MW-R43-letters-first-pass",
+    "MW-R43-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "marwadi/narration/ch43.txt",
+  "json": "marwadi/narration/ch43.json",
+  "textHash": "fnv1a64:3d80d67c1d78f14b",
+  "jsonHash": "fnv1a64:fea80a1133dbfe88",
+  "findings": []
+}

@@ -76,7 +76,8 @@ it("pins Sanskrit lesson-content budgets", () =>
     // retrieval slots, and 45 slots at the observed ~10-per-lesson ceiling is
     // six lessons rather than three. None of them introduces an atom or carries
     // a headword, so every other number in this object is unchanged.
-    lessons: 359,
+    // 359 -> 362: HL-C443: the letter chapter adds one letter lesson per letter the reader had read in words and never written, plus two reviews. RE-MEASURED against the tree; a letter lesson introduces one script atom and no idiom, sense or culture claim.
+    lessons: 362,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

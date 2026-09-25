@@ -1,0 +1,21 @@
+{
+  "chapter": 41,
+  "title": "Letters You Have Read All Along",
+  "label": "ch:bn-letters-read-all-along",
+  "canDo": "I can write anusvar, bisarga, jha, pha and sha, and find each one in a word I already say.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "BN-R41-letters-second-pass",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 41: i can write anusvar, bisarga, jha, pha and sha, and find each one in a word I already say.",
+    "assesses": [
+      "BN-SCRIPT-C41-ANUSVAR-01",
+      "BN-SCRIPT-C41-BISARGA-01",
+      "BN-SCRIPT-C41-JHA-01",
+      "BN-SCRIPT-C41-PHA-01",
+      "BN-SCRIPT-C41-SHA-01"
+    ]
+  }
+}

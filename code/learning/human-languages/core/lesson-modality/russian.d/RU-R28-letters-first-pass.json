@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R28-letters-first-pass",
+    "language": "russian",
+    "chapter": 28,
+    "sequence": 1380,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:07f2b568506893d1"
+  },
+  "findings": []
+}

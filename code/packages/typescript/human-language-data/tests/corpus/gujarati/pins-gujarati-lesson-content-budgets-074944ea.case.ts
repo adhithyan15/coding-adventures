@@ -40,7 +40,8 @@ it("pins Gujarati lesson-content budgets", () =>
     // reinforcement debt -- the words readable unaided, set against the repair
     // kit for the ones that are not. No new atoms and no new headwords.
     //
-    lessons: 281,
+    // 281 -> 285: HL-C443: the letter chapter adds one letter lesson per letter the reader had read in words and never written, plus two reviews. RE-MEASURED against the tree; a letter lesson introduces one script atom and no idiom, sense or culture claim.
+    lessons: 285,
     idioms: 12,
     senses: 6,
     cultureClaims: 16,

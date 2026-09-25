@@ -132,5 +132,7 @@ it("pins Gujarati's meaning-first opening script spine", () => {
     ["43", 8],
     // chapter 44 -- the reading rung: words, lines, and a whole meeting
     ["44", 3],
+    // chapter 45 -- HL-C443: gha and the ai sign, each from its word, and two reviews
+    ["45", 4],
   ]);
 });
