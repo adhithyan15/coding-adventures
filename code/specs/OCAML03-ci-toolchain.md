@@ -127,8 +127,11 @@ requests into `main`, and only when a path it owns changes: OCaml packages and
 programs, this spec family, the toolchain lock and its tests and fixtures, the
 scaffold fixtures, or the workflow itself. It does **not** watch
 `.github/workflows/ci.yml`. The generic workflow's OCaml wiring is validated by
-`ci.yml` itself, which runs `test_ocaml_toolchain_lock.py` and
-`validate-repository-report` on every change to it.
+`ci.yml` itself: its unconditional `contracts` job runs
+`test_ocaml_toolchain_lock.py`, which checks that wiring, on every change. The
+lock contract requires the job and its "Verify repo-wide metadata contracts"
+step to stay unconditional and to keep running that test, so a `ci.yml` edit
+cannot drop the check it is now the only trigger for.
 
 *Revision 2026-09-25.* The first version pushed on every branch and watched
 `ci.yml`. Every pull request therefore ran the three-target matrix twice (push

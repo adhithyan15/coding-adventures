@@ -5,8 +5,9 @@ on:
   # requests, not pushes to every branch (which ran each PR twice), and not on
   # every ci.yml edit (which ran the whole three-OS matrix for unrelated CI
   # changes and fought other work for runners). ci.yml's own OCaml wiring is
-  # still validated by ci.yml, which runs test_ocaml_toolchain_lock.py and
-  # validate-repository-report on every ci.yml change. OCAML03 "Triggers".
+  # still validated on every ci.yml change: its ungated contracts job runs
+  # test_ocaml_toolchain_lock.py, and the lock contract requires that step to
+  # stay. OCAML03 "Triggers".
   push:
     branches: [main]
     paths:

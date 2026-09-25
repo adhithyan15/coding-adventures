@@ -22,10 +22,13 @@ On a busy day those jobs held runners that other PRs were queued behind, and
 they are also where the opam flakes come from.
 
 **Fix.** `push` is limited to `main`, and `ci.yml` is dropped from the paths.
-`ci.yml`'s OCaml wiring is still validated by `ci.yml` itself, which runs
-`test_ocaml_toolchain_lock.py` and `validate-repository-report` on every change
-to it. The lock contract (`ocaml_toolchain_lock.py`) pins the narrower
-triggers, and its test refuses widening them again.
+`ci.yml`'s OCaml wiring is still validated by `ci.yml` itself: its ungated
+`contracts` job runs `test_ocaml_toolchain_lock.py`. Because that is now the
+only check a `ci.yml`-only edit gets, the lock contract also requires the job
+and step to stay unconditional and keep running the test (the security review
+caught that a `ci.yml` PR could otherwise delete the line and weaken the
+bootstrap in one go). The contract pins the narrower triggers, and its test
+refuses widening them again.
 
 **Do differently.**
 - A standalone workflow's `paths` should list what *its* jobs consume. If the
