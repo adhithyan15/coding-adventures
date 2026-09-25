@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:e3b71f337fd6d33c",
+  "lessonIds": [
+    "SA-C88-girl",
+    "SA-C88-youngman",
+    "SA-C88-friend",
+    "SA-C88-son",
+    "SA-C88-daughter"
+  ],
+  "tex": "sanskrit/book/chapters/ch88-girls-boys-friends.tex"
+}

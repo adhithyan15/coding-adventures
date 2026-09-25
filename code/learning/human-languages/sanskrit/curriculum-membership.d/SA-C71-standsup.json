@@ -1,0 +1,11 @@
+{
+  "id": "SA-C71-standsup",
+  "pathSegment": "SA-PATH-71-MOVE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-71-MOVE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-84-PLACES",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "SA-EXT-84-PLACES"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C76-heat",
+  "pathSegment": "SA-PATH-76-WEATHER",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-76-WEATHER",
+      "order": 2
+    }
+  ]
+}

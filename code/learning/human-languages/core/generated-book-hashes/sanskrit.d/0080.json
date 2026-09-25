@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:ed44cb2bc28a97e3",
+  "lessonIds": [
+    "SA-C80-crow",
+    "SA-C80-parrot",
+    "SA-C80-peacock",
+    "SA-C80-tortoise",
+    "SA-C80-frog"
+  ],
+  "tex": "sanskrit/book/chapters/ch80-crow-parrot-peacock.tex"
+}

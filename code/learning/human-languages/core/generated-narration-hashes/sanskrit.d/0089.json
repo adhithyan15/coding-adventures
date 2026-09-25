@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:5918fa468a665eca",
+  "lessonIds": [
+    "SA-C89-beautiful",
+    "SA-C89-far",
+    "SA-C89-near",
+    "SA-C89-hard",
+    "SA-C89-sweet",
+    "SA-R89-first-pass-food-animals-nature",
+    "SA-R89-second-pass-places-days-people"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch89.txt",
+  "json": "sanskrit/narration/ch89.json",
+  "textHash": "fnv1a64:fd266577c9d6b223",
+  "jsonHash": "fnv1a64:3564c0f78e0f4f9b",
+  "findings": []
+}

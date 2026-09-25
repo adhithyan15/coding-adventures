@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C77-bathroom",
+    "language": "sanskrit",
+    "chapter": 77,
+    "sequence": 3590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e53346a0bb8600c9"
+  },
+  "findings": []
+}

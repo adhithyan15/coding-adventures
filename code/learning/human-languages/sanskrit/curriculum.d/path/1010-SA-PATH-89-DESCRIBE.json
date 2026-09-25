@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-89-DESCRIBE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "SA-EXT-89-DESCRIBE"
+  ],
+  "after": []
+}

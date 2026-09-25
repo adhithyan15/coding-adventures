@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "Cook, Wash, Bring, Give",
+  "label": "ch:sa-cook-wash-bring-give",
+  "canDo": "I can say someone cooks, sleeps, washes, brings or gives.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-C72-gives",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can say someone cooks, sleeps, washes, brings or gives.",
+    "assesses": [
+      "SA-LEX-C72-HOUSEWORK-03",
+      "SA-LEX-C72-HOUSEWORK-04",
+      "SA-LEX-C72-HOUSEWORK-05"
+    ]
+  }
+}

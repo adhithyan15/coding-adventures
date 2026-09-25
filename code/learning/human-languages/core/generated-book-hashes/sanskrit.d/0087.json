@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:aa4c895c9bf99f37",
+  "lessonIds": [
+    "SA-C87-eleven",
+    "SA-C87-twelve",
+    "SA-C87-twenty",
+    "SA-C87-hundred",
+    "SA-C87-thousand"
+  ],
+  "tex": "sanskrit/book/chapters/ch87-eleven-to-a-thousand.tex"
+}

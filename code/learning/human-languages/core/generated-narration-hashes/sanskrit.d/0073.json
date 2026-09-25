@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:510961e55614bed0",
+  "lessonIds": [
+    "SA-C73-sings",
+    "SA-C73-tells",
+    "SA-C73-cries",
+    "SA-C73-calls",
+    "SA-C73-bows"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch73.txt",
+  "json": "sanskrit/narration/ch73.json",
+  "textHash": "fnv1a64:cf49bb7da4af1cad",
+  "jsonHash": "fnv1a64:740a413cb388477c",
+  "findings": []
+}

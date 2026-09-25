@@ -1,0 +1,11 @@
+{
+  "id": "SA-C66-pain",
+  "pathSegment": "SA-PATH-66-UNWELL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-66-UNWELL",
+      "order": 2
+    }
+  ]
+}

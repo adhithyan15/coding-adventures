@@ -1,0 +1,11 @@
+{
+  "id": "SA-C79-cat",
+  "pathSegment": "SA-PATH-79-ANIMALS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-79-ANIMALS",
+      "order": 4
+    }
+  ]
+}

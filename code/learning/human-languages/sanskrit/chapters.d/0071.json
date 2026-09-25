@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Run, Walk, Sit, Stand",
+  "label": "ch:sa-run-walk-sit-stand",
+  "canDo": "I can say someone runs, walks, sits down, stands up or falls.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-C71-falls",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: i can say someone runs, walks, sits down, stands up or falls.",
+    "assesses": [
+      "SA-LEX-C71-MOVE-03",
+      "SA-LEX-C71-MOVE-04",
+      "SA-LEX-C71-MOVE-05"
+    ]
+  }
+}

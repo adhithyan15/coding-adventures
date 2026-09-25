@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Eleven to a Thousand",
+  "label": "ch:sa-eleven-to-a-thousand",
+  "canDo": "I can count eleven and twelve, and name twenty, a hundred and a thousand.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-C87-thousand",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can count eleven and twelve, and name twenty, a hundred and a thousand.",
+    "assesses": [
+      "SA-LEX-C87-NUMBERS-03",
+      "SA-LEX-C87-NUMBERS-04",
+      "SA-LEX-C87-NUMBERS-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C69-throat",
+    "language": "sanskrit",
+    "chapter": 69,
+    "sequence": 3180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:288e88e62b27789e"
+  },
+  "findings": []
+}

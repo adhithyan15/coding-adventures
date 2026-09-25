@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-83-SCHOOL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a school, a student, a teacher, a lesson and an exam.",
+  "prerequisites": []
+}

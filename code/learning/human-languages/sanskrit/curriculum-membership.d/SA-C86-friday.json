@@ -1,0 +1,11 @@
+{
+  "id": "SA-C86-friday",
+  "pathSegment": "SA-PATH-86-WEEKEND",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "SA-EXT-86-WEEKEND",
+      "order": 0
+    }
+  ]
+}

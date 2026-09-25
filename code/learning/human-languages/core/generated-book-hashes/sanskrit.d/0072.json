@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:461182703596f8ac",
+  "lessonIds": [
+    "SA-C72-cooks",
+    "SA-C72-sleeps",
+    "SA-C72-washes",
+    "SA-C72-brings",
+    "SA-C72-gives"
+  ],
+  "tex": "sanskrit/book/chapters/ch72-cook-wash-bring-give.tex"
+}

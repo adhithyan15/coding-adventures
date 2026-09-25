@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "Sing, Tell, Cry, Call",
+  "label": "ch:sa-sing-tell-cry-call",
+  "canDo": "I can say someone sings, tells, cries, calls or bows.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-C73-bows",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can say someone sings, tells, cries, calls or bows.",
+    "assesses": [
+      "SA-LEX-C73-VOICE-03",
+      "SA-LEX-C73-VOICE-04",
+      "SA-LEX-C73-VOICE-05"
+    ]
+  }
+}

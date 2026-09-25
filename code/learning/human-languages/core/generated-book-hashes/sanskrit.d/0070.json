@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:5ca9c8277fbc5469",
+  "lessonIds": [
+    "SA-C70-nail",
+    "SA-C70-knee",
+    "SA-C70-back",
+    "SA-C70-shoulder",
+    "SA-C70-lip"
+  ],
+  "tex": "sanskrit/book/chapters/ch70-nail-knee-shoulder.tex"
+}

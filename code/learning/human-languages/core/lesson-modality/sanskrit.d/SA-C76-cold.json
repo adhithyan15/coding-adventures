@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C76-cold",
+    "language": "sanskrit",
+    "chapter": 76,
+    "sequence": 3530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:653a16b29c78bb9b"
+  },
+  "findings": []
+}

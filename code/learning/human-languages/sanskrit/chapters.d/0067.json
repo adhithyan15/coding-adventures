@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Tired, Hungry, Thirsty",
+  "label": "ch:sa-tired-hungry-thirsty",
+  "canDo": "I can say I am sleepy, hungry or thirsty, ask for rest, and say I am at ease.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C67-ease",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can say I am sleepy, hungry or thirsty, ask for rest, and say I am at ease.",
+    "assesses": [
+      "SA-LEX-C67-NEEDS-03",
+      "SA-LEX-C67-NEEDS-04",
+      "SA-LEX-C67-NEEDS-05"
+    ]
+  }
+}

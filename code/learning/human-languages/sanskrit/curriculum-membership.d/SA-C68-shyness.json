@@ -1,0 +1,11 @@
+{
+  "id": "SA-C68-shyness",
+  "pathSegment": "SA-PATH-68-FEELINGS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-68-FEELINGS",
+      "order": 3
+    }
+  ]
+}

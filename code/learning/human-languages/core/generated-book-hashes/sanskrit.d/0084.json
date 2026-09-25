@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:5dcfaba7820092b7",
+  "lessonIds": [
+    "SA-C84-temple",
+    "SA-C84-hospital",
+    "SA-C84-field",
+    "SA-C84-farmer",
+    "SA-C84-merchant"
+  ],
+  "tex": "sanskrit/book/chapters/ch84-temple-hospital-field.tex"
+}

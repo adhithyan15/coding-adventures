@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C81-garden",
+    "language": "sanskrit",
+    "chapter": 81,
+    "sequence": 3820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cde29fbf36e030c"
+  },
+  "findings": []
+}

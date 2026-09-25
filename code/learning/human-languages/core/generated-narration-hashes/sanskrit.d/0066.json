@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:ef2030db17b3af95",
+  "lessonIds": [
+    "SA-C66-fever",
+    "SA-C66-cough",
+    "SA-C66-pain",
+    "SA-C66-illness",
+    "SA-C66-health"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch66.txt",
+  "json": "sanskrit/narration/ch66.json",
+  "textHash": "fnv1a64:5909239986fab5dd",
+  "jsonHash": "fnv1a64:68b190a1d9bafa42",
+  "findings": []
+}
