@@ -396,21 +396,27 @@ Variant names are opaque to the compiler (UI30 §2), so which environment
 selects which variant is declared, in the package manifest:
 
 ```toml
-[app.layouts]
 # First match wins; no match is the default layout.
-compact = { size-class = "compact" }
-touch   = { pointer = "coarse" }
+[[app.layouts]]
+variant = "compact"
+size-class = "compact"
+
+[[app.layouts]]
+variant = "touch"
+pointer = "coarse"
 ```
 
-- Keys are variant names; each value is a set of UI48 axes that must all
-  match. Order is the order written. A variant with no rule is never
-  selected at run time (it can still be built alone with `--variant`).
-- Without an `[app.layouts]` table, the conventional names select themselves:
+- Each entry names a variant and the UI48 axes that must all match. An array
+  of tables, because its order is TOML's own — a table's key order is not
+  something a TOML parser promises. A variant with no rule is never selected
+  at run time (it can still be built alone with `--variant`). A rule with no
+  axes always matches, so only the last rule may have none.
+- Without `[[app.layouts]]`, the conventional names select themselves:
   `compact` for `size-class = compact`, `expanded` for `size-class =
   expanded`, `touch` for `pointer = coarse`, in that order. Any other name
   needs a rule.
 - The selector is a pure Rust function in the kernel (`mosaic-package-manifest`
-  parses the table; a `select_variant(environment, rules)` beside it decides),
+  parses the rules; a `select_variant(environment, rules)` beside it decides),
   unit-tested without a backend. Each backend's shell emits the same rules in
   its own language, generated from the Rust table, so the choice is identical
   everywhere.
