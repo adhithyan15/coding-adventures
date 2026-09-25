@@ -136,8 +136,8 @@ pub struct InlineVariablesPass {
     /// Whether to resolve member chains against a top-level object or
     /// array literal (CLOC28). Off by default, because it is only sound
     /// under a **closed-world** assumption — see
-    /// [`InlineVariablesPass::with_structured_literals`].
-    structured_literals: bool,
+    /// [`InlineVariablesPass::closed_world`].
+    closed_world: bool,
 }
 
 impl InlineVariablesPass {
@@ -146,12 +146,21 @@ impl InlineVariablesPass {
     /// Scalar propagation only.
     pub fn new() -> Self {
         Self {
-            structured_literals: false,
+            closed_world: false,
         }
     }
 
-    /// Additionally resolve member chains against a top-level object or
-    /// array literal (CLOC28). **ADVANCED only.**
+    /// Enable the **closed-world** propagations. **ADVANCED only.**
+    ///
+    /// Two capabilities ride this flag, for one reason:
+    ///
+    /// * CLOC28 — resolve a member chain against a top-level object or
+    ///   array literal (`var o={a:1}; o.a` becomes `1`).
+    /// * CLOC29 — propagate a scalar top-level `let`/`var` to its uses
+    ///   (`var x=1; x?a:b` becomes `a` once constant-folding runs).
+    ///
+    /// `const` scalars are NOT gated here: they propagate at both levels,
+    /// as they always have.
     ///
     /// The candidates this enables are all top-level bindings, and a
     /// top-level binding is a property of the global object. At SIMPLE the
@@ -174,9 +183,9 @@ impl InlineVariablesPass {
     ///
     /// Registered this way in `closurec`'s `run.rs`, alongside the other
     /// closed-world passes (`inline`, `remove-unused-vars`, `treeshake`).
-    pub fn with_structured_literals() -> Self {
+    pub fn closed_world() -> Self {
         Self {
-            structured_literals: true,
+            closed_world: true,
         }
     }
 }
@@ -216,7 +225,7 @@ impl Pass for InlineVariablesPass {
                 &mut program,
                 &mut nodes_touched,
                 &mut propagated,
-                self.structured_literals,
+                self.closed_world,
             );
 
         // CV provenance (#89): record every constant we propagated as a
@@ -276,6 +285,16 @@ struct ConstCandidate {
     /// the literal itself would construct a fresh object per use site and
     /// break `o.a === o.a`; see `structured`.
     structured: bool,
+    /// When set, this candidate must clear the whole-program proof in
+    /// [`propagate_structured`] rather than the `count_uses_*` tally.
+    ///
+    /// Always set for a structured candidate. Also set for a **scalar**
+    /// `let`/`var` (CLOC29): those can be reassigned, and `count_uses_*`
+    /// does not see a bare identifier assignment target, so the tally
+    /// would miscount them. The proof counts every mention of the name
+    /// over the serialized AST and refuses on any write, which is exactly
+    /// the guarantee `const`-ness gives the scalar path for free.
+    strong_proof: bool,
 }
 
 /// One propagation event for CV provenance (#89): the original `const`
@@ -309,7 +328,7 @@ fn inline_variables_program(
     program: &mut Program,
     nodes_touched: &mut u32,
     propagated: &mut Vec<PropagatedConst>,
-    structured_literals: bool,
+    closed_world: bool,
 ) -> bool {
     // Phase 1 — count how many times each name is declared as a binding
     // anywhere in the program (function names, parameters, var/let/const
@@ -353,7 +372,7 @@ fn inline_variables_program(
         // CLOC28: an object/array literal is a candidate too, but its
         // uses are rewritten as chains and its eligibility is decided by
         // a separate, stricter gate in phase 3.
-        let structured = structured_literals && structured::is_structured_literal(init);
+        let structured = closed_world && structured::is_structured_literal(init);
         if !structured && !is_literal(init) {
             continue;
         }
@@ -371,7 +390,12 @@ fn inline_variables_program(
         // the serialized AST, that the name is never written in any form
         // and that every occurrence is a chain about to be rewritten.
         // That is what the ladder rungs need — they are all `var`.
-        if !matches!(vd.kind, VarKind::Const) && !structured {
+        // CLOC29 relaxes this for a SCALAR `let`/`var`, but only under the
+        // closed-world flag and only via the stronger proof — see
+        // `strong_proof` on `ConstCandidate`. `const` keeps the cheap
+        // `count_uses_*` route it has always used.
+        let scalar_strong = closed_world && !matches!(vd.kind, VarKind::Const) && !structured;
+        if !matches!(vd.kind, VarKind::Const) && !structured && !scalar_strong {
             continue;
         }
         // Temporal-dead-zone guard. A top-level `const` cannot be read
@@ -391,6 +415,7 @@ fn inline_variables_program(
             name: id.name.clone(),
             value: init.clone(),
             structured,
+            strong_proof: structured || scalar_strong,
         });
     }
     if candidates.is_empty() {
@@ -402,14 +427,20 @@ fn inline_variables_program(
     // literal is short enough for the multi-use budget.
     let mut changed = false;
     for cand in &candidates {
-        // CLOC28 takes a different route to the same question, because
-        // what it rewrites is a chain rather than an identifier.
-        if cand.structured {
+        // CLOC28/CLOC29 take a different route to the same question: a
+        // structured candidate because what it rewrites is a chain rather
+        // than an identifier, a scalar `let`/`var` because the `count_uses_*`
+        // tally below cannot see a write to it.
+        if cand.strong_proof {
             if let Some(sites) = propagate_structured(program, cand) {
                 changed = true;
                 propagated.push(PropagatedConst {
                     name: cand.name.clone(),
-                    value: structured_repr(&cand.value),
+                    value: if cand.structured {
+                        structured_repr(&cand.value)
+                    } else {
+                        literal_repr(&cand.value)
+                    },
                     sites,
                 });
             }
@@ -1668,9 +1699,39 @@ mod tests {
         let node = parse_javascript_typed(src, es).expect("parse");
         let prog = bridge::grammar_to_program(&node, es).expect("bridge");
 
-        // The CLOC28 chain resolution is closed-world, so it is only
-        // enabled in the ADVANCED configuration; tests exercise that one.
-        let pass = InlineVariablesPass::with_structured_literals();
+        // The CLOC28/CLOC29 propagations are closed-world, so they are
+        // only enabled in the ADVANCED configuration; tests exercise that
+        // one. `propagate_source_open_world` covers the other.
+        let pass = InlineVariablesPass::closed_world();
+        let sidecar = Sidecar::new();
+        let mut cv = CVLog::new(false);
+        let out = pass
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .expect("inline-variables");
+
+        let mut cv2 = CVLog::new(false);
+        let opts = EmitOptions {
+            source_map: false,
+            ..Default::default()
+        };
+        emit(&out.program, &sidecar, &mut cv2, &opts)
+            .expect("emit")
+            .code
+    }
+
+    /// Same, in the OPEN-WORLD (default / SIMPLE) configuration: scalar
+    /// `const` propagation only, with the closed-world CLOC28 and CLOC29
+    /// propagations switched off.
+    fn propagate_source_open_world(src: &str) -> String {
+        let es = EsVersion::Es2025;
+        let node = parse_javascript_typed(src, es).expect("parse");
+        let prog = bridge::grammar_to_program(&node, es).expect("bridge");
+
+        let pass = InlineVariablesPass::new();
         let sidecar = Sidecar::new();
         let mut cv = CVLog::new(false);
         let out = pass
@@ -1750,6 +1811,93 @@ mod tests {
     }
 
     // ----- metadata contract -----
+
+    // ---- CLOC29: scalar propagation of a top-level `let`/`var` ----------
+    //
+    // `propagate_source` runs the closed-world (ADVANCED) configuration.
+    // The binding is still present in these outputs: `remove-unused-vars`
+    // deletes it one pass later. What matters is that the READ folded.
+
+    #[test]
+    fn propagates_a_scalar_var() {
+        assert_eq!(
+            propagate_source("var x = 1;console.log(x);"),
+            "var x=1;console.log(1);"
+        );
+    }
+
+    #[test]
+    fn propagates_a_scalar_let() {
+        assert_eq!(
+            propagate_source("let x = 1;console.log(x);"),
+            "let x=1;console.log(1);"
+        );
+    }
+
+    #[test]
+    fn propagates_a_scalar_var_to_several_reads() {
+        assert_eq!(
+            propagate_source("var x = 1;console.log(x, x);"),
+            "var x=1;console.log(1,1);"
+        );
+    }
+
+    // ---- CLOC29: the refusals, which are the whole point ----------------
+    //
+    // A `const` cannot be assigned, which is why the scalar path could
+    // always trust `count_uses_*` — that counter does NOT see a bare
+    // identifier assignment target. Admitting `let`/`var` voids that
+    // assumption, so these candidates go through the stronger
+    // whole-program proof instead. Each of these would fold to the wrong
+    // value under the old counter.
+
+    #[test]
+    fn refuses_a_scalar_var_that_is_reassigned() {
+        assert_eq!(
+            propagate_source("var x = 1;x = 2;console.log(x);"),
+            "var x=1;x=2;console.log(x);"
+        );
+    }
+
+    #[test]
+    fn refuses_a_scalar_var_with_a_compound_assignment() {
+        assert_eq!(
+            propagate_source("var x = 1;x += 2;console.log(x);"),
+            "var x=1;x+=2;console.log(x);"
+        );
+    }
+
+    #[test]
+    fn refuses_a_scalar_var_that_is_incremented() {
+        assert_eq!(
+            propagate_source("var x = 1;x++;console.log(x);"),
+            "var x=1;x++;console.log(x);"
+        );
+    }
+
+    #[test]
+    fn refuses_a_scalar_var_written_inside_a_function() {
+        assert_eq!(
+            propagate_source("var x = 1;function f(){x = 9}f();console.log(x);"),
+            "var x=1;function f(){x=9}f();console.log(x);"
+        );
+    }
+
+    #[test]
+    fn refuses_a_scalar_var_that_is_a_for_in_target() {
+        assert_eq!(
+            propagate_source("var x = 1;for (x in {a: 1});console.log(x);"),
+            "var x=1;for(x in {a:1});console.log(x);"
+        );
+    }
+
+    #[test]
+    fn refuses_a_scalar_var_that_reads_itself_in_its_initializer() {
+        assert_eq!(
+            propagate_source("var x = x;console.log(x);"),
+            "var x=x;console.log(x);"
+        );
+    }
 
     // ---- CLOC28: resolving a chain against an object/array literal ------
     //
@@ -2090,10 +2238,32 @@ mod tests {
     }
 
     #[test]
-    fn does_not_propagate_let_or_var() {
-        // `let`/`var` can be reassigned — never propagated.
-        assert_eq!(propagate_source("let X = 5; use(X);"), "let X=5;use(X);");
-        assert_eq!(propagate_source("var Y = 5; use(Y);"), "var Y=5;use(Y);");
+    fn does_not_propagate_let_or_var_in_the_open_world() {
+        // Until CLOC29 this held unconditionally, on the grounds that a
+        // `let`/`var` can be reassigned. It still holds in the OPEN-WORLD
+        // configuration, and now for the reason upstream has: a top-level
+        // binding is a property of the global object, and at SIMPLE the
+        // reference compiler leaves `var x=1;console.log(x)` alone. The
+        // reassignment hazard itself is handled by the whole-program proof
+        // (see `refuses_a_scalar_var_that_is_reassigned`), not by refusing
+        // the kind outright.
+        assert_eq!(
+            propagate_source_open_world("let X = 5; use(X);"),
+            "let X=5;use(X);"
+        );
+        assert_eq!(
+            propagate_source_open_world("var Y = 5; use(Y);"),
+            "var Y=5;use(Y);"
+        );
+    }
+
+    /// The same two programs in the closed-world configuration, where
+    /// CLOC29 does propagate them. Pinning both sides keeps the gate from
+    /// being widened or dropped without a test moving.
+    #[test]
+    fn does_propagate_let_or_var_in_the_closed_world() {
+        assert_eq!(propagate_source("let X = 5; use(X);"), "let X=5;use(5);");
+        assert_eq!(propagate_source("var Y = 5; use(Y);"), "var Y=5;use(5);");
     }
 
     #[test]
