@@ -419,7 +419,9 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-fs-adapter, the atomic publication boundary.
         # +1: forme-deploy-runner-github-pages-adapter, the hosted publication
         # boundary over GitHub's Git Data API.
-        self.assertEqual(summary.total_projects, 475)
+        # -1: the standalone checklist-app was retired; checklists live in
+        # Trestle (mosaic-pkg-checklist).
+        self.assertEqual(summary.total_projects, 474)
         self.assertEqual(summary.shared_projects, 296)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
@@ -461,7 +463,8 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-fs-adapter owns its filesystem transaction.
         # +1: forme-deploy-runner-github-pages-adapter encodes verified bytes
         # and ownership manifests through the Node Buffer API.
-        self.assertEqual(summary.node_api_projects, 74)
+        # -1: the retired checklist-app (its Electron shell used Node APIs).
+        self.assertEqual(summary.node_api_projects, 73)
         # +1: script-ductus owns `@types/node` directly, because its tests
         # read the shipped fonts off disk to verify the pen paths.
         # +1: chief-of-staff-channel-store owns the test-only Node provider.
@@ -481,7 +484,8 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-fs-adapter owns its Node filesystem provider.
         # +1: forme-deploy-runner-github-pages-adapter owns its Node Buffer
         # provider for binary Git blob transport.
-        self.assertEqual(summary.node_provider_projects, 74)
+        # -1: the retired checklist-app (its Electron shell used Node APIs).
+        self.assertEqual(summary.node_provider_projects, 73)
         self.assertEqual(summary.missing_node_provider_projects, 0)
         self.assertEqual(summary.stale_node_provider_locks, 0)
         self.assertEqual(summary.node_lock_exemptions, 1)
@@ -511,7 +515,8 @@ console.log(prose, nested);
         # +1: forme-deploy-runner-fs-adapter locks its compiler and test graph.
         # +1: forme-deploy-runner-github-pages-adapter locks its compiler and
         # test graph.
-        self.assertEqual(summary.locked_compilers, 474)
+        # -1: the retired checklist-app took its lockfile with it.
+        self.assertEqual(summary.locked_compilers, 473)
 
 
 if __name__ == "__main__":

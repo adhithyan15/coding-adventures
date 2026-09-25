@@ -1,5 +1,17 @@
 # Checklist App — Interactive Decision-Tree Checklist Runner
 
+> **Retired (2026-09-25).** The standalone TypeScript/Electron app at
+> `code/programs/typescript/checklist-app` and its `release-checklist.yml`
+> workflow have been removed. Checklists now live in **Trestle** (the Mosaic
+> task app) as a first-class surface: the decision-tree model is
+> `ChecklistItem` / `DecisionNode` / `ChecklistRunner` in the task core, and
+> the UI is `mosaic-pkg-checklist`. See
+> [`mosaic-component-program-v1.md` §6](mosaic-component-program-v1.md),
+> [`task-app-checklists-v1.md`](task-app-checklists-v1.md) and
+> [`task-app-checklists-view-v1.md`](task-app-checklists-view-v1.md).
+> The removed code is retrievable from git history; this document is kept as
+> the record of the original design.
+
 ## Overview
 
 Most checklist tools are flat lists. Real procedures are not. A pre-flight

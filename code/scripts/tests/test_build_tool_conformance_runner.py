@@ -1263,7 +1263,7 @@ class CorpusTests(unittest.TestCase):
             ),
             (
                 "typescript",
-                "code/programs/typescript/checklist-app/electron/tsconfig.json",
+                "code/programs/typescript/engram-electron/electron/tsconfig.json",
                 "electron/tsconfig.json",
             ),
         ]
