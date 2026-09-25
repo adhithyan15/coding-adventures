@@ -145,6 +145,23 @@ first window's starting size, while users and operating systems remain free to
 resize it afterward. Component artifacts emitted without `--emit-project` are
 therefore unaffected.
 
+### App identity (UI89)
+
+```toml
+[app]
+display-name = "Trestle"
+bundle-identifier = "dev.codingadventures.trestle"
+```
+
+Both are optional and apply to installed apps, where the operating system
+shows a name and needs an identity: the generated iOS / iPadOS project (UI89
+§2.2) today, and the Android project later. `display-name` is the name under
+the icon: 1 to 64 characters, no control characters. It defaults to the root
+component's name. `bundle-identifier` is reverse DNS: at least two
+dot-separated parts of ASCII letters, digits and `-`, at most 155 characters.
+It defaults to `dev.codingadventures.` plus the package name's letters and
+digits. Desktop and browser shells ignore both.
+
 ---
 
 ## 3. Non-negotiable contracts
