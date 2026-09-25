@@ -1,0 +1,11 @@
+{
+  "id": "TE-C94-apology",
+  "pathSegment": "TE-PATH-94-POLITE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-94-POLITE",
+      "order": 1
+    }
+  ]
+}

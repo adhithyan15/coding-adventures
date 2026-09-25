@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-92-DOCTOR",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "TE-EXT-92-DOCTOR"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C93-gladly",
+  "pathSegment": "TE-PATH-93-FINE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-93-FINE",
+      "order": 3
+    }
+  ]
+}

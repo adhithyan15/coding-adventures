@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:cd129b27ab56ef7e",
+  "lessonIds": [
+    "TE-C97-laugh",
+    "TE-C97-crying",
+    "TE-C97-regret",
+    "TE-C97-anxiety",
+    "TE-C97-alone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch97.txt",
+  "json": "telugu/narration/ch97.json",
+  "textHash": "fnv1a64:270ec05c57ca4b38",
+  "jsonHash": "fnv1a64:5eea780c71d17e06",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C92-wound",
+  "pathSegment": "TE-PATH-92-DOCTOR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-92-DOCTOR",
+      "order": 3
+    }
+  ]
+}

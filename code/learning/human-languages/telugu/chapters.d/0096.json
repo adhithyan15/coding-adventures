@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Names, Ages, Birthdays",
+  "label": "ch:te-names-ages-birthdays",
+  "canDo": "I can give a surname and a nickname, ask an age, talk about a birthday, and sign my name.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TE-C96-signature",
+    "kind": "production",
+    "summary": "Complete TE-C96-signature: the details of a name, from surname to signature.",
+    "assesses": [
+      "TE-LEX-C96-NAMES-03",
+      "TE-LEX-C96-NAMES-04",
+      "TE-LEX-C96-NAMES-05"
+    ]
+  }
+}

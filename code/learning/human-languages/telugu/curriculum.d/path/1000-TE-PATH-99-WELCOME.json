@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-99-WELCOME",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "TE-EXT-99-WELCOME"
+  ],
+  "after": []
+}

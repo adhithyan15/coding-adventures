@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:b4ab8e188bf4c72a",
+  "lessonIds": [
+    "TE-C93-wellbeing",
+    "TE-C93-comfortably",
+    "TE-C93-ease",
+    "TE-C93-gladly",
+    "TE-C93-body"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch93.txt",
+  "json": "telugu/narration/ch93.json",
+  "textHash": "fnv1a64:59d1d51183c0f159",
+  "jsonHash": "fnv1a64:e2983412f15d73ca",
+  "findings": []
+}

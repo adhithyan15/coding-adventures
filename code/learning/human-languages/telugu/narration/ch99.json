@@ -1,0 +1,906 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 99,
+  "title": "Welcomes, Gifts, Invitations",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:413045e0d3561771",
+  "lessons": [
+    {
+      "id": "TE-C99-namaste",
+      "sequence": 3830,
+      "title": "నమస్తే (namastē) — namaste, hello",
+      "headword": "నమస్తే",
+      "romanization": "namastē",
+      "gloss": "namaste, hello",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:defec2964bb089b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for that's true, then the Telugu for that's the one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: నమస్తే",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "నమస్తే (namastē) — \"namaste\", said with the palms together."
+            },
+            {
+              "kind": "speech",
+              "text": "It sits beside నమస్కారం, your first word. Both bow: నమస్తే (namastē) is \"a bow to you\", heard all across India; నమస్కారం is the fuller Telugu form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A second hello, shared with most of India."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namastē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namastē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "namastē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *namastē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say namastē, then namaskāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *namastē*, then *namaskāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for that's true, then the Telugu for that's the one, then say namastē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for that's true, then the Telugu for that's the one, then say *namastē* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does నమస్తే (namastē) mean? (\"Namaste, hello\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C99-delight",
+      "sequence": 3840,
+      "title": "ఆనందం (ānandaṁ) — delight, joy",
+      "headword": "ఆనందం",
+      "romanization": "ānandaṁ",
+      "gloss": "delight, joy",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c30f35bf98a18f7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for that's the one, then the Telugu for namaste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆనందం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆనందం (ānandaṁ) — \"delight, joy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మిమ్మల్ని చూసి ఆనందంగా ఉంది — \"I am delighted to see you\". Stronger than సంతోషం, and in the frame you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A warmer word for glad."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānandaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānandaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānandaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānandaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mimmalni cūsi ānandaṁgā undi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mimmalni cūsi ānandaṁgā undi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for that's the one, then the Telugu for namaste, then say ānandaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for that's the one, then the Telugu for namaste, then say *ānandaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆనందం (ānandaṁ) mean? (\"Delight, joy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C99-congrats",
+      "sequence": 3850,
+      "title": "అభినందనలు (abhinandanalu) — congratulations, compliments",
+      "headword": "అభినందనలు",
+      "romanization": "abhinandanalu",
+      "gloss": "congratulations, compliments",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c10832477e67c34f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for namaste, then the Telugu for delight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: అభినందనలు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "అభినందనలు (abhinandanalu) — \"congratulations\", \"compliments\" on something done well."
+            },
+            {
+              "kind": "speech",
+              "text": "శుభాకాంక్షలు wishes someone well for what is coming; అభినందనలు (abhinandanalu) praises what they have done. A passed exam gets both."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Praise for what is done, beside wishes for what comes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhinandanalu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhinandanalu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abhinandanalu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abhinandanalu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say abhinandanalu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *abhinandanalu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for namaste, then the Telugu for delight, then say abhinandanalu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for namaste, then the Telugu for delight, then say *abhinandanalu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does అభినందనలు (abhinandanalu) mean? (\"Congratulations, compliments\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C99-gift",
+      "sequence": 3860,
+      "title": "బహుమతి (bahumati) — a gift, a prize",
+      "headword": "బహుమతి",
+      "romanization": "bahumati",
+      "gloss": "a gift, a prize",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:690eaad5512229b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for delight, then the Telugu for congratulations."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: బహుమతి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "బహుమతి (bahumati) — \"a gift\", and \"a prize\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మీకు ఒక బహుమతి (bahumati) — \"a gift for you\", with the dative మీకు."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Something to bring when you visit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahumati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahumati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahumati, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahumati*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mīku oka bahumati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mīku oka bahumati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for delight, then the Telugu for congratulations, then say bahumati again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for delight, then the Telugu for congratulations, then say *bahumati* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does బహుమతి (bahumati) mean? (\"A gift, a prize\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C99-invitation",
+      "sequence": 3870,
+      "title": "ఆహ్వానం (āhvānaṁ) — an invitation",
+      "headword": "ఆహ్వానం",
+      "romanization": "āhvānaṁ",
+      "gloss": "an invitation",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03530b2c3ab9aa22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Telugu for congratulations, then the Telugu for a gift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఆహ్వానం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఆహ్వానం (āhvānaṁ) — \"an invitation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పెళ్ళికి ఆహ్వానం (āhvānaṁ) — \"an invitation to the wedding\", with -కి, \"to\". It is the reason for most of the visits this book has taught you to make."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Namaste, delight, congratulations, a gift, an invitation: the way into a visit."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āhvānaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āhvānaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āhvānaṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āhvānaṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say peḷḷiki āhvānaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *peḷḷiki āhvānaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Telugu for congratulations, then the Telugu for a gift, then say āhvānaṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Telugu for congratulations, then the Telugu for a gift, then say *āhvānaṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ఆహ్వానం (āhvānaṁ) mean? (\"An invitation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R99-second-pass-welcome",
+      "sequence": 3880,
+      "title": "A warm welcome and short answers — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over short answers and a warm welcome",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2af6b2c4037b8b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A friend arrives at your door. Greet them with palms together, and say you are delighted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the ending -ఏ, \"exactly this\"",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "built from"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: నిజమే. built from: truth + -ఏ.",
+                "word: అదే. built from: that + -ఏ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The -ఏ points: this truth and no other, that one exactly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hand over a gift; congratulate your friend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hand over a gift; congratulate your friend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say the wedding invitation came",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say the wedding invitation came]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "someone asks what happened: it's nothing. Have you eaten? Not yet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: someone asks what happened: it's nothing. Have you eaten? Not yet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agree that it's true; say that will do; and \"that's the one!\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: agree that it's true; say that will do; and \"that's the one!\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing? (ఏమీ లేదు.) Not yet? (ఇంకా లేదు.) That will do? (సరిపోతుంది.) That's true? (నిజమే.) That's the one? (అదే.) Namaste? (నమస్తే (namastē).) Delight? (ఆనందం (ānandaṁ).) Congratulations? (అభినందనలు (abhinandanalu).) A gift? (బహుమతి (bahumati).) An invitation? (ఆహ్వానం (āhvānaṁ).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-R99-second-pass-names-moods",
+      "sequence": 3890,
+      "title": "Who you are and how you are — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over names, ages, birthdays and moods",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e018b16edf9872b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give your surname first, then your nickname, then ask someone their age."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: a name in two parts",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "literally"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: ఇంటిపేరు. literally: house name.",
+                "word: ముద్దుపేరు. literally: affection name.",
+                "word: పుట్టినరోజు. literally: born day."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Each is built from pieces you know, and the house name goes first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wish someone a happy birthday; hand them a gift",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wish someone a happy birthday; hand them a gift]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask them to sign here",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask them to sign here]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tell a friend to smile; then say you felt like crying",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tell a friend to smile; then say you felt like crying]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tell a worried friend not to worry; say you regret it; say you are alone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tell a worried friend not to worry; say you regret it; say you are alone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say an invitation came",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say an invitation came]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A surname? (ఇంటిపేరు.) A nickname? (ముద్దుపేరు.) Age? (వయసు.) A birthday? (పుట్టినరోజు.) A signature? (సంతకం.) A laugh? (నవ్వు.) Crying? (ఏడుపు.) Regret? (విచారం.) Worry? (ఆందోళన.) Alone? (ఒంటరిగా.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

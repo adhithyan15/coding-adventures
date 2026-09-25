@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C96-signature",
+    "language": "telugu",
+    "chapter": 96,
+    "sequence": 3720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a428b1a53044124"
+  },
+  "findings": []
+}

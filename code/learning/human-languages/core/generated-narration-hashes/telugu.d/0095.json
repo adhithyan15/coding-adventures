@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:2189ca6658b24e24",
+  "lessonIds": [
+    "TE-C95-intelugu",
+    "TE-C95-howsay",
+    "TE-C95-gently",
+    "TE-C95-show",
+    "TE-C95-didnthear",
+    "TE-R95-second-pass-asking",
+    "TE-R95-second-pass-health"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch95.txt",
+  "json": "telugu/narration/ch95.json",
+  "textHash": "fnv1a64:eec26d4c20c860cc",
+  "jsonHash": "fnv1a64:60b7540a55aecd62",
+  "findings": []
+}

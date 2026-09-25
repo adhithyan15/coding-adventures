@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-97-MOOD",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about laughing and crying, say I am worried or regretful, and say I am alone.",
+  "prerequisites": []
+}

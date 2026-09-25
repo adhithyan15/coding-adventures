@@ -1,0 +1,11 @@
+{
+  "id": "TE-C95-howsay",
+  "pathSegment": "TE-PATH-95-ASK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-95-ASK",
+      "order": 1
+    }
+  ]
+}

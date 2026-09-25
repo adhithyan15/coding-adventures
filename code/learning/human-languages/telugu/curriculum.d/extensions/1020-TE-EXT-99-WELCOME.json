@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-99-WELCOME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can greet with namaste, say I am delighted to see someone, congratulate, and talk about gifts and invitations.",
+  "prerequisites": []
+}

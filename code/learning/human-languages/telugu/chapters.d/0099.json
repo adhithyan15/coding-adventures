@@ -1,0 +1,21 @@
+{
+  "chapter": 99,
+  "title": "Welcomes, Gifts, Invitations",
+  "label": "ch:te-welcomes-gifts",
+  "canDo": "I can greet with namaste, say I am delighted to see someone, congratulate, and talk about gifts and invitations.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "TE-R99-second-pass-welcome",
+    "kind": "production",
+    "summary": "Complete TE-R99-second-pass-welcome: short answers and a warm welcome, from cold.",
+    "assesses": [
+      "TE-LEX-C99-WELCOME-01",
+      "TE-LEX-C99-WELCOME-02",
+      "TE-LEX-C99-WELCOME-03",
+      "TE-LEX-C99-WELCOME-04",
+      "TE-LEX-C99-WELCOME-05"
+    ]
+  }
+}

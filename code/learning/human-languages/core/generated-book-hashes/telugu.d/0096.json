@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:56598dec75864ed2",
+  "lessonIds": [
+    "TE-C96-surname",
+    "TE-C96-nickname",
+    "TE-C96-age",
+    "TE-C96-birthday",
+    "TE-C96-signature"
+  ],
+  "tex": "telugu/book/chapters/ch96-names-ages-birthdays.tex"
+}

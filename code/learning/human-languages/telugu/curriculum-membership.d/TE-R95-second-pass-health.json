@@ -1,0 +1,11 @@
+{
+  "id": "TE-R95-second-pass-health",
+  "pathSegment": "TE-PATH-95-ASK",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "TE-EXT-95-ASK",
+      "order": 6
+    }
+  ]
+}

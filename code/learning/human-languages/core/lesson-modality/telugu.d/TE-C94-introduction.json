@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C94-introduction",
+    "language": "telugu",
+    "chapter": 94,
+    "sequence": 3600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e958660e91873721"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C95-gently",
+  "pathSegment": "TE-PATH-95-ASK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-95-ASK",
+      "order": 2
+    }
+  ]
+}
