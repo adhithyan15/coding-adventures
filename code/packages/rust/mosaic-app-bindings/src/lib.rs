@@ -28,6 +28,15 @@ fn compose_jna_binding_source(application_id: Option<&str>) -> String {
     )
 }
 
+/// The Compose platform library (UI87 §7): the operating-system capabilities
+/// Mosaic answers for every generated app -- `files.open` and `files.save`
+/// through the native file dialog -- and the router that sends each effect to
+/// the app's own handler or to this library by kind. Written beside
+/// `MosaicRuntimeHost.kt` in every Compose project; installed by `Main.kt`.
+pub fn compose_platform_effects() -> String {
+    include_str!("../templates/compose/MosaicPlatformEffects.kt").to_string()
+}
+
 /// Files that make the fixed Mosaic application C ABI available to SwiftUI.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SwiftRuntimeBinding {

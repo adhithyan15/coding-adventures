@@ -3794,6 +3794,15 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 mosaic_app_bindings::compose_jna_binding_for_application(package_name).as_bytes(),
             )?;
             written.push(host_nested);
+
+            // The platform library every Compose app gets (UI87 §7): the
+            // standard file effects, and the router Main.kt installs.
+            let platform_nested = backend_dir.join("src/main/kotlin/MosaicPlatformEffects.kt");
+            write_file(
+                &platform_nested,
+                mosaic_app_bindings::compose_platform_effects().as_bytes(),
+            )?;
+            written.push(platform_nested);
         }
         Backend::Qt => {
             let require_runtime = project_shell_requires_runtime(profile, runtime_library);
@@ -4543,6 +4552,13 @@ fn swift_app_with_host_effects(
 /// the concrete `MosaicRuntimeHost`. `as?` also covers the non-`native-complete`
 /// shape, where the host falls back to `MosaicComposeHostBridge` and there is
 /// nothing to install onto.
+///
+/// Every Compose app also gets the platform library (UI87 §7): after the
+/// package's handler, if any, `Main.kt` installs `installMosaicPlatformEffects`,
+/// which wraps that handler and routes each effect by kind. The handler's
+/// `kinds` (validated in the manifest to a shape with no quote or backslash)
+/// become the set the router checks; without `kinds`, `null` keeps the original
+/// meaning.
 fn compose_main_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
@@ -4552,7 +4568,7 @@ fn compose_main_with_host_effects(
         .iter()
         .find(|handler| handler.backend == "compose")
     else {
-        return Ok(generated.to_string());
+        return Ok(compose_main_with_platform_effects(generated, None));
     };
 
     // Kotlin has no `#include`, so a declared one would be silently dropped --
@@ -4622,8 +4638,51 @@ fn compose_main_with_host_effects(
         handler.install
     )
     .expect("write Compose host-effect install");
+    writeln!(out, "{}", compose_platform_install_line(&indent, handler.kinds.as_deref()))
+        .expect("write Compose platform-effects install");
     out.push_str(&generated[line_end..]);
     Ok(out)
+}
+
+/// The `Main.kt` line that installs the platform library (UI87 §7.2).
+fn compose_platform_install_line(indent: &str, kinds: Option<&[String]>) -> String {
+    let claimed = match kinds {
+        None => "null".to_string(),
+        Some(kinds) => format!(
+            "setOf({})",
+            kinds
+                .iter()
+                .map(|kind| format!("\"{kind}\""))
+                .collect::<Vec<_>>()
+                .join(", ")
+        ),
+    };
+    format!(
+        "{indent}// Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n\
+         {indent}(mosaicHost as? MosaicRuntimeHost)?.let {{ installMosaicPlatformEffects(it, {claimed}) }}"
+    )
+}
+
+/// `Main.kt` for a package that declares no Compose handler: the platform
+/// library alone. An entry point without the host anchor (not a shape the
+/// generator produces today) is left as it is -- nothing was declared, so
+/// there is nothing to refuse.
+fn compose_main_with_platform_effects(generated: &str, kinds: Option<&[String]>) -> String {
+    const ANCHOR: &str = "val mosaicHost =";
+    let Some(at) = line_anchored_find(generated, ANCHOR) else {
+        return generated.to_string();
+    };
+    let line_start = generated[..at].rfind('\n').map_or(0, |index| index + 1);
+    let indent: String = generated[line_start..at].to_string();
+    let line_end = generated[at..]
+        .find('\n')
+        .map_or(generated.len(), |index| at + index + 1);
+    let mut out = String::with_capacity(generated.len() + 192);
+    out.push_str(&generated[..line_end]);
+    out.push_str(&compose_platform_install_line(&indent, kinds));
+    out.push('\n');
+    out.push_str(&generated[line_end..]);
+    out
 }
 
 /// Install a package's effect handler in the generated Flutter entry point.
@@ -15765,13 +15824,35 @@ handlers = [
         "}\n",
     );
 
+    /// UI87 §7: with no package handler, the only change is the platform
+    /// library, installed right after the host with no claimed kinds.
     #[test]
-    fn a_package_with_no_compose_handler_is_untouched() {
+    fn a_package_with_no_compose_handler_gets_only_the_platform_library() {
         let empty = compose_handler("");
-        assert_eq!(
-            compose_main_with_host_effects(MAIN_KT, &empty).expect("wiring must succeed"),
-            MAIN_KT
+        let wired = compose_main_with_host_effects(MAIN_KT, &empty).expect("wiring must succeed");
+        let expected = MAIN_KT.replace(
+            "MosaicComposeHostBridge.load() }\n",
+            "MosaicComposeHostBridge.load() }\n    // Mosaic's platform library: standard effect kinds, routed by kind (UI87 §7).\n    (mosaicHost as? MosaicRuntimeHost)?.let { installMosaicPlatformEffects(it, null) }\n",
         );
+        assert_eq!(wired, expected);
+    }
+
+    /// The package's handler is installed first; the platform library wraps it
+    /// with the kinds the package claimed.
+    #[test]
+    fn claimed_kinds_reach_the_platform_router_in_order() {
+        let effects = compose_handler(
+            r#"
+[host_effects]
+handlers = [ { backend = "compose", install = "installProbeEffects", kinds = ["importAnki", "files.save"] } ]
+"#,
+        );
+        let wired = compose_main_with_host_effects(MAIN_KT, &effects).expect("wiring");
+        let package = wired.find("installProbeEffects(it)").expect("package install");
+        let platform = wired
+            .find(r#"installMosaicPlatformEffects(it, setOf("importAnki", "files.save"))"#)
+            .expect("platform install with claimed kinds");
+        assert!(package < platform, "the platform library must wrap the package handler:\n{wired}");
     }
 
     #[test]
