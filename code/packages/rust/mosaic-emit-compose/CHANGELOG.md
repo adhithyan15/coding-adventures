@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-25 (choice labels)
+
+- **A labelled `HostCheckbox` / `HostRadio` centres its label on the control.** The emitter wraps a labelled checkbox or radio in its own `Row` with no vertical alignment, so the label sat at the top of Material's 48dp touch target, above the control's centre: Engram's "Suspend" / "Tag only" leech-action radios and Browse's "Reschedule reviews". The web's inline `<label>` sits level with its control. These emitter-built Rows now pass `verticalAlignment = Alignment.CenterVertically`. Authored Rows keep their defaults.
+  - Measured: across every Mosaic program only Engram's output changes (14 lines). Rendered: the Options and Browse labels are level with their controls in both themes, and the other Engram screens are byte-identical. 210 emitter tests pass.
+
 ## 2026-09-24 (number inputs)
 
 - **`HostNumberInput` is a `BasicTextField`, like `HostInput`.** It lowered to Material's `TextField`, which enforces a 280×56dp minimum and paints its own filled container inside the part's border. On Engram's Deck options (found with the Engram screenshot harness):
