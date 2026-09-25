@@ -9,7 +9,7 @@ headword: ದಯವಿಟ್ಟು
 gloss: please (dayaviṭṭu — "having placed compassion," from ದಯ daya "compassion")
 romanization: "dayaviṭṭu"
 concept_tag: COURTESY-PLEASE
-prerequisites: [KA-C01-dhanyavada, KA-C07-naalku]
+prerequisites: [KA-C01-dhanyavada, KA-C07-naalku, KA-C07-ombattu]
 sounds: [kannada-vowel-sign-i, kannada-virama-ottu, kannada-geminate-tta]
 roots: [daya-compassion]
 etymology_hook: "ದಯವಿಟ್ಟು = 'having placed compassion' — Kannada asks please with daya, like Tamil, Arabic faḍl and Hindi kṛpā"
@@ -17,9 +17,9 @@ reviews_of: [KA-C01-dhanyavada]
 duration:
   max_seconds: 270
 requires:
-  knowledge: []
+  knowledge: [KA-SCRIPT-C08-DAYAVITTU-04]
 introduces:
-  knowledge: [KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04]
+  knowledge: [KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03]
 practises:
   knowledge: [KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-LEX-C07-NAALKU-01]
 skills: [listening, speaking, reading]
@@ -75,13 +75,11 @@ Everyday Kannada politeness leans on the **respectful command** — the verb end
 front when you want to underline the courtesy.
 
 ## Sounds you'll need: Sound and structure
-<!-- hl-knowledge: introduces=[KA-SCRIPT-C08-DAYAVITTU-04]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-C08-DAYAVITTU-04] -->
 
-Look at **ಟ್ಟು** — a **doubled** *ṭ*. The first **ಟ್** is *ṭa* silenced by the
-**virama** (its vowel cut), and it tucks **under** the next letter as an *ottu*
-(a subscript form) before **ಟು** *ṭu*. Kannada writes a double consonant by
-stacking, not repeating side by side — a neat contrast with how the Roman
-alphabet just writes "tt."
+Look at **ಟ್ಟು** — a **doubled** *ṭ*, stacked exactly the way **ತ್ತು** was in
+**ಒಂಬತ್ತು**. The first **ಟ್** is *ṭa* silenced by the **virama**, tucked **under**
+**ಟು** *ṭu* as an *ottu*. Same rule, a new letter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C08-DAYAVITTU-01, KA-ETYMON-C08-DAYAVITTU-02, KA-PRAGMATICS-C08-DAYAVITTU-03, KA-SCRIPT-C08-DAYAVITTU-04, KA-LEX-C07-NAALKU-01] -->
