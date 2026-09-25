@@ -26,7 +26,7 @@
 // plus one regeneration rather than an edit here.
 // ---------------------------------------------------------------------------
 
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -144,8 +144,21 @@ function currentLedgerBytes(): string {
   return serialiseFilmstripLedger(buildFilmstripLedger(entries));
 }
 
-describe("the printed filmstrip ledger", () => {
+// These tests assert BYTES, not speed. Building the ledger renders every printed
+// letter (21 since HL-C443 derived Tamil's letter lessons) and the first build
+// also loads the whole curriculum to find those lessons; on a shared CI runner
+// that is several times slower than a laptop, and it broke vitest's default 5 s
+// per-test budget on the first CI run. So the curriculum load is done once in
+// `beforeAll` with its own budget, and each test is given a budget sized to the
+// work it does rather than to a wall-clock guess that measures runner load.
+const LEDGER_BUILD_TIMEOUT_MS = 60_000;
+
+describe("the printed filmstrip ledger", { timeout: LEDGER_BUILD_TIMEOUT_MS }, () => {
   const path = join(CURRICULUM_ROOT, FILMSTRIP_LEDGER_PATH);
+
+  beforeAll(() => {
+    letterLessonCandidates();
+  }, 120_000);
 
   it("matches the pen paths and fonts it was generated from", () => {
     const expected = currentLedgerBytes();
