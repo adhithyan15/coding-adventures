@@ -23,10 +23,10 @@
     "mixedSchemaTracks": 0,
     "version2SchemaTracks": 23,
     "lessonsWithoutLevel": 0,
-    "rampOverBudgetLessons": 39,
+    "rampOverBudgetLessons": 37,
     "scriptRampOverBudgetLessons": 31,
     "lessonsOpeningMultipleScripts": 0,
-    "scriptClosureViolations": 265,
+    "scriptClosureViolations": 266,
     "scriptExposureExemptedGlyphs": 1458,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 6337,
+    "drivableLessons": 6336,
     "drivablePercent": 79,
     "chaptersWithoutDrivablePrefix": 268,
     "unexplainedModalityOverrides": 0
@@ -4744,7 +4744,7 @@
         "language": "malayalam",
         "chapter": 4,
         "lessonId": "ML-C04-practice",
-        "message": "malayalam chapter 4 payoff assesses 3/9 of the chapter's atoms (0.33), below the 0.5 floor."
+        "message": "malayalam chapter 4 payoff assesses 3/10 of the chapter's atoms (0.30), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -5944,23 +5944,9 @@
         "budget": 3
       },
       {
-        "lessonId": "KA-C08-dayavittu",
-        "language": "kannada",
-        "chapter": 8,
-        "atoms": 4,
-        "budget": 3
-      },
-      {
         "lessonId": "LA-C16-undecim-viginti",
         "language": "latin",
         "chapter": 16,
-        "atoms": 4,
-        "budget": 3
-      },
-      {
-        "lessonId": "ML-C08-dayavayi",
-        "language": "malayalam",
-        "chapter": 8,
         "atoms": 4,
         "budget": 3
       },
@@ -6415,6 +6401,13 @@
         "lessonCount": 6
       },
       {
+        "language": "kannada",
+        "chapter": 7,
+        "atoms": 13,
+        "budget": 12,
+        "lessonCount": 12
+      },
+      {
         "language": "punjabi",
         "chapter": 6,
         "atoms": 13,
@@ -6528,8 +6521,8 @@
         "lessonCount": 354,
         "measurable": 354,
         "unmeasurable": 0,
-        "lessonViolations": 1,
-        "chapterViolations": 3
+        "lessonViolations": 0,
+        "chapterViolations": 4
       },
       {
         "language": "latin",
@@ -6544,7 +6537,7 @@
         "lessonCount": 504,
         "measurable": 494,
         "unmeasurable": 10,
-        "lessonViolations": 2,
+        "lessonViolations": 1,
         "chapterViolations": 3
       },
       {
@@ -7236,8 +7229,8 @@
       }
     },
     "summary": {
-      "lessonViolations": 39,
-      "chapterViolations": 61,
+      "lessonViolations": 37,
+      "chapterViolations": 62,
       "unmeasurableLessons": 98,
       "measurablePercent": 99,
       "steepestLesson": {
@@ -57796,13 +57789,13 @@
       {
         "atom": "KA-SCRIPT-C08-DAYAVITTU-04",
         "language": "kannada",
-        "introducedBy": "KA-C08-dayavittu",
-        "introducedAt": 63,
+        "introducedBy": "KA-C07-ombattu",
+        "introducedAt": 60,
         "missed": [
           "R3",
           "R4"
         ],
-        "revisits": 2
+        "revisits": 3
       },
       {
         "atom": "KA-SCRIPT-RECOG-03",
@@ -59270,13 +59263,13 @@
       {
         "atom": "ML-CONCEPT-C08-DAYAVAYI-04",
         "language": "malayalam",
-        "introducedBy": "ML-C08-dayavayi",
-        "introducedAt": 87,
+        "introducedBy": "ML-C04-poyi-varaam",
+        "introducedAt": 49,
         "missed": [
           "R1",
-          "R4"
+          "R2"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "ML-CONCEPT-C09-KSHAMIKKANAM-01",
@@ -102954,9 +102947,9 @@
       "neverRevisitedPercent": 3,
       "missedByWindow": {
         "R1": 1749,
-        "R2": 4441,
+        "R2": 4442,
         "R3": 6208,
-        "R4": 4777
+        "R4": 4776
       },
       "forwardReferences": 917
     }
@@ -103049,8 +103042,8 @@
         "taughtGlyphs": 69,
         "shownGlyphs": 69,
         "neverTaughtGlyphs": 0,
-        "violations": 10,
-        "exposureOnly": 29,
+        "violations": 11,
+        "exposureOnly": 28,
         "exposureExemptedGlyphs": 69,
         "headwordsWithoutRomanization": 0
       },
@@ -104937,6 +104930,13 @@
         "count": 1
       },
       {
+        "lessonId": "KA-C08-dayavittu",
+        "language": "kannada",
+        "chapter": 8,
+        "glyphs": "ಒ",
+        "count": 1
+      },
+      {
         "lessonId": "KA-C09-kshamisi",
         "language": "kannada",
         "chapter": 9,
@@ -105045,8 +105045,8 @@
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 265,
-      "exposureOnly": 405,
+      "violations": 266,
+      "exposureOnly": 404,
       "exposureExemptedGlyphs": 1458,
       "headwordsWithoutRomanization": 46,
       "tracksWithUnknownScript": 0
@@ -123597,11 +123597,11 @@
         "atomMeasurableLessons": 354,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
-        "atomLessonSpikes": 1,
-        "atomChapterSpikes": 3,
+        "atomLessonSpikes": 0,
+        "atomChapterSpikes": 4,
         "glyphLessonSpikes": 4,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 10,
+        "scriptClosureViolations": 11,
         "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
@@ -123742,7 +123742,7 @@
         "atomMeasurableLessons": 494,
         "atomMeasurementBlindLessons": 10,
         "durationViolations": 0,
-        "atomLessonSpikes": 2,
+        "atomLessonSpikes": 1,
         "atomChapterSpikes": 3,
         "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
@@ -123759,9 +123759,9 @@
         "reinforcementWindowMisses": 1144,
         "reinforcementMissesByWindow": {
           "R1": 123,
-          "R2": 197,
+          "R2": 198,
           "R3": 466,
-          "R4": 358
+          "R4": 357
         },
         "payoffSurprises": 8,
         "writingPracticeLessons": 127,
@@ -123785,7 +123785,7 @@
           {
             "language": "malayalam",
             "kind": "atom-step",
-            "count": 5,
+            "count": 4,
             "unit": "lesson/chapter spike(s)",
             "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
           },
@@ -124945,13 +124945,6 @@
         "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
       },
       {
-        "language": "malayalam",
-        "kind": "atom-step",
-        "count": 5,
-        "unit": "lesson/chapter spike(s)",
-        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
-      },
-      {
         "language": "persian",
         "kind": "atom-step",
         "count": 5,
@@ -124981,6 +124974,13 @@
       },
       {
         "language": "kannada",
+        "kind": "atom-step",
+        "count": 4,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "malayalam",
         "kind": "atom-step",
         "count": 4,
         "unit": "lesson/chapter spike(s)",
@@ -125722,11 +125722,6 @@
             "criterion": "vocabulary",
             "detail": "teaches 179 distinct headwords at or below pre-A1, against 300",
             "shortfall": 121
-          },
-          {
-            "criterion": "atom-budget",
-            "detail": "1 lesson(s) at or below pre-A1 exceed the new-atom budget",
-            "shortfall": 1
           }
         ],
         "vocabulary": 250
@@ -125760,11 +125755,6 @@
             "criterion": "vocabulary",
             "detail": "teaches 172 distinct headwords at or below pre-A1, against 300",
             "shortfall": 128
-          },
-          {
-            "criterion": "atom-budget",
-            "detail": "1 lesson(s) at or below pre-A1 exceed the new-atom budget",
-            "shortfall": 1
           }
         ],
         "vocabulary": 315
@@ -126036,10 +126026,10 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 7994,
-    "voice": 5761,
-    "sight": 897,
+    "voice": 5760,
+    "sight": 898,
     "pen": 1336,
-    "coreVoice": 6337,
+    "coreVoice": 6336,
     "lessonsWithWritingSegments": 853,
     "drivablePercent": 79,
     "tracks": [
@@ -132785,10 +132775,10 @@
       {
         "language": "kannada",
         "lessonCount": 354,
-        "voice": 242,
-        "sight": 37,
+        "voice": 241,
+        "sight": 38,
         "pen": 75,
-        "coreVoice": 273,
+        "coreVoice": 272,
         "drivablePercent": 77,
         "drivablePrefixTotal": 219,
         "chapters": [
@@ -132892,10 +132882,10 @@
             "language": "kannada",
             "chapter": 7,
             "lessonCount": 12,
-            "voice": 10,
-            "sight": 0,
+            "voice": 9,
+            "sight": 1,
             "pen": 2,
-            "coreVoice": 10,
+            "coreVoice": 9,
             "modalities": [
               "voice",
               "sight",
@@ -152161,7 +152151,7 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 7355,
-    "usesBeforeIntroduction": 24500,
+    "usesBeforeIntroduction": 24499,
     "technicalUsesBeforeIntroduction": 6192,
     "technicalLessons": 3429,
     "worstTerms": [
