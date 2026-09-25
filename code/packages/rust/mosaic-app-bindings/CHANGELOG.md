@@ -19,9 +19,16 @@ file-dialog code:
   claimed nothing (the original meaning) or to nobody (the host fails an
   unanswered Await). One file operation at a time. Each standard effect is
   deferred and answered from the AWT event thread; installing twice is a no-op.
-- `conformance/compose/MosaicPlatformEffectsTest.kt`: 7 tests with fake dialogs
-  (routing, save, cancel, path-shaped names, bad and oversized bytes, open,
-  non-file). CI runs them in the Journal Compose lane.
+- Hardened after security review: a suggested name also may not contain `:`
+  (a Windows drive or alternate data stream), control or format characters (a
+  right-to-left override can disguise `.exe` as `.pdf`), or end in a dot or
+  space, and it must end in an extension of an accepted type. The temporary
+  file is created owner-only and given the replaced file's POSIX permissions,
+  so saving over a private file never leaves it readable by others.
+- `conformance/compose/MosaicPlatformEffectsTest.kt`: 9 tests with fake dialogs
+  (routing, save, cancel, path- and disguise-shaped names, mismatched type,
+  kept permissions, bad and oversized bytes, open, non-file). CI runs them in
+  the Journal Compose lane.
 
 ### Added — every native host sends its UTC offset (UI38 "Local time")
 

@@ -77,12 +77,49 @@ class MosaicPlatformEffectsTest {
 
     @Test
     fun refusesANameThatIsAPath() {
-        for (name in listOf("../escape.json", "dir/a.json", "a\\b.json", "", ".", "..", "a\u0000b")) {
+        for (name in listOf(
+            "../escape.json", "dir/a.json", "a\\b.json", "", ".", "..", "a\u0000b",
+            "D:report.json", "notes.json:stream", "invoice\u202Efdp.exe", "trailing.", "trailing ",
+        )) {
             assertFalse(mosaicIsPlainFileName(name), name)
             val outcome = mosaicRunFilesSave(mapOf("suggestedName" to name, "bytes" to encoded("x")), FakeDialogs(null))
             assertTrue(outcome.containsKey("failed"), name)
         }
         assertTrue(mosaicIsPlainFileName("journal.json"))
+    }
+
+    @Test
+    fun theNameMustMatchTheAcceptedType() {
+        val outcome = mosaicRunFilesSave(
+            mapOf("suggestedName" to "notes.exe", "accept" to listOf("application/json"), "bytes" to encoded("{}")),
+            FakeDialogs(File(directory, "notes.exe")),
+        )
+        assertTrue(outcome.containsKey("failed"))
+    }
+
+    @Test
+    fun savingOverAFileKeepsItsPermissions() {
+        val target = File(directory, "private.json")
+        target.writeText("old")
+        val path = target.toPath()
+        val supportsPosix = try {
+            Files.setPosixFilePermissions(path, java.nio.file.attribute.PosixFilePermissions.fromString("rw-------"))
+            true
+        } catch (unsupported: UnsupportedOperationException) {
+            false
+        }
+        val outcome = mosaicRunFilesSave(
+            mapOf("suggestedName" to "private.json", "accept" to listOf("application/json"), "bytes" to encoded("new")),
+            FakeDialogs(target),
+        )
+        assertTrue(outcome.containsKey("ok"))
+        assertEquals("new", target.readText())
+        if (supportsPosix) {
+            assertEquals(
+                "rw-------",
+                java.nio.file.attribute.PosixFilePermissions.toString(Files.getPosixFilePermissions(path)),
+            )
+        }
     }
 
     @Test

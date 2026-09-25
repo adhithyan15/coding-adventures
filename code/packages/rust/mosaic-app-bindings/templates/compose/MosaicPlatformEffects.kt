@@ -154,15 +154,26 @@ private fun mosaicReadBounded(file: File, limit: Long): ByteArray? {
 }
 
 /**
- * A suggested name is a plain file name: no directory separators, no NUL, no
- * `.`/`..`, at most 255 characters (UI87 §3.1). Anything else is refused, so an
- * app cannot steer the dialog into another directory.
+ * A suggested name is a plain file name (UI87 §3.1), so an app cannot steer the
+ * dialog, or disguise what it is saving:
+ *
+ * - no directory separators, and not `.` or `..` -- no other directory;
+ * - no `:` -- on Windows `D:x` names another drive, and `x:y` an alternate
+ *   data stream;
+ * - no control or format characters -- a right-to-left override can make
+ *   `invoice<RLO>fdp.exe` read as a PDF in the dialog;
+ * - no trailing dot or space, which Windows silently strips;
+ * - at most 255 characters.
  */
 fun mosaicIsPlainFileName(name: String): Boolean =
     name.isNotEmpty() &&
         name.length <= 255 &&
         name != "." && name != ".." &&
-        name.none { it == '/' || it == '\\' || it == '\u0000' }
+        !name.endsWith(".") && !name.endsWith(" ") &&
+        name.none {
+            it == '/' || it == '\\' || it == ':' ||
+                Character.isISOControl(it) || Character.getType(it) == Character.FORMAT.toInt()
+        }
 
 /** `files.open`: the outcome map, never an exception. */
 fun mosaicRunFilesOpen(payload: Any?, dialogs: MosaicFileDialogs): Map<String, Any?> {
@@ -183,6 +194,24 @@ fun mosaicRunFilesOpen(payload: Any?, dialogs: MosaicFileDialogs): Map<String, A
             "bytes" to Base64.getEncoder().encodeToString(bytes),
         )
     )
+}
+
+/**
+ * Give [to] the POSIX permissions [from] has, when [from] exists and the file
+ * system has POSIX permissions at all. A new file keeps the temporary file's
+ * owner-only default.
+ */
+private fun mosaicCopyPermissions(from: File, to: File) {
+    val source = from.toPath()
+    if (!Files.exists(source, java.nio.file.LinkOption.NOFOLLOW_LINKS)) return
+    try {
+        Files.setPosixFilePermissions(
+            to.toPath(),
+            Files.getPosixFilePermissions(source, java.nio.file.LinkOption.NOFOLLOW_LINKS),
+        )
+    } catch (unsupported: UnsupportedOperationException) {
+        // Not a POSIX file system (Windows): ACLs are inherited from the folder.
+    }
 }
 
 /** `files.save`: the outcome map, never an exception. */
@@ -206,15 +235,25 @@ fun mosaicRunFilesSave(payload: Any?, dialogs: MosaicFileDialogs): Map<String, A
     if (bytes.size > MOSAIC_MAX_SAVE_BYTES) {
         return mosaicFailed("the file is larger than $MOSAIC_MAX_SAVE_BYTES bytes")
     }
-    val target = dialogs.chooseFileToSave(suggestedName, mosaicExtensionsFor(request))
+    // When the app says what it is saving, the name must agree: a JSON export
+    // cannot be offered as `notes.exe`.
+    val extensions = mosaicExtensionsFor(request)
+    if (extensions.isNotEmpty() && extensions.none { suggestedName.lowercase().endsWith(".$it") }) {
+        return mosaicFailed("suggestedName must end in an extension of an accepted type")
+    }
+    val target = dialogs.chooseFileToSave(suggestedName, extensions)
         ?: return mosaicCancelled()
     // Written beside the target and moved into place, so an interrupted save
     // never leaves a half-written file where the person's old one was.
     return try {
         val directory = target.absoluteFile.parentFile ?: return mosaicFailed("couldn't save the file")
-        val temporary = File.createTempFile(".mosaic-save-", ".tmp", directory)
+        // Created owner-only (0600 on POSIX), and given the permissions of the
+        // file it replaces, so saving over a private file never leaves the new
+        // one readable by other users.
+        val temporary = Files.createTempFile(directory.toPath(), ".mosaic-save-", ".tmp").toFile()
         try {
             temporary.writeBytes(bytes)
+            mosaicCopyPermissions(from = target, to = temporary)
             try {
                 Files.move(
                     temporary.toPath(),
