@@ -2,6 +2,26 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- `bytes property > returns a copy (mutation-safe)` was flaky at roughly 1 run
+  in 256. It set the returned copy's first byte to `0xFF` and then asserted the
+  original's first byte was not `0xFF` — which conflates "the original was not
+  mutated" with "the original does not happen to start with `0xFF`". `v4()`
+  fills byte 0 with random bits (the version and variant nibbles live in bytes
+  6 and 8), so an id genuinely starting with `0xFF` failed the test on correct
+  code. Measured over 200,000 generations: 788 hits, 1 in 253.8. The test now
+  snapshots the whole array before mutating and compares against it, which
+  tests the actual claim and is independent of the random bytes. It compares
+  all 16 bytes rather than one, so any collateral change to the original is
+  caught. Over 200,000 generations the old assertion failed 771 times and the
+  new one zero times; against a getter mutated to return the live array, a
+  memoised copy, or a subarray view, the new form fails deterministically where
+  the old one only did so by chance.
+  No production code changed; `get bytes()` was always correct.
+
 ## [0.1.0] - 2026-03-23
 
 ### Added

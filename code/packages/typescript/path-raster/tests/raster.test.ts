@@ -355,37 +355,60 @@ describe("bounded work on font-derived paths", () => {
     expect(points).toBeLessThanOrEqual(200_002);
   });
 
-  it("does not get slower just because the canvas is taller", () => {
+  it("files each edge once instead of re-testing it on every row", () => {
     // The point of bucketing edges by row. An edge confined to two scanlines
     // used to be re-tested on every row of the image; now it is filed once.
-    const edges = 8000;
-    const band = (h: number): PathCommand[] => {
+    //
+    // This test used to hold the shape fixed and compare a 256-row canvas
+    // against an 8192-row one, asserting `tall < max(400, short * 8)`. That
+    // bound turned out to measure the machine, which is exactly what the note
+    // on the next test warns against:
+    //
+    //   * The `short * 8` clause never bound anything. On an idle 4-core box
+    //     the real ratio is 14-22x, because the band spans the whole canvas,
+    //     so the sweep genuinely visits every row and the O(rows) term
+    //     dominates however the edges are filed. "The two are close" was
+    //     simply not true.
+    //   * So the only live clause was the 400 ms stopwatch. Idle it measures
+    //     64-90 ms; under 3x CPU oversubscription 129-160 ms; on a CI runner
+    //     building the whole repository in parallel it came in at 516 ms and
+    //     went red on correct code.
+    //
+    // Holding the canvas tall and varying the EDGE COUNT instead measures the
+    // thing the optimisation actually changes, and is independent of machine
+    // speed because both halves run back to back on the same box under the
+    // same load. Measured:
+    //
+    //   bucketed, idle                      1.3 - 1.5x
+    //   bucketed, 3x oversubscribed         1.4 - 2.3x
+    //   bucketing defeated, 2000 edges     49.7x   (and ~4x that at 8000)
+    //
+    // An 8x bound sits in the middle of that gap. The test can still fail:
+    // filing every edge into every row -- the pre-optimisation behaviour --
+    // was measured at 49.7x with a quarter of the edges used here.
+    const tall = 8192;
+    const band = (edges: number): PathCommand[] => {
       const p: PathCommand[] = [{ kind: "move_to", x: 0, y: 0 }];
       for (let i = 0; i < edges; i += 1) {
-        p.push({ kind: "line_to", x: i % 2 ? 60 : 2, y: (i / edges) * h });
+        p.push({ kind: "line_to", x: i % 2 ? 60 : 2, y: (i / edges) * tall });
       }
       p.push({ kind: "close" });
       return p;
     };
-    const time = (h: number): number => {
-      const c = blank(64, h);
+    // Build the path outside the clock; only the raster is being timed.
+    const time = (edges: number): number => {
+      const path = band(edges);
+      const c = blank(64, tall);
       const started = Date.now();
-      fillPath(c, band(h), BLACK);
+      fillPath(c, path, BLACK);
       return Date.now() - started;
     };
-    time(256); // warm
-    const short = time(256);
-    const tall = time(8192);
-    // THIRTY-TWO times the rows, on the SAME shape. Without bucketing the cost
-    // was linear in canvas height, so this would be ~32x; with it, the sweep
-    // only visits rows the shape is actually in and the two are close.
-    //
-    // The ratio is deliberately far apart and the bound deliberately loose: a
-    // shared CI runner is an order of magnitude slower than a laptop, and a
-    // tight stopwatch bound measures the machine rather than the algorithm.
-    // Between "about the same" and "thirty-two times" there is a lot of room
-    // for a slow box without any room for the H factor to come back unnoticed.
-    expect(tall).toBeLessThan(Math.max(400, short * 8));
+    time(8); // warm
+    const few = time(8);
+    const many = time(8000);
+    // A THOUSAND times the edges over the same rows. Filed once each, that is
+    // nearly free; re-tested per row it is catastrophic.
+    expect(many).toBeLessThan(Math.max(few, 1) * 8);
   });
 
   it("treats a width past the canvas diagonal as the diagonal", () => {

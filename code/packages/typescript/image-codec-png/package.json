@@ -18,8 +18,8 @@
   "devDependencies": {
     "@types/pngjs": "6.0.5",
     "typescript": "^5.0.0",
-    "vitest": "^4.1.0",
-    "@vitest/coverage-v8": "^4.1.0",
+    "vitest": "^4.1.11",
+    "@vitest/coverage-v8": "^4.1.11",
     "pngjs": "7.0.0"
   }
 }
