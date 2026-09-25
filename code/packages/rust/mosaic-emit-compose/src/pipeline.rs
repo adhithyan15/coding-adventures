@@ -7586,6 +7586,13 @@ fn emit_host_button(
         }
         if let Some(colors) = button_colors {
             writeln!(out, "{inner}colors = {colors},").unwrap();
+            // An authored background means an authored look: Material's
+            // default elevation would add a drop shadow no other backend
+            // draws (a web button casts none unless its style asks). Every
+            // light-theme nav tab and task-row button carried one. A part that
+            // does author `elevation` still gets it, through `Modifier.shadow`
+            // in its own chain (UI41); an unstyled button keeps Material's.
+            writeln!(out, "{inner}elevation = null,").unwrap();
         }
         if let Some(modifier) = modifier_expr {
             writeln!(out, "{inner}modifier = {modifier},").unwrap();
@@ -11086,6 +11093,8 @@ mod tests {
             ),
             "got:\n{out}"
         );
+        // ...and no Material drop shadow: the look is authored.
+        assert!(out.contains("elevation = null,"), "got:\n{out}");
         assert!(
             !out.contains(".background(Color(0xFFF87171))"),
             "the inert modifier background must be removed, not left beside \
