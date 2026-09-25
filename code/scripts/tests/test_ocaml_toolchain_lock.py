@@ -152,6 +152,23 @@ class OcamlGenericCiWorkflowTests(unittest.TestCase):
                 "  contracts:\n    name: Repo-wide metadata contracts\n    if: false\n",
                 1,
             ),
+            # The job made conditional after its steps (key order is free): a
+            # four-space key after the step's run block is a job key.
+            self.workflow.replace(
+                f"          {command}\n",
+                f"          {command}\n    if: false\n",
+                1,
+            ),
+            # The job's failure tolerated.
+            self.workflow.replace(
+                "  contracts:\n    name: Repo-wide metadata contracts\n",
+                "  contracts:\n    name: Repo-wide metadata contracts\n    continue-on-error: true\n",
+                1,
+            ),
+            # The step's failure tolerated.
+            self.workflow.replace(step, step + "        continue-on-error: true\n", 1),
+            # A shell without -e, so a failing test no longer fails the step.
+            self.workflow.replace(step, step + "        shell: bash {0}\n", 1),
         )
         for index, workflow in enumerate(cases):
             with self.subTest(case=index):

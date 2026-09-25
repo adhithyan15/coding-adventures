@@ -1166,8 +1166,14 @@ def _require_generic_ci_runs_lock_tests(workflow_text: str) -> None:
     )
     if steps_at is None:
         raise ContractError("generic CI jobs.contracts has no steps")
-    if any(line.startswith("    if:") for line in job[:steps_at]):
-        raise ContractError("generic CI jobs.contracts must not be conditional")
+    # Job keys sit at four spaces wherever they appear (YAML key order is free),
+    # so the whole job is scanned: a condition or a tolerated failure makes the
+    # test's result meaningless.
+    for key in ("if:", "continue-on-error:"):
+        if any(line.startswith(f"    {key}") for line in job):
+            raise ContractError(
+                f"generic CI jobs.contracts must not set {key[:-1]}"
+            )
 
     step_header = f"      - name: {GENERIC_CI_LOCK_TEST_STEP}"
     try:
@@ -1185,10 +1191,14 @@ def _require_generic_ci_runs_lock_tests(workflow_text: str) -> None:
         len(job),
     )
     step = job[step_start:step_end]
-    if any(line.startswith("        if:") for line in step):
-        raise ContractError(
-            f"generic CI {GENERIC_CI_LOCK_TEST_STEP!r} step must not be conditional"
-        )
+    # A condition skips the test; continue-on-error ignores its failure; a
+    # custom shell (e.g. `bash {0}`) drops `-e`, so a failing command no longer
+    # fails the step.
+    for key in ("if:", "continue-on-error:", "shell:"):
+        if any(line.startswith(f"        {key}") for line in step):
+            raise ContractError(
+                f"generic CI {GENERIC_CI_LOCK_TEST_STEP!r} step must not set {key[:-1]}"
+            )
     if not any(line.strip() == GENERIC_CI_LOCK_TEST_COMMAND for line in step):
         raise ContractError(
             "generic CI contracts step must run test_ocaml_toolchain_lock.py"
