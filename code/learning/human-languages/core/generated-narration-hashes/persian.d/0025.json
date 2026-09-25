@@ -1,0 +1,18 @@
+{
+  "language": "persian",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:fa2480488613e682",
+  "lessonIds": [
+    "FA-W25-shin",
+    "FA-W25-sad",
+    "FA-W25-ta",
+    "FA-W25-za"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "persian/narration/ch25.txt",
+  "json": "persian/narration/ch25.json",
+  "textHash": "fnv1a64:0d27340ca83d3792",
+  "jsonHash": "fnv1a64:0968221f4e23e8cb",
+  "findings": []
+}

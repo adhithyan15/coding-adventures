@@ -204,7 +204,7 @@ describe("the real corpus", () => {
     }
     expect(counts).toEqual({
       AR: 15,
-      FA: 11,
+      FA: 26,
       GU: 33,
       HI: 42,
       JA: 23,

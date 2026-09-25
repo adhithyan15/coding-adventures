@@ -1,0 +1,12 @@
+{
+  "language": "persian",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:8c93bafb35c9ec62",
+  "lessonIds": [
+    "FA-W25-shin",
+    "FA-W25-sad",
+    "FA-W25-ta",
+    "FA-W25-za"
+  ],
+  "tex": "persian/book/chapters/ch25-fa-letters-that-share-a-sound.tex"
+}

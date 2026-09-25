@@ -1,0 +1,11 @@
+{
+  "id": "FA-W23-khe",
+  "pathSegment": "FA-PATH-023-LETTERS-HOOK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-023-LETTERS-HOOK",
+      "order": 2
+    }
+  ]
+}

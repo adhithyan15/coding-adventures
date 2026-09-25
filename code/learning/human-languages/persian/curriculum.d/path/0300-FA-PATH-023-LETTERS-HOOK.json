@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-023-LETTERS-HOOK",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "FA-EXT-023-LETTERS-HOOK"
+  ],
+  "after": []
+}

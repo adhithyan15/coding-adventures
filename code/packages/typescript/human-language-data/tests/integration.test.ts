@@ -219,7 +219,9 @@ describe("real curriculum", () => {
       // script ladder has taught and the ten digits -- which is why the chapter
       // ends on figures rather than prose: a price and a platform number are the
       // first Persian a reader can take off a page without knowing the letters.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]);
+      // 21 -> 26: HL-C443, one lesson per letter the reader had read in words and
+      // never written -- eighteen letters in chapters 22-26, each from its word.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]);
     expect(
       books.books
         .find((book) => book.language === "urdu")

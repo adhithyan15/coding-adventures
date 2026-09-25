@@ -1,0 +1,12 @@
+{
+  "language": "persian",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:9d25956fb97faf04",
+  "lessonIds": [
+    "FA-W24-pe",
+    "FA-W24-ye",
+    "FA-W24-kaf",
+    "FA-W24-gaf"
+  ],
+  "tex": "persian/book/chapters/ch24-fa-letters-from-asking-and-saying.tex"
+}

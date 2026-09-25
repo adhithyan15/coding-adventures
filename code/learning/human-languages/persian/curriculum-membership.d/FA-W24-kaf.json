@@ -1,0 +1,11 @@
+{
+  "id": "FA-W24-kaf",
+  "pathSegment": "FA-PATH-024-LETTERS-NAMES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-024-LETTERS-NAMES",
+      "order": 2
+    }
+  ]
+}
