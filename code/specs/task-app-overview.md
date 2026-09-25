@@ -20,8 +20,8 @@ emitted to all nine host platforms, exactly as the **Engram** app already does. 
 in effect, "Engram's architecture applied to project management."
 
 This project supersedes the exploratory TypeScript/Electron
-[`checklist-app`](../programs/typescript/checklist-app) (which remains in place, retrievable via
-git). Where checklist-app modeled one narrow thing (decision-tree checklists) in TypeScript,
+`checklist-app` (retired 2026-09-25; retrievable via git, see
+[`checklist-app.md`](checklist-app.md)). Where checklist-app modeled one narrow thing (decision-tree checklists) in TypeScript,
 task-app models the **general case** in Rust and treats checklists as one of many *views*.
 
 ## The core thesis: one model, many views

@@ -312,6 +312,10 @@ is a genuinely reusable idea and the reason it is folded in rather than deleted.
 - The existing code stays in git history and is not force-deleted; the spec
   `checklist-app.md` is amended to point here rather than rewritten.
 
+**Done (2026-09-25).** With the Checklists surface shipped in Trestle, the
+standalone app directory and `release-checklist.yml` were removed and
+`checklist-app.md` carries a retirement banner pointing here.
+
 ---
 
 ## 7. Definition of done, per component
