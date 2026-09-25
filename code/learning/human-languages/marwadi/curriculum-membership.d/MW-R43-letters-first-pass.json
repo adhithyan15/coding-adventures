@@ -1,0 +1,11 @@
+{
+  "id": "MW-R43-letters-first-pass",
+  "pathSegment": "MW-PATH-043-LETTERS-LAST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-043-LETTERS-LAST",
+      "order": 1
+    }
+  ]
+}

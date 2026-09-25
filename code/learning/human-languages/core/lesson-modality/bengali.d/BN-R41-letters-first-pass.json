@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R41-letters-first-pass",
+    "language": "bengali",
+    "chapter": 41,
+    "sequence": 2210,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1d3f37cfa8e98113"
+  },
+  "findings": []
+}

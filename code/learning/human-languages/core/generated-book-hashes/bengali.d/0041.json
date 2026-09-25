@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:eccaf6191f223ec4",
+  "lessonIds": [
+    "BN-W41-anusvar",
+    "BN-W41-bisarga",
+    "BN-W41-jha",
+    "BN-W41-pha",
+    "BN-W41-sha",
+    "BN-R41-letters-first-pass",
+    "BN-R41-letters-second-pass"
+  ],
+  "tex": "bengali/book/chapters/ch41-letters-you-have-read-all-along.tex"
+}

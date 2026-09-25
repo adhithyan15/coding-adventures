@@ -83,6 +83,7 @@ canonical `sequence` order.
 | 265-270 | 42 | Which One in the Line | `GU-C38-panchmu` -> `GU-C38-triju` -> `GU-C38-biju` -> `GU-C38-chothu` -> `GU-C38-pahelu` -> `GU-R38-first-to-fifth` |
 | 271-278 | 43 | Past Five, and the Balance Turns Over | `GU-C39-chha` -> `GU-C39-saat` -> `GU-W22-ttha` -> `GU-C39-aath` -> `GU-C39-nav` -> `GU-C39-das` -> `GU-C39-ordinal-reach` -> `GU-R39-one-to-ten` |
 | 279-281 | 44 | Reading — Six Words, Six Lines, and a Whole Meeting | `GU-C44-words` -> `GU-C44-lines` -> `GU-C44-pehli-vanchan` |
+| 282-285 | 45 | Letters From Home and Money | `GU-W45-gha` -> `GU-W45-ai-sign` -> `GU-R45-letters-first-pass` -> `GU-R45-letters-second-pass` |
 
 ## Current boundary
 

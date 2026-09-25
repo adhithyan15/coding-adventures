@@ -1,0 +1,11 @@
+{
+  "id": "GU-W45-ai-sign",
+  "pathSegment": "GU-PATH-045-LETTERS-LAST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-045-LETTERS-LAST",
+      "order": 1
+    }
+  ]
+}

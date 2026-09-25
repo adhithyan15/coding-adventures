@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R41-letters-second-pass",
+    "language": "bengali",
+    "chapter": 41,
+    "sequence": 2220,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5d811229337009f2"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:2b0e5b959e28e7e2",
+  "lessonIds": [
+    "ML-W114-dha",
+    "ML-W114-ba",
+    "ML-W114-chillu-rr",
+    "ML-W114-chha",
+    "ML-W114-ai-sign",
+    "ML-R114-letters-first-pass",
+    "ML-R114-letters-second-pass"
+  ],
+  "tex": "malayalam/book/chapters/ch114-letters-from-days-family-body.tex"
+}

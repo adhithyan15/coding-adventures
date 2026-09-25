@@ -167,33 +167,34 @@ describe("the real corpus", () => {
   // letter. A new word must not bring a letter no letter lesson writes, unless
   // this pin moves in the same change and the commit says why.
   //
-  // Measured 2026-09-25 (HL-C443). The biggest completeness debt left is
-  // malayalam 9: letters the reader meets in word after word and never writes.
-  // Tamil (chapters 109-112), arabic (46-49), persian (22-26) and urdu (34-37)
-  // each went to 0 by writing every such letter from the word it came from. The biggest
-  // anchoring debts are marathi (43 cold) and gujarati (34 cold), whose letter
-  // lessons open the track before any word does. Marwadi's 49 builds-toward are
-  // its "र, ा, then राम" chapters, where the word follows the letter in the
-  // same chapter.
+  // Measured 2026-09-25 (HL-C443). Every non-Latin track but japanese now
+  // writes every letter its words use: tamil (chapters 109-112), arabic (46-49),
+  // persian (22-26), urdu (34-37), and the long tail -- hindi 128, sanskrit 65,
+  // marwadi 43, gujarati 45, bengali 41, malayalam 113-114, russian 28. Japanese
+  // keeps five: が ご ざ じ ぽ are kana plus a mark, which is the combinations
+  // work, not a missing letter. The biggest anchoring debts are marathi (43
+  // cold) and gujarati (34 cold), whose letter lessons open the track before any
+  // word does. Marwadi's 49 builds-toward are its "र, ा, then राम" chapters,
+  // where the word follows the letter in the same chapter.
   //
   // Arabic's cold (5 -> 7) and builds-toward (4 -> 5) rose when the measure
   // learned to read a letters-then-word headword ("ا م — سلام"). No content
   // got worse: those lessons were invisible before, and now they are counted.
   const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
     arabic: [7, 5, 0],
-    bengali: [5, 12, 5],
+    bengali: [5, 12, 0],
     chinese: [0, 51, 0],
-    gujarati: [34, 5, 2],
-    hindi: [9, 1, 3],
+    gujarati: [34, 5, 0],
+    hindi: [9, 1, 0],
     japanese: [6, 32, 5],
     kannada: [19, 0, 0],
-    malayalam: [12, 12, 9],
+    malayalam: [12, 12, 0],
     marathi: [43, 4, 0],
-    marwadi: [0, 49, 1],
+    marwadi: [0, 49, 0],
     persian: [0, 4, 0],
     punjabi: [7, 2, 0],
-    russian: [1, 0, 1],
-    sanskrit: [1, 0, 1],
+    russian: [1, 0, 0],
+    sanskrit: [1, 0, 0],
     tamil: [1, 9, 0],
     telugu: [13, 0, 0],
     urdu: [0, 5, 0],

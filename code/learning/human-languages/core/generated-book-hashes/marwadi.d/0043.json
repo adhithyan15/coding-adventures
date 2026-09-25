@@ -1,0 +1,11 @@
+{
+  "language": "marwadi",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:399729ee1fd871bc",
+  "lessonIds": [
+    "MW-W43-ma",
+    "MW-R43-letters-first-pass",
+    "MW-R43-letters-second-pass"
+  ],
+  "tex": "marwadi/book/chapters/ch43-the-letter-that-ends-ram.tex"
+}

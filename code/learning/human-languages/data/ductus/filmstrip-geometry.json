@@ -4517,6 +4517,50 @@
       ]
     },
     {
+      "script": "cyrillic",
+      "glyph": "я",
+      "font": "_fonts/NotoSansCyrillic-Static.ttf",
+      "source": {
+        "citation": "RussianIrina, ‘Learning Russian - Alphabet letters, handwriting’, lowercase я demonstration, 12:13–12:21, YouTube, 5 February 2013",
+        "url": "https://www.youtube.com/watch?v=tqDLDfYoO2o",
+        "variation": "The native-teacher video presents all 33 Russian letters first in print and then in the classic handwritten form taught at school. In the 12:13–12:21 lowercase я demonstration, the pen begins at the baseline with a curved entry, rises to the upper-right junction, circles the upper loop counterclockwise, returns to the junction, descends through the long diagonal leg, and turns into a short baseline exit without lifting. The demonstrated school hand therefore uses one continuous pen-down run with zero intervening lifts: rising entry, upper loop, then descending diagonal leg and exit. The bundled Noto Sans Cyrillic glyph is a printed я-like form with a straight full-height right upright, a broad upper bowl, and an angular lower-left leg, rather than the source's curved rising entry, narrow loop, slanted leg, and exit join. This learner path preserves the source's rise-to-loop-to-leg order, counterclockwise loop direction, and zero-lift evidence while fitting the printed outline: climb the right stem, circle the upper bowl counterclockwise, sweep through its lower join, and descend the diagonal leg without lifting. Connected cursive restores the source's curved entry and baseline exit, and individual handwriting may round, narrow, widen, or slant the loop and leg differently."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 4 movements",
+      "viewBox": {
+        "minX": -35,
+        "minY": -606,
+        "width": 598,
+        "height": 927.5
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "climb the right stem from the baseline to the top",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M35 0L187 218Q127 233 94 273.5Q61 314 62 375Q62 451 112 493.5Q162 536 252 536L493 536L493 0L405 0L405 207L277 207L136 0L35 0ZM280 279L405 279L405 463L263 463Q151 463 153 374Q151 279 280 279Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M449 0 L449 0\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M449 0 L449 140 L449 300 L449 440 L449 499\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"449\" cy=\"499\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"264\" y=\"187.9\" text-anchor=\"middle\" font-size=\"47.9\" fill=\"#6b7280\"><tspan x=\"264\" y=\"187.9\">1. climb the right stem</tspan><tspan x=\"264\" y=\"246.3\">from the baseline to the</tspan><tspan x=\"264\" y=\"304.8\">top</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "curve counterclockwise around the upper bowl",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M35 0L187 218Q127 233 94 273.5Q61 314 62 375Q62 451 112 493.5Q162 536 252 536L493 536L493 0L405 0L405 207L277 207L136 0L35 0ZM280 279L405 279L405 463L263 463Q151 463 153 374Q151 279 280 279Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M449 0 L449 140 L449 300 L449 440 L449 499\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M449 499 L449 499 L360 499 L265 499 L175 475 L115 425 L105 370 L120 325 L180 290 L280 243 L405 243\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"405\" cy=\"243\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"264\" y=\"187.9\" text-anchor=\"middle\" font-size=\"47.9\" fill=\"#6b7280\"><tspan x=\"264\" y=\"187.9\">2. curve</tspan><tspan x=\"264\" y=\"246.3\">counterclockwise around</tspan><tspan x=\"264\" y=\"304.8\">the upper bowl</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "sweep left through the bowl's lower join",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M35 0L187 218Q127 233 94 273.5Q61 314 62 375Q62 451 112 493.5Q162 536 252 536L493 536L493 0L405 0L405 207L277 207L136 0L35 0ZM280 279L405 279L405 463L263 463Q151 463 153 374Q151 279 280 279Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M449 0 L449 140 L449 300 L449 440 L449 499 L360 499 L265 499 L175 475 L115 425 L105 370 L120 325 L180 290 L280 243 L405 243 L405 243\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M405 243 L340 243 L277 225 L187 218\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"187\" cy=\"218\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"264\" y=\"187.9\" text-anchor=\"middle\" font-size=\"47.9\" fill=\"#6b7280\"><tspan x=\"264\" y=\"187.9\">3. sweep left through</tspan><tspan x=\"264\" y=\"246.3\">the bowl&apos;s lower join</tspan></text>"
+        },
+        {
+          "number": 4,
+          "label": "descend the diagonal leg to the lower-left tip",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M35 0L187 218Q127 233 94 273.5Q61 314 62 375Q62 451 112 493.5Q162 536 252 536L493 536L493 0L405 0L405 207L277 207L136 0L35 0ZM280 279L405 279L405 463L263 463Q151 463 153 374Q151 279 280 279Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M449 0 L449 140 L449 300 L449 440 L449 499 L360 499 L265 499 L175 475 L115 425 L105 370 L120 325 L180 290 L280 243 L405 243 L340 243 L277 225 L187 218 L187 218\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M187 218 L155 170 L120 120 L85 70 L35 0\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"35\" cy=\"0\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"264\" y=\"187.9\" text-anchor=\"middle\" font-size=\"47.9\" fill=\"#6b7280\"><tspan x=\"264\" y=\"187.9\">4. descend the diagonal</tspan><tspan x=\"264\" y=\"246.3\">leg to the lower-left</tspan><tspan x=\"264\" y=\"304.8\">tip</tspan></text>"
+        }
+      ]
+    },
+    {
       "script": "devanagari",
       "glyph": "अ",
       "font": "_fonts/NotoSansDevanagari-Static.ttf",
@@ -6711,6 +6755,38 @@
           "label": "lift, then descend the right spine and turn through its lower foot",
           "startsAfterLift": true,
           "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M210 178Q155 178 105 207Q55 236 11 303L74 346Q108 295 138 273Q168 251 206 251Q247 251 273 282Q299 313 299 384Q299 461 269.5 495.5Q240 530 188 530Q157 530 129 522.5Q101 515 79 503L54 570Q87 587 123.5 595Q160 603 192 603Q275 603 327.5 549.5Q380 496 380 383Q380 319 364.5 279Q349 239 324 217Q299 195 269 186.5Q239 178 210 178ZM627 0Q584 0 555.5 9.5Q527 19 510 37Q494 54 486.5 79Q479 104 479 148L479 603L559 592L559 152Q559 125 562 112.5Q565 100 571 92Q582 78 603.5 75.5Q625 73 646 73L638 0L627 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M80 555 L130 570 L185 570 L235 555 L275 525 L305 485 L325 435 L335 380 L330 330 L315 285 L285 245 L245 220 L205 210 L165 220 L125 240 L90 270 L60 315\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M520 560 L520 560\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M520 560 L520 500 L520 430 L520 350 L520 270 L520 190 L520 120 L540 75 L580 45 L620 38\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"620\" cy=\"38\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"328.5\" y=\"202.1\" text-anchor=\"middle\" font-size=\"62.1\" fill=\"#6b7280\"><tspan x=\"328.5\" y=\"202.1\">2. lift, then descend</tspan><tspan x=\"328.5\" y=\"277.9\">the right spine and</tspan><tspan x=\"328.5\" y=\"353.6\">turn through its lower</tspan><tspan x=\"328.5\" y=\"429.4\">foot</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "gujarati",
+      "glyph": "ઘ",
+      "font": "_fonts/NotoSansGujarati-Static.ttf",
+      "source": {
+        "citation": "t30apps.com, ‘Gujarati Alphabet Writing Practice’, version 1.0, ઘ animation, first and second SVG paths",
+        "url": "https://www.t30apps.com/gujarati-alphabet-writing/",
+        "variation": "The teaching app animates ઘ as two ordered pen-down runs. Its first SVG path begins at the upper left, circles through the upper lobe, turns back left through the middle, then continues clockwise around the rounded lower body and finishes at its upper right. The animation lifts once and its second SVG path descends the full right spine before turning through its lower foot. The remaining path slots are empty. The app explicitly says that depicted forms and stroke orders can differ by source and should be treated as one variant, not a universal standard. The bundled Noto Sans Gujarati glyph preserves the upper lobe, middle turn, rounded lower body, and tall right spine, but its printed lobes are broader and the spine foot more angular than the animated school-hand form. This learner path preserves the source's joined-upper-and-lower-body-before-right-spine order and one-lift evidence while fitting both runs to the font's ink. Individual handwriting may narrow, round, simplify, retrace, or slant the lobes, turn, spine, and terminals differently."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 2 movements",
+      "viewBox": {
+        "minX": -26,
+        "minY": -673,
+        "width": 708,
+        "height": 1097.1
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "circle the upper lobe, turn through the middle, and round the lower body",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M274 107Q184 107 133.5 150.5Q83 194 83 261Q83 317 114 355Q83 377 63.5 406.5Q44 436 44 478Q44 528 86 565.5Q128 603 210 603Q231 603 258 600Q285 597 304 592L290 521Q275 525 255.5 527.5Q236 530 219 530Q170 530 147.5 513.5Q125 497 125 470Q125 449 136 430.5Q147 412 172 396Q209 411 259 411Q273 411 291 409Q309 407 320 405L308 333Q291 338 257 338Q217 338 190.5 320.5Q164 303 164 264Q164 222 194.5 200.5Q225 179 274 179Q329 179 370 200Q411 221 446 255L446 603L526 592L526 152Q526 125 529 112.5Q532 100 538 92Q549 78 570 75.5Q591 73 612 73L604 0L594 0Q551 0 522.5 9.5Q494 19 477 37Q461 54 453.5 79Q446 104 446 148L446 161Q415 139 373.5 123Q332 107 274 107Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M280 560 L280 560\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M280 560 L220 565 L160 555 L110 530 L80 490 L80 450 L100 415 L140 385 L185 370 L235 370 L285 380 L245 375 L200 365 L160 340 L135 305 L125 265 L135 220 L160 180 L200 150 L250 135 L305 140 L355 160 L400 195 L430 240\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"430\" cy=\"240\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"328\" y=\"196.7\" text-anchor=\"middle\" font-size=\"56.7\" fill=\"#6b7280\"><tspan x=\"328\" y=\"196.7\">1. circle the upper</tspan><tspan x=\"328\" y=\"265.9\">lobe, turn through the</tspan><tspan x=\"328\" y=\"335\">middle, and round the</tspan><tspan x=\"328\" y=\"404.2\">lower body</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "lift, then descend the right spine and turn through its lower foot",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M274 107Q184 107 133.5 150.5Q83 194 83 261Q83 317 114 355Q83 377 63.5 406.5Q44 436 44 478Q44 528 86 565.5Q128 603 210 603Q231 603 258 600Q285 597 304 592L290 521Q275 525 255.5 527.5Q236 530 219 530Q170 530 147.5 513.5Q125 497 125 470Q125 449 136 430.5Q147 412 172 396Q209 411 259 411Q273 411 291 409Q309 407 320 405L308 333Q291 338 257 338Q217 338 190.5 320.5Q164 303 164 264Q164 222 194.5 200.5Q225 179 274 179Q329 179 370 200Q411 221 446 255L446 603L526 592L526 152Q526 125 529 112.5Q532 100 538 92Q549 78 570 75.5Q591 73 612 73L604 0L594 0Q551 0 522.5 9.5Q494 19 477 37Q461 54 453.5 79Q446 104 446 148L446 161Q415 139 373.5 123Q332 107 274 107Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M280 560 L220 565 L160 555 L110 530 L80 490 L80 450 L100 415 L140 385 L185 370 L235 370 L285 380 L245 375 L200 365 L160 340 L135 305 L125 265 L135 220 L160 180 L200 150 L250 135 L305 140 L355 160 L400 195 L430 240\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M485 560 L485 560\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M485 560 L485 500 L485 430 L485 350 L485 270 L485 190 L485 120 L500 75 L535 45 L580 38\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"580\" cy=\"38\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"328\" y=\"196.7\" text-anchor=\"middle\" font-size=\"56.7\" fill=\"#6b7280\"><tspan x=\"328\" y=\"196.7\">2. lift, then descend</tspan><tspan x=\"328\" y=\"265.9\">the right spine and turn</tspan><tspan x=\"328\" y=\"335\">through its lower foot</tspan></text>"
         }
       ]
     },
@@ -9501,6 +9577,44 @@
           "label": "rise into the chillu hook and curl left above the line",
           "startsAfterLift": false,
           "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M288 566Q332 566 366 554Q400 542 426 518Q452 494 472 457L498 227L498 0L412 0L412 282Q412 347 408 380.5Q404 414 390 436Q373 465 347 479.5Q321 494 284 494Q238 494 202.5 467.5Q167 441 147 395.5Q127 350 127 292Q127 232 143.5 187Q160 142 187 110Q214 78 247 55L189 -8Q146 27 112 68.5Q78 110 58.5 164.5Q39 219 39 292Q39 373 69.5 434.5Q100 496 156 531Q212 566 288 566ZM822 -12Q758 -12 713.5 14.5Q669 41 646 92.5Q623 144 623 217Q623 275 641.5 324.5Q660 374 692.5 418Q725 462 767 501L796 532Q825 558 845.5 587Q866 616 866 651Q866 678 848 699Q830 720 788 720Q766 720 746 717Q726 714 713 709L694 778Q711 783 740 787.5Q769 792 801 792Q861 792 894 770.5Q927 749 940 720Q953 691 953 668Q953 616 926.5 575Q900 534 853 491L833 464Q791 429 764 388.5Q737 348 724 304.5Q711 261 711 215Q711 154 726.5 119.5Q742 85 767.5 71.5Q793 58 822 58Q877 58 905.5 97.5Q934 137 934 215Q934 267 918 317.5Q902 368 870 409Q838 450 788 473Q766 484 742 489Q718 494 689 494Q636 494 603.5 483Q571 472 551 452Q534 435 522 412Q510 389 504 354.5Q498 320 498 266L498 100L422 100L422 292L448 451Q471 489 506 514.5Q541 540 586 553Q631 566 685 566Q727 566 763 558Q799 550 833 533Q838 531 843 528Q848 525 852 523Q911 490 949 440.5Q987 391 1005 334Q1023 277 1023 221Q1023 112 971.5 50Q920 -12 822 -12Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M225 35 L170 75 L120 145 L88 225 L84 305 L112 395 L175 475 L245 520 L315 530 L380 505 L430 455 L450 370 L455 280 L455 190 L455 100 L455 35\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M540 455 L600 500 L675 530 L740 515 L790 480 L860 450 L925 390 L965 305 L978 220 L955 135 L900 65 L825 24 L755 45 L695 110 L665 195 L670 275 L705 355 L750 420 L790 480 L790 480\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M790 480 L830 515 L875 565 L905 620 L910 675 L875 725 L815 752 L755 750 L720 740\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"720\" cy=\"740\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"531\" y=\"242.1\" text-anchor=\"middle\" font-size=\"90.1\" fill=\"#6b7280\"><tspan x=\"531\" y=\"242.1\">4. rise into the chillu</tspan><tspan x=\"531\" y=\"352\">hook and curl left</tspan><tspan x=\"531\" y=\"461.9\">above the line</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "malayalam",
+      "glyph": "ർ",
+      "font": "_fonts/NotoSansMalayalam-Static.ttf",
+      "source": {
+        "citation": "Sriveenkat, Ml ർ order.gif, Malayalam chillu RR stroke-order animation, 00:03.0–00:08.5 (Wikimedia Commons, 2 July 2023)",
+        "url": "https://commons.wikimedia.org/wiki/File:Ml_%E0%B5%BC_order.gif",
+        "variation": "The 57-frame Gayathri-font animation draws ർ in one uninterrupted run: climb from the lower-left tip around the left arch, carry the upper shoulder right, sweep clockwise around the right loop and return through its inner side, then rise into the finishing hook above the line. This is one attested pedagogical order fitted to the bundled Noto Sans Malayalam outline; arch width, loop roundness, and hook height vary by hand, but the zero-lift order remains the same."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": -31,
+        "minY": -862,
+        "width": 798,
+        "height": 1334.1
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "climb around the left arch and carry the upper shoulder right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M495 -12Q432 -12 387.5 14.5Q343 41 320 92.5Q297 144 297 217Q297 275 315 324.5Q333 374 365.5 418Q398 462 440 501L469 532Q498 558 519 587Q540 616 540 651Q540 678 522 699Q504 720 462 720Q440 720 420 717Q400 714 387 709L368 778Q385 783 414 787.5Q443 792 475 792Q535 792 568 770.5Q601 749 614 720Q627 691 627 668Q627 616 600.5 575Q574 534 527 491L507 464Q465 429 438 388.5Q411 348 398 304.5Q385 261 385 215Q385 154 400.5 119.5Q416 85 441.5 71.5Q467 58 496 58Q551 58 579.5 97.5Q608 137 608 215Q608 254 599 292.5Q590 331 572 365.5Q554 400 526.5 428Q499 456 462 473Q438 484 411 489.5Q384 495 352 495Q280 495 230 465.5Q180 436 154 385.5Q128 335 128 273Q128 221 143 180Q158 139 185.5 108Q213 77 250 54L200 -9Q157 16 120.5 55.5Q84 95 61.5 150.5Q39 206 39 277Q39 339 59.5 391.5Q80 444 119.5 483Q159 522 217.5 544Q276 566 351 566Q396 566 434.5 558Q473 550 507 533Q512 531 517 528.5Q522 526 526 523Q585 490 623 440.5Q661 391 679 334Q697 277 697 221Q697 112 645 50Q593 -12 495 -12Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M220 25 L220 25\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M220 25 L160 75 L105 155 L78 255 L92 355 L145 450 L235 515 L345 540 L445 510\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"445\" cy=\"510\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"368\" y=\"215.9\" text-anchor=\"middle\" font-size=\"63.9\" fill=\"#6b7280\"><tspan x=\"368\" y=\"215.9\">1. climb around the left</tspan><tspan x=\"368\" y=\"293.9\">arch and carry the upper</tspan><tspan x=\"368\" y=\"371.8\">shoulder right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "sweep clockwise around the right loop and return to the upper crossing",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M495 -12Q432 -12 387.5 14.5Q343 41 320 92.5Q297 144 297 217Q297 275 315 324.5Q333 374 365.5 418Q398 462 440 501L469 532Q498 558 519 587Q540 616 540 651Q540 678 522 699Q504 720 462 720Q440 720 420 717Q400 714 387 709L368 778Q385 783 414 787.5Q443 792 475 792Q535 792 568 770.5Q601 749 614 720Q627 691 627 668Q627 616 600.5 575Q574 534 527 491L507 464Q465 429 438 388.5Q411 348 398 304.5Q385 261 385 215Q385 154 400.5 119.5Q416 85 441.5 71.5Q467 58 496 58Q551 58 579.5 97.5Q608 137 608 215Q608 254 599 292.5Q590 331 572 365.5Q554 400 526.5 428Q499 456 462 473Q438 484 411 489.5Q384 495 352 495Q280 495 230 465.5Q180 436 154 385.5Q128 335 128 273Q128 221 143 180Q158 139 185.5 108Q213 77 250 54L200 -9Q157 16 120.5 55.5Q84 95 61.5 150.5Q39 206 39 277Q39 339 59.5 391.5Q80 444 119.5 483Q159 522 217.5 544Q276 566 351 566Q396 566 434.5 558Q473 550 507 533Q512 531 517 528.5Q522 526 526 523Q585 490 623 440.5Q661 391 679 334Q697 277 697 221Q697 112 645 50Q593 -12 495 -12Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M220 25 L160 75 L105 155 L78 255 L92 355 L145 450 L235 515 L345 540 L445 510 L445 510\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M445 510 L545 495 L625 430 L672 335 L680 225 L650 125 L590 48 L510 22 L430 52 L370 130 L340 215 L348 300 L385 390 L440 470 L485 505\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"485\" cy=\"505\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"368\" y=\"215.9\" text-anchor=\"middle\" font-size=\"63.9\" fill=\"#6b7280\"><tspan x=\"368\" y=\"215.9\">2. sweep clockwise</tspan><tspan x=\"368\" y=\"293.9\">around the right loop</tspan><tspan x=\"368\" y=\"371.8\">and return to the upper</tspan><tspan x=\"368\" y=\"449.8\">crossing</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "rise into the chillu hook and curl left above the line",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M495 -12Q432 -12 387.5 14.5Q343 41 320 92.5Q297 144 297 217Q297 275 315 324.5Q333 374 365.5 418Q398 462 440 501L469 532Q498 558 519 587Q540 616 540 651Q540 678 522 699Q504 720 462 720Q440 720 420 717Q400 714 387 709L368 778Q385 783 414 787.5Q443 792 475 792Q535 792 568 770.5Q601 749 614 720Q627 691 627 668Q627 616 600.5 575Q574 534 527 491L507 464Q465 429 438 388.5Q411 348 398 304.5Q385 261 385 215Q385 154 400.5 119.5Q416 85 441.5 71.5Q467 58 496 58Q551 58 579.5 97.5Q608 137 608 215Q608 254 599 292.5Q590 331 572 365.5Q554 400 526.5 428Q499 456 462 473Q438 484 411 489.5Q384 495 352 495Q280 495 230 465.5Q180 436 154 385.5Q128 335 128 273Q128 221 143 180Q158 139 185.5 108Q213 77 250 54L200 -9Q157 16 120.5 55.5Q84 95 61.5 150.5Q39 206 39 277Q39 339 59.5 391.5Q80 444 119.5 483Q159 522 217.5 544Q276 566 351 566Q396 566 434.5 558Q473 550 507 533Q512 531 517 528.5Q522 526 526 523Q585 490 623 440.5Q661 391 679 334Q697 277 697 221Q697 112 645 50Q593 -12 495 -12Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M220 25 L160 75 L105 155 L78 255 L92 355 L145 450 L235 515 L345 540 L445 510 L545 495 L625 430 L672 335 L680 225 L650 125 L590 48 L510 22 L430 52 L370 130 L340 215 L348 300 L385 390 L440 470 L485 505 L485 505\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M485 505 L530 555 L570 620 L582 675 L558 720 L510 752 L455 765 L410 758 L380 748\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"380\" cy=\"748\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"368\" y=\"215.9\" text-anchor=\"middle\" font-size=\"63.9\" fill=\"#6b7280\"><tspan x=\"368\" y=\"215.9\">3. rise into the chillu</tspan><tspan x=\"368\" y=\"293.9\">hook and curl left above</tspan><tspan x=\"368\" y=\"371.8\">the line</tspan></text>"
         }
       ]
     },

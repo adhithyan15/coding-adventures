@@ -1,0 +1,11 @@
+{
+  "id": "RU-R28-letters-second-pass",
+  "pathSegment": "RU-PATH-028-LETTERS-LAST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-028-LETTERS-LAST",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,627 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 113,
+  "title": "Letters From Your First Words",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:24a439bcd95fa42c",
+  "lessons": [
+    {
+      "id": "ML-W113-sha",
+      "sequence": 4180,
+      "title": "ശ (śa) — the letter that opens ശരി",
+      "headword": "ശ",
+      "romanization": "śa",
+      "gloss": "śa — the letter that opens ശരി",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:829bf47e62232170",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ശ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ശ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ഠ and ഫ once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ശരി (śari), \"okay\". You have read it for a long time. This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ശ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശ — śa, the sound sh."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens ശരി (śari), \"okay\", one of the first words in this book."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ശ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ശ (śa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ശരി and point at ശ (śa) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ശരി** and point at ശ inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ശ (śa) three times, saying ś as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ശ three times, saying *ś* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ഫ, then ശ (śa), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ഫ, then ശ, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ശരി aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ശരി** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ശ? (śa, ś.) Which word did it come from? (ശരി, śari, \"okay\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W113-nga",
+      "sequence": 4190,
+      "title": "ങ (ṅa) — the nasal in നിങ്ങൾ",
+      "headword": "ങ",
+      "romanization": "ṅa",
+      "gloss": "ṅa — the nasal in നിങ്ങൾ",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:362969f8a1a63720",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ങ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ങ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ഫ and ശ (śa) once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say നിങ്ങൾ (niṅṅaḷ), \"you (respectful)\". You have read it for a long time. This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ങ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ങ — ṅa, the nasal made where k is made."
+            },
+            {
+              "kind": "speech",
+              "text": "It is inside നിങ്ങൾ (niṅṅaḷ), the respectful \"you\", where it is written twice, one on top of the other, for the long ṅṅ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ങ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ങ (ṅa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at നിങ്ങൾ and point at ങ (ṅa) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **നിങ്ങൾ** and point at ങ inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ങ (ṅa) three times, saying ṅ as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ങ three times, saying *ṅ* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ശ (śa), then ങ (ṅa), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ശ, then ങ, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "നിങ്ങൾ aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **നിങ്ങൾ** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ങ? (ṅa, ṅ.) Which word did it come from? (നിങ്ങൾ, niṅṅaḷ, \"you (respectful)\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W113-lla",
+      "sequence": 4200,
+      "title": "ള (ḷa) — the letter inside നാളെ",
+      "headword": "ള",
+      "romanization": "ḷa",
+      "gloss": "ḷa — the letter inside നാളെ",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5103ea5b8c0278ab",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ള",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ള and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ശ (śa) and ങ (ṅa) once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say നാളെ (nāḷe), \"tomorrow\". You have read it for a long time. This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ള",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ള — ḷa, an l made with the tongue curled back."
+            },
+            {
+              "kind": "speech",
+              "text": "It is inside നാളെ (nāḷe), \"tomorrow\", from നാളെ കാണാം, \"see you tomorrow\". The dot under the romanization (ḷ) is what marks the curled tongue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ള",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ള (ḷa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at നാളെ and point at ള (ḷa) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **നാളെ** and point at ള inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ള (ḷa) three times, saying ḷ as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ള three times, saying *ḷ* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ങ (ṅa), then ള (ḷa), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ങ, then ള, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "നാളെ aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **നാളെ** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ള? (ḷa, ḷ.) Which word did it come from? (നാളെ, nāḷe, \"tomorrow\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W113-kha",
+      "sequence": 4210,
+      "title": "ഖ (kha) — the letter inside സുഖം",
+      "headword": "ഖ",
+      "romanization": "kha",
+      "gloss": "kha — the letter inside സുഖം",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:83183d55aa31d253",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ഖ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ഖ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ങ (ṅa) and ള (ḷa) once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say സുഖം (sukham), \"well-being\". You have read it for a long time. This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ഖ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഖ — kha, a k with a puff of breath."
+            },
+            {
+              "kind": "speech",
+              "text": "It is inside സുഖമാണോ? (sukhamāṇō?), \"how are you?\", built on സുഖം (sukham), \"well-being\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ഖ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ഖ (kha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at സുഖം and point at ഖ (kha) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **സുഖം** and point at ഖ inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ഖ (kha) three times, saying kh as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ഖ three times, saying *kh* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ള (ḷa), then ഖ (kha), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ള, then ഖ, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "സുഖം aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **സുഖം** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ഖ? (kha, kh.) Which word did it come from? (സുഖം, sukham, \"well-being\".)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-041-LETTERS-LAST",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "BN-EXT-041-LETTERS-LAST"
+  ],
+  "after": []
+}

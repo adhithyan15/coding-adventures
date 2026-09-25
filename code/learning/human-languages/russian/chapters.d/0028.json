@@ -1,0 +1,17 @@
+{
+  "chapter": 28,
+  "title": "The Small Ya",
+  "label": "ch:ru-small-ya",
+  "canDo": "I can write the small ya, the word for I, as Russian writes it inside a sentence.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "RU-R28-letters-second-pass",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 28: i can write the small ya, the word for I, as Russian writes it inside a sentence.",
+    "assesses": [
+      "RU-SCRIPT-C28-YA-SMALL-01"
+    ]
+  }
+}

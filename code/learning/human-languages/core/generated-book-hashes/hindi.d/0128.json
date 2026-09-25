@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:4569da066cf7f7c8",
+  "lessonIds": [
+    "HI-W128-vowel-sign-i",
+    "HI-W128-letter-i",
+    "HI-W128-letter-nya",
+    "HI-R128-letters-first-pass",
+    "HI-R128-letters-second-pass"
+  ],
+  "tex": "hindi/book/chapters/ch128-letters-you-have-read-all-along.tex"
+}

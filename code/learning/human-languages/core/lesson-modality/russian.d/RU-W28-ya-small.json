@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "RU-W28-ya-small",
+    "language": "russian",
+    "chapter": 28,
+    "sequence": 1370,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9e665e81c95b4ebf",
+    "detachableSegments": [
+      "Script you'll notice: я",
+      "Writing: я"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "BN-W41-pha",
+    "language": "bengali",
+    "chapter": 41,
+    "sequence": 2190,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:dae39fa855e4ca64",
+    "detachableSegments": [
+      "Script you'll notice: ফ",
+      "Writing: ফ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

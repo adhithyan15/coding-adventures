@@ -1,0 +1,17 @@
+{
+  "language": "russian",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:0bbe2d1a9a48b9f5",
+  "lessonIds": [
+    "RU-W28-ya-small",
+    "RU-R28-letters-first-pass",
+    "RU-R28-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "russian/narration/ch28.txt",
+  "json": "russian/narration/ch28.json",
+  "textHash": "fnv1a64:4d1837ff39c3c857",
+  "jsonHash": "fnv1a64:52bd14d940555fe8",
+  "findings": []
+}

@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-W114-dha",
+    "language": "malayalam",
+    "chapter": 114,
+    "sequence": 4220,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c7df6784e27c4bfc",
+    "detachableSegments": [
+      "Script you'll notice: ധ",
+      "Writing: ധ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

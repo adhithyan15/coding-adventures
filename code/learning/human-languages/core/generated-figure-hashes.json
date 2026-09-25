@@ -746,6 +746,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "GU-W45-gha",
+      "sourceHash": "fnv1a64:607de344398fd072",
+      "svgHash": "fnv1a64:cf5b94bd3ee9f8b3",
+      "svg": "gujarati/book/figures/GU-W45-gha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "HI-S01-letter-ma",
       "sourceHash": "fnv1a64:896277301a8bee28",
       "svgHash": "fnv1a64:4507a2a0b3bb2cb0",
@@ -1037,6 +1044,20 @@
       "sourceHash": "fnv1a64:ce693b41b51f0e52",
       "svgHash": "fnv1a64:26ddfa520f4a00ed",
       "svg": "hindi/book/figures/HI-W12-ya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-W128-letter-i",
+      "sourceHash": "fnv1a64:e12c374ae640f10e",
+      "svgHash": "fnv1a64:a7656f8c223c4a53",
+      "svg": "hindi/book/figures/HI-W128-letter-i-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "HI-W128-letter-nya",
+      "sourceHash": "fnv1a64:957296092e95adb8",
+      "svgHash": "fnv1a64:08937ec66960ed69",
+      "svg": "hindi/book/figures/HI-W128-letter-nya-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -1380,6 +1401,13 @@
       "sourceHash": "fnv1a64:4de8606704ab3479",
       "svgHash": "fnv1a64:c8f2ca716e69bd0c",
       "svg": "malayalam/book/figures/ML-W07-number-words-1-5-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W114-chillu-rr",
+      "sourceHash": "fnv1a64:161eb78169b888d3",
+      "svgHash": "fnv1a64:0718f67eedf116e9",
+      "svg": "malayalam/book/figures/ML-W114-chillu-rr-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -1901,6 +1929,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "MW-W43-ma",
+      "sourceHash": "fnv1a64:5b7702747b944378",
+      "svgHash": "fnv1a64:4507a2a0b3bb2cb0",
+      "svg": "marwadi/book/figures/MW-W43-ma-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "FA-C03-chist",
       "sourceHash": "fnv1a64:6eabe122b58a83b0",
       "svgHash": "fnv1a64:92979857084bb407",
@@ -2206,6 +2241,13 @@
       "sourceHash": "fnv1a64:4d3866c3d65e5883",
       "svgHash": "fnv1a64:ef2626b7396e30f0",
       "svg": "russian/book/figures/RU-W07-yu-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W28-ya-small",
+      "sourceHash": "fnv1a64:da6f7fbdc35483b5",
+      "svgHash": "fnv1a64:3fd121460f438a21",
+      "svg": "russian/book/figures/RU-W28-ya-small-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

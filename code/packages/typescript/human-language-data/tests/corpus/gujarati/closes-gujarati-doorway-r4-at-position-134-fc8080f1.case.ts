@@ -110,7 +110,18 @@ it("closes Gujarati doorway R4 at position 134", () => {
   // The lesson sits at sequence 1825, which is index 220 -- far past the
   // checkpoint at 134 -- so every position assertion above is untouched, and
   // that is why it was placed there rather than beside the atoms it retrieves.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(350);
+  // 350 -> 362. HL-C443 chapter 45 (gha, the ai sign, two reviews), decomposed
+  // against the corpus measured without it:
+  //    0   created by the chapter's own two atoms: each letter lesson recalls
+  //        the one before, and the two reviews give both their revisits.
+  //   +12  PRE-EXISTING (atom, window) slots that did not exist until the track
+  //        grew 281 -> 285: four R4, five R3, two R2 and one R1, all on atoms of
+  //        chapters 37-44 (ordinals, the question words, the reading skills)
+  //        whose next window only now falls inside the track.
+  //    0   closed.
+  // The lessons sit at the end of the track, far past the checkpoint at 134, so
+  // every position assertion above is untouched.
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(362);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:37a6d43570a7a124",
+  "lessonIds": [
+    "HI-W128-vowel-sign-i",
+    "HI-W128-letter-i",
+    "HI-W128-letter-nya",
+    "HI-R128-letters-first-pass",
+    "HI-R128-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "hindi/narration/ch128.txt",
+  "json": "hindi/narration/ch128.json",
+  "textHash": "fnv1a64:81209f2875097428",
+  "jsonHash": "fnv1a64:cd0142d94ddf1499",
+  "findings": []
+}

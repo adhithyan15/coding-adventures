@@ -1,0 +1,11 @@
+{
+  "id": "BN-W41-sha",
+  "pathSegment": "BN-PATH-041-LETTERS-LAST",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-041-LETTERS-LAST",
+      "order": 4
+    }
+  ]
+}

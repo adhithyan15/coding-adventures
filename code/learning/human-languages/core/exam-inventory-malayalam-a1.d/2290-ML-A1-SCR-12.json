@@ -1,7 +1,7 @@
 {
   "id": "ML-A1-SCR-12",
   "category": "Lipi (script and orthography)",
-  "label": "the nine headword characters without a direct script-lesson owner",
+  "label": "every headword character has a direct script-lesson owner",
   "probe": null,
   "anchorIds": [
     "ES-A1-PROXY",
@@ -12,5 +12,5 @@
     "A1-O1-03"
   ],
   "malayalamSpecific": false,
-  "note": "RE-DERIVED FROM DIRECT OWNERS, NOT ESTIMATED. 69 distinct Malayalam characters appear in headwords across 472 lessons; 60 occur in the headword of a writing/script lesson and nine do not -- 87 per cent direct-owner closure. ML-S148-letter-pha adds both the new headword character ഫ and its direct owner, so the open set is unchanged. Counts below are headword FIELDS first and distinct TOKENS second, so repeated sibling headwords are visible instead of silently collapsed: ള ḷa U+0D33 (24 fields / 19 tokens), ശ śa U+0D36 (17 / 13), ങ ṅa U+0D19 (14 / 12), ർ chillu-r U+0D7C (11 / 11), ധ dha U+0D27 (7 / 6), ൈ ai sign U+0D48 (5 / 5), ബ ba U+0D2C (4 / 4), ഖ kha U+0D16 (3 / 3), ഛ cha U+0D1B (2 / 2). This is deliberately a DIRECT-OWNER measure: the broader script-closure gate can credit glyphs appearing inside a writing lesson's examples, so calling these nine 'never taught' would conflict with that metric. The old 'sha (14)' mixed an ambiguous English name with an unrecoverable count; U+0D36 is open, while U+0D37 ഷ is directly owned by ML-S121-letter-ssa."
+  "note": "RE-DERIVED FROM DIRECT OWNERS, NOT ESTIMATED. 69 distinct Malayalam characters appear in headwords across 504 lessons, and all 69 occur in the headword of a writing/script lesson -- 100 per cent direct-owner closure. The last nine to close were given one letter lesson each by HL-C443 (chapters 113-114), each taught from the word the reader had been reading it in: ള ḷa U+0D33, ശ śa U+0D36, ങ ṅa U+0D19, ർ chillu-r U+0D7C, ധ dha U+0D27, ൈ ai sign U+0D48, ബ ba U+0D2C, ഖ kha U+0D16 and ഛ chha U+0D1B. This is deliberately a DIRECT-OWNER measure: the broader script-closure gate can credit glyphs appearing inside a writing lesson's examples. The two letters called 'sha' are told apart by codepoint: U+0D36 ശ is directly owned by ML-W113-sha, and U+0D37 ഷ by ML-S121-letter-ssa."
 }
