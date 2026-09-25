@@ -109,6 +109,20 @@ describe("placing the image", () => {
     expect(placed!.blocks.filter((block) => block.markdown.includes("filmstrip")).length).toBe(1);
   });
 
+  it("falls back to the first Script block when a track presents its letter there", () => {
+    const scriptOnly = lesson("ZH-S1", { language: "tamil", blocks: ["Warm-up", "Script — the letter", "Wrap-up Recall"] });
+    expect(writingLetterOf(scriptOnly)).toBe("அ");
+    const [placed] = withFilmstripImages([scriptOnly], filmstripCandidates([scriptOnly]));
+    expect(placed!.blocks[1]!.markdown.startsWith("![How அ is written")).toBe(true);
+  });
+
+  it("prefers a Writing block over an earlier Script block", () => {
+    const both = lesson("TA-S9", { blocks: ["Script — shape", "Writing: strokes", "Wrap-up Recall"] });
+    const [placed] = withFilmstripImages([both], filmstripCandidates([both]));
+    expect(placed!.blocks[0]!.markdown).not.toContain("filmstrip");
+    expect(placed!.blocks[1]!.markdown).toContain("filmstrip");
+  });
+
   it("leaves a lesson that already prints its figure by hand alone", () => {
     const authored = lesson("TA-S1");
     authored.blocks[0]!.markdown = "![hand placed](figures/TA-S1-filmstrip.svg)\n";
@@ -131,14 +145,15 @@ describe("the real corpus", () => {
   );
 
   it("draws a filmstrip for every Tamil letter lesson whose letter has a cited ductus", () => {
-    // 20 lessons, 19 letters, on the first rollout (வ has both TA-S01-va and the
-    // guided copy TA-W00; the ledger draws the letter once). A letter lesson
+    // 21 lessons, 20 letters (20 lessons / 19 letters on the first rollout; the
+    // Script-block fallback added one lesson for one more letter). வ has both TA-S01-va and the guided copy TA-W00, and
+    // the ledger draws the letter once. A letter lesson
     // whose glyph has no cited ductus (vowel signs, the pulli) is a candidate
     // that is not drawn; citing its stroke order is what moves this number,
     // never an edit here alone.
     const tamil = targets.filter((target) => target.lessonId.startsWith("TA-"));
-    expect(tamil).toHaveLength(20);
-    expect(new Set(tamil.map((target) => target.glyph)).size).toBe(19);
+    expect(tamil).toHaveLength(21);
+    expect(new Set(tamil.map((target) => target.glyph)).size).toBe(20);
   });
 
   it("draws every switched-on track exactly the letters its ductus cites", () => {
@@ -146,27 +161,30 @@ describe("the real corpus", () => {
     // ductus (a letter drawn once serves four books); then every other track
     // with any cited ductus. Kannada, malayalam and telugu cite only vowels and
     // chillus, so only those letter lessons print a filmstrip until their
-    // consonants are sourced. Chinese, russian and urdu print none YET: their
-    // writing-lesson headwords are not a single grapheme (a character with its
-    // reading, an upper/lower pair), which HL-C443 records as the next step.
+    // consonants are sourced. Tracks that present a letter under "## Script"
+    // rather than "## Writing:" (chinese, japanese, urdu, persian, most russian)
+    // get the filmstrip in that Script block.
     const counts: Record<string, number> = {};
     for (const target of targets) {
       const prefix = target.lessonId.split("-")[0]!;
       counts[prefix] = (counts[prefix] ?? 0) + 1;
     }
     expect(counts).toEqual({
-      AR: 1,
-      FA: 4,
-      GU: 28,
-      HI: 36,
-      JA: 1,
+      AR: 3,
+      FA: 11,
+      GU: 33,
+      HI: 42,
+      JA: 23,
       KA: 13,
       ML: 13,
-      MR: 37,
-      MW: 6,
+      MR: 42,
+      MW: 32,
+      RU: 18,
       SA: 39,
-      TA: 20,
+      TA: 21,
       TE: 9,
+      UR: 12,
+      ZH: 58,
     });
   });
 
