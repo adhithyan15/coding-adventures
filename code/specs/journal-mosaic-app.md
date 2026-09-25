@@ -588,7 +588,49 @@ while Personal is selected.
 
 **Events:** `onRenameJournal`, `onDeleteJournal`.
 
+## Export (J6a)
+
+An **Export** button saves the whole journal to a file the person chooses,
+through Mosaic's standard `files.save` effect (UI87 §7). The app writes no host
+code: Compose answers it with its platform library, the browser with
+`mosaic-file-effects.mjs`, and a backend without a platform library yet fails
+the effect, which the app reports.
+
+- **Event:** `onExportJournal`. The runtime emits one `Await` effect:
+
+  ```text
+  files.save {
+    suggestedName: "journal-YYYY-MM-DD.json",    -- the user's today
+    accept: ["application/json"],
+    bytes: base64(<export file>)
+  }
+  ```
+
+  While it is outstanding, a second Export does nothing, and the button is
+  disabled (`exporting`).
+- **The file** is Journal's own versioned JSON, so a later Import can load it
+  with the same validating `restore` (UI47 §8.3):
+
+  ```json
+  { "format": "coding-adventures-journal",
+    "schema": "journal-mosaic-app/state", "version": 1,
+    "state": { ...the snapshot state... } }
+  ```
+
+  The bytes are captured when Export is pressed (UI47 §8.3). Files larger
+  than the 16 MiB `files.save` limit are refused before the effect, with a
+  message.
+- **Results.** `ok { name }` shows "Exported to NAME"; with `download: true`
+  (the browser fallback) it shows "Downloaded NAME". `cancelled` shows
+  nothing. `failed { message }` shows "Couldn't export: MESSAGE". The status
+  line is `export-status`; it is not persisted.
+- **Persistence while exporting.** A pending Await blocks snapshots (UI47
+  §8.1), so hosts defer autosave until the export completes. The journal is
+  unchanged by an export either way.
+
+Markdown export (readable, one-way) and Import are later steps.
+
 ## Deferred
 
 Launching on the remaining native lanes, packaging and release (J5); the markdown preview;
-(search J4a, stars J4b, on-this-day J4c, tags J4d, an entry's day J4e and journals J4f an entry's journal J4g, an empty journal J4h and renaming and deleting a journal J4i are above); export (needs a host file-save effect on native hosts); importing the TypeScript app's entries.
+(search J4a, stars J4b, on-this-day J4c, tags J4d, an entry's day J4e and journals J4f an entry's journal J4g, an empty journal J4h and renaming and deleting a journal J4i are above; export J6a is above); import; Markdown export; importing the TypeScript app's entries; export on SwiftUI, Qt, XAML and Flutter, which arrives with their platform libraries (UI87 §7.3).
