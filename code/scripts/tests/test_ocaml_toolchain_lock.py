@@ -640,7 +640,15 @@ class OcamlToolchainWorkflowTests(unittest.TestCase):
                 "        timeout-minutes: 1",
                 1,
             ),
-            self.workflow.replace("branches: ['**']", "branches: [main]", 1),
+            # Widening the push trigger back to every branch is refused.
+            self.workflow.replace("branches: [main]", "branches: ['**']", 1),
+            # And so is watching ci.yml again.
+            self.workflow.replace(
+                "      - '.github/workflows/build-ocaml.yml'\n",
+                "      - '.github/workflows/build-ocaml.yml'\n"
+                "      - '.github/workflows/ci.yml'\n",
+                1,
+            ),
             self.workflow.replace(
                 "workflow_dispatch:", "workflow_dispatch:\n    x: y", 1
             ),

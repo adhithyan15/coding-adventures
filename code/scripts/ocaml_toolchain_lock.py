@@ -849,9 +849,12 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
     _require_workflow_keys(
         triggers, {"push", "pull_request", "workflow_dispatch"}, "on"
     )
+    # OCaml sources, the toolchain contract and this workflow -- not ci.yml.
+    # A ci.yml edit is validated by ci.yml itself (it runs the lock tests and
+    # validate-repository-report), so listing it here ran the whole three-OS
+    # matrix for unrelated CI changes (OCAML03 "Triggers").
     expected_paths = [
         ".github/workflows/build-ocaml.yml",
-        ".github/workflows/ci.yml",
         "code/scripts/ocaml_toolchain_lock.py",
         "code/scripts/tests/test_ocaml_toolchain_lock.py",
         "code/specs/OCAML0*.md",
@@ -860,8 +863,10 @@ def validate_workflow_text(manifest: Mapping[str, Any], workflow_text: str) -> N
         "code/packages/ocaml/**",
         "code/programs/ocaml/**",
     ]
+    # Pushes to main and pull requests into it: a push trigger on every branch
+    # ran each pull request's matrix twice.
     for trigger_name, expected_branches in (
-        ("push", "['**']"),
+        ("push", "[main]"),
         ("pull_request", "[main]"),
     ):
         trigger = _workflow_mapping(triggers[trigger_name], f"on.{trigger_name}")
