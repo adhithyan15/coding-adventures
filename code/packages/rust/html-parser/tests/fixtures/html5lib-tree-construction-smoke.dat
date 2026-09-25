@@ -42255,3 +42255,20 @@ nested form ignored
 |       <template>
 |         content
 |           <form>
+
+#source template.dat:124
+#data
+<br>BC<form>D<div>E</form>F</div>G
+#errors
+unexpected end tag
+unexpected end tag
+#document-fragment
+template
+#document
+| <br>
+| "BC"
+| <form>
+|   "D"
+|   <div>
+|     "E"
+| "FG"

@@ -1,5 +1,5 @@
 {
-  "case_count": 315,
+  "case_count": 316,
   "cases": [
     {
       "axis": "adoption-agency",
@@ -1890,6 +1890,12 @@
       "id": "template-dat-123",
       "reason": "template contents and template-context insertion modes",
       "source": "template.dat:123"
+    },
+    {
+      "axis": "template-insertion",
+      "id": "template-dat-124",
+      "reason": "template contents and template-context insertion modes",
+      "source": "template.dat:124"
     }
   ],
   "counts_by_axis": {
@@ -1897,7 +1903,7 @@
     "foreign-fragment": 66,
     "html-fragment": 81,
     "table-insertion": 19,
-    "template-insertion": 127
+    "template-insertion": 128
   },
   "description": "Focused parser audit over selected html5lib tree-construction families that stress insertion-mode recovery.",
   "format": "whatwg-html-tree-insertion-audit/v1",

@@ -10,11 +10,9 @@
     "upstream_source": "html5lib-tests/tokenizer"
   },
   "tree_construction": {
-    "local_cases": 2654,
-    "missing": 1,
-    "missing_sources": [
-      "template.dat:124"
-    ],
+    "local_cases": 2655,
+    "missing": 0,
+    "missing_sources": [],
     "upstream_cases": 1952,
     "upstream_revision": "92054a74d0c6a1ed2e9024d71ebf2880f2af02e2",
     "upstream_source": "wpt/html/syntax/parsing/resources"
