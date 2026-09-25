@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C98-alarm",
+    "language": "kannada",
+    "chapter": 98,
+    "sequence": 3860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23ebe41a5992d77b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C99-skin",
+    "language": "kannada",
+    "chapter": 99,
+    "sequence": 3890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12b985c0af626e55"
+  },
+  "findings": []
+}

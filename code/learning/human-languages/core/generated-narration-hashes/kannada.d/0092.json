@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:2fa1bd437de3039e",
+  "lessonIds": [
+    "KA-C92-school",
+    "KA-C92-college",
+    "KA-C92-office",
+    "KA-C92-job",
+    "KA-C92-english"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch92.txt",
+  "json": "kannada/narration/ch92.json",
+  "textHash": "fnv1a64:12daaf212bd8acb3",
+  "jsonHash": "fnv1a64:304d025f305bd042",
+  "findings": []
+}

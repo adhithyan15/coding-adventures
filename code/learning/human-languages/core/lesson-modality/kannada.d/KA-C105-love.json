@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C105-love",
+    "language": "kannada",
+    "chapter": 105,
+    "sequence": 4210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7db6328f8c9478b9"
+  },
+  "findings": []
+}

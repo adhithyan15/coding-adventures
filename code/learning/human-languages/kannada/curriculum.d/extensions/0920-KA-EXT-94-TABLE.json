@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-94-TABLE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for a snack, a spoon, a glass or a plate, and ask the price.",
+  "prerequisites": []
+}

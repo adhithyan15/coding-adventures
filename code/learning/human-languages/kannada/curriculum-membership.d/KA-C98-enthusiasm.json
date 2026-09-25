@@ -1,0 +1,11 @@
+{
+  "id": "KA-C98-enthusiasm",
+  "pathSegment": "KA-PATH-98-MOODS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-98-MOODS",
+      "order": 1
+    }
+  ]
+}

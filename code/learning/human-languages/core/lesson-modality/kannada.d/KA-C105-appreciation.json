@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C105-appreciation",
+    "language": "kannada",
+    "chapter": 105,
+    "sequence": 4220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c6af17e764c3f8f"
+  },
+  "findings": []
+}

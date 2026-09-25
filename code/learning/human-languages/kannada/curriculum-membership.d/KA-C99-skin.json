@@ -1,0 +1,11 @@
+{
+  "id": "KA-C99-skin",
+  "pathSegment": "KA-PATH-99-BODY2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-99-BODY2",
+      "order": 1
+    }
+  ]
+}

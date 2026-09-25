@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-101-OPEN",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "KA-EXT-101-OPEN"
+  ],
+  "after": []
+}

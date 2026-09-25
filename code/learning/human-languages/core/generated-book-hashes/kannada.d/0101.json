@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:fff852fa865556a4",
+  "lessonIds": [
+    "KA-C101-open",
+    "KA-C101-close",
+    "KA-C101-stop",
+    "KA-C101-call",
+    "KA-C101-urgent"
+  ],
+  "tex": "kannada/book/chapters/ch101-open-close-stop-call.tex"
+}

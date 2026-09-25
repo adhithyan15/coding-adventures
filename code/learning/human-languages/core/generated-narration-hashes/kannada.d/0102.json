@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:f95e2ec2bf3281e3",
+  "lessonIds": [
+    "KA-C102-other",
+    "KA-C102-wrong",
+    "KA-C102-all",
+    "KA-C102-onlyone",
+    "KA-C102-fornoreason"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch102.txt",
+  "json": "kannada/narration/ch102.json",
+  "textHash": "fnv1a64:261764db547637bf",
+  "jsonHash": "fnv1a64:80978061f6eff3b4",
+  "findings": []
+}

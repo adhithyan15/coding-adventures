@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "Wishes and Warmth",
+  "label": "ch:ka-wishes-and-warmth",
+  "canDo": "I can give best wishes, name a festival, hospitality, love and appreciation.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "KA-C105-appreciation",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: i can give best wishes, name a festival, hospitality, love and appreciation.",
+    "assesses": [
+      "KA-LEX-C105-WISHES-03",
+      "KA-LEX-C105-WISHES-04",
+      "KA-LEX-C105-WISHES-05"
+    ]
+  }
+}

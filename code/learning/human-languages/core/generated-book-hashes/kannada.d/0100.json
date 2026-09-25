@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:db475c9a8b86639a",
+  "lessonIds": [
+    "KA-C100-map",
+    "KA-C100-ticket",
+    "KA-C100-bus",
+    "KA-C100-station",
+    "KA-C100-near"
+  ],
+  "tex": "kannada/book/chapters/ch100-help-me-find-it.tex"
+}

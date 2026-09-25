@@ -1,0 +1,19 @@
+{
+  "chapter": 99,
+  "title": "The Body Again",
+  "label": "ch:ka-the-body-again",
+  "canDo": "I can name breath, skin and blood, say I have a stomach ache, and talk about weight.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C99-weight",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: i can name breath, skin and blood, say I have a stomach ache, and talk about weight.",
+    "assesses": [
+      "KA-LEX-C99-BODY2-03",
+      "KA-LEX-C99-BODY2-04",
+      "KA-LEX-C99-BODY2-05"
+    ]
+  }
+}

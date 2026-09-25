@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:18fc7ac7dac4967a",
+  "lessonIds": [
+    "KA-C90-grandson",
+    "KA-C90-granddaughter",
+    "KA-C90-relative",
+    "KA-C90-neighbours",
+    "KA-C90-uncle"
+  ],
+  "tex": "kannada/book/chapters/ch90-more-of-the-family.tex"
+}

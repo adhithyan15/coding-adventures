@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:006e19152a869257",
+  "lessonIds": [
+    "KA-C105-wishes",
+    "KA-C105-festival",
+    "KA-C105-hospitality",
+    "KA-C105-love",
+    "KA-C105-appreciation"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch105.txt",
+  "json": "kannada/narration/ch105.json",
+  "textHash": "fnv1a64:cac14cdeeb97724e",
+  "jsonHash": "fnv1a64:f71888ab8f6bb926",
+  "findings": []
+}

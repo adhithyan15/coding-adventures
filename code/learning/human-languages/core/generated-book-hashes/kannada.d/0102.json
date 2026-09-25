@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:0431fe60c4864207",
+  "lessonIds": [
+    "KA-C102-other",
+    "KA-C102-wrong",
+    "KA-C102-all",
+    "KA-C102-onlyone",
+    "KA-C102-fornoreason"
+  ],
+  "tex": "kannada/book/chapters/ch102-this-way-that-way.tex"
+}

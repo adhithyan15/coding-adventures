@@ -1,0 +1,15 @@
+{
+  "language": "kannada",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:d0ab23a82aa0a465",
+  "lessonIds": [
+    "KA-C97-pardon",
+    "KA-C97-introduction",
+    "KA-C97-grateful",
+    "KA-C97-dontforget",
+    "KA-C97-kindness",
+    "KA-R97-first-pass-people-work",
+    "KA-R97-second-pass-body-table-greetings"
+  ],
+  "tex": "kannada/book/chapters/ch97-grateful-and-sorry.tex"
+}

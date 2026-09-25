@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:75590e6f8c971f05",
+  "lessonIds": [
+    "KA-C96-eaten",
+    "KA-C96-whatsnew",
+    "KA-C96-longtime",
+    "KA-C96-hello",
+    "KA-C96-wellbeing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch96.txt",
+  "json": "kannada/narration/ch96.json",
+  "textHash": "fnv1a64:5c04a2b1644dd95b",
+  "jsonHash": "fnv1a64:350f7335c466c1ea",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C104-business",
+    "language": "kannada",
+    "chapter": 104,
+    "sequence": 4130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f688d47e9134e25"
+  },
+  "findings": []
+}

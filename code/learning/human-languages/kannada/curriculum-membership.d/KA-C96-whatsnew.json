@@ -1,0 +1,11 @@
+{
+  "id": "KA-C96-whatsnew",
+  "pathSegment": "KA-PATH-96-HELLO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-96-HELLO",
+      "order": 1
+    }
+  ]
+}

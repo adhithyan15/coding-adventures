@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-90-KIN",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "KA-EXT-90-KIN"
+  ],
+  "after": []
+}

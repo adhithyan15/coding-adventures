@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "Grateful and Sorry",
+  "label": "ch:ka-grateful-and-sorry",
+  "canDo": "I can ask for pardon, speak of an introduction, say I am grateful, ask someone not to forget, and name kindness.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "KA-R97-second-pass-body-table-greetings",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can ask for pardon, speak of an introduction, say I am grateful, ask someone not to forget, and name kindness.",
+    "assesses": [
+      "KA-LEX-C97-GRATEFUL-03",
+      "KA-LEX-C97-GRATEFUL-04",
+      "KA-LEX-C97-GRATEFUL-05"
+    ]
+  }
+}

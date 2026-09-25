@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:1350e16dcff4a1d4",
+  "lessonIds": [
+    "KA-C94-snack",
+    "KA-C94-spoon",
+    "KA-C94-glass",
+    "KA-C94-plate",
+    "KA-C94-price"
+  ],
+  "tex": "kannada/book/chapters/ch94-at-the-table.tex"
+}

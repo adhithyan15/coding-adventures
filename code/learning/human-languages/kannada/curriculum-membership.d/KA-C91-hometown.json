@@ -1,0 +1,11 @@
+{
+  "id": "KA-C91-hometown",
+  "pathSegment": "KA-PATH-91-ABOUTYOU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-91-ABOUTYOU",
+      "order": 3
+    }
+  ]
+}

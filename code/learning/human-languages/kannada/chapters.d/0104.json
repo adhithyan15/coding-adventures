@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "People at Work",
+  "label": "ch:ka-people-at-work",
+  "canDo": "I can name business, a worker, the police, a driver and a shop.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "KA-C104-shop",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can name business, a worker, the police, a driver and a shop.",
+    "assesses": [
+      "KA-LEX-C104-JOBS-03",
+      "KA-LEX-C104-JOBS-04",
+      "KA-LEX-C104-JOBS-05"
+    ]
+  }
+}

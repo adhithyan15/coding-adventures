@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:e427baa9947c674d",
+  "lessonIds": [
+    "KA-C101-open",
+    "KA-C101-close",
+    "KA-C101-stop",
+    "KA-C101-call",
+    "KA-C101-urgent"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch101.txt",
+  "json": "kannada/narration/ch101.json",
+  "textHash": "fnv1a64:a9cc78612d087fa9",
+  "jsonHash": "fnv1a64:758172dd4d873eb3",
+  "findings": []
+}

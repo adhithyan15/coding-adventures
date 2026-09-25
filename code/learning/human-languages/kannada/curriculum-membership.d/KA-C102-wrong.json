@@ -1,0 +1,11 @@
+{
+  "id": "KA-C102-wrong",
+  "pathSegment": "KA-PATH-102-THISWAY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-102-THISWAY",
+      "order": 1
+    }
+  ]
+}

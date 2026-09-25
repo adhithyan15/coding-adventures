@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:6d9b669d3c5f3919",
+  "lessonIds": [
+    "KA-C98-boredom",
+    "KA-C98-enthusiasm",
+    "KA-C98-shyness",
+    "KA-C98-alarm",
+    "KA-C98-peace"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch98.txt",
+  "json": "kannada/narration/ch98.json",
+  "textHash": "fnv1a64:ed632532ff025979",
+  "jsonHash": "fnv1a64:4f9d673f45e5d754",
+  "findings": []
+}

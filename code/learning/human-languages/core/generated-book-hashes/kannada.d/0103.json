@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:af5e470dcadf39fa",
+  "lessonIds": [
+    "KA-C103-house",
+    "KA-C103-street",
+    "KA-C103-city",
+    "KA-C103-country",
+    "KA-C103-state"
+  ],
+  "tex": "kannada/book/chapters/ch103-where-i-live.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C90-uncle",
+    "language": "kannada",
+    "chapter": 90,
+    "sequence": 3450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:adb044357dfd8a29"
+  },
+  "findings": []
+}
