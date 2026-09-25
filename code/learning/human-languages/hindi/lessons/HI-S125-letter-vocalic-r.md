@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-S125-letter-vocalic-r
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 608
+sequence: 613
 delivery: script
-chapter: 13
+chapter: 14
 type: writing
 headword: "ऋ"
 gloss: the independent vowel ऋ — recognised, sounded, and written before ऋतु
@@ -36,10 +36,11 @@ reviews_of: [HI-S117-letter-ca, HI-C13-haath]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-117] -->
 
+[PAUSE 1s] You have said **ऋतु** (*ṛtu*), "season". Its first letter is the one this lesson writes.
+
 [PAUSE 2s] Find **च** in **चार**. Say *ca*. Then put the word away.
 
-One new character comes next. It gets its own short lesson before the seasons
-lesson asks you to read or write it.
+One new character comes next: the first letter of the word you have met.
 
 ## Script you'll notice: ऋ and its Hindi value
 <!-- hl-knowledge: introduces=[HI-SCRIPT-RECOG-125]; assesses=[] -->
@@ -85,9 +86,9 @@ only the first differing stroke.
 
 ## Wrap-up Recall — no-model checkpoint
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-125, HI-SCRIPT-WRITE-125] -->
-<!-- hl-activity: {"id":"HI-S125-letter-vocalic-r-no-model","kind":"text","assesses":["HI-SCRIPT-RECOG-125","HI-SCRIPT-WRITE-125"],"prompt":"With no model or character bank, write the independent vowel at the start of ritu.","answer":"ऋ","accepted":[],"feedback":{"correct":"The independent vowel is ready before ऋतु becomes scored vocabulary.","incorrect":"Finish the attempt, reopen ऋ, repair only the first differing stroke, then close the model again."},"response_seconds":25} -->
+<!-- hl-activity: {"id":"HI-S125-letter-vocalic-r-no-model","kind":"text","assesses":["HI-SCRIPT-RECOG-125","HI-SCRIPT-WRITE-125"],"prompt":"With no model or character bank, write the independent vowel at the start of ritu.","answer":"ऋ","accepted":[],"feedback":{"correct":"The independent vowel is written, and ऋतु now reads from its first letter.","incorrect":"Finish the attempt, reopen ऋ, repair only the first differing stroke, then close the model again."},"response_seconds":25} -->
 
-Close the model again. The next chapter will use the word *ritu*, “season.”
+Close the model again. You have met the word *ritu*, “season.”
 Write its first Devanagari character from memory.
 
 [PAUSE 3s] What is the careful transliteration of **ऋ**? (**ṛ**.) How is it

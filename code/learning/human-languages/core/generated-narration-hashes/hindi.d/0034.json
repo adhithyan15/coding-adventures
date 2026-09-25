@@ -1,10 +1,9 @@
 {
   "language": "hindi",
   "chapter": 34,
-  "sourceHash": "fnv1a64:f6a823b4cbfc849a",
+  "sourceHash": "fnv1a64:1cc7b0e896e18321",
   "lessonIds": [
     "HI-C34-sochna",
-    "HI-S135-letter-au",
     "HI-C34-samajhna",
     "HI-C34-padhna",
     "HI-C34-likhna"
@@ -13,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "hindi/narration/ch34.txt",
   "json": "hindi/narration/ch34.json",
-  "textHash": "fnv1a64:36273c6110f4e98c",
-  "jsonHash": "fnv1a64:4fe4cd6b07d66be1",
+  "textHash": "fnv1a64:dee9ab01b138da96",
+  "jsonHash": "fnv1a64:497bd9316df8d174",
   "findings": []
 }

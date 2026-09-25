@@ -2,8 +2,8 @@
   "lesson": {
     "id": "HI-S144-vowel-sign-vocalic-r",
     "language": "hindi",
-    "chapter": 7,
-    "sequence": 507,
+    "chapter": 8,
+    "sequence": 511,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:c9c58f98302677ed",
+    "sourceHash": "fnv1a64:5b8377bb721c6ca9",
     "detachableSegments": [
       "Script you'll notice: ◌ृ",
       "Script: the name and the sound have come apart",
