@@ -20,6 +20,7 @@
 
 use crate::arena::{Arena, NodeId};
 use dom_core::Attribute;
+use std::collections::HashSet;
 
 /// The token an element was created for. Reconstruction and the adoption
 /// agency create a *new* element "for the token for which the element was
@@ -60,6 +61,9 @@ pub const MAX_ENTRIES_AFTER_MARKER: usize = 64;
 #[derive(Debug, Clone, Default)]
 pub struct ActiveFormatting {
     entries: Vec<Entry>,
+    /// The element entries' nodes, so "is this node in the list?" — asked for
+    /// every node the adoption agency visits — does not scan.
+    members: HashSet<NodeId>,
 }
 
 impl ActiveFormatting {
@@ -104,7 +108,7 @@ impl ActiveFormatting {
         if identical.len() >= 3 {
             // `identical` runs from the latest to the earliest.
             let earliest = *identical.last().expect("three matches");
-            self.entries.remove(earliest);
+            self.remove_at(earliest);
         }
         let after_marker = self
             .entries
@@ -113,8 +117,9 @@ impl ActiveFormatting {
             .map_or(0, |marker| marker + 1);
         let capped = self.entries.len() - after_marker >= MAX_ENTRIES_AFTER_MARKER;
         if capped {
-            self.entries.remove(after_marker);
+            self.remove_at(after_marker);
         }
+        self.members.insert(node);
         self.entries.push(Entry::Element { node, token });
         capped
     }
@@ -123,23 +128,35 @@ impl ActiveFormatting {
     /// the index already, so it need not search).
     pub fn set_node(&mut self, index: usize, node: NodeId) {
         if let Some(Entry::Element { node: slot, .. }) = self.entries.get_mut(index) {
+            self.members.remove(slot);
+            self.members.insert(node);
             *slot = node;
         }
     }
 
+    fn remove_at(&mut self, index: usize) {
+        if let Entry::Element { node, .. } = self.entries.remove(index) {
+            self.members.remove(&node);
+        }
+    }
+
+    /// Searches from the end, where the entries the builder asks about are.
     pub fn position(&self, node: NodeId) -> Option<usize> {
+        if !self.contains(node) {
+            return None;
+        }
         self.entries
             .iter()
-            .position(|entry| entry.node() == Some(node))
+            .rposition(|entry| entry.node() == Some(node))
     }
 
     pub fn contains(&self, node: NodeId) -> bool {
-        self.position(node).is_some()
+        self.members.contains(&node)
     }
 
     pub fn remove(&mut self, node: NodeId) {
         if let Some(index) = self.position(node) {
-            self.entries.remove(index);
+            self.remove_at(index);
         }
     }
 
@@ -148,7 +165,10 @@ impl ActiveFormatting {
     }
 
     pub fn token_for(&self, node: NodeId) -> Option<&FormattingToken> {
-        self.entries.iter().find_map(|entry| match entry {
+        if !self.contains(node) {
+            return None;
+        }
+        self.entries.iter().rev().find_map(|entry| match entry {
             Entry::Element {
                 node: candidate,
                 token,
@@ -160,17 +180,16 @@ impl ActiveFormatting {
     /// Point the entry for `old` at `new`, keeping its token (reconstruction and
     /// the adoption agency replace an entry in place).
     pub fn replace_node(&mut self, old: NodeId, new: NodeId) {
-        for entry in &mut self.entries {
-            if let Entry::Element { node, .. } = entry {
-                if *node == old {
-                    *node = new;
-                }
-            }
+        if let Some(index) = self.position(old) {
+            self.set_node(index, new);
         }
     }
 
     pub fn insert(&mut self, index: usize, entry: Entry) {
         let index = index.min(self.entries.len());
+        if let Some(node) = entry.node() {
+            self.members.insert(node);
+        }
         self.entries.insert(index, entry);
     }
 
@@ -190,8 +209,11 @@ impl ActiveFormatting {
     /// "Clear the list of active formatting elements up to the last marker".
     pub fn clear_to_last_marker(&mut self) {
         while let Some(entry) = self.entries.pop() {
-            if entry == Entry::Marker {
-                break;
+            match entry {
+                Entry::Marker => break,
+                Entry::Element { node, .. } => {
+                    self.members.remove(&node);
+                }
             }
         }
     }

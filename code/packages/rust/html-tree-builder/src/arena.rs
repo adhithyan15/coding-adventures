@@ -27,6 +27,20 @@
 
 use dom_core::{Attribute, Document, DocumentType, Element, Node};
 
+/// The deepest element a converted tree contains (the Document is depth 0,
+/// `<html>` depth 1). Blink uses the same figure.
+///
+/// Tree construction can nest without limit: `<div>` × 100,000 does, and the
+/// adoption agency can re-nest elements after the fact. Rather than police
+/// every place that moves nodes, the limit is applied once, where the tree
+/// leaves the arena: an element at the limit is emitted without children, and
+/// its children follow it as siblings. So no consumer — `dom_core`'s
+/// recursive `Drop`, layout, a serializer — ever receives a deeper tree.
+pub const MAX_TREE_DEPTH: usize = 512;
+
+/// How far [`Arena::is_inclusive_ancestor`] walks before giving up.
+pub const MAX_ANCESTOR_WALK: usize = 8 * MAX_TREE_DEPTH;
+
 /// A node's index in the arena. Cheap to copy and compare, which is what the
 /// stack of open elements and the list of active formatting elements hold.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -234,22 +248,6 @@ impl Arena {
         }
     }
 
-    /// How many parent links separate `node` from the root, counting at most
-    /// `limit` of them (the builder only needs to know "at least `limit`").
-    /// A template's contents count as one level below the template.
-    pub fn depth(&self, node: NodeId, limit: usize) -> usize {
-        let mut depth = 0;
-        let mut cursor = self.container(node);
-        while let Some(parent) = cursor {
-            depth += 1;
-            if depth >= limit {
-                break;
-            }
-            cursor = self.container(parent);
-        }
-        depth
-    }
-
     /// The node `id` sits inside: its parent, or for a template's contents
     /// fragment, the template.
     pub fn container(&self, id: NodeId) -> Option<NodeId> {
@@ -257,16 +255,22 @@ impl Arena {
         record.parent.or(record.host)
     }
 
-    /// Whether `ancestor` is `node` or one of its ancestors.
+    /// Whether `ancestor` is `node` or one of its ancestors, looking through
+    /// template contents to their template. The walk is bounded by
+    /// [`MAX_ANCESTOR_WALK`]; past it the answer is a conservative `true`, so
+    /// a caller guarding against cycles skips the move rather than risking one.
     pub fn is_inclusive_ancestor(&self, ancestor: NodeId, node: NodeId) -> bool {
         let mut cursor = Some(node);
-        while let Some(current) = cursor {
+        for _ in 0..MAX_ANCESTOR_WALK {
+            let Some(current) = cursor else {
+                return false;
+            };
             if current == ancestor {
                 return true;
             }
-            cursor = self.nodes[current.0].parent;
+            cursor = self.container(current);
         }
-        false
+        true
     }
 
     /// Move every child of `from` to the end of `to`, in order (adoption agency
@@ -297,13 +301,20 @@ impl Arena {
     /// contents become its children, which is how `dom_core` and the html5lib
     /// format show them.
     pub fn to_document(&self) -> Document {
+        self.to_document_capped().0
+    }
+
+    /// [`Arena::to_document`], also saying whether [`MAX_TREE_DEPTH`] had to
+    /// flatten anything.
+    pub fn to_document_capped(&self) -> (Document, bool) {
         let mut document = Document::new();
+        let mut flattened = false;
         for &child in self.children(Self::DOCUMENT) {
-            if let Some(node) = self.to_node(child) {
+            if let Some(node) = self.to_node(child, &mut flattened) {
                 document.push_child(node);
             }
         }
-        document
+        (document, flattened)
     }
 
     /// The children of `parent` as `dom_core` nodes. Fragment parsing returns
@@ -311,24 +322,23 @@ impl Arena {
     pub fn to_nodes(&self, parent: NodeId) -> Vec<Node> {
         self.children(parent)
             .iter()
-            .filter_map(|&child| self.to_node(child))
+            .filter_map(|&child| self.to_node(child, &mut false))
             .collect()
     }
 
-    fn to_node(&self, id: NodeId) -> Option<Node> {
-        // An explicit stack rather than recursion: a hostile document can nest
-        // elements hundreds of thousands deep, and the builder itself never
-        // recurses on depth.
+    fn to_node(&self, id: NodeId, flattened: &mut bool) -> Option<Node> {
+        // An explicit stack rather than recursion: the arena can nest
+        // arbitrarily deep, and the builder itself never recurses on depth.
         enum Frame {
-            Open(NodeId),
+            Open(NodeId, usize),
             Close,
         }
         let mut finished: Vec<Vec<Node>> = vec![Vec::new()];
         let mut pending: Vec<Element> = Vec::new();
-        let mut work = vec![Frame::Open(id)];
+        let mut work = vec![Frame::Open(id, 1)];
         while let Some(frame) = work.pop() {
             match frame {
-                Frame::Open(node) => match &self.nodes[node.0].kind {
+                Frame::Open(node, level) => match &self.nodes[node.0].kind {
                     NodeKind::Document | NodeKind::DocumentFragment => {}
                     NodeKind::Doctype {
                         name,
@@ -348,20 +358,31 @@ impl Arena {
                         .last_mut()?
                         .push(Node::processing_instruction(target.clone(), data.clone())),
                     NodeKind::Element(data) => {
-                        pending.push(Element {
+                        let element = Element {
                             namespace: data.namespace.dom_name(),
                             name: data.name.clone(),
                             attributes: data.attributes.clone(),
                             children: Vec::new(),
-                        });
-                        finished.push(Vec::new());
-                        work.push(Frame::Close);
+                        };
                         let children = match data.template_contents {
                             Some(contents) => self.children(contents),
                             None => self.children(node),
                         };
-                        for &child in children.iter().rev() {
-                            work.push(Frame::Open(child));
+                        if level >= MAX_TREE_DEPTH {
+                            // At the limit: the element stays a leaf, and its
+                            // children follow it at the same level.
+                            *flattened |= !children.is_empty();
+                            finished.last_mut()?.push(Node::Element(element));
+                            for &child in children.iter().rev() {
+                                work.push(Frame::Open(child, level));
+                            }
+                        } else {
+                            pending.push(element);
+                            finished.push(Vec::new());
+                            work.push(Frame::Close);
+                            for &child in children.iter().rev() {
+                                work.push(Frame::Open(child, level + 1));
+                            }
                         }
                     }
                 },
@@ -432,11 +453,18 @@ mod tests {
             arena.append(parent, child);
             parent = child;
         }
-        let document = arena.to_document();
+        let (document, flattened) = arena.to_document_capped();
+        assert!(flattened);
         assert_eq!(document.children.len(), 1);
-        // Dropping a 200,000-deep owned tree recurses in `Drop`; forget it so
-        // the test measures the conversion, not dom_core's destructor.
-        std::mem::forget(document);
+        // Walk the leftmost chain: it stops at the limit.
+        let mut depth = 0;
+        let mut level = &document.children;
+        while let Some(Node::Element(element)) = level.first() {
+            depth += 1;
+            level = &element.children;
+        }
+        assert_eq!(depth, MAX_TREE_DEPTH);
+        // Dropped normally: the capped tree is shallow enough for Drop.
     }
 
     #[test]

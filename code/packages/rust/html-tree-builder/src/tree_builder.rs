@@ -115,9 +115,15 @@ struct InsertionPoint {
 /// `BeforeHead`, `InHead`, `AfterHead` into `InBody`) is six.
 const MAX_REPROCESS: usize = 32;
 
-/// The deepest an element may be inserted (the Document is depth 0, `<html>`
-/// depth 1). Blink uses the same figure.
-pub const MAX_TREE_DEPTH: usize = 512;
+/// A resource limit, not a specification rule: the most elements the stack of
+/// open elements holds when a start tag arrives. Scope checks, "any other end
+/// tag" and the adoption agency all walk the stack, so an unbounded stack
+/// (`<div>` × 100,000) makes every token cost as much as the whole document.
+/// A start tag that finds the stack full first closes the current node, as if
+/// its end tag had been omitted, and reports `tree-builder-open-elements-limit`.
+/// (Reconstruction may still add up to 64 formatting elements past it.)
+/// Output depth is capped separately, in `arena::MAX_TREE_DEPTH`.
+pub const MAX_OPEN_ELEMENTS: usize = 512;
 
 pub struct TreeBuilder {
     pub(crate) arena: Arena,
@@ -231,11 +237,43 @@ impl TreeBuilder {
             Token::Eof => Tok::Eof,
         };
         self.ignore_next_line_feed = false;
+        if matches!(token, Tok::StartTag(_)) && self.open.len() >= MAX_OPEN_ELEMENTS {
+            self.make_room();
+        }
         let self_closing = matches!(&token, Tok::StartTag(tag) if tag.self_closing);
         self.self_closing_acknowledged = false;
         self.run(token);
         if self_closing && !self.self_closing_acknowledged {
             self.error("non-void-html-element-start-tag-with-trailing-solidus");
+        }
+    }
+
+    /// Close current nodes until the stack is below [`MAX_OPEN_ELEMENTS`],
+    /// keeping the other state consistent with each close: the node leaves the
+    /// list of active formatting elements, an element that pushed a marker
+    /// clears to it, a template pops its template insertion mode, and the
+    /// insertion mode is reset afterwards.
+    fn make_room(&mut self) {
+        self.error("tree-builder-open-elements-limit");
+        while self.open.len() >= MAX_OPEN_ELEMENTS {
+            let Some(node) = self.open.pop(&self.arena) else {
+                break;
+            };
+            self.formatting.remove(node);
+            let pushed_marker = [
+                "applet", "object", "marquee", "template", "td", "th", "caption",
+            ]
+            .iter()
+            .any(|name| self.arena.is_html(node, name));
+            if pushed_marker {
+                self.formatting.clear_to_last_marker();
+            }
+            if self.arena.is_html(node, "template") {
+                self.template_modes.pop();
+            }
+        }
+        if self.mode != InsertionMode::Text {
+            self.reset_insertion_mode();
         }
     }
 
@@ -409,35 +447,7 @@ impl TreeBuilder {
 
     /// "Insert a foreign element" for `tag` in `namespace`, and push it.
     fn insert_element(&mut self, namespace: Namespace, tag: &Tag) -> NodeId {
-        let mut point = self.appropriate_place(None);
-        // A resource limit, not a specification rule (Blink has the same one):
-        // an element never goes deeper than MAX_TREE_DEPTH. Past it, the new
-        // element becomes a sibling of the deepest allowed element instead of
-        // its child, so the tree stays shallow enough for recursive consumers
-        // (dom_core's Drop, layout) while the stack of open elements, and so
-        // every end tag's meaning, is unchanged.
-        if self.arena.depth(point.parent, MAX_TREE_DEPTH) >= MAX_TREE_DEPTH {
-            let mut target = point.parent;
-            // Climb (through a template's contents to the template), and never
-            // stop on a <template> element itself: its children are its
-            // contents fragment's, and a direct child would be lost.
-            while self.arena.depth(target, MAX_TREE_DEPTH) >= MAX_TREE_DEPTH
-                || self
-                    .arena
-                    .element(target)
-                    .is_some_and(|element| element.template_contents.is_some())
-            {
-                let Some(up) = self.arena.container(target) else {
-                    break;
-                };
-                target = up;
-            }
-            point = InsertionPoint {
-                parent: target,
-                before: None,
-            };
-            self.error("tree-builder-depth-limit");
-        }
+        let point = self.appropriate_place(None);
         let element =
             self.arena
                 .create_element(namespace, tag.name.clone(), tag.attributes.clone());

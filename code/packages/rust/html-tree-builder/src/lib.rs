@@ -127,9 +127,16 @@ pub fn parse_document(
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
     let document_mode = builder.document_mode();
-    let (arena, tree_diagnostics) = builder.finish();
+    let (arena, mut tree_diagnostics) = builder.finish();
+    let (document, flattened) = arena.to_document_capped();
+    if flattened {
+        tree_diagnostics.push(TreeDiagnostic {
+            code: "tree-builder-depth-limit",
+            position: lexer.position(),
+        });
+    }
     Ok(ParseOutput {
-        document: arena.to_document(),
+        document,
         document_mode,
         lexer_diagnostics,
         tree_diagnostics,

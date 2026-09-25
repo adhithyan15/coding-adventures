@@ -19,7 +19,7 @@
 
 use crate::arena::{Arena, Namespace, NodeId};
 use crate::elements::bounds_default_scope;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 /// Which of the specification's four scopes a lookup uses.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -58,6 +58,7 @@ impl Scope {
 #[derive(Debug, Clone, Default)]
 pub struct OpenElements {
     stack: Vec<NodeId>,
+    members: HashSet<NodeId>,
     html_counts: HashMap<String, usize>,
 }
 
@@ -70,15 +71,20 @@ impl OpenElements {
     }
 
     fn count_in(&mut self, arena: &Arena, node: NodeId) {
+        self.members.insert(node);
         if let Some(name) = Self::html_name(arena, node) {
             *self.html_counts.entry(name.to_string()).or_default() += 1;
         }
     }
 
     fn count_out(&mut self, arena: &Arena, node: NodeId) {
+        self.members.remove(&node);
         if let Some(name) = Self::html_name(arena, node) {
             if let Some(count) = self.html_counts.get_mut(name) {
                 *count = count.saturating_sub(1);
+                if *count == 0 {
+                    self.html_counts.remove(name);
+                }
             }
         }
     }
@@ -124,12 +130,18 @@ impl OpenElements {
         &self.stack
     }
 
+    /// O(1): the stack is asked this for every entry reconstruction visits.
     pub fn contains(&self, node: NodeId) -> bool {
-        self.stack.contains(&node)
+        self.members.contains(&node)
     }
 
+    /// Searches from the current node upwards: the node asked about is almost
+    /// always near the bottom of the stack.
     pub fn position(&self, node: NodeId) -> Option<usize> {
-        self.stack.iter().position(|&candidate| candidate == node)
+        if !self.contains(node) {
+            return None;
+        }
+        self.stack.iter().rposition(|&candidate| candidate == node)
     }
 
     pub fn remove(&mut self, arena: &Arena, node: NodeId) {

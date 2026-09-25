@@ -20,11 +20,12 @@ documented in this file.
     attribute adjustment tables;
   - a bound on reprocessing, and a cycle check before the adoption agency
     inserts, so no input can hang the builder;
-  - resource limits from the security review: tree depth 512 (a 100,000-deep
-    document took 12.7 s and overflowed the stack when dropped; now 0.9 s),
-    at most 64 active formatting elements after the last marker (distinct
-    attributes defeated the Noah's Ark clause: 75 KB of input took 42 s and
-    gigabytes; now 0.2 s), reconstruction by index instead of search, and a
-    per-name count of open elements that answers most scope checks at once.
+  - resource limits from two rounds of security review: output depth 512,
+    applied where the tree leaves the arena so no construction path can
+    exceed it; 512 open elements, a full stack closing its current node
+    before the next start tag; 64 active formatting elements after the last
+    marker; hash-set membership and search-from-the-end in the stack and the
+    formatting list. Hostile inputs that took 2.8 to 452 s (or crashed on
+    drop) now parse 250-900 KB in under a second.
 - The html5lib corpus harness with a shrink-only expected-failure list:
   1,883 of 2,654 cases pass.

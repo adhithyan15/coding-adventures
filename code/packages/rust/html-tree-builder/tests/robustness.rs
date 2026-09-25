@@ -2,7 +2,7 @@
 //! inputs built to stress the parts of tree construction that loop or nest.
 //! Several come from the step-1 security review.
 
-use coding_adventures_html_tree_builder::tree_builder::MAX_TREE_DEPTH;
+use coding_adventures_html_tree_builder::arena::MAX_TREE_DEPTH;
 use coding_adventures_html_tree_builder::{html5lib, parse_document, TreeBuilderOptions};
 use dom_core::Node;
 use std::time::{Duration, Instant};
@@ -52,7 +52,7 @@ fn deep_nesting_is_capped_and_the_result_drops_safely() {
     assert!(output
         .tree_diagnostics
         .iter()
-        .any(|diagnostic| diagnostic.code == "tree-builder-depth-limit"));
+        .any(|diagnostic| diagnostic.code == "tree-builder-open-elements-limit"));
 }
 
 #[test]
@@ -125,4 +125,42 @@ fn many_templates_closed_at_end_of_file_all_close() {
         .tree_diagnostics
         .iter()
         .any(|diagnostic| diagnostic.code == "tree-builder-reprocess-limit"));
+}
+
+// Round 2 of the security review.
+
+#[test]
+fn the_adoption_agency_cannot_renest_past_the_depth_limit() {
+    let source = "<div>".repeat(600) + &"<b><div></b>".repeat(5_000);
+    let output = parse(&source);
+    assert!(depth(&output.document.children) <= MAX_TREE_DEPTH);
+}
+
+#[test]
+fn an_open_p_out_of_scope_does_not_make_every_div_walk_the_stack() {
+    parse(&("<p><button>".to_string() + &"<div>".repeat(40_000)));
+    parse(&("<p><object>".to_string() + &"<div>".repeat(40_000)));
+}
+
+#[test]
+fn unmatched_end_tags_under_deep_inline_nesting() {
+    parse(&("<span>".repeat(20_000) + &"</x>".repeat(20_000)));
+}
+
+#[test]
+fn many_short_formatting_elements_under_deep_nesting() {
+    parse(&("<div>".repeat(20_000) + &"<b></b>".repeat(20_000)));
+}
+
+#[test]
+fn marker_segmented_formatting_lists() {
+    let mut source = String::new();
+    for _ in 0..200 {
+        source.push_str("<object>");
+        for index in 0..64 {
+            source.push_str(&format!("<b id={index}>"));
+        }
+    }
+    source.push_str(&"<b></b>".repeat(20_000));
+    parse(&source);
 }
