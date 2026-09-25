@@ -128,7 +128,7 @@ generated project the same way:
 | Flutter | `mosaic_platform_effects.dart` | `file_selector` on desktop; share sheet for save on mobile |
 | Qt | `MosaicPlatformEffects.{h,cpp}` | `QFileDialog` (native where the platform has one) |
 | XAML | `MosaicPlatformEffects.cs` | `FileOpenPicker` / `FileSavePicker` |
-| web family | `mosaic-file-effects.mjs` (exists) | `showOpenFilePicker` / `showSaveFilePicker`, falling back to `<input type=file>` and a download link |
+| web family | `mosaic-file-effects.mjs` (exists) | `showOpenFilePicker` / `showSaveFilePicker`; without them, `files.save` downloads the bytes and reports `ok { name, download: true }` (a download is not a durable save the person placed), and an `<input type=file>` fallback for `files.open` follows |
 
 The generalised core is the **contract**, not code: each library answers the
 same kinds with the same payloads, limits and results (§3.1, UI59), and each
