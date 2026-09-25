@@ -14,6 +14,65 @@ The goal is the same goal as the Closure Compiler clone (CLOC01):
 one, one tiny composable crate at a time, with the option to
 swap in real V8-style algorithms once the scaffolding is up.
 
+## Revision 2026-09-25 — the engine Venture runs
+
+The owner has made this engine a product goal: **Venture's JavaScript engine,
+built from scratch on the LANG VM** ([BR02](BR02-venture-completion-roadmap.md)
+P9). That changes four decisions below. Where this section and the original
+text disagree, this section wins.
+
+1. **Values live on `gc-core` from the first runnable PR,** not in
+   `Rc<RefCell<…>>`. The collector now exists (`FlatHeap`: precise roots,
+   mark-sweep, generational, compacting, incremental). JavaScript object
+   graphs are cyclic by default (`a.self = a`, closures capturing their own
+   function), and DOM wrappers must be traced, so reference counting would
+   leak from day one. V8C02 is revised to NaN-boxed values on `gc-core`.
+2. **The execution target is `vm-core`,** the shared register interpreter the
+   JIT and AOT build on, not `twig-vm`. That requires two pieces of shared
+   LANG VM work: LANG20 PR 8 (`vm-core` dispatches through `LangBinding`), and
+   `load_property` / `store_property` / `send` as real IIR opcodes (today
+   only `twig-vm` runs them).
+3. **test262 is the gate from the first PR, not "much later".** A
+   `v8-test262` runner comes before any runtime crate: it reads each test's
+   front matter (`includes`, `flags`, `features`, `negative`), runs strict and
+   sloppy variants, and keeps a checked-in **expected-pass list that may only
+   grow**. The first gate is the parse-phase negative tests against the
+   existing `javascript-parser`, which exists today.
+4. **No code path may recognise a specific test input.** The HTML parser
+   answered its scripted conformance cases by matching their script text
+   (BR02 §2). A test this engine cannot pass is recorded as an expected
+   failure with its reason, never special-cased.
+
+### Shared LANG VM work JavaScript needs
+
+These belong to the platform, not to `v8-*`, and each is its own spec and PR
+in the LANG series:
+
+| need | state today |
+|---|---|
+| Objects with property maps, prototypes, attributes, accessors | missing in `vm-core` (IIR has fixed-index fields only) |
+| Exceptions at run time | opcodes exist (AOT00-T2 Slice 1); no runtime executes them (Slice 2 planned) |
+| Generators and async (suspend/resume) | missing |
+| Microtask / job queue | `event-loop` exists; no job queue |
+| UTF-16 code-unit strings | strings are UTF-8 |
+| RegExp backreferences and lookaround | `regex-engine` is a Pike VM without them |
+| Weak references and ephemerons (WeakMap, WeakRef) | missing in `gc-core` |
+| Host objects (the DOM) | `BuiltinRegistry` only; no get/set/callback protocol |
+
+### Phases
+
+| phase | delivers | gate |
+|---|---|---|
+| P0 | `v8-test262` runner; LANG20 PR 8; property opcodes in IIR | test262 parse-phase tests vs `javascript-parser` |
+| P1 | smallest runnable JS: `v8-binding` (NaN-boxed, `gc-core`), `v8-ir-compiler` per V8C03, dictionary-mode objects with prototypes, `print` | test262 `language/{expressions,statements}` without flagged features |
+| P2 | ES5.1 core: run-time exceptions, property descriptors and accessors, strict mode, UTF-16 strings, Object/Function/Array/String/Number/Boolean/Math/JSON/Error | test262 `built-ins/*` restricted to ES5 |
+| P3 | browser embedding: host-object protocol, DOM wrappers over Venture's DOM (BR02 P4), `<script>`, timers and microtasks | Venture scripting on; BR02 P1's expected failures retire |
+| P4 | ES2015+ in test262 `features:` order: let/const and TDZ, arrows, classes, destructuring, templates, symbols and iterators, generators, promises and async, Map/Set then WeakMap, typed arrays, BigInt (`bignum-core`), a new RegExp engine, modules, Proxy/Reflect | each feature's test262 tag |
+| P5 | performance: hidden classes and inline caches (`lang-runtime-core` ICs), a native `jit-core` backend, deopt | test262 under the JIT, diffed against the interpreter |
+
+The spec order becomes: **V8C09 (`v8-test262`) first**, then V8C02 and V8C03
+as revised, then V8C04–V8C08 as sketched below.
+
 ## Why "V8" rather than just a JS interpreter?
 
 V8 is a useful target name because it's an opinionated design
@@ -128,17 +187,17 @@ simple key-value store. Not enough for a real framework.
   literal `HashMap<String, Value>` per object. Hidden classes
   land alongside the first property-access pass that *needs*
   them for perf.
-- **GC.** v1 uses `Rc<RefCell<…>>` for object cells. A real GC
-  arrives when allocation pressure makes it interesting.
+- ~~**GC.** v1 uses `Rc<RefCell<…>>` for object cells.~~ Superseded by the
+  2026-09-25 revision: values live on `gc-core` from the first runnable PR.
 - **Generators / async.** Phase 5 AST nodes don't exist yet;
   no semantic work to do.
 - **Stack traces / debugger.** The CV log already gives us
   source→IR→bytecode→output provenance. Debugger UI is
   separate (CLOC02 §LANG VM dev-tools track).
 - **Spec compliance.** v1 implements the *common* semantics
-  for each AST node, not every Annex-B oddity. Test262
-  integration arrives much later, after we've got something
-  worth measuring.
+  for each AST node, not every Annex-B oddity. ~~Test262 integration arrives
+  much later.~~ Superseded: test262 is the gate from the first PR, and what
+  v1 does not pass is an expected failure, listed.
 
 ## Stage roadmap (8 specs in the V8C series)
 
@@ -155,6 +214,8 @@ simple key-value store. Not enough for a real framework.
 - **V8C06** — `v8-host`: host bindings (console, setTimeout).
 - **V8C07** — `v8-vm`: the driver, error reporting, source-map
   integration via CV.
+- **V8C09** — `v8-test262` (added 2026-09-25, written first): the test262
+  runner, its expected-pass list, and how a test is classified.
 - **V8C08** — `v8c` CLI: argument surface, file I/O. Drop-in
   compatible with `node` at the command-line surface (in the
   same spirit closurec is compatible with the Java Closure
