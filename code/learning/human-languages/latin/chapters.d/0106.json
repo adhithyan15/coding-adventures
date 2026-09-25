@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Thirty to a Thousand",
+  "label": "ch:la-thirty-to-a-thousand",
+  "canDo": "I can count thirty, forty and fifty, a hundred and a thousand.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C106-mille",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can count thirty, forty and fifty, a hundred and a thousand.",
+    "assesses": [
+      "LA-LEX-C106-NUMERI-03",
+      "LA-LEX-C106-NUMERI-04",
+      "LA-LEX-C106-NUMERI-05"
+    ]
+  }
+}

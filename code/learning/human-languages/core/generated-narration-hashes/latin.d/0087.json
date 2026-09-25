@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:a44b5aa098518123",
+  "lessonIds": [
+    "LA-C87-flumen",
+    "LA-C87-lacus",
+    "LA-C87-rivus",
+    "LA-C87-fons",
+    "LA-C87-ora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch87.txt",
+  "json": "latin/narration/ch87.json",
+  "textHash": "fnv1a64:65e65858960c7e37",
+  "jsonHash": "fnv1a64:8006021068127992",
+  "findings": []
+}

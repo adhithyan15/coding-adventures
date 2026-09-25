@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "Far, Above, Below, Inside, Outside",
+  "label": "ch:la-far-above-below-inside-outside",
+  "canDo": "I can say far away, above, below, inside and outside.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "LA-C102-extra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can say far away, above, below, inside and outside.",
+    "assesses": [
+      "LA-LEX-C102-LOCUS-03",
+      "LA-LEX-C102-LOCUS-04",
+      "LA-LEX-C102-LOCUS-05"
+    ]
+  }
+}

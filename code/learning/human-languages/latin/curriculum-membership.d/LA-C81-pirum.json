@@ -1,0 +1,11 @@
+{
+  "id": "LA-C81-pirum",
+  "pathSegment": "LA-PATH-81-CIBUS3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-81-CIBUS3",
+      "order": 2
+    }
+  ]
+}

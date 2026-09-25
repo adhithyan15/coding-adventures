@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-80-CIBUS2",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "LA-EXT-80-CIBUS2"
+  ],
+  "after": []
+}

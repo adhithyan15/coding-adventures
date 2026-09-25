@@ -1,0 +1,11 @@
+{
+  "id": "LA-C76-voco",
+  "pathSegment": "LA-PATH-76-VERBA2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-76-VERBA2",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C78-intro",
+    "language": "latin",
+    "chapter": 78,
+    "sequence": 2500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7da6fa516c2db11"
+  },
+  "findings": []
+}

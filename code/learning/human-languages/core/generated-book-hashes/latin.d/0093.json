@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:fc644ce875b15187",
+  "lessonIds": [
+    "LA-C93-magnus",
+    "LA-C93-parvus",
+    "LA-C93-longus",
+    "LA-C93-brevis",
+    "LA-C93-altus"
+  ],
+  "tex": "latin/book/chapters/ch93-big-and-small-long-and-short-high.tex"
+}

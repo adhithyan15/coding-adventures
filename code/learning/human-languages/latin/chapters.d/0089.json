@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "Cloud, Rain, Snow, Plain, Shore",
+  "label": "ch:la-cloud-rain-snow-plain-shore",
+  "canDo": "I can name a cloud, rain, snow, a plain and a shore.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C89-litus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can name a cloud, rain, snow, a plain and a shore.",
+    "assesses": [
+      "LA-LEX-C89-CAELUM-03",
+      "LA-LEX-C89-CAELUM-04",
+      "LA-LEX-C89-CAELUM-05"
+    ]
+  }
+}

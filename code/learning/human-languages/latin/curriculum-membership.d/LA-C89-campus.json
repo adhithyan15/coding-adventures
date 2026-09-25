@@ -1,0 +1,11 @@
+{
+  "id": "LA-C89-campus",
+  "pathSegment": "LA-PATH-89-CAELUM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-89-CAELUM",
+      "order": 3
+    }
+  ]
+}

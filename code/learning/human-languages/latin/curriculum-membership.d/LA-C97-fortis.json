@@ -1,0 +1,11 @@
+{
+  "id": "LA-C97-fortis",
+  "pathSegment": "LA-PATH-97-FACILIS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-97-FACILIS",
+      "order": 3
+    }
+  ]
+}

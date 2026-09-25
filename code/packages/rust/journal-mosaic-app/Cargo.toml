@@ -11,6 +11,7 @@ license = "MIT"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+coding_adventures_base64 = { path = "../base64" }
 journal-core = { path = "../journal-core", features = ["serde"] }
 mosaic-app-capi = { path = "../mosaic-app-capi" }
 mosaic-app-wasm = { path = "../mosaic-app-wasm" }

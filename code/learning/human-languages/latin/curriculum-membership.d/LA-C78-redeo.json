@@ -1,0 +1,11 @@
+{
+  "id": "LA-C78-redeo",
+  "pathSegment": "LA-PATH-78-VERBA4",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-78-VERBA4",
+      "order": 2
+    }
+  ]
+}

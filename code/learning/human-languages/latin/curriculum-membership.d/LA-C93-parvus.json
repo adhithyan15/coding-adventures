@@ -1,0 +1,11 @@
+{
+  "id": "LA-C93-parvus",
+  "pathSegment": "LA-PATH-93-MAGNUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-93-MAGNUS",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C68-sitis",
+  "pathSegment": "LA-PATH-68-AEGER",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-68-AEGER",
+      "order": 3
+    }
+  ]
+}

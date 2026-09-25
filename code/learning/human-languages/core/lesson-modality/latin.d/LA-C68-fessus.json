@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C68-fessus",
+    "language": "latin",
+    "chapter": 68,
+    "sequence": 2000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76c57d83fbb51655"
+  },
+  "findings": []
+}

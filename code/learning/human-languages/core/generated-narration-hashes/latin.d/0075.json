@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:e04e496f733c3f46",
+  "lessonIds": [
+    "LA-C75-laboro",
+    "LA-C75-cano",
+    "LA-C75-salto",
+    "LA-C75-rideo",
+    "LA-C75-fleo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch75.txt",
+  "json": "latin/narration/ch75.json",
+  "textHash": "fnv1a64:43470df4da3d9dfa",
+  "jsonHash": "fnv1a64:83e0eab1323950e5",
+  "findings": []
+}

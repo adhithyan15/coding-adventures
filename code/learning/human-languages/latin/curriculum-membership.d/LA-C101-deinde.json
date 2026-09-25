@@ -1,0 +1,11 @@
+{
+  "id": "LA-C101-deinde",
+  "pathSegment": "LA-PATH-101-VERBA7",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-101-VERBA7",
+      "order": 4
+    }
+  ]
+}

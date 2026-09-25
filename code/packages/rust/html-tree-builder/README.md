@@ -30,10 +30,12 @@ beside it, measured on the same corpus, until it is at least as correct; then
 | §13.2.6.1 appropriate place for inserting, foster parenting | `TreeBuilder::appropriate_place` |
 | §13.2.6.4.1–7 initial … in body, including select | `TreeBuilder::initial` … `in_body` |
 | §13.2.6.4.7 adoption agency algorithm | `TreeBuilder::adoption_agency` |
-| §13.2.6.4.8 text, §13.2.6.4.16 in template, §13.2.6.4.17–21 after body … after after frameset | one method each |
+| §13.2.6.4.8 text | `TreeBuilder::text` |
+| §13.2.6.4.9–15 in table … in cell, foster parenting | `in_table` … `in_cell` |
+| §13.2.6.4.16 in template, §13.2.6.4.17–21 after body … after after frameset | one method each |
 
-Not yet (BR03 §5): the table modes, foreign content, fragment parsing, and
-parse errors by specification code.
+Not yet (BR03 §5): foreign content, fragment parsing, and parse errors by
+specification code.
 
 ## Resource limits
 
@@ -61,11 +63,11 @@ positions are searched from the end, where the builder's targets are.
 
 ## Progress
 
-`tests/corpus.rs` runs html-parser's html5lib corpus (2,655 cases). **1,883
+`tests/corpus.rs` runs html-parser's html5lib corpus (2,655 cases). **2,138
 pass.** Every failing case is listed in `tests/fixtures/expected-failures.txt`;
 the test fails on an unlisted failure and on a listed case that passes, so the
-list only shrinks. Most of what remains is tables, foreign content and
-fragments. Two groups are outside this crate: 31 script-data cases wait on an
+list only shrinks. Every other failing case needs foreign content or
+fragment parsing. Two groups are outside this crate: 31 script-data cases wait on an
 `html-lexer` fix, and 4 `<selectedcontent>` cases wait on a real DOM.
 
 ## Usage

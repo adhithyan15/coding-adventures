@@ -1,0 +1,11 @@
+{
+  "id": "LA-C70-familia",
+  "pathSegment": "LA-PATH-70-FAMILIA1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-70-FAMILIA1",
+      "order": 4
+    }
+  ]
+}

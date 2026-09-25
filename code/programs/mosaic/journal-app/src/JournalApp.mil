@@ -79,6 +79,10 @@ component JournalApp {
   // Personal can be renamed but not deleted (a restore requires it).
   slot can-rename-journal : bool ;
   slot can-delete-journal : bool ;
+  // Export (J6a): what the last Export did ("" for nothing), and whether one
+  // is outstanding (the button is disabled meanwhile).
+  slot export-status : text ;
+  slot exporting : bool ;
 
   emit onSelectEntry ( index : number ) ;
   emit onNewEntry ;
@@ -107,4 +111,6 @@ component JournalApp {
   // moving its entries to Personal.
   emit onRenameJournal ;
   emit onDeleteJournal ;
+  // Save the whole journal to a file, through the standard files.save effect.
+  emit onExportJournal ;
 }

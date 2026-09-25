@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "Rarely, Already, Then, Much, Little",
+  "label": "ch:la-rarely-already-then-much-little",
+  "canDo": "I can say rarely, already and then, and much and little.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "LA-C105-parum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: i can say rarely, already and then, and much and little.",
+    "assesses": [
+      "LA-LEX-C105-QUANTUM-03",
+      "LA-LEX-C105-QUANTUM-04",
+      "LA-LEX-C105-QUANTUM-05"
+    ]
+  }
+}

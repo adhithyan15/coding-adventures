@@ -1,0 +1,19 @@
+{
+  "chapter": 85,
+  "title": "Ball, Wheel, Sword, Crown, Ring",
+  "label": "ch:la-ball-wheel-sword-crown-ring",
+  "canDo": "I can name a ball, a wheel, a sword, a crown and a ring.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "LA-R85-second-pass-verbs-food-the-house-and-things",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 85: i can name a ball, a wheel, a sword, a crown and a ring.",
+    "assesses": [
+      "LA-LEX-C85-RES2-03",
+      "LA-LEX-C85-RES2-04",
+      "LA-LEX-C85-RES2-05"
+    ]
+  }
+}

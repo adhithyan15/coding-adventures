@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "Today, Yesterday, Year, Month, Dawn",
+  "label": "ch:la-today-yesterday-year-month-dawn",
+  "canDo": "I can say today and yesterday, and name a year, a month and the dawn.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "LA-C103-aurora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say today and yesterday, and name a year, a month and the dawn.",
+    "assesses": [
+      "LA-LEX-C103-ANNUS-03",
+      "LA-LEX-C103-ANNUS-04",
+      "LA-LEX-C103-ANNUS-05"
+    ]
+  }
+}

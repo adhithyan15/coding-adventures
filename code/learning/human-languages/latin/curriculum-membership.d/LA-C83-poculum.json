@@ -1,0 +1,11 @@
+{
+  "id": "LA-C83-poculum",
+  "pathSegment": "LA-PATH-83-DOMUS2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-83-DOMUS2",
+      "order": 3
+    }
+  ]
+}

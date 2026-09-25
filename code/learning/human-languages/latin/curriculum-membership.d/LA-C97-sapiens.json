@@ -1,0 +1,11 @@
+{
+  "id": "LA-C97-sapiens",
+  "pathSegment": "LA-PATH-97-FACILIS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-97-FACILIS",
+      "order": 4
+    }
+  ]
+}
