@@ -4,7 +4,7 @@
   "chapter": 86,
   "title": "The One It Is Done To",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c98e96f0e5df4c0d",
+  "sourceHash": "fnv1a64:6ef03117dbe6957a",
   "lessons": [
     {
       "id": "TA-C86-ai",
@@ -621,6 +621,397 @@
             {
               "kind": "speech",
               "text": "What is them, as the one it is done to? (Avarai.) What is me? (Eṉṉai.) When may the ending be left off? (On a thing, when it is not a particular one.) And what has to be true before it is compulsory? (The object is a person.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R86-who-is-in-the-room",
+      "sequence": 3591,
+      "title": "(இவர், விடை, and the two we-words) (yār uḷḷē, yār veḷiyē) — one idea in four places",
+      "headword": "(இவர், விடை, and the two we-words)",
+      "romanization": "yār uḷḷē, yār veḷiyē",
+      "gloss": "cold retrieval of four things the book said once, which turn out to be one idea — Tamil keeps track of who is present and who is included",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:661f57d91e9033f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Introduce the person standing beside you as your friend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the two words for we",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "who it covers"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "word: நாம். who it covers: me, and you too.",
+                "word: நாங்கள். who it covers: me and my people, but not you."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "English has one we and leaves the listener guessing. Tamil makes you choose before you open your mouth, and the choice is audible to everyone in the room."
+            },
+            {
+              "kind": "speech",
+              "text": "Getting it wrong is not a grammar slip — it either includes somebody you meant to exclude or shuts out somebody standing right there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: இவர், and the ending that judges",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "இவர் என் நண்பர் — this is my friend — is three words with no verb in the middle, the same silence the name sentence had."
+            },
+            {
+              "kind": "speech",
+              "text": "What it adds is a choice of ending. நண்பர் carries respect; a plainer ending would not. Introducing someone in Tamil therefore states your regard for them out loud, in front of them, whether or not you meant to say anything about it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "You'll want to know: விடை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "விடை is leave to depart — a noun for the act of taking your leave, sharing a root with வீடு, the house."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it beside the farewells: the everyday one promises a return, and this word names the departure itself. Tamil has both, and it reserves the naming one for the heavier moment."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Page covered."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which we-word takes the listener in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which we-word takes the listener in]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which one shuts them out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which one shuts them out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "this is my friend, respectfully",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *this is my friend*, respectfully]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what the ending on that last word tells the listener",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what the ending on that last word tells the listener]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the noun for taking your leave, and the house-word it is related to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the noun for taking your leave, and the house-word it is related to]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You are talking to a colleague about a plan the two of you share — which we-word do you reach for? (நாம்.) And which noun names the act of leaving rather than promising a return?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R86-the-last-page",
+      "sequence": 3592,
+      "title": "(the fifteen that came once) (oru muṟai maṭṭum) — the last page",
+      "headword": "(the fifteen that came once)",
+      "romanization": "oru muṟai maṭṭum",
+      "gloss": "the closing page — a second cold pass over the fifteen pieces this book asked for exactly once, from three letters to the five opening exchanges",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:678649400b90625d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: three pieces, one of them yours to draw",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: three pieces, one of them yours to draw and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read உ, then ய."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built, and what this page does with it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Everything here has come round twice in your reading: once where it was taught, once on a retrieval page in this last stretch. A second pass is where memory starts holding without the book, and the widest gap on offer runs from the opening pages to this one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: three pieces, one of them yours to draw",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "உ standing, ி hanging, ய a consonant, ஒ standing o, ோ the sign built from two marks."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "உ, and say whether it is a letter or a sign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **உ**, and say whether it is a letter or a sign]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ி, and say what it replaces",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ி**, and say what it replaces]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஒ and ோ — the same vowel standing, then hanging",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஒ** and **ோ** — the same vowel standing, then hanging]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "comprehension",
+          "title": "Reading: five words, cold",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சரி, பெயர், இருக்கிறீர்கள், போ, ஒன்று."
+            },
+            {
+              "kind": "speech",
+              "text": "No glosses this time. Read each one and say what it means before moving on. The long one in the middle is the test: eight pieces, and you have met every piece."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "input",
+          "title": "The exchange — five of them, unprompted",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The book opened with five, and an examiner opens with the same ones:"
+            },
+            {
+              "kind": "speech",
+              "text": "greet, and answer a thank-you."
+            },
+            {
+              "kind": "speech",
+              "text": "trade names, both sides, closing warmly."
+            },
+            {
+              "kind": "speech",
+              "text": "ask after the person, and reply in full."
+            },
+            {
+              "kind": "speech",
+              "text": "take your leave, promising the next meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "say what you speak, and what you do."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Page covered."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exchange 2 above, both sides",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: exchange 2 above, both sides]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exchange 3 above, both sides",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: exchange 3 above, both sides]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exchange 1, then exchange 4, back to back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: exchange 1, then exchange 4, back to back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "exchange 5, about yourself",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: exchange 5, about yourself]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "சரி",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **சரி**]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which sign on this page wraps around its consonant on both sides? (ோ.) And which of the five exchanges would you want one more run at before somebody asks for it cold?"
             }
           ]
         }

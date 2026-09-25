@@ -1,0 +1,11 @@
+{
+  "id": "TA-R85-going-and-doing",
+  "pathSegment": "TA-PATH-85-THIRD-PERSON",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "TA-EXT-85-THIRD-PERSON",
+      "order": 6
+    }
+  ]
+}

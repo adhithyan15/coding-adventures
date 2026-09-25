@@ -1,12 +1,15 @@
 {
   "language": "tamil",
   "chapter": 85,
-  "sourceHash": "fnv1a64:d9a06aa052b00c46",
+  "sourceHash": "fnv1a64:f52a783157db6d83",
   "lessonIds": [
     "TA-C85-avan-aval",
     "TA-C85-avargal",
     "TA-C85-naam-naangal",
-    "TA-R85-avarkal-recall"
+    "TA-R85-avarkal-recall",
+    "TA-R85-the-opening-courtesies",
+    "TA-R85-the-name-exchange",
+    "TA-R85-going-and-doing"
   ],
   "tex": "tamil/book/chapters/ch85-the-people-not-here.tex"
 }

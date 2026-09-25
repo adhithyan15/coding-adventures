@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R86-who-is-in-the-room",
+    "language": "tamil",
+    "chapter": 86,
+    "sequence": 3591,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:661f57d91e9033f8"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R85-the-name-exchange",
+    "language": "tamil",
+    "chapter": 85,
+    "sequence": 3552,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:334e4ad27a322294"
+  },
+  "findings": []
+}

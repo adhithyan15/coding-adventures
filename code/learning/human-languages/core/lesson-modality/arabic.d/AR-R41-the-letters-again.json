@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "AR-R41-the-letters-again",
+    "language": "arabic",
+    "chapter": 41,
+    "sequence": 1211,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59c89f100880f348",
+    "detachableSegments": [
+      "Script: one bowl, four letters",
+      "Script: the letter with three jobs"
+    ]
+  },
+  "findings": []
+}

@@ -3,8 +3,8 @@
   "language": "arabic",
   "chapter": 11,
   "title": "Head and Hand",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:899dcb54c9d9adc2",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:fad5abf9d1f96cbf",
   "lessons": [
     {
       "id": "AR-C11-ras",
@@ -218,6 +218,177 @@
             {
               "kind": "speech",
               "text": "What does يد mean? (\"Hand.\") How does it compare to its Hebrew cousin? (Nearly identical — both yad — one of the more strikingly unchanged shared words across the Semitic family.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R11-how-are-you-cold",
+      "sequence": 551,
+      "title": "How are you, cold",
+      "headword": "كيف حالك؟ · بخير",
+      "romanization": "kayfa ḥāluka? · bi-khayr",
+      "gloss": "the wellbeing exchange run cold — a question that asks after your state rather than after you, a root that means to turn, and two answers where English has one",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:264e821765e48a0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask after somebody and answer them back, both parts, without reading on. If the question came out as a memorised noise rather than three pieces you can name, this page is for you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The two words",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "letters, right to left",
+                "what it is"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "word: كيف kayfa. letters, right to left: kāf, yāʾ, fāʾ. what it is: how — a question word, partner to ما.",
+                "word: حال ḥāl. letters, right to left: ḥāʾ, alif, lām. what it is: state, condition — root ḥ–w–l, to turn."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The ح is the deep throat ḥ, not an English h. And حال is the whole point of the question: English asks after you, Arabic asks after your state — the thing that turns and changes, which is exactly what its root means."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the same suffix, one lesson on",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كيف حالك؟ bolts three pieces you already own together: how + state + your. The suffix behaves identically to the one that gave you اسمي, and it splits the same way."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "to a man",
+                "to a woman"
+              ],
+              "columns": 2,
+              "rowCount": 1,
+              "utterances": [
+                "to a man: كيف حالك؟ kayfa ḥāluka. to a woman: كيف حالك؟ kayfa ḥāluki."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Literally: how — your-state. No is, no are. The same zero copula that ran through the name exchange runs through this one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "How to answer: two replies where English has one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بخير bi-khayr is بـ (in) plus خير (khayr, good) — literally in goodness. You had met khayr long before you were told: it sits inside the morning greeting صباح الخير, morning of the good."
+            },
+            {
+              "kind": "speech",
+              "text": "الحمد لله al-ḥamdu lillāh comes back more often than bi-khayr does. Every letter in it is one you can write — alif, lām, ḥāʾ, mīm, dāl, hāʾ — and it says the praise is to God, from the root ḥ–m–d, to praise."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask a man — kayfa ḥāluka?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask a man — *kayfa ḥāluka?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask a woman — kayfa ḥāluki?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask a woman — *kayfa ḥāluki?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the plain answer — bi-khayr, shukran",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the plain answer — *bi-khayr, shukran*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the commoner answer — al-ḥamdu lillāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the commoner answer — *al-ḥamdu lillāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the three attaching pieces inside these lines — al-, bi-, li-",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the three attaching pieces inside these lines — *al-*, *bi-*, *li-*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the root behind حال and what it means. (ḥ–w–l, to turn or change.) Give the literal sense of بخير. (In goodness.) Give the literal sense of الحمد لله. (The praise is to God.) And name the question word that partners كيف. (ما.)"
             }
           ]
         }

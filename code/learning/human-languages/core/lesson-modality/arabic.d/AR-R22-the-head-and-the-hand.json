@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R22-the-head-and-the-hand",
+    "language": "arabic",
+    "chapter": 22,
+    "sequence": 661,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6bbdd3747c91874c"
+  },
+  "findings": []
+}

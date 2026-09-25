@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "AR-R23-please-sorry-thank-you",
+    "language": "arabic",
+    "chapter": 23,
+    "sequence": 671,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18d9022380d75d97",
+    "detachableSegments": [
+      "Script: the two letters inside شكرا",
+      "Writing: what changes when letters join"
+    ]
+  },
+  "findings": []
+}

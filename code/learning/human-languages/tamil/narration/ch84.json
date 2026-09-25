@@ -4,7 +4,7 @@
   "chapter": 84,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:113d3f6e4d78e269",
+  "sourceHash": "fnv1a64:e85f6f9bd0cc76aa",
   "lessons": [
     {
       "id": "TA-C84-words",
@@ -569,6 +569,766 @@
             {
               "kind": "speech",
               "text": "What does Tamil not need in அம்மா இங்கே? (A verb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R84-letters-that-look-alike",
+      "sequence": 3501,
+      "title": "(twelve consonants, four confusable sets) (pannireṇṭu meyyeḻuttu) — sorted by ear, not by date",
+      "headword": "(twelve consonants, four confusable sets)",
+      "romanization": "pannireṇṭu meyyeḻuttu",
+      "gloss": "cold retrieval of twelve Tamil consonants, sorted by the sets that sound alike rather than by the order they arrived in",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:96012a799a02bc63",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: the three that are all n",
+          "Script: two l-letters and two r-letters",
+          "Script: five that stand alone"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the three that are all n, Script: two l-letters and two r-letters and Script: five that stand alone until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read வ, then க, and name each."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: the three that are all n",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "sound",
+                "where the tongue goes"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "letter: ந. sound: na. where the tongue goes: teeth — the soft one.",
+                "letter: ண. sound: ṇa. where the tongue goes: curled back, on the roof.",
+                "letter: ன. sound: ṉa. where the tongue goes: the ridge behind the teeth."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "They arrived one per chapter, pages apart, and no page has put them side by side. That is the whole reason this set is hard: Tamil hears three different letters where English hears one sound. The difference is in where the tongue lands, and the shapes carry no hint of it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: two l-letters and two r-letters",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "pair",
+                "letters"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "pair: the l-sounds. letters: ல la, ordinary, ழ the curled one Tamil is named for.",
+                "pair: the r-sounds. letters: ர ra, a tap, ற ṟa, harder and further back."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "ழ deserves the pause. It is the sound in the language's own name, it has no English equivalent, and a reader who met it once, thirty chapters ago, will not place it cold now."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script: five that stand alone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "No confusable twin, no set to belong to: வ va, ப pa, ம ma, க ka, ச ca."
+            },
+            {
+              "kind": "speech",
+              "text": "Each one carries a built-in a, as every bare Tamil consonant does. Reading one aloud means saying two things — the consonant and the vowel inside it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the tables."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ந, ண, ன — and say where the tongue goes for each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ந**, **ண**, **ன** — and say where the tongue goes for each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ல, then ழ — and say which one names the language",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ல**, then **ழ** — and say which one names the language]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ர, then ற — and say which is the harder one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ர**, then **ற** — and say which is the harder one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "வ, ப, ம, க, ச — five in a row, no hesitating",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **வ**, **ப**, **ம**, **க**, **ச** — five in a row, no hesitating]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the vowel hiding inside a bare Tamil consonant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the vowel hiding inside a bare Tamil consonant]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many n-letters does Tamil write, and which of them curls the tongue back? (Three; ண.) Which letter gives the language its name?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R84-vowels-signs-and-the-dot",
+      "sequence": 3502,
+      "title": "(three vowels, five signs, one dot) (uyireḻuttum kuṟiyum puḷḷiyum) — the same vowel, standing or hanging",
+      "headword": "(three vowels, five signs, one dot)",
+      "romanization": "uyireḻuttum kuṟiyum puḷḷiyum",
+      "gloss": "cold retrieval of the vowels that stand alone, the signs that do the same job hanging off a consonant, the dot that takes a vowel away, and the three consonants left over",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:c5c4a09805db7d21",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script: standing, or hanging",
+          "Script: the three signs with no standing partner here",
+          "Script: the dot that removes a vowel",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: standing, or hanging, Script: the three signs with no standing partner here, Script: the dot that removes a vowel and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read அ. Then look at ் and say what it does to the letter it sits on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: standing, or hanging",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "vowel",
+                "on its own",
+                "hanging on a consonant"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "vowel: long ā. on its own: ஆ. hanging on a consonant: ா.",
+                "vowel: u. on its own: உ. hanging on a consonant: ு.",
+                "vowel: short a. on its own: அ. hanging on a consonant: nothing — it is already inside."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "That table is the whole system. A Tamil vowel gets a full-size letter when nothing comes before it, and a hanging sign when a consonant does. Short a is the exception that proves it: every bare consonant already contains one, so it needs no sign at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: the three signs with no standing partner here",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ி i, ே ē, ோ ō — met one per chapter, and each one replaces the built-in a of whatever letter it lands on."
+            },
+            {
+              "kind": "speech",
+              "text": "Read them as a set and the shapes stop being arbitrary: ே and ோ share the same upward stroke, because ோ is that stroke with a tail. Learning one buys most of the other."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script: the dot that removes a vowel",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three consonants were never gathered with the rest: ட ṭa, த ta, ய ya. Each carries its built-in a, and ் takes it away."
+            },
+            {
+              "kind": "speech",
+              "text": "So one mark and one letter give you two readings — த is ta, த் is a bare t. Everything the signs above do is a swap; this is the only one that subtracts."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the tables."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆ and ா — and say what the difference between them is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆ** and **ா** — and say what the difference between them is]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "உ and ு — the same question",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **உ** and **ு** — the same question]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ி, ே, ோ — name each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ி**, **ே**, **ோ** — name each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ட, த, ய — and say the vowel inside each",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ட**, **த**, **ய** — and say the vowel inside each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what ் does",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what **்** does]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "வ, the first shape this book ever asked you to copy",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **வ**, the first shape this book ever asked you to copy]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When does a Tamil vowel take a full-size letter rather than a hanging sign? (When no consonant comes before it.) Which mark subtracts a vowel instead of swapping one?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R84-words-the-script-pages-built",
+      "sequence": 3503,
+      "title": "(seven words you learned to read before you learned to spell them) (vācikka kaṟṟa ēḻu col)",
+      "headword": "(seven words you learned to read before you learned to spell them)",
+      "romanization": "vācikka kaṟṟa ēḻu col",
+      "gloss": "cold retrieval of the seven words the writing companions taught you to decode, and the script feature each one carried in",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:cdba41492d900b28",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script: the signs that sit on the wrong side",
+          "Script: த and ழ"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: the signs that sit on the wrong side and Script: த and ழ until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read சரி, then என். You have said both since the first two chapters."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading: seven words, each one a lesson in disguise",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "what it means",
+                "what it was really teaching"
+              ],
+              "columns": 3,
+              "rowCount": 7,
+              "utterances": [
+                "word: இல்லை. what it means: no, there is not. what it was really teaching: the ai sign, which stands to the LEFT.",
+                "word: சரி. what it means: fine, all right. what it was really teaching: ச, one letter for a whole family of sounds.",
+                "word: என். what it means: my. what it was really teaching: a word-initial vowel, reached by a rule you had.",
+                "word: பெயர். what it means: name. what it was really teaching: a second sign that stands to the left of its letter.",
+                "word: எப்படி. what it means: how. what it was really teaching: the retroflex ட.",
+                "word: இருக்கிறீர்கள். what it means: are you (respectful). what it was really teaching: the ு sign, in a word of eight pieces.",
+                "word: தமிழ். what it means: Tamil. what it was really teaching: ழ, and the name of the language."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Every one was a word you could already say. The writing pages never asked you to decode something unfamiliar — they put a known word in front of you and let the shapes attach to a sound you owned."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: the signs that sit on the wrong side",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of the seven carry the same surprise. In இல்லை and in பெயர், a vowel sign is written before the consonant it is pronounced after."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth holding because it breaks the habit every reader brings: the order on the page is not the order in the mouth. A Tamil reader takes in the group and then says it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script: த and ழ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தமிழ் is two letters worth stopping on. த is the soft dental t, the one made against the teeth. ழ is the curled sound with no English partner, and the language wears it in its own name."
+            },
+            {
+              "kind": "speech",
+              "text": "Reading the name correctly is the single clearest proof that the script has stopped being decoration."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the table and work from the left column only."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "இல்லை, சரி, என் — three in a row",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **இல்லை**, **சரி**, **என்** — three in a row]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பெயர், then எப்படி",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பெயர்**, then **எப்படி**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "இருக்கிறீர்கள் — slowly, group by group",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **இருக்கிறீர்கள்** — slowly, group by group]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "தமிழ், and name its last letter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **தமிழ்**, and name its last letter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which two of the seven write a vowel sign to the left of its letter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which two of the seven write a vowel sign to the left of its letter]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter gives Tamil its name, and which side of its consonant does the ai sign sit on? (ழ; the left.) Which of the seven is the longest on the page?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R84-the-u-family-completed",
+      "sequence": 3504,
+      "title": "(உ ஊ ு ூ — and the two that open o) (u-kuṭumpam muḻumai)",
+      "headword": "(உ ஊ ு ூ — and the two that open o)",
+      "romanization": "u-kuṭumpam muḻumai",
+      "gloss": "cold retrieval of the four pieces of the u-family, gathered into the square they always formed, and the standing and hanging shapes of o beside them",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b3578b0906f668e0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: the square the u-family always formed",
+          "Script: o, standing and hanging"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the square the u-family always formed and Script: o, standing and hanging until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read உணவு, then ஊர். Say what the first letter of each is doing differently."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: the square the u-family always formed",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four pieces, arriving in four separate chapters, and they were a grid the whole time:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "",
+                "standing alone",
+                "hanging on a consonant"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "short u. standing alone: உ. hanging on a consonant: ு.",
+                "long ū. standing alone: ஊ. hanging on a consonant: ூ."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "உணவு holds both columns of the top row — it opens with the standing உ and closes with the hanging ு, the same vowel wearing two shapes in one word. That word is the argument for the grid, and it is the reason this page exists: no chapter could show the square, because no chapter had all four corners."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading: the words that carried them in",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "means",
+                "the piece it brought"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "word: உணவு. means: food. the piece it brought: standing உ against hanging ு.",
+                "word: ஊர். means: town, home place. the piece it brought: standing ஊ, the long partner.",
+                "word: மூன்று. means: three. the piece it brought: the hanging ூ, closing the family.",
+                "word: பேசு. means: speak. the piece it brought: the long-e sign ே."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script: o, standing and hanging",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஒன்று (\"one\") opens with ஒ, the standing short o. போ (\"go\") carries ோ, the hanging long one — and ோ is the odd shape of the set, because it is built from two marks, one placed before its consonant and one after."
+            },
+            {
+              "kind": "speech",
+              "text": "So a single vowel can be written on both sides of the letter it belongs to at once. Reading it means taking the whole group in before saying anything."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the grid."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four corners of the u-square, and which corner each shape is",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four corners of the u-square, and which corner each shape is]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "உணவு — and point to both u's in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **உணவு** — and point to both u's in it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஊர், மூன்று, பேசு",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஊர்**, **மூன்று**, **பேசு**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஒன்று, then போ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஒன்று**, then **போ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which sign is built from two marks, and where each mark sits",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which sign is built from two marks, and where each mark sits]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word on this page shows the same vowel standing and hanging at once? (உணவு.) And which sign wraps around its consonant on both sides?"
             }
           ]
         }

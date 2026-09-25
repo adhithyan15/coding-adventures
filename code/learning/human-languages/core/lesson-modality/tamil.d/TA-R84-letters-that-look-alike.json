@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-R84-letters-that-look-alike",
+    "language": "tamil",
+    "chapter": 84,
+    "sequence": 3501,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96012a799a02bc63",
+    "detachableSegments": [
+      "Script: the three that are all n",
+      "Script: two l-letters and two r-letters",
+      "Script: five that stand alone"
+    ]
+  },
+  "findings": []
+}

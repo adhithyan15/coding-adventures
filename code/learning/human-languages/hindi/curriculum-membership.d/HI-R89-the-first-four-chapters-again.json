@@ -1,0 +1,11 @@
+{
+  "id": "HI-R89-the-first-four-chapters-again",
+  "pathSegment": "HI-PATH-89-SCHOOL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-89-SCHOOL",
+      "order": 4
+    }
+  ]
+}

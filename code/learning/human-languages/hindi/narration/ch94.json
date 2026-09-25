@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "The Pronouns, And The Article Hindi Does Not Have",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f1a11c745aec02e9",
+  "sourceHash": "fnv1a64:53ac3297e8d9e85d",
   "lessons": [
     {
       "id": "HI-C86-ham",
@@ -1087,6 +1087,226 @@
             {
               "kind": "speech",
               "text": "What word for the appears before sṭeśan? (None — Hindi has no article.) Which oblique would you use asking a stranger? (Āpko.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R94-met-once-and-left-there",
+      "sequence": 3721,
+      "title": "(पेट, औरत, सीढ़ी, चादर) (peṭ, aurat, sīṛhī, chādar) — five pockets nobody returned to",
+      "headword": "(पेट, औरत, सीढ़ी, चादर)",
+      "romanization": "peṭ, aurat, sīṛhī, chādar",
+      "gloss": "cold retrieval of five pockets the book opened once and never came back to — a body word, a person word in three registers, two things in a house, a form field, and the two named meals",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b62a88375e513f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words from the chapter that furnished a house: the one you climb, and the one you spread on a bed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: why these five",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Most of this book circles back on itself, so a word meets you five times over and you end up owning it. Five things escaped that. दोपहर का खाना and रात का खाना are the clearest — say both now."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart: पेट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पेट goes back to Prakrit पेट्ट, and there the clean line ends. The mainstream account takes it as Dravidian; Turner declines that and offers no Sanskrit source either. So: unsettled, Dravidian leading — and the retroflex ट is itself the feature most credited to that contact."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: औरत — three things to hold",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what you need",
+                "the answer"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "what you need: its gender. the answer: feminine, though the ending does not say so.",
+                "what you need: its source. the answer: Arabic عورة (ʿawra), root ʿ-w-r, senses near a gap.",
+                "what you need: the sense woman. the answer: from Persian, handed on around 1420.",
+                "what you need: which to say. the answer: औरत spoken, महिला public, स्त्री literary."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "The middle rows belong together: the harsh root sense is the earlier life of a word Persian repurposed, not a claim Arabic makes about women. And मेरी औरत means my wife, in a register most avoid."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "input",
+          "title": "You'll want to know: सीढ़ी and चादर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सीढ़ी (sīṛhī) is a staircase and also a ladder — you go up both in steps. चादर (chādar) is a sheet, from Persian chādar, a broad piece of cloth; English took it as chuddar."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "input",
+          "title": "You'll want to know: the नाम field, twice over",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The A1 form ladder gave you one field under two conditions, and the difference is the point."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "condition",
+                "beside the line",
+                "what it proves"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "condition: supported. beside the line: the bank A मीरा, B अरुण, visible. what it proves: you read the label and copy its value.",
+                "condition: delayed. beside the line: nothing; the bank is covered. what it proves: the spelling came from memory."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "An exam form gives you the second."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover everything above."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two named meals, and what each is built from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two named meals, and what each is built from]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word for a staircase, and its second sense",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word for a staircase, and its second sense]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the word for a sheet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the word for a sheet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of औरत, महिला, स्त्री goes on a public sign",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of **औरत**, **महिला**, **स्त्री** goes on a public sign]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the gender of औरत, and whether its ending told you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the gender of **औरत**, and whether its ending told you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where the trail behind पेट stops",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where the trail behind **पेट** stops]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "नाम: अरुण, nothing to copy",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **नाम: अरुण**, nothing to copy]"
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which language gave औरत the sense woman, the one it came from or the one it travelled through? (Persian.) Which meal is रात का खाना?"
             }
           ]
         }

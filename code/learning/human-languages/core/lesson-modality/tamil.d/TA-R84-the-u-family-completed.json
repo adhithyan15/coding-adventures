@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "TA-R84-the-u-family-completed",
+    "language": "tamil",
+    "chapter": 84,
+    "sequence": 3504,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3578b0906f668e0",
+    "detachableSegments": [
+      "Script: the square the u-family always formed",
+      "Script: o, standing and hanging"
+    ]
+  },
+  "findings": []
+}

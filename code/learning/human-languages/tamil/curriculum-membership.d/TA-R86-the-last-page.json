@@ -1,0 +1,11 @@
+{
+  "id": "TA-R86-the-last-page",
+  "pathSegment": "TA-PATH-86-ACCUSATIVE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TA-EXT-86-ACCUSATIVE",
+      "order": 5
+    }
+  ]
+}

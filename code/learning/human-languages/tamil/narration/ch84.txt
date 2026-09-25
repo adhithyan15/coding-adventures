@@ -1,8 +1,8 @@
 Tamil, chapter 84: Reading — Words, Lines, and a First Passage.
-3 lessons. All 3 can be done entirely by ear.
+7 lessons. You can do the first 3 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 7.
 (reading) — six words, counted in shapes.
 
 Warm-up.
@@ -41,7 +41,7 @@ How many of the six were new? (None.)
 Does a Tamil word have as many shapes as sounds? (No — fewer.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 7.
 (reading) — six lines, and a question that ends where it asks.
 
 Warm-up.
@@ -80,7 +80,7 @@ When do you find out a Tamil line is a question? (At its last word.)
 What is வணக்கம், literally? (A bowing.)
 
 
-Lesson 3 of 3.
+Lesson 3 of 7.
 (reading) — the first passage.
 
 Warm-up.
@@ -119,3 +119,185 @@ Wrap-up Recall.
 How many words in that passage were new? (None.)
 [pause 2 seconds]
 What does Tamil not need in அம்மா இங்கே? (A verb.)
+
+
+Lesson 4 of 7.
+(twelve consonants, four confusable sets) (pannireṇṭu meyyeḻuttu) — sorted by ear, not by date.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the three that are all n, Script: two l-letters and two r-letters and Script: five that stand alone until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+Read வ, then க, and name each.
+
+Script: the three that are all n.
+[a table of 3 rows, read aloud]
+letter: ந. sound: na. where the tongue goes: teeth — the soft one.
+letter: ண. sound: ṇa. where the tongue goes: curled back, on the roof.
+letter: ன. sound: ṉa. where the tongue goes: the ridge behind the teeth.
+They arrived one per chapter, pages apart, and no page has put them side by side. That is the whole reason this set is hard: Tamil hears three different letters where English hears one sound. The difference is in where the tongue lands, and the shapes carry no hint of it.
+
+Script: two l-letters and two r-letters.
+[a table of 2 rows, read aloud]
+pair: the l-sounds. letters: ல la, ordinary, ழ the curled one Tamil is named for.
+pair: the r-sounds. letters: ர ra, a tap, ற ṟa, harder and further back.
+ழ deserves the pause. It is the sound in the language's own name, it has no English equivalent, and a reader who met it once, thirty chapters ago, will not place it cold now.
+
+Script: five that stand alone.
+No confusable twin, no set to belong to: வ va, ப pa, ம ma, க ka, ச ca.
+Each one carries a built-in a, as every bare Tamil consonant does. Reading one aloud means saying two things — the consonant and the vowel inside it.
+
+Guided Practice.
+[pause 1 second]
+Cover the tables.
+[your turn — read: ந, ண, ன — and say where the tongue goes for each]
+[pause 8 seconds for the answer]
+[your turn — read: ல, then ழ — and say which one names the language]
+[pause 8 seconds for the answer]
+[your turn — read: ர, then ற — and say which is the harder one]
+[pause 8 seconds for the answer]
+[your turn — read: வ, ப, ம, க, ச — five in a row, no hesitating]
+[pause 8 seconds for the answer]
+[your turn — say: the vowel hiding inside a bare Tamil consonant]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many n-letters does Tamil write, and which of them curls the tongue back? (Three; ண.) Which letter gives the language its name?
+
+
+Lesson 5 of 7.
+(three vowels, five signs, one dot) (uyireḻuttum kuṟiyum puḷḷiyum) — the same vowel, standing or hanging.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: standing, or hanging, Script: the three signs with no standing partner here, Script: the dot that removes a vowel and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+Read அ. Then look at ் and say what it does to the letter it sits on.
+
+Script: standing, or hanging.
+[a table of 3 rows, read aloud]
+vowel: long ā. on its own: ஆ. hanging on a consonant: ா.
+vowel: u. on its own: உ. hanging on a consonant: ு.
+vowel: short a. on its own: அ. hanging on a consonant: nothing — it is already inside.
+That table is the whole system. A Tamil vowel gets a full-size letter when nothing comes before it, and a hanging sign when a consonant does. Short a is the exception that proves it: every bare consonant already contains one, so it needs no sign at all.
+
+Script: the three signs with no standing partner here.
+ி i, ே ē, ோ ō — met one per chapter, and each one replaces the built-in a of whatever letter it lands on.
+Read them as a set and the shapes stop being arbitrary: ே and ோ share the same upward stroke, because ோ is that stroke with a tail. Learning one buys most of the other.
+
+Script: the dot that removes a vowel.
+Three consonants were never gathered with the rest: ட ṭa, த ta, ய ya. Each carries its built-in a, and ் takes it away.
+So one mark and one letter give you two readings — த is ta, த் is a bare t. Everything the signs above do is a swap; this is the only one that subtracts.
+
+Guided Practice.
+[pause 1 second]
+Cover the tables.
+[your turn — read: ஆ and ா — and say what the difference between them is]
+[pause 8 seconds for the answer]
+[your turn — read: உ and ு — the same question]
+[pause 8 seconds for the answer]
+[your turn — read: ி, ே, ோ — name each]
+[pause 8 seconds for the answer]
+[your turn — read: ட, த, ய — and say the vowel inside each]
+[pause 8 seconds for the answer]
+[your turn — say: what ் does]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: வ, the first shape this book ever asked you to copy]
+
+Wrap-up Recall.
+[pause 3 seconds]
+When does a Tamil vowel take a full-size letter rather than a hanging sign? (When no consonant comes before it.) Which mark subtracts a vowel instead of swapping one?
+
+
+Lesson 6 of 7.
+(seven words you learned to read before you learned to spell them) (vācikka kaṟṟa ēḻu col) — cold retrieval of the seven words the writing companions taught you to decode, and the script feature each one carried in.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: the signs that sit on the wrong side and Script: த and ழ until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+Read சரி, then என். You have said both since the first two chapters.
+
+Reading: seven words, each one a lesson in disguise.
+[a table of 7 rows, read aloud]
+word: இல்லை. what it means: no, there is not. what it was really teaching: the ai sign, which stands to the LEFT.
+word: சரி. what it means: fine, all right. what it was really teaching: ச, one letter for a whole family of sounds.
+word: என். what it means: my. what it was really teaching: a word-initial vowel, reached by a rule you had.
+word: பெயர். what it means: name. what it was really teaching: a second sign that stands to the left of its letter.
+word: எப்படி. what it means: how. what it was really teaching: the retroflex ட.
+word: இருக்கிறீர்கள். what it means: are you (respectful). what it was really teaching: the ு sign, in a word of eight pieces.
+word: தமிழ். what it means: Tamil. what it was really teaching: ழ, and the name of the language.
+Every one was a word you could already say. The writing pages never asked you to decode something unfamiliar — they put a known word in front of you and let the shapes attach to a sound you owned.
+
+Script: the signs that sit on the wrong side.
+Two of the seven carry the same surprise. In இல்லை and in பெயர், a vowel sign is written before the consonant it is pronounced after.
+That is worth holding because it breaks the habit every reader brings: the order on the page is not the order in the mouth. A Tamil reader takes in the group and then says it.
+
+Script: த and ழ.
+தமிழ் is two letters worth stopping on. த is the soft dental t, the one made against the teeth. ழ is the curled sound with no English partner, and the language wears it in its own name.
+Reading the name correctly is the single clearest proof that the script has stopped being decoration.
+
+Guided Practice.
+[pause 1 second]
+Cover the table and work from the left column only.
+[your turn — read: இல்லை, சரி, என் — three in a row]
+[pause 8 seconds for the answer]
+[your turn — read: பெயர், then எப்படி]
+[pause 8 seconds for the answer]
+[your turn — read: இருக்கிறீர்கள் — slowly, group by group]
+[pause 8 seconds for the answer]
+[your turn — read: தமிழ், and name its last letter]
+[pause 8 seconds for the answer]
+[your turn — say: which two of the seven write a vowel sign to the left of its letter]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which letter gives Tamil its name, and which side of its consonant does the ai sign sit on? (ழ; the left.) Which of the seven is the longest on the page?
+
+
+Lesson 7 of 7.
+(உ ஊ ு ூ — and the two that open o) (u-kuṭumpam muḻumai).
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the square the u-family always formed and Script: o, standing and hanging until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 3 seconds]
+Read உணவு, then ஊர். Say what the first letter of each is doing differently.
+
+Script: the square the u-family always formed.
+Four pieces, arriving in four separate chapters, and they were a grid the whole time:
+[a table of 2 rows, read aloud]
+short u. standing alone: உ. hanging on a consonant: ு.
+long ū. standing alone: ஊ. hanging on a consonant: ூ.
+உணவு holds both columns of the top row — it opens with the standing உ and closes with the hanging ு, the same vowel wearing two shapes in one word. That word is the argument for the grid, and it is the reason this page exists: no chapter could show the square, because no chapter had all four corners.
+
+Reading: the words that carried them in.
+[a table of 4 rows, read aloud]
+word: உணவு. means: food. the piece it brought: standing உ against hanging ு.
+word: ஊர். means: town, home place. the piece it brought: standing ஊ, the long partner.
+word: மூன்று. means: three. the piece it brought: the hanging ூ, closing the family.
+word: பேசு. means: speak. the piece it brought: the long-e sign ே.
+
+Script: o, standing and hanging.
+ஒன்று ("one") opens with ஒ, the standing short o. போ ("go") carries ோ, the hanging long one — and ோ is the odd shape of the set, because it is built from two marks, one placed before its consonant and one after.
+So a single vowel can be written on both sides of the letter it belongs to at once. Reading it means taking the whole group in before saying anything.
+
+Guided Practice.
+[pause 1 second]
+Cover the grid.
+[your turn — say: the four corners of the u-square, and which corner each shape is]
+[pause 8 seconds for the answer]
+[your turn — read: உணவு — and point to both u's in it]
+[pause 8 seconds for the answer]
+[your turn — read: ஊர், மூன்று, பேசு]
+[pause 8 seconds for the answer]
+[your turn — read: ஒன்று, then போ]
+[pause 8 seconds for the answer]
+[your turn — say: which sign is built from two marks, and where each mark sits]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which word on this page shows the same vowel standing and hanging at once? (உணவு.) And which sign wraps around its consonant on both sides?

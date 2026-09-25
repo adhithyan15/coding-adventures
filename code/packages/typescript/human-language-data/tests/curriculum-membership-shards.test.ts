@@ -314,9 +314,84 @@ describe("direct curriculum lesson owners", () => {
     // existing segment whose `spine_node` already matched its content, so
     // malayalam needed no new chapter and none of the four-part chapter
     // registration HL-C436 and HL-C437 required.
-    expect(digest).toBe("98e3031ab021e795e9b7c8aede41ccf38af1edbb321122efafcc1a4fa6b876b8");
+    //
+    // 7550 -> 7555 is HL-C439: FIVE `review` lessons taking hindi to zero pre-A1
+    // reinforcement debt. 44 thin atoms and 54 retrieval slots, because TEN of
+    // the 44 had never been revisited at all and each of those costs TWO lessons
+    // rather than one -- `practisedAtoms` is a set per lesson, so an atom cannot
+    // earn two revisits from one page however many times that page names it.
+    //
+    // The five split by where the debt sat, not by chapter: 22 script atoms went
+    // into two recall pages in chapter 85 (`HI-PATH-78-READING`), the twelve
+    // atoms of the opening chapters 1-4 into chapter 89, ten scattered leftovers
+    // -- a body word, a person word in three registers, two things in a house,
+    // two form fields and the two named meals -- into chapter 94, and the ten
+    // zero-revisit atoms got their SECOND pass on the book's last page, chapter
+    // 105. 12 + 10 + 10 + 22 slots from the first four, and the last one closes
+    // the remaining ten. 54 exactly.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // 32d9f83927 reproduced 98e3031a... and 7550 byte for byte. Dumping the
+    // loaded graph from both trees and diffing gives TWENTY-SIX changed lines and
+    // nothing that is not this change: five lessons joining their segments' and
+    // extensions' derived `lessons` lists, twice each, with four previous last
+    // elements gaining a trailing comma on each side.
+    //
+    // Like HL-C438 and unlike HL-C436 and HL-C437, no new graph node of any kind
+    // -- no segment, no extension, no chapter. Every one of the five was appended
+    // to an existing segment whose `spine_node` already matched its content.
+    //
+    // 7555 -> 7564 is HL-C440: NINE `review` lessons taking tamil to zero pre-A1
+    // reinforcement debt, and the LAST of the large ones. 73 thin atoms, 15 of
+    // them never revisited, so (15 x 2) + 58 = 88 retrieval slots -- the biggest
+    // of the programme, but concentrated rather than spread: 42 of the 73 sat on
+    // just TWO segments.
+    //
+    // Nine rather than eight because one planned 16-atom page was split; slots
+    // are a floor, not a cap, and the duration ceiling is the real constraint.
+    // All nine went onto EXISTING segments in chapters 84-86 -- the far end of a
+    // track whose debt is concentrated in chapters 1-39 -- so no new chapter,
+    // segment or extension, as for HL-C438 and HL-C439.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // d9b659429b reproduced 998a8193... and 7555 byte for byte. Dumping the
+    // loaded graph from both trees and diffing gives THIRTY changed lines and
+    // nothing that is not this change: nine lessons joining their segments' and
+    // extensions' derived `lessons` lists, twice each, with three previous last
+    // elements gaining a trailing comma on each side.
+    //
+    // The gate that shaped this tranche was NOT the digest but
+    // `forwardReferences`: tamil sits at 8 against a ceiling of 8, and
+    // `lessonsEarly > 1` at 4 against 4, so a retrieval page printing any word
+    // the course teaches later would have failed the build. It held at 8 and 4.
+    //
+    // 7564 -> 7579 is HL-C441: FIFTEEN `review` lessons taking arabic to zero
+    // pre-A1 reinforcement debt, which takes the CORPUS to zero -- arabic was the
+    // last of twenty-three tracks still carrying any. 78 thin atoms, 68 of them
+    // never revisited, so (68 x 2) + 10 = 146 retrieval slots: the largest number
+    // in the programme, and it came from the SHAPE of the debt rather than its
+    // size. Arabic's pre-A1 has almost no review layer, so 87% of its thin atoms
+    // had no later revisit at all, against tamil's 21% and malayalam's 2%. An atom
+    // at zero revisits costs two lessons; one at one costs one. That ratio, not the
+    // atom count, is what set this tranche at fifteen lessons.
+    //
+    // The debt was also CONCENTRATED -- three segments carried 52 of the 78 -- so
+    // as with HL-C438, HL-C439 and HL-C440, every one of the fifteen went onto an
+    // EXISTING segment whose `spine_node` already matched. No new chapter, segment
+    // or extension. Six sit mid-book (chapters 10-24) to give the opening chapters
+    // a first pass at a reachable distance, and nine sit late (33-45) for the
+    // second, which is why the closing page of the book is a retrieval page.
+    //
+    // Attribution by reconstruction AND structural diff. A clean worktree at
+    // c5b37e048e reproduced 297f88ff... and 7564 byte for byte. Dumping the loaded
+    // graph from both trees and diffing gives exactly THIRTY removed lines and
+    // SIXTY added ones, and nothing that is not this change: each of the fifteen
+    // lessons joins its segment's and its extension's derived `lessons` list, which
+    // is thirty new entries, and the thirty previous last elements each gain a
+    // trailing comma.
+    expect(digest).toBe("7a0bc9d7f03bce2c84f6d9f11685008253737dc2b39eec2288f88b21e9bf2331");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7550);
+      .toHaveLength(7579);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

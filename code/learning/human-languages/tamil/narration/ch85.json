@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "The People Not Here",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f23cc1dcdcba55ec",
+  "sourceHash": "fnv1a64:2e0824ad7b105a1a",
   "lessons": [
     {
       "id": "TA-C85-avan-aval",
@@ -641,6 +641,534 @@
             {
               "kind": "speech",
               "text": "Which word is respectful and hides the person's sex? (அவர்.) Which is they? (அவர்கள் (avarkaḷ).) Which we leaves the listener out? (நாங்கள்.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R85-the-opening-courtesies",
+      "sequence": 3551,
+      "title": "(வணக்கம், நன்றி, சரி — and the how-are-you) (toṭakka mariyātai)",
+      "headword": "(வணக்கம், நன்றி, சரி — and the how-are-you)",
+      "romanization": "toṭakka mariyātai",
+      "gloss": "cold retrieval of the courtesies chapters 1 and 3 built, and the two facts about Tamil register that came with them",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3125fa97f878e27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Greet someone. Then say the one word that means fine, correct, and all right at the same time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: two facts about Tamil courtesy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both of the opening words carry a claim the book made once and never returned to."
+            },
+            {
+              "kind": "speech",
+              "text": "வணக்கம் is native. Neighbouring languages reached for a Sanskrit borrowing for the same bow; Tamil kept its own word and uses it across every setting, formal to casual. That is unusual enough in the region to be worth knowing."
+            },
+            {
+              "kind": "speech",
+              "text": "நன்றி is native too — built on the word for goodness — and it comes with a pragmatic warning: among people who are close, saying thanks out loud can sound marked, a small distance opening where none was wanted. The word is correct; the question is whether the moment calls for it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: answering, and how few words it takes",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "you mean",
+                "you say"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "you mean: yes. you say: ஆம்.",
+                "you mean: no. you say: இல்லை.",
+                "you mean: fine, agreed, got it. you say: சரி."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "சரி is the one that does the most work, because it answers three different questions — is that right?, will you?, understood? — with one syllable pair and no change."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "The exchange — how are you, both sides",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நீங்கள் எப்படி இருக்கிறீர்கள்? — how are you, respectfully."
+            },
+            {
+              "kind": "speech",
+              "text": "நலம் — the answer, and the whole reply is nāṉ nalamāga irukkiṟēṉ."
+            },
+            {
+              "kind": "speech",
+              "text": "எப்படி on its own — how, the question word inside it."
+            },
+            {
+              "kind": "speech",
+              "text": "பரவாயில்லை — no problem, and also the Tamil for you're welcome."
+            },
+            {
+              "kind": "speech",
+              "text": "That last one is the pair worth holding: English keeps no problem and you're welcome apart, and Tamil hands you one phrase for both."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Page covered, both sides out loud."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the greeting, and say whether it is native or borrowed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the greeting, and say whether it is native or borrowed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yes, no, and the agreeing word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: yes, no, and the agreeing word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole how-are-you question, respectfully",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole how-are-you question, respectfully]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the answer, in full",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the answer, in full]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you reply when somebody thanks you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you reply when somebody thanks you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "when saying thanks out loud might land badly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: when saying thanks out loud might land badly]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which single Tamil phrase covers both no problem and you're welcome? (பரவாயில்லை.) And what is the risk of thanking a close friend out loud?"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R85-the-name-exchange",
+      "sequence": 3552,
+      "title": "(உங்கள் பெயர் என்ன?) (uṅkaḷ peyar eṉṉa?) — four words, and the one that is missing",
+      "headword": "(உங்கள் பெயர் என்ன?)",
+      "romanization": "uṅkaḷ peyar eṉṉa?",
+      "gloss": "cold retrieval of the whole name exchange, and the missing word that makes it work",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:334e4ad27a322294",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word for my. Then the word for what."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the sentence with no verb in it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "என் பெயர் … is my name …, and there the sentence stops. No word stands where English puts is."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not an abbreviation or a casual drop. Tamil does not need a verb to link two things: put the two nouns side by side and the link is understood. The same silence sits inside the question — உங்கள் பெயர் என்ன? is your name what?, three words doing what English needs four to do."
+            },
+            {
+              "kind": "speech",
+              "text": "Once you have seen it here, you have seen it everywhere it happens."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange — both sides, end to end",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "move",
+                "what you say"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "move: ask. what you say: உங்கள் பெயர் என்ன?",
+                "move: answer. what you say: என் பெயர் …",
+                "move: close it warmly. what you say: மகிழ்ச்சி."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "மகிழ்ச்சி is worth its own moment: the word is joy, and nothing more. It is not a built phrase meaning pleased to meet you — it is one noun, offered, and the occasion supplies the rest."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the table. Take both parts."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the question, respectfully",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the question, respectfully]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your own answer, with your name in it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your own answer, with your name in it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the warm word that closes a first meeting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the warm word that closes a first meeting]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what மகிழ்ச்சி means on its own",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what **மகிழ்ச்சி** means on its own]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where English would put a word that Tamil leaves out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where English would put a word that Tamil leaves out]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words does Tamil need for what is your name?, and which English word has no Tamil counterpart in it? (Three; is.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R85-going-and-doing",
+      "sequence": 3553,
+      "title": "(போய் வருகிறேன் — and the first four verbs) (pōy varugiṟēṉ)",
+      "headword": "(போய் வருகிறேன் — and the first four verbs)",
+      "romanization": "pōy varugiṟēṉ",
+      "gloss": "cold retrieval of the farewells and the first verbs the opening chapters built, and the one idea that runs through both",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:8615118d3e6d0625",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the verb for go. Then the verb for speak."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — a goodbye that refuses to be one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போய் வருகிறேன் is what a Tamil speaker says on leaving, and it does not mean goodbye. It means I will go and come back."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "what you say",
+                "what it literally says"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "what you say: போய் வருகிறேன். what it literally says: I will go and come back.",
+                "what you say: மீண்டும் சந்திப்போம். what it literally says: we will meet once more.",
+                "what you say: நாளை பார்க்கலாம். what it literally says: tomorrow, let us see."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read the right-hand column down and the pattern is unmistakable: not one of the three names the parting. Each one names the next meeting instead. A language can decline to have a word for goodbye, and this one does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: four verbs, two shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "போ go, பேசு speak, வாழ் live, flourish — three plain stems. Then வேலை செய், which is not one word but two: work plus do."
+            },
+            {
+              "kind": "speech",
+              "text": "That second shape is worth naming, because Tamil uses it constantly. A noun parked in front of செய் makes a verb out of it, which is how the language keeps borrowing things to do without borrowing verbs to do them with."
+            },
+            {
+              "kind": "speech",
+              "text": "And நான் தமிழ் பேசுகிறேன் shows what the stem does under pressure: பேசு takes a tense piece and then a person piece, in that order, and the speaker is named at both ends of the sentence."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover both tables."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all three farewells, and what each one literally promises",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all three farewells, and what each one literally promises]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four verbs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four verbs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which of the four is built from a noun plus a doing-word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which of the four is built from a noun plus a doing-word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I speak Tamil, whole",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *I speak Tamil*, whole]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two pieces that attach to a stem, in order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two pieces that attach to a stem, in order]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the everyday Tamil leave-taking literally say? (I will go and come back.) And which verb on this page is two words wearing one job?"
             }
           ]
         }

@@ -1,0 +1,11 @@
+{
+  "id": "TA-R84-letters-that-look-alike",
+  "pathSegment": "TA-PATH-84-READING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-84-READING",
+      "order": 3
+    }
+  ]
+}

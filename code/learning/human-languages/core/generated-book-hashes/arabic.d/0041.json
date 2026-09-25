@@ -1,11 +1,12 @@
 {
   "language": "arabic",
   "chapter": 41,
-  "sourceHash": "fnv1a64:a6f4cdfd45f6c77c",
+  "sourceHash": "fnv1a64:db480a72d5410fb9",
   "lessonIds": [
     "AR-C41-ya",
     "AR-C41-karrir",
-    "AR-R41-calling-and-asking-again"
+    "AR-R41-calling-and-asking-again",
+    "AR-R41-the-letters-again"
   ],
   "tex": "arabic/book/chapters/ch41-calling-somebody-and-asking-again.tex"
 }

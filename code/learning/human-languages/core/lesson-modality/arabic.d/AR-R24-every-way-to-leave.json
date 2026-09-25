@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "AR-R24-every-way-to-leave",
+    "language": "arabic",
+    "chapter": 24,
+    "sequence": 681,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ea31b928aeab8fd",
+    "detachableSegments": [
+      "Script: the throat sound and the shape-shifter",
+      "Script: مع السلامة, letter by letter"
+    ]
+  },
+  "findings": []
+}

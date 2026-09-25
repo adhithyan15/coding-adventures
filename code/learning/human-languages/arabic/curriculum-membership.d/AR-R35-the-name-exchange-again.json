@@ -1,0 +1,11 @@
+{
+  "id": "AR-R35-the-name-exchange-again",
+  "pathSegment": "AR-PATH-032",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-032-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

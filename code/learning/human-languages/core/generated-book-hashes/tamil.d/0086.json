@@ -1,12 +1,14 @@
 {
   "language": "tamil",
   "chapter": 86,
-  "sourceHash": "fnv1a64:03ff0f85863e07ff",
+  "sourceHash": "fnv1a64:18fcaec7bcf832a8",
   "lessonIds": [
     "TA-C86-ai",
     "TA-C86-ennai-unnai",
     "TA-C86-rational",
-    "TA-R86-ai-recall"
+    "TA-R86-ai-recall",
+    "TA-R86-who-is-in-the-room",
+    "TA-R86-the-last-page"
   ],
   "tex": "tamil/book/chapters/ch86-the-one-it-is-done-to.tex"
 }

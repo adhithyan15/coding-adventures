@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "The People You Introduce",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:16ba0fd31eaabd66",
+  "sourceHash": "fnv1a64:67a5ed4583b13bde",
   "lessons": [
     {
       "id": "AR-C35-jar",
@@ -594,6 +594,174 @@
             {
               "kind": "speech",
               "text": "What does ص-د-ق mean, and what does that make a friend? (To be truthful — the one who is true to you.) Name the family. (Ṣidq, ṣādiq, ṣadaqa, aṣdiqāʾ.) Which earlier words wear ṣadīq's faʿīl pattern, and which wear ṣādiq's doer shape? (Ḥalīb and malīḥ; qāʾil and kātib.) Introduce the people you can now name. (Jārī, ibn, bint, ṣadīqī — beside ab, umm, akh, ukht.) What does the ة of ṣadīqa do? (Marks it feminine — as on qahwa and as-salāma.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R35-the-name-exchange-again",
+      "sequence": 961,
+      "title": "The name exchange, with somebody else in the room",
+      "headword": "ما اسمك؟ · تشرفنا",
+      "romanization": "mā ismuka? · tasharrafnā",
+      "gloss": "the introduction exchange for the second time, now with a third person in the room — the suffix set, the missing verb, and the honour hiding in the polite close",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e22e3e986cf3b041",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask a woman her name, answer with your own, and close politely. This chapter has given you a neighbour, a friend, a son and a daughter — so run the exchange, then introduce one of them."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask a man — mā ismuka?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask a man — *mā ismuka?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask a woman — mā ismuki?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask a woman — *mā ismuki?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer — ismī …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer — *ismī …*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "close — tasharrafnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: close — *tasharrafnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "now name your neighbour, your friend, your son, your daughter into the same frame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: now name your neighbour, your friend, your son, your daughter into the same frame]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every line above is missing a verb, and none of them feels short. That is the zero copula doing its work: my-name Arun, with the is understood."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: the suffix set, whole",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "noun",
+                "glued on",
+                "result"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "noun: اسم ism. glued on: ـي -ī. result: اسمي my name.",
+                "noun: اسم ism. glued on: ـك -ka. result: اسمك your name, to a man.",
+                "noun: اسم ism. glued on: ـك -ki. result: اسمك your name, to a woman."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "اسم is three letters, all from the first writing set: alif, sīn, mīm. What follows it is never a separate word. Arabic has no free-standing my — it glues ي on, the same habit that glues الـ for the and بـ for in."
+            },
+            {
+              "kind": "speech",
+              "text": "The two your forms are identical on the page. Only the unwritten vowel separates them, which is why the ear does the work the eye cannot."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "The two words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ما mā is mīm plus alif and means what — the form you want before a noun, where māḏā is the one for verbs."
+            },
+            {
+              "kind": "speech",
+              "text": "Two of these words have histories worth holding onto. اسم shares its root s–m–w with Hebrew shem and has no tie to English name at all. And تشرفنا comes from sh–r–f, honour: sharaf, sharīf, and at a long distance English sheriff. It does not mean pleased to meet you. It means we have been honoured."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens: which axis splits you",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أنت is one skeleton — hamza-seated alif, nūn, tāʾ — for both genders. أنتَ anta addresses a man, أنتِ anti a woman, and the split is Semitic: the same t marks you in Hebrew atta and att."
+            },
+            {
+              "kind": "speech",
+              "text": "The European and Dravidian tracks split you by register. Arabic splits it by who is listening. Two languages can make the same distinction in form and mean something entirely different by it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the root behind تشرفنا and what the word literally claims. (sh–r–f, honour — we have been honoured.) Name the axis Arabic uses for أنت. (The listener's gender.) Say how Arabic builds my. (A glued suffix ـي, never a separate word.) And say which what goes before a noun. (ما.)"
             }
           ]
         }

@@ -1,8 +1,8 @@
 Arabic, chapter 35: The People You Introduce.
-3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 جار (jār) — "neighbour," and a root with a letter in hiding.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -47,7 +47,7 @@ Wrap-up Recall.
 What is جار (jār)'s third root letter, and where has it gone? (و — collapsed into the long alif, as in qāla from ق-و-ل.) Where does it resurface? (In jāwara and jīrān.) How do you say "my neighbour"? (Jārī — the ending of ismī.) Is English neighbour related? (No — Germanic, the nigh-dweller.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 ابن, بنت (ibn, bint) — son and daughter, one letter apart.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -91,7 +91,7 @@ Wrap-up Recall.
 What is the only difference between ابن and بنت? (An added ت — as with akh and ukht.) And the parents? (Ab and umm.) What root do grammarians give ibn, and why hold it loosely? (ب-ن-ي, "to build" — but Hebrew ben and bat suggest an older bare word.) Where does ibn appear in a name English knows? (Ibn Sīnā, Avicenna.)
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 صديق (ṣadīq) — "friend," the one who is true to you.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -139,3 +139,44 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does ص-د-ق mean, and what does that make a friend? (To be truthful — the one who is true to you.) Name the family. (Ṣidq, ṣādiq, ṣadaqa, aṣdiqāʾ.) Which earlier words wear ṣadīq's faʿīl pattern, and which wear ṣādiq's doer shape? (Ḥalīb and malīḥ; qāʾil and kātib.) Introduce the people you can now name. (Jārī, ibn, bint, ṣadīqī — beside ab, umm, akh, ukht.) What does the ة of ṣadīqa do? (Marks it feminine — as on qahwa and as-salāma.)
+
+
+Lesson 4 of 4.
+The name exchange, with somebody else in the room — the introduction exchange for the second time, now with a third person in the room — the suffix set, the missing verb, and the honour hiding in the polite close.
+
+Warm-up.
+[pause 4 seconds]
+Ask a woman her name, answer with your own, and close politely. This chapter has given you a neighbour, a friend, a son and a daughter — so run the exchange, then introduce one of them.
+
+The exchange.
+[your turn — say: ask a man — mā ismuka?]
+[pause 8 seconds for the answer]
+[your turn — say: ask a woman — mā ismuki?]
+[pause 8 seconds for the answer]
+[your turn — say: answer — ismī …]
+[pause 8 seconds for the answer]
+[your turn — say: close — tasharrafnā]
+[pause 8 seconds for the answer]
+[your turn — say: now name your neighbour, your friend, your son, your daughter into the same frame]
+[pause 8 seconds for the answer]
+Every line above is missing a verb, and none of them feels short. That is the zero copula doing its work: my-name Arun, with the is understood.
+
+Grammar Lens: the suffix set, whole.
+[a table of 3 rows, read aloud]
+noun: اسم ism. glued on: ـي -ī. result: اسمي my name.
+noun: اسم ism. glued on: ـك -ka. result: اسمك your name, to a man.
+noun: اسم ism. glued on: ـك -ki. result: اسمك your name, to a woman.
+اسم is three letters, all from the first writing set: alif, sīn, mīm. What follows it is never a separate word. Arabic has no free-standing my — it glues ي on, the same habit that glues الـ for the and بـ for in.
+The two your forms are identical on the page. Only the unwritten vowel separates them, which is why the ear does the work the eye cannot.
+
+The two words.
+ما mā is mīm plus alif and means what — the form you want before a noun, where māḏā is the one for verbs.
+Two of these words have histories worth holding onto. اسم shares its root s–m–w with Hebrew shem and has no tie to English name at all. And تشرفنا comes from sh–r–f, honour: sharaf, sharīf, and at a long distance English sheriff. It does not mean pleased to meet you. It means we have been honoured.
+
+Grammar Lens: which axis splits you.
+أنت is one skeleton — hamza-seated alif, nūn, tāʾ — for both genders. أنتَ anta addresses a man, أنتِ anti a woman, and the split is Semitic: the same t marks you in Hebrew atta and att.
+The European and Dravidian tracks split you by register. Arabic splits it by who is listening. Two languages can make the same distinction in form and mean something entirely different by it.
+
+Wrap-up Recall.
+[pause 4 seconds]
+Give the root behind تشرفنا and what the word literally claims. (sh–r–f, honour — we have been honoured.) Name the axis Arabic uses for أنت. (The listener's gender.) Say how Arabic builds my. (A glued suffix ـي, never a separate word.) And say which what goes before a noun. (ما.)

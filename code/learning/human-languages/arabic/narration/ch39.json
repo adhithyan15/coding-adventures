@@ -3,8 +3,8 @@
   "language": "arabic",
   "chapter": 39,
   "title": "Denying, and Asking",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e56ea075c3b727c7",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b02f845b03b8ca33",
   "lessons": [
     {
       "id": "AR-C39-laysa",
@@ -716,6 +716,135 @@
             {
               "kind": "speech",
               "text": "Which negator would you use for اسمي حسن, which for كتب, and which for أكتب? (ليس (laysa), then ما (mā), then لا.) What does هل (hal) ask of the sentence it fronts? (Nothing at all — it only marks it.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R39-every-way-to-leave-again",
+      "sequence": 1131,
+      "title": "Every way to leave, asked and denied",
+      "headword": "مع السلامة · إلى اللقاء",
+      "romanization": "maʿa s-salāma · ilā l-liqāʾ",
+      "gloss": "both farewells on their second outing, now that the book can ask a question and say no — is this goodbye, or not yet, and what each phrase literally commits you to",
+      "script": "arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b23ac41cdc9dc2db",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give both farewells and what each one literally says. Then use this chapter's question particle to ask whether somebody is leaving, and its negator to answer that they are not."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole arc — greet, give your name, ask after them, part",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole arc — greet, give your name, ask after them, part]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "part with safety — maʿa s-salāma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: part with safety — *maʿa s-salāma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "part until the meeting — ilā l-liqāʾ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: part until the meeting — *ilā l-liqāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "the one root that opens the greeting and closes the farewell",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: the one root that opens the greeting and closes the farewell]"
+            },
+            {
+              "kind": "speech",
+              "text": "Everything above stands on a handful of three-consonant roots, and the farewell uses the same one the first greeting did. s–l–m gives salām, salāma, islām, muslim — peace, safety, wholeness, one family."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: with, until, and the pattern between them",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مع maʿa is mīm plus ʿayn and means with. It is a preposition that stands apart — unlike الـ and بـ, which fasten onto the word after them. Its Hebrew cousin is ʿim."
+            },
+            {
+              "kind": "speech",
+              "text": "السلامة is الـ + salām + ة, and the middle piece has been poured into the pattern faʿāla, which converts a thing into the state of that thing: peace becomes safety. Then the sun-letter rule bites, so الس is read as-, and the phrase is as-salāma, never al-salāma."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "You'll want to know: until the meeting",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "إلى اللقاء is إلى (until) plus اللقاء (the meeting), root l–q–y, to meet. Arabic does not name the parting; it names the next meeting and points at it."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish does the same thing with hasta luego, until later, and both leave the listener holding a future rather than an ending. The إ with its hamza below and the ق qāf both sit outside the writing set, so read them."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three pieces of السلامة. (الـ + salām + ة.) Say whether مع attaches to the next word. (No.) Give the root inside اللقاء and its sense. (l–q–y, to meet.) And name the root that both opens and closes this book's first four chapters of speech. (s–l–m.)"
             }
           ]
         }

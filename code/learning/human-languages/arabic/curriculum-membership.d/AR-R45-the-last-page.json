@@ -1,0 +1,11 @@
+{
+  "id": "AR-R45-the-last-page",
+  "pathSegment": "AR-PATH-043-WRITING",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-043-WRITING",
+      "order": 3
+    }
+  ]
+}

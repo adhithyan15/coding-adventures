@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Asking Someone's Age",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c58a8d3dc3d2a194",
+  "sourceHash": "fnv1a64:c6d1098a9c43cacc",
   "lessons": [
     {
       "id": "AR-C17-kam-umruka",
@@ -123,6 +123,181 @@
             {
               "kind": "speech",
               "text": "What does عمر literally mean, and what root is it from? (\"Age, lifetime\" — root ع-م-ر, tied to living/flourishing.) Does Arabic use a verb to state age, the way Romance (\"have\"), Germanic (\"be\"), or Latin (\"born\" + duration) do? (No — it juxtaposes \"my age\" and the number, with no verb needed at all.) What does كم عمرك؟ literally ask? (\"How much [is] your ʿumr?\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-R17-the-letters-that-wrote-my-name",
+      "sequence": 611,
+      "title": "The letters that wrote my name",
+      "headword": "ب ن ت ث · ي · خير",
+      "romanization": "bāʾ, nūn, tāʾ, thāʾ · yāʾ · khayr",
+      "gloss": "the writing set that built اسمي and بخير, retrieved cold — one bowl with four dot patterns, a letter with three jobs, and the marks everyday text leaves off",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:91d165ff4ece4610",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script: one bowl, four letters",
+          "Script: the letter with three jobs",
+          "Script: the marks everyday text leaves off",
+          "Script: خير, taken apart"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: one bowl, four letters, Script: the letter with three jobs, Script: the marks everyday text leaves off and Script: خير, taken apart until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write اسمي and خير by hand, right to left, without looking below. Both were drawn stroke by stroke in the writing set and neither has been asked for since."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script: one bowl, four letters",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "letter",
+                "dots",
+                "where it sits"
+              ],
+              "columns": 3,
+              "rowCount": 4,
+              "utterances": [
+                "letter: ب bāʾ. dots: one below. where it sits: inside بخير.",
+                "letter: ن nūn. dots: one above. where it sits: inside أنت.",
+                "letter: ت tāʾ. dots: two above. where it sits: inside أنت, تشرفنا.",
+                "letter: ث thāʾ. dots: three above. where it sits: —."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One shallow boat-bowl, drawn the same way every time. Only the dots change, and the dots are the letter. Two of these four build the word for you: an alif with a hamza seat, then nūn, then tāʾ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script: the letter with three jobs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ي yāʾ is the same bowl body with two dots below — a tooth when joined. It does three separate jobs, and you have used all three:"
+            },
+            {
+              "kind": "speech",
+              "text": "consonant y, as in yawm, a day."
+            },
+            {
+              "kind": "speech",
+              "text": "the long vowel ī, a seat for the ee sound."
+            },
+            {
+              "kind": "speech",
+              "text": "the suffix ـي, glued on to mean my."
+            },
+            {
+              "kind": "speech",
+              "text": "That third job is what turns اسم into اسمي. Four letters, right to left: alif, sīn, mīm, yāʾ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script: the marks everyday text leaves off",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ḥarakāt are three small marks written around a consonant, not letters of their own: fatḥa above for a, kasra below for i, ḍamma above for u. Arabic is an abjad, so ordinary text leaves them out — and one of them carries the whole difference between أنتَ and أنتِ."
+            },
+            {
+              "kind": "speech",
+              "text": "Hamza is not one of them. It writes a real consonant: the glottal catch in the middle of English uh-oh. Written alone it is ء; riding an alif seat it is أ, which is how the word for you begins."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script: خير, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خ khāʾ belongs to the hook-and-tail family — a rounded hook flowing into a tail that drops below the line, with one dot above. Its plain cousin ح has no dot and ج takes one below."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "خير right to left — khāʾ with its dot, into yāʾ, then rā, and lift",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **خير** right to left — *khāʾ* with its dot, into *yāʾ*, then *rā*, and lift]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "glue بـ on the front — بخير, its one dot below, joining straight into the khāʾ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: glue **بـ** on the front — **بخير**, its one dot below, joining straight into the *khāʾ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "اسمي — alif, sīn, mīm, yāʾ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **اسمي** — *alif · sīn · mīm · yāʾ*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing joins after ر, which is why the pen lifts there."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the one feature that separates ب ن ت ث. (The dots — one below, one above, two above, three above.) Give yāʾ's three jobs. (Consonant y, long vowel ī, the suffix meaning my.) Say whether hamza is a vowel mark. (No — a glottal stop.) And say what بـ adds to خير. (In — in goodness.)"
             }
           ]
         }

@@ -1,0 +1,11 @@
+{
+  "id": "AR-R17-the-letters-that-wrote-my-name",
+  "pathSegment": "AR-PATH-019",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R35-the-name-exchange-again",
+    "language": "arabic",
+    "chapter": 35,
+    "sequence": 961,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e22e3e986cf3b041"
+  },
+  "findings": []
+}
