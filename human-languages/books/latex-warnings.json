@@ -513,15 +513,15 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 0
+        "underfull": 1
       },
-      "improvements": [
-        "underfull"
-      ],
+      "improvements": [],
       "log": "code/learning/human-languages/tamil/book/book.log",
       "regressions": [],
-      "samples": {},
-      "status": "under baseline",
+      "samples": {
+        "underfull": "Underfull \\hbox (badness 10000) in paragraph at lines 28--29"
+      },
+      "status": "ok",
       "track": "tamil"
     },
     {
