@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C121-bus",
+    "language": "malayalam",
+    "chapter": 121,
+    "sequence": 4610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:416345d607ac7c85"
+  },
+  "findings": []
+}

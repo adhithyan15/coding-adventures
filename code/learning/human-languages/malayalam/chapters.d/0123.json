@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Maybe, and Not",
+  "label": "ch:ml-maybe-and-not",
+  "canDo": "I can say it is not possible, not like that, maybe, other, and wrong.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ML-C123-wrong",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say it is not possible, not like that, maybe, other, and wrong.",
+    "assesses": [
+      "ML-LEX-C123-MAYBE-03",
+      "ML-LEX-C123-MAYBE-04",
+      "ML-LEX-C123-MAYBE-05"
+    ]
+  }
+}

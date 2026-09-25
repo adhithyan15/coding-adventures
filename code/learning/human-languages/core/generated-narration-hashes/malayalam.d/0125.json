@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:17aa80e4e0e6a7f6",
+  "lessonIds": [
+    "ML-C125-grandchild",
+    "ML-C125-relative",
+    "ML-C125-neighbours",
+    "ML-C125-uncle",
+    "ML-C125-nephew"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch125.txt",
+  "json": "malayalam/narration/ch125.json",
+  "textHash": "fnv1a64:0650238ad12ebe3b",
+  "jsonHash": "fnv1a64:404ec6c8a7a25fd4",
+  "findings": []
+}

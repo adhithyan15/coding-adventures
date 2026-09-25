@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:cb5ffaec994b3bf1",
+  "lessonIds": [
+    "ML-C123-notpossible",
+    "ML-C123-notlikethat",
+    "ML-C123-maybe",
+    "ML-C123-other",
+    "ML-C123-wrong"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch123.txt",
+  "json": "malayalam/narration/ch123.json",
+  "textHash": "fnv1a64:ebaf7cdca421aafb",
+  "jsonHash": "fnv1a64:f5ba6c41843ae770",
+  "findings": []
+}

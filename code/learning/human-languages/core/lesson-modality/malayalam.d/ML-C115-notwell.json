@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C115-notwell",
+    "language": "malayalam",
+    "chapter": 115,
+    "sequence": 4330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:81362d98a9782ade"
+  },
+  "findings": []
+}

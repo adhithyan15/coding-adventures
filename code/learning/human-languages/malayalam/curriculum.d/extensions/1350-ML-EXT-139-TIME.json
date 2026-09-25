@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-139-TIME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about time: a minute, an hour, a month and a year.",
+  "prerequisites": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-121-TRAVEL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask someone to call, and ask for a ticket, a bus, a station and a map.",
+  "prerequisites": []
+}

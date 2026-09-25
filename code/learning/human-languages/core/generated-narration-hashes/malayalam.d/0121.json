@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:b3641883d5cd8497",
+  "lessonIds": [
+    "ML-C121-call",
+    "ML-C121-ticket",
+    "ML-C121-bus",
+    "ML-C121-station",
+    "ML-C121-map"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch121.txt",
+  "json": "malayalam/narration/ch121.json",
+  "textHash": "fnv1a64:e29cfe47a41e3679",
+  "jsonHash": "fnv1a64:56b33da44877561e",
+  "findings": []
+}

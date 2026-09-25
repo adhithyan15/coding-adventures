@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "How Long?",
+  "label": "ch:ml-how-long",
+  "canDo": "I can talk about time: a minute, an hour, a month and a year.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "ML-C139-year",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: i can talk about time: a minute, an hour, a month and a year.",
+    "assesses": [
+      "ML-LEX-C139-TIME-03",
+      "ML-LEX-C139-TIME-04",
+      "ML-LEX-C139-TIME-05"
+    ]
+  }
+}

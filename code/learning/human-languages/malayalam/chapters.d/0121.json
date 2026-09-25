@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Out and About",
+  "label": "ch:ml-out-and-about",
+  "canDo": "I can ask someone to call, and ask for a ticket, a bus, a station and a map.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ML-C121-map",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can ask someone to call, and ask for a ticket, a bus, a station and a map.",
+    "assesses": [
+      "ML-LEX-C121-TRAVEL-03",
+      "ML-LEX-C121-TRAVEL-04",
+      "ML-LEX-C121-TRAVEL-05"
+    ]
+  }
+}

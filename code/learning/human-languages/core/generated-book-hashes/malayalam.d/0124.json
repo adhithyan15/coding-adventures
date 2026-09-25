@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:cf071748bf3d248e",
+  "lessonIds": [
+    "ML-C124-congratulations",
+    "ML-C124-invitation",
+    "ML-C124-gift",
+    "ML-C124-welcome",
+    "ML-C124-wishes"
+  ],
+  "tex": "malayalam/book/chapters/ch124-welcome-good-wishes.tex"
+}

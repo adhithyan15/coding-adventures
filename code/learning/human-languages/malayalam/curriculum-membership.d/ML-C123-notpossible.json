@@ -1,0 +1,11 @@
+{
+  "id": "ML-C123-notpossible",
+  "pathSegment": "ML-PATH-123-MAYBE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ML-EXT-123-MAYBE",
+      "order": 0
+    }
+  ]
+}

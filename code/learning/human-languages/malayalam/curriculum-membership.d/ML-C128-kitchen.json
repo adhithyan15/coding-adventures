@@ -1,0 +1,11 @@
+{
+  "id": "ML-C128-kitchen",
+  "pathSegment": "ML-PATH-128-HOME",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ML-EXT-128-HOME",
+      "order": 2
+    }
+  ]
+}

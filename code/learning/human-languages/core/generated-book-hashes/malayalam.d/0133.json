@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:0acf1f5a0748323d",
+  "lessonIds": [
+    "ML-C133-mango",
+    "ML-C133-jackfruit",
+    "ML-C133-lemon",
+    "ML-C133-ginger",
+    "ML-C133-sugar"
+  ],
+  "tex": "malayalam/book/chapters/ch133-sweet-and-sour.tex"
+}

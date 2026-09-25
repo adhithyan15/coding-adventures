@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:4cff3bcbb228c93c",
+  "lessonIds": [
+    "ML-C126-address",
+    "ML-C126-wedding",
+    "ML-C126-language",
+    "ML-C126-english",
+    "ML-C126-office"
+  ],
+  "tex": "malayalam/book/chapters/ch126-about-you.tex"
+}

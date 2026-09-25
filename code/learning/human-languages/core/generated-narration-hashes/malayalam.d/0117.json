@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:e42c4c29e9929d1e",
+  "lessonIds": [
+    "ML-C117-thirst",
+    "ML-C117-sweat",
+    "ML-C117-tablet",
+    "ML-C117-vomiting",
+    "ML-C117-wound"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch117.txt",
+  "json": "malayalam/narration/ch117.json",
+  "textHash": "fnv1a64:23ed77d24edf31db",
+  "jsonHash": "fnv1a64:81584aad8e9367fc",
+  "findings": []
+}

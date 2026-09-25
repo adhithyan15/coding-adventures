@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Around Town",
+  "label": "ch:ml-around-town",
+  "canDo": "I can name the market, a temple, a church or mosque, a bridge and a village.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ML-C135-village",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can name the market, a temple, a church or mosque, a bridge and a village.",
+    "assesses": [
+      "ML-LEX-C135-TOWN-03",
+      "ML-LEX-C135-TOWN-04",
+      "ML-LEX-C135-TOWN-05"
+    ]
+  }
+}

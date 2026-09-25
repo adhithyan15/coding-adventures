@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C129-watch",
+    "language": "malayalam",
+    "chapter": 129,
+    "sequence": 5050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8e2262c6dd4b3c1"
+  },
+  "findings": []
+}

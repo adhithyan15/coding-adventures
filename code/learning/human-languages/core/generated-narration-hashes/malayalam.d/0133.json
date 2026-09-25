@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:b449c9109058af59",
+  "lessonIds": [
+    "ML-C133-mango",
+    "ML-C133-jackfruit",
+    "ML-C133-lemon",
+    "ML-C133-ginger",
+    "ML-C133-sugar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch133.txt",
+  "json": "malayalam/narration/ch133.json",
+  "textHash": "fnv1a64:04985ea609e67478",
+  "jsonHash": "fnv1a64:9c4daf225fc932b9",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C132-puttu",
+    "language": "malayalam",
+    "chapter": 132,
+    "sequence": 5190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7603e2995a5e2d39"
+  },
+  "findings": []
+}

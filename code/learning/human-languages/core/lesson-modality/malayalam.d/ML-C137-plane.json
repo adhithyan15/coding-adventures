@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C137-plane",
+    "language": "malayalam",
+    "chapter": 137,
+    "sequence": 5440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bcba9fe40a6902f"
+  },
+  "findings": []
+}

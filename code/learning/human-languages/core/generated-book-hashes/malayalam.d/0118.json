@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:6617b5718ce7534a",
+  "lessonIds": [
+    "ML-C118-coldweather",
+    "ML-C118-heat",
+    "ML-C118-sleep",
+    "ML-C118-mist",
+    "ML-C118-thunder"
+  ],
+  "tex": "malayalam/book/chapters/ch118-hot-cold-sleepy.tex"
+}

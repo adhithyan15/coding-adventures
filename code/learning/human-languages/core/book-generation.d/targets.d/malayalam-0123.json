@@ -1,0 +1,6 @@
+{
+  "language": "malayalam",
+  "chapter": 123,
+  "output": "malayalam/book/chapters/ch123-maybe-and-not.tex",
+  "scriptSet": "malayalam-comparisons"
+}

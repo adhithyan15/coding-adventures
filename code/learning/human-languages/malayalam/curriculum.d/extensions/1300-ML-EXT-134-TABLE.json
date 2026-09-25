@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-134-TABLE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a glass, a bottle, a cup, a spoon and a plate.",
+  "prerequisites": []
+}

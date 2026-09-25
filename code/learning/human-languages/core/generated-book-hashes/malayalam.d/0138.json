@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:016b344aed006568",
+  "lessonIds": [
+    "ML-C138-bird",
+    "ML-C138-snake",
+    "ML-C138-monkey",
+    "ML-C138-tiger",
+    "ML-C138-rabbit"
+  ],
+  "tex": "malayalam/book/chapters/ch138-animals-of-kerala.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Things You Carry",
+  "label": "ch:ml-things-you-carry",
+  "canDo": "I can name a bed, a key, an umbrella, my glasses and a watch, and ask where they are.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "ML-C129-watch",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can name a bed, a key, an umbrella, my glasses and a watch, and ask where they are.",
+    "assesses": [
+      "ML-LEX-C129-THINGS-03",
+      "ML-LEX-C129-THINGS-04",
+      "ML-LEX-C129-THINGS-05"
+    ]
+  }
+}

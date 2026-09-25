@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-132-DISHES",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "ML-EXT-132-DISHES"
+  ],
+  "after": []
+}

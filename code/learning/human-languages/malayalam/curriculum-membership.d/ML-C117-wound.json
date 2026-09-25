@@ -1,0 +1,11 @@
+{
+  "id": "ML-C117-wound",
+  "pathSegment": "ML-PATH-117-BODY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-117-BODY",
+      "order": 4
+    }
+  ]
+}

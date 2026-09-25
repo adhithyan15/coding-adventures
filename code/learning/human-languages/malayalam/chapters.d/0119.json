@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Slowly, Once More",
+  "label": "ch:ml-slowly-once-more",
+  "canDo": "I can ask someone to speak slowly, say it once more, speak louder, give the meaning, and wait.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "ML-C119-wait",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can ask someone to speak slowly, say it once more, speak louder, give the meaning, and wait.",
+    "assesses": [
+      "ML-LEX-C119-SLOWLY-03",
+      "ML-LEX-C119-SLOWLY-04",
+      "ML-LEX-C119-SLOWLY-05"
+    ]
+  }
+}

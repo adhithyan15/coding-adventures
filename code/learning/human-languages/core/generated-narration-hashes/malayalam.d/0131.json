@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:cae4ba028d0d28b1",
+  "lessonIds": [
+    "ML-C131-fish",
+    "ML-C131-meat",
+    "ML-C131-egg",
+    "ML-C131-vegetables",
+    "ML-C131-onion"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch131.txt",
+  "json": "malayalam/narration/ch131.json",
+  "textHash": "fnv1a64:3ac17da24072e45c",
+  "jsonHash": "fnv1a64:fb05d2763bb6ebf7",
+  "findings": []
+}

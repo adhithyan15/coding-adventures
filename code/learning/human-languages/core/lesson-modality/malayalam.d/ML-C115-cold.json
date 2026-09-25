@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C115-cold",
+    "language": "malayalam",
+    "chapter": 115,
+    "sequence": 4290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd1f8f44808c8974"
+  },
+  "findings": []
+}

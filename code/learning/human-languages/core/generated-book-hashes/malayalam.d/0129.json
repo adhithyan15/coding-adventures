@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:9b03b55f80015ad2",
+  "lessonIds": [
+    "ML-C129-bed",
+    "ML-C129-key",
+    "ML-C129-umbrella",
+    "ML-C129-glasses",
+    "ML-C129-watch"
+  ],
+  "tex": "malayalam/book/chapters/ch129-things-you-carry.tex"
+}

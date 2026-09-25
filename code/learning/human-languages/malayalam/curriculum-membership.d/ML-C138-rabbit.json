@@ -1,0 +1,11 @@
+{
+  "id": "ML-C138-rabbit",
+  "pathSegment": "ML-PATH-138-ANIMALS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-138-ANIMALS",
+      "order": 4
+    }
+  ]
+}

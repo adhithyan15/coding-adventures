@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "Festival Days",
+  "label": "ch:ml-festival-days",
+  "canDo": "I can name Onam, Vishu, Christmas, Eid and a temple festival.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "ML-R141-second-pass-town-travel-time",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: i can name Onam, Vishu, Christmas, Eid and a temple festival.",
+    "assesses": [
+      "ML-LEX-C141-FESTIVALS-03",
+      "ML-LEX-C141-FESTIVALS-04",
+      "ML-LEX-C141-FESTIVALS-05"
+    ]
+  }
+}

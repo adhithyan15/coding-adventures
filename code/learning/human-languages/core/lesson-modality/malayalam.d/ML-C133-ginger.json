@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C133-ginger",
+    "language": "malayalam",
+    "chapter": 133,
+    "sequence": 5240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6aaf316e9a48cbd6"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ML-PATH-135-TOWN",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "ML-EXT-135-TOWN"
+  ],
+  "after": []
+}

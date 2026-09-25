@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:eaedd6a20e000646",
+  "lessonIds": [
+    "ML-C117-thirst",
+    "ML-C117-sweat",
+    "ML-C117-tablet",
+    "ML-C117-vomiting",
+    "ML-C117-wound"
+  ],
+  "tex": "malayalam/book/chapters/ch117-the-body-asks.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:d8d8eaf58d4b8ffb",
+  "lessonIds": [
+    "ML-C129-bed",
+    "ML-C129-key",
+    "ML-C129-umbrella",
+    "ML-C129-glasses",
+    "ML-C129-watch"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch129.txt",
+  "json": "malayalam/narration/ch129.json",
+  "textHash": "fnv1a64:99ccc38a4e95c96c",
+  "jsonHash": "fnv1a64:9289c3538bb0215d",
+  "findings": []
+}

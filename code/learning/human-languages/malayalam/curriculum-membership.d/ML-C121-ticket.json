@@ -1,0 +1,11 @@
+{
+  "id": "ML-C121-ticket",
+  "pathSegment": "ML-PATH-121-TRAVEL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-121-TRAVEL",
+      "order": 1
+    }
+  ]
+}

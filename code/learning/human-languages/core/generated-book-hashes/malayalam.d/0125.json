@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:2b158a7fa437e1d1",
+  "lessonIds": [
+    "ML-C125-grandchild",
+    "ML-C125-relative",
+    "ML-C125-neighbours",
+    "ML-C125-uncle",
+    "ML-C125-nephew"
+  ],
+  "tex": "malayalam/book/chapters/ch125-more-of-the-family.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "malayalam",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:314f5e8a5ad35dcf",
+  "lessonIds": [
+    "ML-C122-really",
+    "ML-C122-nothing",
+    "ML-C122-ohno",
+    "ML-C122-thesame",
+    "ML-C122-ohisee"
+  ],
+  "tex": "malayalam/book/chapters/ch122-quick-replies.tex"
+}

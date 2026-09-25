@@ -1,0 +1,8 @@
+{
+  "id": "ML-EXT-127-CARE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell someone to take care, say it is late, suggest we go, name a holiday, and promise to call.",
+  "prerequisites": []
+}

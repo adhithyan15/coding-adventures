@@ -1,0 +1,11 @@
+{
+  "id": "ML-C126-wedding",
+  "pathSegment": "ML-PATH-126-ABOUTYOU",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ML-EXT-126-ABOUTYOU",
+      "order": 1
+    }
+  ]
+}

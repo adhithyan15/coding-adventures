@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C137-train",
+    "language": "malayalam",
+    "chapter": 137,
+    "sequence": 5430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89b016266426ce6b"
+  },
+  "findings": []
+}

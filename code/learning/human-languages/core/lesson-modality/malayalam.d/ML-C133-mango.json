@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C133-mango",
+    "language": "malayalam",
+    "chapter": 133,
+    "sequence": 5210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ec8d4dd41cb53e0"
+  },
+  "findings": []
+}

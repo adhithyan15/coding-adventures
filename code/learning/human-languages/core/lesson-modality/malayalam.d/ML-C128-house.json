@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C128-house",
+    "language": "malayalam",
+    "chapter": 128,
+    "sequence": 4960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd467ead988be1a4"
+  },
+  "findings": []
+}

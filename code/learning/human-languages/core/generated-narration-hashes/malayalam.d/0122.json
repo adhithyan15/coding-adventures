@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:0adad998e2bd0917",
+  "lessonIds": [
+    "ML-C122-really",
+    "ML-C122-nothing",
+    "ML-C122-ohno",
+    "ML-C122-thesame",
+    "ML-C122-ohisee"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch122.txt",
+  "json": "malayalam/narration/ch122.json",
+  "textHash": "fnv1a64:d44e53d79b586d42",
+  "jsonHash": "fnv1a64:6f9f4b2d17ea2633",
+  "findings": []
+}

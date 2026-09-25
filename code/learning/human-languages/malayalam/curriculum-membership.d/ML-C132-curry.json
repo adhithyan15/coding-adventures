@@ -1,0 +1,11 @@
+{
+  "id": "ML-C132-curry",
+  "pathSegment": "ML-PATH-132-DISHES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ML-EXT-132-DISHES",
+      "order": 4
+    }
+  ]
+}

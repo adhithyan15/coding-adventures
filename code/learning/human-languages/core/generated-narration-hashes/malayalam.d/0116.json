@@ -1,0 +1,19 @@
+{
+  "language": "malayalam",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:ab8ad41c34be8bdc",
+  "lessonIds": [
+    "ML-C116-sadness",
+    "ML-C116-fear",
+    "ML-C116-anger",
+    "ML-C116-laughter",
+    "ML-C116-worry"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "malayalam/narration/ch116.txt",
+  "json": "malayalam/narration/ch116.json",
+  "textHash": "fnv1a64:49efa8455910e66b",
+  "jsonHash": "fnv1a64:6bdee47886864b79",
+  "findings": []
+}

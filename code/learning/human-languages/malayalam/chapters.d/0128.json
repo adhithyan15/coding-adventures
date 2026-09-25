@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Come In, This Is Home",
+  "label": "ch:ml-come-in-this-is-home",
+  "canDo": "I can name a house, a room, the kitchen, the bathroom and the yard.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "ML-C128-yard",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can name a house, a room, the kitchen, the bathroom and the yard.",
+    "assesses": [
+      "ML-LEX-C128-HOME-03",
+      "ML-LEX-C128-HOME-04",
+      "ML-LEX-C128-HOME-05"
+    ]
+  }
+}

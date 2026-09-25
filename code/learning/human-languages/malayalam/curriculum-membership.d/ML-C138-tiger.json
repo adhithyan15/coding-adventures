@@ -1,0 +1,11 @@
+{
+  "id": "ML-C138-tiger",
+  "pathSegment": "ML-PATH-138-ANIMALS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ML-EXT-138-ANIMALS",
+      "order": 3
+    }
+  ]
+}
