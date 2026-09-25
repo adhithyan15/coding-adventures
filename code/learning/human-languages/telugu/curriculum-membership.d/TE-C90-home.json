@@ -1,0 +1,11 @@
+{
+  "id": "TE-C90-home",
+  "pathSegment": "TE-PATH-90-LEAVE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-90-LEAVE",
+      "order": 2
+    }
+  ]
+}

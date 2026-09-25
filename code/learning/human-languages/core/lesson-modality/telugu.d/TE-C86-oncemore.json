@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C86-oncemore",
+    "language": "telugu",
+    "chapter": 86,
+    "sequence": 3130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6605659dd0e41324"
+  },
+  "findings": []
+}

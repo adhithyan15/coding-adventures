@@ -1,0 +1,11 @@
+{
+  "id": "TE-R91-second-pass-people",
+  "pathSegment": "TE-PATH-91-GREET",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "TE-EXT-91-GREET",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-91-GREET",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can greet someone the way Telugu speakers greet each other day to day: are you well, long time, what's new, where to, have you eaten.",
+  "prerequisites": []
+}

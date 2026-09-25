@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:0733dd447a8573d2",
+  "lessonIds": [
+    "TE-C87-mistake",
+    "TE-C87-exactly",
+    "TE-C87-probably",
+    "TE-C87-isee",
+    "TE-C87-really",
+    "TE-R87-second-pass-replies",
+    "TE-R87-second-pass-feelings"
+  ],
+  "tex": "telugu/book/chapters/ch87-right-wrong-maybe.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C85-anger",
+  "pathSegment": "TE-PATH-85-FEEL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-85-FEEL",
+      "order": 3
+    }
+  ]
+}

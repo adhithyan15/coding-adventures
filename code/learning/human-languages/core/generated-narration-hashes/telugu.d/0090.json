@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:e4771cf8c6638c73",
+  "lessonIds": [
+    "TE-C90-care",
+    "TE-C90-soon",
+    "TE-C90-home",
+    "TE-C90-leave",
+    "TE-C90-letsgo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch90.txt",
+  "json": "telugu/narration/ch90.json",
+  "textHash": "fnv1a64:6d4dc2b2684c3b43",
+  "jsonHash": "fnv1a64:1dbd2263e04fc120",
+  "findings": []
+}

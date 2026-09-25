@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C89-wedding",
+    "language": "telugu",
+    "chapter": 89,
+    "sequence": 3320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b52a5fb75451359"
+  },
+  "findings": []
+}

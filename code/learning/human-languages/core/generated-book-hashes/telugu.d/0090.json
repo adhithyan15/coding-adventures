@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:aa8e87d1ab707290",
+  "lessonIds": [
+    "TE-C90-care",
+    "TE-C90-soon",
+    "TE-C90-home",
+    "TE-C90-leave",
+    "TE-C90-letsgo"
+  ],
+  "tex": "telugu/book/chapters/ch90-on-the-way-out.tex"
+}

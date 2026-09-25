@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:bb29e84a4dd2fe79",
+  "lessonIds": [
+    "TE-C85-cold",
+    "TE-C85-heat",
+    "TE-C85-fear",
+    "TE-C85-anger",
+    "TE-C85-sorrow"
+  ],
+  "tex": "telugu/book/chapters/ch85-cold-hot-feel.tex"
+}

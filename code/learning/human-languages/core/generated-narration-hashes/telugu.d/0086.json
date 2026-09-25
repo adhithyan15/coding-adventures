@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:79d59669ffb12159",
+  "lessonIds": [
+    "TE-C86-slowly",
+    "TE-C86-oncemore",
+    "TE-C86-loudly",
+    "TE-C86-oneminute",
+    "TE-C86-wait"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch86.txt",
+  "json": "telugu/narration/ch86.json",
+  "textHash": "fnv1a64:4fcaf968dd0ffe3d",
+  "jsonHash": "fnv1a64:20a8bbab046ccdf7",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C90-letsgo",
+    "language": "telugu",
+    "chapter": 90,
+    "sequence": 3380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b43f089fcf167562"
+  },
+  "findings": []
+}
