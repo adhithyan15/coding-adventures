@@ -1794,7 +1794,7 @@ fn parts_filling_width(root: &LayoutNode, part_styles: &PartStyleMap) -> HashSet
         outside: &mut HashSet<String>,
         inside: &mut HashSet<String>,
     ) {
-        if matches!(node.tag.as_str(), "HostInput" | "Input" | "HostButton") {
+        if matches!(node.tag.as_str(), "HostInput" | "Input" | "HostNumberInput" | "HostButton") {
             if let Some(part) = node.part_name.as_deref() {
                 let full = part_styles
                     .get(part)
@@ -1869,7 +1869,7 @@ fn leaf_parts_row_weighted(root: &LayoutNode, part_styles: &PartStyleMap) -> Has
         weighted: &mut HashMap<String, String>,
         outside: &mut HashSet<String>,
     ) {
-        if matches!(node.tag.as_str(), "Text" | "HostInput" | "Input" | "HostButton") {
+        if matches!(node.tag.as_str(), "Text" | "HostInput" | "Input" | "HostNumberInput" | "HostButton") {
             if let Some(part) = node.part_name.as_deref() {
                 if !in_row_scope {
                     outside.insert(part.to_string());
@@ -8556,14 +8556,27 @@ fn emit_host_number_input(
         "/* no onChange bound */".to_string()
     };
 
+    // `BasicTextField`, as `HostInput` is, not Material's `TextField`. The
+    // Material field enforces a 280x56dp minimum and paints its own filled
+    // container inside the part's border: Engram's Deck options drew every
+    // number field twice as tall as its text fields, and five of them in one
+    // Row overflowed the panel and drew their labels over each other. The
+    // part's style now owns the box, exactly as it does for a text field, and
+    // the width decisions (`fillMaxWidth()` / a Row weight) are the same ones.
     let mut out = String::new();
-    writeln!(out, "{pad}TextField(").unwrap();
+    writeln!(out, "{pad}BasicTextField(").unwrap();
     writeln!(out, "{inner}value = {value_expr}.toString(),").unwrap();
     writeln!(out, "{inner}onValueChange = {{ v -> {on_value_change} }},").unwrap();
-    if let Some(style) = &style {
-        if !style.modifier.is_empty() {
-            writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
-        }
+    let fills = node
+        .part_name
+        .as_deref()
+        .is_some_and(|part| part_styles.fills_width(part));
+    let row_weight = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.leaf_row_weight(part));
+    if let Some(modifier) = host_control_modifier_expr_filling(node, style.as_ref(), fills, row_weight) {
+        writeln!(out, "{inner}modifier = {modifier},").unwrap();
     }
     if let Some(text_style) = input_text.text_style_expr() {
         writeln!(out, "{inner}textStyle = {text_style},").unwrap();
@@ -8574,13 +8587,6 @@ fn emit_host_number_input(
         "{inner}keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),"
     )
     .unwrap();
-    if let Some(placeholder) = text_prop_expr(node, "placeholder")? {
-        writeln!(
-            out,
-            "{inner}placeholder = {{ Text(text = {placeholder}) }},"
-        )
-        .unwrap();
-    }
     if let Some(enabled) = disabled_prop_enabled_expr(node)? {
         writeln!(out, "{inner}enabled = {enabled},").unwrap();
     }
@@ -11415,7 +11421,11 @@ mod tests {
         assert!(
             out.contains("keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),")
         );
-        assert!(out.contains("placeholder = { Text(text = \"20\") },"));
+        // `BasicTextField`, not Material's `TextField` (280x56dp minimum and
+        // its own container). A number's text is never empty, so the Material
+        // `placeholder` could never show; it is no longer emitted.
+        assert!(out.contains("BasicTextField("), "{out}");
+        assert!(!out.contains("placeholder ="), "{out}");
         assert!(out.contains("enabled = true,"));
     }
 
