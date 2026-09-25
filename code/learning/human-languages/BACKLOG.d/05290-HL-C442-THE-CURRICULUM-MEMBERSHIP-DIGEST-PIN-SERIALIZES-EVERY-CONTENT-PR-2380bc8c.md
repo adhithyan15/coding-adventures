@@ -1,6 +1,7 @@
 ## HL-C442-2380bc8c — The curriculum membership digest pin serializes every content PR
 
-**Status: OPEN.** Found while adding Telugu chapters 84-87.
+**Status: CLOSED — implemented.** Found while adding Telugu chapters 84-87; fixed
+with chapters 88-91 by pinning each track in its own file.
 
 `tests/curriculum-membership-shards.test.ts` pins ONE corpus-wide SHA-256 and
 ONE lesson count. Every PR that adds a lesson to any track must edit the same
