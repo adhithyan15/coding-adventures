@@ -13,7 +13,8 @@
 //
 // This module removes the manual steps for the case that is always the same: a
 // `type: writing` lesson whose headword is ONE letter, with a `## Writing:`
-// block, on a track that has been switched on below. Such a lesson is a
+// block (or, where a track presents its letters that way, a `## Script`
+// block), on a track that has been switched on below. Such a lesson is a
 // candidate. The candidate becomes a figure only if `script-ductus` holds a
 // cited ductus for that letter, and the generated filmstrip ledger is the record
 // of that. HL11 §5.2 still holds: no citation, no pen path, no figure. Nothing
@@ -59,6 +60,24 @@ import type { ParsedLesson } from "./parse.js";
  */
 export const DERIVED_FILMSTRIP_SCRIPTS: Readonly<Record<string, string>> = {
   tamil: "tamil",
+  // HL-C443 second rollout: the four Devanagari tracks share one cited ductus.
+  hindi: "devanagari",
+  marathi: "devanagari",
+  sanskrit: "devanagari",
+  marwadi: "devanagari",
+  // HL-C443 third rollout: every other track with any cited ductus. A track
+  // whose letters are mostly uncited (kannada, malayalam, telugu: vowels and
+  // chillus only) still gets exactly the letters that ARE cited, no more.
+  gujarati: "gujarati",
+  arabic: "arabic",
+  persian: "perso-arabic",
+  urdu: "urdu-nastaliq",
+  russian: "cyrillic",
+  chinese: "chinese",
+  japanese: "japanese",
+  kannada: "kannada",
+  malayalam: "malayalam",
+  telugu: "telugu",
 };
 
 const GRAPHEMES = new Intl.Segmenter("und", { granularity: "grapheme" });
@@ -66,6 +85,37 @@ const GRAPHEMES = new Intl.Segmenter("und", { granularity: "grapheme" });
 /** Does this block hold the lesson's writing instructions? */
 function isWritingBlock(title: string): boolean {
   return /^Writing\b/.test(title.trim());
+}
+
+/** Does this block present the letter itself (the tracks that teach a letter under a `## Script` heading)? */
+function isScriptBlock(title: string): boolean {
+  return /^Script\b/.test(title.trim());
+}
+
+/**
+ * Where a lesson's filmstrip belongs: its first Writing block, or, for the
+ * tracks that present a letter under `## Script` instead (chinese, japanese,
+ * urdu, persian and most russian letter lessons), its first Script block.
+ * `-1` when the lesson has neither.
+ */
+export function filmstripBlockIndex(lesson: ParsedLesson): number {
+  const letter = letterBlockIndex(lesson);
+  if (letter !== -1) return letter;
+  // A DECLARED target may sit on a lesson that teaches its letter inside a word
+  // lesson (FA-C03-chist introduces چ in its first explanation block). There the
+  // figure goes on the first block that introduces a script atom. Derived
+  // candidates never reach this branch: `writingLetterOf` requires a letter
+  // block.
+  return lesson.blocks.findIndex((block) =>
+    (block.knowledge?.introduces ?? []).some((atom) => /-SCRIPT-/.test(atom)),
+  );
+}
+
+/** The first Writing block, else the first Script block; `-1` when neither. */
+function letterBlockIndex(lesson: ParsedLesson): number {
+  const writing = lesson.blocks.findIndex((block) => isWritingBlock(block.title));
+  if (writing !== -1) return writing;
+  return lesson.blocks.findIndex((block) => isScriptBlock(block.title));
 }
 
 /**
@@ -78,7 +128,7 @@ export function writingLetterOf(lesson: ParsedLesson): string | undefined {
   if (lesson.realization.type !== "writing") return undefined;
   const headword = (lesson.realization.headword ?? "").trim();
   if (headword === "" || [...GRAPHEMES.segment(headword)].length !== 1) return undefined;
-  if (!lesson.blocks.some((block) => isWritingBlock(block.title))) return undefined;
+  if (letterBlockIndex(lesson) === -1) return undefined;
   return headword;
 }
 
@@ -137,7 +187,8 @@ export function filmstripImageMarkdown(target: ScriptFilmstripTarget): string {
 
 /**
  * Lessons as the BOOK sees them: each filmstrip target's image placed at the
- * top of its lesson's first Writing block, above the numbered strokes it draws.
+ * top of its lesson's first Writing block (else its first Script block), above
+ * the numbered strokes it draws.
  *
  * Only the book gets this view. Narration and the app keep the authored lesson,
  * because a listener cannot see a figure. A lesson that already references its
@@ -156,7 +207,7 @@ export function withFilmstripImages(
     if (target === undefined) return lesson;
     const file = `figures/${basename(target.output)}`;
     if (lesson.blocks.some((block) => block.markdown.includes(file))) return lesson;
-    const at = lesson.blocks.findIndex((block) => isWritingBlock(block.title));
+    const at = filmstripBlockIndex(lesson);
     if (at === -1) return lesson;
     const blocks = lesson.blocks.map((block, index) =>
       index === at

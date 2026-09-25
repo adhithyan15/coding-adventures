@@ -4,11 +4,16 @@
 \usepackage{graphicx}
 \graphicspath{{figures/}}
 
+% A block figure fits a box, not only a width. Width alone was enough while
+% every figure was a wide etymology route; a stroke-order filmstrip of a tall,
+% narrow letter (alef is about four times taller than wide) scaled to the line
+% width ran off the page (HL-C443). With both bounds, keepaspectratio scales the
+% figure to whichever limit it meets first, so a wide figure is unchanged.
 \newcommand{\hlblockfigure}[2]{%
   \par\medskip
   \begingroup
     \centering
-    \includegraphics[width=0.92\linewidth,keepaspectratio]{#1}\par
+    \includegraphics[width=0.92\linewidth,height=0.45\textheight,keepaspectratio]{#1}\par
     \small\itshape #2\par
   \endgroup
   \medskip

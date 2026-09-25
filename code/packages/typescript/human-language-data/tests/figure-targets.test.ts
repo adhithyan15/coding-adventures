@@ -59,7 +59,7 @@ describe("which lessons are filmstrip candidates", () => {
   it("only draws candidates from switched-on tracks, into that track's own book", () => {
     const candidates = filmstripCandidates([
       lesson("TA-S1"),
-      lesson("HI-S1", { language: "hindi", headword: "आ" }),
+      lesson("BN-S1", { language: "bengali", headword: "অ" }),
     ]);
     expect(candidates).toEqual([
       {
@@ -109,6 +109,37 @@ describe("placing the image", () => {
     expect(placed!.blocks.filter((block) => block.markdown.includes("filmstrip")).length).toBe(1);
   });
 
+  it("falls back to the first Script block when a track presents its letter there", () => {
+    const scriptOnly = lesson("ZH-S1", { language: "tamil", blocks: ["Warm-up", "Script — the letter", "Wrap-up Recall"] });
+    expect(writingLetterOf(scriptOnly)).toBe("அ");
+    const [placed] = withFilmstripImages([scriptOnly], filmstripCandidates([scriptOnly]));
+    expect(placed!.blocks[1]!.markdown.startsWith("![How அ is written")).toBe(true);
+  });
+
+  it("prefers a Writing block over an earlier Script block", () => {
+    const both = lesson("TA-S9", { blocks: ["Script — shape", "Writing: strokes", "Wrap-up Recall"] });
+    const [placed] = withFilmstripImages([both], filmstripCandidates([both]));
+    expect(placed!.blocks[0]!.markdown).not.toContain("filmstrip");
+    expect(placed!.blocks[1]!.markdown).toContain("filmstrip");
+  });
+
+  it("places a declared target on a word lesson's first script-introducing block", () => {
+    // FA-C03-chist teaches چ inside a word lesson: no Writing or Script block,
+    // so it is never a derived candidate, but a DECLARED filmstrip still prints.
+    const word = lesson("FA-C3", { type: "word", blocks: ["Warm-up", "You'll want to know", "Wrap-up Recall"] });
+    word.blocks[1]!.knowledge = { introduces: ["FA-LEX-X", "FA-SCRIPT-CHE"], assesses: [] } as never;
+    expect(writingLetterOf(word)).toBeUndefined();
+    const declared: ScriptFilmstripTarget = {
+      kind: "script-filmstrip",
+      lessonId: "FA-C3",
+      script: "perso-arabic",
+      glyph: "چ",
+      output: "persian/book/figures/FA-C3-filmstrip.svg",
+    };
+    const [placed] = withFilmstripImages([word], [declared]);
+    expect(placed!.blocks[1]!.markdown.startsWith("![How چ is written")).toBe(true);
+  });
+
   it("leaves a lesson that already prints its figure by hand alone", () => {
     const authored = lesson("TA-S1");
     authored.blocks[0]!.markdown = "![hand placed](figures/TA-S1-filmstrip.svg)\n";
@@ -123,6 +154,20 @@ describe("placing the image", () => {
   });
 });
 
+describe("the shared figure macro", () => {
+  it("bounds a block figure's height as well as its width", () => {
+    // A filmstrip of a tall, narrow letter scaled to the line width alone ran
+    // hundreds of points off the page in CI's XeLaTeX build (persian and urdu
+    // alef). No test here compiles TeX, so the bound itself is pinned.
+    const visual = readFileSync(join(defaultCurriculumRoot(), "_shared", "visual.tex"), "utf8");
+    const block = visual.slice(visual.indexOf("\\newcommand{\\hlblockfigure}"));
+    const options = /\\includegraphics\[([^\]]*)\]/.exec(block)?.[1] ?? "";
+    expect(options).toMatch(/\bwidth=/);
+    expect(options).toMatch(/\bheight=/);
+    expect(options).toContain("keepaspectratio");
+  });
+});
+
 describe("the real corpus", () => {
   const root = defaultCurriculumRoot();
   const lessons = loadLessons(root);
@@ -131,14 +176,47 @@ describe("the real corpus", () => {
   );
 
   it("draws a filmstrip for every Tamil letter lesson whose letter has a cited ductus", () => {
-    // 20 lessons, 19 letters, on the first rollout (வ has both TA-S01-va and the
-    // guided copy TA-W00; the ledger draws the letter once). A letter lesson
+    // 21 lessons, 20 letters (20 lessons / 19 letters on the first rollout; the
+    // Script-block fallback added one lesson for one more letter). வ has both TA-S01-va and the guided copy TA-W00, and
+    // the ledger draws the letter once. A letter lesson
     // whose glyph has no cited ductus (vowel signs, the pulli) is a candidate
     // that is not drawn; citing its stroke order is what moves this number,
     // never an edit here alone.
     const tamil = targets.filter((target) => target.lessonId.startsWith("TA-"));
-    expect(tamil).toHaveLength(20);
-    expect(new Set(tamil.map((target) => target.glyph)).size).toBe(19);
+    expect(tamil).toHaveLength(21);
+    expect(new Set(tamil.map((target) => target.glyph)).size).toBe(20);
+  });
+
+  it("draws every switched-on track exactly the letters its ductus cites", () => {
+    // Rollouts: tamil; then the four Devanagari tracks, which share one cited
+    // ductus (a letter drawn once serves four books); then every other track
+    // with any cited ductus. Kannada, malayalam and telugu cite only vowels and
+    // chillus, so only those letter lessons print a filmstrip until their
+    // consonants are sourced. Tracks that present a letter under "## Script"
+    // rather than "## Writing:" (chinese, japanese, urdu, persian, most russian)
+    // get the filmstrip in that Script block.
+    const counts: Record<string, number> = {};
+    for (const target of targets) {
+      const prefix = target.lessonId.split("-")[0]!;
+      counts[prefix] = (counts[prefix] ?? 0) + 1;
+    }
+    expect(counts).toEqual({
+      AR: 3,
+      FA: 11,
+      GU: 33,
+      HI: 42,
+      JA: 23,
+      KA: 13,
+      ML: 13,
+      MR: 42,
+      MW: 32,
+      RU: 18,
+      SA: 39,
+      TA: 21,
+      TE: 9,
+      UR: 12,
+      ZH: 58,
+    });
   });
 
   it("prints every resolved filmstrip in its chapter", () => {
