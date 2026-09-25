@@ -155,50 +155,6 @@
    "upstream_exit": 0,
    "upstream_stdout": "for(var i=0;i<3;)i++;console.log(i);\n"
   },
-  "ladder_t5_array_advanced": {
-   "closurec_exit": 0,
-   "closurec_stdout": "var a=[1,2,3];console.log(a[0]);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "ADVANCED",
-   "reason": "closurec does not propagate a single-use array literal into its use site and eliminate the binding (CCR-068).",
-   "rung": "array",
-   "tier": 5,
-   "upstream_exit": 0,
-   "upstream_stdout": "console.log(1);\n"
-  },
-  "ladder_t5_nested_obj_advanced": {
-   "closurec_exit": 0,
-   "closurec_stdout": "var o={a:{b:{c:1}}};console.log(o.a.b.c);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "ADVANCED",
-   "reason": "closurec does not propagate a single-use nested object literal through a property chain to its use site (CCR-068).",
-   "rung": "nested_obj",
-   "tier": 5,
-   "upstream_exit": 0,
-   "upstream_stdout": "console.log(1);\n"
-  },
-  "ladder_t5_object_advanced": {
-   "closurec_exit": 0,
-   "closurec_stdout": "var o={a:1,b:2};console.log(o.a);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "ADVANCED",
-   "reason": "closurec does not propagate a single-use object literal into its use site and eliminate the binding. This is the CCR-068 value-propagation gap \u2014 the single largest contributor to the ADVANCED ladder result.",
-   "rung": "object",
-   "tier": 5,
-   "upstream_exit": 0,
-   "upstream_stdout": "console.log(1);\n"
-  },
-  "ladder_t5_quoted_key_advanced": {
-   "closurec_exit": 0,
-   "closurec_stdout": "var o={\"a-b\":1};console.log(o[\"a-b\"]);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "ADVANCED",
-   "reason": "closurec does not propagate a single-use object literal read through a quoted key (CCR-068).",
-   "rung": "quoted_key",
-   "tier": 5,
-   "upstream_exit": 0,
-   "upstream_stdout": "console.log(1);\n"
-  },
   "ladder_t5_regex_advanced": {
    "closurec_exit": 0,
    "closurec_stdout": "var r=/ab+c/g;console.log(r.test(\"abc\"));\n",

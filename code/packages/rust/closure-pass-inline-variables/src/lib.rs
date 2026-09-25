@@ -129,14 +129,55 @@ const MAX_MULTIUSE_LITERAL_LEN: usize = 8;
 /// Zero-sized type: no per-instance state. Pass-internal state (the
 /// candidate map, the per-name substitution) lives in pass-local maps
 /// constructed inside [`Pass::run`] per CLOC06 §"Pass-internal state."
+mod structured;
+
 #[derive(Debug, Default, Clone, Copy)]
-pub struct InlineVariablesPass;
+pub struct InlineVariablesPass {
+    /// Whether to resolve member chains against a top-level object or
+    /// array literal (CLOC28). Off by default, because it is only sound
+    /// under a **closed-world** assumption — see
+    /// [`InlineVariablesPass::with_structured_literals`].
+    structured_literals: bool,
+}
 
 impl InlineVariablesPass {
     /// Zero-arg constructor for ergonomic
     /// `PassPipeline::add(Box::new(InlineVariablesPass::new()))`.
+    /// Scalar propagation only.
     pub fn new() -> Self {
-        Self
+        Self {
+            structured_literals: false,
+        }
+    }
+
+    /// Additionally resolve member chains against a top-level object or
+    /// array literal (CLOC28). **ADVANCED only.**
+    ///
+    /// The candidates this enables are all top-level bindings, and a
+    /// top-level binding is a property of the global object. At SIMPLE the
+    /// reference compiler is open-world — another script may read `o`, so
+    /// folding `o.a` to its value is not sound — and it declines
+    /// accordingly. At ADVANCED it folds. Measured, both levels:
+    ///
+    /// ```text
+    /// SIMPLE   : var o={a:1,b:2};console.log(o.a);  =>  unchanged
+    /// ADVANCED : var o={a:1,b:2};console.log(o.a);  =>  console.log(1);
+    /// ```
+    ///
+    /// The line is drawn by *scope*, not by level: upstream folds a
+    /// function-local object at SIMPLE too, because a local is closed-world
+    /// wherever it appears (`function f(){var o={a:1};return o.a}` becomes
+    /// `function f(){return 1}` at SIMPLE). This pass only collects
+    /// top-level declarations, so for what it can see today, "ADVANCED
+    /// only" and "closed-world only" coincide. Widening it to locals means
+    /// revisiting this gate, not just this flag.
+    ///
+    /// Registered this way in `closurec`'s `run.rs`, alongside the other
+    /// closed-world passes (`inline`, `remove-unused-vars`, `treeshake`).
+    pub fn with_structured_literals() -> Self {
+        Self {
+            structured_literals: true,
+        }
     }
 }
 
@@ -171,7 +212,12 @@ impl Pass for InlineVariablesPass {
         let mut nodes_touched: u32 = 1; // the program root
         let mut propagated: Vec<PropagatedConst> = Vec::new();
         let changed =
-            inline_variables_program(&mut program, &mut nodes_touched, &mut propagated);
+            inline_variables_program(
+                &mut program,
+                &mut nodes_touched,
+                &mut propagated,
+                self.structured_literals,
+            );
 
         // CV provenance (#89): record every constant we propagated as a
         // `propagated` contribution carrying `{name, value, sites}` — the
@@ -224,6 +270,12 @@ impl Pass for InlineVariablesPass {
 struct ConstCandidate {
     name: String,
     value: Expression,
+    /// When set, `value` is an object or array literal and uses are
+    /// rewritten by resolving member *chains* against it (CLOC28) rather
+    /// than by substituting `value` at each bare identifier. Substituting
+    /// the literal itself would construct a fresh object per use site and
+    /// break `o.a === o.a`; see `structured`.
+    structured: bool,
 }
 
 /// One propagation event for CV provenance (#89): the original `const`
@@ -257,6 +309,7 @@ fn inline_variables_program(
     program: &mut Program,
     nodes_touched: &mut u32,
     propagated: &mut Vec<PropagatedConst>,
+    structured_literals: bool,
 ) -> bool {
     // Phase 1 — count how many times each name is declared as a binding
     // anywhere in the program (function names, parameters, var/let/const
@@ -281,9 +334,6 @@ fn inline_variables_program(
             ))) => vd,
             _ => continue,
         };
-        if !matches!(vd.kind, VarKind::Const) {
-            continue; // let/var can be reassigned — not safe to propagate
-        }
         // Single declarator only. A multi-declarator `const A = f(), X = 2`
         // evaluates earlier siblings (which may call code that reads X)
         // before X initializes — the TDZ scan below only looks at whole
@@ -300,7 +350,28 @@ fn inline_variables_program(
             Some(i) => i,
             None => continue,
         };
-        if !is_literal(init) {
+        // CLOC28: an object/array literal is a candidate too, but its
+        // uses are rewritten as chains and its eligibility is decided by
+        // a separate, stricter gate in phase 3.
+        let structured = structured_literals && structured::is_structured_literal(init);
+        if !structured && !is_literal(init) {
+            continue;
+        }
+        // Kind gate, and the one place the two paths genuinely differ.
+        //
+        // The scalar path is `const`-only and must stay that way: a
+        // `let`/`var` can be reassigned, and `count_uses_*` deliberately
+        // does not count a bare identifier assignment target (a `const`
+        // cannot be assigned, so the scalar path never needed to). Admit
+        // `var` there and `var X=1;X=2;f(X)` would report one use, match
+        // it, and fold to `f(1)`.
+        //
+        // The structured path admits `let`/`var` because it does not rely
+        // on that counter at all: `structured_is_eligible` proves, over
+        // the serialized AST, that the name is never written in any form
+        // and that every occurrence is a chain about to be rewritten.
+        // That is what the ladder rungs need — they are all `var`.
+        if !matches!(vd.kind, VarKind::Const) && !structured {
             continue;
         }
         // Temporal-dead-zone guard. A top-level `const` cannot be read
@@ -319,6 +390,7 @@ fn inline_variables_program(
         candidates.push(ConstCandidate {
             name: id.name.clone(),
             value: init.clone(),
+            structured,
         });
     }
     if candidates.is_empty() {
@@ -330,6 +402,19 @@ fn inline_variables_program(
     // literal is short enough for the multi-use budget.
     let mut changed = false;
     for cand in &candidates {
+        // CLOC28 takes a different route to the same question, because
+        // what it rewrites is a chain rather than an identifier.
+        if cand.structured {
+            if let Some(sites) = propagate_structured(program, cand) {
+                changed = true;
+                propagated.push(PropagatedConst {
+                    name: cand.name.clone(),
+                    value: structured_repr(&cand.value),
+                    sites,
+                });
+            }
+            continue;
+        }
         let uses = count_uses_program(program, &cand.name);
         if uses == 0 {
             continue; // nothing to propagate (remove-unused-vars will drop it)
@@ -1007,6 +1092,126 @@ fn count_uses_member(
 
 // ---- propagation (replace every use of the name with the literal) --------
 
+/// CLOC28. Try to rewrite every member chain rooted at `cand.name` into
+/// the scalar it reads, committing only if the binding is left with no
+/// remaining references at all. Returns the number of sites rewritten, or
+/// `None` if the candidate was rejected and the program left untouched.
+///
+/// # How this establishes safety
+///
+/// The rewrite is attempted on a **clone**, and the clone is accepted only
+/// when the only mention of the name left is its own declaration. That
+/// single comparison subsumes the
+/// escape analysis this pass would otherwise have to write by hand:
+///
+/// * `window.f(o)` leaves a bare `o` behind, so the count stays above one
+///   and the candidate is rejected. Upstream also declines to fold there.
+/// * `o.b` where `b` is not an own key does not resolve, so that `o`
+///   survives and the whole binding is rejected — including its other,
+///   resolvable reads. Conservative, and it keeps prototype reads such as
+///   `o.toString` correct.
+/// * A variant of the AST this pass has never heard of cannot be rewritten
+///   either, so it too leaves an occurrence behind and rejects.
+///
+/// Writes are the one thing the count cannot catch, because a rewritten
+/// `o.a++` would remove the occurrence *and* corrupt the program into
+/// `1++`. Those are excluded up front by [`has_write_occurrence`].
+fn propagate_structured(program: &mut Program, cand: &ConstCandidate) -> Option<usize> {
+    let before = serde_json::to_value(&*program).ok()?;
+    let total = structured::count_name_mentions(&before, &cand.name);
+    // Exactly one mention is the declaration's own binding target and
+    // nothing else, so there is nothing to rewrite.
+    if total <= 1 {
+        return None;
+    }
+    if has_write_occurrence(&before, &cand.name) {
+        return None;
+    }
+    // A read of the binding inside its OWN initializer runs while the
+    // binding is still `undefined`, so it always throws:
+    //
+    //     var a = [1, a[0], 5];   // TypeError, every time
+    //
+    // `propagate_all` rewrites chains anywhere in the program, the
+    // declarator's `init` included, so that `a[0]` would fold to `1` — which
+    // both erases a guaranteed throw and removes the very occurrence that
+    // would otherwise have pushed `remaining` above one and rejected the
+    // candidate. The declaration sits at index 0 here, so `prefix_is_inert`
+    // never sees anything to object to. Decline instead; upstream keeps the
+    // program and warns `JSC_REFERENCE_BEFORE_DECLARE`.
+    let init_json = serde_json::to_value(&cand.value).ok()?;
+    if structured::count_name_mentions(&init_json, &cand.name) > 0 {
+        return None;
+    }
+
+    let mut trial = program.clone();
+    if !propagate_all(&mut trial, cand) {
+        return None;
+    }
+    let after = serde_json::to_value(&trial).ok()?;
+    let remaining = structured::count_name_mentions(&after, &cand.name);
+    if remaining != 1 {
+        // Anything beyond the declaration itself still mentions the name:
+        // an escape, an unresolvable read, a write, or an AST shape this
+        // pass does not model. Leave the binding entirely alone.
+        return None;
+    }
+
+    *program = trial;
+    Some(total - 1)
+}
+
+/// Is `name` written anywhere in the serialized program — assigned to,
+/// incremented, `delete`d, or bound by a `for`-head?
+///
+/// Read positions are handled by counting; writes need their own check
+/// because rewriting one both hides the occurrence and produces nonsense
+/// (`o.a++` would become `1++`). This walks the serialized form for the
+/// same reason [`structured::count_identifier_nodes`] does: an AST variant
+/// nobody remembered to visit must fail *closed*, and here that means any
+/// node whose type is one of the write forms disqualifies the name if the
+/// name appears anywhere beneath the written side.
+fn has_write_occurrence(v: &serde_json::Value, name: &str) -> bool {
+    match v {
+        serde_json::Value::Object(map) => {
+            let ty = map.get("type").and_then(serde_json::Value::as_str);
+            let written_side = match ty {
+                Some("AssignmentExpression") => map.get("left"),
+                Some("UpdateExpression") => map.get("argument"),
+                Some("ForInStatement") | Some("ForOfStatement") => map.get("left"),
+                Some("UnaryExpression")
+                    if map.get("operator").and_then(serde_json::Value::as_str)
+                        == Some("delete") =>
+                {
+                    map.get("argument")
+                }
+                _ => None,
+            };
+            if let Some(side) = written_side {
+                if structured::count_name_mentions(side, name) > 0 {
+                    return true;
+                }
+            }
+            map.values().any(|child| has_write_occurrence(child, name))
+        }
+        serde_json::Value::Array(items) => {
+            items.iter().any(|child| has_write_occurrence(child, name))
+        }
+        _ => false,
+    }
+}
+
+/// A compact rendering of an object/array literal for the CV `value`
+/// field. The scalar path prints the literal; there is no short faithful
+/// rendering of a structure, so name the shape instead.
+fn structured_repr(expr: &Expression) -> String {
+    match expr {
+        Expression::ObjectExpression(_) => "{…}".to_string(),
+        Expression::ArrayExpression(_) => "[…]".to_string(),
+        _ => "?".to_string(),
+    }
+}
+
 /// Replace EVERY use of `cand.name` in the program with a clone of the
 /// constant's literal value. Returns whether any replacement was made.
 /// The walk does not short-circuit — it rewrites all use sites.
@@ -1210,11 +1415,32 @@ fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> bool {
 }
 
 fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
+    // CLOC28. For a structured candidate the unit of replacement is the
+    // whole member chain, not the identifier: `o.a.b.c` becomes the scalar
+    // the path resolves to, and a bare `o` is left alone (it is an escape,
+    // and the eligibility check in `inline_variables_program` will have
+    // rejected the candidate before we get here if one exists).
+    if cand.structured {
+        if let Expression::MemberExpression(m) = expr {
+            if let Some((root, keys)) = structured::chain_of(m) {
+                if root == cand.name {
+                    if let Some(v) = structured::resolve(&cand.value, &keys) {
+                        if is_literal(v) {
+                            *expr = v.clone();
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // A bare identifier in use position that matches the constant's name
     // becomes the literal. This is the only place a replacement happens;
     // every other arm just recurses into use-position sub-expressions.
+    // A structured candidate never takes this path — see above.
     if let Expression::Identifier(id) = expr {
-        if id.name == cand.name {
+        if !cand.structured && id.name == cand.name {
             *expr = cand.value.clone();
             return true;
         }
@@ -1442,7 +1668,9 @@ mod tests {
         let node = parse_javascript_typed(src, es).expect("parse");
         let prog = bridge::grammar_to_program(&node, es).expect("bridge");
 
-        let pass = InlineVariablesPass::new();
+        // The CLOC28 chain resolution is closed-world, so it is only
+        // enabled in the ADVANCED configuration; tests exercise that one.
+        let pass = InlineVariablesPass::with_structured_literals();
         let sidecar = Sidecar::new();
         let mut cv = CVLog::new(false);
         let out = pass
@@ -1522,6 +1750,209 @@ mod tests {
     }
 
     // ----- metadata contract -----
+
+    // ---- CLOC28: resolving a chain against an object/array literal ------
+    //
+    // These assert the PASS's output, so the binding is still present: it
+    // is `remove-unused-vars` that deletes it, one pass later, and only at
+    // ADVANCED. What matters here is that the READ became a scalar.
+
+    #[test]
+    fn resolves_object_property_read_to_its_scalar() {
+        assert_eq!(
+            propagate_source("var o = { a: 1, b: 2 };console.log(o.a);"),
+            "var o={a:1,b:2};console.log(1);"
+        );
+    }
+
+    #[test]
+    fn resolves_a_nested_chain_all_the_way_down() {
+        assert_eq!(
+            propagate_source("var o = { a: { b: { c: 1 } } };console.log(o.a.b.c);"),
+            "var o={a:{b:{c:1}}};console.log(1);"
+        );
+    }
+
+    #[test]
+    fn resolves_array_element_by_integer_index() {
+        assert_eq!(
+            propagate_source("var a = [1, 2, 3];console.log(a[0]);"),
+            "var a=[1,2,3];console.log(1);"
+        );
+    }
+
+    #[test]
+    fn resolves_a_quoted_key_subscript() {
+        assert_eq!(
+            propagate_source(r#"var o = { "a-b": 1 };console.log(o["a-b"]);"#),
+            r#"var o={"a-b":1};console.log(1);"#
+        );
+    }
+
+    #[test]
+    fn resolves_every_read_when_there_are_several() {
+        assert_eq!(
+            propagate_source("var o = { a: 1, b: 2 };console.log(o.a, o.b);"),
+            "var o={a:1,b:2};console.log(1,2);"
+        );
+    }
+
+    // ---- CLOC28: the refusals ------------------------------------------
+
+    /// The miscompile this pass came closest to shipping.
+    ///
+    /// `count_uses_*` does not count a bare identifier assignment target,
+    /// because the scalar path is `const`-only and a `const` cannot be
+    /// assigned. The structured path admits `var`, so a reassignment is
+    /// reachable — and an eligibility check keyed on `"type":"Identifier"`
+    /// does not see it either, because `AssignmentTarget` is
+    /// `#[serde(untagged)]` and serializes the target without a type tag.
+    /// Both holes lined up: the fold produced `console.log(1)` for a
+    /// program that prints 2.
+    #[test]
+    fn refuses_a_binding_that_is_reassigned() {
+        assert_eq!(
+            propagate_source("var o = { a: 1 };o = { a: 2 };console.log(o.a);"),
+            "var o={a:1};o={a:2};console.log(o.a);"
+        );
+    }
+
+    #[test]
+    fn refuses_a_binding_whose_property_is_written() {
+        assert_eq!(
+            propagate_source("var o = { a: 1 };o.a = 2;console.log(o.a);"),
+            "var o={a:1};o.a=2;console.log(o.a);"
+        );
+    }
+
+    #[test]
+    fn refuses_a_binding_whose_property_is_incremented() {
+        assert_eq!(
+            propagate_source("var o = { a: 1 };o.a++;console.log(o.a);"),
+            "var o={a:1};o.a++;console.log(o.a);"
+        );
+    }
+
+    #[test]
+    fn refuses_a_binding_with_a_deleted_property() {
+        assert_eq!(
+            propagate_source("var o = { a: 1 };delete o.a;console.log(o.a);"),
+            "var o={a:1};delete o.a;console.log(o.a);"
+        );
+    }
+
+    /// The object is handed to something that can read or mutate it, so no
+    /// read of it may be folded — not even the resolvable one alongside.
+    #[test]
+    fn refuses_a_binding_that_escapes() {
+        assert_eq!(
+            propagate_source("var o = { a: 1 };sink(o);console.log(o.a);"),
+            "var o={a:1};sink(o);console.log(o.a);"
+        );
+    }
+
+    /// An absent key is NOT `undefined` — the read may resolve up the
+    /// prototype chain, which `o.toString` certainly does.
+    #[test]
+    fn refuses_a_key_absent_from_the_literal() {
+        assert_eq!(
+            propagate_source("var o = { a: 1 };console.log(o.b);"),
+            "var o={a:1};console.log(o.b);"
+        );
+    }
+
+    #[test]
+    fn refuses_a_prototype_read() {
+        assert_eq!(
+            propagate_source("var o = { a: 1 };console.log(typeof o.toString);"),
+            "var o={a:1};console.log(typeof o.toString);"
+        );
+    }
+
+    /// Substituting the inner object at both sites would build two
+    /// distinct objects and flip `===` from true to false, so a chain that
+    /// resolves to a non-scalar is left alone.
+    #[test]
+    fn refuses_to_substitute_a_non_scalar_and_break_identity() {
+        assert_eq!(
+            propagate_source("var o = { a: { b: 1 } };console.log(o.a === o.a);"),
+            "var o={a:{b:1}};console.log(o.a===o.a);"
+        );
+    }
+
+    #[test]
+    fn refuses_a_dynamic_subscript() {
+        assert_eq!(
+            propagate_source("var o = { a: 1 };console.log(o[k]);"),
+            "var o={a:1};console.log(o[k]);"
+        );
+    }
+
+    #[test]
+    fn refuses_an_out_of_range_index() {
+        assert_eq!(
+            propagate_source("var a = [1, 2];console.log(a[5]);"),
+            "var a=[1,2];console.log(a[5]);"
+        );
+    }
+
+    #[test]
+    fn refuses_an_array_hole() {
+        assert_eq!(
+            propagate_source("var a = [1, , 3];console.log(a[1]);"),
+            "var a=[1,,3];console.log(a[1]);"
+        );
+    }
+
+    /// A spread can contribute the key we are reading, or shadow it, and
+    /// we cannot see through it — so no read of the literal resolves.
+    /// Upstream does fold this; see CLOC28's "where v1 stays behind".
+    /// A spread earlier in an array contributes an unknown number of
+    /// elements, so every later position shifts by an amount we cannot
+    /// know. Reading `[..."xy", 5]` positionally answers `5` for index 1;
+    /// the program answers `"y"`.
+    ///
+    /// Review caught this: the first version declined only when the element
+    /// *at* the index was a spread, mirroring nothing — the object arm bails
+    /// on any spread at all, and the array arm quietly did not.
+    #[test]
+    fn refuses_an_array_spread_at_or_before_the_index() {
+        assert_eq!(
+            propagate_source(r#"var a = [..."xy", 5];console.log(a[1]);"#),
+            r#"var a=[..."xy",5];console.log(a[1]);"#
+        );
+    }
+
+    /// A spread AFTER the index is harmless — the elements before it are
+    /// still where they appear — so this one folds, and upstream folds it
+    /// too. The guard is positional, not a blanket refusal.
+    #[test]
+    fn still_resolves_an_index_before_an_array_spread() {
+        assert_eq!(
+            propagate_source("var a = [1, 2, ...x];console.log(a[0]);"),
+            "var a=[1,2,...x];console.log(1);"
+        );
+    }
+
+    /// Reading the binding inside its own initializer runs while the binding
+    /// is still `undefined`, so it always throws. Folding it away would
+    /// erase a guaranteed TypeError *and* hide the occurrence that should
+    /// have rejected the candidate.
+    #[test]
+    fn refuses_a_binding_that_reads_itself_in_its_initializer() {
+        assert_eq!(
+            propagate_source("var a = [1, a[0], 5];console.log(a[2]);"),
+            "var a=[1,a[0],5];console.log(a[2]);"
+        );
+    }
+
+    #[test]
+    fn refuses_a_spread_bearing_literal() {
+        assert_eq!(
+            propagate_source("var o = { ...x, a: 1 };console.log(o.a);"),
+            "var o={...x,a:1};console.log(o.a);"
+        );
+    }
 
     #[test]
     fn name_is_inline_variables() {

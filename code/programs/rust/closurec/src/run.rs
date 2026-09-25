@@ -405,8 +405,22 @@ fn run_typed_pipeline(
     if advanced.is_some() {
         pipeline.add(Box::new(InlinePass::new()));
     }
-    // inline-variables propagates a `const = literal` to its use sites.
-    pipeline.add(Box::new(InlineVariablesPass::new()));
+    // inline-variables propagates a `const = literal` to its use sites at
+    // BOTH levels — that is scope-independent and open-world safe, because
+    // the value substituted is the one the binding is declared with.
+    //
+    // Its CLOC28 half, resolving `o.a` against a top-level `var o = {a:1}`,
+    // is NOT: a top-level binding is a property of the global object, and
+    // at SIMPLE another script may read or replace it. Upstream draws the
+    // same line — it leaves `var o={a:1,b:2};console.log(o.a)` alone at
+    // SIMPLE and folds it to `console.log(1)` at ADVANCED — so the
+    // structured half is enabled only here, with the other closed-world
+    // passes.
+    pipeline.add(Box::new(if advanced.is_some() {
+        InlineVariablesPass::with_structured_literals()
+    } else {
+        InlineVariablesPass::new()
+    }));
 
     // remove-unused-vars (deletes unreferenced top-level `var/let/const`) and
     // treeshake (deletes unreferenced top-level `function`/`class`) are

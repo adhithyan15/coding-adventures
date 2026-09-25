@@ -2,6 +2,39 @@
 
 All notable changes to the `coding-adventures-closure-pass-remove-unused-vars` crate will be documented in this file.
 
+## [0.7.0] - 2026-09-24
+
+### Changed — a pure object/array literal initializer is now removable (CLOC28)
+
+`is_removable_init` accepted a literal, a bare identifier, or nothing. An
+object or array literal was kept, on the grounds that "its elements may not be
+pure". True in general, and too coarse: `var o = {a: 1}` evaluates nothing at
+all, and after [CLOC28](../../specs/CLOC28-literal-property-propagation.md)
+resolves `o.a` to `1` such a binding is left unreferenced and should go. Without
+this the new pass produced `var o={a:1,b:2};console.log(1)` — the read folded,
+the dead object still there.
+
+The check is now recursive, and the caution it replaces is preserved exactly
+where it was warranted:
+
+```js
+var o = { a: 1, b: window.f() };   // kept — dropping it loses the call
+var o = { [window.f()]: 1 };       // kept — the KEY is evaluated too
+var o = { ...x };                  // kept — spreading reads x's properties,
+                                   //   which can fire getters
+var o = { a: 1, get b() { … } };   // removable — defining an accessor
+                                   //   calls nothing
+```
+
+Array holes evaluate nothing and are pure; `[...x]` runs x's iterator and is
+not. Function and arrow expressions are pure to evaluate — building a closure
+calls nothing.
+
+Upstream is cleverer here and we are explicitly not matching it yet: it keeps
+the effect and drops the rest, turning
+`var o={a:1,b:window.f()};console.log(o.a)` into `window.f();console.log(1)`,
+where we keep the whole binding. Sound, larger, and noted in CLOC28.
+
 ## [0.6.0] - 2026-06-30
 
 ### Added — correlation-vector deletion provenance (#89)

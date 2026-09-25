@@ -113,7 +113,8 @@ use coding_adventures_closure_scope_analyzer::{
     analyze, BindingId, BindingKind, ScopeId,
 };
 use coding_adventures_javascript_ast::{
-    BindingTarget, Declaration, Expression, ProgramItem, Statement, VariableDeclaration,
+    BindingTarget, Declaration, Expression, ObjectMember, ProgramItem, PropertyKind, Statement,
+    VariableDeclaration,
 };
 
 /// Is a variable initializer safe to delete along with its binding?
@@ -143,16 +144,68 @@ use coding_adventures_javascript_ast::{
 fn is_removable_init(init: &Option<Expression>) -> bool {
     match init {
         None => true,
-        Some(expr) => matches!(
-            expr,
-            Expression::NumericLiteral(_)
-                | Expression::StringLiteral(_)
-                | Expression::BooleanLiteral(_)
-                | Expression::NullLiteral(_)
-                | Expression::BigIntLiteral(_)
-                | Expression::UndefinedLiteral(_)
-                | Expression::Identifier(_)
-        ),
+        Some(expr) => is_pure_to_evaluate(expr),
+    }
+}
+
+/// Can evaluating `expr` be skipped entirely — does it do nothing but
+/// produce a value?
+///
+/// The scalar cases are the original set: a literal, or a bare identifier
+/// (reading a binding has no value-level getter to fire).
+///
+/// CLOC28 adds object and array literals, but only when they are pure
+/// *all the way down*. That distinction is the whole point: an object
+/// literal is not inherently safe to drop, because evaluating it evaluates
+/// its parts.
+///
+/// ```js
+/// var o = { a: 1, b: window.f() };   // dropping `o` would lose the call
+/// var o = { [window.f()]: 1 };       // the KEY is evaluated too
+/// var o = { ...x };                  // spreading reads x's properties,
+///                                    //   which can fire getters
+/// ```
+///
+/// A getter or method *definition* is pure by contrast: `{ get b() { … } }`
+/// builds a closure and calls nothing, so an unreferenced object carrying
+/// one can go.
+///
+/// Upstream is cleverer here — it keeps the effect and drops the rest,
+/// turning `var o={a:1,b:window.f()};console.log(o.a)` into
+/// `window.f();console.log(1)`. We keep the whole binding instead, which
+/// is sound but larger; see CLOC28.
+fn is_pure_to_evaluate(expr: &Expression) -> bool {
+    match expr {
+        Expression::NumericLiteral(_)
+        | Expression::StringLiteral(_)
+        | Expression::BooleanLiteral(_)
+        | Expression::NullLiteral(_)
+        | Expression::BigIntLiteral(_)
+        | Expression::UndefinedLiteral(_)
+        | Expression::RegExpLiteral(_)
+        | Expression::Identifier(_)
+        | Expression::FunctionExpression(_)
+        | Expression::ArrowFunctionExpression(_) => true,
+        Expression::ArrayExpression(arr) => arr.elements.iter().all(|el| match el {
+            None => true,                                     // a hole evaluates nothing
+            Some(Expression::SpreadElement(_)) => false,      // `[...x]` runs x's iterator
+            Some(e) => is_pure_to_evaluate(e),
+        }),
+        Expression::ObjectExpression(obj) => obj.properties.iter().all(|m| match m {
+            ObjectMember::Spread(_) => false,
+            ObjectMember::Property(p) => {
+                if p.computed {
+                    return false; // the key expression is evaluated
+                }
+                match p.kind {
+                    // An accessor's value is its function; defining it
+                    // calls nothing.
+                    PropertyKind::Get | PropertyKind::Set => true,
+                    PropertyKind::Init => is_pure_to_evaluate(&p.value),
+                }
+            }
+        }),
+        _ => false,
     }
 }
 
