@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 35,
+  "output": "urdu/book/chapters/ch35-ur-letters-of-the-hook-family.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

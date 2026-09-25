@@ -42,7 +42,11 @@ it("pins Urdu lesson-content budgets", () =>
     // 162 -> 164: HL-C428, two `review` lessons -- the letters that differ by one
     // mark, and the layers an Urdu word can arrive from. No new atoms.
     //
-    lessons: 164,
+    // 164 -> 182: HL-C443 chapters 34-37 add sixteen letter lessons (one per
+    // letter the reader had read in words and never written) and two reviews.
+    // RE-MEASURED against the tree. A letter lesson introduces one script atom
+    // and no idiom, sense or culture claim.
+    lessons: 182,
     idioms: 2,
     senses: 4,
     cultureClaims: 4,

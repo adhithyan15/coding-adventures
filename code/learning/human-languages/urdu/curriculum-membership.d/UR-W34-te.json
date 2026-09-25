@@ -1,0 +1,11 @@
+{
+  "id": "UR-W34-te",
+  "pathSegment": "UR-PATH-034-LETTERS-BOAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-034-LETTERS-BOAT",
+      "order": 1
+    }
+  ]
+}

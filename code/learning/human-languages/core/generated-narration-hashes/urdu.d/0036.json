@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:1df27d6dcc1d9105",
+  "lessonIds": [
+    "UR-W36-dal",
+    "UR-W36-rre",
+    "UR-W36-do-chashmi-he",
+    "UR-W36-gaf"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "urdu/narration/ch36.txt",
+  "json": "urdu/narration/ch36.json",
+  "textHash": "fnv1a64:60ebe55273e53ce7",
+  "jsonHash": "fnv1a64:c596e28414097aab",
+  "findings": []
+}

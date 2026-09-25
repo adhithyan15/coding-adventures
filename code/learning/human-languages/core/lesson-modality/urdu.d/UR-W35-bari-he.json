@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "UR-W35-bari-he",
+    "language": "urdu",
+    "chapter": 35,
+    "sequence": 1790,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:26e2362858cf8759",
+    "detachableSegments": [
+      "Script you'll notice: ح",
+      "Writing: ح"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

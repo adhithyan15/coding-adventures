@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:ed049c26bd81a3af",
+  "lessonIds": [
+    "UR-W37-fe",
+    "UR-W37-qaf",
+    "UR-W37-zuad",
+    "UR-W37-zoe",
+    "UR-W37-hamza-seat",
+    "UR-R37-letters-first-pass",
+    "UR-R37-letters-second-pass"
+  ],
+  "tex": "urdu/book/chapters/ch37-ur-letters-from-farewells-and-shirts.tex"
+}

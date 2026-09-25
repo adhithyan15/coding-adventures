@@ -1,0 +1,18 @@
+{
+  "language": "urdu",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:d38aea77a655779e",
+  "lessonIds": [
+    "UR-W35-jim",
+    "UR-W35-bari-he",
+    "UR-W35-khe",
+    "UR-W35-che"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "urdu/narration/ch35.txt",
+  "json": "urdu/narration/ch35.json",
+  "textHash": "fnv1a64:8257b9cb3cc531f9",
+  "jsonHash": "fnv1a64:c7ba4e4d689f97af",
+  "findings": []
+}

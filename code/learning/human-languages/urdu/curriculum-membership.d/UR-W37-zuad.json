@@ -1,0 +1,11 @@
+{
+  "id": "UR-W37-zuad",
+  "pathSegment": "UR-PATH-037-LETTERS-LAST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-037-LETTERS-LAST",
+      "order": 2
+    }
+  ]
+}

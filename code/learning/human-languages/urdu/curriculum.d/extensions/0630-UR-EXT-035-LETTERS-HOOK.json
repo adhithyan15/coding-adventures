@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-035-LETTERS-HOOK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write jim, bari he, khe and che, and tell the four apart by their dots.",
+  "prerequisites": []
+}

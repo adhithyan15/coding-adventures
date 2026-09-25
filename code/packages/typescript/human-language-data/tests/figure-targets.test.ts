@@ -216,7 +216,7 @@ describe("the real corpus", () => {
       SA: 39,
       TA: 30,
       TE: 9,
-      UR: 12,
+      UR: 27,
       ZH: 58,
     });
   });

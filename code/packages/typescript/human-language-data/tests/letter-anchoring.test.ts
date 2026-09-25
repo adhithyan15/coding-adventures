@@ -167,9 +167,9 @@ describe("the real corpus", () => {
   // letter. A new word must not bring a letter no letter lesson writes, unless
   // this pin moves in the same change and the commit says why.
   //
-  // Measured 2026-09-25 (HL-C443). The biggest completeness debt left is urdu
-  // 16: letters the reader meets in word after word and never writes. Tamil
-  // (chapters 109-112), arabic (chapters 46-49) and persian (chapters 22-26)
+  // Measured 2026-09-25 (HL-C443). The biggest completeness debt left is
+  // malayalam 9: letters the reader meets in word after word and never writes.
+  // Tamil (chapters 109-112), arabic (46-49), persian (22-26) and urdu (34-37)
   // each went to 0 by writing every such letter from the word it came from. The biggest
   // anchoring debts are marathi (43 cold) and gujarati (34 cold), whose letter
   // lessons open the track before any word does. Marwadi's 49 builds-toward are
@@ -196,7 +196,7 @@ describe("the real corpus", () => {
     sanskrit: [1, 0, 1],
     tamil: [1, 9, 0],
     telugu: [13, 0, 0],
-    urdu: [0, 5, 16],
+    urdu: [0, 5, 0],
   };
 
   it("measures every non-Latin track", () => {
