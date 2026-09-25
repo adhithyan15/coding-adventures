@@ -1,0 +1,11 @@
+{
+  "id": "TE-C87-exactly",
+  "pathSegment": "TE-PATH-87-ANSWER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-87-ANSWER",
+      "order": 1
+    }
+  ]
+}

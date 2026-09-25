@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:f704d6664db02ef8",
+  "lessonIds": [
+    "TE-C84-fever",
+    "TE-C84-pain",
+    "TE-C84-tiredness",
+    "TE-C84-thirst",
+    "TE-C84-rest"
+  ],
+  "tex": "telugu/book/chapters/ch84-not-well.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "Slower, Please",
+  "label": "ch:te-slower-please",
+  "canDo": "I can ask someone to speak slowly or loudly, to say it once more, or to wait a minute.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "TE-C86-wait",
+    "kind": "production",
+    "summary": "Complete TE-C86-wait: keep a conversation going when you cannot follow it.",
+    "assesses": [
+      "TE-LEX-C86-REPAIR-03",
+      "TE-LEX-C86-REPAIR-04",
+      "TE-LEX-C86-REPAIR-05"
+    ]
+  }
+}

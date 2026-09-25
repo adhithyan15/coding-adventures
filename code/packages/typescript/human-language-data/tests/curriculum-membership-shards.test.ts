@@ -314,9 +314,14 @@ describe("direct curriculum lesson owners", () => {
     // existing segment whose `spine_node` already matched its content, so
     // malayalam needed no new chapter and none of the four-part chapter
     // registration HL-C436 and HL-C437 required.
-    expect(digest).toBe("98e3031ab021e795e9b7c8aede41ccf38af1edbb321122efafcc1a4fa6b876b8");
+    //
+    // 7550 -> 7572 is telugu chapters 84-87: twenty new pre-A1 headwords and two
+    // closing review lessons, on four NEW segments and four new extensions (one
+    // per chapter). Attribution: every one of the 22 lessons sits on
+    // TE-PATH-84..87, which hold nothing else, and the count moved by exactly 22.
+    expect(digest).toBe("320199cbe0a7e89882b48ddb2792d162d217754b08e5b5bd092f49a0571add57");
     expect(curricula.flatMap((curriculum) => curriculum.path).flatMap((path) => path.lessons))
-      .toHaveLength(7550);
+      .toHaveLength(7572);
   });
 
   it("keeps the canonical curriculum shards free of derived lesson arrays", () => {

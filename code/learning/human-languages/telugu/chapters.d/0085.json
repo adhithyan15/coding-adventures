@@ -1,0 +1,19 @@
+{
+  "chapter": 85,
+  "title": "Cold, Hot, and How You Feel",
+  "label": "ch:te-cold-hot-feel",
+  "canDo": "I can say that I feel cold or hot, and that I am afraid, angry or sad.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C85-sorrow",
+    "kind": "production",
+    "summary": "Complete TE-C85-sorrow: say how you feel, from the weather to the heart.",
+    "assesses": [
+      "TE-LEX-C85-FEEL-03",
+      "TE-LEX-C85-FEEL-04",
+      "TE-LEX-C85-FEEL-05"
+    ]
+  }
+}

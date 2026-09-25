@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C84-tiredness",
+    "language": "telugu",
+    "chapter": 84,
+    "sequence": 3040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4efd40c9eb17602"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-84-UNWELL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that I have a fever, that something hurts, that I am tired or thirsty, and ask someone to rest.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C84-thirst",
+  "pathSegment": "TE-PATH-84-UNWELL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-84-UNWELL",
+      "order": 3
+    }
+  ]
+}

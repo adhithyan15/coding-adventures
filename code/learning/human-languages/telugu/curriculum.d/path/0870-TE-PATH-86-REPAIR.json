@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-86-REPAIR",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "TE-EXT-86-REPAIR"
+  ],
+  "after": []
+}

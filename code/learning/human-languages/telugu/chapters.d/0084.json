@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "When You Are Not Well",
+  "label": "ch:te-not-well",
+  "canDo": "I can say that I have a fever, that something hurts, that I am tired or thirsty, and ask someone to rest.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C84-rest",
+    "kind": "production",
+    "summary": "Complete TE-C84-rest: name what is wrong and tell a tired or feverish friend to rest.",
+    "assesses": [
+      "TE-LEX-C84-UNWELL-03",
+      "TE-LEX-C84-UNWELL-04",
+      "TE-LEX-C84-UNWELL-05"
+    ]
+  }
+}
