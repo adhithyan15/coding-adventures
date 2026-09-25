@@ -49,8 +49,6 @@ Read from the right: **چ** *ch*, **ی** long *i*, **س** *s*, **ت** *t*.
 **چ** is one of Persian's four additions to the Arabic alphabet: it uses the
 same base shape as **ج**, with three dots below. Meet only this joined form now.
 
-![How چ is written, stroke by stroke](figures/FA-C03-chist-filmstrip.svg)
-
 ## Grammar Lens: two words compressed
 <!-- hl-knowledge: introduces=[FA-GRAMMAR-CHI-AST-FUSION]; assesses=[] -->
 

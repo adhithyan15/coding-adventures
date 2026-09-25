@@ -91,6 +91,11 @@ That is about 380 filmstrips that could print today.
   per-track extractor that reads the letter out of such a headword, instead of
   requiring the whole headword to be one grapheme.
 
+- **Filmstrips in the app.** The language-ladder app does not show filmstrips
+  yet. Its eager figure map excludes `*-filmstrip.svg`, because 370 URLs pushed
+  first paint over its 500 kB budget. Showing them there needs a lazily loaded
+  figure map.
+
 ### The shape of the writing ramp (project owner, 2026-09-25)
 
 Writing must be gentle in the same way vocabulary is:

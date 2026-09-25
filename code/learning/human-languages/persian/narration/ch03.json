@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1aeea7ae7e54f019",
+  "sourceHash": "fnv1a64:c382a44a66a07827",
   "lessons": [
     {
       "id": "FA-C03-shoma-to",
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d44b7f3f079857e6",
+      "sourceHash": "fnv1a64:c3aea9dc955afe90",
       "notice": null,
       "blocks": [
         {
@@ -202,10 +202,6 @@
             {
               "kind": "speech",
               "text": "Read from the right: چ ch, ی long i, س s, ت t. چ is one of Persian's four additions to the Arabic alphabet: it uses the same base shape as ج, with three dots below. Meet only this joined form now."
-            },
-            {
-              "kind": "speech",
-              "text": "How چ is written, stroke by stroke."
             }
           ]
         },

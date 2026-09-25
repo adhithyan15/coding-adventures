@@ -99,6 +99,20 @@ function isScriptBlock(title: string): boolean {
  * `-1` when the lesson has neither.
  */
 export function filmstripBlockIndex(lesson: ParsedLesson): number {
+  const letter = letterBlockIndex(lesson);
+  if (letter !== -1) return letter;
+  // A DECLARED target may sit on a lesson that teaches its letter inside a word
+  // lesson (FA-C03-chist introduces چ in its first explanation block). There the
+  // figure goes on the first block that introduces a script atom. Derived
+  // candidates never reach this branch: `writingLetterOf` requires a letter
+  // block.
+  return lesson.blocks.findIndex((block) =>
+    (block.knowledge?.introduces ?? []).some((atom) => /-SCRIPT-/.test(atom)),
+  );
+}
+
+/** The first Writing block, else the first Script block; `-1` when neither. */
+function letterBlockIndex(lesson: ParsedLesson): number {
   const writing = lesson.blocks.findIndex((block) => isWritingBlock(block.title));
   if (writing !== -1) return writing;
   return lesson.blocks.findIndex((block) => isScriptBlock(block.title));
@@ -114,7 +128,7 @@ export function writingLetterOf(lesson: ParsedLesson): string | undefined {
   if (lesson.realization.type !== "writing") return undefined;
   const headword = (lesson.realization.headword ?? "").trim();
   if (headword === "" || [...GRAPHEMES.segment(headword)].length !== 1) return undefined;
-  if (filmstripBlockIndex(lesson) === -1) return undefined;
+  if (letterBlockIndex(lesson) === -1) return undefined;
   return headword;
 }
 

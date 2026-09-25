@@ -123,6 +123,23 @@ describe("placing the image", () => {
     expect(placed!.blocks[1]!.markdown).toContain("filmstrip");
   });
 
+  it("places a declared target on a word lesson's first script-introducing block", () => {
+    // FA-C03-chist teaches چ inside a word lesson: no Writing or Script block,
+    // so it is never a derived candidate, but a DECLARED filmstrip still prints.
+    const word = lesson("FA-C3", { type: "word", blocks: ["Warm-up", "You'll want to know", "Wrap-up Recall"] });
+    word.blocks[1]!.knowledge = { introduces: ["FA-LEX-X", "FA-SCRIPT-CHE"], assesses: [] } as never;
+    expect(writingLetterOf(word)).toBeUndefined();
+    const declared: ScriptFilmstripTarget = {
+      kind: "script-filmstrip",
+      lessonId: "FA-C3",
+      script: "perso-arabic",
+      glyph: "چ",
+      output: "persian/book/figures/FA-C3-filmstrip.svg",
+    };
+    const [placed] = withFilmstripImages([word], [declared]);
+    expect(placed!.blocks[1]!.markdown.startsWith("![How چ is written")).toBe(true);
+  });
+
   it("leaves a lesson that already prints its figure by hand alone", () => {
     const authored = lesson("TA-S1");
     authored.blocks[0]!.markdown = "![hand placed](figures/TA-S1-filmstrip.svg)\n";
