@@ -1208,13 +1208,15 @@ fn canonical_event_name(name: &str) -> std::borrow::Cow<'_, str> {
 }
 
 /// A host-supplied name or message, made fit for a status line: control
-/// characters dropped, at most [`MAX_EXPORT_NAME_CHARS`] characters, and a
+/// characters and the invisible format characters that reorder or hide text
+/// (a right-to-left override can make `journal<RLO>nosj.exe` read as a JSON
+/// file) dropped, at most [`MAX_EXPORT_NAME_CHARS`] characters, and a
 /// placeholder when there is none.
 fn displayable_name(text: Option<&str>) -> String {
     let cleaned: String = text
         .unwrap_or("")
         .chars()
-        .filter(|c| !c.is_control())
+        .filter(|c| !c.is_control() && !is_invisible_format(*c))
         .take(MAX_EXPORT_NAME_CHARS)
         .collect();
     if cleaned.trim().is_empty() {
@@ -1222,6 +1224,19 @@ fn displayable_name(text: Option<&str>) -> String {
     } else {
         cleaned
     }
+}
+
+/// Bidirectional controls and zero-width characters (Unicode's format
+/// characters that change how surrounding text is shown).
+fn is_invisible_format(c: char) -> bool {
+    matches!(
+        c,
+        '\u{061C}'
+            | '\u{200B}'..='\u{200F}'
+            | '\u{202A}'..='\u{202E}'
+            | '\u{2060}'..='\u{2069}'
+            | '\u{FEFF}'
+    )
 }
 
 /// The user's today: the local date at `now_ms`, `utc_offset_minutes` east
@@ -2851,6 +2866,12 @@ mod tests {
         let update = a.complete_effect(id, EffectResult::Ok(json!({ "name": long }))).unwrap();
         let status = update.props["export-status"].as_str().unwrap();
         assert!(!status.contains('\u{0007}'));
+
+        let mut b = app();
+        let id = export_effect(&send(&mut b, "onExportJournal", json!({})).unwrap()).id;
+        let disguised = "journal\u{202E}nosj.exe";
+        let update = b.complete_effect(id, EffectResult::Ok(json!({ "name": disguised }))).unwrap();
+        assert_eq!(update.props["export-status"], "Exported to journalnosj.exe");
         assert!(status.chars().count() <= "Exported to ".len() + MAX_EXPORT_NAME_CHARS);
     }
 

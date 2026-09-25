@@ -617,7 +617,10 @@ the effect, which the app reports.
     "state": { ...the snapshot state... } }
   ```
 
-  The bytes are captured when Export is pressed (UI47 §8.3). Files larger
+  `state` is the whole snapshot state, so it includes the editor's unsaved
+  draft (title, body, tags, date, journal) exactly as the browser already
+  stores it; that is what lets Import restore the app as it was. The bytes
+  are captured when Export is pressed (UI47 §8.3). Files larger
   than the 16 MiB `files.save` limit are refused before the effect, with a
   message.
 - **Results.** `ok { name }` shows "Exported to NAME"; with `download: true`
@@ -625,8 +628,11 @@ the effect, which the app reports.
   nothing. `failed { message }` shows "Couldn't export: MESSAGE". The status
   line is `export-status`; it is not persisted.
 - **Persistence while exporting.** A pending Await blocks snapshots (UI47
-  §8.1), so hosts defer autosave until the export completes. The journal is
-  unchanged by an export either way.
+  §8.1), so hosts defer autosave until the export completes, including for
+  edits made meanwhile; the answer's update saves everything at once. The
+  journal is unchanged by an export either way. A host-supplied name or
+  message loses control and bidirectional/zero-width format characters before
+  it reaches the status line.
 
 Markdown export (readable, one-way) and Import are later steps.
 

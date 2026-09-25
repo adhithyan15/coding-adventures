@@ -84,6 +84,8 @@ function camelProps(props: Record<string, unknown>): Props {
   ) as Props;
 }
 
+const SAVE_FAILED = "Journal could not save to this browser. Your changes are kept only until you close the page.";
+
 /** The standard kinds the browser platform library answers (UI87 §7). */
 const FILE_EFFECT_KINDS = new Set(["files.open", "files.save"]);
 
@@ -162,8 +164,10 @@ export function App({
     try {
       const snapshot = app.snapshot();
       if (snapshot) writeSnapshot(storage, snapshot);
+      // A save that works again clears an earlier save failure (only that one).
+      setNotice(current => (current === SAVE_FAILED ? "" : current));
     } catch {
-      setNotice("Journal could not save to this browser. Your changes are kept only until you close the page.");
+      setNotice(SAVE_FAILED);
     }
   };
 
@@ -202,8 +206,11 @@ export function App({
       setError(String(reason));
       return;
     }
-    // A pending Await blocks snapshots (UI47 §8.1): save once it is answered.
-    if (!runFileEffects(app, next)) persist(app);
+    // A pending Await blocks snapshots (UI47 §8.1): while an export is
+    // outstanding -- including edits made meanwhile -- saving waits, and the
+    // answer's update saves everything at once.
+    if (runFileEffects(app, next) || next.props.exporting === true) return;
+    persist(app);
   };
 
   if (!update) {
