@@ -4,7 +4,7 @@
   "chapter": 124,
   "title": "Welcome and Good Wishes",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3db7b8b18efa3f0d",
+  "sourceHash": "fnv1a64:c5016d110da4e002",
   "lessons": [
     {
       "id": "ML-C124-congratulations",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff4e045d1180e613",
+      "sourceHash": "fnv1a64:509c3fb5f8910687",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +538,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ആശംസകൾ (āśaṁsakaḷ) — \"good wishes\", in the plural like അഭിനന്ദനങ്ങൾ (abhinandanaṅṅaḷ)."
+              "text": "ആശംസകൾ (āśaṁsakaḷ) — \"good wishes\". Like അഭിനന്ദനങ്ങൾ (abhinandanaṅṅaḷ), it is said in the plural."
             }
           ]
         },

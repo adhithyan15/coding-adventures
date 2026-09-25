@@ -38,7 +38,7 @@ reviews_of: [ML-C124-welcome]
 ## You'll want to know: ആശംസകൾ
 <!-- hl-knowledge: introduces=[ML-LEX-C124-WELCOME-05]; assesses=[] -->
 
-**ആശംസകൾ** (*āśaṁsakaḷ*) — "good wishes", in the plural like **അഭിനന്ദനങ്ങൾ**.
+**ആശംസകൾ** (*āśaṁsakaḷ*) — "good wishes". Like **അഭിനന്ദനങ്ങൾ**, it is said in the plural.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
