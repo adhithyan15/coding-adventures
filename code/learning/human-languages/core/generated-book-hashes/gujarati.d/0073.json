@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:b9867cde78e286f6",
+  "lessonIds": [
+    "GU-C73-light",
+    "GU-C73-new",
+    "GU-C73-old",
+    "GU-C73-hot",
+    "GU-C73-cheap"
+  ],
+  "tex": "gujarati/book/chapters/ch73-light-new-old-hot-cheap.tex"
+}

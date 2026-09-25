@@ -1,0 +1,11 @@
+{
+  "id": "GU-C57-rupees",
+  "pathSegment": "GU-PATH-57-MARKET",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-57-MARKET",
+      "order": 3
+    }
+  ]
+}

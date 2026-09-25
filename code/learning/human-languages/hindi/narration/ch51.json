@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d339c92531248b67",
+  "sourceHash": "fnv1a64:516a77e3fc332f05",
   "lessons": [
     {
       "id": "HI-C51-flower",
@@ -543,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1475ad93707b34f",
+      "sourceHash": "fnv1a64:9150ff123d94e336",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +634,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say mulāqāt, then read प्रणाम",
+              "instruction": "say mulāqāt, then read प्रणाम and point to its ण",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *mulāqāt*, then read **प्रणाम**]"
+              "source": "[YOU RECALL: say *mulāqāt*, then read **प्रणाम** and point to its **ण**]"
             }
           ]
         },

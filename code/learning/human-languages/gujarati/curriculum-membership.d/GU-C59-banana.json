@@ -1,0 +1,11 @@
+{
+  "id": "GU-C59-banana",
+  "pathSegment": "GU-PATH-59-PRODUCE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-59-PRODUCE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C84-clinic",
+    "language": "gujarati",
+    "chapter": 84,
+    "sequence": 4260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c560a8f9453cc4d2"
+  },
+  "findings": []
+}

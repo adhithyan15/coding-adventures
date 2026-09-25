@@ -1,0 +1,19 @@
+{
+  "chapter": 63,
+  "title": "Roof, Wall and Garden",
+  "label": "ch:gu-roof-wall-and-garden",
+  "canDo": "I can name a roof, a wall, a courtyard, a garden and an address.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "GU-C63-address",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 63: i can name a roof, a wall, a courtyard, a garden and an address.",
+    "assesses": [
+      "GU-LEX-C63-HOUSE-03",
+      "GU-LEX-C63-HOUSE-04",
+      "GU-LEX-C63-HOUSE-05"
+    ]
+  }
+}

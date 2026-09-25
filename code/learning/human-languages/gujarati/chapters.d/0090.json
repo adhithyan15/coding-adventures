@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "Weddings, Birthdays and Work",
+  "label": "ch:gu-weddings-birthdays-and-work",
+  "canDo": "I can name a wedding, a birthday and an age, a field and a merchant.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "GU-C90-merchant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 90: i can name a wedding, a birthday and an age, a field and a merchant.",
+    "assesses": [
+      "GU-LEX-C90-LIFE-03",
+      "GU-LEX-C90-LIFE-04",
+      "GU-LEX-C90-LIFE-05"
+    ]
+  }
+}

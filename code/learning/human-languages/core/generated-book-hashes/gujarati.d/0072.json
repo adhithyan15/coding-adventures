@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:3887b021a06e3f9e",
+  "lessonIds": [
+    "GU-C72-big",
+    "GU-C72-small",
+    "GU-C72-long",
+    "GU-C72-short",
+    "GU-C72-heavy"
+  ],
+  "tex": "gujarati/book/chapters/ch72-big-and-small-long-and-short.tex"
+}

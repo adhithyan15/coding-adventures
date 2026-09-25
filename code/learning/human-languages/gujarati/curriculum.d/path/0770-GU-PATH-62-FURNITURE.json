@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-62-FURNITURE",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "GU-EXT-62-FURNITURE"
+  ],
+  "after": []
+}

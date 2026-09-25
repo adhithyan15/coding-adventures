@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C66-cloud",
+    "language": "gujarati",
+    "chapter": 66,
+    "sequence": 3350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72c743da84d9efe1"
+  },
+  "findings": []
+}

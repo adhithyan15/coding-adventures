@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C61-cup",
+    "language": "gujarati",
+    "chapter": 61,
+    "sequence": 3120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:921f33543cdeb178"
+  },
+  "findings": []
+}

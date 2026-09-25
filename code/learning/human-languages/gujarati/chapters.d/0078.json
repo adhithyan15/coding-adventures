@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Monday to Friday",
+  "label": "ch:gu-monday-to-friday",
+  "canDo": "I can name the days from Monday to Friday.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "GU-C78-friday",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can name the days from Monday to Friday.",
+    "assesses": [
+      "GU-LEX-C78-WEEK1-03",
+      "GU-LEX-C78-WEEK1-04",
+      "GU-LEX-C78-WEEK1-05"
+    ]
+  }
+}

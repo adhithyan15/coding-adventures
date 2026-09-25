@@ -1,0 +1,19 @@
+{
+  "chapter": 66,
+  "title": "Wind, Cloud and Heat",
+  "label": "ch:gu-wind-cloud-and-heat",
+  "canDo": "I can name the wind, a cloud, the heat, ice and fog.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GU-C66-fog",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: i can name the wind, a cloud, the heat, ice and fog.",
+    "assesses": [
+      "GU-LEX-C66-WEATHER-03",
+      "GU-LEX-C66-WEATHER-04",
+      "GU-LEX-C66-WEATHER-05"
+    ]
+  }
+}

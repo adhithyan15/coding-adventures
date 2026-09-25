@@ -206,12 +206,18 @@ describe("the real corpus", () => {
   // Arabic's cold (5 -> 7) and builds-toward (4 -> 5) rose when the measure
   // learned to read a letters-then-word headword ("ا م — سلام"). No content
   // got worse: those lessons were invisible before, and now they are counted.
+  //
+  // Hindi's cold fell 9 -> 4 when five letter lessons moved to sit right after
+  // the word that holds their letter: ृ after कृपया, ऋ after ऋतु, झ after साँझ,
+  // औ after औरत, ण after प्रणाम. The four left need more than a move: घ and ढ
+  // depend on each other in the script ladder, and ऊ and ओ have no word before
+  // chapter 96.
   const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
     arabic: [7, 5, 0],
     bengali: [5, 12, 0],
     chinese: [0, 51, 0],
     gujarati: [34, 5, 0],
-    hindi: [9, 1, 0],
+    hindi: [4, 1, 0],
     japanese: [2, 35, 0],
     kannada: [19, 0, 0],
     malayalam: [12, 12, 0],

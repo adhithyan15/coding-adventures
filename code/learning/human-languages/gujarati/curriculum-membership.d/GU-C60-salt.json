@@ -1,0 +1,11 @@
+{
+  "id": "GU-C60-salt",
+  "pathSegment": "GU-PATH-60-SNACKS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-60-SNACKS",
+      "order": 1
+    }
+  ]
+}

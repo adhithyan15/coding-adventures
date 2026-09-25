@@ -12,18 +12,18 @@ headword: कृपया
 gloss: please (kṛpayā — "kindly," from kṛpā "grace/compassion")
 romanization: "kṛpayā"
 concept_tag: COURTESY-PLEASE
-prerequisites: [HI-S144-vowel-sign-vocalic-r, HI-C01-dhanyavad]
+prerequisites: [HI-C01-dhanyavad]
 sounds: [vocalic-r-matra, retroflex-flap]
 roots: [krpa-sanskrit]
 etymology_hook: "कृपया kṛpayā is 'kindly', from Sanskrit kṛpā 'grace, compassion' — the same 'invoke grace' idea as Arabic min faḍlik"
 duration:
   max_seconds: 226
 requires:
-  knowledge: [HI-SCRIPT-RECOG-144]
+  knowledge: [HI-CONCEPT-C01-DHANYAVAD-01]
 introduces:
   knowledge: [HI-CONCEPT-C08-KRIPAYA-01, HI-CONCEPT-C08-KRIPAYA-02]
 practises:
-  knowledge: [HI-CONCEPT-C08-KRIPAYA-01, HI-CONCEPT-C08-KRIPAYA-02, HI-SCRIPT-RECOG-144]
+  knowledge: [HI-CONCEPT-C08-KRIPAYA-01, HI-CONCEPT-C08-KRIPAYA-02, HI-CONCEPT-C01-DHANYAVAD-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,9 @@ reviews_of: [HI-C01-dhanyavad]
 # कृपया (kṛpayā) — please (kindly)
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-144] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-DHANYAVAD-01] -->
+
+[PAUSE 1s] First, the word you already use to thank someone: **धन्यवाद**.
 
 [PAUSE 2s] Hindi's dictionary word for "please" is really the word **compassion**
 in disguise — and it's more formal than you might expect.
@@ -52,9 +54,10 @@ That places Hindi in good company: **Arabic** asks *min faḍlik* ("from your
 whole swathe of Asia says *please* by naming the kindness it hopes for — a
 different instinct from French's "if it **pleases** you."
 
-The first letter hides a sound you met in the syllabary track: **कृ** is *ka*
-carrying the **vocalic r** (the *ृ* mark) — *kṛ*, the same *ṛ* vowel Sanskrit and
-the Dravidian scripts share.
+The first syllable hides a sound worth noticing: **कृ** is *ka* carrying the
+**vocalic r** (the *ृ* mark) — *kṛ*, the same *ṛ* vowel Sanskrit and the
+Dravidian scripts share. The next lesson takes that mark out of this word and
+writes it on its own.
 
 ## You'll want to know — Be honest about how it's used
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C08-KRIPAYA-02]; assesses=[] -->

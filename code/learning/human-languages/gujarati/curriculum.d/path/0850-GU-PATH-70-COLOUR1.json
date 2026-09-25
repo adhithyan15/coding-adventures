@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-70-COLOUR1",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "GU-EXT-70-COLOUR1"
+  ],
+  "after": []
+}

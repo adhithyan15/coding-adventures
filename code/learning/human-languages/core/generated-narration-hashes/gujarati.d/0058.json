@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:9e5be452c9c700f6",
+  "lessonIds": [
+    "GU-C58-rice-grain",
+    "GU-C58-flour",
+    "GU-C58-ghee",
+    "GU-C58-yogurt",
+    "GU-C58-buttermilk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch58.txt",
+  "json": "gujarati/narration/ch58.json",
+  "textHash": "fnv1a64:1891c54200c4ccc9",
+  "jsonHash": "fnv1a64:d72001ce196f0f13",
+  "findings": []
+}

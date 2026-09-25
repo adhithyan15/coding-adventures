@@ -1,0 +1,21 @@
+{
+  "language": "gujarati",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:f2dfa58b0165f2d5",
+  "lessonIds": [
+    "GU-C68-tiger",
+    "GU-C68-lion",
+    "GU-C68-elephant",
+    "GU-C68-monkey",
+    "GU-C68-snake",
+    "GU-R68-first-pass-the-body-the-family-and-the-house",
+    "GU-R68-second-pass-food-the-land-and-animals"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "gujarati/narration/ch68.txt",
+  "json": "gujarati/narration/ch68.json",
+  "textHash": "fnv1a64:232fffce60bb77ce",
+  "jsonHash": "fnv1a64:8bed97d1e593d8f4",
+  "findings": []
+}

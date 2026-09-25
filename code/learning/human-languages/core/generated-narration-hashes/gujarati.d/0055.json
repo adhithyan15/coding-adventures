@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:0d2f09579883d219",
+  "lessonIds": [
+    "GU-C55-randhvu",
+    "GU-C55-dhovu",
+    "GU-C55-aapvu",
+    "GU-C55-laavvu",
+    "GU-C55-pivu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch55.txt",
+  "json": "gujarati/narration/ch55.json",
+  "textHash": "fnv1a64:cb13c3737f5d4962",
+  "jsonHash": "fnv1a64:eb6a221ab51ffe9f",
+  "findings": []
+}

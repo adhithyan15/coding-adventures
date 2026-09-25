@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Glasses, Bag, Wallet, Letter, Gift",
+  "label": "ch:gu-glasses-bag-wallet-letter-gift",
+  "canDo": "I can name glasses, a bag, a wallet, a letter and a gift.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GU-C88-gift",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can name glasses, a bag, a wallet, a letter and a gift.",
+    "assesses": [
+      "GU-LEX-C88-CARRY-03",
+      "GU-LEX-C88-CARRY-04",
+      "GU-LEX-C88-CARRY-05"
+    ]
+  }
+}

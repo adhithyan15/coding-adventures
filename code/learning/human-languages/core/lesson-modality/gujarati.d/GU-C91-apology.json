@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C91-apology",
+    "language": "gujarati",
+    "chapter": 91,
+    "sequence": 4640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd706188e9f8e5c3"
+  },
+  "findings": []
+}

@@ -1,19 +1,18 @@
 {
   "language": "hindi",
   "chapter": 13,
-  "sourceHash": "fnv1a64:6cf94d3b577f9afd",
+  "sourceHash": "fnv1a64:40a7ed4b4bfce1fc",
   "lessonIds": [
     "HI-C13-sir",
     "HI-C13-haath",
     "HI-S08-letter-sa",
-    "HI-S117-letter-ca",
-    "HI-S125-letter-vocalic-r"
+    "HI-S117-letter-ca"
   ],
   "voiceLessons": 2,
   "drivablePrefix": 2,
   "text": "hindi/narration/ch13.txt",
   "json": "hindi/narration/ch13.json",
-  "textHash": "fnv1a64:f566a2b4ce15cab8",
-  "jsonHash": "fnv1a64:042bc3890083fa92",
+  "textHash": "fnv1a64:d8463da90f28c7a3",
+  "jsonHash": "fnv1a64:6058a8ed98f1e5bd",
   "findings": []
 }

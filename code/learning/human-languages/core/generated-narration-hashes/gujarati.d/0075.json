@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:0383920dc51c0aa5",
+  "lessonIds": [
+    "GU-C75-ahead",
+    "GU-C75-behind",
+    "GU-C75-inside",
+    "GU-C75-outside",
+    "GU-C75-between"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch75.txt",
+  "json": "gujarati/narration/ch75.json",
+  "textHash": "fnv1a64:bc7437545e8bcb4d",
+  "jsonHash": "fnv1a64:3f7ebd28199ff77c",
+  "findings": []
+}

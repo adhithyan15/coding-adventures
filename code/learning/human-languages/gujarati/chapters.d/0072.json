@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "Big and Small, Long and Short",
+  "label": "ch:gu-big-and-small-long-and-short",
+  "canDo": "I can say big, small, long, short and heavy.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C72-heavy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can say big, small, long, short and heavy.",
+    "assesses": [
+      "GU-LEX-C72-SIZE-03",
+      "GU-LEX-C72-SIZE-04",
+      "GU-LEX-C72-SIZE-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C86-map",
+  "pathSegment": "GU-PATH-86-JOURNEY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-86-JOURNEY",
+      "order": 2
+    }
+  ]
+}

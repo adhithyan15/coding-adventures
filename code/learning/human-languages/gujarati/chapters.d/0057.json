@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "Buying and Selling",
+  "label": "ch:gu-buying-and-selling",
+  "canDo": "I can say to buy and to sell, and talk about the price, rupees and coins.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GU-C57-coin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: i can say to buy and to sell, and talk about the price, rupees and coins.",
+    "assesses": [
+      "GU-LEX-C57-MARKET-03",
+      "GU-LEX-C57-MARKET-04",
+      "GU-LEX-C57-MARKET-05"
+    ]
+  }
+}

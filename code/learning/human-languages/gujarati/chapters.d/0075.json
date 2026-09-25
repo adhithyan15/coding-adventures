@@ -1,0 +1,19 @@
+{
+  "chapter": 75,
+  "title": "Ahead, Behind, In and Out",
+  "label": "ch:gu-ahead-behind-in-and-out",
+  "canDo": "I can say ahead, behind, inside, outside and between.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C75-between",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 75: i can say ahead, behind, inside, outside and between.",
+    "assesses": [
+      "GU-LEX-C75-WHERE2-03",
+      "GU-LEX-C75-WHERE2-04",
+      "GU-LEX-C75-WHERE2-05"
+    ]
+  }
+}

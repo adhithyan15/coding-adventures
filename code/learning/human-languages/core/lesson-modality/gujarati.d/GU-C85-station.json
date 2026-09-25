@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C85-station",
+    "language": "gujarati",
+    "chapter": 85,
+    "sequence": 4330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c977a1d7b06110a0"
+  },
+  "findings": []
+}

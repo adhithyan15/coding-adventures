@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C71-white",
+    "language": "gujarati",
+    "chapter": 71,
+    "sequence": 3610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1e434a058df630e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C69-peacock",
+  "pathSegment": "GU-PATH-69-SKY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-69-SKY",
+      "order": 2
+    }
+  ]
+}

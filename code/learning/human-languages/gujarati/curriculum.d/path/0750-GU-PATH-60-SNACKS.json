@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-60-SNACKS",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "GU-EXT-60-SNACKS"
+  ],
+  "after": []
+}

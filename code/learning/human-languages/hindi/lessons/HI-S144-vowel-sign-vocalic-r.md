@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-S144-vowel-sign-vocalic-r
 spine_node: SPINE-MEET-GREET
-sequence: 507
+sequence: 511
 delivery: script
-chapter: 7
+chapter: 8
 type: writing
 headword: "ृ"
 gloss: the single character ◌ृ — a hook under the consonant, written as one vowel and said as another
@@ -35,6 +35,8 @@ reviews_of: [HI-S111-letter-ka]
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-111] -->
+
+[PAUSE 1s] You have been saying **कृपया** (*kṛpayā*). Its first syllable, **कृ**, carries the mark this lesson writes.
 
 [PAUSE 1s] Before the new one: **क** — what sound does it carry?
 

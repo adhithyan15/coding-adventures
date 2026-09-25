@@ -1,0 +1,11 @@
+{
+  "id": "GU-C80-holiday",
+  "pathSegment": "GU-PATH-80-TIME",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-80-TIME",
+      "order": 2
+    }
+  ]
+}

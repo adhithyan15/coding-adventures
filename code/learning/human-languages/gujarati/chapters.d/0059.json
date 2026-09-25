@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "Fruit and Vegetables",
+  "label": "ch:gu-fruit-and-vegetables",
+  "canDo": "I can name fruit, a banana, an apple, potatoes and a tomato.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GU-C59-tomato",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: i can name fruit, a banana, an apple, potatoes and a tomato.",
+    "assesses": [
+      "GU-LEX-C59-PRODUCE-03",
+      "GU-LEX-C59-PRODUCE-04",
+      "GU-LEX-C59-PRODUCE-05"
+    ]
+  }
+}

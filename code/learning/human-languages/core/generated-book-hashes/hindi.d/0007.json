@@ -1,13 +1,12 @@
 {
   "language": "hindi",
   "chapter": 7,
-  "sourceHash": "fnv1a64:96faad99bd8e3780",
+  "sourceHash": "fnv1a64:24da75be179fa612",
   "lessonIds": [
     "HI-C07-haan",
     "HI-C07-nahin",
     "HI-S02-letter-na",
-    "HI-S111-letter-ka",
-    "HI-S144-vowel-sign-vocalic-r"
+    "HI-S111-letter-ka"
   ],
   "tex": "hindi/book/chapters/ch07-yes-and-no.tex"
 }

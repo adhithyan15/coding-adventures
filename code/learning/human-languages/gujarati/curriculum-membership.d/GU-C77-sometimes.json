@@ -1,0 +1,11 @@
+{
+  "id": "GU-C77-sometimes",
+  "pathSegment": "GU-PATH-77-WHEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-77-WHEN",
+      "order": 1
+    }
+  ]
+}

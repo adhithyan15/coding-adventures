@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:40e25ce3aed56b43",
+  "lessonIds": [
+    "GU-C83-fifty",
+    "GU-C83-hundred",
+    "GU-C83-thousand",
+    "GU-C83-howmuch",
+    "GU-C83-which"
+  ],
+  "tex": "gujarati/book/chapters/ch83-fifty-to-a-thousand-and-how-much.tex"
+}

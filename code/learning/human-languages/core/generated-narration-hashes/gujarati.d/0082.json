@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:ffc30df394996d58",
+  "lessonIds": [
+    "GU-C82-seventeen",
+    "GU-C82-eighteen",
+    "GU-C82-twenty",
+    "GU-C82-thirty",
+    "GU-C82-forty"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch82.txt",
+  "json": "gujarati/narration/ch82.json",
+  "textHash": "fnv1a64:47ebe110a056ba02",
+  "jsonHash": "fnv1a64:1459b448ebda14a4",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C72-small",
+  "pathSegment": "GU-PATH-72-SIZE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-72-SIZE",
+      "order": 1
+    }
+  ]
+}

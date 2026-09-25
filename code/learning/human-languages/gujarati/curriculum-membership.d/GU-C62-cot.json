@@ -1,0 +1,11 @@
+{
+  "id": "GU-C62-cot",
+  "pathSegment": "GU-PATH-62-FURNITURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-62-FURNITURE",
+      "order": 1
+    }
+  ]
+}

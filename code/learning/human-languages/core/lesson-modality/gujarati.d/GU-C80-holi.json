@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C80-holi",
+    "language": "gujarati",
+    "chapter": 80,
+    "sequence": 4100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a9e498a142254af"
+  },
+  "findings": []
+}

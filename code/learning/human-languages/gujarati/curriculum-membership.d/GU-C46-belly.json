@@ -1,0 +1,11 @@
+{
+  "id": "GU-C46-belly",
+  "pathSegment": "GU-PATH-46-BODY1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-46-BODY1",
+      "order": 2
+    }
+  ]
+}
