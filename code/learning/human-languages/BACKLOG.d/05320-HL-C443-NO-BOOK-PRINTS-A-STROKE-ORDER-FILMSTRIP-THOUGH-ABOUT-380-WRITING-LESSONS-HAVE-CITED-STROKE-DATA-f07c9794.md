@@ -140,7 +140,10 @@ unmeasured. There are 93 unwritten letters.
 
 The fixes, biggest first:
 
-- **Unwritten.** Only Japanese is left, with 5 (が ご ざ じ ぽ). These are kana plus a mark, which belongs to the combinations work.
+- **Unwritten: DONE, 0 on every track.** Japanese needed no lesson. Its last
+  five (が ご ざ じ ぽ) are kana plus a mark. Each base kana and both marks
+  already had lessons, and a voiced kana is now measured as a combination of
+  its parts.
   Each fix is one letter lesson that follows the first word using the letter.
   Two tracks are done, each with one lesson per letter that names its word:
   - Tamil 14 → 0, in chapters 109-112.
@@ -152,7 +155,14 @@ The fixes, biggest first:
     Malayalam 9 and Russian 1, all → 0 in one chapter per track (two for
     Malayalam). This also closes Malayalam's `ML-A1-SCR-12` direct-owner gap.
 - **Cold.** Marathi 43, Gujarati 34, Kannada 19, Telugu 13, Malayalam 12,
-  Hindi 9. These are mostly alphabet-first openings, where the letters come
+  Hindi 9. Marathi shows the pattern. Chapter 1 writes the letters of
+  नमस्कार, which is anchored. But it also writes ह and ो, and हो only arrives
+  as a word in chapter 4. Chapter 2 writes ः आ भ े ं त, and none of those are
+  in its one word, धन्यवाद. The fix is structural: move the word lesson that
+  needs each letter (for example `MR-C01-ho`) ahead of the letter's lesson, or
+  move the letter lessons after it. Either way the opening chapters reorder,
+  and so do the per-track pins. Plan it as its own change per track, not as
+  a batch. These are mostly alphabet-first openings, where the letters come
   before any word. The fix moves the letter lesson after its first word, or
   adds a word first.
 - **Builds-toward.** Chinese 51, Marwadi 49, Japanese 32. Here the word
