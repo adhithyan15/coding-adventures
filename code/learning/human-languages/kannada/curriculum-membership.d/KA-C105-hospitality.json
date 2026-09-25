@@ -1,0 +1,11 @@
+{
+  "id": "KA-C105-hospitality",
+  "pathSegment": "KA-PATH-105-WISHES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-105-WISHES",
+      "order": 2
+    }
+  ]
+}

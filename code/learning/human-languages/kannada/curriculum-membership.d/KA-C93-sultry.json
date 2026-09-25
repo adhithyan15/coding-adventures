@@ -1,0 +1,11 @@
+{
+  "id": "KA-C93-sultry",
+  "pathSegment": "KA-PATH-93-WEATHER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-93-WEATHER",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:0d38cd32176bbcd6",
+  "lessonIds": [
+    "KA-C95-notpossible",
+    "KA-C95-notlikethat",
+    "KA-C95-oh",
+    "KA-C95-maybe",
+    "KA-C95-certainly"
+  ],
+  "tex": "kannada/book/chapters/ch95-maybe-and-not-possible.tex"
+}

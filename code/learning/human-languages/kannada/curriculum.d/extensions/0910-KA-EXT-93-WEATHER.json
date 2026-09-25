@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-93-WEATHER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I feel dizzy or hot, that I am at ease, and name a wound and vomiting.",
+  "prerequisites": []
+}

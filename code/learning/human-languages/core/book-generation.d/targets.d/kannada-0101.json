@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 101,
+  "output": "kannada/book/chapters/ch101-open-close-stop-call.tex",
+  "scriptSet": "kannada-comparisons"
+}

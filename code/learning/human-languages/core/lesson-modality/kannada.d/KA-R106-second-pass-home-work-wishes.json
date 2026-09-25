@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R106-second-pass-home-work-wishes",
+    "language": "kannada",
+    "chapter": 106,
+    "sequence": 4290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e064dbc8f15074de"
+  },
+  "findings": []
+}

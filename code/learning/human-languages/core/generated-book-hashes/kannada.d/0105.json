@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:63b5f8a136664c3d",
+  "lessonIds": [
+    "KA-C105-wishes",
+    "KA-C105-festival",
+    "KA-C105-hospitality",
+    "KA-C105-love",
+    "KA-C105-appreciation"
+  ],
+  "tex": "kannada/book/chapters/ch105-wishes-and-warmth.tex"
+}

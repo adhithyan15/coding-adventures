@@ -1,0 +1,6 @@
+{
+  "language": "kannada",
+  "chapter": 100,
+  "output": "kannada/book/chapters/ch100-help-me-find-it.tex",
+  "scriptSet": "kannada-comparisons"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C94-spoon",
+  "pathSegment": "KA-PATH-94-TABLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-94-TABLE",
+      "order": 1
+    }
+  ]
+}

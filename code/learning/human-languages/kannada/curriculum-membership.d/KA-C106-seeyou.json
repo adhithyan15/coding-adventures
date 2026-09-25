@@ -1,0 +1,11 @@
+{
+  "id": "KA-C106-seeyou",
+  "pathSegment": "KA-PATH-106-SOON",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-106-SOON",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C103-house",
+    "language": "kannada",
+    "chapter": 103,
+    "sequence": 4080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ed9008edf5353ae"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:23688d5c4bfb44f1",
+  "lessonIds": [
+    "KA-C104-business",
+    "KA-C104-worker",
+    "KA-C104-police",
+    "KA-C104-driver",
+    "KA-C104-shop"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch104.txt",
+  "json": "kannada/narration/ch104.json",
+  "textHash": "fnv1a64:0de2cbc15154fc63",
+  "jsonHash": "fnv1a64:c4927008da5c0328",
+  "findings": []
+}

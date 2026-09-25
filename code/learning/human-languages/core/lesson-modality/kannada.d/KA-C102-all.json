@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C102-all",
+    "language": "kannada",
+    "chapter": 102,
+    "sequence": 4050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cfcd590cafae77d"
+  },
+  "findings": []
+}

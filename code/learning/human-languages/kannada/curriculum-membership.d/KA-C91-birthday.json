@@ -1,0 +1,11 @@
+{
+  "id": "KA-C91-birthday",
+  "pathSegment": "KA-PATH-91-ABOUTYOU",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-91-ABOUTYOU",
+      "order": 1
+    }
+  ]
+}

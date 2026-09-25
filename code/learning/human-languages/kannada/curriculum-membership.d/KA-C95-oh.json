@@ -1,0 +1,11 @@
+{
+  "id": "KA-C95-oh",
+  "pathSegment": "KA-PATH-95-MAYBE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-95-MAYBE",
+      "order": 2
+    }
+  ]
+}

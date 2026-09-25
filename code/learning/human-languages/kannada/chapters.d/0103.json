@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "Where I Live",
+  "label": "ch:ka-where-i-live",
+  "canDo": "I can say where I live: house, street, city, country and state.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "KA-C103-state",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say where I live: house, street, city, country and state.",
+    "assesses": [
+      "KA-LEX-C103-HOME-03",
+      "KA-LEX-C103-HOME-04",
+      "KA-LEX-C103-HOME-05"
+    ]
+  }
+}

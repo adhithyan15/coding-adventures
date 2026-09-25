@@ -1,0 +1,11 @@
+{
+  "id": "KA-C104-police",
+  "pathSegment": "KA-PATH-104-JOBS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-104-JOBS",
+      "order": 2
+    }
+  ]
+}

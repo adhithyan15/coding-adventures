@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C102-fornoreason",
+    "language": "kannada",
+    "chapter": 102,
+    "sequence": 4070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2fedda63a4e3d0d1"
+  },
+  "findings": []
+}

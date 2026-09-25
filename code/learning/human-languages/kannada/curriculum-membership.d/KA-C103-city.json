@@ -1,0 +1,11 @@
+{
+  "id": "KA-C103-city",
+  "pathSegment": "KA-PATH-103-HOME",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-103-HOME",
+      "order": 2
+    }
+  ]
+}

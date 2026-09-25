@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C105-hospitality",
+    "language": "kannada",
+    "chapter": 105,
+    "sequence": 4200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:532dd1a6743ecc9f"
+  },
+  "findings": []
+}

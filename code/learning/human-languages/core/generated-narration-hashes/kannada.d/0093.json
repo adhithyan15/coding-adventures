@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:cb2b5a61eaf7e209",
+  "lessonIds": [
+    "KA-C93-dizzy",
+    "KA-C93-sultry",
+    "KA-C93-ease",
+    "KA-C93-wound",
+    "KA-C93-vomiting"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch93.txt",
+  "json": "kannada/narration/ch93.json",
+  "textHash": "fnv1a64:8d2f2ce2afc2c040",
+  "jsonHash": "fnv1a64:7c3d0972c1e06098",
+  "findings": []
+}

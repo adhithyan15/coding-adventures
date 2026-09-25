@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Maybe, and Not Possible",
+  "label": "ch:ka-maybe-and-not-possible",
+  "canDo": "I can say it is not possible, it is not like that, oh I see, maybe, and certainly.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "KA-C95-certainly",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say it is not possible, it is not like that, oh I see, maybe, and certainly.",
+    "assesses": [
+      "KA-LEX-C95-MAYBE-03",
+      "KA-LEX-C95-MAYBE-04",
+      "KA-LEX-C95-MAYBE-05"
+    ]
+  }
+}

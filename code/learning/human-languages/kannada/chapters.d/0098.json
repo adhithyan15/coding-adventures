@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "Moods",
+  "label": "ch:ka-moods",
+  "canDo": "I can name boredom, enthusiasm, shyness, alarm and peace of mind.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C98-peace",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 98: i can name boredom, enthusiasm, shyness, alarm and peace of mind.",
+    "assesses": [
+      "KA-LEX-C98-MOODS-03",
+      "KA-LEX-C98-MOODS-04",
+      "KA-LEX-C98-MOODS-05"
+    ]
+  }
+}

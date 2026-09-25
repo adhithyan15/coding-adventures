@@ -1,0 +1,11 @@
+{
+  "id": "KA-C96-longtime",
+  "pathSegment": "KA-PATH-96-HELLO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-96-HELLO",
+      "order": 2
+    }
+  ]
+}

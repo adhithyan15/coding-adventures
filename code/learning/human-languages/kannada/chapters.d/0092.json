@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "School and Work",
+  "label": "ch:ka-school-and-work",
+  "canDo": "I can name a school, a college, an office, a job and the English language.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "KA-C92-english",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can name a school, a college, an office, a job and the English language.",
+    "assesses": [
+      "KA-LEX-C92-WORK-03",
+      "KA-LEX-C92-WORK-04",
+      "KA-LEX-C92-WORK-05"
+    ]
+  }
+}
