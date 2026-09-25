@@ -95,17 +95,18 @@ by side.
 ## 5. Order of work
 
 1. Crate skeleton: arena tree, `OpenElements`, `ActiveFormatting`, the
-   dispatcher, `Initial` through `AfterHead`, `Text`, `InBody` without
-   formatting or tables. Harness plus expected-failure list.
-2. Formatting elements and the adoption agency algorithm.
-3. Tables: `InTable` through `InCell`, foster parenting, `InTableText`.
-4. `InSelect` and `InSelectInTable`, `InTemplate` and the template mode stack.
-5. Frames, `AfterBody` and the after-after modes, `InHeadNoscript` with
-   scripting off.
-6. Foreign content: SVG and MathML adjustments, integration points, CDATA.
-7. Fragment parsing (§13.4).
-8. Errors by code and position.
-9. The switch: `html-parser` delegates tree construction to the new crate. Its
+   dispatcher, and every insertion mode outside tables, select and template:
+   `Initial` through `AfterHead`, `InHeadNoscript`, `InBody` with formatting
+   elements and the adoption agency algorithm, `Text`, `AfterBody`, the frameset
+   modes and the after-after modes. Harness plus expected-failure list. A token
+   that reaches a mode not yet written is handled by the `InBody` rules and
+   reported as a `tree-builder-mode-not-implemented` diagnostic.
+2. Tables: `InTable` through `InCell`, foster parenting, `InTableText`.
+3. `InSelect` and `InSelectInTable`, `InTemplate` and the template mode stack.
+4. Foreign content: SVG and MathML adjustments, integration points, CDATA.
+5. Fragment parsing (§13.4).
+6. Errors by code and position.
+7. The switch: `html-parser` delegates tree construction to the new crate. Its
    repair passes, `normalize_document_shell` and the synthetic fragment
    attribute are deleted.
 
