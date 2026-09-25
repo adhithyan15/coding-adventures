@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "TA-R86-the-last-page",
+    "language": "tamil",
+    "chapter": 86,
+    "sequence": 3592,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:678649400b90625d",
+    "detachableSegments": [
+      "Script: three pieces, one of them yours to draw"
+    ]
+  },
+  "findings": []
+}

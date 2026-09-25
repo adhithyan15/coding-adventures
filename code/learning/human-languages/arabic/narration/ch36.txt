@@ -1,8 +1,8 @@
 Arabic, chapter 36: Cups, Plates, and More Than One.
-4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 زيت (zayt) — "oil," and a letter you already knew.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -48,7 +48,7 @@ Wrap-up Recall.
 What is ز, described from a letter you had? (Rā with one dot above — and it breaks the same way.) What does ز-ي-ت give besides oil? (Zaytūn and zaytūna.) Which Spanish words carry this root with Arabic's article stuck on, and which one did sukkar give? (Aceite and aceituna; azúcar.) Why az- rather than al-? (ز is a sun letter.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 كوب (kūb) — "a cup," and more than one of them.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -93,7 +93,7 @@ Wrap-up Recall.
 How does Arabic make "cups" out of كوب? (Akwāb — the root is re-poured into a new shape, not given an ending. That is a broken plural.) Which earlier root shows the same shape-changing machinery? (ك-ت-ب — kitāb, kātib, maktab, maktaba.) Ask for a cup of water politely. (Kūb māʾ, min faḍlik.) And reply to thanks? (ʿAfwan.) Did Arabic get kūb from Latin cuppa? (Unsettled — a resemblance, not a claim.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 طبق (ṭabaq) — "a plate," and a broken plural that repeats.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -137,7 +137,7 @@ Wrap-up Recall.
 What shape do أكواب and أطباق share? (Afʿāl — the broken plural you have now met twice.) What does ط-ب-ق mean? (To cover, to lie in layers.) Name two more words it builds. (Ṭābiq, a storey, and ṭabaqa, a layer or a class.) Which plain letter is ط the emphatic partner of? (Tāʾ.) Where would you find a stack of aṭbāq? (In a maṭʿam — the place of eating.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 ملعقة (milʿaqa) — "a spoon," the tool shape, and two ways to say more than one.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -185,3 +185,44 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What separates مَـ from مِـ? (Ma- makes a place, mi- a tool — maktab and maṭʿam against mirʾāh and milʿaqa.) What does ل-ع-ق mean? (To lap.) Name this chapter's broken plurals, and a sound one. (Akwāb, aṭbāq, malāʿiq; qahawāt or ṣadīqāt.) What does the ة on milʿaqa tell you? (Feminine — and unusually for a ة word, it still breaks.) Ask for a spoon politely. (Milʿaqa, min faḍlik.)
+
+
+Lesson 5 of 5.
+The hand that holds the spoon — the hand that holds the spoon, and the family words around it — five inherited Semitic roots on their second outing, with the two script pieces of the farewell.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: the two halves of the farewell until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 4 seconds]
+Pick up the spoon this chapter gave you and name the part of the body doing it. Then name the one at the other end. Both words came once, a long way back.
+
+Across the family: the inherited stock.
+[a table of 5 rows, read aloud]
+Arabic: يد yad. meaning: hand. Hebrew cousin: יד yad.
+Arabic: رأس raʾs. meaning: head. Hebrew cousin: ראש rosh.
+Arabic: أب ab. meaning: father. Hebrew cousin: אב av.
+Arabic: أم umm. meaning: mother. Hebrew cousin: אם em.
+Arabic: أخ / أخت akh / ukht. meaning: brother / sister. Hebrew cousin: אח ach.
+Neither language borrowed these from the other; both inherited them. يد has barely moved at all — two letters, one syllable, and its Hebrew cousin is said almost the same way after several thousand years.
+أخت is أخ with one letter added. Set that beside the colour words, which needed a whole reshaped template to change gender, and the contrast is the point: the oldest words take the cheapest endings.
+
+Why it's said this way: roots still at work.
+رئيس raʾīs, president or chief, is built on head with nothing borrowed — Arabic reached for its own oldest word, the way English reached for Latin caput to make capital and captain.
+أم and أبو are still forming names today. Add a child's name and you have a kunya: mother of and father of, used as an honorific in ordinary speech.
+
+Script: the two halves of the farewell.
+[once you have stopped driving — write: مع — mīm, round head, joining left into ʿayn]
+[once you have stopped driving — write: السلامة — الـ, then sīn, lām, alif, mīm, then the tied ة]
+مع needed no new letters when you first wrote it. And السلامة is not a new word: it is الـ wrapped round the very first word you learned to draw, with a tied tāʾ closing it — the same ة that closes ملعقة (milʿaqa), the spoon in your hand.
+
+Guided Practice.
+[your turn — say: hand, head — yad, raʾs]
+[pause 8 seconds for the answer]
+[your turn — say: the four relatives — ab, umm, akh, ukht]
+[pause 8 seconds for the answer]
+[your turn — recall: the word for president, and the body part underneath it]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 4 seconds]
+Name the word in this set that has changed least from its Hebrew cousin. (يد.) Say what separates أخ from أخت. (One added letter.) Name the letter that closes both السلامة and ملعقة (milʿaqa). (ة, the tied tāʾ.) And give the chief built on the word for head. (رئيس.)

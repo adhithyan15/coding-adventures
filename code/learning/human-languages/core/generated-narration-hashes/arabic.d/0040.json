@@ -1,19 +1,20 @@
 {
   "language": "arabic",
   "chapter": 40,
-  "sourceHash": "fnv1a64:b7413c20cfdd3898",
+  "sourceHash": "fnv1a64:636463b4175f8c41",
   "lessonIds": [
     "AR-C40-limadha",
     "AR-C40-lianna",
     "AR-C40-anna",
     "AR-C40-hinama",
-    "AR-R40-why-that-when"
+    "AR-R40-why-that-when",
+    "AR-R40-the-plate-and-the-spoon"
   ],
-  "voiceLessons": 4,
+  "voiceLessons": 5,
   "drivablePrefix": 1,
   "text": "arabic/narration/ch40.txt",
   "json": "arabic/narration/ch40.json",
-  "textHash": "fnv1a64:693658e07eeccaed",
-  "jsonHash": "fnv1a64:f46fcdf86315f8ae",
+  "textHash": "fnv1a64:c071ce04d16f2d3d",
+  "jsonHash": "fnv1a64:f9e2b43c9f31c117",
   "findings": []
 }

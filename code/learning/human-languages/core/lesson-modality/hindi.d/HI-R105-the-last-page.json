@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "HI-R105-the-last-page",
+    "language": "hindi",
+    "chapter": 105,
+    "sequence": 4521,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2f20a386238036a2",
+    "detachableSegments": [
+      "Script: स and ऋ — one you read, one you also draw"
+    ]
+  },
+  "findings": []
+}

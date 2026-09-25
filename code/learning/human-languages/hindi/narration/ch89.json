@@ -4,7 +4,7 @@
   "chapter": 89,
   "title": "School: The Borrowed Word and the Built One",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:79bd4cab6b9f3711",
+  "sourceHash": "fnv1a64:eaceb138bddfc8b8",
   "lessons": [
     {
       "id": "HI-C81-skool",
@@ -524,6 +524,225 @@
             {
               "kind": "speech",
               "text": "Which of the two school words would you expect on a sign in a reading paper, and which in a spoken exchange? (विद्यालय (vidyālay) on the sign, स्कूल (skūl) in the exchange.) Say where the student is."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R89-the-first-four-chapters-again",
+      "sequence": 3381,
+      "title": "(नाम, कैसे, फिर) (nām, kaise, phir) — the opening of the book, eighty chapters later",
+      "headword": "(नाम, कैसे, फिर)",
+      "romanization": "nām, kaise, phir",
+      "gloss": "cold retrieval of the whole opening — the four exchanges chapters 1 to 4 built, run end to end with nothing on the page to lean on",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:789c40e26b79abe6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask a stranger their name, respectfully. Then say the word for again."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: why this page gives you no cues",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The opening chapters built the four moves that open and close a meeting. Every page since leaned on them; none asked you to produce them cold. An examiner will, so this page names a move and waits."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange — four of them, by what each one does",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "the move",
+                "what you produce"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "the move: open. what you produce: the greeting, and the answer to a thank-you.",
+                "the move: trade names. what you produce: the question, your answer, the pleased-to-meet-you.",
+                "the move: ask after them. what you produce: the how-are-you, and a reply.",
+                "the move: close. what you produce: one of three farewells, chosen by formality."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the right-hand column; the left one is the whole cue."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: कैसा, कैसी, कैसे — the one that bends",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कैसा masculine singular, कैसी feminine, कैसे for a respectful आप or a masculine plural."
+            },
+            {
+              "kind": "speech",
+              "text": "That last cell is why आप कैसे हैं? takes कैसे for one person: आप counts as plural whoever it points at, and adjective and verb follow it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "input",
+          "title": "You'll want to know: आपका स्वागत है, and where ख़ुशी belongs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One phrase, two moments: it answers a thank-you (you're welcome) and greets an arrival (welcome), with no change to the Hindi. आपसे मिलकर ख़ुशी हुई is narrower — the first minute, nowhere else."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — three farewells, three distances",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "what you say",
+                "how it lands",
+                "who it is for"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "what you say: अलविदा. how it lands: final, weighty. who it is for: a long parting.",
+                "what you say: फिर मिलेंगे. how it lands: warm, ordinary. who it is for: almost anyone.",
+                "what you say: चलता हूँ / चलती हूँ. how it lands: casual, spoken. who it is for: people you know."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "फिर on its own means again or then, and it turns the middle row into a promise of a further meeting rather than an ending. चलता हूँ announces your own going, so its ending matches whoever speaks."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Both sides, out loud, page covered."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the opening — greet, and answer a thank-you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the opening — greet, and answer a thank-you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the name trade, both sides",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the name trade, both sides]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the how-are-you to an elder, and a reply",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the how-are-you to an elder, and a reply]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the close, all three ways",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the close, all three ways]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "आपका स्वागत है answering thanks, then opening a door",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **आपका स्वागत है** answering thanks, then opening a door]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "कैसा, कैसी, कैसे, and what each is for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **कैसा**, **कैसी**, **कैसे**, and what each is for]"
+            }
+          ]
+        },
+        {
+          "index": 7,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which farewell announces your own going rather than the meeting's end, and which ending does कैसा take after आप? (चलता हूँ; कैसे, since आप counts as plural.)"
             }
           ]
         }

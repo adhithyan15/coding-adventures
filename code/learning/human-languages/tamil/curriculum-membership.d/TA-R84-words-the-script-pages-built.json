@@ -1,0 +1,11 @@
+{
+  "id": "TA-R84-words-the-script-pages-built",
+  "pathSegment": "TA-PATH-84-READING",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TA-EXT-84-READING",
+      "order": 5
+    }
+  ]
+}

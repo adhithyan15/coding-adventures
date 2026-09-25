@@ -1,0 +1,11 @@
+{
+  "id": "AR-R10-the-name-exchange-cold",
+  "pathSegment": "AR-PATH-014",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-014-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

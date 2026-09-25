@@ -1,9 +1,10 @@
 {
   "language": "arabic",
   "chapter": 23,
-  "sourceHash": "fnv1a64:02c856b67179a26f",
+  "sourceHash": "fnv1a64:a1bf60ee95f8e98b",
   "lessonIds": [
-    "AR-C23-afwan"
+    "AR-C23-afwan",
+    "AR-R23-please-sorry-thank-you"
   ],
   "tex": "arabic/book/chapters/ch23-youre-welcome.tex"
 }

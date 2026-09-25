@@ -1,8 +1,8 @@
 Arabic, chapter 39: Denying, and Asking.
-5 lessons. All 5 can be done entirely by ear.
+6 lessons. All 6 can be done entirely by ear.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 ليس (laysa) — is not.
 
 Warm-up.
@@ -35,7 +35,7 @@ Why can a nominal sentence not be denied with لا? (There is no verb for لا t
 Source: Unicode Arabic chart.
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 ما (mā) — did not.
 
 Warm-up.
@@ -74,7 +74,7 @@ Which negator goes with a past-tense verb, which with a present, and which with 
 Source: Unicode Arabic chart.
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 لا … ولا … (lā … wa-lā …) — neither, nor.
 
 Warm-up.
@@ -108,7 +108,7 @@ How many negators does neither … nor need in Arabic? (Two, and they are the sa
 Source: Unicode Arabic chart.
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 هل (hal) — a question is coming.
 
 Warm-up.
@@ -144,7 +144,7 @@ What moves when an Arabic statement becomes a yes-or-no question? (Nothing — �
 Source: Unicode Arabic chart.
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 Denying, and asking — three negators for three kinds of sentence, one question particle, and the first Arabic exchange in this book that has two sides to it.
 
 Warm-up.
@@ -169,3 +169,34 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which negator would you use for اسمي حسن, which for كتب, and which for أكتب? (ليس (laysa), then ما (mā), then لا.) What does هل (hal) ask of the sentence it fronts? (Nothing at all — it only marks it.)
+
+
+Lesson 6 of 6.
+Every way to leave, asked and denied — both farewells on their second outing, now that the book can ask a question and say no — is this goodbye, or not yet, and what each phrase literally commits you to.
+
+Warm-up.
+[pause 4 seconds]
+Give both farewells and what each one literally says. Then use this chapter's question particle to ask whether somebody is leaving, and its negator to answer that they are not.
+
+The exchange.
+[your turn — say: the whole arc — greet, give your name, ask after them, part]
+[pause 8 seconds for the answer]
+[your turn — say: part with safety — maʿa s-salāma]
+[pause 8 seconds for the answer]
+[your turn — say: part until the meeting — ilā l-liqāʾ]
+[pause 8 seconds for the answer]
+[your turn — recall: the one root that opens the greeting and closes the farewell]
+[pause 8 seconds for the answer]
+Everything above stands on a handful of three-consonant roots, and the farewell uses the same one the first greeting did. s–l–m gives salām, salāma, islām, muslim — peace, safety, wholeness, one family.
+
+Grammar Lens: with, until, and the pattern between them.
+مع maʿa is mīm plus ʿayn and means with. It is a preposition that stands apart — unlike الـ and بـ, which fasten onto the word after them. Its Hebrew cousin is ʿim.
+السلامة is الـ + salām + ة, and the middle piece has been poured into the pattern faʿāla, which converts a thing into the state of that thing: peace becomes safety. Then the sun-letter rule bites, so الس is read as-, and the phrase is as-salāma, never al-salāma.
+
+You'll want to know: until the meeting.
+إلى اللقاء is إلى (until) plus اللقاء (the meeting), root l–q–y, to meet. Arabic does not name the parting; it names the next meeting and points at it.
+Spanish does the same thing with hasta luego, until later, and both leave the listener holding a future rather than an ending. The إ with its hamza below and the ق qāf both sit outside the writing set, so read them.
+
+Wrap-up Recall.
+[pause 4 seconds]
+Give the three pieces of السلامة. (الـ + salām + ة.) Say whether مع attaches to the next word. (No.) Give the root inside اللقاء and its sense. (l–q–y, to meet.) And name the root that both opens and closes this book's first four chapters of speech. (s–l–m.)

@@ -1,8 +1,8 @@
 Arabic, chapter 11: Head and Hand.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 رأس (raʾs) — the head.
 
 Warm-up.
@@ -29,7 +29,7 @@ Wrap-up Recall.
 What does رأس mean, and what's its Hebrew cousin? ("Head" — cousin of rosh, as in Rosh Hashanah.) What word is built on it for "president," and what does it literally mean? (رئيس raʾīs, "the head [one]" — the same "head = leader" idea as English captain/capital from Latin caput.)
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 يد (yad) — the hand.
 
 Warm-up.
@@ -51,3 +51,43 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does يد mean? ("Hand.") How does it compare to its Hebrew cousin? (Nearly identical — both yad — one of the more strikingly unchanged shared words across the Semitic family.)
+
+
+Lesson 3 of 3.
+How are you, cold — the wellbeing exchange run cold — a question that asks after your state rather than after you, a root that means to turn, and two answers where English has one.
+
+Warm-up.
+[pause 4 seconds]
+Ask after somebody and answer them back, both parts, without reading on. If the question came out as a memorised noise rather than three pieces you can name, this page is for you.
+
+The two words.
+[a table of 2 rows, read aloud]
+word: كيف kayfa. letters, right to left: kāf, yāʾ, fāʾ. what it is: how — a question word, partner to ما.
+word: حال ḥāl. letters, right to left: ḥāʾ, alif, lām. what it is: state, condition — root ḥ–w–l, to turn.
+The ح is the deep throat ḥ, not an English h. And حال is the whole point of the question: English asks after you, Arabic asks after your state — the thing that turns and changes, which is exactly what its root means.
+
+Grammar Lens: the same suffix, one lesson on.
+كيف حالك؟ bolts three pieces you already own together: how + state + your. The suffix behaves identically to the one that gave you اسمي, and it splits the same way.
+[a table of 1 row, read aloud]
+to a man: كيف حالك؟ kayfa ḥāluka. to a woman: كيف حالك؟ kayfa ḥāluki.
+Literally: how — your-state. No is, no are. The same zero copula that ran through the name exchange runs through this one.
+
+How to answer: two replies where English has one.
+بخير bi-khayr is بـ (in) plus خير (khayr, good) — literally in goodness. You had met khayr long before you were told: it sits inside the morning greeting صباح الخير, morning of the good.
+الحمد لله al-ḥamdu lillāh comes back more often than bi-khayr does. Every letter in it is one you can write — alif, lām, ḥāʾ, mīm, dāl, hāʾ — and it says the praise is to God, from the root ḥ–m–d, to praise.
+
+The exchange.
+[your turn — say: ask a man — kayfa ḥāluka?]
+[pause 8 seconds for the answer]
+[your turn — say: ask a woman — kayfa ḥāluki?]
+[pause 8 seconds for the answer]
+[your turn — say: the plain answer — bi-khayr, shukran]
+[pause 8 seconds for the answer]
+[your turn — say: the commoner answer — al-ḥamdu lillāh]
+[pause 8 seconds for the answer]
+[your turn — recall: the three attaching pieces inside these lines — al-, bi-, li-]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 4 seconds]
+Give the root behind حال and what it means. (ḥ–w–l, to turn or change.) Give the literal sense of بخير. (In goodness.) Give the literal sense of الحمد لله. (The praise is to God.) And name the question word that partners كيف. (ما.)

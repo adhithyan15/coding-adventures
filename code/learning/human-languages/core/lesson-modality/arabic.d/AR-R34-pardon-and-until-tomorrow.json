@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "AR-R34-pardon-and-until-tomorrow",
+    "language": "arabic",
+    "chapter": 34,
+    "sequence": 931,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6df41879774a3c78",
+    "detachableSegments": [
+      "Script: the throat letter and the loop"
+    ]
+  },
+  "findings": []
+}

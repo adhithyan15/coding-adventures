@@ -1,15 +1,16 @@
 {
   "language": "arabic",
   "chapter": 24,
-  "sourceHash": "fnv1a64:90b11a35af7be781",
+  "sourceHash": "fnv1a64:73562f10a45df411",
   "lessonIds": [
-    "AR-C24-ila-al-ghad"
+    "AR-C24-ila-al-ghad",
+    "AR-R24-every-way-to-leave"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "arabic/narration/ch24.txt",
   "json": "arabic/narration/ch24.json",
-  "textHash": "fnv1a64:691ef908377f59fd",
-  "jsonHash": "fnv1a64:d9bd52870435e653",
+  "textHash": "fnv1a64:7f7365265dd81bb5",
+  "jsonHash": "fnv1a64:43d44917638565ac",
   "findings": []
 }

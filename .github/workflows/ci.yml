@@ -1277,6 +1277,31 @@ jobs:
         with:
           persist-credentials: false
 
+      # The conformance check below requires exactly Swift 6.3.3. It used to
+      # rely on the Swift that GitHub preinstalls on ubuntu-24.04, so every
+      # runner-image update could swap the toolchain underneath it: image
+      # 20260920.314.1 did, and the job failed on every PR that ran it. Install
+      # the pinned release instead. The SHA-256 is of the official swift.org
+      # tarball, whose signature was checked against the Swift 6.x Release
+      # Signing Key (EF80A866B47A981F) when the pin was recorded; bump both
+      # together.
+      - name: Install Swift 6.3.3 (pinned)
+        shell: bash
+        env:
+          SWIFT_URL: https://download.swift.org/swift-6.3.3-release/ubuntu2404/swift-6.3.3-RELEASE/swift-6.3.3-RELEASE-ubuntu24.04.tar.gz
+          SWIFT_SHA256: da8272a5fddccd65b1529ed0e52e04526e2eadd4237d58d6220efeb973c6cd19
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/swift-6.3.3.tar.gz"
+          curl --fail --silent --show-error --location --retry 3 --output "$archive" "$SWIFT_URL"
+          echo "$SWIFT_SHA256  $archive" | sha256sum --check --strict
+          toolchain="$RUNNER_TEMP/swift-6.3.3"
+          mkdir -p "$toolchain"
+          tar -xzf "$archive" -C "$toolchain" --strip-components=1
+          rm -f "$archive"
+          # GITHUB_PATH prepends, so later steps resolve this swift first.
+          echo "$toolchain/usr/bin" >> "$GITHUB_PATH"
+
       - name: Verify generated Swift against every official Unicode 17 vector
         shell: bash
         run: |
