@@ -115,14 +115,15 @@ pub fn parse_document(
     let mut lexer = create_html_lexer_with_context(&HtmlLexContext::data())?;
     let mut builder = TreeBuilder::new(options.scripting);
 
+    let mut cdata = CdataTally::default();
     let mut buffer = [0; 4];
     for character in source.chars() {
         lexer.push(character.encode_utf8(&mut buffer))?;
-        drain(&mut lexer, &mut builder)?;
+        drain(&mut lexer, &mut builder, &mut cdata)?;
     }
     lexer.finish()?;
     builder.input_finished();
-    drain(&mut lexer, &mut builder)?;
+    drain(&mut lexer, &mut builder, &mut cdata)?;
     builder.process(Token::Eof, lexer.position());
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
@@ -143,11 +144,44 @@ pub fn parse_document(
     })
 }
 
-fn drain(lexer: &mut HtmlLexer, builder: &mut TreeBuilder) -> Result<(), ParseError> {
+/// How many `<![CDATA[` the lexer has turned into bogus comments so far, and
+/// how many of those comments the builder has been handed.
+/// Diagnostics are scanned once each, so the tally stays linear however many
+/// comments look like CDATA.
+#[derive(Default)]
+struct CdataTally {
+    scanned: usize,
+    seen: usize,
+    handed: usize,
+}
+
+fn drain(
+    lexer: &mut HtmlLexer,
+    builder: &mut TreeBuilder,
+    cdata: &mut CdataTally,
+) -> Result<(), ParseError> {
     for positioned in lexer.drain_positioned_tokens() {
         // The end of input is the driver's to report, once, after `finish`.
         if matches!(positioned.token, Token::Eof) {
             continue;
+        }
+        // `html-lexer` raises `cdata-in-html-content` on reading `<![CDATA[`
+        // and nowhere else, then emits that section as one bogus comment before
+        // any other token. So a comment is a CDATA section exactly when more
+        // of those diagnostics exist than such comments were handed on.
+        if let Token::Comment(data) = &positioned.token {
+            if data.starts_with("[CDATA[") {
+                let diagnostics = lexer.diagnostics();
+                cdata.seen += diagnostics[cdata.scanned..]
+                    .iter()
+                    .filter(|diagnostic| diagnostic.code == "cdata-in-html-content")
+                    .count();
+                cdata.scanned = diagnostics.len();
+                if cdata.seen > cdata.handed {
+                    cdata.handed += 1;
+                    builder.next_comment_is_cdata();
+                }
+            }
         }
         builder.process(positioned.token, positioned.position);
         if let Some(context) = builder.take_tokenizer_request() {

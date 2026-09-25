@@ -18,6 +18,14 @@ documented in this file.
   **2,415 of 2,655** corpus cases pass (277 more). Every remaining failure is
   a fragment case (step 4), the html-lexer script-data bug, a scripted case,
   or `<selectedcontent>`.
+- **Security review of step 3.** Only a real `<![CDATA[` is read back as a
+  CDATA section: the driver marks the one comment the lexer made of it
+  (counting its `cdata-in-html-content` diagnostics, each scanned once).
+  Before, a genuine comment `<!--[CDATA[-->` or a bogus end tag `</[CDATA[x>`
+  switched the tokenizer too, so markup every spec parser treats as inert came
+  out as a live `<img onerror>`. And the foreign end-tag walk compares names
+  with `eq_ignore_ascii_case` instead of allocating a lowercase copy per step
+  (1 MB of long names: 14 s → 1 s). Both are pinned in `tests/foreign_content.rs`.
 
 - **BR03 step 2: tables.** The seven table insertion modes — in table, in
   table text, in caption, in column group, in table body, in row, in cell —

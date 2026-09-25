@@ -148,6 +148,9 @@ pub struct TreeBuilder {
     self_closing_acknowledged: bool,
     tokenizer_request: Option<HtmlLexContext>,
     input_finished: bool,
+    /// Set by the driver for the one comment token that `html-lexer` made
+    /// from a real `<![CDATA[`; see [`Self::next_comment_is_cdata`].
+    comment_is_cdata: bool,
     position: SourcePosition,
     stopped: bool,
     pub(crate) diagnostics: Vec<TreeDiagnostic>,
@@ -174,6 +177,7 @@ impl TreeBuilder {
             self_closing_acknowledged: false,
             tokenizer_request: None,
             input_finished: false,
+            comment_is_cdata: false,
             position: SourcePosition::default(),
             stopped: false,
             diagnostics: Vec::new(),
@@ -192,6 +196,19 @@ impl TreeBuilder {
     /// section read back from a bogus comment needs to know which.
     pub fn input_finished(&mut self) {
         self.input_finished = true;
+    }
+
+    /// Mark the next comment token as the bogus comment `html-lexer` made of a
+    /// real `<![CDATA[` (it raises `cdata-in-html-content` exactly then).
+    ///
+    /// Only such a comment may be read back as a CDATA section in foreign
+    /// content. A genuine comment `<!--[CDATA[x-->`, or the bogus comment of
+    /// `</[CDATA[x>`, carries the same text, and treating it as CDATA would
+    /// switch the tokenizer mid-document: markup every spec parser reads as
+    /// inert comment, raw text or an attribute value would come out as live
+    /// elements here (a sanitizer bypass, security review of step 3).
+    pub fn next_comment_is_cdata(&mut self) {
+        self.comment_is_cdata = true;
     }
 
     pub fn take_tokenizer_request(&mut self) -> Option<HtmlLexContext> {
@@ -256,6 +273,7 @@ impl TreeBuilder {
         let self_closing = matches!(&token, Tok::StartTag(tag) if tag.self_closing);
         self.self_closing_acknowledged = false;
         self.run(token);
+        self.comment_is_cdata = false;
         if self_closing && !self.self_closing_acknowledged {
             self.error("non-void-html-element-start-tag-with-trailing-solidus");
         }
@@ -2359,7 +2377,7 @@ impl TreeBuilder {
                 self.insert_text(&text);
                 self.frameset_ok = false;
             }
-            Tok::Comment(ref data) if data.starts_with("[CDATA[") => {
+            Tok::Comment(ref data) if self.comment_is_cdata && data.starts_with("[CDATA[") => {
                 let Tok::Comment(data) = token else {
                     unreachable!("matched a comment")
                 };
@@ -2431,12 +2449,14 @@ impl TreeBuilder {
     }
 
     fn foreign_end_tag(&mut self, name: String) -> Flow {
-        let tag_name = |builder: &Self, node: NodeId| {
+        // Compared without allocating: element names are the author's and
+        // unbounded, and the walk may visit every open element for every end
+        // tag (security review of step 3).
+        let named = |builder: &Self, node: NodeId| {
             builder
                 .arena
                 .element(node)
-                .map(|element| element.name.to_ascii_lowercase())
-                .unwrap_or_default()
+                .is_some_and(|element| element.name.eq_ignore_ascii_case(&name))
         };
         let Some(mut index) = self.open.len().checked_sub(1) else {
             return Flow::Done;
@@ -2446,7 +2466,7 @@ impl TreeBuilder {
             self.open.pop(&self.arena);
             return Flow::Done;
         }
-        if tag_name(self, current) != name {
+        if !named(self, current) {
             self.error("unexpected-end-tag");
         }
         loop {
@@ -2454,7 +2474,7 @@ impl TreeBuilder {
                 return Flow::Done;
             }
             let node = self.open.get(index).expect("index is in range");
-            if tag_name(self, node) == name {
+            if named(self, node) {
                 self.open.pop_until_node(&self.arena, node);
                 return Flow::Done;
             }
