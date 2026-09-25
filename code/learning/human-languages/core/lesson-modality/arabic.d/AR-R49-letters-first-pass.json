@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R49-letters-first-pass",
+    "language": "arabic",
+    "chapter": 49,
+    "sequence": 1420,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ee3f091c288fae46"
+  },
+  "findings": []
+}

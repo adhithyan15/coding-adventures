@@ -122,12 +122,28 @@ describe("letter sets", () => {
     expect(track(report).unwritten).toEqual([]);
   });
 
-  it("does not treat a copied word, or a letter beside a word, as a letter set", () => {
+  it("counts the leading letters of a letters-then-word headword", () => {
+    const report = measureLetterAnchoring([
+      lesson("TA-C1", 10, { headword: `${VA}${KA}` }),
+      lesson("TA-W1", 20, { type: "writing", headword: `${VA} ${KA} — ${VA}${KA}` }),
+      lesson("TA-W2", 30, { type: "writing", headword: `${MA}, ${VA}${KA}` }),
+    ]);
+    expect(track(report).letterLessons.map((entry) => entry.letter)).toEqual([`${VA} ${KA}`, MA]);
+  });
+
+  it("does not treat a copied word, or a word before a letter, as a letter set", () => {
     const report = measureLetterAnchoring([
       lesson("TA-W1", 10, { type: "writing", headword: `${VA}${KA}` }),
-      lesson("TA-W2", 20, { type: "writing", headword: `${MA}, ${VA}${KA}` }),
+      lesson("TA-W2", 20, { type: "writing", headword: `${VA}${KA} ${MA}` }),
     ]);
     expect(track(report).letterLessons).toEqual([]);
+  });
+
+  it("never counts the Arabic tatweel as a letter", () => {
+    const report = measureLetterAnchoring([
+      lesson("AR-C1", 10, { headword: "\u0628\u0640\u0628", language: "arabic" }),
+    ]);
+    expect(track(report, "arabic").unwritten).toEqual(["\u0628"]);
   });
 });
 
@@ -151,15 +167,20 @@ describe("the real corpus", () => {
   // letter. A new word must not bring a letter no letter lesson writes, unless
   // this pin moves in the same change and the commit says why.
   //
-  // Measured 2026-09-25 (HL-C443). The biggest completeness debts are the
-  // Perso-Arabic tracks (arabic 18, persian 18, urdu 16) and tamil 14: letters
-  // the reader meets in word after word and never writes. The biggest
+  // Measured 2026-09-25 (HL-C443). The biggest completeness debts are persian
+  // 18 and urdu 16: letters the reader meets in word after word and never
+  // writes. Tamil (chapters 109-112) and arabic (chapters 46-49) each went to 0
+  // by writing every such letter from the word it came from. The biggest
   // anchoring debts are marathi (43 cold) and gujarati (34 cold), whose letter
   // lessons open the track before any word does. Marwadi's 49 builds-toward are
-  // its "र, ा, then राम" chapters: the word follows the letter in the same
-  // chapter.
+  // its "र, ा, then राम" chapters, where the word follows the letter in the
+  // same chapter.
+  //
+  // Arabic's cold (5 -> 7) and builds-toward (4 -> 5) rose when the measure
+  // learned to read a letters-then-word headword ("ا م — سلام"). No content
+  // got worse: those lessons were invisible before, and now they are counted.
   const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
-    arabic: [5, 4, 18],
+    arabic: [7, 5, 0],
     bengali: [5, 12, 5],
     chinese: [0, 51, 0],
     gujarati: [34, 5, 2],

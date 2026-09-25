@@ -203,7 +203,7 @@ describe("the real corpus", () => {
       counts[prefix] = (counts[prefix] ?? 0) + 1;
     }
     expect(counts).toEqual({
-      AR: 3,
+      AR: 15,
       FA: 11,
       GU: 33,
       HI: 42,

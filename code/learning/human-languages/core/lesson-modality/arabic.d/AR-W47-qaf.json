@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W47-qaf",
+    "language": "arabic",
+    "chapter": 47,
+    "sequence": 1340,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6bb3ce15d94c016a",
+    "detachableSegments": [
+      "Script you'll notice: ق",
+      "Writing: ق"
+    ]
+  },
+  "findings": []
+}

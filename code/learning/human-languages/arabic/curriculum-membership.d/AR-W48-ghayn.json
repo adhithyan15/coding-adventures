@@ -1,0 +1,11 @@
+{
+  "id": "AR-W48-ghayn",
+  "pathSegment": "AR-PATH-048-LETTERS-PLEASE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-048-LETTERS-PLEASE",
+      "order": 3
+    }
+  ]
+}

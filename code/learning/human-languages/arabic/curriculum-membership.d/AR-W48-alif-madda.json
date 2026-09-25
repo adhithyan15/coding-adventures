@@ -1,0 +1,11 @@
+{
+  "id": "AR-W48-alif-madda",
+  "pathSegment": "AR-PATH-048-LETTERS-PLEASE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-048-LETTERS-PLEASE",
+      "order": 1
+    }
+  ]
+}

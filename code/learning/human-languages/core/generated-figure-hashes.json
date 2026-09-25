@@ -25,6 +25,90 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "AR-W46-dal",
+      "sourceHash": "fnv1a64:3135e15967044c9b",
+      "svgHash": "fnv1a64:84704193ce8b4ffa",
+      "svg": "arabic/book/figures/AR-W46-dal-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W46-sad",
+      "sourceHash": "fnv1a64:812b645d421e732a",
+      "svgHash": "fnv1a64:4f204d2209dee0da",
+      "svg": "arabic/book/figures/AR-W46-sad-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W46-shin",
+      "sourceHash": "fnv1a64:4c3ce4de8e1890b7",
+      "svgHash": "fnv1a64:6f1328d2eb66d733",
+      "svg": "arabic/book/figures/AR-W46-shin-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W47-alif-maqsura",
+      "sourceHash": "fnv1a64:b1a3b624cde423c0",
+      "svgHash": "fnv1a64:763cc830e3cca555",
+      "svg": "arabic/book/figures/AR-W47-alif-maqsura-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W47-fa",
+      "sourceHash": "fnv1a64:9551cbfc1813de6b",
+      "svgHash": "fnv1a64:24ceb9d63c7b3e23",
+      "svg": "arabic/book/figures/AR-W47-fa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W47-qaf",
+      "sourceHash": "fnv1a64:8acd299351f35cbe",
+      "svgHash": "fnv1a64:ac25494108c0f1bf",
+      "svg": "arabic/book/figures/AR-W47-qaf-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W48-dad",
+      "sourceHash": "fnv1a64:72a62a061144cd42",
+      "svgHash": "fnv1a64:6a5c5fc627a44b5a",
+      "svg": "arabic/book/figures/AR-W48-dad-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W48-ghayn",
+      "sourceHash": "fnv1a64:f627209034298a08",
+      "svgHash": "fnv1a64:a938b49b960b4594",
+      "svg": "arabic/book/figures/AR-W48-ghayn-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W48-zay",
+      "sourceHash": "fnv1a64:ddaaf565d4b64cdd",
+      "svgHash": "fnv1a64:58aafaa970738afe",
+      "svg": "arabic/book/figures/AR-W48-zay-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W49-dhal",
+      "sourceHash": "fnv1a64:01467660fee43518",
+      "svgHash": "fnv1a64:87945e0fbc515054",
+      "svg": "arabic/book/figures/AR-W49-dhal-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W49-ta-emphatic",
+      "sourceHash": "fnv1a64:270966e523cd629d",
+      "svgHash": "fnv1a64:26a5255f8ad1ff54",
+      "svg": "arabic/book/figures/AR-W49-ta-emphatic-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "AR-W49-za-emphatic",
+      "sourceHash": "fnv1a64:0bdb455cfdd771b3",
+      "svgHash": "fnv1a64:63d4e56b2433e269",
+      "svg": "arabic/book/figures/AR-W49-za-emphatic-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "ZH-W01-hao-build",
       "sourceHash": "fnv1a64:01d1d6e6ec1f22f6",
       "svgHash": "fnv1a64:37f5625c27f8f5d8",

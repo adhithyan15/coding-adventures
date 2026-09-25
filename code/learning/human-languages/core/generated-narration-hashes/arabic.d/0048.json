@@ -1,0 +1,18 @@
+{
+  "language": "arabic",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:9b3c1ba49e45d441",
+  "lessonIds": [
+    "AR-W48-dad",
+    "AR-W48-alif-madda",
+    "AR-W48-zay",
+    "AR-W48-ghayn"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "arabic/narration/ch48.txt",
+  "json": "arabic/narration/ch48.json",
+  "textHash": "fnv1a64:42c53b0e16218a85",
+  "jsonHash": "fnv1a64:fb8c32245f81559d",
+  "findings": []
+}

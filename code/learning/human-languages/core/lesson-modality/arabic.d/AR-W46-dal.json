@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W46-dal",
+    "language": "arabic",
+    "chapter": 46,
+    "sequence": 1300,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8d8aa0747c33063a",
+    "detachableSegments": [
+      "Script you'll notice: د",
+      "Writing: د"
+    ]
+  },
+  "findings": []
+}

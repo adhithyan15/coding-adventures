@@ -1,0 +1,12 @@
+{
+  "language": "arabic",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:9074cdf99b564c81",
+  "lessonIds": [
+    "AR-W47-alif-hamza-below",
+    "AR-W47-alif-maqsura",
+    "AR-W47-fa",
+    "AR-W47-qaf"
+  ],
+  "tex": "arabic/book/chapters/ch47-ar-letters-from-goodbyes.tex"
+}

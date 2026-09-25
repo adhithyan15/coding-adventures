@@ -1,0 +1,11 @@
+{
+  "id": "AR-W48-zay",
+  "pathSegment": "AR-PATH-048-LETTERS-PLEASE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-048-LETTERS-PLEASE",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R49-letters-second-pass",
+    "language": "arabic",
+    "chapter": 49,
+    "sequence": 1430,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:71b3ce759bd5709d"
+  },
+  "findings": []
+}

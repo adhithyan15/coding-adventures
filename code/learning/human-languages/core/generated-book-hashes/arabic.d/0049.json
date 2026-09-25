@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:4db8b0ce22968030",
+  "lessonIds": [
+    "AR-W49-ta-emphatic",
+    "AR-W49-za-emphatic",
+    "AR-W49-dhal",
+    "AR-R49-letters-first-pass",
+    "AR-R49-letters-second-pass"
+  ],
+  "tex": "arabic/book/chapters/ch49-ar-letters-from-food-noon-going.tex"
+}
