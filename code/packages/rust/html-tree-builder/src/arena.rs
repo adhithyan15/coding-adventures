@@ -95,6 +95,11 @@ struct NodeRecord {
     kind: NodeKind,
     parent: Option<NodeId>,
     children: Vec<NodeId>,
+    /// For a template's contents fragment: the `<template>` it belongs to.
+    /// Not a parent (the fragment is not a child of anything), but depth
+    /// is measured through it, because the contents print — and are laid
+    /// out — as the template's children.
+    host: Option<NodeId>,
 }
 
 #[derive(Debug, Clone)]
@@ -118,6 +123,7 @@ impl Arena {
                 kind: NodeKind::Document,
                 parent: None,
                 children: Vec::new(),
+                host: None,
             }],
         }
     }
@@ -127,6 +133,7 @@ impl Arena {
             kind,
             parent: None,
             children: Vec::new(),
+            host: None,
         });
         NodeId(self.nodes.len() - 1)
     }
@@ -143,12 +150,16 @@ impl Arena {
         let name = name.into();
         let template_contents = (namespace == Namespace::Html && name == "template")
             .then(|| self.push(NodeKind::DocumentFragment));
-        self.push(NodeKind::Element(ElementData {
+        let element = self.push(NodeKind::Element(ElementData {
             namespace,
             name,
             attributes,
             template_contents,
-        }))
+        }));
+        if let Some(contents) = template_contents {
+            self.nodes[contents.0].host = Some(element);
+        }
+        element
     }
 
     pub fn create(&mut self, kind: NodeKind) -> NodeId {
@@ -221,6 +232,29 @@ impl Arena {
             Some(index) => children.insert(index, child),
             None => children.push(child),
         }
+    }
+
+    /// How many parent links separate `node` from the root, counting at most
+    /// `limit` of them (the builder only needs to know "at least `limit`").
+    /// A template's contents count as one level below the template.
+    pub fn depth(&self, node: NodeId, limit: usize) -> usize {
+        let mut depth = 0;
+        let mut cursor = self.container(node);
+        while let Some(parent) = cursor {
+            depth += 1;
+            if depth >= limit {
+                break;
+            }
+            cursor = self.container(parent);
+        }
+        depth
+    }
+
+    /// The node `id` sits inside: its parent, or for a template's contents
+    /// fragment, the template.
+    pub fn container(&self, id: NodeId) -> Option<NodeId> {
+        let record = &self.nodes[id.0];
+        record.parent.or(record.host)
     }
 
     /// Whether `ancestor` is `node` or one of its ancestors.

@@ -48,6 +48,15 @@ impl Entry {
     }
 }
 
+/// A resource limit, not a specification rule: at most this many elements
+/// after the last marker. The Noah's Ark clause only removes *identical*
+/// entries, so `<b id=1><b id=2>…` grows the list without bound, and every
+/// later text insertion then reconstructs the whole list — N elements per
+/// character, from input of size N. Past the limit the earliest entry is
+/// dropped, and the builder reports `tree-builder-formatting-limit`. No
+/// corpus case comes near it.
+pub const MAX_ENTRIES_AFTER_MARKER: usize = 64;
+
 #[derive(Debug, Clone, Default)]
 pub struct ActiveFormatting {
     entries: Vec<Entry>,
@@ -74,8 +83,9 @@ impl ActiveFormatting {
     /// Noah's Ark clause: if three entries after the last marker already have
     /// the same tag name and the same attributes as this one, the earliest of
     /// them is removed first. That caps how much `<b><b><b><b>…` a page can
-    /// make every later text insertion reconstruct.
-    pub fn push(&mut self, node: NodeId, token: FormattingToken) {
+    /// make every later text insertion reconstruct. Returns `true` when
+    /// [`MAX_ENTRIES_AFTER_MARKER`] also had to drop an entry.
+    pub fn push(&mut self, node: NodeId, token: FormattingToken) -> bool {
         let mut identical = Vec::new();
         for (index, entry) in self.entries.iter().enumerate().rev() {
             match entry {
@@ -96,7 +106,25 @@ impl ActiveFormatting {
             let earliest = *identical.last().expect("three matches");
             self.entries.remove(earliest);
         }
+        let after_marker = self
+            .entries
+            .iter()
+            .rposition(|entry| *entry == Entry::Marker)
+            .map_or(0, |marker| marker + 1);
+        let capped = self.entries.len() - after_marker >= MAX_ENTRIES_AFTER_MARKER;
+        if capped {
+            self.entries.remove(after_marker);
+        }
         self.entries.push(Entry::Element { node, token });
+        capped
+    }
+
+    /// Point entry `index` at `node`, keeping its token (reconstruction knows
+    /// the index already, so it need not search).
+    pub fn set_node(&mut self, index: usize, node: NodeId) {
+        if let Some(Entry::Element { node: slot, .. }) = self.entries.get_mut(index) {
+            *slot = node;
+        }
     }
 
     pub fn position(&self, node: NodeId) -> Option<usize> {
@@ -206,7 +234,7 @@ mod tests {
             .map(|_| arena.create_element(Namespace::Html, "b", Vec::new()))
             .collect();
         for &node in &nodes {
-            list.push(node, token("b", &[]));
+            let _ = list.push(node, token("b", &[]));
         }
         assert_eq!(list.len(), 3);
         assert!(!list.contains(nodes[0]));
@@ -219,7 +247,7 @@ mod tests {
         let mut list = ActiveFormatting::default();
         let mut push = |list: &mut ActiveFormatting, attributes: &[(&str, &str)]| {
             let node = arena.create_element(Namespace::Html, "font", Vec::new());
-            list.push(node, token("font", attributes));
+            let _ = list.push(node, token("font", attributes));
             node
         };
         let first = push(&mut list, &[("a", "1"), ("b", "2")]);
@@ -234,15 +262,37 @@ mod tests {
     }
 
     #[test]
+    fn distinct_entries_are_capped_after_the_last_marker() {
+        let mut arena = Arena::new();
+        let mut list = ActiveFormatting::default();
+        let outer = arena.create_element(Namespace::Html, "b", Vec::new());
+        let _ = list.push(outer, token("b", &[]));
+        list.push_marker();
+        let mut capped = 0;
+        for index in 0..MAX_ENTRIES_AFTER_MARKER + 10 {
+            let node = arena.create_element(Namespace::Html, "b", Vec::new());
+            if list.push(node, token("b", &[("id", &index.to_string())])) {
+                capped += 1;
+            }
+        }
+        assert_eq!(capped, 10);
+        assert_eq!(list.len(), 2 + MAX_ENTRIES_AFTER_MARKER);
+        assert!(
+            list.contains(outer),
+            "entries before the marker are untouched"
+        );
+    }
+
+    #[test]
     fn clear_to_last_marker_and_lookup() {
         let mut arena = Arena::new();
         let mut list = ActiveFormatting::default();
         let outer = arena.create_element(Namespace::Html, "a", Vec::new());
         let inner = arena.create_element(Namespace::Html, "a", Vec::new());
-        list.push(outer, token("a", &[]));
+        let _ = list.push(outer, token("a", &[]));
         list.push_marker();
         assert_eq!(list.last_named_after_marker(&arena, "a"), None);
-        list.push(inner, token("a", &[]));
+        let _ = list.push(inner, token("a", &[]));
         assert_eq!(list.last_named_after_marker(&arena, "a"), Some(inner));
         list.clear_to_last_marker();
         assert_eq!(

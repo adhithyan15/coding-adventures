@@ -115,6 +115,10 @@ struct InsertionPoint {
 /// `BeforeHead`, `InHead`, `AfterHead` into `InBody`) is six.
 const MAX_REPROCESS: usize = 32;
 
+/// The deepest an element may be inserted (the Document is depth 0, `<html>`
+/// depth 1). Blink uses the same figure.
+pub const MAX_TREE_DEPTH: usize = 512;
+
 pub struct TreeBuilder {
     pub(crate) arena: Arena,
     mode: InsertionMode,
@@ -237,7 +241,10 @@ impl TreeBuilder {
 
     fn run(&mut self, token: Tok) {
         let mut token = token;
-        for _ in 0..MAX_REPROCESS {
+        // Closing N open templates at end of file legitimately reprocesses the
+        // EOF token N times, so the bound grows with the stack (which is finite).
+        let limit = MAX_REPROCESS + self.open.len();
+        for _ in 0..limit {
             if self.stopped {
                 return;
             }
@@ -402,12 +409,40 @@ impl TreeBuilder {
 
     /// "Insert a foreign element" for `tag` in `namespace`, and push it.
     fn insert_element(&mut self, namespace: Namespace, tag: &Tag) -> NodeId {
-        let point = self.appropriate_place(None);
+        let mut point = self.appropriate_place(None);
+        // A resource limit, not a specification rule (Blink has the same one):
+        // an element never goes deeper than MAX_TREE_DEPTH. Past it, the new
+        // element becomes a sibling of the deepest allowed element instead of
+        // its child, so the tree stays shallow enough for recursive consumers
+        // (dom_core's Drop, layout) while the stack of open elements, and so
+        // every end tag's meaning, is unchanged.
+        if self.arena.depth(point.parent, MAX_TREE_DEPTH) >= MAX_TREE_DEPTH {
+            let mut target = point.parent;
+            // Climb (through a template's contents to the template), and never
+            // stop on a <template> element itself: its children are its
+            // contents fragment's, and a direct child would be lost.
+            while self.arena.depth(target, MAX_TREE_DEPTH) >= MAX_TREE_DEPTH
+                || self
+                    .arena
+                    .element(target)
+                    .is_some_and(|element| element.template_contents.is_some())
+            {
+                let Some(up) = self.arena.container(target) else {
+                    break;
+                };
+                target = up;
+            }
+            point = InsertionPoint {
+                parent: target,
+                before: None,
+            };
+            self.error("tree-builder-depth-limit");
+        }
         let element =
             self.arena
                 .create_element(namespace, tag.name.clone(), tag.attributes.clone());
         self.insert_at(point, element);
-        self.open.push(element);
+        self.open.push(&self.arena, element);
         element
     }
 
@@ -420,7 +455,7 @@ impl TreeBuilder {
     /// self-closing foreign elements.
     fn insert_void_element(&mut self, tag: &Tag) {
         self.insert_html_element(tag);
-        self.open.pop();
+        self.open.pop(&self.arena);
         self.self_closing_acknowledged = true;
     }
 
@@ -488,7 +523,7 @@ impl TreeBuilder {
             {
                 break;
             }
-            self.open.pop();
+            self.open.pop(&self.arena);
         }
     }
 
@@ -499,7 +534,7 @@ impl TreeBuilder {
                     if element.namespace == Namespace::Html
                         && has_implied_end_tag_thoroughly(&element.name) =>
                 {
-                    self.open.pop();
+                    self.open.pop(&self.arena);
                 }
                 _ => break,
             }
@@ -590,8 +625,7 @@ impl TreeBuilder {
         }
         // …then advance, creating a fresh element for each.
         for position in index..self.formatting.len() {
-            let Some(Entry::Element { node, token }) = self.formatting.get(position).cloned()
-            else {
+            let Some(Entry::Element { token, .. }) = self.formatting.get(position).cloned() else {
                 continue;
             };
             let fresh = self.insert_html_element(&Tag {
@@ -599,20 +633,23 @@ impl TreeBuilder {
                 attributes: token.attributes,
                 self_closing: false,
             });
-            self.formatting.replace_node(node, fresh);
+            self.formatting.set_node(position, fresh);
         }
     }
 
     fn push_formatting_element(&mut self, tag: &Tag) {
         self.reconstruct_active_formatting();
         let node = self.insert_html_element(tag);
-        self.formatting.push(
+        let capped = self.formatting.push(
             node,
             FormattingToken {
                 name: tag.name.clone(),
                 attributes: tag.attributes.clone(),
             },
         );
+        if capped {
+            self.error("tree-builder-formatting-limit");
+        }
     }
 
     // ----------------------------------------------------------------------
@@ -625,7 +662,7 @@ impl TreeBuilder {
         // Step 2.
         if let Some(current) = self.current() {
             if self.arena.is_html(current, subject) && !self.formatting.contains(current) {
-                self.open.pop();
+                self.open.pop(&self.arena);
                 return true;
             }
         }
@@ -665,7 +702,7 @@ impl TreeBuilder {
                 .find(|&node| self.is_special_node(node));
             // 4.8
             let Some(furthest_block) = furthest_block else {
-                self.open.pop_until_node(formatting_element);
+                self.open.pop_until_node(&self.arena, formatting_element);
                 self.formatting.remove(formatting_element);
                 return true;
             };
@@ -698,14 +735,14 @@ impl TreeBuilder {
                     self.formatting.remove(node);
                 }
                 let Some(token) = self.formatting.token_for(node).cloned() else {
-                    self.open.remove(node);
+                    self.open.remove(&self.arena, node);
                     continue;
                 };
                 let fresh =
                     self.arena
                         .create_element(Namespace::Html, token.name, token.attributes);
                 self.formatting.replace_node(node, fresh);
-                self.open.replace(node, fresh);
+                self.open.replace(&self.arena, node, fresh);
                 if last_node == furthest_block {
                     bookmark_after = Some(fresh);
                 }
@@ -747,12 +784,12 @@ impl TreeBuilder {
                 }
             }
             // 4.19
-            self.open.remove(formatting_element);
+            self.open.remove(&self.arena, formatting_element);
             let below = self
                 .open
                 .position(furthest_block)
                 .expect("furthest block is on the stack");
-            self.open.insert(below + 1, fresh);
+            self.open.insert(&self.arena, below + 1, fresh);
         }
         true
     }
@@ -843,7 +880,7 @@ impl TreeBuilder {
             .arena
             .create_element(Namespace::Html, "html", attributes);
         self.arena.append(Arena::DOCUMENT, html);
-        self.open.push(html);
+        self.open.push(&self.arena, html);
     }
 
     // ----------------------------------------------------------------------
@@ -931,7 +968,7 @@ impl TreeBuilder {
                 Flow::Done
             }
             Tok::EndTag(name) if name == "head" => {
-                self.open.pop();
+                self.open.pop(&self.arena);
                 self.mode = InsertionMode::AfterHead;
                 Flow::Done
             }
@@ -944,7 +981,7 @@ impl TreeBuilder {
                 Flow::Done
             }
             Tok::EndTag(name) if name == "template" => {
-                if !self.open.contains_html(&self.arena, "template") {
+                if !self.open.contains_html("template") {
                     self.error("unexpected-end-tag");
                     return Flow::Done;
                 }
@@ -967,7 +1004,7 @@ impl TreeBuilder {
                 Flow::Done
             }
             other => {
-                self.open.pop();
+                self.open.pop(&self.arena);
                 self.mode = InsertionMode::AfterHead;
                 Flow::Reprocess(other)
             }
@@ -986,7 +1023,7 @@ impl TreeBuilder {
             }
             Tok::StartTag(ref tag) if tag.name == "html" => self.in_body(token),
             Tok::EndTag(ref name) if name == "noscript" => {
-                self.open.pop();
+                self.open.pop(&self.arena);
                 self.mode = InsertionMode::InHead;
                 Flow::Done
             }
@@ -1011,7 +1048,7 @@ impl TreeBuilder {
             }
             other => {
                 self.error("unexpected-token-in-head-noscript");
-                self.open.pop();
+                self.open.pop(&self.arena);
                 self.mode = InsertionMode::InHead;
                 Flow::Reprocess(other)
             }
@@ -1067,9 +1104,9 @@ impl TreeBuilder {
                 let Some(head) = self.head else {
                     return self.in_head(token);
                 };
-                self.open.push(head);
+                self.open.push(&self.arena, head);
                 let flow = self.in_head(token);
-                self.open.remove(head);
+                self.open.remove(&self.arena, head);
                 flow
             }
             Tok::EndTag(ref name) if name == "template" => self.in_head(token),
@@ -1178,7 +1215,7 @@ impl TreeBuilder {
         match tag.name.as_str() {
             "html" => {
                 self.error("non-html-root");
-                if !self.open.contains_html(&self.arena, "template") {
+                if !self.open.contains_html("template") {
                     if let Some(html) = self.open.top() {
                         self.merge_attributes(html, tag);
                     }
@@ -1191,7 +1228,7 @@ impl TreeBuilder {
                 let second = self.open.get(1);
                 if self.open.len() > 1
                     && second.is_some_and(|node| self.arena.is_html(node, "body"))
-                    && !self.open.contains_html(&self.arena, "template")
+                    && !self.open.contains_html("template")
                 {
                     self.frameset_ok = false;
                     self.merge_attributes(second.expect("checked above"), tag);
@@ -1206,7 +1243,7 @@ impl TreeBuilder {
                 {
                     self.arena.detach(second.expect("checked above"));
                     while self.open.len() > 1 {
-                        self.open.pop();
+                        self.open.pop(&self.arena);
                     }
                     self.insert_html_element(&tag);
                     self.mode = InsertionMode::InFrameset;
@@ -1229,7 +1266,7 @@ impl TreeBuilder {
                     })
                 {
                     self.error("unexpected-start-tag");
-                    self.open.pop();
+                    self.open.pop(&self.arena);
                 }
                 self.insert_html_element(&tag);
             }
@@ -1240,7 +1277,7 @@ impl TreeBuilder {
                 self.frameset_ok = false;
             }
             "form" => {
-                let in_template = self.open.contains_html(&self.arena, "template");
+                let in_template = self.open.contains_html("template");
                 if self.form.is_some() && !in_template {
                     self.error("unexpected-start-tag");
                 } else {
@@ -1289,7 +1326,7 @@ impl TreeBuilder {
                         self.any_other_end_tag("a");
                     }
                     self.formatting.remove(existing);
-                    self.open.remove(existing);
+                    self.open.remove(&self.arena, existing);
                 }
                 self.push_formatting_element(&tag);
             }
@@ -1418,7 +1455,7 @@ impl TreeBuilder {
                         self.error("unexpected-start-tag-in-select");
                     }
                 } else if self.current_is("option") {
-                    self.open.pop();
+                    self.open.pop(&self.arena);
                 }
                 self.reconstruct_active_formatting();
                 self.insert_html_element(&tag);
@@ -1439,7 +1476,7 @@ impl TreeBuilder {
                         self.error("unexpected-start-tag-in-select");
                     }
                 } else if self.current_is("option") {
-                    self.open.pop();
+                    self.open.pop(&self.arena);
                 }
                 self.reconstruct_active_formatting();
                 self.insert_html_element(&tag);
@@ -1468,7 +1505,7 @@ impl TreeBuilder {
                 adjust_attributes(&mut tag, adjust_foreign_attribute);
                 self.insert_element(Namespace::MathMl, &tag);
                 if tag.self_closing {
-                    self.open.pop();
+                    self.open.pop(&self.arena);
                     self.self_closing_acknowledged = true;
                 }
             }
@@ -1478,7 +1515,7 @@ impl TreeBuilder {
                 adjust_attributes(&mut tag, adjust_foreign_attribute);
                 self.insert_element(Namespace::Svg, &tag);
                 if tag.self_closing {
-                    self.open.pop();
+                    self.open.pop(&self.arena);
                     self.self_closing_acknowledged = true;
                 }
             }
@@ -1545,7 +1582,7 @@ impl TreeBuilder {
                 self.open.pop_until_html(&self.arena, &name);
             }
             "form" => {
-                if self.open.contains_html(&self.arena, "template") {
+                if self.open.contains_html("template") {
                     if !self.open.has_in_scope(&self.arena, "form", Scope::Default) {
                         self.error("unexpected-end-tag");
                         return Flow::Done;
@@ -1568,7 +1605,7 @@ impl TreeBuilder {
                     if self.current() != Some(node) {
                         self.error("end-tag-too-early-ignored");
                     }
-                    self.open.remove(node);
+                    self.open.remove(&self.arena, node);
                 }
             }
             "p" => {
@@ -1650,7 +1687,7 @@ impl TreeBuilder {
                 if self.current() != Some(node) {
                     self.error("end-tag-too-early");
                 }
-                self.open.pop_until_node(node);
+                self.open.pop_until_node(&self.arena, node);
                 return;
             }
             if self.is_special_node(node) {
@@ -1672,12 +1709,12 @@ impl TreeBuilder {
             }
             Tok::Eof => {
                 self.error("expected-named-closing-tag-but-got-eof");
-                self.open.pop();
+                self.open.pop(&self.arena);
                 self.mode = self.original_mode;
                 Flow::Reprocess(Tok::Eof)
             }
             Tok::EndTag(_) => {
-                self.open.pop();
+                self.open.pop(&self.arena);
                 self.mode = self.original_mode;
                 self.tokenizer_request = Some(HtmlLexContext::data());
                 Flow::Done
@@ -1735,7 +1772,7 @@ impl TreeBuilder {
                 Flow::Done
             }
             Tok::Eof => {
-                if !self.open.contains_html(&self.arena, "template") {
+                if !self.open.contains_html("template") {
                     self.stopped = true;
                     return Flow::Done;
                 }
@@ -1801,7 +1838,7 @@ impl TreeBuilder {
                 if self.open.len() <= 1 {
                     self.error("unexpected-end-tag");
                 } else {
-                    self.open.pop();
+                    self.open.pop(&self.arena);
                     if !self.current_is("frameset") {
                         self.mode = InsertionMode::AfterFrameset;
                     }

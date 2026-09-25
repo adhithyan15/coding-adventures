@@ -1,45 +1,101 @@
-//! Hostile shapes: the builder must finish, in bounded time, on inputs built
-//! to stress the parts of tree construction that loop.
+//! Hostile shapes: the builder must finish, in bounded time and memory, on
+//! inputs built to stress the parts of tree construction that loop or nest.
+//! Several come from the step-1 security review.
 
+use coding_adventures_html_tree_builder::tree_builder::MAX_TREE_DEPTH;
 use coding_adventures_html_tree_builder::{html5lib, parse_document, TreeBuilderOptions};
+use dom_core::Node;
 use std::time::{Duration, Instant};
 
-fn parses_quickly(source: &str) -> Vec<String> {
+fn parse(source: &str) -> coding_adventures_html_tree_builder::ParseOutput {
     let started = Instant::now();
     let output = parse_document(source, TreeBuilderOptions::default()).expect("parses");
-    let lines = html5lib::document_lines(&output.document);
     assert!(
         started.elapsed() < Duration::from_secs(60),
         "took {:?}",
         started.elapsed()
     );
-    // dom_core's owned tree drops recursively; don't let a deep test tree
-    // measure (or overflow) that instead of the builder.
-    std::mem::forget(output);
-    lines
+    output
+}
+
+fn depth(nodes: &[Node]) -> usize {
+    let mut deepest = 0;
+    let mut work: Vec<(&Node, usize)> = nodes.iter().map(|node| (node, 1)).collect();
+    while let Some((node, level)) = work.pop() {
+        deepest = deepest.max(level);
+        if let Node::Element(element) = node {
+            work.extend(element.children.iter().map(|child| (child, level + 1)));
+        }
+    }
+    deepest
+}
+
+fn count_elements(nodes: &[Node]) -> usize {
+    let mut count = 0;
+    let mut work: Vec<&Node> = nodes.iter().collect();
+    while let Some(node) = work.pop() {
+        if let Node::Element(element) = node {
+            count += 1;
+            work.extend(element.children.iter());
+        }
+    }
+    count
 }
 
 #[test]
-fn deeply_nested_elements() {
-    let lines = parses_quickly(&"<div>".repeat(10_000));
-    assert_eq!(lines.len(), 3 + 10_000);
+fn deep_nesting_is_capped_and_the_result_drops_safely() {
+    // The result is dropped normally: dom_core's Drop recurses, and the
+    // depth cap is what keeps that safe.
+    let output = parse(&"<div>".repeat(20_000));
+    assert!(depth(&output.document.children) <= MAX_TREE_DEPTH);
+    assert_eq!(count_elements(&output.document.children), 3 + 20_000);
+    assert!(output
+        .tree_diagnostics
+        .iter()
+        .any(|diagnostic| diagnostic.code == "tree-builder-depth-limit"));
 }
 
 #[test]
-fn many_distinct_formatting_elements_then_text_in_new_blocks() {
-    let mut source = String::new();
-    for index in 0..1_000 {
+fn deep_template_nesting_is_capped_too() {
+    let output = parse(&"<template>".repeat(3_000));
+    assert!(depth(&output.document.children) <= MAX_TREE_DEPTH);
+}
+
+#[test]
+fn distinct_formatting_elements_cannot_amplify() {
+    // Security review finding 1: distinct attributes defeat the Noah's Ark
+    // clause, and each later text run reconstructs the whole list.
+    let n = 3_000;
+    let mut source = String::from("<p>");
+    for index in 0..n {
         source.push_str(&format!("<b id={index}>"));
     }
-    source.push_str(&"<p>x".repeat(50));
-    parses_quickly(&source);
+    source.push_str("</p>");
+    source.push_str(&"<p>x</p>".repeat(n));
+    let output = parse(&source);
+    let elements = count_elements(&output.document.children);
+    assert!(
+        elements < 400_000,
+        "{elements} elements from {} bytes",
+        source.len()
+    );
+}
+
+#[test]
+fn one_character_after_many_formatting_elements_is_cheap() {
+    // Security review finding 2.
+    let mut source = String::from("<p>");
+    for index in 0..20_000 {
+        source.push_str(&format!("<b id={index}>"));
+    }
+    source.push_str("</p>x");
+    parse(&source);
 }
 
 #[test]
 fn identical_formatting_elements_are_capped_by_noahs_ark() {
     let source = format!("{}<p>x", "<b>".repeat(2_000));
-    let lines = parses_quickly(&source);
-    // The <p> reopens only the three <b> the list kept.
+    let lines = html5lib::document_lines(&parse(&source).document);
     let reopened = lines
         .iter()
         .rev()
@@ -50,13 +106,23 @@ fn identical_formatting_elements_are_capped_by_noahs_ark() {
 
 #[test]
 fn misnested_formatting_runs_the_adoption_agency_repeatedly() {
-    let source = "<a><b><i><u><s><div>".repeat(250) + &"</a>x".repeat(250);
-    parses_quickly(&source);
+    parse(&("<a><b><i><u><s><div>".repeat(250) + &"</a>x".repeat(250)));
 }
 
 #[test]
 fn stray_end_tags_and_frameset_recovery() {
-    let source =
-        "</p></div></body></html>".repeat(1_000) + "<frameset><frame>" + &"</frameset>".repeat(100);
-    parses_quickly(&source);
+    parse(
+        &("</p></div></body></html>".repeat(1_000)
+            + "<frameset><frame>"
+            + &"</frameset>".repeat(100)),
+    );
+}
+
+#[test]
+fn many_templates_closed_at_end_of_file_all_close() {
+    let output = parse(&"<template>".repeat(100));
+    assert!(!output
+        .tree_diagnostics
+        .iter()
+        .any(|diagnostic| diagnostic.code == "tree-builder-reprocess-limit"));
 }

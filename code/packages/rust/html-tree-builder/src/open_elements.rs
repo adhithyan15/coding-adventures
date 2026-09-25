@@ -19,6 +19,7 @@
 
 use crate::arena::{Arena, Namespace, NodeId};
 use crate::elements::bounds_default_scope;
+use std::collections::HashMap;
 
 /// Which of the specification's four scopes a lookup uses.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -47,18 +48,54 @@ impl Scope {
     }
 }
 
+/// The stack, plus a count of the HTML elements on it by tag name.
+///
+/// The count is what keeps scope checks cheap on hostile input. Every
+/// `<div>` start tag asks "is a `p` open in button scope?"; with no `p` open,
+/// the walk would visit the whole stack, so 100,000 nested `<div>`s cost
+/// 5·10⁹ steps. When the count for a name is zero the answer is "no" without
+/// walking.
 #[derive(Debug, Clone, Default)]
 pub struct OpenElements {
     stack: Vec<NodeId>,
+    html_counts: HashMap<String, usize>,
 }
 
 impl OpenElements {
-    pub fn push(&mut self, node: NodeId) {
+    fn html_name(arena: &Arena, node: NodeId) -> Option<&str> {
+        arena
+            .element(node)
+            .filter(|element| element.namespace == Namespace::Html)
+            .map(|element| element.name.as_str())
+    }
+
+    fn count_in(&mut self, arena: &Arena, node: NodeId) {
+        if let Some(name) = Self::html_name(arena, node) {
+            *self.html_counts.entry(name.to_string()).or_default() += 1;
+        }
+    }
+
+    fn count_out(&mut self, arena: &Arena, node: NodeId) {
+        if let Some(name) = Self::html_name(arena, node) {
+            if let Some(count) = self.html_counts.get_mut(name) {
+                *count = count.saturating_sub(1);
+            }
+        }
+    }
+
+    fn open_count(&self, name: &str) -> usize {
+        self.html_counts.get(name).copied().unwrap_or(0)
+    }
+
+    pub fn push(&mut self, arena: &Arena, node: NodeId) {
+        self.count_in(arena, node);
         self.stack.push(node);
     }
 
-    pub fn pop(&mut self) -> Option<NodeId> {
-        self.stack.pop()
+    pub fn pop(&mut self, arena: &Arena) -> Option<NodeId> {
+        let node = self.stack.pop()?;
+        self.count_out(arena, node);
+        Some(node)
     }
 
     /// The bottommost node.
@@ -95,25 +132,29 @@ impl OpenElements {
         self.stack.iter().position(|&candidate| candidate == node)
     }
 
-    pub fn remove(&mut self, node: NodeId) {
+    pub fn remove(&mut self, arena: &Arena, node: NodeId) {
         if let Some(index) = self.position(node) {
             self.stack.remove(index);
+            self.count_out(arena, node);
         }
     }
 
-    pub fn insert(&mut self, index: usize, node: NodeId) {
+    pub fn insert(&mut self, arena: &Arena, index: usize, node: NodeId) {
+        self.count_in(arena, node);
         self.stack.insert(index, node);
     }
 
-    pub fn replace(&mut self, old: NodeId, new: NodeId) {
+    pub fn replace(&mut self, arena: &Arena, old: NodeId, new: NodeId) {
         if let Some(index) = self.position(old) {
+            self.count_out(arena, old);
+            self.count_in(arena, new);
             self.stack[index] = new;
         }
     }
 
     /// Whether an HTML element named `name` is on the stack at all.
-    pub fn contains_html(&self, arena: &Arena, name: &str) -> bool {
-        self.stack.iter().any(|&node| arena.is_html(node, name))
+    pub fn contains_html(&self, name: &str) -> bool {
+        self.open_count(name) > 0
     }
 
     /// "Has an element in the specific scope": walk up from the current node;
@@ -125,6 +166,9 @@ impl OpenElements {
 
     /// The same walk for "any of these names" (`h1`…`h6` share one rule).
     pub fn has_any_in_scope(&self, arena: &Arena, names: &[&str], scope: Scope) -> bool {
+        if names.iter().all(|name| self.open_count(name) == 0) {
+            return false;
+        }
         for &node in self.stack.iter().rev() {
             let Some(element) = arena.element(node) else {
                 continue;
@@ -142,6 +186,9 @@ impl OpenElements {
     /// The same walk for one particular node (`</form>` and the adoption agency
     /// ask about a node, not a name).
     pub fn has_node_in_scope(&self, arena: &Arena, target: NodeId, scope: Scope) -> bool {
+        if Self::html_name(arena, target).is_some_and(|name| self.open_count(name) == 0) {
+            return false;
+        }
         for &node in self.stack.iter().rev() {
             if node == target {
                 return true;
@@ -161,18 +208,22 @@ impl OpenElements {
     }
 
     pub fn pop_until_any_html(&mut self, arena: &Arena, names: &[&str]) {
-        while let Some(node) = self.stack.pop() {
-            if arena.element(node).is_some_and(|element| {
-                element.namespace == Namespace::Html && names.contains(&element.name.as_str())
-            }) {
+        if names.iter().all(|name| self.open_count(name) == 0) {
+            return;
+        }
+        while let Some(node) = self.pop(arena) {
+            if Self::html_name(arena, node).is_some_and(|name| names.contains(&name)) {
                 break;
             }
         }
     }
 
     /// Pop until `target` itself has been popped.
-    pub fn pop_until_node(&mut self, target: NodeId) {
-        while let Some(node) = self.stack.pop() {
+    pub fn pop_until_node(&mut self, arena: &Arena, target: NodeId) {
+        if !self.contains(target) {
+            return;
+        }
+        while let Some(node) = self.pop(arena) {
             if node == target {
                 break;
             }
@@ -188,7 +239,7 @@ mod tests {
         let mut stack = OpenElements::default();
         for name in names {
             let node = arena.create_element(Namespace::Html, *name, Vec::new());
-            stack.push(node);
+            stack.push(arena, node);
         }
         stack
     }
@@ -236,8 +287,9 @@ mod tests {
         assert!(stack.has_node_in_scope(&arena, div, Scope::Default));
         stack.pop_until_html(&arena, "p");
         assert_eq!(stack.current(), Some(div));
-        stack.pop_until_node(div);
+        stack.pop_until_node(&arena, div);
         assert_eq!(stack.len(), 2);
-        assert!(stack.contains_html(&arena, "body"));
+        assert!(stack.contains_html("body"));
+        assert!(!stack.contains_html("p"));
     }
 }

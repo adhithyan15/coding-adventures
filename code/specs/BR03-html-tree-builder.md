@@ -82,6 +82,12 @@ by side.
   default scope. The html5lib corpus follows the current text, and so does
   this crate. Section numbers in the code are the current ones (§13.2.6.4.16
   is "in template").
+- **Resource limits** sit on top of the specification, each reported as a
+  diagnostic: tree depth 512 (Blink's figure; deeper elements become siblings,
+  the stack of open elements is unchanged) and 64 active formatting elements
+  after the last marker (the Noah's Ark clause only removes identical entries,
+  so distinct attributes otherwise amplify input quadratically). A browser
+  parsing untrusted pages needs both; no corpus case reaches either.
 - **No test input is recognised anywhere** (BR02 §3). A case the builder does
   not pass is a declared expected failure with its reason.
 

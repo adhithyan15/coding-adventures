@@ -35,6 +35,25 @@ beside it, measured on the same corpus, until it is at least as correct; then
 Not yet (BR03 §5): the table modes, foreign content, fragment parsing, and
 parse errors by specification code.
 
+## Resource limits
+
+Untrusted pages must not be able to exhaust memory or time. Two limits sit on
+top of the specification's rules, each reported as a diagnostic when hit and
+far beyond anything in the corpus:
+
+- **Tree depth 512** (`tree_builder::MAX_TREE_DEPTH`, the figure Blink uses).
+  Deeper elements become siblings of the deepest allowed element; the stack
+  of open elements is unchanged, so end tags still mean what they meant.
+  `tree-builder-depth-limit`.
+- **64 active formatting elements after the last marker**
+  (`active_formatting::MAX_ENTRIES_AFTER_MARKER`). Distinct attributes defeat
+  the Noah's Ark clause, and every text insertion reconstructs the whole list,
+  so without it `<b id=1><b id=2>…` amplifies input quadratically.
+  `tree-builder-formatting-limit`.
+
+Scope checks also consult a per-name count of open elements first, so the
+common "is a `p` open?" question is O(1) when none is.
+
 ## Progress
 
 `tests/corpus.rs` runs html-parser's html5lib corpus (2,654 cases). **1,883
