@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/v8-test262",
+  "capabilities": [
+    { "category": "env",    "action": "read",   "target": "TEST262_DIR", "justification": "Location of the test262 checkout when --test262 is not given." },
+    { "category": "fs",     "action": "read",   "target": "*",           "justification": "Reads test262 tests, harness files and .git/HEAD of the checkout, and this crate's TEST262_REVISION and expected lists." },
+    { "category": "fs",     "action": "write",  "target": "*",           "justification": "--update rewrites this crate's expected/<level>.txt." },
+    { "category": "stdout", "action": "write",  "target": "*",           "justification": "Per-area summary, or --json." }
+  ],
+  "justification": "Conformance runner over a local test262 checkout. No network access: CI fetches the pinned suite before running it."
+}
