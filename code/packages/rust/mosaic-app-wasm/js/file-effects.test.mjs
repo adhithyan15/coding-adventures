@@ -215,6 +215,7 @@ test('files.save refuses names that are paths, disguises, or the wrong type, bef
   for (const [name, accept] of [
     ['../x.json', undefined], ['a/b.json', undefined], ['D:x.json', undefined], ['x.json:s', undefined],
     ['invoice‮fdp.exe', undefined], ['trailing.', undefined], ['trailing ', undefined],
+    ['Invoice.pdf      .exe', undefined],
     ['notes.exe', ['application/json']],
   ]) {
     const { files, calls, completions } = fixture();
@@ -237,9 +238,31 @@ test('without the File System Access API, files.save downloads the bytes under t
   assert.deepEqual(clicked, [{ href: 'blob:mosaic', download: 'journal.json' }]);
   assert.deepEqual(completions, [[10, { ok: { name: 'journal.json', download: true } }]]);
 
+  // One gesture cannot start a burst: a second download inside the interval fails.
+  await files.run(effect(12, 'files.save', { suggestedName: 'again.json', accept: ['application/json'], bytes: 'AA==' }));
+  assert.equal(clicked.length, 1);
+  assert.ok(completions[1][1].failed);
+
   // The older alias keeps its explicit degradation: no download claims a save.
   const legacy = fixture({ showSaveFilePicker: undefined, document: { createElement: () => ({ click() {} }) },
     URL: { createObjectURL: () => 'blob:x', revokeObjectURL() {} }, Blob: class {} });
   await legacy.files.run(effect(11, 'file.save', { suggestedName: 'book.json', bytes: 'AA==' }));
   assert.ok(legacy.completions[0][1].failed);
+});
+
+test('the download fallback refuses a name with no accepted type', async () => {
+  for (const payload of [
+    { suggestedName: 'setup.exe', bytes: 'AA==' },
+    { suggestedName: 'setup.exe', accept: ['x/unknown'], bytes: 'AA==' },
+  ]) {
+    const clicked = [];
+    const { files, completions } = fixture({
+      showSaveFilePicker: undefined,
+      Blob: class {}, URL: { createObjectURL: () => 'blob:x', revokeObjectURL() {} }, setTimeout: () => {},
+      document: { createElement: () => ({ click() { clicked.push(1); } }) },
+    });
+    await files.run(effect(13, 'files.save', payload));
+    assert.equal(clicked.length, 0);
+    assert.ok(completions[0][1].failed);
+  }
 });

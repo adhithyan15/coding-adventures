@@ -82,6 +82,8 @@ export function isPlainFileName(name) {
     && name.length <= 255
     && name !== '.' && name !== '..'
     && !/[.\s]$/.test(name)
+    // Runs of spaces are how `Invoice.pdf<30 spaces>.exe` hides its extension.
+    && !/\s{2,}/.test(name)
     && !/[\\/:\u0000-\u001f\u007f-\u009f\p{Cf}]/u.test(name);
 }
 
@@ -113,10 +115,15 @@ function pickerOptions(payload) {
 
 /** One executor per live MosaicHost. Call run directly in the UI gesture,
  * before yielding to React effects, timers or other asynchronous work. */
+/** At most one fallback download in this window: without a picker the person
+ * never confirms a download, so one gesture must not start a burst of them. */
+export const DOWNLOAD_FALLBACK_INTERVAL_MS = 5_000;
+
 export function createBrowserFileEffects(host, environment = globalThis) {
   if (host.update.protocolVersion !== 2) throw new Error('Browser file effects require protocol 2');
   let disposed = false;
   let busy = false;
+  let lastFallbackDownload = -Infinity;
   const records = new Map();
 
   async function perform(effect) {
@@ -155,14 +162,32 @@ export function createBrowserFileEffects(host, environment = globalThis) {
       }
       if (typeof picker !== 'function') {
         // No File System Access API (Firefox, Safari). `files.save` falls back
-        // to a download of the same bytes under the suggested name. A download
-        // cannot claim the file was durably saved where the person chose, so
-        // the result says `download: true` and an app can word it accordingly.
-        // The older `file.save` alias keeps degrading explicitly, as before.
-        if (effect.kind === 'files.save' && typeof environment.document?.createElement === 'function'
+        // to a download of the same bytes under the suggested name. Without a
+        // picker the person never sees or confirms the name, so the fallback
+        // is narrower than the picker path:
+        //  - only for a known accepted type, and a name ending in its
+        //    extension -- never an `.exe` or `.bat` with no `accept`;
+        //  - at most one download per DOWNLOAD_FALLBACK_INTERVAL_MS, so one
+        //    gesture cannot start a burst;
+        //  - the Blob is typed as the accepted MIME type.
+        // A download cannot claim the file was durably saved where the person
+        // chose, so the result says `download: true`, and `name` is the name
+        // requested (the browser may rename or block it). The older `file.save`
+        // alias keeps degrading explicitly, as before.
+        const accepted = Object.entries(acceptedTypes(effect.payload));
+        const match = accepted.find(([, extensions]) =>
+          extensions.some(extension => options.suggestedName?.toLowerCase().endsWith(extension)));
+        const now = typeof environment.performance?.now === 'function' ? environment.performance.now() : Date.now();
+        if (effect.kind === 'files.save' && match
+            && typeof environment.document?.createElement === 'function'
             && typeof environment.URL?.createObjectURL === 'function') {
+          if (now - lastFallbackDownload < DOWNLOAD_FALLBACK_INTERVAL_MS) {
+            throw new Error('Only one download at a time; try again in a moment');
+          }
+          lastFallbackDownload = now;
           const bytes = decode(savedBytes);
-          const url = environment.URL.createObjectURL(new environment.Blob([bytes]));
+          const url = environment.URL.createObjectURL(new environment.Blob([bytes], { type: match[0] }));
+          const revoke = () => environment.URL.revokeObjectURL(url);
           try {
             const link = environment.document.createElement('a');
             link.href = url;
@@ -170,7 +195,8 @@ export function createBrowserFileEffects(host, environment = globalThis) {
             link.rel = 'noopener';
             link.click();
           } finally {
-            environment.setTimeout?.(() => environment.URL.revokeObjectURL(url), 60_000);
+            const later = environment.setTimeout ?? globalThis.setTimeout;
+            if (typeof later === 'function') later(revoke, 60_000); else revoke();
           }
           return { ok: { name: options.suggestedName, download: true } };
         }

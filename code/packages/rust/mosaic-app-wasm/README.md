@@ -94,10 +94,17 @@ and applies its own versioned format. The selected save destination is written
 and closed before success is reported. Picker dismissal returns cancellation;
 denial, unsupported capabilities, concurrent dialogs and I/O errors return failure.
 Browsers without these picker APIs explicitly degrade for `file.*`. For
-`files.save` they fall back to a download of the same bytes under the suggested
-name, and the result carries `download: true`: a download cannot claim that the
-file was durably saved where the person chose, so the app can say "downloaded"
-rather than "saved".
+`files.save` they fall back to a download of the same bytes, narrowly, because
+the person never sees or confirms the name:
+
+- only when `accept` names a known type and the suggested name ends in its
+  extension (no `.exe`, `.bat` or untyped download), with the Blob typed as
+  that MIME type;
+- at most one download every `DOWNLOAD_FALLBACK_INTERVAL_MS` (5 s), so one
+  gesture cannot start a burst;
+- the result is `{name, download: true}`, where `name` is the name requested
+  (the browser may rename or block it). A download is not a durable save the
+  person placed, so the app can say "downloaded" rather than "saved".
 
 Duplicate `run` calls return no update and do not repeat I/O or replay old renders.
 If `completeEffect` rejects, `run` rejects and the executor retains the outcome;
