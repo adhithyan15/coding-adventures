@@ -2381,6 +2381,29 @@ jobs:
             xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/mosaic-swift-taskapp-ios" CODE_SIGNING_ALLOWED=NO build
           )
 
+          # iOS and iPadOS with the REAL runtime linked in (UI89 §2.1): the
+          # Rust engine is built as an .xcframework of static libraries (device
+          # + a fat simulator slice), because iOS does not allow loading an
+          # app's own dylib. The loader then calls it directly
+          # (MOSAIC_RUNTIME_STATIC); nm confirms the engine is in the binary,
+          # not merely that the link succeeded.
+          rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
+          ios_runtime="$RUNNER_TEMP/TaskAppRuntime.xcframework"
+          bash code/scripts/build-mosaic-xcframework.sh task-mosaic-app "$ios_runtime"
+          ios_linked_output="$RUNNER_TEMP/mosaic-swift-taskapp-ios-linked"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_linked_output" --emit-project --profile native-complete --runtime-library "$ios_runtime"
+          jq -e '.nativeComplete == true and (.degradations | type == "array" and length == 0)' "$ios_linked_output/swiftui/mosaic-degradations.json"
+          grep -q 'cSettings: \[.define("MOSAIC_RUNTIME_STATIC")\]' "$ios_linked_output/swiftui/Package.swift"
+          ios_linked_data="$RUNNER_TEMP/mosaic-swift-taskapp-ios-linked-dd"
+          (
+            cd "$ios_linked_output/swiftui"
+            xcodebuild -scheme App -destination 'generic/platform=iOS Simulator' -derivedDataPath "$ios_linked_data" CODE_SIGNING_ALLOWED=NO build
+            xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$ios_linked_data" CODE_SIGNING_ALLOWED=NO build
+          )
+          for binary in "$ios_linked_data/Build/Products/Debug-iphonesimulator/App" "$ios_linked_data/Build/Products/Debug-iphoneos/App"; do
+            nm -gU "$binary" | grep -q ' _mosaic_app_create$'
+          done
+
           toolkit_output="$RUNNER_TEMP/mosaic-swift-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend swiftui --output "$toolkit_output" --emit-project
           swift build --package-path "$toolkit_output/swiftui"

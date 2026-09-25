@@ -120,6 +120,41 @@ pub fn swift_package_with_runtime_binding(package_swift: &str, bundle_runtime: b
     }
 }
 
+/// The directory, inside an emitted SwiftUI package, where a statically linked
+/// runtime's `.xcframework` is placed (UI89 §2.1).
+pub const SWIFT_STATIC_RUNTIME_PATH: &str = "Runtime/MosaicAppRuntime.xcframework";
+
+/// Link a statically built runtime into an emitted Swift package (UI89 §2.1).
+///
+/// iOS and iPadOS do not let an app load its own `.dylib` at run time, so the
+/// runtime is a static library in an `.xcframework` -- one slice per platform
+/// (device, simulator, and macOS when it was built) -- that the package links:
+///
+/// ```text
+///   .binaryTarget(name: "MosaicAppRuntime", path: "Runtime/MosaicAppRuntime.xcframework")
+///   .target(name: "CMosaicRuntime", dependencies: ["MosaicAppRuntime"],
+///           cSettings: [.define("MOSAIC_RUNTIME_STATIC")], ...)
+/// ```
+///
+/// `MOSAIC_RUNTIME_STATIC` switches the C loader to name the runtime's
+/// functions directly instead of looking them up with `dlsym`. Apply after
+/// [`swift_package_with_runtime_binding`] with `bundle_runtime = false`: a
+/// linked runtime is not a resource.
+pub fn swift_package_with_static_runtime(package_swift: &str) -> String {
+    let with_loader = package_swift.replacen(
+        "      name: \"CMosaicRuntime\",\n      path: \"Sources/CMosaicRuntime\",\n      publicHeadersPath: \"include\"\n    ),",
+        "      name: \"CMosaicRuntime\",\n      dependencies: [\"MosaicAppRuntime\"],\n      path: \"Sources/CMosaicRuntime\",\n      publicHeadersPath: \"include\",\n      cSettings: [.define(\"MOSAIC_RUNTIME_STATIC\")]\n    ),",
+        1,
+    );
+    with_loader.replacen(
+        "  targets: [\n",
+        &format!(
+            "  targets: [\n    .binaryTarget(\n      name: \"MosaicAppRuntime\",\n      path: \"{SWIFT_STATIC_RUNTIME_PATH}\"\n    ),\n"
+        ),
+        1,
+    )
+}
+
 /// Generate the standard XAML/.NET host binding for the requested C# namespace.
 pub fn xaml_runtime_binding(namespace: &str) -> String {
     xaml_runtime_binding_source(namespace, None)
@@ -810,4 +845,23 @@ mod tests {
         }
         assert!(bindings[4].0.contains("#include <QDateTime>"));
     }
+
+    /// UI89 §2.1: a static runtime is a linked binary target the loader
+    /// depends on, with the macro that selects the direct-call path.
+    #[test]
+    fn a_static_runtime_links_the_xcframework_into_the_loader() {
+        let generated = "// swift-tools-version:5.9\nlet package = Package(\n  name: \"App\",\n  targets: [\n    .executableTarget(\n      name: \"App\",\n      path: \"Sources/App\"\n    )\n  ]\n)\n";
+        let bound = swift_package_with_runtime_binding(generated, false);
+        let linked = swift_package_with_static_runtime(&bound);
+        assert!(linked.contains(
+            ".binaryTarget(\n      name: \"MosaicAppRuntime\",\n      path: \"Runtime/MosaicAppRuntime.xcframework\"\n    )"
+        ), "{linked}");
+        assert!(linked.contains("dependencies: [\"MosaicAppRuntime\"]"), "{linked}");
+        assert!(linked.contains("cSettings: [.define(\"MOSAIC_RUNTIME_STATIC\")]"), "{linked}");
+        assert!(!linked.contains("resources:"), "a linked runtime is not a resource: {linked}");
+        let loader = swift_runtime_binding().loader_c;
+        assert!(loader.contains("#if defined(MOSAIC_RUNTIME_STATIC)"));
+        assert!(loader.contains("runtime->create = mosaic_app_create;"));
+    }
+
 }

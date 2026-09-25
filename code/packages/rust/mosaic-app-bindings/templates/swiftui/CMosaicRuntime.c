@@ -1,3 +1,19 @@
+/* CMosaicRuntime.c -- how a SwiftUI app reaches its Rust runtime.
+ *
+ * Two ways, chosen when the package is built:
+ *
+ *   dynamic (default)          the runtime is a .dylib found at run time with
+ *                              dlopen: macOS, where a bundled dylib is allowed.
+ *   MOSAIC_RUNTIME_STATIC      the runtime is a static library linked into the
+ *                              app from an .xcframework: iOS and iPadOS, which
+ *                              do not allow loading an app's own dylib at run
+ *                              time (UI89 §2.1). The package defines this macro
+ *                              when it links one.
+ *
+ * The static path names the runtime's functions directly. That is not only
+ * simpler than dlsym: a static archive contributes only the objects something
+ * refers to, so a runtime reached only by dlsym would be dropped by the linker.
+ */
 #include "CMosaicRuntime.h"
 
 #include <dlfcn.h>
@@ -38,6 +54,36 @@ static void set_error(mosaic_binding_runtime *runtime, const char *message) {
     snprintf(runtime->error, sizeof(runtime->error), "%s",
              message == NULL ? "unknown dynamic-loader error" : message);
 }
+
+#if defined(MOSAIC_RUNTIME_STATIC)
+/* The runtime's C ABI (mosaic-app-capi), linked in from the xcframework. */
+extern mosaic_binding_status mosaic_app_create(
+    mosaic_binding_bytes, mosaic_binding_app *, mosaic_binding_buffer *);
+extern mosaic_binding_status mosaic_app_dispatch(
+    mosaic_binding_app, mosaic_binding_bytes, mosaic_binding_buffer *);
+extern mosaic_binding_status mosaic_app_snapshot(mosaic_binding_app, mosaic_binding_buffer *);
+extern mosaic_binding_status mosaic_app_restore(
+    mosaic_binding_app, mosaic_binding_bytes, mosaic_binding_buffer *);
+extern mosaic_binding_status mosaic_app_complete_effect(
+    mosaic_binding_app, mosaic_binding_bytes, mosaic_binding_bytes, mosaic_binding_buffer *);
+extern void mosaic_buffer_free(mosaic_binding_buffer);
+extern void mosaic_app_destroy(mosaic_binding_app);
+
+/* Stands in for a dlopen handle: non-NULL, never passed to dlclose. */
+static char mosaic_static_runtime;
+
+static void link_static(mosaic_binding_runtime *runtime) {
+    runtime->library = &mosaic_static_runtime;
+    runtime->create = mosaic_app_create;
+    runtime->dispatch = mosaic_app_dispatch;
+    runtime->snapshot = mosaic_app_snapshot;
+    runtime->restore = mosaic_app_restore;
+    runtime->complete_effect = mosaic_app_complete_effect;
+    runtime->buffer_free = mosaic_buffer_free;
+    runtime->destroy = mosaic_app_destroy;
+    runtime->error[0] = '\0';
+}
+#endif
 
 static int resolve_symbols(mosaic_binding_runtime *runtime) {
 #define RESOLVE(field, symbol)                                                   \
@@ -97,6 +143,13 @@ mosaic_binding_runtime *mosaic_binding_open(const char *library_path) {
     if (runtime == NULL) {
         return NULL;
     }
+
+#if defined(MOSAIC_RUNTIME_STATIC)
+    /* Linked in: there is nothing to find, and no path is honoured. */
+    (void)library_path;
+    link_static(runtime);
+    return runtime;
+#endif
 
     if (library_path != NULL && library_path[0] != '\0') {
         try_library(runtime, library_path);
@@ -189,6 +242,12 @@ void mosaic_binding_destroy(
 
 void mosaic_binding_close(mosaic_binding_runtime *runtime) {
     if (runtime == NULL) return;
+#if defined(MOSAIC_RUNTIME_STATIC)
+    if (runtime->library == &mosaic_static_runtime) {
+        free(runtime);
+        return;
+    }
+#endif
     if (runtime->library != NULL) dlclose(runtime->library);
     free(runtime);
 }

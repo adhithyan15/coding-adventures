@@ -88,6 +88,22 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn('.degradations | type == "array" and length == 0', journal_block)
         self.assertIn('swift build --package-path "$journal_swift_output/swiftui"', journal_block)
 
+    def test_ios_links_the_real_runtime_statically(self) -> None:
+        """UI89 §2.1: Trestle is built for the iOS Simulator and devices with
+        its Rust engine linked from an .xcframework, and nm proves the engine
+        is in both binaries."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# iOS and iPadOS with the REAL runtime linked in (UI89")
+        block = workflow[start:workflow.index("\n\n", start)]
+        self.assertIn("rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios", block)
+        self.assertIn("bash code/scripts/build-mosaic-xcframework.sh task-mosaic-app", block)
+        self.assertIn('--runtime-library "$ios_runtime"', block)
+        self.assertIn("MOSAIC_RUNTIME_STATIC", block)
+        self.assertIn("-destination 'generic/platform=iOS Simulator'", block)
+        self.assertIn("-destination 'generic/platform=iOS'", block)
+        self.assertIn("nm -gU", block)
+
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_swift_runtime(
