@@ -5373,9 +5373,21 @@ fn emit_host_checkbox_qml(
     // `x()`; a `emit onToggle ( value : bool )` (or any arity ≥ 1)
     // gets `x(checked)` since `checked` is the natural payload Qt
     // makes available in the signal-handler scope.
+    //
+    // The exception is an `( index : number )` signal inside a `For`
+    // (UI29-2 §2.1.1): it gets the row index, exactly as a HostButton
+    // would, because the toggle alone cannot say which row changed.
     if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
         let camel = qml_signal_name(emit_name, ctx.signal_names)?;
-        let arg = pick_signal_arg_with(emit_name, ctx.emits, "checked");
+        let wants_index = ctx.emits.iter().find(|e| e.name == emit_name).is_some_and(|e| {
+            matches!(e.params.as_slice(), [param] if param.r#type == EmitPayloadType::Number)
+        });
+        let arg = if wants_index {
+            host_button_signal_args(emit_name, ctx)
+                .unwrap_or_else(|| "/* TODO: payload */".to_string())
+        } else {
+            pick_signal_arg_with(emit_name, ctx.emits, "checked").to_string()
+        };
         writeln!(out, "{inner_pad}onToggled: {camel}({arg})").unwrap();
     }
 
@@ -6312,6 +6324,20 @@ fn build_checked_attribute(node: &LayoutNode) -> Option<String> {
         }
         LayoutPropValue::Keyword(k) if k == "true" || k == "false" => {
             format!("checked: {k}")
+        }
+        // Inside a `For` the state is usually a loop binding or a row
+        // expression such as `row[4]`, a "1"/"" text marker, read by
+        // truthiness like HostButton's `selected:` (UI29-2 §2.1).
+        LayoutPropValue::Keyword(binding) => {
+            let camel = to_camel_case_first_lower(binding);
+            if is_safe_identifier(&camel) {
+                format!("checked: Boolean({camel})")
+            } else {
+                "checked: false".to_string()
+            }
+        }
+        LayoutPropValue::Expr(expr) if !expr.trim().is_empty() => {
+            format!("checked: Boolean({})", expr.trim())
         }
         _ => "checked: false".to_string(),
     })
@@ -10325,6 +10351,62 @@ mod tests {
         let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
         assert!(r.output.contains("onClicked: mosaicEmitClick()"));
         assert!(!r.output.contains("onClicked: mosaicEmitClick(text)"));
+    }
+
+    /// UI29-2 §2.1.1: in a `For`, an `( index : number )` `onToggle` gets the
+    /// row index, and a row expression drives `checked` by truthiness.
+    #[test]
+    fn host_checkbox_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "Checklist",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onToggle",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = LayoutDef {
+            component_name: "Checklist".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![LayoutNode {
+                    tag: "For".to_string(),
+                    part_name: None,
+                    props: vec![
+                        lp("each", LayoutPropValue::SlotRef("items".to_string())),
+                        lp("as", LayoutPropValue::Keyword("item".to_string())),
+                        lp("index", LayoutPropValue::Keyword("i".to_string())),
+                    ],
+                    children: vec![LayoutNode {
+                        tag: "HostCheckbox".to_string(),
+                        part_name: None,
+                        props: vec![
+                            lp("checked", LayoutPropValue::Expr("item".to_string())),
+                            lp("label", LayoutPropValue::Expr("item".to_string())),
+                            lp("onToggle", LayoutPropValue::EmitRef("onToggle".to_string())),
+                        ],
+                        children: Vec::new(),
+                    }],
+                }],
+            },
+        };
+        let r = from_pipeline(&m, &l, &empty_style("Checklist")).unwrap();
+        assert!(
+            r.output.contains("checked: Boolean(item)"),
+            "expected the row expression to drive the box, got:\n{}",
+            r.output
+        );
+        assert!(
+            r.output.contains("onToggled: mosaicEmitToggle(i)"),
+            "expected the checkbox to dispatch the row index, got:\n{}",
+            r.output
+        );
     }
 
     #[test]
