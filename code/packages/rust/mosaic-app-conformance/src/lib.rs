@@ -229,6 +229,7 @@ mod tests {
             platform: Platform::Windows,
             restored_snapshot: None,
             utc_offset_minutes: None,
+            environment: mosaic_app_runtime::EnvironmentAxes::default(),
         }
     }
 
