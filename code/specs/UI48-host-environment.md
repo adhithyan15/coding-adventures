@@ -366,6 +366,67 @@ Sliced so each lands independently and provably.
 
 ---
 
+### 7.2 ENV2 and ENV3, designed
+
+Written before implementation, from what the pipeline does today (checked on
+`main` with Engram, whose `EngramApp.touch.mll` is the only root-level
+variant): the artifact builder already compiles every authored variant, and
+each emitter writes `<Component>.<variant>.<ext>` beside the default. What it
+cannot do is put two variants **in one app**. On SwiftUI both files declare
+`struct EngramAppView` and repeat the event enum and its extension, so only
+the default is compiled into `Sources/App`.
+
+**ENV2 — one app carries every variant.**
+
+- Each variant's root is a distinct type: `<Component><Variant>View` (the
+  variant name in PascalCase: `touch` → `EngramAppTouchView`), and each
+  backend's equivalent (a `@Composable` function, a Dart widget class, a QML
+  component, a XAML user control — XAML already suffixes its type).
+- A variant file carries only what differs: its view. The component's
+  interface — its event type, prop accessors — is the same for every variant
+  (UI30 §2.2 puts the variant on the layout, never the interface) and is
+  emitted once, by the default. Helpers private to a file may repeat.
+- The project shell compiles every variant into the app. `--variant` at build
+  time (UI30 §3) still builds a single-variant artifact for hosts that want
+  one; this is the carry-everything default for project shells only.
+
+**ENV3 — the selector: environment in, variant out.**
+
+Variant names are opaque to the compiler (UI30 §2), so which environment
+selects which variant is declared, in the package manifest:
+
+```toml
+[app.layouts]
+# First match wins; no match is the default layout.
+compact = { size-class = "compact" }
+touch   = { pointer = "coarse" }
+```
+
+- Keys are variant names; each value is a set of UI48 axes that must all
+  match. Order is the order written. A variant with no rule is never
+  selected at run time (it can still be built alone with `--variant`).
+- Without an `[app.layouts]` table, the conventional names select themselves:
+  `compact` for `size-class = compact`, `expanded` for `size-class =
+  expanded`, `touch` for `pointer = coarse`, in that order. Any other name
+  needs a rule.
+- The selector is a pure Rust function in the kernel (`mosaic-package-manifest`
+  parses the table; a `select_variant(environment, rules)` beside it decides),
+  unit-tested without a backend. Each backend's shell emits the same rules in
+  its own language, generated from the Rust table, so the choice is identical
+  everywhere.
+- Selection runs on the environment the host observes (ENV4..N): SwiftUI's
+  `horizontalSizeClass` and scene phase, Compose's `WindowSizeClass`, the
+  web's `matchMedia`. When the chosen variant changes, the shell mounts the
+  other root view with the same props; the app's state lives in the runtime,
+  so nothing is lost. The same observation is sent to the runtime as
+  `environmentChanged` (ENV1), for apps that also want to react in logic.
+
+**Order of work.** ENV2 and ENV3 land together per backend, SwiftUI first
+(iPhone and iPad), with the Rust selector and manifest table in the first
+PR. The acceptance test changes the environment and asserts the swap, as §7
+requires: TaskApp gets `TaskApp.compact.mll`, and the iOS simulator gate
+launches it on a phone (compact) and asserts the compact layout's marker.
+
 ## 8. Open questions
 
 1. **Should `size-class` thresholds be authorable per component?** A dense
