@@ -24,6 +24,9 @@ documented in this file.
   raw text instead of markup. Conformance cases keep their `#script-on` /
   `#script-off` flags (unflagged cases still run scripting-on); tests that pin
   scripting-on behaviour opt in explicitly.
+- The document-shell pass decides whether a node before `<frameset>` is
+  ignorable with the parse's own scripting flag; it had hard-coded scripting
+  on, which the new default made wrong for a `<noscript>` there.
 
 - Preserve collapsible leading and trailing spaces when browser content is
   projected from separate inline text nodes.

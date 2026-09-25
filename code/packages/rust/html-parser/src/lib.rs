@@ -4862,7 +4862,7 @@ impl HtmlParser {
     }
 
     fn finish_document(&mut self) -> Document {
-        normalize_document_shell(std::mem::take(&mut self.document))
+        normalize_document_shell(std::mem::take(&mut self.document), self.options.scripting)
     }
 
     fn process_token(&mut self, token: Token) {
@@ -12879,7 +12879,9 @@ fn decrement_open_element_paths_after_remove(
     }
 }
 
-fn normalize_document_shell(document: Document) -> Document {
+/// `scripting` is the parse's own scripting flag: whether a `<noscript>` before
+/// a `<frameset>` is ignorable depends on it, so it must not be assumed.
+fn normalize_document_shell(document: Document, scripting: HtmlScriptingMode) -> Document {
     let mut normalized = Document::new();
     let mut builder = DocumentShellBuilder::default();
 
@@ -12909,7 +12911,7 @@ fn normalize_document_shell(document: Document) -> Document {
     }
 
     let trailing_document_children = std::mem::take(&mut builder.trailing_document_children);
-    normalized.push_child(builder.finish());
+    normalized.push_child(builder.finish(scripting));
     normalized.children.extend(trailing_document_children);
     normalized
 }
@@ -13439,7 +13441,7 @@ impl DocumentShellBuilder {
         }
     }
 
-    fn finish(self) -> Node {
+    fn finish(self, scripting: HtmlScriptingMode) -> Node {
         let head = Node::element("head".to_string(), self.head_attributes);
         let body = Node::element("body".to_string(), self.body_attributes);
         let mut html = Node::element("html".to_string(), self.html_attributes);
@@ -13461,7 +13463,7 @@ impl DocumentShellBuilder {
         html_element.children.extend(self.pre_head_html_children);
         html_element.children.push(Node::Element(head));
         html_element.children.extend(self.pre_body_html_children);
-        html_element.children.extend(body_or_frameset_nodes(body));
+        html_element.children.extend(body_or_frameset_nodes(body, scripting));
         html_element.children.extend(self.trailing_html_children);
         html
     }
@@ -13491,7 +13493,7 @@ fn coalesce_adjacent_text_nodes(nodes: &mut Vec<Node>) {
     }
 }
 
-fn body_or_frameset_nodes(mut body: Element) -> Vec<Node> {
+fn body_or_frameset_nodes(mut body: Element, scripting: HtmlScriptingMode) -> Vec<Node> {
     let has_frameset_child = body
         .children
         .iter()
@@ -13500,7 +13502,7 @@ fn body_or_frameset_nodes(mut body: Element) -> Vec<Node> {
         let first_non_hidden = body
             .children
             .iter()
-            .position(|node| !is_ignorable_before_frameset_node(node));
+            .position(|node| !is_ignorable_before_frameset_node_with_scripting(node, scripting));
         if matches!(
             first_non_hidden.and_then(|index| body.children.get(index)),
             Some(Node::Element(element))
@@ -13514,7 +13516,7 @@ fn body_or_frameset_nodes(mut body: Element) -> Vec<Node> {
         }
         if let Some(nodes) = first_non_hidden
             .and_then(|index| body.children.get(index))
-            .and_then(frameset_nodes_from_compatible_wrapper)
+            .and_then(|node| frameset_nodes_from_compatible_wrapper(node, scripting))
         {
             return nodes;
         }
@@ -13527,7 +13529,10 @@ fn body_or_frameset_nodes(mut body: Element) -> Vec<Node> {
     vec![Node::Element(body)]
 }
 
-fn frameset_nodes_from_compatible_wrapper(node: &Node) -> Option<Vec<Node>> {
+fn frameset_nodes_from_compatible_wrapper(
+    node: &Node,
+    scripting: HtmlScriptingMode,
+) -> Option<Vec<Node>> {
     let Node::Element(element) = node else {
         return None;
     };
@@ -13537,7 +13542,7 @@ fn frameset_nodes_from_compatible_wrapper(node: &Node) -> Option<Vec<Node>> {
     let first_non_ignorable = element
         .children
         .iter()
-        .position(|node| !is_ignorable_before_frameset_node(node))?;
+        .position(|node| !is_ignorable_before_frameset_node_with_scripting(node, scripting))?;
     if !matches!(
         element.children.get(first_non_ignorable),
         Some(Node::Element(child)) if child.namespace.is_none() && child.name == "frameset"
@@ -13545,7 +13550,7 @@ fn frameset_nodes_from_compatible_wrapper(node: &Node) -> Option<Vec<Node>> {
         return element
             .children
             .get(first_non_ignorable)
-            .and_then(frameset_nodes_from_compatible_wrapper);
+            .and_then(|node| frameset_nodes_from_compatible_wrapper(node, scripting));
     }
     Some(
         element
@@ -13619,10 +13624,6 @@ fn is_fragment_frameset_compatible_node(node: &Node) -> bool {
                 if element.namespace.is_some()
                     && element.children.iter().all(is_fragment_frameset_compatible_node)
         )
-}
-
-fn is_ignorable_before_frameset_node(node: &Node) -> bool {
-    is_ignorable_before_frameset_node_with_scripting(node, HtmlScriptingMode::Enabled)
 }
 
 fn is_ignorable_before_frameset_node_with_scripting(
