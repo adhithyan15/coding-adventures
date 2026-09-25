@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:0162b54bb2f8daea",
+  "lessonIds": [
+    "UR-W37-fe",
+    "UR-W37-qaf",
+    "UR-W37-zuad",
+    "UR-W37-zoe",
+    "UR-W37-hamza-seat",
+    "UR-R37-letters-first-pass",
+    "UR-R37-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "urdu/narration/ch37.txt",
+  "json": "urdu/narration/ch37.json",
+  "textHash": "fnv1a64:54ec669145c684c1",
+  "jsonHash": "fnv1a64:f27b810ef547f6f6",
+  "findings": []
+}

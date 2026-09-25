@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "UR-W36-dal",
+    "language": "urdu",
+    "chapter": 36,
+    "sequence": 1820,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b018600ee9b901ac",
+    "detachableSegments": [
+      "Script you'll notice: د",
+      "Writing: د"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

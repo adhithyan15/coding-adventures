@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "UR-W36-do-chashmi-he",
+    "language": "urdu",
+    "chapter": 36,
+    "sequence": 1840,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2e66d8892c98eaae",
+    "detachableSegments": [
+      "Script you'll notice: ھ",
+      "Writing: ھ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

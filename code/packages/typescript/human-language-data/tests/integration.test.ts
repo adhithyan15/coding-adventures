@@ -278,7 +278,10 @@ describe("real curriculum", () => {
       // has actually taught, which is why the passage says nothing about tea,
       // shoes or goodbyes: چائے, جوتا and خدا حافظ each contain a letter this
       // track has not reached.
-      26, 27, 28, 29, 30, 31, 32, 33]);
+      // 33 -> 37: HL-C443, one lesson per letter the reader had read in words and
+      // never written -- sixteen letters in chapters 34-37, each from its word,
+      // which also reaches the خ and د of خدا حافظ.
+      26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37]);
     expect(
       books.books
         .find((book) => book.language === "russian")

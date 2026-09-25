@@ -140,13 +140,14 @@ unmeasured. There are 93 unwritten letters.
 
 The fixes, biggest first:
 
-- **Unwritten.** Urdu 16, Malayalam 9, Bengali 5, Japanese 5.
+- **Unwritten.** Malayalam 9, Bengali 5, Japanese 5.
   Each fix is one letter lesson that follows the first word using the letter.
   Two tracks are done, each with one lesson per letter that names its word:
   - Tamil 14 → 0, in chapters 109-112.
   - Arabic 18 → 0, in chapters 46-49. Four of those 18 were already written in
     "letters — word" lessons that the measure now reads.
   - Persian 18 → 0, in chapters 22-26.
+  - Urdu 16 → 0, in chapters 34-37.
 - **Cold.** Marathi 43, Gujarati 34, Kannada 19, Telugu 13, Malayalam 12,
   Hindi 9. These are mostly alphabet-first openings, where the letters come
   before any word. The fix moves the letter lesson after its first word, or

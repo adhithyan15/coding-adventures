@@ -1,0 +1,501 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 34,
+  "title": "Letters on the Boat",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:5009d9bec109450f",
+  "lessons": [
+    {
+      "id": "UR-W34-be",
+      "sequence": 1750,
+      "title": "ب (be) — the letter that opens بولنا",
+      "headword": "ب",
+      "romanization": "be",
+      "gloss": "be — the letter that opens بولنا",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:21ba39977e5ce622",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ب",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ب and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write پ and و once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say بولنا (bolnā), \"to speak\". You have read it for a long time. This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ب — be, the sound b."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens بولنا (bolnā), \"to speak\". You already write پ, the shallow boat with three dots beneath it. ب is the same boat with one dot below."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ب",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start here: sweep the independent be-series bowl from right to left."
+            },
+            {
+              "kind": "speech",
+              "text": "2. after one lift, place the single dot below — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order; hands and teachers vary. Source: Zer o Zabar, Be, kāf, and short vowels, independent ب (be) handwriting animation and Be instructions (Northwestern University Libraries Open Textbook, 2026)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at بولنا and point at ب (be) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **بولنا** and point at ب inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ب (be) three times, saying b as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ب three times, saying *b* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "و, then ب (be), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: و, then ب, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "بولنا aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **بولنا** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ب? (be, b.) Which word did it come from? (بولنا, bolnā, \"to speak\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W34-te",
+      "sequence": 1760,
+      "title": "ت (te) — the letter that opens تم",
+      "headword": "ت",
+      "romanization": "te",
+      "gloss": "te — the letter that opens تم",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f0753e63ba6148d7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ت",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ت and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write و and ب (be) once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say تم (tum), \"you (familiar)\". You have read it for a long time. This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ت — te, the sound t, with the tongue against the teeth."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens تم (tum), the familiar \"you\". The same boat again, now with two dots above."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start here: sweep the independent be-series bowl from right to left."
+            },
+            {
+              "kind": "speech",
+              "text": "2. after one lift, place the left dot above the main line."
+            },
+            {
+              "kind": "speech",
+              "text": "3. after another lift, place the right dot beside it — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order; hands and teachers vary. Source: Zer o Zabar, Te, mīm, jīm, che, and more diacritics, independent ت handwriting animation and Te instructions (Northwestern University Libraries Open Textbook, 2026)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at تم and point at ت (te) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **تم** and point at ت inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ت (te) three times, saying t as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ت three times, saying *t* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ب (be), then ت (te), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ب, then ت, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "تم aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **تم** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ت? (te, t.) Which word did it come from? (تم, tum, \"you (familiar)\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-W34-tte",
+      "sequence": 1770,
+      "title": "ٹ (ṭe) — the letter that opens ٹھیک",
+      "headword": "ٹ",
+      "romanization": "ṭe",
+      "gloss": "ṭe — the letter that opens ٹھیک",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c3cce5c03f9a647e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ٹ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ٹ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ب (be) and ت once each, and name them."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ٹھیک (ṭhīk), \"fine, well\". You have read it for a long time. This lesson takes one letter out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ٹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ٹ — ṭe, a t made with the tongue curled back."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens ٹھیک (ṭhīk), \"fine\". Say tum, then ṭhīk: the first t touches the teeth, the second is struck further back. Urdu marks that curled-back sound with a small mark above the boat, where ت has its two dots. The dot under the romanization (ṭ) marks the same thing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ٹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start here: sweep the independent be-series bowl from right to left."
+            },
+            {
+              "kind": "speech",
+              "text": "2. after one lift, draw the small retroflex mark downward, back upward, and down again to close its loop — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order; hands and teachers vary. Source: Zer o Zabar, Fe, qāf, ṭe, ḍāl, and ṛe, independent ٹ handwriting animation and Ṭe instructions (Northwestern University Libraries Open Textbook, 2026)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ٹھیک and point at ٹ (ṭe) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ٹھیک** and point at ٹ inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ٹ (ṭe) three times, saying ṭ as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ٹ three times, saying *ṭ* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ت (te), then ٹ (ṭe), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ت, then ٹ, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ٹھیک aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ٹھیک** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter is this — ٹ? (ṭe, ṭ.) Which word did it come from? (ٹھیک, ṭhīk, \"fine, well\".)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
