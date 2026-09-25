@@ -1,5 +1,5 @@
 {
-  "case_count": 241,
+  "case_count": 242,
   "cases": [
     {
       "axis": "void-in-table",
@@ -1446,6 +1446,12 @@
       "id": "template-dat-119",
       "reason": "body void elements such as area, br, embed, hr, img, input, and wbr",
       "source": "template.dat:119"
+    },
+    {
+      "axis": "void-fragment-context",
+      "id": "template-dat-124",
+      "reason": "void elements in html5lib fragment contexts",
+      "source": "template.dat:124"
     }
   ],
   "counts_by_axis": {
@@ -1454,7 +1460,7 @@
     "metadata-void-elements": 56,
     "stray-void-end-tags": 5,
     "void-foreign-boundary": 14,
-    "void-fragment-context": 15,
+    "void-fragment-context": 16,
     "void-in-select": 8,
     "void-in-table": 53
   },

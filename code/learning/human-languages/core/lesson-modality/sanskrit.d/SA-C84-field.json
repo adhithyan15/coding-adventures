@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C84-field",
+    "language": "sanskrit",
+    "chapter": 84,
+    "sequence": 3960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac5d011e64f2f502"
+  },
+  "findings": []
+}

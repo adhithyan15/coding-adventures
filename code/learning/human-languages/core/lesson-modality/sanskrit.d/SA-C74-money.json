@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C74-money",
+    "language": "sanskrit",
+    "chapter": 74,
+    "sequence": 3430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78acb47b93c55240"
+  },
+  "findings": []
+}

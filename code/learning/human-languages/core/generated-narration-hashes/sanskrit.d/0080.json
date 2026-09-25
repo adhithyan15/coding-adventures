@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:e44939bfa4672b39",
+  "lessonIds": [
+    "SA-C80-crow",
+    "SA-C80-parrot",
+    "SA-C80-peacock",
+    "SA-C80-tortoise",
+    "SA-C80-frog"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch80.txt",
+  "json": "sanskrit/narration/ch80.json",
+  "textHash": "fnv1a64:850d9766ddc30dad",
+  "jsonHash": "fnv1a64:77276b871b0cfca9",
+  "findings": []
+}

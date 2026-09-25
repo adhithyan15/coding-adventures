@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R77-first-pass-body-and-feelings",
+    "language": "sanskrit",
+    "chapter": 77,
+    "sequence": 3620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ee9d60cf904e390"
+  },
+  "findings": []
+}

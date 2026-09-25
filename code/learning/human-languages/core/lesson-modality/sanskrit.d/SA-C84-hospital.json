@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C84-hospital",
+    "language": "sanskrit",
+    "chapter": 84,
+    "sequence": 3950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15587d6f5c599533"
+  },
+  "findings": []
+}

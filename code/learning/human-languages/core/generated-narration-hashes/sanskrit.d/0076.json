@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:1832129e82f66ef6",
+  "lessonIds": [
+    "SA-C76-rain",
+    "SA-C76-cold",
+    "SA-C76-heat",
+    "SA-C76-spring",
+    "SA-C76-summer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch76.txt",
+  "json": "sanskrit/narration/ch76.json",
+  "textHash": "fnv1a64:7ed6c7329db9af58",
+  "jsonHash": "fnv1a64:1b65b9a97928d1f4",
+  "findings": []
+}

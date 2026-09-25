@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "Lake, Well and Shore",
+  "label": "ch:sa-lake-well-shore",
+  "canDo": "I can name a lake, a well, a pond, an island and a shore.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-C82-shore",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can name a lake, a well, a pond, an island and a shore.",
+    "assesses": [
+      "SA-LEX-C82-WATER-03",
+      "SA-LEX-C82-WATER-04",
+      "SA-LEX-C82-WATER-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:c6d9892adaef6b07",
+  "lessonIds": [
+    "SA-C74-buys",
+    "SA-C74-money",
+    "SA-C74-price",
+    "SA-C74-shop",
+    "SA-C74-market"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch74.txt",
+  "json": "sanskrit/narration/ch74.json",
+  "textHash": "fnv1a64:757f15ed7ddfa576",
+  "jsonHash": "fnv1a64:356bf64c7a048cf2",
+  "findings": []
+}

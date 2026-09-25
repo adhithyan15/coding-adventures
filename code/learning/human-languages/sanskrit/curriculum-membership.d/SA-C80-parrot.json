@@ -1,0 +1,11 @@
+{
+  "id": "SA-C80-parrot",
+  "pathSegment": "SA-PATH-80-BIRDS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-80-BIRDS",
+      "order": 1
+    }
+  ]
+}

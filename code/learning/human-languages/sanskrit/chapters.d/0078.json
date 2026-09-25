@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Mango, Banana and Bread",
+  "label": "ch:sa-mango-banana-bread",
+  "canDo": "I can name a mango, a banana, oil, flatbread and sweet rice pudding.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "SA-C78-payasam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can name a mango, a banana, oil, flatbread and sweet rice pudding.",
+    "assesses": [
+      "SA-LEX-C78-FOOD-03",
+      "SA-LEX-C78-FOOD-04",
+      "SA-LEX-C78-FOOD-05"
+    ]
+  }
+}

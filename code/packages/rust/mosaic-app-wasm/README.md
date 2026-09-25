@@ -75,8 +75,17 @@ for its secure-context and user-activation requirements.
 
 | Await kind | Payload | Successful result payload |
 |---|---|---|
+| `files.open` | `{accept?: [MIME]}` | `{name, mimeType, bytes}` |
+| `files.save` | `{suggestedName, accept?: [MIME], bytes}` | `{name}`, or `{name, download: true}` (below) |
 | `file.open` | `{}` | `{name, bytes}` |
 | `file.save` | `{suggestedName, bytes}` | `{name}` |
+
+`files.*` are the kinds every Mosaic backend answers (UI59, UI87 §7): this
+executor is the web's platform library. `file.*` are the original names, kept
+as aliases with their original results until VisiCalc migrates. A suggested
+name must be a plain file name (no separators, `:`, control or format
+characters, trailing dot or space), and with `accept` it must end in an
+extension of an accepted type.
 
 `bytes` is base64, with a 16 MiB decoded limit (below the WASM JSON request limit).
 Both payloads may include `mimeType` and `extension` together, for example
@@ -84,8 +93,18 @@ Both payloads may include `mimeType` and `extension` together, for example
 and applies its own versioned format. The selected save destination is written
 and closed before success is reported. Picker dismissal returns cancellation;
 denial, unsupported capabilities, concurrent dialogs and I/O errors return failure.
-Browsers without these picker APIs explicitly degrade; no download fallback can
-claim that a file was durably saved.
+Browsers without these picker APIs explicitly degrade for `file.*`. For
+`files.save` they fall back to a download of the same bytes, narrowly, because
+the person never sees or confirms the name:
+
+- only when `accept` names a known type and the suggested name ends in its
+  extension (no `.exe`, `.bat` or untyped download), with the Blob typed as
+  that MIME type;
+- at most one download every `DOWNLOAD_FALLBACK_INTERVAL_MS` (5 s), so one
+  gesture cannot start a burst;
+- the result is `{name, download: true}`, where `name` is the name requested
+  (the browser may rename or block it). A download is not a durable save the
+  person placed, so the app can say "downloaded" rather than "saved".
 
 Duplicate `run` calls return no update and do not repeat I/O or replay old renders.
 If `completeEffect` rejects, `run` rejects and the executor retains the outcome;

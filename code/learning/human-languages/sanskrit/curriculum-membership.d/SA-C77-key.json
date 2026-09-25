@@ -1,0 +1,11 @@
+{
+  "id": "SA-C77-key",
+  "pathSegment": "SA-PATH-77-HOME",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-77-HOME",
+      "order": 4
+    }
+  ]
+}

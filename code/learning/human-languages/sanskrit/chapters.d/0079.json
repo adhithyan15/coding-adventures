@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "Elephant, Horse and Camel",
+  "label": "ch:sa-elephant-horse-camel",
+  "canDo": "I can name an elephant, a horse, a camel, a mouse and a cat.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-C79-cat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can name an elephant, a horse, a camel, a mouse and a cat.",
+    "assesses": [
+      "SA-LEX-C79-ANIMALS-03",
+      "SA-LEX-C79-ANIMALS-04",
+      "SA-LEX-C79-ANIMALS-05"
+    ]
+  }
+}

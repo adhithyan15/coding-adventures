@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 79,
+  "output": "sanskrit/book/chapters/ch79-elephant-horse-camel.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

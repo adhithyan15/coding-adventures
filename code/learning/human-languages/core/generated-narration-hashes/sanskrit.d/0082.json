@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:9b3c49f7d6ce9f0e",
+  "lessonIds": [
+    "SA-C82-lake",
+    "SA-C82-well",
+    "SA-C82-pond",
+    "SA-C82-island",
+    "SA-C82-shore"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch82.txt",
+  "json": "sanskrit/narration/ch82.json",
+  "textHash": "fnv1a64:afbe17dd7d0cc733",
+  "jsonHash": "fnv1a64:d5db2878156c368f",
+  "findings": []
+}

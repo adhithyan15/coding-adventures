@@ -1,0 +1,11 @@
+{
+  "id": "SA-R89-first-pass-food-animals-nature",
+  "pathSegment": "SA-PATH-89-DESCRIBE",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-89-DESCRIBE",
+      "order": 5
+    }
+  ]
+}

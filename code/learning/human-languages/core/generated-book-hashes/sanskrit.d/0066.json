@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:0705733335d72901",
+  "lessonIds": [
+    "SA-C66-fever",
+    "SA-C66-cough",
+    "SA-C66-pain",
+    "SA-C66-illness",
+    "SA-C66-health"
+  ],
+  "tex": "sanskrit/book/chapters/ch66-not-well.tex"
+}

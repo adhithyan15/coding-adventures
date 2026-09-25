@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C88-son",
+    "language": "sanskrit",
+    "chapter": 88,
+    "sequence": 4170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:183df726f815ea52"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "At School",
+  "label": "ch:sa-at-school",
+  "canDo": "I can name a school, a student, a teacher, a lesson and an exam.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "SA-C83-exam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can name a school, a student, a teacher, a lesson and an exam.",
+    "assesses": [
+      "SA-LEX-C83-SCHOOL-03",
+      "SA-LEX-C83-SCHOOL-04",
+      "SA-LEX-C83-SCHOOL-05"
+    ]
+  }
+}

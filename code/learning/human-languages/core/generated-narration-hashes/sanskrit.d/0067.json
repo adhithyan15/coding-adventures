@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:631fd2adcfe83e8a",
+  "lessonIds": [
+    "SA-C67-sleep",
+    "SA-C67-hunger",
+    "SA-C67-thirst",
+    "SA-C67-rest",
+    "SA-C67-ease"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch67.txt",
+  "json": "sanskrit/narration/ch67.json",
+  "textHash": "fnv1a64:a6086c1ed4c28733",
+  "jsonHash": "fnv1a64:c0227f67336e24e4",
+  "findings": []
+}

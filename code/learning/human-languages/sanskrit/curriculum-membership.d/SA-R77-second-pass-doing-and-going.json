@@ -1,0 +1,11 @@
+{
+  "id": "SA-R77-second-pass-doing-and-going",
+  "pathSegment": "SA-PATH-77-HOME",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "SA-EXT-77-HOME",
+      "order": 6
+    }
+  ]
+}

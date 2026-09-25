@@ -1,0 +1,11 @@
+{
+  "id": "SA-C84-field",
+  "pathSegment": "SA-PATH-84-PLACES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-84-PLACES",
+      "order": 2
+    }
+  ]
+}

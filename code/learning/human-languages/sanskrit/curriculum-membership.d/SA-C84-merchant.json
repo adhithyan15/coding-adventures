@@ -1,0 +1,11 @@
+{
+  "id": "SA-C84-merchant",
+  "pathSegment": "SA-PATH-84-PLACES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-84-PLACES",
+      "order": 4
+    }
+  ]
+}

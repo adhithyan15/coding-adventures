@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:01921e3ae54705cb",
+  "lessonIds": [
+    "SA-C79-elephant",
+    "SA-C79-horse",
+    "SA-C79-camel",
+    "SA-C79-mouse",
+    "SA-C79-cat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch79.txt",
+  "json": "sanskrit/narration/ch79.json",
+  "textHash": "fnv1a64:e0c162c82f2abfa9",
+  "jsonHash": "fnv1a64:5450c8cfaf8e7b17",
+  "findings": []
+}

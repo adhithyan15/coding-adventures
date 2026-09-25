@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C69-tongue",
+    "language": "sanskrit",
+    "chapter": 69,
+    "sequence": 3210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c324e0281e3b93e"
+  },
+  "findings": []
+}

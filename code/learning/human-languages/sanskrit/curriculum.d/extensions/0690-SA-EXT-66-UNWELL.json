@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-66-UNWELL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a fever, a cough, pain and illness, and wish someone health.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C66-illness",
+  "pathSegment": "SA-PATH-66-UNWELL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-66-UNWELL",
+      "order": 3
+    }
+  ]
+}

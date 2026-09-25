@@ -1,0 +1,11 @@
+{
+  "id": "SA-C89-near",
+  "pathSegment": "SA-PATH-89-DESCRIBE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-89-DESCRIBE",
+      "order": 2
+    }
+  ]
+}

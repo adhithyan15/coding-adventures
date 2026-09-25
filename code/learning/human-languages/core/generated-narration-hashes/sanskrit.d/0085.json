@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:3d99abef3d28a85e",
+  "lessonIds": [
+    "SA-C85-week",
+    "SA-C85-monday",
+    "SA-C85-tuesday",
+    "SA-C85-wednesday",
+    "SA-C85-thursday"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch85.txt",
+  "json": "sanskrit/narration/ch85.json",
+  "textHash": "fnv1a64:ec7be8282aac7e0c",
+  "jsonHash": "fnv1a64:855024c756512fe6",
+  "findings": []
+}

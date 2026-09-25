@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C72-gives",
+    "language": "sanskrit",
+    "chapter": 72,
+    "sequence": 3360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62c016fb07d7b8a1"
+  },
+  "findings": []
+}

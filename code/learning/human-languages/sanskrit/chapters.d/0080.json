@@ -1,0 +1,19 @@
+{
+  "chapter": 80,
+  "title": "Crow, Parrot and Peacock",
+  "label": "ch:sa-crow-parrot-peacock",
+  "canDo": "I can name a crow, a parrot, a peacock, a tortoise and a frog.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-C80-frog",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 80: i can name a crow, a parrot, a peacock, a tortoise and a frog.",
+    "assesses": [
+      "SA-LEX-C80-BIRDS-03",
+      "SA-LEX-C80-BIRDS-04",
+      "SA-LEX-C80-BIRDS-05"
+    ]
+  }
+}

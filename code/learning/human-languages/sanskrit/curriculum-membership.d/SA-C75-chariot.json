@@ -1,0 +1,11 @@
+{
+  "id": "SA-C75-chariot",
+  "pathSegment": "SA-PATH-75-TRAVEL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-75-TRAVEL",
+      "order": 1
+    }
+  ]
+}

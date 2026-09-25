@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:852fcbbdcbf10b6f",
+  "lessonIds": [
+    "SA-C67-sleep",
+    "SA-C67-hunger",
+    "SA-C67-thirst",
+    "SA-C67-rest",
+    "SA-C67-ease"
+  ],
+  "tex": "sanskrit/book/chapters/ch67-tired-hungry-thirsty.tex"
+}
