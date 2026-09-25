@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C117-mama",
+    "language": "hindi",
+    "chapter": 117,
+    "sequence": 5190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66303e1b8508f28b"
+  },
+  "findings": []
+}

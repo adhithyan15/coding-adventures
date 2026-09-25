@@ -1,0 +1,11 @@
+{
+  "id": "HI-R127-second-pass-body-mood",
+  "pathSegment": "HI-PATH-127-NOTATALL",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "HI-EXT-127-NOTATALL",
+      "order": 6
+    }
+  ]
+}

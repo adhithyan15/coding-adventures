@@ -1,0 +1,11 @@
+{
+  "id": "HI-C106-bimar",
+  "pathSegment": "HI-PATH-106-UNWELL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-106-UNWELL",
+      "order": 3
+    }
+  ]
+}

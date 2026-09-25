@@ -1,0 +1,11 @@
+{
+  "id": "HI-C123-khanakhaya",
+  "pathSegment": "HI-PATH-123-HAAL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-123-HAAL",
+      "order": 4
+    }
+  ]
+}

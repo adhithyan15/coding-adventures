@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C107-sehat",
+    "language": "hindi",
+    "chapter": 107,
+    "sequence": 4690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:303f4a0ca12c86e2"
+  },
+  "findings": []
+}

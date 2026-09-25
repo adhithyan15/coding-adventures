@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:4689e0cfa2f4bc83",
+  "lessonIds": [
+    "HI-C127-malumnahin",
+    "HI-C127-bilkulnahin",
+    "HI-C127-sachmuch",
+    "HI-C127-achhaji",
+    "HI-C127-chalega",
+    "HI-R127-second-pass-repair",
+    "HI-R127-second-pass-body-mood"
+  ],
+  "tex": "hindi/book/chapters/ch127-not-at-all.tex"
+}

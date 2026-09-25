@@ -1,0 +1,11 @@
+{
+  "id": "HI-C118-rishtedar",
+  "pathSegment": "HI-PATH-118-SPOUSE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-118-SPOUSE",
+      "order": 4
+    }
+  ]
+}

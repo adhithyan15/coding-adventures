@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-115-COMEIN",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "HI-EXT-115-COMEIN"
+  ],
+  "after": []
+}

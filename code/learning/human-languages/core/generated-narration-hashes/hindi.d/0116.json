@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:ab58ebe5ae061042",
+  "lessonIds": [
+    "HI-C116-dada",
+    "HI-C116-dadi",
+    "HI-C116-nana",
+    "HI-C116-nani",
+    "HI-C116-chacha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch116.txt",
+  "json": "hindi/narration/ch116.json",
+  "textHash": "fnv1a64:fba501685df8792a",
+  "jsonHash": "fnv1a64:594731bb56f5ce03",
+  "findings": []
+}

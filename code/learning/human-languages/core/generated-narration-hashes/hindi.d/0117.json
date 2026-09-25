@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:98c2fd56dbc6c1a0",
+  "lessonIds": [
+    "HI-C117-mausi",
+    "HI-C117-bua",
+    "HI-C117-mama",
+    "HI-C117-bhabhi",
+    "HI-C117-sasural"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch117.txt",
+  "json": "hindi/narration/ch117.json",
+  "textHash": "fnv1a64:d3c98b0d4a43b24a",
+  "jsonHash": "fnv1a64:35edd614fba77e38",
+  "findings": []
+}

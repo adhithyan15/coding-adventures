@@ -106,14 +106,19 @@ describe("the gate that would have caught the A2 claim", () => {
     // unaffected — overstating is a track touching HIGHER than it has attained, not a
     // track having attained nothing — so the 23 stands and the zero does not.
     // 1 -> 2: Telugu closed its last pre-A1 criterion (vocabulary, 300 headwords)
-    // with chapters 92-99, the second track to attain any level.
-    expect(gate.summary.tracksWithAnyLevel).toBe(2);
+    // with chapters 92-99, the second track to attain any level. 2 -> 3: Hindi
+    // closed the same criterion with chapters 106-127.
+    expect(gate.summary.tracksWithAnyLevel).toBe(3);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
     // C2. The tracks that hold a rung are pinned by name, and the per-level counts
     // are derived from that map, so a track climbing a rung edits one entry here
     // and the anti-spurious sweep stays intact.
-    const HELD: Readonly<Record<string, string>> = { spanish: "A1", telugu: "pre-A1" };
+    const HELD: Readonly<Record<string, string>> = {
+      spanish: "A1",
+      telugu: "pre-A1",
+      hindi: "pre-A1",
+    };
     const expectedByLevel = new Map<string, number>();
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
@@ -188,10 +193,15 @@ describe("the gate that would have caught the A2 claim", () => {
     // Hindi has one over-budget lesson, and it sits ABOVE pre-A1. Before the criteria
     // were level-scoped it blocked pre-A1 anyway, which made criterion 3 unfalsifiable
     // at the bottom of the ladder for every track.
+    //
+    // Hindi now shows it end to end: with chapters 106-127 it ATTAINS pre-A1 while
+    // that one over-budget lesson is still in the track, and the lesson surfaces as
+    // an atom-budget blocker only on the rung it actually sits on, A1.
     const gate = realReport().levelGate!;
     const hindi = gate.tracks.find((t) => t.language === "hindi")!;
-    expect(hindi.inProgressAt).toBe("pre-A1");
-    expect(hindi.blockers.map((b) => b.criterion)).not.toContain("atom-budget");
+    expect(hindi.attained).toBe("pre-A1");
+    expect(hindi.inProgressAt).toBe("A1");
+    expect(hindi.blockers.map((b) => b.criterion)).toContain("atom-budget");
   });
 
   it("fails an authored-but-unrealized level on a COUNT, not on absence", () => {

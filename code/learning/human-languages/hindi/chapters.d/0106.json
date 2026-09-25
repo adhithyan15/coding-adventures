@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Not Feeling Well",
+  "label": "ch:hi-not-feeling-well",
+  "canDo": "I can say I am tired, have a cold or a cough, or am ill, and ask how someone is feeling.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "HI-C106-tabiyat",
+    "kind": "production",
+    "summary": "Complete HI-C106-tabiyat: say what is wrong and ask how someone feels.",
+    "assesses": [
+      "HI-LEX-C106-UNWELL-03",
+      "HI-LEX-C106-UNWELL-04",
+      "HI-LEX-C106-UNWELL-05"
+    ]
+  }
+}

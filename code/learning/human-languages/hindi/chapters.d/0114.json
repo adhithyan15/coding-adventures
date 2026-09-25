@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Sorry, No Problem, Congratulations",
+  "label": "ch:hi-sorry-no-problem",
+  "canDo": "I can apologise, answer an apology, congratulate, give good wishes, and talk about an invitation.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "HI-C114-nimantran",
+    "kind": "production",
+    "summary": "Complete HI-C114-nimantran: the courtesies that come around a visit.",
+    "assesses": [
+      "HI-LEX-C114-SORRY-03",
+      "HI-LEX-C114-SORRY-04",
+      "HI-LEX-C114-SORRY-05"
+    ]
+  }
+}

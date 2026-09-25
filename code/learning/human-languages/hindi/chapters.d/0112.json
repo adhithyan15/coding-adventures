@@ -1,0 +1,19 @@
+{
+  "chapter": 112,
+  "title": "Right, Wrong, Sure",
+  "label": "ch:hi-right-wrong-sure",
+  "canDo": "I can say something is right or wrong, ask if someone is sure, react with really? and oh!",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "HI-C112-are",
+    "kind": "production",
+    "summary": "Complete HI-C112-are: reactions and judgements.",
+    "assesses": [
+      "HI-LEX-C112-RIGHT-03",
+      "HI-LEX-C112-RIGHT-04",
+      "HI-LEX-C112-RIGHT-05"
+    ]
+  }
+}

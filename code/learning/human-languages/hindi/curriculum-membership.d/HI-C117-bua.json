@@ -1,0 +1,11 @@
+{
+  "id": "HI-C117-bua",
+  "pathSegment": "HI-PATH-117-AUNT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-117-AUNT",
+      "order": 1
+    }
+  ]
+}

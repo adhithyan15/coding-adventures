@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C124-pyasa",
+    "language": "hindi",
+    "chapter": 124,
+    "sequence": 5530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c5b3b1d32d3bf46"
+  },
+  "findings": []
+}

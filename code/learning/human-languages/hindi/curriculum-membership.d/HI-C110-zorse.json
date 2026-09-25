@@ -1,0 +1,11 @@
+{
+  "id": "HI-C110-zorse",
+  "pathSegment": "HI-PATH-110-AGAIN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-110-AGAIN",
+      "order": 1
+    }
+  ]
+}

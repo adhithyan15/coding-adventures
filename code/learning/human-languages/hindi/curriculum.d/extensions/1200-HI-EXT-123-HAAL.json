@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-123-HAAL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can greet someone the everyday way: how's it going, all well, long time, what's up, have you eaten.",
+  "prerequisites": []
+}

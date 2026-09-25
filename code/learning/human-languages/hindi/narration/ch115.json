@@ -1,0 +1,908 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 115,
+  "title": "Come In, Here You Are",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:d99b3ca1b3a7ac6c",
+  "lessons": [
+    {
+      "id": "HI-C115-aie",
+      "sequence": 5050,
+      "title": "आइए (āie) — please come (in)",
+      "headword": "आइए",
+      "romanization": "āie",
+      "gloss": "please come (in)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c88dbec9752378c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for good wishes, then the Hindi for an invitation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आइए",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आइए (āie) — \"please come\", \"come in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "It is आना, \"to come\", with the respectful -इए. आइए (āie), आइए (āie)! — doubled, it is a warm welcome at the door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A welcome at the door."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āie, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āie*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say āie, āie!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *āie, āie!*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for good wishes, then the Hindi for an invitation, then say āie again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for good wishes, then the Hindi for an invitation, then say *āie* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आइए (āie) mean? (\"Please come (in)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C115-padharie",
+      "sequence": 5060,
+      "title": "पधारिए (padhārie) — please come (formal)",
+      "headword": "पधारिए",
+      "romanization": "padhārie",
+      "gloss": "please come (formal)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9595ac935c60d7f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an invitation, then the Hindi for please come in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पधारिए",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पधारिए (padhārie) — \"please come\", in its most formal, honouring form."
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday āie comes first in this chapter; पधारिए (padhārie) is what you say to an honoured guest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A second welcome, for an honoured guest."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padhārie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padhārie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "padhārie, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *padhārie*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say padhārie, then āie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *padhārie*, then *āie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an invitation, then the Hindi for please come in, then say padhārie again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an invitation, then the Hindi for please come in, then say *padhārie* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पधारिए (padhārie) mean? (\"Please come (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C115-lijie",
+      "sequence": 5070,
+      "title": "लीजिए (lījie) — please take; here you are",
+      "headword": "लीजिए",
+      "romanization": "lījie",
+      "gloss": "please take; here you are",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6cf3d67b357477a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for please come in, then the Hindi for please come, formally."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लीजिए",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लीजिए (lījie) — \"please take\", \"here you are\", as you hand something over."
+            },
+            {
+              "kind": "speech",
+              "text": "It is लेना, \"to take\", with the respectful ending of बोलिए. चाय लीजिए (lījie) — \"have some tea\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "An offer as you hand it over."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lījie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lījie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lījie, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lījie*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say cāy lījie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *cāy lījie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for please come in, then the Hindi for please come, formally, then say lījie again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for please come in, then the Hindi for please come, formally, then say *lījie* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लीजिए (lījie) mean? (\"Please take; here you are\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C115-shauqse",
+      "sequence": 5080,
+      "title": "शौक़ से (śauq se) — by all means, gladly",
+      "headword": "शौक़ से",
+      "romanization": "śauq se",
+      "gloss": "by all means, gladly",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:40633abfe36b3058",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for please come, formally, then the Hindi for here you are."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शौक़ से",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शौक़ से (śauq se) — \"by all means\", \"gladly\", literally \"with pleasure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The answer when someone asks if they may: क्या मैं बैठ सकता हूँ? — शौक़ से (śauq se)!"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A generous yes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śauq se",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śauq se*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śauq se, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śauq se*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say śauq se!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *śauq se!*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for please come, formally, then the Hindi for here you are, then say śauq se again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for please come, formally, then the Hindi for here you are, then say *śauq se* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शौक़ से (śauq se) mean? (\"By all means, gladly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C115-jinahin",
+      "sequence": 5090,
+      "title": "जी नहीं (jī nahīṁ) — no, politely",
+      "headword": "जी नहीं",
+      "romanization": "jī nahīṁ",
+      "gloss": "no, politely",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d94fc3f0e0948cd7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for here you are, then the Hindi for by all means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जी नहीं",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जी नहीं (jī nahīṁ) — \"no\", said politely."
+            },
+            {
+              "kind": "speech",
+              "text": "It pairs with the जी हाँ you know: जी makes either answer respectful."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Come in, please come, here you are, by all means, and a polite no."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jī nahīṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jī nahīṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jī nahīṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jī nahīṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say jī nahīṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *jī nahīṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for here you are, then the Hindi for by all means, then say jī nahīṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for here you are, then the Hindi for by all means, then say *jī nahīṁ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जी नहीं (jī nahīṁ) mean? (\"No, politely\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R115-second-pass-courtesy",
+      "sequence": 5100,
+      "title": "A visit, start to finish — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over the courtesies of a visit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1fa238b3881e928",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A guest is at your door. Welcome them in, and hand them a cup of tea."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the respectful ending",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "word",
+                "from"
+              ],
+              "columns": 2,
+              "rowCount": 3,
+              "utterances": [
+                "word: āie. from: come.",
+                "word: लीजिए (lījie). from: take.",
+                "word: पधारिए (padhārie). from: arrive, formally."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "One ending turns a verb into a polite request, as it did for बोलिए."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "you bumped into someone: beg their pardon; they answer \"no problem\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: you bumped into someone: beg their pardon; they answer \"no problem\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "congratulate a friend; then send them good wishes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: congratulate a friend; then send them good wishes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thank someone for an invitation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thank someone for an invitation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a guest asks to sit: say \"by all means\"; offered more food, say a polite no",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a guest asks to sit: say \"by all means\"; offered more food, say a polite no]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An apology? (माफ़ी.) No problem? (कोई बात नहीं.) Congratulations? (बधाई.) Good wishes? (शुभकामनाएँ.) An invitation? (निमंत्रण.) Come in? (āie.) Please come, formally? (पधारिए (padhārie).) Here you are? (लीजिए (lījie).) By all means? (शौक़ से (śauq se).) A polite no? (जी नहीं (jī nahīṁ).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R115-second-pass-reactions",
+      "sequence": 5110,
+      "title": "Reacting and answering — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over reactions and short answers",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8bc1dd726f42c98d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Someone gives an answer. Tell them it is right; then tell them it is wrong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: two words you already had, joined",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "answer",
+                "built from"
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "answer: कुछ नहीं. built from: something + not.",
+                "answer: अभी नहीं. built from: right now + not.",
+                "answer: सच में? built from: truth + in.",
+                "answer: वही. built from: that + exactly."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Most short answers are two small words you already own, put side by side."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "react to surprising news: oh, really?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: react to surprising news: oh, really?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask if someone is sure; answer \"definitely\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask if someone is sure; answer \"definitely\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asked what happened, say nothing; asked if you have finished, say not yet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: asked what happened, say nothing; asked if you have finished, say not yet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say that's enough; say \"that's the one\"; say maybe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say that's enough; say \"that's the one\"; say maybe]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer a request with \"by all means\", then with a polite no",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer a request with \"by all means\", then with a polite no]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Right? (सही.) Wrong? (ग़लत.) Sure? (पक्का.) Really? (सच में?) Oh? (अरे.) Nothing? (कुछ नहीं.) Not yet? (अभी नहीं.) Enough? (काफ़ी.) That very one? (वही.) Maybe? (हो सकता है.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

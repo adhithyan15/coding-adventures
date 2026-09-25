@@ -1,0 +1,21 @@
+{
+  "chapter": 115,
+  "title": "Come In, Here You Are",
+  "label": "ch:hi-come-in",
+  "canDo": "I can welcome a guest in, offer something, answer by all means, and say no politely.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "HI-R115-second-pass-courtesy",
+    "kind": "production",
+    "summary": "Complete HI-R115-second-pass-courtesy: courtesies and reactions, from cold.",
+    "assesses": [
+      "HI-LEX-C115-COMEIN-01",
+      "HI-LEX-C115-COMEIN-02",
+      "HI-LEX-C115-COMEIN-03",
+      "HI-LEX-C115-COMEIN-04",
+      "HI-LEX-C115-COMEIN-05"
+    ]
+  }
+}

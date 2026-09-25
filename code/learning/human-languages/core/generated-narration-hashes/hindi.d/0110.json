@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:ee803071e5518977",
+  "lessonIds": [
+    "HI-C110-dobara",
+    "HI-C110-zorse",
+    "HI-C110-ekminat",
+    "HI-C110-rukie",
+    "HI-C110-matlab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch110.txt",
+  "json": "hindi/narration/ch110.json",
+  "textHash": "fnv1a64:7e6651eca8c46030",
+  "jsonHash": "fnv1a64:4866b421de11b5b4",
+  "findings": []
+}

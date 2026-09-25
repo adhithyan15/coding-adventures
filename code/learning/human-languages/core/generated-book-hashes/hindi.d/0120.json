@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:79a536700907b74d",
+  "lessonIds": [
+    "HI-C120-hastakshar",
+    "HI-C120-pahchan",
+    "HI-C120-parichay",
+    "HI-C120-insan",
+    "HI-C120-milkar"
+  ],
+  "tex": "hindi/book/chapters/ch120-forms-and-introductions.tex"
+}

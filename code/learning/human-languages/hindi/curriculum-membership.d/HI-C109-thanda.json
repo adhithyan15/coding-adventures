@@ -1,0 +1,11 @@
+{
+  "id": "HI-C109-thanda",
+  "pathSegment": "HI-PATH-109-MOOD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-109-MOOD",
+      "order": 4
+    }
+  ]
+}

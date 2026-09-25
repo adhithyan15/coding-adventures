@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:4219190f64c68b27",
+  "lessonIds": [
+    "HI-C107-doctor",
+    "HI-C107-aspatal",
+    "HI-C107-chot",
+    "HI-C107-kamzori",
+    "HI-C107-sehat"
+  ],
+  "tex": "hindi/book/chapters/ch107-at-the-doctor.tex"
+}

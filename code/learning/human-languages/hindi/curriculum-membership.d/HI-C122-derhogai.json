@@ -1,0 +1,11 @@
+{
+  "id": "HI-C122-derhogai",
+  "pathSegment": "HI-PATH-122-LATE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-122-LATE",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C110-ekminat",
+  "pathSegment": "HI-PATH-110-AGAIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-110-AGAIN",
+      "order": 2
+    }
+  ]
+}

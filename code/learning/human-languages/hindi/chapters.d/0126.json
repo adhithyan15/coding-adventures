@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "What Did You Say?",
+  "label": "ch:hi-what-did-you-say",
+  "canDo": "I can ask what someone said, ask for it once more, and say I did not understand or do not know.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "HI-C126-ekbaraur",
+    "kind": "production",
+    "summary": "Complete HI-C126-ek-bar-aur: keep a conversation going when you are lost.",
+    "assesses": [
+      "HI-LEX-C126-WHAT-03",
+      "HI-LEX-C126-WHAT-04",
+      "HI-LEX-C126-WHAT-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:13a27983e729445f",
+  "lessonIds": [
+    "HI-C106-thakan",
+    "HI-C106-zukam",
+    "HI-C106-khansi",
+    "HI-C106-bimar",
+    "HI-C106-tabiyat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch106.txt",
+  "json": "hindi/narration/ch106.json",
+  "textHash": "fnv1a64:40990eb167e15065",
+  "jsonHash": "fnv1a64:a75c68e59a0eac78",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C118-larki",
+  "pathSegment": "HI-PATH-118-SPOUSE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-118-SPOUSE",
+      "order": 1
+    }
+  ]
+}

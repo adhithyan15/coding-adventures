@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C126-nahinpata",
+    "language": "hindi",
+    "chapter": 126,
+    "sequence": 5650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f752cc1467cec37"
+  },
+  "findings": []
+}
