@@ -30,7 +30,7 @@
 //! have no identity to preserve, so duplicating one is free. That is why
 //! [`resolve`] refuses to return anything else.
 
-use coding_adventures_javascript_ast::{Expression, MemberExpression, ObjectMember, PropertyKind};
+use coding_adventures_javascript_ast::{Expression, ObjectMember, PropertyKind};
 
 /// One step of a key path: `o.a` and `o["a"]` are both `Name("a")`;
 /// `a[0]` is `Index(0)`.
@@ -43,30 +43,75 @@ pub enum Key {
 /// Peel a member chain to its root identifier and the key path read from
 /// it, outermost expression in, returning the path in *access* order.
 ///
+/// Accepts a chain that mixes `.` and `?.` steps and sits under a
+/// [`Expression::ChainExpression`] (CLOC30).
+///
 /// Returns `None` the moment a step is something this pass does not model
 /// — a computed key that is not a literal (`o[i]`), a call in the middle
 /// of the chain (`o.f().b`), anything rooted in something other than a
 /// plain name. Declining here is always safe: the caller treats an
 /// unrecognised occurrence as a reason to leave the whole binding alone.
-pub fn chain_of(m: &MemberExpression) -> Option<(String, Vec<Key>)> {
+///
+/// `o?.a?.b`, `o.a?.b` and `o?.a.b` all parse as an interleaving of
+/// [`Expression::MemberExpression`] and
+/// [`Expression::OptionalMemberExpression`] beneath one `ChainExpression`,
+/// so one walker has to accept both at every step.
+///
+/// # Why `?.` needs no extra guard
+///
+/// `?.` short-circuits to `undefined` when its object is `null` or
+/// `undefined`. It cannot do that here. The root is a candidate whose
+/// initializer [`is_structured_literal`] — an object or array literal is
+/// never nullish — and every intermediate step is resolved by [`resolve`]
+/// against that literal, which only continues through a nested object or
+/// array literal and otherwise returns `None`. So wherever this walker
+/// produces a path that `resolve` accepts, no `?.` on it could have
+/// short-circuited, and `?.` reads exactly as `.` would.
+///
+/// Where a `?.` *would* short-circuit the walk stops, but the caller still
+/// rewrites the longest prefix that resolves: `var o={a:null}; o?.a?.b`
+/// becomes `null?.b`, not nothing. That is correct — `null?.b` is
+/// `undefined`, as the source computes — and still behind upstream, which
+/// folds the whole chain to `void 0`. The `ChainExpression` wrapper
+/// survives the prefix rewrite, so a later `?.` still short-circuits to the
+/// end of the chain instead of throwing.
+pub fn chain_of_expr(e: &Expression) -> Option<(String, Vec<Key>)> {
+    // A chain expression is a transparent wrapper around its spine.
+    let mut cur = match e {
+        Expression::ChainExpression(c) => c.expression.as_ref(),
+        other => other,
+    };
     let mut keys = Vec::new();
-    let mut cur = m;
     loop {
-        keys.push(key_of(cur)?);
-        match cur.object.as_ref() {
+        let (computed, property, object) = match cur {
+            Expression::MemberExpression(m) => (m.computed, m.property.as_ref(), m.object.as_ref()),
+            Expression::OptionalMemberExpression(m) => {
+                (m.computed, m.property.as_ref(), m.object.as_ref())
+            }
+            _ => return None,
+        };
+        keys.push(key_of_parts(computed, property)?);
+        match object {
             Expression::Identifier(id) => {
                 keys.reverse();
                 return Some((id.name.clone(), keys));
             }
-            Expression::MemberExpression(inner) => cur = inner,
-            _ => return None,
+            // A nested `ChainExpression` cannot appear mid-spine in
+            // well-formed input, but unwrapping one costs nothing and
+            // keeps the walker total.
+            Expression::ChainExpression(c) => cur = c.expression.as_ref(),
+            inner => cur = inner,
         }
     }
 }
 
 /// The key one member step reads, or `None` if it is not a literal key.
-fn key_of(m: &MemberExpression) -> Option<Key> {
-    match (m.computed, m.property.as_ref()) {
+///
+/// Takes the two fields rather than a `MemberExpression`, because
+/// `OptionalMemberExpression` carries the same pair and reads the same way
+/// (CLOC30) — see [`chain_of_expr`].
+fn key_of_parts(computed: bool, property: &Expression) -> Option<Key> {
+    match (computed, property) {
         // `o.a` — the property is a name, not a value to evaluate.
         (false, Expression::Identifier(id)) => Some(Key::Name(id.name.clone())),
         // `o["a-b"]` — a string subscript is the same read as `o.a` would
@@ -77,7 +122,11 @@ fn key_of(m: &MemberExpression) -> Option<Key> {
         // an array object, not element reads, so they are not modelled.
         (true, Expression::NumericLiteral(n)) => {
             let v = n.value;
-            if v.is_finite() && v >= 0.0 && v.fract() == 0.0 && v <= usize::MAX as f64 {
+            // `<`, not `<=`: `usize::MAX as f64` rounds UP to 2^64, so `<=`
+            // admits 2^64 itself, `v as usize` then saturates to `usize::MAX`,
+            // and the `*i + 1` in the array arm overflows — a panic in any
+            // overflow-checked build, which includes the test profile.
+            if v.is_finite() && v >= 0.0 && v.fract() == 0.0 && v < usize::MAX as f64 {
                 Some(Key::Index(v as usize))
             } else {
                 None
@@ -166,7 +215,7 @@ fn step<'a>(cur: &'a Expression, k: &Key) -> Option<&'a Expression> {
             if arr
                 .elements
                 .iter()
-                .take(*i + 1)
+                .take(i.saturating_add(1))
                 .any(|e| matches!(e, Some(Expression::SpreadElement(_))))
             {
                 return None;

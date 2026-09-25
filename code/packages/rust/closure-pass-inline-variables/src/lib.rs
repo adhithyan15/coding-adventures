@@ -104,13 +104,12 @@ use coding_adventures_closure_pass_pipeline::{
     IterationPolicy, Pass, PassContext, PassError, PassOutput, PassStats,
 };
 use coding_adventures_correlation_vector::Contribution;
-use serde_json::json;
 use coding_adventures_javascript_ast::statement::TaggedStatement;
 use coding_adventures_javascript_ast::{
     ArrowBody, AssignmentTarget, BindingTarget, ClassMember, Declaration, Expression, ForInit,
-    Program, ProgramItem, ObjectMember, PropertyKey, Statement, VarKind,
-    VariableDeclaration,
+    ObjectMember, Program, ProgramItem, PropertyKey, Statement, VarKind, VariableDeclaration,
 };
+use serde_json::json;
 
 /// `Pass::depends_on` value — constant-fold first, so a folded
 /// initializer is already a literal when we scan for candidates.
@@ -184,9 +183,7 @@ impl InlineVariablesPass {
     /// Registered this way in `closurec`'s `run.rs`, alongside the other
     /// closed-world passes (`inline`, `remove-unused-vars`, `treeshake`).
     pub fn closed_world() -> Self {
-        Self {
-            closed_world: true,
-        }
+        Self { closed_world: true }
     }
 }
 
@@ -220,13 +217,12 @@ impl Pass for InlineVariablesPass {
         let mut program = ctx.program.clone();
         let mut nodes_touched: u32 = 1; // the program root
         let mut propagated: Vec<PropagatedConst> = Vec::new();
-        let changed =
-            inline_variables_program(
-                &mut program,
-                &mut nodes_touched,
-                &mut propagated,
-                self.closed_world,
-            );
+        let changed = inline_variables_program(
+            &mut program,
+            &mut nodes_touched,
+            &mut propagated,
+            self.closed_world,
+        );
 
         // CV provenance (#89): record every constant we propagated as a
         // `propagated` contribution carrying `{name, value, sites}` — the
@@ -1532,8 +1528,18 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> usize {
     // and the eligibility check in `inline_variables_program` will have
     // rejected the candidate before we get here if one exists).
     if cand.structured {
-        if let Expression::MemberExpression(m) = expr {
-            if let Some((root, keys)) = structured::chain_of(m) {
+        // CLOC30: the spine may mix `.` and `?.` and sit under a
+        // `ChainExpression`, so all three shapes go through one walker.
+        // `?.` cannot short-circuit on a path `resolve` accepts — the root
+        // is an object/array literal and every step lands on another one —
+        // so an optional chain reads exactly as a plain one here.
+        if matches!(
+            expr,
+            Expression::MemberExpression(_)
+                | Expression::OptionalMemberExpression(_)
+                | Expression::ChainExpression(_)
+        ) {
+            if let Some((root, keys)) = structured::chain_of_expr(expr) {
                 if root == cand.name {
                     if let Some(v) = structured::resolve(&cand.value, &keys) {
                         if is_literal(v) {
@@ -1976,6 +1982,142 @@ mod tests {
         assert_eq!(
             propagate_source("var x = x;console.log(x);"),
             "var x=x;console.log(x);"
+        );
+    }
+
+    // ---- CLOC30: optional chains resolve like plain ones ----------------
+    //
+    // `?.` cannot short-circuit on a path `resolve` accepts: the root is an
+    // object/array literal (never nullish) and every step lands on another
+    // one. So these read exactly as their `.` equivalents.
+
+    #[test]
+    fn resolves_an_all_optional_chain() {
+        assert_eq!(
+            propagate_source("var o = { a: { b: 1 } };console.log(o?.a?.b);"),
+            "var o={a:{b:1}};console.log(1);"
+        );
+    }
+
+    #[test]
+    fn resolves_a_chain_that_starts_plain_and_turns_optional() {
+        assert_eq!(
+            propagate_source("var o = { a: { b: 1 } };console.log(o.a?.b);"),
+            "var o={a:{b:1}};console.log(1);"
+        );
+    }
+
+    #[test]
+    fn resolves_a_chain_that_starts_optional_and_turns_plain() {
+        assert_eq!(
+            propagate_source("var o = { a: { b: 1 } };console.log(o?.a.b);"),
+            "var o={a:{b:1}};console.log(1);"
+        );
+    }
+
+    #[test]
+    fn resolves_an_optional_computed_subscript() {
+        assert_eq!(
+            propagate_source(r#"var o = { a: 1 };console.log(o?.["a"]);"#),
+            r#"var o={a:1};console.log(1);"#
+        );
+    }
+
+    #[test]
+    fn resolves_an_optional_index_into_an_array() {
+        assert_eq!(
+            propagate_source("var a = [1, 2, 3];console.log(a?.[1]);"),
+            "var a=[1,2,3];console.log(2);"
+        );
+    }
+
+    /// A step onto a scalar stops the walk — but the PREFIX still resolves,
+    /// so this is a rewrite, not a refusal. The earlier name for this test
+    /// said "refuses", which contradicted the output it asserts.
+    ///
+    /// `null?.b` is `undefined`, exactly what the source computes, and the
+    /// surviving `ChainExpression` is what keeps the residual `?.`
+    /// short-circuiting instead of throwing. Upstream folds the whole thing
+    /// to `void 0`; being shorter of that is a gap, not a divergence in the
+    /// dangerous direction.
+    #[test]
+    fn resolves_only_the_prefix_when_a_null_intermediate_stops_the_walk() {
+        assert_eq!(
+            propagate_source("var o = { a: null };console.log(o?.a?.b);"),
+            "var o={a:null};console.log(null?.b);"
+        );
+    }
+
+    /// Every CLOC28 guard still applies when the chain is optional — the
+    /// write makes the whole binding ineligible, `?.` or not.
+    #[test]
+    fn refuses_an_optional_chain_when_the_property_is_written() {
+        assert_eq!(
+            propagate_source("var o = { a: 1 };o.a = 9;console.log(o?.a);"),
+            "var o={a:1};o.a=9;console.log(o?.a);"
+        );
+    }
+
+    // ---- A planted number needs parens the source never did -------------
+    //
+    // Found in review of CLOC30. Propagation puts a NUMBER where the source
+    // had an identifier, and two renderings of one break the operator that
+    // follows: `1.b` is a SyntaxError (the `.` is read as a decimal point),
+    // and `-3?.b` parses as `-(3?.b)`, which is NaN rather than undefined.
+    //
+    // The emitter fix lives in `closure-emitter`, but the exposure is
+    // created here, so the regression tests live here too — `propagate_source`
+    // runs the pass AND the emitter, which is exactly the path that broke.
+    //
+    // The negative case is the dangerous one: valid JavaScript, no crash, a
+    // silently wrong value.
+
+    #[test]
+    fn parenthesizes_a_planted_integer_before_a_plain_member() {
+        assert_eq!(
+            propagate_source("var o = { a: 1 };console.log(o?.a.b);"),
+            "var o={a:1};console.log((1).b);"
+        );
+    }
+
+    #[test]
+    fn parenthesizes_a_planted_integer_deeper_in_a_chain() {
+        assert_eq!(
+            propagate_source("var o = { a: { b: 2 } };console.log(o?.a?.b.c);"),
+            "var o={a:{b:2}};console.log((2).c);"
+        );
+    }
+
+    #[test]
+    fn parenthesizes_a_planted_integer_from_an_array_index() {
+        assert_eq!(
+            propagate_source("var a = [1, 2];console.log(a?.[0].x);"),
+            "var a=[1,2];console.log((1).x);"
+        );
+    }
+
+    /// The pass alone does NOT reach the negative case: `-3` is still a
+    /// `UnaryExpression` here, so `is_literal` declines and the chain is
+    /// left whole. Only once constant-fold has turned it into a
+    /// `NumericLiteral(-3)` does this pass resolve it and plant a number
+    /// that needs parens — which is why the `(-3)?.b` regression is pinned
+    /// in `closure-emitter` (see `optional_member_parenthesizes_a_negative_base`)
+    /// rather than here. Pinned so the boundary is visible if it moves.
+    #[test]
+    fn leaves_a_negated_value_alone_because_it_is_not_yet_a_literal() {
+        assert_eq!(
+            propagate_source("var o = { a: -3 };console.log(o?.a?.b);"),
+            "var o={a:-3};console.log(o?.a?.b);"
+        );
+    }
+
+    /// A number that already carries its own `.` is unambiguous, so it must
+    /// NOT be wrapped — the guard is lexical, not "parenthesize every number".
+    #[test]
+    fn leaves_a_planted_float_base_unparenthesized() {
+        assert_eq!(
+            propagate_source("var o = { a: 1.5 };console.log(o.a.toFixed);"),
+            "var o={a:1.5};console.log(1.5.toFixed);"
         );
     }
 

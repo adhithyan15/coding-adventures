@@ -63,29 +63,24 @@
 use coding_adventures_closure_source_map::SourceMapBuilder;
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
-    AssignmentTarget, BigIntLiteral, BinaryExpression, BinaryOperator, BlockStatement,
-    ArrowBody, ArrowFunctionExpression,
-    TemplateElement, TemplateLiteral,
-    BooleanLiteral,
-    BreakStatement, CallExpression, ClassExpression, ClassMember, ConditionalExpression, ContinueStatement,
-    Declaration, DebuggerStatement, DoWhileStatement,
-    MethodDefinition, MethodKind, PropertyDefinition,
-    EmptyStatement, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
-    ForStatement,
-    ClassDeclaration, FunctionDeclaration, FunctionExpression,
-    ExportAllDeclaration, ExportDefaultDeclaration, ExportDefaultKind, ExportNamedDeclaration,
-    ExportSpecifier,
-    FunctionParam, Identifier, IfStatement, ImportDeclaration, ImportSpecifier, LabeledStatement,
-    LogicalExpression, LogicalOperator,
-    MemberExpression, NewExpression, NullLiteral, NumericLiteral, ObjectExpression, Program, ProgramItem, SequenceExpression,
-    ObjectMember, Property, PropertyKey, PropertyKind, ReturnStatement, Statement, StringLiteral,
-    SwitchCase, SwitchStatement, ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UpdateExpression, UpdateOperator,
-    RegExpLiteral,
-    UndefinedLiteral, VarKind, VariableDeclaration, VariableDeclarator, WhileStatement, WithStatement,
-    TaggedTemplateExpression, SpreadElement, YieldExpression, AwaitExpression, ThisExpression,
-    Super, NewTarget, ImportMeta, ImportExpression,
-    ChainExpression, OptionalCallExpression, OptionalMemberExpression,
+    statement::TaggedStatement, ArrayExpression, ArrowBody, ArrowFunctionExpression,
+    AssignmentExpression, AssignmentOperator, AssignmentTarget, AwaitExpression, BigIntLiteral,
+    BinaryExpression, BinaryOperator, BlockStatement, BooleanLiteral, BreakStatement,
+    CallExpression, ChainExpression, ClassDeclaration, ClassExpression, ClassMember,
+    ConditionalExpression, ContinueStatement, DebuggerStatement, Declaration, DoWhileStatement,
+    EmptyStatement, ExportAllDeclaration, ExportDefaultDeclaration, ExportDefaultKind,
+    ExportNamedDeclaration, ExportSpecifier, Expression, ExpressionStatement, ForInStatement,
+    ForInit, ForOfStatement, ForStatement, FunctionDeclaration, FunctionExpression, FunctionParam,
+    Identifier, IfStatement, ImportDeclaration, ImportExpression, ImportMeta, ImportSpecifier,
+    LabeledStatement, LogicalExpression, LogicalOperator, MemberExpression, MethodDefinition,
+    MethodKind, NewExpression, NewTarget, NullLiteral, NumericLiteral, ObjectExpression,
+    ObjectMember, OptionalCallExpression, OptionalMemberExpression, Program, ProgramItem, Property,
+    PropertyDefinition, PropertyKey, PropertyKind, RegExpLiteral, ReturnStatement,
+    SequenceExpression, SpreadElement, Statement, StringLiteral, Super, SwitchCase,
+    SwitchStatement, TaggedTemplateExpression, TemplateElement, TemplateLiteral, ThisExpression,
+    ThrowStatement, TryStatement, UnaryExpression, UnaryOperator, UndefinedLiteral,
+    UpdateExpression, UpdateOperator, VarKind, VariableDeclaration, VariableDeclarator,
+    WhileStatement, WithStatement, YieldExpression,
 };
 use coding_adventures_type_sidecar::Sidecar;
 use std::fmt;
@@ -370,10 +365,7 @@ impl<'a> Emitter<'a> {
             // statement that pushes the line past the budget -- see
             // `LINE_LENGTH_BUDGET` for the oracle table. Skipped on the final item
             // so the output does not gain a trailing blank line.
-            if !self.opts.pretty
-                && self.col > Self::LINE_LENGTH_BUDGET
-                && i + 1 < p.body.len()
-            {
+            if !self.opts.pretty && self.col > Self::LINE_LENGTH_BUDGET && i + 1 < p.body.len() {
                 self.newline();
             }
         }
@@ -1420,11 +1412,7 @@ impl<'a> Emitter<'a> {
     /// `extends (a?b:c)`) is wrapped — exactly the grammar's requirement.
     /// Members print back-to-back with no separators (each carries its own
     /// `{…}`).
-    fn emit_class_tail(
-        &mut self,
-        super_class: &Option<Box<Expression>>,
-        body: &[ClassMember],
-    ) {
+    fn emit_class_tail(&mut self, super_class: &Option<Box<Expression>>, body: &[ClassMember]) {
         if let Some(sup) = super_class {
             self.required_ws();
             self.write_str("extends");
@@ -1996,8 +1984,7 @@ impl<'a> Emitter<'a> {
             BinaryOperator::Sub => Some('-'),
             _ => None,
         };
-        let left_needs_space =
-            self.opts.pretty || sign.is_some_and(|sc| self.out.ends_with(sc));
+        let left_needs_space = self.opts.pretty || sign.is_some_and(|sc| self.out.ends_with(sc));
         if left_needs_space {
             self.write_str(" ");
         }
@@ -2435,8 +2422,37 @@ impl<'a> Emitter<'a> {
     /// continues, so the parens are redundant (`a?.b?.c`) — hence
     /// `emit_optional_member`/`emit_optional_call` do NOT use this and keep their
     /// bare `PREC_PRIMARY` emit.
+    /// Does this access base need parentheses for **lexical** reasons, over
+    /// and above precedence?
+    ///
+    /// A number is `PREC_PRIMARY`, so precedence alone never wraps it — but
+    /// two renderings of one break the operator that follows:
+    ///
+    /// ```text
+    /// 1.b      // SyntaxError: the `.` is read as this number's decimal point
+    /// -3?.b    // parses as -(3?.b) -> NaN, not (-3)?.b -> undefined
+    /// ```
+    ///
+    /// A bare integer needs the parens before `.`; a negative needs them
+    /// before `.` and `?.` alike, because the leading `-` is a unary operator
+    /// binding looser than member access. `1.5.b` and `1e3.b` are already
+    /// unambiguous — the number has consumed its own `.` — so they are left
+    /// alone.
+    ///
+    /// This matters because constant propagation plants numbers where the
+    /// source had an identifier: `var o={a:-3}; o?.a?.b` becomes `-3?.b`,
+    /// which is valid JavaScript computing the WRONG VALUE. Silent, and the
+    /// reason this is checked lexically rather than by precedence.
+    fn numeric_base_needs_parens(base: &Expression) -> bool {
+        let Expression::NumericLiteral(n) = base else {
+            return false;
+        };
+        let text = format_js_number_value(n.value);
+        text.starts_with('-') || text.bytes().all(|b: u8| b.is_ascii_digit())
+    }
+
     fn emit_plain_access_base(&mut self, base: &Expression) {
-        if matches!(base, Expression::ChainExpression(_)) {
+        if matches!(base, Expression::ChainExpression(_)) || Self::numeric_base_needs_parens(base) {
             self.write_str("(");
             self.emit_expression(base);
             self.write_str(")");
@@ -2473,7 +2489,15 @@ impl<'a> Emitter<'a> {
     /// (`(a||b)?.c`) must keep its parens.
     fn emit_optional_member(&mut self, m: &OptionalMemberExpression) {
         self.maybe_map(&m.cv);
-        self.emit_expression_inner(&m.object, PREC_PRIMARY);
+        // A chain base stays bare here (the chain just continues), but the
+        // LEXICAL hazard still applies: `-3?.b` would parse as `-(3?.b)`.
+        if Self::numeric_base_needs_parens(&m.object) {
+            self.write_str("(");
+            self.emit_expression(&m.object);
+            self.write_str(")");
+        } else {
+            self.emit_expression_inner(&m.object, PREC_PRIMARY);
+        }
         if m.computed {
             self.write_str("?.[");
             self.emit_expression(&m.property);
@@ -2490,7 +2514,13 @@ impl<'a> Emitter<'a> {
     /// looser *sequence* argument wraps (`f?.((a,b))`).
     fn emit_optional_call(&mut self, c: &OptionalCallExpression) {
         self.maybe_map(&c.cv);
-        self.emit_expression_inner(&c.callee, PREC_PRIMARY);
+        if Self::numeric_base_needs_parens(&c.callee) {
+            self.write_str("(");
+            self.emit_expression(&c.callee);
+            self.write_str(")");
+        } else {
+            self.emit_expression_inner(&c.callee, PREC_PRIMARY);
+        }
         self.write_str("?.(");
         for (i, a) in c.arguments.iter().enumerate() {
             if i > 0 {
@@ -3539,7 +3569,6 @@ mod tests {
         Program::new_untraced(EsVersion::Es2025, SourceType::Module)
     }
 
-
     // =================================================================
     // Output line wrapping (CLOC #218)
     //
@@ -3566,7 +3595,11 @@ mod tests {
     fn short_programs_are_never_wrapped() {
         // Well under the budget -> a single line, no break.
         let lens = wrapped_line_lengths(10, 3);
-        assert_eq!(lens, vec![100], "10 statements of width 10 must stay on one line");
+        assert_eq!(
+            lens,
+            vec![100],
+            "10 statements of width 10 must stay on one line"
+        );
     }
 
     #[test]
@@ -3600,7 +3633,9 @@ mod tests {
         for n in [50usize, 51, 52, 100] {
             let out = emit_default(
                 untraced_program().with_body(
-                    (0..n).map(|i| stmt(call(ident(&format!("sink{i:03}")), vec![]))).collect(),
+                    (0..n)
+                        .map(|i| stmt(call(ident(&format!("sink{i:03}")), vec![])))
+                        .collect(),
                 ),
             );
             assert!(
@@ -3624,7 +3659,10 @@ mod tests {
         let prog = untraced_program().with_body(body);
         let sidecar = Sidecar::new();
         let mut cv = CVLog::new(false);
-        let opts = EmitOptions { pretty: true, ..EmitOptions::default() };
+        let opts = EmitOptions {
+            pretty: true,
+            ..EmitOptions::default()
+        };
         let out = emit(&prog, &sidecar, &mut cv, &opts).expect("emit failed");
         assert_eq!(
             out.code.lines().count(),
@@ -3732,7 +3770,8 @@ mod tests {
                 let c = char::from_u32(cp).unwrap();
                 let out = f(&format!("A{c}B"));
                 assert!(
-                    !out.chars().any(|ch| (ch as u32) < 0x20 || ch as u32 == 0x7f),
+                    !out.chars()
+                        .any(|ch| (ch as u32) < 0x20 || ch as u32 == 0x7f),
                     "{name}: U+{cp:04X} leaked a raw control byte: {out:?}"
                 );
                 assert!(
@@ -3785,7 +3824,10 @@ mod tests {
 
     /// An empty function body `{}` — the value of a no-op method.
     fn empty_block() -> BlockStatement {
-        BlockStatement { cv: None, body: vec![] }
+        BlockStatement {
+            cv: None,
+            body: vec![],
+        }
     }
     /// A method value `(){}` (no params, empty body).
     fn method_fn() -> FunctionExpression {
@@ -3802,7 +3844,10 @@ mod tests {
     fn method(name: &str, kind: MethodKind, is_static: bool) -> ClassMember {
         ClassMember::Method(MethodDefinition {
             cv: None,
-            key: PropertyKey::Identifier(Identifier { cv: None, name: name.to_string() }),
+            key: PropertyKey::Identifier(Identifier {
+                cv: None,
+                name: name.to_string(),
+            }),
             kind,
             value: method_fn(),
             computed: false,
@@ -3818,7 +3863,10 @@ mod tests {
     ) -> Expression {
         Expression::ClassExpression(ClassExpression {
             cv: None,
-            id: id.map(|n| Identifier { cv: None, name: n.to_string() }),
+            id: id.map(|n| Identifier {
+                cv: None,
+                name: n.to_string(),
+            }),
             super_class: super_class.map(Box::new),
             body,
         })
@@ -3834,7 +3882,10 @@ mod tests {
     #[test]
     fn class_named_and_heritage() {
         // `class C{}` and `class C extends B{}` (both statement-wrapped).
-        assert_eq!(emit_expr(class_expr(Some("C"), None, vec![])), "(class C{});");
+        assert_eq!(
+            emit_expr(class_expr(Some("C"), None, vec![])),
+            "(class C{});"
+        );
         assert_eq!(
             emit_expr(class_expr(Some("C"), Some(ident("B")), vec![])),
             "(class C extends B{});"
@@ -3873,7 +3924,11 @@ mod tests {
     #[test]
     fn class_with_method() {
         assert_eq!(
-            emit_expr(class_expr(None, None, vec![method("m", MethodKind::Method, false)])),
+            emit_expr(class_expr(
+                None,
+                None,
+                vec![method("m", MethodKind::Method, false)]
+            )),
             "(class{m(){}});"
         );
     }
@@ -3881,15 +3936,27 @@ mod tests {
     #[test]
     fn class_static_and_accessors() {
         assert_eq!(
-            emit_expr(class_expr(None, None, vec![method("m", MethodKind::Method, true)])),
+            emit_expr(class_expr(
+                None,
+                None,
+                vec![method("m", MethodKind::Method, true)]
+            )),
             "(class{static m(){}});"
         );
         assert_eq!(
-            emit_expr(class_expr(None, None, vec![method("x", MethodKind::Get, false)])),
+            emit_expr(class_expr(
+                None,
+                None,
+                vec![method("x", MethodKind::Get, false)]
+            )),
             "(class{get x(){}});"
         );
         assert_eq!(
-            emit_expr(class_expr(None, None, vec![method("x", MethodKind::Set, false)])),
+            emit_expr(class_expr(
+                None,
+                None,
+                vec![method("x", MethodKind::Set, false)]
+            )),
             "(class{set x(){}});"
         );
     }
@@ -3905,7 +3972,10 @@ mod tests {
             computed: true,
             is_static: false,
         });
-        assert_eq!(emit_expr(class_expr(None, None, vec![m])), "(class{[k](){}});");
+        assert_eq!(
+            emit_expr(class_expr(None, None, vec![m])),
+            "(class{[k](){}});"
+        );
     }
 
     #[test]
@@ -3988,7 +4058,7 @@ mod tests {
         };
         assert_eq!(emit_expr(member(or(), "c", false)), "(a||b).c;");
         assert_eq!(emit_expr(member(or(), "c", true)), "(a||b)[c];"); // computed
-        // A member object that is itself a member (PREC_PRIMARY) stays bare.
+                                                                      // A member object that is itself a member (PREC_PRIMARY) stays bare.
         assert_eq!(
             emit_expr(member(member(ident("a"), "b", false), "c", false)),
             "a.b.c;"
@@ -4042,9 +4112,15 @@ mod tests {
     #[test]
     fn optional_member_dot_and_computed() {
         // `a?.b` — optional dot access spells the operator `?.`.
-        assert_eq!(emit_expr(chain(opt_member(ident("a"), "b", false))), "a?.b;");
+        assert_eq!(
+            emit_expr(chain(opt_member(ident("a"), "b", false))),
+            "a?.b;"
+        );
         // `a?.[b]` — optional computed access spells `?.[`…`]`.
-        assert_eq!(emit_expr(chain(opt_member(ident("a"), "b", true))), "a?.[b];");
+        assert_eq!(
+            emit_expr(chain(opt_member(ident("a"), "b", true))),
+            "a?.[b];"
+        );
     }
 
     #[test]
@@ -4131,7 +4207,10 @@ mod tests {
             cv: None,
             expressions: vec![ident("b"), ident("c")],
         });
-        assert_eq!(emit_expr(chain(opt_call(ident("a"), vec![seq]))), "a?.((b,c));");
+        assert_eq!(
+            emit_expr(chain(opt_call(ident("a"), vec![seq]))),
+            "a?.((b,c));"
+        );
     }
 
     #[test]
@@ -4140,8 +4219,14 @@ mod tests {
         // Symbolic operators carry no space in compact mode.
         assert_eq!(emit_expr(binary(Add, ident("a"), ident("b"))), "a+b;");
         assert_eq!(emit_expr(binary(Mul, ident("a"), ident("b"))), "a*b;");
-        assert_eq!(emit_expr(binary(StrictEq, ident("a"), ident("b"))), "a===b;");
-        assert_eq!(emit_expr(binary(LeftShift, ident("a"), ident("b"))), "a<<b;");
+        assert_eq!(
+            emit_expr(binary(StrictEq, ident("a"), ident("b"))),
+            "a===b;"
+        );
+        assert_eq!(
+            emit_expr(binary(LeftShift, ident("a"), ident("b"))),
+            "a<<b;"
+        );
         assert_eq!(emit_expr(binary(BitOr, ident("a"), ident("b"))), "a|b;");
         assert_eq!(emit_expr(binary(Exp, ident("a"), ident("b"))), "a**b;");
     }
@@ -4205,19 +4290,31 @@ mod tests {
         // `a + (+b)` must NOT tighten to `a++b` (which parses as `a++ b`); the
         // right seam keeps one space. The left seam still tightens: `a+ +b`.
         assert_eq!(
-            emit_expr(binary(Add, ident("a"), unary(UnaryOperator::Plus, ident("b")))),
+            emit_expr(binary(
+                Add,
+                ident("a"),
+                unary(UnaryOperator::Plus, ident("b"))
+            )),
             "a+ +b;"
         );
         // Likewise `a - (-b)` must not become `a--b`.
         assert_eq!(
-            emit_expr(binary(Sub, ident("a"), unary(UnaryOperator::Negate, ident("b")))),
+            emit_expr(binary(
+                Sub,
+                ident("a"),
+                unary(UnaryOperator::Negate, ident("b"))
+            )),
             "a- -b;"
         );
         // A negative numeric literal on the right is the same hazard.
         assert_eq!(emit_expr(binary(Sub, ident("a"), num(-1.0))), "a- -1;");
         // Mixed signs do NOT fuse, so no space is needed: `a+-b` = `a + (-b)`.
         assert_eq!(
-            emit_expr(binary(Add, ident("a"), unary(UnaryOperator::Negate, ident("b")))),
+            emit_expr(binary(
+                Add,
+                ident("a"),
+                unary(UnaryOperator::Negate, ident("b"))
+            )),
             "a+-b;"
         );
     }
@@ -4225,8 +4322,7 @@ mod tests {
     fn emit_default(prog: Program) -> EmitOutput {
         let sidecar = Sidecar::new();
         let mut cv = CVLog::new(true);
-        emit(&prog, &sidecar, &mut cv, &EmitOptions::default())
-            .expect("emit should succeed")
+        emit(&prog, &sidecar, &mut cv, &EmitOptions::default()).expect("emit should succeed")
     }
 
     fn emit_with(prog: Program, opts: EmitOptions) -> EmitOutput {
@@ -4287,6 +4383,74 @@ mod tests {
             raw: String::new(),
         });
         emit_default(program().with_body(vec![stmt(s)])).code
+    }
+
+    /// A number planted as an access base needs parens the source never had.
+    ///
+    /// Constant propagation replaces an identifier with a literal, and two
+    /// renderings of a number break the operator that follows. Before this
+    /// guard the emitter produced `1.b` (a SyntaxError) and `-3?.b` (valid
+    /// JavaScript computing `-(3?.b)` = NaN, where the source computes
+    /// `undefined`). The second is the dangerous one: no crash, no
+    /// diagnostic, a silently wrong value.
+    #[test]
+    fn member_parenthesizes_a_bare_integer_base() {
+        let base = Expression::NumericLiteral(NumericLiteral {
+            cv: None,
+            value: 1.0,
+            raw: String::new(),
+        });
+        let m = Expression::MemberExpression(MemberExpression {
+            cv: None,
+            object: Box::new(base),
+            property: Box::new(ident("b")),
+            computed: false,
+        });
+        assert_eq!(
+            emit_default(program().with_body(vec![stmt(m)])).code,
+            "(1).b;"
+        );
+    }
+
+    #[test]
+    fn optional_member_parenthesizes_a_negative_base() {
+        let base = Expression::NumericLiteral(NumericLiteral {
+            cv: None,
+            value: -3.0,
+            raw: String::new(),
+        });
+        let m = Expression::OptionalMemberExpression(OptionalMemberExpression {
+            cv: None,
+            object: Box::new(base),
+            property: Box::new(ident("b")),
+            computed: false,
+        });
+        assert_eq!(
+            emit_default(program().with_body(vec![stmt(m)])).code,
+            "(-3)?.b;"
+        );
+    }
+
+    /// The guard is lexical, not "parenthesize every number": a float has
+    /// already consumed its own `.`, so `1.5.toFixed` is unambiguous and must
+    /// stay bare.
+    #[test]
+    fn member_leaves_a_float_base_bare() {
+        let base = Expression::NumericLiteral(NumericLiteral {
+            cv: None,
+            value: 1.5,
+            raw: String::new(),
+        });
+        let m = Expression::MemberExpression(MemberExpression {
+            cv: None,
+            object: Box::new(base),
+            property: Box::new(ident("toFixed")),
+            computed: false,
+        });
+        assert_eq!(
+            emit_default(program().with_body(vec![stmt(m)])).code,
+            "1.5.toFixed;"
+        );
     }
 
     #[test]
@@ -4545,7 +4709,10 @@ mod tests {
         Expression::AssignmentExpression(AssignmentExpression {
             cv: None,
             operator: op,
-            left: AssignmentTarget::Identifier(Identifier { cv: None, name: name.to_string() }),
+            left: AssignmentTarget::Identifier(Identifier {
+                cv: None,
+                name: name.to_string(),
+            }),
             right: Box::new(rhs),
         })
     }
@@ -4594,7 +4761,11 @@ mod tests {
         // NOT include assignment, so the parens are REQUIRED: `a=1?b:c` parses
         // as `a=(1?b:c)`. This must survive (it is the soundness guard for the
         // branch de-parenthesisation above).
-        let e = conditional(assign("a", AssignmentOperator::Eq, num(1.0)), ident("b"), ident("c"));
+        let e = conditional(
+            assign("a", AssignmentOperator::Eq, num(1.0)),
+            ident("b"),
+            ident("c"),
+        );
         let out = emit_default(program().with_body(vec![stmt(e)]));
         assert_eq!(out.code, "(a=1)?b:c;");
     }
@@ -4650,19 +4821,28 @@ mod tests {
     #[test]
     fn not_over_equality_parenthesises() {
         // `!(a == b)` must NOT print `!a == b` (which reparses as `(!a) == b`).
-        let e = unary(UnaryOperator::Not, binary(BinaryOperator::Eq, ident("a"), ident("b")));
+        let e = unary(
+            UnaryOperator::Not,
+            binary(BinaryOperator::Eq, ident("a"), ident("b")),
+        );
         assert_eq!(emit_expr(e), "!(a==b);");
     }
 
     #[test]
     fn negate_over_addition_parenthesises() {
-        let e = unary(UnaryOperator::Negate, binary(BinaryOperator::Add, ident("a"), ident("b")));
+        let e = unary(
+            UnaryOperator::Negate,
+            binary(BinaryOperator::Add, ident("a"), ident("b")),
+        );
         assert_eq!(emit_expr(e), "-(a+b);");
     }
 
     #[test]
     fn bitnot_over_bitor_parenthesises() {
-        let e = unary(UnaryOperator::BitNot, binary(BinaryOperator::BitOr, ident("a"), ident("b")));
+        let e = unary(
+            UnaryOperator::BitNot,
+            binary(BinaryOperator::BitOr, ident("a"), ident("b")),
+        );
         assert_eq!(emit_expr(e), "~(a|b);");
     }
 
@@ -4681,7 +4861,10 @@ mod tests {
     #[test]
     fn negate_over_negate_keeps_separating_space() {
         // `-(-a)` must print `- -a`, never `--a` (pre-decrement of `a`).
-        let e = unary(UnaryOperator::Negate, unary(UnaryOperator::Negate, ident("a")));
+        let e = unary(
+            UnaryOperator::Negate,
+            unary(UnaryOperator::Negate, ident("a")),
+        );
         assert_eq!(emit_expr(e), "- -a;");
     }
 
@@ -4789,15 +4972,27 @@ mod tests {
     fn rest_parameter_minified() {
         let f = FunctionDeclaration {
             cv: None,
-            id: Identifier { cv: None, name: "f".to_string() },
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
             params: vec![
-                FunctionParam::Identifier(Identifier { cv: None, name: "a".to_string() }),
+                FunctionParam::Identifier(Identifier {
+                    cv: None,
+                    name: "a".to_string(),
+                }),
                 FunctionParam::RestElement(RestElement {
                     cv: None,
-                    argument: Identifier { cv: None, name: "rest".to_string() },
+                    argument: Identifier {
+                        cv: None,
+                        name: "rest".to_string(),
+                    },
                 }),
             ],
-            body: BlockStatement { cv: None, body: vec![] },
+            body: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
             generator: false,
             is_async: false,
         };
@@ -4814,12 +5009,21 @@ mod tests {
     fn rest_parameter_sole_minified() {
         let f = FunctionDeclaration {
             cv: None,
-            id: Identifier { cv: None, name: "g".to_string() },
+            id: Identifier {
+                cv: None,
+                name: "g".to_string(),
+            },
             params: vec![FunctionParam::RestElement(RestElement {
                 cv: None,
-                argument: Identifier { cv: None, name: "args".to_string() },
+                argument: Identifier {
+                    cv: None,
+                    name: "args".to_string(),
+                },
             })],
-            body: BlockStatement { cv: None, body: vec![] },
+            body: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
             generator: false,
             is_async: false,
         };
@@ -4845,16 +5049,28 @@ mod tests {
     fn default_parameter_minified() {
         let f = FunctionDeclaration {
             cv: None,
-            id: Identifier { cv: None, name: "f".to_string() },
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
             params: vec![
-                FunctionParam::Identifier(Identifier { cv: None, name: "a".to_string() }),
+                FunctionParam::Identifier(Identifier {
+                    cv: None,
+                    name: "a".to_string(),
+                }),
                 FunctionParam::AssignmentPattern(AssignmentPattern {
                     cv: None,
-                    left: Identifier { cv: None, name: "b".to_string() },
+                    left: Identifier {
+                        cv: None,
+                        name: "b".to_string(),
+                    },
                     right: num(1.0),
                 }),
             ],
-            body: BlockStatement { cv: None, body: vec![] },
+            body: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
             generator: false,
             is_async: false,
         };
@@ -4876,13 +5092,22 @@ mod tests {
         });
         let f = FunctionDeclaration {
             cv: None,
-            id: Identifier { cv: None, name: "f".to_string() },
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
             params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
                 cv: None,
-                left: Identifier { cv: None, name: "a".to_string() },
+                left: Identifier {
+                    cv: None,
+                    name: "a".to_string(),
+                },
                 right: seq,
             })],
-            body: BlockStatement { cv: None, body: vec![] },
+            body: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
             generator: false,
             is_async: false,
         };
@@ -4898,13 +5123,22 @@ mod tests {
     fn default_parameter_pretty_spaces_equals() {
         let f = FunctionDeclaration {
             cv: None,
-            id: Identifier { cv: None, name: "f".to_string() },
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
             params: vec![FunctionParam::AssignmentPattern(AssignmentPattern {
                 cv: None,
-                left: Identifier { cv: None, name: "a".to_string() },
+                left: Identifier {
+                    cv: None,
+                    name: "a".to_string(),
+                },
                 right: num(1.0),
             })],
-            body: BlockStatement { cv: None, body: vec![] },
+            body: BlockStatement {
+                cv: None,
+                body: vec![],
+            },
             generator: false,
             is_async: false,
         };
@@ -4936,10 +5170,17 @@ mod tests {
 
     /// Build a top-level `class <id>[ extends S]{members}` program and emit it
     /// in the default (minified) mode, returning the output code.
-    fn emit_class_decl(id: &str, super_class: Option<Expression>, body: Vec<ClassMember>) -> String {
+    fn emit_class_decl(
+        id: &str,
+        super_class: Option<Expression>,
+        body: Vec<ClassMember>,
+    ) -> String {
         let d = Declaration::ClassDeclaration(ClassDeclaration {
             cv: None,
-            id: Identifier { cv: None, name: id.to_string() },
+            id: Identifier {
+                cv: None,
+                name: id.to_string(),
+            },
             super_class: super_class.map(Box::new),
             body,
         });
@@ -4958,7 +5199,10 @@ mod tests {
     fn field(name: &str, value: Option<Expression>, is_static: bool) -> ClassMember {
         ClassMember::Field(PropertyDefinition {
             cv: None,
-            key: PropertyKey::Identifier(Identifier { cv: None, name: name.to_string() }),
+            key: PropertyKey::Identifier(Identifier {
+                cv: None,
+                name: name.to_string(),
+            }),
             value,
             computed: false,
             is_static,
@@ -4968,13 +5212,19 @@ mod tests {
     #[test]
     fn field_with_initializer() {
         // `class C{x=1;}` — an instance field with an initializer, terminated `;`.
-        assert_eq!(emit_class_decl("C", None, vec![field("x", Some(num(1.0)), false)]), "class C{x=1;};");
+        assert_eq!(
+            emit_class_decl("C", None, vec![field("x", Some(num(1.0)), false)]),
+            "class C{x=1;};"
+        );
     }
 
     #[test]
     fn bare_field_has_no_value() {
         // `class C{y;}` — a bare field: just the key and the terminator.
-        assert_eq!(emit_class_decl("C", None, vec![field("y", None, false)]), "class C{y;};");
+        assert_eq!(
+            emit_class_decl("C", None, vec![field("y", None, false)]),
+            "class C{y;};"
+        );
     }
 
     // ---- private-name keys (CLOC12.177) ------------------------------
@@ -4984,7 +5234,10 @@ mod tests {
     fn private_field(name: &str, value: Option<Expression>, is_static: bool) -> ClassMember {
         ClassMember::Field(PropertyDefinition {
             cv: None,
-            key: PropertyKey::PrivateName(PrivateName { cv: None, name: name.to_string() }),
+            key: PropertyKey::PrivateName(PrivateName {
+                cv: None,
+                name: name.to_string(),
+            }),
             value,
             computed: false,
             is_static,
@@ -4995,7 +5248,10 @@ mod tests {
     fn private_method(name: &str) -> ClassMember {
         ClassMember::Method(MethodDefinition {
             cv: None,
-            key: PropertyKey::PrivateName(PrivateName { cv: None, name: name.to_string() }),
+            key: PropertyKey::PrivateName(PrivateName {
+                cv: None,
+                name: name.to_string(),
+            }),
             kind: MethodKind::Method,
             value: method_fn(),
             computed: false,
@@ -5015,7 +5271,10 @@ mod tests {
     #[test]
     fn bare_private_field() {
         // `class C{#x;}` — a bare private field, no initializer.
-        assert_eq!(emit_class_decl("C", None, vec![private_field("x", None, false)]), "class C{#x;};");
+        assert_eq!(
+            emit_class_decl("C", None, vec![private_field("x", None, false)]),
+            "class C{#x;};"
+        );
     }
 
     #[test]
@@ -5030,7 +5289,10 @@ mod tests {
     #[test]
     fn private_method_prints_hash() {
         // `class C{#m(){}}` — a private method key also prints `#`.
-        assert_eq!(emit_class_decl("C", None, vec![private_method("m")]), "class C{#m(){}};");
+        assert_eq!(
+            emit_class_decl("C", None, vec![private_method("m")]),
+            "class C{#m(){}};"
+        );
     }
 
     #[test]
@@ -5040,7 +5302,10 @@ mod tests {
             emit_class_decl(
                 "C",
                 None,
-                vec![private_field("x", Some(num(1.0)), false), method("m", MethodKind::Method, false)],
+                vec![
+                    private_field("x", Some(num(1.0)), false),
+                    method("m", MethodKind::Method, false)
+                ],
             ),
             "class C{#x=1;m(){}};"
         );
@@ -5076,7 +5341,10 @@ mod tests {
             emit_class_decl(
                 "C",
                 None,
-                vec![field("x", Some(num(1.0)), false), method("m", MethodKind::Method, false)],
+                vec![
+                    field("x", Some(num(1.0)), false),
+                    method("m", MethodKind::Method, false)
+                ],
             ),
             "class C{x=1;m(){}};"
         );
@@ -5093,19 +5361,28 @@ mod tests {
 
     /// A `static { <statements> }` member.
     fn static_block(stmts: Vec<Statement>) -> ClassMember {
-        ClassMember::StaticBlock(BlockStatement { cv: None, body: stmts })
+        ClassMember::StaticBlock(BlockStatement {
+            cv: None,
+            body: stmts,
+        })
     }
 
     /// An expression statement wrapping `expr`.
     fn expr_stmt(expr: Expression) -> Statement {
-        Statement::expression_statement(ExpressionStatement { cv: None, expression: expr })
+        Statement::expression_statement(ExpressionStatement {
+            cv: None,
+            expression: expr,
+        })
     }
 
     #[test]
     fn empty_static_block() {
         // `class C{static{}}` — the `static` keyword abuts the `{` with no space,
         // and the empty block is brace-terminated (no trailing `;`).
-        assert_eq!(emit_class_decl("C", None, vec![static_block(vec![])]), "class C{static{}};");
+        assert_eq!(
+            emit_class_decl("C", None, vec![static_block(vec![])]),
+            "class C{static{}};"
+        );
     }
 
     #[test]
@@ -5124,7 +5401,10 @@ mod tests {
             emit_class_decl(
                 "C",
                 None,
-                vec![static_block(vec![expr_stmt(ident("x")), expr_stmt(ident("y"))])],
+                vec![static_block(vec![
+                    expr_stmt(ident("x")),
+                    expr_stmt(ident("y"))
+                ])],
             ),
             "class C{static{x;y}};"
         );
@@ -5187,7 +5467,11 @@ mod tests {
         // The constructor prints with no keyword prefix (its `kind` only
         // matters to the passes). A computed key `[k]` is bracketed.
         assert_eq!(
-            emit_class_decl("C", None, vec![method("constructor", MethodKind::Constructor, false)]),
+            emit_class_decl(
+                "C",
+                None,
+                vec![method("constructor", MethodKind::Constructor, false)]
+            ),
             "class C{constructor(){}};"
         );
         let computed = ClassMember::Method(MethodDefinition {
@@ -5198,14 +5482,21 @@ mod tests {
             computed: true,
             is_static: false,
         });
-        assert_eq!(emit_class_decl("C", None, vec![computed]), "class C{[k](){}};");
+        assert_eq!(
+            emit_class_decl("C", None, vec![computed]),
+            "class C{[k](){}};"
+        );
     }
 
     #[test]
     fn class_declaration_full_shape_named_heritage_and_member() {
         // `class C extends B { m() {} }` — the whole shape in one assertion.
         assert_eq!(
-            emit_class_decl("C", Some(ident("B")), vec![method("m", MethodKind::Method, false)]),
+            emit_class_decl(
+                "C",
+                Some(ident("B")),
+                vec![method("m", MethodKind::Method, false)]
+            ),
             "class C extends B{m(){}};"
         );
     }
@@ -5336,9 +5627,7 @@ mod tests {
     #[test]
     fn gap030_does_not_pop_empty_body_of_if() {
         // Build: function f(){if(x);}
-        let empty = Statement::Tagged(TaggedStatement::EmptyStatement(EmptyStatement {
-            cv: None,
-        }));
+        let empty = Statement::Tagged(TaggedStatement::EmptyStatement(EmptyStatement { cv: None }));
         let if_stmt = TaggedStatement::IfStatement(IfStatement {
             cv: None,
             test: ident("x"),
@@ -5375,9 +5664,7 @@ mod tests {
     /// `while(x)`. Mirrors `gap030_does_not_pop_empty_body_of_if`.
     #[test]
     fn gap030_does_not_pop_empty_body_of_while() {
-        let empty = Statement::Tagged(TaggedStatement::EmptyStatement(EmptyStatement {
-            cv: None,
-        }));
+        let empty = Statement::Tagged(TaggedStatement::EmptyStatement(EmptyStatement { cv: None }));
         let while_stmt = TaggedStatement::WhileStatement(WhileStatement {
             cv: None,
             test: ident("x"),
@@ -5469,8 +5756,8 @@ mod tests {
         assert_eq!(emit_holes("__"), "[,,]"); // two holes, length 2
         assert_eq!(emit_holes("_"), "[,]"); // single hole, length 1
         assert_eq!(emit_holes("_e"), "[,1]"); // leading hole, length 2
-        // Internal hole is unchanged by the trailing-hole fix (every element here
-        // is the literal `1`): `[1,,1]`, length 3.
+                                              // Internal hole is unchanged by the trailing-hole fix (every element here
+                                              // is the literal `1`): `[1,,1]`, length 3.
         assert_eq!(emit_holes("e_e"), "[1,,1]");
         // No trailing hole → no extra comma.
         assert_eq!(emit_holes("ee"), "[1,1]");
@@ -5485,11 +5772,19 @@ mod tests {
         // when the object is reached through a member/call/assignment spine (the
         // direct-expression check misses these). `({}).f` printed unwrapped as
         // `{}.f` is a hard miscompile (invalid JS).
-        let obj = || Expression::ObjectExpression(ObjectExpression { cv: None, properties: vec![] });
+        let obj = || {
+            Expression::ObjectExpression(ObjectExpression {
+                cv: None,
+                properties: vec![],
+            })
+        };
         // ({}).f
         assert_eq!(emit_expr(member(obj(), "f", false)), "({}).f;");
         // ({}).f()
-        assert_eq!(emit_expr(call(member(obj(), "f", false), vec![])), "({}).f();");
+        assert_eq!(
+            emit_expr(call(member(obj(), "f", false), vec![])),
+            "({}).f();"
+        );
         // ({}).f().g() — deeper spine
         assert_eq!(
             emit_expr(call(
@@ -5518,7 +5813,10 @@ mod tests {
         // A member/call whose leftmost token is an identifier does NOT start with
         // `{`, so it must stay unwrapped — the spine walk must not over-wrap.
         assert_eq!(emit_expr(member(ident("a"), "f", false)), "a.f;");
-        assert_eq!(emit_expr(call(member(ident("a"), "f", false), vec![])), "a.f();");
+        assert_eq!(
+            emit_expr(call(member(ident("a"), "f", false), vec![])),
+            "a.f();"
+        );
     }
 
     #[test]
@@ -5529,7 +5827,10 @@ mod tests {
         // token and must NOT wrap again. Regression guard: a naive
         // "is the leftmost leaf an object?" check produces the double-wrapped
         // `(({})+1).x`; the reference Closure prints `({}+1).x`.
-        let obj = Expression::ObjectExpression(ObjectExpression { cv: None, properties: vec![] });
+        let obj = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![],
+        });
         let e = member(binary(BinaryOperator::Add, obj, num(1.0)), "x", false);
         assert_eq!(emit_expr(e), "({}+1).x;");
     }
@@ -5580,7 +5881,10 @@ mod tests {
 
     /// Build a spread member `...arg`.
     fn spread_member(arg: Expression) -> ObjectMember {
-        ObjectMember::Spread(SpreadElement { cv: None, argument: Box::new(arg) })
+        ObjectMember::Spread(SpreadElement {
+            cv: None,
+            argument: Box::new(arg),
+        })
     }
 
     /// Build a plain `name: value` init member.
@@ -5588,7 +5892,10 @@ mod tests {
         ObjectMember::Property(Property {
             cv: None,
             kind: PropertyKind::Init,
-            key: PropertyKey::Identifier(Identifier { cv: None, name: name.to_string() }),
+            key: PropertyKey::Identifier(Identifier {
+                cv: None,
+                name: name.to_string(),
+            }),
             value: Box::new(value),
             computed: false,
             shorthand: false,
@@ -5598,14 +5905,20 @@ mod tests {
 
     /// Emit an object literal (as a parenthesised statement) from its members.
     fn emit_object_members(members: Vec<ObjectMember>) -> String {
-        let o = Expression::ObjectExpression(ObjectExpression { cv: None, properties: members });
+        let o = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: members,
+        });
         emit_default(program().with_body(vec![stmt(o)])).code
     }
 
     #[test]
     fn object_spread_sole_member_is_bare() {
         // `{...a}` — the spread argument prints bare.
-        assert_eq!(emit_object_members(vec![spread_member(ident("a"))]), "({...a});");
+        assert_eq!(
+            emit_object_members(vec![spread_member(ident("a"))]),
+            "({...a});"
+        );
     }
 
     #[test]
@@ -5634,7 +5947,10 @@ mod tests {
             callee: Box::new(ident("f")),
             arguments: vec![],
         });
-        assert_eq!(emit_object_members(vec![spread_member(call)]), "({...f()});");
+        assert_eq!(
+            emit_object_members(vec![spread_member(call)]),
+            "({...f()});"
+        );
     }
 
     #[test]
@@ -5646,7 +5962,10 @@ mod tests {
             cv: None,
             expressions: vec![ident("a"), ident("b")],
         });
-        assert_eq!(emit_object_members(vec![spread_member(seq)]), "({...(a,b)});");
+        assert_eq!(
+            emit_object_members(vec![spread_member(seq)]),
+            "({...(a,b)});"
+        );
     }
 
     // ---- property-key quote stripping (emit_property_key) ----
@@ -5876,7 +6195,10 @@ mod tests {
         assert_eq!(
             emit_stmt(Statement::labeled_statement(LabeledStatement {
                 cv: None,
-                label: Identifier { cv: None, name: "L".to_string() },
+                label: Identifier {
+                    cv: None,
+                    name: "L".to_string()
+                },
                 body: Box::new(block_of(vec![a()])),
             })),
             "L:{a};"
@@ -5984,7 +6306,11 @@ mod tests {
                     test: Some(num(1.0)),
                     consequent: vec![expr_stmt(ident("a"))],
                 },
-                SwitchCase { cv: None, test: Some(num(2.0)), consequent: vec![] },
+                SwitchCase {
+                    cv: None,
+                    test: Some(num(2.0)),
+                    consequent: vec![],
+                },
             ],
         });
         assert_eq!(emit_stmt(s), "switch(x){case 1:a;case 2:};");
@@ -6006,9 +6332,7 @@ mod tests {
                 consequent: vec![Statement::if_statement(IfStatement {
                     cv: None,
                     test: ident("y"),
-                    consequent: Box::new(Statement::empty_statement(EmptyStatement {
-                        cv: None,
-                    })),
+                    consequent: Box::new(Statement::empty_statement(EmptyStatement { cv: None })),
                     alternate: None,
                 })],
             }],
@@ -6061,7 +6385,10 @@ mod tests {
         });
         let s = Statement::labeled_statement(LabeledStatement {
             cv: None,
-            label: Identifier { cv: None, name: "a".to_string() },
+            label: Identifier {
+                cv: None,
+                name: "a".to_string(),
+            },
             body: Box::new(body),
         });
         assert_eq!(emit_stmt(s), "a:foo();");
@@ -6069,7 +6396,10 @@ mod tests {
 
     #[test]
     fn bare_break_statement_emits_break_semicolon() {
-        let s = Statement::break_statement(BreakStatement { cv: None, label: None });
+        let s = Statement::break_statement(BreakStatement {
+            cv: None,
+            label: None,
+        });
         assert_eq!(emit_stmt(s), "break;");
     }
 
@@ -6077,7 +6407,10 @@ mod tests {
     fn labeled_break_statement_emits_break_label_semicolon() {
         let s = Statement::break_statement(BreakStatement {
             cv: None,
-            label: Some(Identifier { cv: None, name: "a".to_string() }),
+            label: Some(Identifier {
+                cv: None,
+                name: "a".to_string(),
+            }),
         });
         assert_eq!(emit_stmt(s), "break a;");
     }
@@ -6090,11 +6423,17 @@ mod tests {
         // print it as-is.
         let inner = Statement::break_statement(BreakStatement {
             cv: None,
-            label: Some(Identifier { cv: None, name: "a".to_string() }),
+            label: Some(Identifier {
+                cv: None,
+                name: "a".to_string(),
+            }),
         });
         let s = Statement::labeled_statement(LabeledStatement {
             cv: None,
-            label: Identifier { cv: None, name: "a".to_string() },
+            label: Identifier {
+                cv: None,
+                name: "a".to_string(),
+            },
             body: Box::new(inner),
         });
         assert_eq!(emit_stmt(s), "a:break a;");
@@ -6528,7 +6867,9 @@ mod tests {
         // the closing `}` (ASI), so it is popped: `{debugger}`.
         let outer = BlockStatement {
             cv: None,
-            body: vec![Statement::debugger_statement(DebuggerStatement { cv: None })],
+            body: vec![Statement::debugger_statement(DebuggerStatement {
+                cv: None,
+            })],
         };
         let item = ProgramItem::Statement(Statement::block_statement(outer));
         let code = emit_default(program().with_body(vec![item])).code;
@@ -6758,10 +7099,18 @@ mod tests {
     fn fexpr(id: Option<&str>, params: &[&str], body: Vec<Statement>) -> Expression {
         Expression::FunctionExpression(FunctionExpression {
             cv: None,
-            id: id.map(|n| Identifier { cv: None, name: n.to_string() }),
+            id: id.map(|n| Identifier {
+                cv: None,
+                name: n.to_string(),
+            }),
             params: params
                 .iter()
-                .map(|p| FunctionParam::Identifier(Identifier { cv: None, name: p.to_string() }))
+                .map(|p| {
+                    FunctionParam::Identifier(Identifier {
+                        cv: None,
+                        name: p.to_string(),
+                    })
+                })
                 .collect(),
             body: BlockStatement { cv: None, body },
             generator: false,
@@ -6856,7 +7205,12 @@ mod tests {
             cv: None,
             params: params
                 .iter()
-                .map(|p| FunctionParam::Identifier(Identifier { cv: None, name: p.to_string() }))
+                .map(|p| {
+                    FunctionParam::Identifier(Identifier {
+                        cv: None,
+                        name: p.to_string(),
+                    })
+                })
                 .collect(),
             body: ArrowBody::Expression(Box::new(body)),
             is_async: false,
@@ -6869,7 +7223,12 @@ mod tests {
             cv: None,
             params: params
                 .iter()
-                .map(|p| FunctionParam::Identifier(Identifier { cv: None, name: p.to_string() }))
+                .map(|p| {
+                    FunctionParam::Identifier(Identifier {
+                        cv: None,
+                        name: p.to_string(),
+                    })
+                })
                 .collect(),
             body: ArrowBody::Block(BlockStatement { cv: None, body }),
             is_async: false,
@@ -6889,7 +7248,10 @@ mod tests {
     #[test]
     fn arrow_zero_and_multi_params_are_parenthesised() {
         assert_eq!(emit_expr(arrow_block(&[], vec![])), "()=>{};");
-        assert_eq!(emit_expr(arrow_concise(&["a", "b"], ident("a"))), "(a,b)=>a;");
+        assert_eq!(
+            emit_expr(arrow_concise(&["a", "b"], ident("a"))),
+            "(a,b)=>a;"
+        );
     }
 
     /// A block body prints like a function body; the last statement drops
@@ -6907,7 +7269,10 @@ mod tests {
     /// otherwise the leading `{` reads as a block body.
     #[test]
     fn arrow_object_literal_concise_body_is_wrapped() {
-        let obj = Expression::ObjectExpression(ObjectExpression { cv: None, properties: vec![] });
+        let obj = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![],
+        });
         assert_eq!(emit_expr(arrow_concise(&[], obj)), "()=>({});");
     }
 
@@ -6967,23 +7332,38 @@ mod tests {
     // ---- TemplateLiteral (CLOC12.154) -------------------------
 
     fn tquasi(raw: &str, tail: bool) -> TemplateElement {
-        TemplateElement { cv: None, raw: raw.to_string(), cooked: Some(raw.to_string()), tail }
+        TemplateElement {
+            cv: None,
+            raw: raw.to_string(),
+            cooked: Some(raw.to_string()),
+            tail,
+        }
     }
 
     fn template(quasis: Vec<TemplateElement>, expressions: Vec<Expression>) -> Expression {
-        Expression::TemplateLiteral(TemplateLiteral { cv: None, quasis, expressions })
+        Expression::TemplateLiteral(TemplateLiteral {
+            cv: None,
+            quasis,
+            expressions,
+        })
     }
 
     /// A no-substitution template prints its raw text between backticks.
     #[test]
     fn template_no_substitution() {
-        assert_eq!(emit_expr(template(vec![tquasi("abc", true)], vec![])), "`abc`;");
+        assert_eq!(
+            emit_expr(template(vec![tquasi("abc", true)], vec![])),
+            "`abc`;"
+        );
     }
 
     /// A single `${…}` interleaves the two quasis around the expression.
     #[test]
     fn template_single_substitution() {
-        let t = template(vec![tquasi("a", false), tquasi("b", true)], vec![ident("x")]);
+        let t = template(
+            vec![tquasi("a", false), tquasi("b", true)],
+            vec![ident("x")],
+        );
         assert_eq!(emit_expr(t), "`a${x}b`;");
     }
 
@@ -7031,7 +7411,10 @@ mod tests {
     /// `write_str`'s no-embedded-newline assert.
     #[test]
     fn template_preserves_interior_newline() {
-        assert_eq!(emit_expr(template(vec![tquasi("a\nb", true)], vec![])), "`a\nb`;");
+        assert_eq!(
+            emit_expr(template(vec![tquasi("a\nb", true)], vec![])),
+            "`a\nb`;"
+        );
     }
 
     /// gap-158: the newline-aware path also covers quasis *inside* a `${…}`
@@ -7039,7 +7422,10 @@ mod tests {
     /// insert.
     #[test]
     fn template_substitution_quasi_preserves_newline() {
-        let t = template(vec![tquasi("a\nb", false), tquasi("c", true)], vec![ident("x")]);
+        let t = template(
+            vec![tquasi("a\nb", false), tquasi("c", true)],
+            vec![ident("x")],
+        );
         assert_eq!(emit_expr(t), "`a\nb${x}c`;");
     }
 
@@ -7047,7 +7433,10 @@ mod tests {
     /// emits just the newline — the empty segments write nothing.
     #[test]
     fn template_bare_newline_quasi() {
-        assert_eq!(emit_expr(template(vec![tquasi("\n", true)], vec![])), "`\n`;");
+        assert_eq!(
+            emit_expr(template(vec![tquasi("\n", true)], vec![])),
+            "`\n`;"
+        );
     }
 
     // ---- UpdateExpression (CLOC12.158) ------------------------
@@ -7073,19 +7462,31 @@ mod tests {
     /// The four core shapes: prefix/postfix × increment/decrement.
     #[test]
     fn update_prefix_increment() {
-        assert_eq!(emit_expr(update(UpdateOperator::Increment, true, ident("x"))), "++x;");
+        assert_eq!(
+            emit_expr(update(UpdateOperator::Increment, true, ident("x"))),
+            "++x;"
+        );
     }
     #[test]
     fn update_postfix_increment() {
-        assert_eq!(emit_expr(update(UpdateOperator::Increment, false, ident("x"))), "x++;");
+        assert_eq!(
+            emit_expr(update(UpdateOperator::Increment, false, ident("x"))),
+            "x++;"
+        );
     }
     #[test]
     fn update_prefix_decrement() {
-        assert_eq!(emit_expr(update(UpdateOperator::Decrement, true, ident("x"))), "--x;");
+        assert_eq!(
+            emit_expr(update(UpdateOperator::Decrement, true, ident("x"))),
+            "--x;"
+        );
     }
     #[test]
     fn update_postfix_decrement() {
-        assert_eq!(emit_expr(update(UpdateOperator::Decrement, false, ident("x"))), "x--;");
+        assert_eq!(
+            emit_expr(update(UpdateOperator::Decrement, false, ident("x"))),
+            "x--;"
+        );
     }
 
     /// `a - (--b)` must print `a- --b`, never `a---b` (which JS reparses as
@@ -7317,14 +7718,20 @@ mod tests {
     // ---- SequenceExpression (CLOC12.160) -------------------------------
 
     fn seq(exprs: Vec<Expression>) -> Expression {
-        Expression::SequenceExpression(SequenceExpression { cv: None, expressions: exprs })
+        Expression::SequenceExpression(SequenceExpression {
+            cv: None,
+            expressions: exprs,
+        })
     }
 
     /// A sequence at statement position prints bare — the loosest expression,
     /// nothing captures it: `a,b,c;`.
     #[test]
     fn sequence_at_statement_is_bare() {
-        assert_eq!(emit_expr(seq(vec![ident("a"), ident("b"), ident("c")])), "a,b,c;");
+        assert_eq!(
+            emit_expr(seq(vec![ident("a"), ident("b"), ident("c")])),
+            "a,b,c;"
+        );
     }
 
     /// A sequence as a call argument MUST wrap, or `f(a,b)` would be a
@@ -7339,7 +7746,10 @@ mod tests {
     /// preserved: `f((a,b),c);` — never the three-argument `f(a,b,c)`.
     #[test]
     fn sequence_as_call_arg_preserves_arity() {
-        let e = call(ident("f"), vec![seq(vec![ident("a"), ident("b")]), ident("c")]);
+        let e = call(
+            ident("f"),
+            vec![seq(vec![ident("a"), ident("b")]), ident("c")],
+        );
         assert_eq!(emit_expr(e), "f((a,b),c);");
     }
 
@@ -7361,7 +7771,10 @@ mod tests {
         let e = Expression::AssignmentExpression(AssignmentExpression {
             cv: None,
             operator: AssignmentOperator::Eq,
-            left: AssignmentTarget::Identifier(Identifier { cv: None, name: "x".to_string() }),
+            left: AssignmentTarget::Identifier(Identifier {
+                cv: None,
+                name: "x".to_string(),
+            }),
             right: Box::new(seq(vec![ident("a"), ident("b")])),
         });
         assert_eq!(emit_expr(e), "x=(a,b);");
@@ -7411,7 +7824,11 @@ mod tests {
     /// Build a raw `TemplateLiteral` struct (not wrapped in `Expression`) for
     /// use as a tagged-template quasi.
     fn raw_template(quasis: Vec<TemplateElement>, expressions: Vec<Expression>) -> TemplateLiteral {
-        TemplateLiteral { cv: None, quasis, expressions }
+        TemplateLiteral {
+            cv: None,
+            quasis,
+            expressions,
+        }
     }
 
     fn tagged(tag: Expression, quasi: TemplateLiteral) -> Expression {
@@ -7426,7 +7843,10 @@ mod tests {
     /// template; no separator between the tag and the backtick.
     #[test]
     fn tagged_identifier_no_sub() {
-        let e = tagged(ident("tag"), raw_template(vec![tquasi("abc", true)], vec![]));
+        let e = tagged(
+            ident("tag"),
+            raw_template(vec![tquasi("abc", true)], vec![]),
+        );
         assert_eq!(emit_expr(e), "tag`abc`;");
     }
 
@@ -7444,7 +7864,10 @@ mod tests {
     #[test]
     fn tagged_with_substitution() {
         let tag = member(ident("String"), "raw", false);
-        let quasi = raw_template(vec![tquasi("a", false), tquasi("b", true)], vec![ident("x")]);
+        let quasi = raw_template(
+            vec![tquasi("a", false), tquasi("b", true)],
+            vec![ident("x")],
+        );
         let e = tagged(tag, quasi);
         assert_eq!(emit_expr(e), "String.raw`a${x}b`;");
     }
@@ -7470,7 +7893,10 @@ mod tests {
     // ---- SpreadElement (CLOC12.162) ------------------------------------
 
     fn spread(argument: Expression) -> Expression {
-        Expression::SpreadElement(SpreadElement { cv: None, argument: Box::new(argument) })
+        Expression::SpreadElement(SpreadElement {
+            cv: None,
+            argument: Box::new(argument),
+        })
     }
 
     /// `f(...a)` — a spread as the sole call argument prints bare, with no
@@ -7625,7 +8051,10 @@ mod tests {
 
     /// Build an `AwaitExpression` (named `aw` — `await` is a Rust keyword).
     fn aw(argument: Expression) -> Expression {
-        Expression::AwaitExpression(AwaitExpression { cv: None, argument: Box::new(argument) })
+        Expression::AwaitExpression(AwaitExpression {
+            cv: None,
+            argument: Box::new(argument),
+        })
     }
 
     /// `await p` — the keyword and operand are separated by a mandatory space
@@ -7668,7 +8097,10 @@ mod tests {
     /// looser await object.
     #[test]
     fn await_wrapped_as_member_object() {
-        assert_eq!(emit_expr(member(aw(ident("p")), "x", false)), "(await p).x;");
+        assert_eq!(
+            emit_expr(member(aw(ident("p")), "x", false)),
+            "(await p).x;"
+        );
     }
 
     /// `(await f)()` — a call callee likewise wraps the await.
@@ -7754,7 +8186,10 @@ mod tests {
     /// `super.m()` — a method call off `super` composes without parens.
     #[test]
     fn super_method_call_is_bare() {
-        assert_eq!(emit_expr(call(member(super_expr(), "m", false), vec![])), "super.m();");
+        assert_eq!(
+            emit_expr(call(member(super_expr(), "m", false), vec![])),
+            "super.m();"
+        );
     }
 
     /// `super+1` — even a binary parent leaves the primary `super` bare.
@@ -7783,13 +8218,19 @@ mod tests {
     /// parens (the trailing `.x` is a real member access on top of it).
     #[test]
     fn new_target_as_member_object_is_bare() {
-        assert_eq!(emit_expr(member(new_target_expr(), "x", false)), "new.target.x;");
+        assert_eq!(
+            emit_expr(member(new_target_expr(), "x", false)),
+            "new.target.x;"
+        );
     }
 
     /// `f(new.target)` — as a call argument it is a plain primary operand.
     #[test]
     fn new_target_as_call_argument_is_bare() {
-        assert_eq!(emit_expr(call(ident("f"), vec![new_target_expr()])), "f(new.target);");
+        assert_eq!(
+            emit_expr(call(ident("f"), vec![new_target_expr()])),
+            "f(new.target);"
+        );
     }
 
     /// `new.target+1` — even a binary parent leaves the primary bare.
@@ -7818,13 +8259,19 @@ mod tests {
     /// no parens (the trailing `.url` is a real member access on top of it).
     #[test]
     fn import_meta_as_member_object_is_bare() {
-        assert_eq!(emit_expr(member(import_meta_expr(), "url", false)), "import.meta.url;");
+        assert_eq!(
+            emit_expr(member(import_meta_expr(), "url", false)),
+            "import.meta.url;"
+        );
     }
 
     /// `f(import.meta)` — as a call argument it is a plain primary operand.
     #[test]
     fn import_meta_as_call_argument_is_bare() {
-        assert_eq!(emit_expr(call(ident("f"), vec![import_meta_expr()])), "f(import.meta);");
+        assert_eq!(
+            emit_expr(call(ident("f"), vec![import_meta_expr()])),
+            "f(import.meta);"
+        );
     }
 
     /// `import.meta+1` — even a binary parent leaves the primary bare.
@@ -7840,7 +8287,10 @@ mod tests {
 
     /// Build a dynamic `import(source)`.
     fn import_expr(source: Expression) -> Expression {
-        Expression::ImportExpression(ImportExpression { cv: None, source: Box::new(source) })
+        Expression::ImportExpression(ImportExpression {
+            cv: None,
+            source: Box::new(source),
+        })
     }
 
     /// `import("m")` — a string-literal specifier prints inside the literal
@@ -7879,7 +8329,10 @@ mod tests {
     /// primary, so a member/call parent composes without wrapping it.
     #[test]
     fn import_expression_as_member_object_is_bare() {
-        let e = call(member(import_expr(ident("x")), "then", false), vec![ident("f")]);
+        let e = call(
+            member(import_expr(ident("x")), "then", false),
+            vec![ident("f")],
+        );
         assert_eq!(emit_expr(e), "import(x).then(f);");
     }
 

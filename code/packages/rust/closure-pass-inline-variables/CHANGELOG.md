@@ -2,6 +2,60 @@
 
 All notable changes to the `coding-adventures-closure-pass-inline-variables` crate will be documented in this file.
 
+## [0.18.0] - 2026-09-25
+
+### Added — optional chains resolve like plain ones (CLOC30)
+
+Per [CLOC30](../../specs/CLOC30-optional-chain-resolution.md). The CLOC28
+resolver walked `MemberExpression` spines only; it now walks optional ones
+too, so every mixture of `.` and `?.` resolves the same way:
+
+```js
+var o = { a: { b: 1 } };
+console.log(o?.a?.b);     // => console.log(1)
+console.log(o.a?.b);      // => console.log(1)
+console.log(o?.a.b);      // => console.log(1)
+
+var a = [1, 2, 3];
+console.log(a?.[1]);      // => console.log(2)
+```
+
+One ladder rung closes (60 → 59). The other four shapes had no rung at all —
+they were found by probing the oracle *around* the rung rather than by the
+rung itself, which is worth noting: a single rung marked one capability, and
+the capability turned out to be five.
+
+### Why `?.` needed no new soundness argument
+
+`?.` short-circuits only when its object is `null` or `undefined`, and on a
+path this pass accepts that cannot happen: the root is an object or array
+literal, and `resolve` only continues through another one. So no `?.` on an
+accepted path could have short-circuited, and it reads exactly as `.` would.
+Every CLOC28 guard carries over untouched, because they live in `resolve` and
+in candidate eligibility rather than in the spine walk.
+
+Where a `?.` *would* short-circuit, the walk stops — but it still resolves
+the longest prefix it can, so the binding goes and a shorter chain remains:
+
+```js
+var o = { a: null };
+console.log(o?.a?.b);     // => console.log(null?.b)
+```
+
+Correct (`null?.b` is `undefined`, as the source computes) and still behind
+the oracle, which folds the whole thing to `void 0`. The `ChainExpression`
+wrapper survives the prefix rewrite, which is what keeps a later `?.`
+short-circuiting rather than throwing.
+
+### Internals
+
+`chain_of` is deleted and replaced by `chain_of_expr`, which accepts
+`MemberExpression`, `OptionalMemberExpression` and `ChainExpression` at every
+step. `key_of` became `key_of_parts(computed, property)`, since both
+member kinds carry the same pair.
+
+7 tests added.
+
 ## [0.17.0] - 2026-09-25
 
 ### Added — propagate a scalar `let`/`var` to its use sites (CLOC29)
