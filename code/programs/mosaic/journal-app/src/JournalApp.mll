@@ -90,6 +90,22 @@ layout JournalApp {
           onClick : emit: onAddJournal
         )
       }
+      // Renaming and deleting the selected journal (J4i). Rename takes the
+      // field's name; Delete moves the journal's entries to Personal.
+      Row [ journal-actions ] {
+        If ( when: slot: can-rename-journal ) {
+          HostButton [ rename-journal ] (
+            label : "Rename" ,
+            onClick : emit: onRenameJournal
+          )
+        }
+        If ( when: slot: can-delete-journal ) {
+          HostButton [ delete-journal ] (
+            label : "Delete journal" ,
+            onClick : emit: onDeleteJournal
+          )
+        }
+      }
       If ( when: slot: journal-error ) {
         Text [ journal-error ] ( content : slot: journal-error )
       }
@@ -124,20 +140,31 @@ layout JournalApp {
           )
         }
         Else {
-          // A third EmptyState mount: the filter is on and nothing is starred.
-          If ( when: slot: no-starred ) {
+          // A fourth EmptyState mount (J4h): the selected journal is empty,
+          // which says more than "nothing starred" would.
+          If ( when: slot: journal-empty ) {
             pkg::mosaic-pkg-toolkit::EmptyState (
-              title : "No starred entries" ,
-              message : "Star an entry to keep it here." ,
+              title : "No entries in this journal" ,
+              message : "New entries you write while it is selected are filed here." ,
               action-label : ""
             )
           }
           Else {
-            pkg::mosaic-pkg-toolkit::RecordList (
-              rows : slot: timeline-rows ,
-              selected-key : slot: selected-key ,
-              onSelect : emit: onSelectEntry
-            )
+            // The last EmptyState mount: the filter is on and nothing is starred.
+            If ( when: slot: no-starred ) {
+              pkg::mosaic-pkg-toolkit::EmptyState (
+                title : "No starred entries" ,
+                message : "Star an entry to keep it here." ,
+                action-label : ""
+              )
+            }
+            Else {
+              pkg::mosaic-pkg-toolkit::RecordList (
+                rows : slot: timeline-rows ,
+                selected-key : slot: selected-key ,
+                onSelect : emit: onSelectEntry
+              )
+            }
           }
         }
       }
@@ -149,6 +176,20 @@ layout JournalApp {
           label : slot: star-label ,
           onClick : emit: onToggleStar
         )
+      }
+      // An entry's journal (J4g): a third SegmentedControl mount, only when
+      // there is more than one journal; Save below files or moves it there.
+      If ( when: slot: has-journals ) {
+        Column [ journal-block ] {
+          Text [ journal-label ] ( content : "Journal" )
+          pkg::mosaic-pkg-toolkit::SegmentedControl (
+            options : slot: draft-journal-options ,
+            selected-index : slot: draft-journal-index ,
+            vertical : false ,
+            disabled : false ,
+            onSelect : emit: onDraftJournalChange
+          )
+        }
       }
       // An entry's day (J4e), blank for today; saved by Save below.
       Column [ date-block ] {

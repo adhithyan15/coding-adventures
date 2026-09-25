@@ -482,6 +482,9 @@ pub fn from_pipeline(
         writeln!(out, "import androidx.compose.ui.graphics.drawscope.Stroke").unwrap();
     }
     writeln!(out, "import androidx.compose.ui.text.TextStyle").unwrap();
+    if part_styles.uses_text_align() {
+        writeln!(out, "import androidx.compose.ui.text.style.TextAlign").unwrap();
+    }
     writeln!(out, "import androidx.compose.ui.text.font.FontFamily").unwrap();
     writeln!(out, "import androidx.compose.ui.text.input.ImeAction").unwrap();
     writeln!(out, "import androidx.compose.ui.text.input.KeyboardType").unwrap();
@@ -607,6 +610,10 @@ pub fn from_pipeline(
     }
     if uses_fill_fraction {
         out.push_str(&emit_fill_fraction_helper());
+        writeln!(out).unwrap();
+    }
+    if !part_styles.wrap_rows.is_empty() {
+        out.push_str(&emit_wrap_row_helper());
         writeln!(out).unwrap();
     }
     if uses_drag {
@@ -1787,7 +1794,7 @@ fn parts_filling_width(root: &LayoutNode, part_styles: &PartStyleMap) -> HashSet
         outside: &mut HashSet<String>,
         inside: &mut HashSet<String>,
     ) {
-        if matches!(node.tag.as_str(), "HostInput" | "Input" | "HostButton") {
+        if matches!(node.tag.as_str(), "HostInput" | "Input" | "HostNumberInput" | "HostButton") {
             if let Some(part) = node.part_name.as_deref() {
                 let full = part_styles
                     .get(part)
@@ -1823,11 +1830,12 @@ fn parts_filling_width(root: &LayoutNode, part_styles: &PartStyleMap) -> HashSet
     outside
 }
 
-/// `Text` parts that sit directly in a RowScope and author a percentage
-/// width, mapped to the `weight` that percentage becomes there.
+/// Leaf parts (`Text`, and the `HostInput` / `Input` / `HostButton`
+/// controls) that sit directly in a RowScope and author a percentage width,
+/// mapped to the `weight` that percentage becomes there.
 ///
 /// A container in a Row already gets its weight from `emit_container`; a
-/// `Text` is a leaf with no `in_row_scope` of its own, so the answer is
+/// leaf has no `in_row_scope` of its own, so the answer is
 /// precomputed here from the same scope rule as [`parts_width_guarded`] (and
 /// that set leaves these parts out, because [`compose_row_weight`] is `Some`
 /// for them -- a weighted child absorbs slack instead of holding width).
@@ -1839,10 +1847,21 @@ fn parts_filling_width(root: &LayoutNode, part_styles: &PartStyleMap) -> HashSet
 ///     → Text("Sun", modifier = Modifier.weight(0.142857f), …) ×7
 ///
 /// Before, the seven names measured to their text and sat packed at the
-/// Row's start ("SunMonTueWedThuFriSat") above a seven-column grid. A part
+/// Row's start ("SunMonTueWedThuFriSat") above a seven-column grid. The
+/// controls had the same gap: Journal's search field, `width: 100%` in a
+/// Row beside *Clear*, stayed at its intrinsic ~120px in a 276px pane
+///
+///   Row [ search-bar ] {
+///     HostInput [ search-input ] ( … )     // width "100%"
+///     HostButton [ search-clear ] ( … )    // no width
+///   }
+///     → BasicTextField(…, modifier = Modifier.weight(1f)…)
+///
+/// so the field takes what Clear leaves (one weighted child takes all the
+/// slack, which is what a CSS `100%` in a flex row ends up doing). A part
 /// that is also used outside a Row is left out: `weight` does not resolve
 /// outside RowScope, and half-applying would render one part two ways.
-fn text_parts_row_weighted(root: &LayoutNode, part_styles: &PartStyleMap) -> HashMap<String, String> {
+fn leaf_parts_row_weighted(root: &LayoutNode, part_styles: &PartStyleMap) -> HashMap<String, String> {
     fn walk(
         node: &LayoutNode,
         in_row_scope: bool,
@@ -1850,7 +1869,7 @@ fn text_parts_row_weighted(root: &LayoutNode, part_styles: &PartStyleMap) -> Has
         weighted: &mut HashMap<String, String>,
         outside: &mut HashSet<String>,
     ) {
-        if node.tag == "Text" {
+        if matches!(node.tag.as_str(), "Text" | "HostInput" | "Input" | "HostNumberInput" | "HostButton") {
             if let Some(part) = node.part_name.as_deref() {
                 if !in_row_scope {
                     outside.insert(part.to_string());
@@ -1876,6 +1895,89 @@ fn text_parts_row_weighted(root: &LayoutNode, part_styles: &PartStyleMap) -> Has
     walk(root, false, part_styles, &mut weighted, &mut outside);
     weighted.retain(|part, _| !outside.contains(part));
     weighted
+}
+
+/// The `TextAlign` a part's own base `text-align` becomes on a `Text`, or
+/// `None` for no (or an unknown) value. Quotes are tolerated, as the
+/// packages author both `center` and `"center"`.
+fn text_align_expr(props: &[StyleProp]) -> Option<&'static str> {
+    let value = props.iter().rev().find(|prop| prop.name == "text-align")?;
+    match value.value.trim().trim_matches('"').trim() {
+        "left" | "start" => Some("TextAlign.Start"),
+        "center" => Some("TextAlign.Center"),
+        "right" | "end" => Some("TextAlign.End"),
+        _ => None,
+    }
+}
+
+/// `Text` parts that author `text-align`, mapped to the `TextAlign` it
+/// becomes, and the subset that must also fill their parent's width.
+///
+/// `textAlign` aligns the text inside the `Text`'s own box, which wraps its
+/// content, so on its own it moves nothing. On the web the same text sits in
+/// a flex item that is as wide as its share of a Row (`weight`, see
+/// [`leaf_parts_row_weighted`]) or, in a Column, stretched to the Column's
+/// width (`align-items` defaults to `stretch`). The Row case already has its
+/// width; the Column case is given it with `fillMaxWidth()`:
+///
+///   part calendar-dow-sun { width : "14.2857%" ; text-align : "center" ; }
+///     → Text("Sun", modifier = Modifier.weight(0.142857f), …,
+///            textAlign = TextAlign.Center)
+///   part empty-title { text-align : center ; }          // in a Column
+///     → Text("No tasks", modifier = Modifier.fillMaxWidth(), …,
+///            textAlign = TextAlign.Center)
+///
+/// Only `center` and `end` fill: `start` is where the text already sits. A
+/// part that authors its own `width` / `min-width` / `max-width` never fills
+/// either: Calendar's today badge is a 21px pill (`width : 21`) whose number
+/// is centred inside it, not a bar across the cell. A part used in a
+/// RowScope even once never fills (`fillMaxWidth()` would
+/// take the whole Row before its siblings measure), the rule
+/// [`parts_filling_width`] uses for controls.
+fn text_parts_aligned(
+    root: &LayoutNode,
+    part_styles: &PartStyleMap,
+) -> (HashMap<String, &'static str>, HashSet<String>) {
+    fn walk(
+        node: &LayoutNode,
+        in_row_scope: bool,
+        part_styles: &PartStyleMap,
+        aligned: &mut HashMap<String, &'static str>,
+        outside: &mut HashSet<String>,
+        inside: &mut HashSet<String>,
+    ) {
+        if node.tag == "Text" {
+            if let Some(part) = node.part_name.as_deref() {
+                let props = part_styles.get(part);
+                if let Some(align) = props.and_then(|props| text_align_expr(props)) {
+                    let sized = props.is_some_and(|props| {
+                        props
+                            .iter()
+                            .any(|prop| matches!(prop.name.as_str(), "width" | "min-width" | "max-width"))
+                    });
+                    aligned.insert(part.to_string(), align);
+                    if in_row_scope {
+                        inside.insert(part.to_string());
+                    } else if align != "TextAlign.Start" && !sized {
+                        outside.insert(part.to_string());
+                    }
+                }
+            }
+        }
+        let row_here = match node.tag.as_str() {
+            "For" | "If" | "Else" => in_row_scope,
+            _ => row_scoped_children(node, part_styles),
+        };
+        for child in &node.children {
+            walk(child, row_here, part_styles, aligned, outside, inside);
+        }
+    }
+    let mut aligned = HashMap::new();
+    let mut outside = HashSet::new();
+    let mut inside = HashSet::new();
+    walk(root, false, part_styles, &mut aligned, &mut outside, &mut inside);
+    outside.retain(|part| !inside.contains(part));
+    (aligned, outside)
 }
 
 fn part_container_composables(root: &LayoutNode) -> HashMap<String, BTreeSet<&'static str>> {
@@ -1929,6 +2031,16 @@ fn flow_wrapped_composable<'a>(
     }
 }
 
+/// `_MosaicWrapRow` in place of `FlowRow` for a qualifying wrapping Row
+/// ([`wrap_rows_and_items`]); otherwise the composable unchanged.
+fn wrap_row_composable<'a>(node: &LayoutNode, part_styles: &PartStyleMap, composable: &'a str) -> &'a str {
+    let wraps = node
+        .part_name
+        .as_deref()
+        .is_some_and(|part| part_styles.is_wrap_row(part));
+    if composable == "FlowRow" && wraps { "_MosaicWrapRow" } else { composable }
+}
+
 /// Whether a part authors `flex-wrap: wrap`.
 fn part_wants_flow_wrap(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
     let Some(part) = node.part_name.as_deref() else {
@@ -1949,7 +2061,12 @@ fn part_wants_flow_wrap(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
 /// [`container_default_fill`] decides, so the helper is present exactly
 /// when a call to it can be emitted.
 fn layout_uses_fill_fraction(node: &LayoutNode, part_styles: &PartStyleMap) -> bool {
+    let wrap_item = node
+        .part_name
+        .as_deref()
+        .is_some_and(|part| part_styles.wrap_item_fraction(part).is_some());
     (container_composable_for_tag(&node.tag).is_some()
+        && !wrap_item
         && node
             .part_name
             .as_deref()
@@ -1986,6 +2103,177 @@ fn emit_fill_fraction_helper() -> String {
     }
 "
     .to_string()
+}
+
+/// `_MosaicWrapRow`: CSS `flex-wrap: wrap` with the default
+/// `align-items: stretch`, for rows whose items are all sized as a fraction
+/// of the row ([`wrap_rows_and_items`]).
+///
+/// `FlowRow` cannot do this. Its items keep their own heights, so Calendar's
+/// week with an event was ragged: the event's day ran ~55px below its
+/// neighbours, whose borders stopped at their 96px `min-height`. The obvious
+/// `fillMaxRowHeight()` measures an item against the line's *remaining*
+/// width, which collapsed the fraction-width cells into one line (see
+/// `lessons.d/compose-flowrow-measures-fillmaxrowheight-…`).
+///
+/// This layout measures each item exactly once, as Compose requires:
+///
+///   width   = floor(rowWidth * fraction), from the item's parent data,
+///             not from any measurement;
+///   lines   break when the next width would overflow the row;
+///   height  of a line = the tallest item's `maxIntrinsicHeight(width)`,
+///             an intrinsic query, not a measurement;
+///   measure each item at `Constraints.fixed(width, lineHeight)`.
+///
+/// Names are fully qualified so the helper needs no imports of its own.
+fn emit_wrap_row_helper() -> String {
+    "private class _MosaicWrapItemData(val fraction: Float) : androidx.compose.ui.layout.ParentDataModifier {
+    override fun androidx.compose.ui.unit.Density.modifyParentData(parentData: Any?): Any? = this@_MosaicWrapItemData
+}
+
+private fun Modifier._mosaicWrapItem(fraction: Float): Modifier = this.then(_MosaicWrapItemData(fraction))
+
+@Composable
+private fun _MosaicWrapRow(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    androidx.compose.ui.layout.Layout(content = content, modifier = modifier) { measurables, constraints ->
+        val rowWidth = if (constraints.hasBoundedWidth) constraints.maxWidth else 0
+        val widths = measurables.map { measurable ->
+            val fraction = (measurable.parentData as? _MosaicWrapItemData)?.fraction ?: 1f
+            kotlin.math.floor(rowWidth * fraction).toInt().coerceIn(0, rowWidth)
+        }
+        val lineOf = IntArray(measurables.size)
+        val lineHeights = mutableListOf<Int>()
+        var used = 0
+        var tallest = 0
+        measurables.forEachIndexed { index, measurable ->
+            if (used > 0 && used + widths[index] > rowWidth) {
+                lineHeights.add(tallest)
+                used = 0
+                tallest = 0
+            }
+            lineOf[index] = lineHeights.size
+            used += widths[index]
+            tallest = maxOf(tallest, measurable.maxIntrinsicHeight(widths[index]))
+        }
+        if (measurables.isNotEmpty()) lineHeights.add(tallest)
+        val placeables = measurables.mapIndexed { index, measurable ->
+            measurable.measure(androidx.compose.ui.unit.Constraints.fixed(widths[index], lineHeights[lineOf[index]]))
+        }
+        val maxHeight = if (constraints.hasBoundedHeight) constraints.maxHeight else Int.MAX_VALUE
+        val height = lineHeights.sum().coerceIn(constraints.minHeight, maxHeight)
+        layout(rowWidth, height) {
+            var x = 0
+            var y = 0
+            var line = 0
+            placeables.forEachIndexed { index, placeable ->
+                if (lineOf[index] != line) {
+                    y += lineHeights[line]
+                    line = lineOf[index]
+                    x = 0
+                }
+                placeable.place(x, y)
+                x += placeable.width
+            }
+        }
+    }
+}
+"
+    .to_string()
+}
+
+/// Wrapping Rows that lower to [`emit_wrap_row_helper`]'s `_MosaicWrapRow`,
+/// and their item parts mapped to the Kotlin fraction each takes.
+///
+/// Only the case `FlowRow` gets wrong and this layout gets right: a wrapping
+/// Row with no `gap` / `row-gap` / `column-gap` / `justify-content` /
+/// `align-items` / `text-align` of its own (the helper takes no arrangement),
+/// whose direct children (through `For` / `If` / `Else`) are ALL containers
+/// with a percentage width below 100% and no `height`. Anything else keeps
+/// `FlowRow`. An item part used anywhere outside such a row disqualifies the
+/// whole set, because `_mosaicWrapItem` means nothing elsewhere and the part
+/// would render two ways.
+fn wrap_rows_and_items(
+    root: &LayoutNode,
+    part_styles: &PartStyleMap,
+) -> (HashSet<String>, HashMap<String, String>) {
+    fn children_through_meta(node: &LayoutNode) -> Vec<&LayoutNode> {
+        let mut out = Vec::new();
+        for child in &node.children {
+            if matches!(child.tag.as_str(), "For" | "If" | "Else") {
+                out.extend(children_through_meta(child));
+            } else {
+                out.push(child);
+            }
+        }
+        out
+    }
+    fn row_qualifies(node: &LayoutNode, part_styles: &PartStyleMap) -> Option<Vec<(String, String)>> {
+        if node.tag != "Row" || !part_wants_flow_wrap(node, part_styles) {
+            return None;
+        }
+        let props = part_styles.get(node.part_name.as_deref()?)?;
+        let arranged = props.iter().any(|prop| {
+            matches!(
+                prop.name.as_str(),
+                "gap" | "row-gap" | "column-gap" | "justify-content" | "align-items" | "text-align"
+            )
+        });
+        if arranged {
+            return None;
+        }
+        let children = children_through_meta(node);
+        if children.is_empty() {
+            return None;
+        }
+        let mut items = Vec::new();
+        for child in children {
+            container_composable_for_tag(&child.tag)?;
+            let part = child.part_name.as_deref()?;
+            let props = part_styles.get(part)?;
+            if props.iter().any(|prop| prop.name == "height") {
+                return None;
+            }
+            let fraction = percent_width_fraction(props).filter(|f| *f < 1.0)?;
+            items.push((part.to_string(), kotlin_fraction(fraction)));
+        }
+        Some(items)
+    }
+    fn walk(
+        node: &LayoutNode,
+        in_wrap_row: bool,
+        part_styles: &PartStyleMap,
+        rows: &mut HashSet<String>,
+        items: &mut HashMap<String, String>,
+        outside: &mut HashSet<String>,
+    ) {
+        if !in_wrap_row {
+            if let Some(part) = node.part_name.as_deref() {
+                outside.insert(part.to_string());
+            }
+        }
+        let qualifies = row_qualifies(node, part_styles);
+        if let Some(found) = &qualifies {
+            if let Some(part) = node.part_name.as_deref() {
+                rows.insert(part.to_string());
+            }
+            items.extend(found.iter().cloned());
+        }
+        let here = match node.tag.as_str() {
+            "For" | "If" | "Else" => in_wrap_row,
+            _ => qualifies.is_some(),
+        };
+        for child in &node.children {
+            walk(child, here, part_styles, rows, items, outside);
+        }
+    }
+    let mut rows = HashSet::new();
+    let mut items = HashMap::new();
+    let mut outside = HashSet::new();
+    walk(root, false, part_styles, &mut rows, &mut items, &mut outside);
+    if items.keys().any(|part| outside.contains(part)) {
+        return (HashSet::new(), HashMap::new());
+    }
+    (rows, items)
 }
 
 /// Whether any part in this layout authors `flex-wrap: wrap`, and so
@@ -2192,6 +2480,14 @@ fn kotlin_fraction(fraction: f64) -> String {
 /// of the FlowRow's width, which is what CSS means, so seven fit a line --
 /// floored rather than rounded ([`emit_fill_fraction_helper`]).
 fn container_default_fill(node: &LayoutNode, part_styles: &PartStyleMap) -> String {
+    // A `_MosaicWrapRow` item: the row gives it its width, from this fraction.
+    if let Some(fraction) = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.wrap_item_fraction(part))
+    {
+        return format!("_mosaicWrapItem({fraction}f)");
+    }
     match node
         .part_name
         .as_deref()
@@ -2947,9 +3243,17 @@ struct PartStyleMap {
     /// [`parts_filling_width`]. Precomputed for the same reason as
     /// `width_guarded`: leaf writers have no `in_row_scope` of their own.
     fill_width: HashSet<String>,
-    /// `Text` parts that take a RowScope `weight` from a percentage width;
-    /// see [`text_parts_row_weighted`]. Part name → weight.
-    row_weighted_text: HashMap<String, String>,
+    /// Leaf parts that take a RowScope `weight` from a percentage width;
+    /// see [`leaf_parts_row_weighted`]. Part name → weight.
+    row_weighted_leaf: HashMap<String, String>,
+    /// `Text` parts' own `text-align` as a `TextAlign`, and those that also
+    /// fill their parent's width; see [`text_parts_aligned`].
+    text_align: HashMap<String, &'static str>,
+    text_align_fill: HashSet<String>,
+    /// Wrapping Rows lowered to `_MosaicWrapRow`, and their items' fractions;
+    /// see [`wrap_rows_and_items`].
+    wrap_rows: HashSet<String>,
+    wrap_items: HashMap<String, String>,
 }
 
 impl PartStyleMap {
@@ -2971,12 +3275,39 @@ impl PartStyleMap {
     fn resolve_width_guards(&mut self, root: &LayoutNode) {
         self.width_guarded = parts_width_guarded(root, self);
         self.fill_width = parts_filling_width(root, self);
-        self.row_weighted_text = text_parts_row_weighted(root, self);
+        self.row_weighted_leaf = leaf_parts_row_weighted(root, self);
+        (self.text_align, self.text_align_fill) = text_parts_aligned(root, self);
+        (self.wrap_rows, self.wrap_items) = wrap_rows_and_items(root, self);
     }
 
-    /// The RowScope weight a `Text` part takes, if any.
-    fn text_row_weight(&self, part: &str) -> Option<&str> {
-        self.row_weighted_text.get(part).map(String::as_str)
+    /// Does this wrapping Row lower to `_MosaicWrapRow`?
+    fn is_wrap_row(&self, part: &str) -> bool {
+        self.wrap_rows.contains(part)
+    }
+
+    /// The fraction a `_MosaicWrapRow` item takes, if this part is one.
+    fn wrap_item_fraction(&self, part: &str) -> Option<&str> {
+        self.wrap_items.get(part).map(String::as_str)
+    }
+
+    /// The `TextAlign` a `Text` part takes, if it authors `text-align`.
+    fn text_align(&self, part: &str) -> Option<&'static str> {
+        self.text_align.get(part).copied()
+    }
+
+    /// Does this `Text` part fill its parent so its `text-align` can act?
+    fn text_align_fills(&self, part: &str) -> bool {
+        self.text_align_fill.contains(part)
+    }
+
+    /// Does any `Text` use `TextAlign` (so the file needs its import)?
+    fn uses_text_align(&self) -> bool {
+        !self.text_align.is_empty()
+    }
+
+    /// The RowScope weight a leaf part takes, if any.
+    fn leaf_row_weight(&self, part: &str) -> Option<&str> {
+        self.row_weighted_leaf.get(part).map(String::as_str)
     }
 
     /// Does this leaf control's `width: 100%` lower to `fillMaxWidth()`?
@@ -3046,7 +3377,11 @@ fn build_part_style_map(style: &StyleDef, slots: &[SlotDecl]) -> PartStyleMap {
         slot_states,
         width_guarded: HashSet::new(),
         fill_width: HashSet::new(),
-        row_weighted_text: HashMap::new(),
+        row_weighted_leaf: HashMap::new(),
+        text_align: HashMap::new(),
+        text_align_fill: HashSet::new(),
+        wrap_rows: HashSet::new(),
+        wrap_items: HashMap::new(),
     }
 }
 
@@ -5116,7 +5451,20 @@ fn emit_host_navigation_split(
 }
 
 fn text_call(value_expr: &str, text_ctx: Option<&TextStyleCtx>, modifier: Option<&str>) -> String {
-    let args = text_ctx.map(TextStyleCtx::text_args).unwrap_or_default();
+    text_call_aligned(value_expr, text_ctx, modifier, None)
+}
+
+/// [`text_call`] with the part's own `textAlign` (see [`text_parts_aligned`]).
+fn text_call_aligned(
+    value_expr: &str,
+    text_ctx: Option<&TextStyleCtx>,
+    modifier: Option<&str>,
+    text_align: Option<&str>,
+) -> String {
+    let mut args = text_ctx.map(TextStyleCtx::text_args).unwrap_or_default();
+    if let Some(align) = text_align {
+        write!(args, ", textAlign = {align}").unwrap();
+    }
     let modifier_arg = modifier
         .map(|value| format!(", modifier = {value}"))
         .unwrap_or_default();
@@ -5384,7 +5732,8 @@ fn emit_compose_tree(
             } else {
                 text
             };
-            emit_text(node, depth, Some(&text), for_payload, part_styles)
+            let box_chain = style.as_ref().map(|s| s.modifier.as_str()).filter(|c| !c.is_empty());
+            emit_text(node, depth, Some(&text), for_payload, part_styles, box_chain)
         },
         "Icon" => emit_icon_compose(node, depth, part_styles, text_ctx),
         "Path" => emit_path(node, depth, part_styles),
@@ -5736,7 +6085,7 @@ fn emit_container_frame(
         wheel_modifier,
     } = *frame_ctx;
     let pad = "    ".repeat(depth);
-    let composable = flow_wrapped_composable(node, part_styles, composable);
+    let composable = wrap_row_composable(node, part_styles, flow_wrapped_composable(node, part_styles, composable));
     let mut opener = String::new();
     let chain_indent = (depth + 2) * 4;
     let inherited_color = text_ctx.and_then(|t| t.color.as_deref());
@@ -6005,7 +6354,7 @@ fn emit_container(
     in_row_scope: bool,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
-    let composable = flow_wrapped_composable(node, part_styles, composable);
+    let composable = wrap_row_composable(node, part_styles, flow_wrapped_composable(node, part_styles, composable));
     let mut out = String::new();
 
     // Build the part-style chain for this node (if any).  The chain
@@ -6787,6 +7136,8 @@ fn emit_text(
     text_ctx: Option<&TextStyleCtx>,
     for_payload: Option<ForPayloadScope<'_>>,
     part_styles: &PartStyleMap,
+    // The part's own box modifiers (`ComposeStyle::modifier`), if styled.
+    box_chain: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let value_expr = match find_prop_value(node, "content") {
@@ -6800,8 +7151,44 @@ fn emit_text(
     // args appended (`Text(( v ), color = ..., fontFamily = ...)`).
     // With no styling, keep the labelled `Text(text = ...)` shape so the
     // styleless passthrough (e.g. FormulaBar) is byte-identical to before.
-    let modifier = if layout_node_is_accessibility_hidden(node) {
-        Some("Modifier.clearAndSetSemantics { }".to_string())
+    // The modifier, in one order for every `Text`:
+    //
+    //   Modifier
+    //     .fillMaxWidth() | .weight(f) | .wrapContentWidth(unbounded = true)
+    //     <the part's own box chain: padding, background, clip, size, border>
+    //     <semantics: a11y label / heading / hidden>
+    //
+    // The width decision goes first, as `emit_container` puts its UI59
+    // floor first, so the part's padding and background sit inside the box
+    // that decision sizes. At most one of the three applies: a part in a
+    // Row takes a weight or the floor, one outside every Row may fill.
+    let part = node.part_name.as_deref();
+    let mut chain = String::from("Modifier");
+    if part.is_some_and(|part| part_styles.text_align_fills(part)) {
+        // A centred or end-aligned `Text` outside a Row is as wide as its
+        // parent, as the stretched flex item it is on the web
+        // (`text_parts_aligned`).
+        chain.push_str(".fillMaxWidth()");
+    } else if let Some(weight) = part.and_then(|part| part_styles.leaf_row_weight(part)) {
+        // A percentage width in a Row is a share of it
+        // (`leaf_parts_row_weighted`).
+        write!(chain, ".weight({weight}f)").unwrap();
+    } else if part.is_some_and(|part| part_styles.is_width_guarded(part)) {
+        // UI59 §4 -- a bare `Text` is a leaf, so `emit_container`'s floor
+        // never reaches it. Trestle's schedule text measured ZERO WIDTH at
+        // 700 in the Board view for exactly that reason.
+        chain.push_str(".wrapContentWidth(unbounded = true)");
+    }
+    // The part's own box: before, only its text style reached the `Text`,
+    // and its padding, background, rounded corners, size and border were
+    // dropped -- unreported, because the drop reporter lowers the same
+    // properties for containers. Calendar's today badge (a 21px amber pill)
+    // was never drawn on Compose.
+    if let Some(box_chain) = box_chain {
+        chain.push_str(box_chain);
+    }
+    if layout_node_is_accessibility_hidden(node) {
+        chain.push_str(".clearAndSetSemantics { }");
     } else {
         let label = text_prop_expr(node, "a11y-label")?;
         let is_heading = matches!(
@@ -6809,45 +7196,23 @@ fn emit_text(
             Some(LayoutPropValue::Keyword(value)) if value == "heading"
         );
         match (label, is_heading) {
-            (Some(label), true) => Some(format!(
-                "Modifier.clearAndSetSemantics {{ contentDescription = {label}; heading() }}"
-            )),
-            (Some(label), false) => Some(format!(
-                "Modifier.clearAndSetSemantics {{ contentDescription = {label} }}"
-            )),
-            (None, true) => Some("Modifier.semantics { heading() }".to_string()),
-            (None, false) => None,
+            (Some(label), true) => write!(
+                chain,
+                ".clearAndSetSemantics {{ contentDescription = {label}; heading() }}"
+            )
+            .unwrap(),
+            (Some(label), false) => {
+                write!(chain, ".clearAndSetSemantics {{ contentDescription = {label} }}").unwrap()
+            }
+            (None, true) => chain.push_str(".semantics { heading() }"),
+            (None, false) => {}
         }
-    };
-    // A percentage width in a Row is a share of it (`text_parts_row_weighted`).
-    let modifier = match node
-        .part_name
-        .as_deref()
-        .and_then(|part| part_styles.text_row_weight(part))
-    {
-        Some(weight) => {
-            let base = modifier.unwrap_or_else(|| "Modifier".to_string());
-            Some(format!("{base}.weight({weight}f)"))
-        }
-        None => modifier,
-    };
-    // UI59 §4 -- a bare `Text` is a leaf, so `emit_container`'s floor never
-    // reaches it. Trestle's schedule text measured ZERO WIDTH at 700 in the
-    // Board view for exactly that reason.
-    let modifier = if node
-        .part_name
-        .as_deref()
-        .map(|part| part_styles.is_width_guarded(part))
-        .unwrap_or(false)
-    {
-        let base = modifier.unwrap_or_else(|| "Modifier".to_string());
-        Some(format!("{base}.wrapContentWidth(unbounded = true)"))
-    } else {
-        modifier
-    };
+    }
+    let modifier = (chain != "Modifier").then_some(chain);
+    let text_align = part.and_then(|part| part_styles.text_align(part));
     Ok(format!(
         "{pad}{}\n",
-        text_call(&value_expr, text_ctx, modifier.as_deref())
+        text_call_aligned(&value_expr, text_ctx, modifier.as_deref(), text_align)
     ))
 }
 
@@ -7012,7 +7377,12 @@ fn emit_host_input(
         .part_name
         .as_deref()
         .is_some_and(|part| part_styles.fills_width(part));
-    let mut modifier_expr = host_control_modifier_expr_filling(node, style.as_ref(), fills);
+    let row_weight = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.leaf_row_weight(part));
+    let mut modifier_expr =
+        host_control_modifier_expr_filling(node, style.as_ref(), fills, row_weight);
     if let Some(accessible_label) = text_prop_expr(node, "a11y-label")? {
         let base = modifier_expr.unwrap_or_else(|| "Modifier".to_string());
         modifier_expr = Some(format!(
@@ -7135,6 +7505,13 @@ fn emit_host_button(
     //
     // `backgroundColor` is Material 2's parameter name; this emitter targets
     // `androidx.compose.material`, not material3's `containerColor`.
+    //
+    // `disabledBackgroundColor` is the SAME expression. Left out, a disabled
+    // button fell back to Material's `onSurface` at 12% alpha over the light
+    // theme's surface -- near-white on Engram's dark Collection panel ("Delete
+    // note" / "Delete note type" while nothing is selected). On the web a
+    // disabled button keeps its authored background unless the package styles
+    // `state disabled`; so does this.
     let mut style = style;
     let button_colors = match style.as_mut().and_then(|s| {
         s.background
@@ -7144,7 +7521,7 @@ fn emit_host_button(
         Some((expr, segment, modifier)) => {
             *modifier = modifier.replace(&segment, "");
             Some(format!(
-                "ButtonDefaults.buttonColors(backgroundColor = {expr})"
+                "ButtonDefaults.buttonColors(backgroundColor = {expr}, disabledBackgroundColor = {expr})"
             ))
         }
         None => None,
@@ -7154,7 +7531,12 @@ fn emit_host_button(
         .part_name
         .as_deref()
         .is_some_and(|part| part_styles.fills_width(part));
-    let mut modifier_expr = host_control_modifier_expr_filling(node, style.as_ref(), fills);
+    let row_weight = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.leaf_row_weight(part));
+    let mut modifier_expr =
+        host_control_modifier_expr_filling(node, style.as_ref(), fills, row_weight);
     // UI59 §4 -- the floor reaches leaves too. `emit_container` applies it
     // for container children; a `Button` is emitted here instead and got
     // nothing, so `Delete` measured ZERO WIDTH at 1280 -- the declared
@@ -7204,6 +7586,13 @@ fn emit_host_button(
         }
         if let Some(colors) = button_colors {
             writeln!(out, "{inner}colors = {colors},").unwrap();
+            // An authored background means an authored look: Material's
+            // default elevation would add a drop shadow no other backend
+            // draws (a web button casts none unless its style asks). Every
+            // light-theme nav tab and task-row button carried one. A part that
+            // does author `elevation` still gets it, through `Modifier.shadow`
+            // in its own chain (UI41); an unstyled button keeps Material's.
+            writeln!(out, "{inner}elevation = null,").unwrap();
         }
         if let Some(modifier) = modifier_expr {
             writeln!(out, "{inner}modifier = {modifier},").unwrap();
@@ -7218,24 +7607,31 @@ fn emit_host_button(
 }
 
 fn host_control_modifier_expr(node: &LayoutNode, style: Option<&ComposeStyle>) -> Option<String> {
-    host_control_modifier_expr_filling(node, style, false)
+    host_control_modifier_expr_filling(node, style, false, None)
 }
 
 /// [`host_control_modifier_expr`] for a control that may fill its parent's
-/// width ([`parts_filling_width`]). The fill goes FIRST, as the container
+/// width ([`parts_filling_width`]) or, in a Row, take a share of it
+/// ([`leaf_parts_row_weighted`]). Either goes FIRST, as the container
 /// default does, and only when the chain does not already decide the width
 /// (`chain_sets_own_width`): a `max-width` emits its own
 /// `widthIn(max).fillMaxWidth()`, and the order of those two is not
-/// symmetric (#14833).
+/// symmetric (#14833). The two never meet: a part in a Row is left out of
+/// the fill set, and one outside every Row has no weight.
 fn host_control_modifier_expr_filling(
     node: &LayoutNode,
     style: Option<&ComposeStyle>,
     fill_width: bool,
+    row_weight: Option<&str>,
 ) -> Option<String> {
     let mut modifier = String::from("Modifier");
     let chain = style.map(|s| s.modifier.as_str()).unwrap_or("");
-    if fill_width && !chain_sets_own_width(chain) {
-        modifier.push_str(".fillMaxWidth()");
+    if !chain_sets_own_width(chain) {
+        if let Some(weight) = row_weight {
+            write!(modifier, ".weight({weight}f)").unwrap();
+        } else if fill_width {
+            modifier.push_str(".fillMaxWidth()");
+        }
     }
     modifier.push_str(chain);
     if let Some(part) = &node.part_name {
@@ -7774,12 +8170,16 @@ fn emit_host_checkbox(
             if !style.modifier.is_empty() {
                 writeln!(out, "{pad}Row(").unwrap();
                 writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+                // The label sits beside the control's centre, as an inline
+                // `<label>` does on the web -- not at the top of Material's
+                // 48dp touch target (Engram's leech-action radios).
+                writeln!(out, "{inner}verticalAlignment = Alignment.CenterVertically,").unwrap();
                 writeln!(out, "{pad}) {{").unwrap();
             } else {
-                writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+                writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {{").unwrap();
             }
         } else {
-            writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+            writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {{").unwrap();
         }
         for line in checkbox_lines {
             writeln!(out, "{line}").unwrap();
@@ -7859,12 +8259,16 @@ fn emit_host_radio(
             if !style.modifier.is_empty() {
                 writeln!(out, "{pad}Row(").unwrap();
                 writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
+                // The label sits beside the control's centre, as an inline
+                // `<label>` does on the web -- not at the top of Material's
+                // 48dp touch target (Engram's leech-action radios).
+                writeln!(out, "{inner}verticalAlignment = Alignment.CenterVertically,").unwrap();
                 writeln!(out, "{pad}) {{").unwrap();
             } else {
-                writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+                writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {{").unwrap();
             }
         } else {
-            writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth()) {{").unwrap();
+            writeln!(out, "{pad}Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {{").unwrap();
         }
         for line in radio_lines {
             writeln!(out, "{line}").unwrap();
@@ -8160,14 +8564,27 @@ fn emit_host_number_input(
         "/* no onChange bound */".to_string()
     };
 
+    // `BasicTextField`, as `HostInput` is, not Material's `TextField`. The
+    // Material field enforces a 280x56dp minimum and paints its own filled
+    // container inside the part's border: Engram's Deck options drew every
+    // number field twice as tall as its text fields, and five of them in one
+    // Row overflowed the panel and drew their labels over each other. The
+    // part's style now owns the box, exactly as it does for a text field, and
+    // the width decisions (`fillMaxWidth()` / a Row weight) are the same ones.
     let mut out = String::new();
-    writeln!(out, "{pad}TextField(").unwrap();
+    writeln!(out, "{pad}BasicTextField(").unwrap();
     writeln!(out, "{inner}value = {value_expr}.toString(),").unwrap();
     writeln!(out, "{inner}onValueChange = {{ v -> {on_value_change} }},").unwrap();
-    if let Some(style) = &style {
-        if !style.modifier.is_empty() {
-            writeln!(out, "{inner}modifier = Modifier{},", style.modifier).unwrap();
-        }
+    let fills = node
+        .part_name
+        .as_deref()
+        .is_some_and(|part| part_styles.fills_width(part));
+    let row_weight = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.leaf_row_weight(part));
+    if let Some(modifier) = host_control_modifier_expr_filling(node, style.as_ref(), fills, row_weight) {
+        writeln!(out, "{inner}modifier = {modifier},").unwrap();
     }
     if let Some(text_style) = input_text.text_style_expr() {
         writeln!(out, "{inner}textStyle = {text_style},").unwrap();
@@ -8178,13 +8595,6 @@ fn emit_host_number_input(
         "{inner}keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),"
     )
     .unwrap();
-    if let Some(placeholder) = text_prop_expr(node, "placeholder")? {
-        writeln!(
-            out,
-            "{inner}placeholder = {{ Text(text = {placeholder}) }},"
-        )
-        .unwrap();
-    }
     if let Some(enabled) = disabled_prop_enabled_expr(node)? {
         writeln!(out, "{inner}enabled = {enabled},").unwrap();
     }
@@ -8858,13 +9268,159 @@ mod tests {
         assert!(matches!(from_pipeline(&m, &l, &style), Err(PipelineEmitError::InvalidTypography(_))));
     }
 
-    /// `width: 100%` on a leaf control fills its parent — but only outside a
-    /// RowScope, where `fillMaxWidth()` would take the whole Row before its
-    /// siblings are measured. A part used in a Row even once keeps its
-    /// intrinsic width everywhere, and `max-width` keeps its own
-    /// `widthIn(max).fillMaxWidth()` order.
+    /// A `Text` wears its part's box: padding, background, rounded corners,
+    /// size and border reach its modifier, after any width decision (as a
+    /// container's UI59 floor comes first) and before its semantics. Before,
+    /// only the text style did, so Calendar's today badge -- a 21px amber
+    /// pill -- was never drawn, and the drop reporter did not say so.
     #[test]
-    fn full_width_leaf_controls_fill_outside_rows_only() {
+    fn text_wears_its_parts_box() {
+        let m = component("Month", vec![], vec![]);
+        let text = |part: &str, props: Vec<LayoutProp>| styled_node("Text", part, props, vec![]);
+        let content = |value: &str| LayoutProp {
+            name: "content".into(),
+            value: LayoutPropValue::String(value.into()),
+        };
+        let heading = LayoutProp {
+            name: "a11y-role".into(),
+            value: LayoutPropValue::Keyword("heading".into()),
+        };
+        let l = layout(
+            "Month",
+            node(
+                "Column",
+                vec![],
+                vec![
+                    text("today", vec![content("24")]),
+                    text("title", vec![content("January"), heading]),
+                    styled_node("Row", "names", vec![], vec![text("chip", vec![content("Done")])]),
+                ],
+            ),
+        );
+        let style = style_def(
+            "Month",
+            vec![
+                part(
+                    "today",
+                    vec![
+                        sprop("width", "21"),
+                        sprop("height", "21"),
+                        sprop("border-radius", "20"),
+                        sprop("background", "#eaa63f"),
+                        sprop("color", "#1a1714"),
+                    ],
+                    vec![],
+                ),
+                part("title", vec![sprop("padding", "8")], vec![]),
+                part(
+                    "chip",
+                    vec![sprop("padding", "4"), sprop("border-width", "1"), sprop("border-color", "#333333")],
+                    vec![],
+                ),
+            ],
+        );
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        // The whole `Text(...)` call starting at `needle` (it may span lines).
+        let call = |needle: &str| {
+            let start = out.find(needle).unwrap_or_else(|| panic!("no {needle}:\n{out}"));
+            // Each Text here is its section's last line, closed by `}`.
+            let end = out[start..].find("\n}").map_or(out.len(), |i| start + i);
+            out[start..end].to_string()
+        };
+        let today = call("Text(\"24\"");
+        for piece in [".width(21.dp)", ".height(21.dp)", "0xFFEAA63F", "RoundedCornerShape(20.dp)"] {
+            assert!(today.contains(piece), "{piece} in {today}\n{out}");
+        }
+        assert!(today.contains("color = Color(0xFF1A1714)"), "the text colour stays a Text arg: {today}");
+        let title = call("Text(text = \"January\"");
+        let padding = title.find(".padding(8.dp)").expect(&title);
+        let semantics = title.find(".semantics { heading() }").expect(&title);
+        assert!(padding < semantics, "the box comes before the semantics: {title}");
+        // In a Row the UI59 floor comes first, then the box.
+        let chip = call("Text(text = \"Done\"");
+        let floor = chip.find(".wrapContentWidth(unbounded = true)").expect(&chip);
+        assert!(floor < chip.find(".padding(4.dp)").expect(&chip), "{chip}");
+        assert!(chip.contains(".border(1.dp, Color(0xFF333333))"), "{chip}");
+    }
+
+    /// A `Text` part's own `text-align` reaches the `Text` call as
+    /// `textAlign`. In a Row the text already has its share's width; in a
+    /// Column a centred or end-aligned text also fills, as the stretched
+    /// flex item it is on the web. `start` never fills, a part used in a
+    /// Row never fills, and a file with no aligned text has no import.
+    #[test]
+    fn text_align_reaches_text_and_centres_in_its_own_width() {
+        let m = component("Month", vec![], vec![]);
+        let text = |part: &str, value: &str| {
+            styled_node(
+                "Text",
+                part,
+                vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::String(value.into()),
+                }],
+                vec![],
+            )
+        };
+        let l = layout(
+            "Month",
+            node(
+                "Column",
+                vec![],
+                vec![
+                    styled_node("Row", "names", vec![], vec![text("name-a", "Sun"), text("shared", "S")]),
+                    text("title", "January"),
+                    text("lead", "Left"),
+                    text("shared", "S"),
+                    text("plain", "Plain"),
+                    text("badge", "21"),
+                ],
+            ),
+        );
+        let style = style_def(
+            "Month",
+            vec![
+                part("name-a", vec![sprop("width", "\"14.2857%\""), sprop("text-align", "\"center\"")], vec![]),
+                part("title", vec![sprop("text-align", "right")], vec![]),
+                part("lead", vec![sprop("text-align", "left")], vec![]),
+                part("shared", vec![sprop("text-align", "center")], vec![]),
+                part("plain", vec![sprop("padding", "2")], vec![]),
+                part("badge", vec![sprop("width", "21"), sprop("text-align", "center")], vec![]),
+            ],
+        );
+        let out = from_pipeline(&m, &l, &style).unwrap().output;
+        assert!(out.contains("import androidx.compose.ui.text.style.TextAlign"), "{out}");
+        // A sized text centres inside its own width; it does not fill.
+        assert!(out.contains(".width(21.dp), textAlign = TextAlign.Center)"), "{out}");
+        assert!(!out.contains("fillMaxWidth()\n            .width(21.dp)"), "{out}");
+        assert!(
+            out.contains("Text(\"Sun\", modifier = Modifier.weight(0.142857f), textAlign = TextAlign.Center)"),
+            "{out}"
+        );
+        assert!(
+            out.contains("Text(\"January\", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.End)"),
+            "{out}"
+        );
+        assert!(out.contains("Text(\"Left\", textAlign = TextAlign.Start)"), "{out}");
+        // Shared: aligned in both places, filling in neither. It keeps its
+        // UI59 width guard, which is decided per part, so in both places.
+        assert!(!out.contains("fillMaxWidth(), textAlign = TextAlign.Center"), "shared: {out}");
+        let guarded = "Text(\"S\", modifier = Modifier.wrapContentWidth(unbounded = true), textAlign = TextAlign.Center)";
+        assert_eq!(out.matches(guarded).count(), 2, "{out}");
+        assert!(out.contains("Text(text = \"Plain\", modifier = Modifier\n            .padding(2.dp))"), "{out}");
+
+        let plain = style_def("Month", vec![part("plain", vec![sprop("padding", "2")], vec![])]);
+        let out = from_pipeline(&m, &l, &plain).unwrap().output;
+        assert!(!out.contains("TextAlign"), "{out}");
+    }
+
+    /// `width: 100%` on a leaf control fills its parent outside a RowScope,
+    /// where `fillMaxWidth()` would take the whole Row before its siblings
+    /// are measured. In a Row, a percentage width is a `weight` instead. A
+    /// part used both in and out of a Row gets neither, and `max-width`
+    /// keeps its own `widthIn(max).fillMaxWidth()` order.
+    #[test]
+    fn full_width_leaf_controls_fill_columns_and_share_rows() {
         let m = component("Form", vec![], vec![]);
         let input = |part: &str| styled_node("HostInput", part, vec![], vec![]);
         let l = layout(
@@ -8878,6 +9434,14 @@ mod tests {
                     input("capped-field"),
                     input("shared-field"),
                     node("Row", vec![], vec![input("row-field"), input("shared-field")]),
+                    node(
+                        "Row",
+                        vec![],
+                        vec![
+                            input("row-capped-field"),
+                            styled_node("HostButton", "half-btn", vec![], vec![]),
+                        ],
+                    ),
                     input("plain-field"),
                 ],
             ),
@@ -8891,6 +9455,8 @@ mod tests {
                 part("capped-field", vec![full(), sprop("max-width", "400px")], vec![]),
                 part("shared-field", vec![full()], vec![]),
                 part("row-field", vec![full()], vec![]),
+                part("row-capped-field", vec![full(), sprop("max-width", "400px")], vec![]),
+                part("half-btn", vec![sprop("width", "50%")], vec![]),
                 part("plain-field", vec![sprop("padding", "4px")], vec![]),
             ],
         );
@@ -8907,8 +9473,17 @@ mod tests {
         let capped = modifier_of("capped-field");
         assert!(!capped.starts_with("modifier = Modifier.fillMaxWidth()"), "{capped}");
         assert!(capped.contains(".widthIn(max = 400.dp)"), "{capped}");
-        for part in ["row-field", "shared-field", "plain-field"] {
+        for part in ["row-field", "shared-field", "plain-field", "half-btn"] {
             assert!(!modifier_of(part).contains("fillMaxWidth"), "{part}:\n{out}");
+        }
+        // In a Row the percentage is a share of it: the field takes the
+        // slack, the button half. A part also used outside a Row gets no
+        // weight (it does not resolve there), and a capped field keeps its
+        // own `widthIn`, which already decides the width.
+        assert!(modifier_of("row-field").starts_with("modifier = Modifier.weight(1f)"), "{out}");
+        assert!(modifier_of("half-btn").starts_with("modifier = Modifier.weight(0.5f)"), "{out}");
+        for part in ["shared-field", "row-capped-field", "title-field", "plain-field"] {
+            assert!(!modifier_of(part).contains(".weight("), "{part}:\n{out}");
         }
     }
 
@@ -9015,6 +9590,7 @@ mod tests {
                         vec![],
                         vec![styled_node("Column", "cell", vec![], vec![])],
                     ),
+                    styled_node("Column", "half", vec![], vec![]),
                     styled_node("Column", "too-wide", vec![], vec![]),
                     styled_node("Column", "not-a-number", vec![], vec![]),
                 ],
@@ -9028,6 +9604,7 @@ mod tests {
                 part("name-b", vec![seventh()], vec![]),
                 part("grid", vec![sprop("flex-wrap", "wrap")], vec![]),
                 part("cell", vec![seventh(), sprop("padding", "6")], vec![]),
+                part("half", vec![sprop("width", "50%"), sprop("padding", "1")], vec![]),
                 part("too-wide", vec![sprop("width", "150%"), sprop("padding", "1")], vec![]),
                 part("not-a-number", vec![sprop("width", "x%"), sprop("padding", "1")], vec![]),
             ],
@@ -9035,8 +9612,14 @@ mod tests {
         let out = from_pipeline(&m, &l, &style).unwrap().output;
         assert!(out.contains("Text(text = \"Sun\", modifier = Modifier.weight(0.142857f))"), "{out}");
         assert!(out.contains("Text(text = \"Mon\", modifier = Modifier.weight(0.142857f))"), "{out}");
-        assert!(out.contains("FlowRow("), "{out}");
-        assert!(out.contains("modifier = Modifier._mosaicFillFraction(0.142857f)"), "{out}");
+        // A wrapping Row of fraction-width cells is `_MosaicWrapRow`, whose
+        // items take their width from the row (`wrap_rows_and_items`).
+        assert!(out.contains("_MosaicWrapRow("), "{out}");
+        assert!(!out.contains("FlowRow("), "{out}");
+        assert!(out.contains("modifier = Modifier._mosaicWrapItem(0.142857f)"), "{out}");
+        assert!(out.contains("private fun _MosaicWrapRow("), "{out}");
+        // Outside a Row, a percentage fills a floored fraction of the parent.
+        assert!(out.contains("modifier = Modifier._mosaicFillFraction(0.5f)"), "{out}");
         assert!(out.contains("private fun Modifier._mosaicFillFraction(fraction: Float)"), "{out}");
         assert!(out.contains("kotlin.math.floor(constraints.maxWidth * fraction)"), "{out}");
         assert!(out.contains("import androidx.compose.ui.layout.layout"), "{out}");
@@ -9047,6 +9630,7 @@ mod tests {
         let plain = style_def("Month", vec![part("cell", vec![sprop("padding", "6")], vec![])]);
         let out = from_pipeline(&m, &l, &plain).unwrap().output;
         assert!(!out.contains("_mosaicFillFraction"), "{out}");
+        assert!(!out.contains("_MosaicWrapRow"), "{out}");
         assert!(!out.contains("import androidx.compose.ui.layout.layout"), "{out}");
     }
 
@@ -10509,10 +11093,16 @@ mod tests {
         // modifier -- Material paints its own container over the modifier,
         // so the authored colour would reach the source and not the screen
         // (#14912).
+        // ...and keeps it when disabled: Material's default disabled colour
+        // is `onSurface` at 12% over a light surface, near-white on a dark app.
         assert!(
-            out.contains("ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF87171))"),
+            out.contains(
+                "ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF87171), disabledBackgroundColor = Color(0xFFF87171))"
+            ),
             "got:\n{out}"
         );
+        // ...and no Material drop shadow: the look is authored.
+        assert!(out.contains("elevation = null,"), "got:\n{out}");
         assert!(
             !out.contains(".background(Color(0xFFF87171))"),
             "the inert modifier background must be removed, not left beside \
@@ -10634,9 +11224,13 @@ mod tests {
         // The state-layer chain is MOVED into `buttonColors` verbatim, not
         // re-derived, so this asserts the same expression it always did --
         // only the channel carrying it changed (#14912).
-        assert!(out.contains(
-            "ButtonDefaults.buttonColors(backgroundColor = if (_mosaicTruthy(( selected ))) Color(0xFFFFFFFF) else if (size == \"compact\") Color(0xFFFFAA00) else if (variant == \"danger\") Color(0xFFDC3545) else Color(0xFF111111))"
-        ), "model slot order or conditional style is wrong:\n{out}");
+        let chain = "if (_mosaicTruthy(( selected ))) Color(0xFFFFFFFF) else if (size == \"compact\") Color(0xFFFFAA00) else if (variant == \"danger\") Color(0xFFDC3545) else Color(0xFF111111)";
+        assert!(
+            out.contains(&format!(
+                "ButtonDefaults.buttonColors(backgroundColor = {chain}, disabledBackgroundColor = {chain})"
+            )),
+            "model slot order or conditional style is wrong:\n{out}"
+        );
         assert!(
             out.contains(".padding((if (size == \"compact\") 6 else 8).dp)"),
             "layered padding did not retain a Dp type:\n{out}"
@@ -10835,7 +11429,11 @@ mod tests {
         assert!(
             out.contains("keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),")
         );
-        assert!(out.contains("placeholder = { Text(text = \"20\") },"));
+        // `BasicTextField`, not Material's `TextField` (280x56dp minimum and
+        // its own container). A number's text is never empty, so the Material
+        // `placeholder` could never show; it is no longer emitted.
+        assert!(out.contains("BasicTextField("), "{out}");
+        assert!(!out.contains("placeholder ="), "{out}");
         assert!(out.contains("enabled = true,"));
     }
 
@@ -10999,7 +11597,9 @@ mod tests {
             .unwrap()
             .output;
         assert!(out.contains("import androidx.compose.material.Checkbox"));
-        assert!(out.contains("Row(modifier = Modifier.fillMaxWidth()) {"));
+        assert!(out.contains(
+            "Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {"
+        ), "the label is centred on the control:\n{out}");
         assert!(out.contains("Checkbox("));
         assert!(out.contains("checked = _mosaicTruthy(buryNewValue),"));
         assert!(out.contains(
@@ -11169,7 +11769,9 @@ mod tests {
             .unwrap()
             .output;
         assert!(out.contains("import androidx.compose.material.RadioButton"));
-        assert!(out.contains("Row(modifier = Modifier.fillMaxWidth()) {"));
+        assert!(out.contains(
+            "Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {"
+        ), "the label is centred on the control:\n{out}");
         assert!(out.contains("RadioButton("));
         assert!(out.contains("selected = _mosaicTruthy(suspendSelected),"));
         assert!(out

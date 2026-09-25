@@ -1,6 +1,9 @@
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.runSkikoComposeUiTest
 import java.io.File
@@ -49,7 +52,13 @@ class EngramScreenshots {
             val host = checkNotNull(MosaicRuntimeHost.load()) {
                 "standard Compose binding did not load the Engram Rust runtime"
             }
-            setContent { MosaicApp(host) }
+            // `MosaicApp` takes the start response since the standard binding
+            // began rendering from it; this harness still passed only the host
+            // and no longer compiled (it is not run in CI).
+            val initialResponse = checkNotNull(host.props()) {
+                "standard Compose binding returned no Engram startup props"
+            }
+            setContent { MosaicApp(host, initialResponse) }
             waitForIdle()
 
             fun shot(name: String) {
@@ -66,6 +75,17 @@ class EngramScreenshots {
             }
 
             shot("01-decks")
+
+            // Every screen, through the nav's own control. "Decks" is also the
+            // deck list's label, so each option is matched by the toolkit
+            // SegmentedControl's `segmented-option` tag as well as its label
+            // (the nav is the first SegmentedControl mount, so its parts keep
+            // the unsuffixed names).
+            listOf("Study", "Browse", "Add", "Stats", "Options").forEachIndexed { i, label ->
+                onNode(hasTestTag("segmented-option") and hasText(label)).performClick()
+                waitForIdle()
+                shot("0${i + 2}-${label.lowercase()}")
+            }
         }
     }
 }

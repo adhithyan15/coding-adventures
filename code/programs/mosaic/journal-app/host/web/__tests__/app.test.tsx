@@ -179,8 +179,10 @@ it("adds a journal, files new entries there and switches between journals", asyn
   await act(async () => button("Add").click());
   expect(field("New journal name").value).toBe("");
   expect(() => button("At home")).toThrow();
+  expect(container.textContent).toContain("No entries in this journal"); // J4h
   await write("Standup");
   expect(button("Standup")).toBeTruthy();
+  expect(container.textContent).not.toContain("No entries in this journal");
 
   await act(async () => button("Personal").click());
   expect(button("At home")).toBeTruthy();
@@ -188,6 +190,60 @@ it("adds a journal, files new entries there and switches between journals", asyn
   await act(async () => button("All journals").click());
   expect(button("At home")).toBeTruthy();
   expect(button("Standup")).toBeTruthy();
+});
+
+it("moves an entry to another journal from the editor's picker", async () => {
+  await mount(memoryStorage());
+  const field = (label: string) => container.querySelector(`input[aria-label="${label}"]`) as HTMLInputElement;
+  // The pane's switcher comes first in the DOM, so the editor's option is the last.
+  const pickerOption = (label: string) => {
+    const found = [...container.querySelectorAll("button")].filter(b => b.textContent === label);
+    if (found.length < 2) throw new Error(`no picker option "${label}"`);
+    return found[found.length - 1];
+  };
+  await act(async () => button("New entry").click());
+  await type(field("Title"), "At home");
+  await act(async () => button("Save").click());
+  const personal = () => [...container.querySelectorAll("button")].filter(b => b.textContent === "Personal");
+  expect(personal()).toHaveLength(1); // one journal: the pane's switcher only, no picker
+
+  await type(field("New journal name"), "Work");
+  await act(async () => button("Add").click());
+  await act(async () => button("All journals").click());
+  expect(personal()).toHaveLength(2);
+  await act(async () => button("At home").click());
+  await act(async () => pickerOption("Work").click());
+  await act(async () => button("Save").click());
+
+  await act(async () => pickerOption("Personal").click());
+  await act(async () => button("Cancel").click());
+  await act(async () => button("Personal").click());
+  expect(() => button("At home")).toThrow();
+  await act(async () => button("Work").click());
+  expect(button("At home")).toBeTruthy();
+});
+
+it("renames a journal, then deletes it and keeps its entries in Personal", async () => {
+  await mount(memoryStorage());
+  const field = (label: string) => container.querySelector(`input[aria-label="${label}"]`) as HTMLInputElement;
+  await type(field("New journal name"), "Work");
+  await act(async () => button("Add").click());
+  await act(async () => button("New entry").click());
+  await type(field("Title"), "Standup");
+  await act(async () => button("Save").click());
+  expect(() => button("Delete journal")).not.toThrow();
+
+  await type(field("New journal name"), "Office");
+  await act(async () => button("Rename").click());
+  expect(() => button("Work")).toThrow();
+  expect(button("Office")).toBeTruthy();
+
+  await act(async () => button("Delete journal").click());
+  expect(() => button("Office")).toThrow();
+  expect(button("Standup")).toBeTruthy(); // moved to Personal, shown under All journals
+  await act(async () => button("Personal").click());
+  expect(button("Standup")).toBeTruthy();
+  expect(() => button("Delete journal")).toThrow(); // Personal cannot be deleted
 });
 
 it("says why a bad date cannot be saved, then files the entry on the day typed", async () => {

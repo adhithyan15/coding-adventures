@@ -2,6 +2,24 @@
 
 ## 0.1.0 — unreleased
 
+- **Renaming and deleting a journal (J4i).** Under the *New journal* row, while
+  a journal is selected, a `journal-actions` row offers *Rename* (Add's
+  style; it uses the field's name) and *Delete journal* (in the draft
+  error's red; it moves the journal's entries to Personal). Personal is
+  never offered for deletion. New slots: `can-rename-journal`,
+  `can-delete-journal`. New events: `onRenameJournal` and `onDeleteJournal`
+  (the contract test counts 21).
+- **An empty journal (J4h).** Before, a selected journal with no entries left
+  the pane blank under the filters. Now a fourth `EmptyState` mount says "No
+  entries in this journal" (between "No entries match" and "No starred
+  entries" in the chain, so the starred state's parts are now `-m4`). New
+  slot: `journal-empty`.
+- **An entry's journal (J4g).** Above the Date field, when there is more than
+  one journal, a labelled *Journal* `SegmentedControl` (the third mount, so
+  the pane's options keep their part names) shows the draft's journal, and
+  Save files or moves the entry there. New slots: `draft-journal-options`,
+  `draft-journal-index`, `has-journals`. New event: `onDraftJournalChange`
+  (the contract test counts 19).
 - **Journals (J4f).** Under the tags, a second vertical `SegmentedControl`
   mount switches between "All journals" and each journal (after the tags, so
   the tag options keep their part names). Under it, a *New journal* field and

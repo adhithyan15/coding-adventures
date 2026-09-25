@@ -9,13 +9,15 @@ behaviour of its own:
 | part | component | package |
 | --- | --- | --- |
 | the timeline | `RecordList` (rows grouped by day) | `mosaic-pkg-toolkit` |
-| the first-run state, and "No entries match", "No starred entries" | `EmptyState` (mounted three times) | `mosaic-pkg-toolkit` |
+| the first-run state, and "No entries match", "No entries in this journal", "No starred entries" | `EmptyState` (mounted four times) | `mosaic-pkg-toolkit` |
 | search (J4a) | a `HostInput` and a *Clear* button above the timeline | kernel primitives |
 | stars (J4b) | *Star* above the editor, *Starred only* under the search field | kernel primitives |
 | on this day (J4c) | a second `RecordList`, above the timeline, of earlier years' entries on today's date | `mosaic-pkg-toolkit` |
 | tags (J4d) | a *Tags* field above the editor; a vertical `SegmentedControl` of the journal's tags as a filter | `mosaic-pkg-toolkit` |
 | an entry's day (J4e) | a *Date* field above Tags; a red line when Save refuses a draft | kernel primitives |
 | journals (J4f) | a second vertical `SegmentedControl` (All journals, then each journal), a *New journal* field and *Add* | `mosaic-pkg-toolkit` |
+| renaming and deleting a journal (J4i) | *Rename* and *Delete journal* under the *New journal* row while a journal is selected | kernel primitives |
+| an entry's journal (J4g) | a *Journal* `SegmentedControl` above Date, when there are several journals | `mosaic-pkg-toolkit` |
 | the editor | `DraftEditor` (title, body, Save / Delete / Cancel) | `mosaic-pkg-draft-editor` |
 
 The layout is a `HostNavigationSplit`: a **New entry** button, the search field

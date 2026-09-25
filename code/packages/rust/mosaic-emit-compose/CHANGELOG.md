@@ -1,5 +1,60 @@
 # Changelog
 
+## 2026-09-25 (choice labels)
+
+- **A labelled `HostCheckbox` / `HostRadio` centres its label on the control.** The emitter wraps a labelled checkbox or radio in its own `Row` with no vertical alignment, so the label sat at the top of Material's 48dp touch target, above the control's centre: Engram's "Suspend" / "Tag only" leech-action radios and Browse's "Reschedule reviews". The web's inline `<label>` sits level with its control. These emitter-built Rows now pass `verticalAlignment = Alignment.CenterVertically`. Authored Rows keep their defaults.
+  - Measured: across every Mosaic program only Engram's output changes (14 lines). Rendered: the Options and Browse labels are level with their controls in both themes, and the other Engram screens are byte-identical. 210 emitter tests pass.
+
+## 2026-09-24 (number inputs)
+
+- **`HostNumberInput` is a `BasicTextField`, like `HostInput`.** It lowered to Material's `TextField`, which enforces a 280×56dp minimum and paints its own filled container inside the part's border. On Engram's Deck options (found with the Engram screenshot harness):
+  - every number field was twice the height of the text fields;
+  - the five review-factor fields overflowed the panel and drew "Hard multiplier" and "Easy bonus" over each other;
+  - the leech row and the bury checkboxes were pushed out of the panel.
+
+  The part's style now owns the box, as for a text field. The field also takes the same width decisions (`fillMaxWidth()` outside a Row, a percentage's weight in one), because `HostNumberInput` joins `parts_filling_width` and `leaf_parts_row_weighted`. The Material `placeholder` is gone: a number's text is never empty, so it never showed.
+  - Rendered: Engram's Options fits the panel with every label visible, and Browse's Cards field is compact. The other Engram screens and every Trestle view are byte-identical. Native-complete (0) and Trestle's emitted-control contract pass.
+## 2026-09-25 (button elevation)
+
+- **A `HostButton` with an authored background casts no Material shadow.** Material's `Button` has a default elevation, so every styled button drew a drop shadow that no other backend draws: a web button casts none unless its style asks. The shadow was also the only visible edge of buttons authored as borderless. Trestle's task name, Edit, Delete and "+ Sub-project" (`background: transparent; border-width: 0`) read as boxed buttons on Compose, and on the web as plain clickable text. A button whose part authors a background now passes `elevation = null`. A part that authors `elevation` still gets its shadow, through `Modifier.shadow` in its own chain (UI41), and an unstyled button keeps Material's defaults.
+  - Rendered: Trestle (light and dark) and Engram (light). Borderless buttons now read as on the web, and bordered ones (Engram's nav options, `#dee2e6` 1px) show just their border. `TaskAppUiTest`, the emitted-control contract and native-complete (0) pass.
+
+## 2026-09-24 (disabled buttons)
+
+- **A disabled `HostButton` keeps its authored background.** `ButtonDefaults.buttonColors(backgroundColor = …)` sets only the enabled colour. A disabled button therefore fell back to Material's `disabledBackgroundColor`, `onSurface` at 12% over the light theme's surface, which is near-white. On Engram's dark Collection panel, "Delete note" and "Delete note type" rendered as blank pale pills while nothing was selected, found with the Engram screenshot harness (#15987). `disabledBackgroundColor` is now the same expression. That matches the web, where a disabled button keeps its authored background unless the package styles `state disabled`. Rendered: the two buttons show their crimson in Engram's Decks screen, the other five Engram screens and every Trestle view are byte-identical, and the emitter's 210 tests pass.
+## 2026-09-24 (wrap rows)
+
+- **A wrapping Row of fraction-width items stretches each line, as CSS does.** CSS lays `flex-wrap: wrap` out in lines, and `align-items` defaults to `stretch`, so every item on a line is as tall as the tallest. `FlowRow` leaves items at their own heights. In Calendar, the week with an event was ragged: the event's day ran about 55px below its neighbours, whose borders stopped at their 96px `min-height`. `fillMaxRowHeight()` cannot fix it, because it measures an item against the line's *remaining* width and so collapsed the cells into one line (see the lesson in `lessons.d`).
+  - Such a Row now lowers to `_MosaicWrapRow`, a file-private `Layout` emitted only when used. Each item takes `floor(rowWidth × fraction)` from its `_mosaicWrapItem(f)` parent data. Lines break on those widths. A line's height is its tallest item's `maxIntrinsicHeight`, and every item is measured once at `Constraints.fixed(width, lineHeight)`.
+  - It applies only where it is exactly right: a wrapping Row with no gap, `justify-content`, `align-items` or `text-align` of its own, whose children (through `For` / `If` / `Else`) are all containers with a percentage width below 100% and no `height`. Everything else keeps `FlowRow`.
+  - Measured: across every Mosaic program only Trestle's output changes, in Calendar. The rendered week shares one bottom border, and every other Trestle view is byte-identical. `TaskAppUiTest`, the emitted-control contract and native-complete (0) pass.
+
+## 2026-09-24 (text box)
+
+- **A `Text` wears its part's box.** The `Text` arm built the part's whole `ComposeStyle` but passed only its text style to `emit_text`. The modifier chain was thrown away: padding, background, rounded corners, size and border. Calendar's today badge (a 21px amber pill) was never drawn, and Trestle's "Up next" count and due-date pills were bare text. The drop reporter lowers the same properties through the container path, so it reported 0 degradations. Now the chain follows the width decision (`fillMaxWidth()` / `weight` / the UI59 floor, which comes first as it does for containers) and precedes the semantics. The previous semantics-first order is gone. The reporter's answer is now true, and a lesson records the gap.
+  - Measured before/after across every Mosaic program:
+    - Trestle changes on 57 lines: pills, padded labels, and the day-name row's padding.
+    - Engram changes on 172, across both of its generated files: 41 paddings, and a 56px width on each of two stat labels.
+    - Venture changes on 8 lines: the view-source panel gets its authored max width, height, background, border and padding, and the page title's modifiers are reordered.
+    - Journal and VisiCalc don't change.
+  - Verified: Trestle's dark renders (every view changes only by padding and pills), `TaskAppUiTest`, the emitted-control contract and native-complete (0) pass. Engram and Venture compile.
+  - `taskapp_native_control_contract.py`'s two error-text markers are now `Text(newTaskNameError, ` and `Text(newTaskDueError, `, because those texts now carry their `padding-left` modifier before `color`.
+
+## 2026-09-24 (text-align)
+
+- **A `Text`'s own `text-align` reaches its `Text` call.** Until now `text-align` was lowered only on containers, as content alignment. On a `Text` leaf it was ignored, and the drop wasn't reported. Calendar's day names stayed at the start of their now-weighted columns (#15968), while the web centres them. Now a `Text` part's base `text-align` becomes `textAlign = TextAlign.Start/Center/End`, and the `TextAlign` import is added only when used.
+  - On its own, `textAlign` aligns only within the `Text`'s box, which wraps its content. In a Row the box already has its share (`weight`). Outside a Row, a `center` or `end` text also gets `fillMaxWidth()`, as the stretched flex item it is on the web.
+  - A part that authors its own `width` / `min-width` / `max-width` never fills: Calendar's today badge is a 21px pill. Neither does a part used in a Row even once (the `parts_filling_width` rule), nor `start`.
+  - Measured before/after across every Mosaic program: Trestle changes on its 7 day names (now centred), Engram on 2 stat labels, and VisiCalc on its address label. Those last three sit in Rows under the width guard, so they get `textAlign` and no fill, and their layout doesn't move. Trestle's Calendar render changed, and every other view is byte-identical.
+  - Verified: `TaskAppUiTest` passes, the emitted-control contract passes, and the native-complete report shows 0 degradations. Engram and VisiCalc compile.
+  - Still open: `calendar-daynum-today`'s `width`, `height`, `background` and `border-radius` don't reach its `Text` at all, so today's pill isn't drawn, and that isn't reported either.
+
+## 2026-09-24 (row controls)
+
+- **A control's percentage width in a Row is its share of the Row.** Since #15968 a `Text` in a RowScope took `weight(f)` from a percentage width, but `HostInput`, `Input` and `HostButton` didn't. Their `width: 100%` fills only outside a Row, so in a Row it was dropped without a report. Journal's search field, beside *Clear*, stayed at its intrinsic ~120px in a 276px pane. The precomputed set (renamed `leaf_parts_row_weighted`) now covers the three controls, and their modifier chain starts with `.weight(f)`, unless the chain already decides the width (a `max-width`). A part used both in and out of a Row still gets neither the weight nor the fill.
+  - Measured before/after across every Mosaic program: Journal changes on 1 control (`search-input`) and Trestle on 4. In Trestle, the sidebar's project buttons now span the sidebar, the *New project* field takes what `+` leaves, and a task row's name takes the row's slack, pushing its due date and buttons to the row's end, as on the web. Engram, VisiCalc and the demos don't change.
+  - Verified: `TaskAppUiTest` passes, the emitted-control contract passes, and the native-complete report is still 0 degradations.
+
 ## 2026-09-24 (placeholders)
 
 - **A field's placeholder wears the field's text style, dimmed (#14798).** The `HostInput` placeholder `Text` took only a bound `font-size`. A field whose typed text was light (`TextStyle(color = …)`) therefore showed its placeholder in Material's black: in dark Trestle, "What needs doing?", "Due (optional)" and "New project" were black on #1a1714. The placeholder now takes the field's colour, size, weight and family, with the colour at 60% alpha (`(Color(…)).copy(alpha = 0.6f)`), as a browser draws `::placeholder`. An unstyled field keeps `Text(text = …)`. Rendered in dark Trestle. `TaskAppUiTest` passes, and Engram and Journal compile.

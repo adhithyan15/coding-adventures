@@ -1,6 +1,9 @@
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.toAwtImage
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
@@ -111,11 +114,13 @@ class JournalScreenshots {
             shot("09-draft-error")
 
             // Journals (J4f): add a Work journal (selected, so the lists
-            // start empty), write in it, then try a name already taken.
+            // start empty and say so, J4h), write in it, then try a name
+            // already taken.
             onNodeWithTag("journal-name-input").performTextInput("Work")
             waitForIdle()
             onNodeWithText("Add").performClick()
             waitForIdle()
+            shot("09a-empty-journal")
             onNodeWithText("New entry").performClick()
             waitForIdle()
             onNodeWithTag("draft-editor-title").performTextInput("Standup notes")
@@ -128,6 +133,26 @@ class JournalScreenshots {
             onNodeWithText("Add").performClick()
             waitForIdle()
             shot("11-journal-error")
+
+            // An entry's journal (J4g): the open entry is in Work; the
+            // editor's picker (the pane comes first, so its option is the
+            // last "Personal") moves it, and it leaves the Work list.
+            onAllNodes(hasText("Personal") and hasClickAction()).onLast().performClick()
+            waitForIdle()
+            onNodeWithText("Save").performClick()
+            waitForIdle()
+            shot("12-moved-to-personal")
+
+            // Renaming and deleting a journal (J4i): rename Work to Office,
+            // then delete it; its entries move to Personal.
+            onNodeWithTag("journal-name-input").performTextReplacement("Office")
+            waitForIdle()
+            onNodeWithText("Rename").performClick()
+            waitForIdle()
+            shot("13-renamed-journal")
+            onNodeWithText("Delete journal").performClick()
+            waitForIdle()
+            shot("14-deleted-journal")
         }
     }
 }

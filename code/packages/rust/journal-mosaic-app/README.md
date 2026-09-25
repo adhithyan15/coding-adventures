@@ -27,7 +27,7 @@ engine's state, and `dispatch` turns the package's events into engine commands.
 - **The editor holds a draft for a target** (a new entry, or an existing one).
   Typing only changes the draft, Save commits it, and Cancel reloads it.
 - **Unknown events and bad payloads are errors** that leave the app unchanged.
-- **Search, stars, On this day, tags, an entry's day and journals (J4a–J4f)**
+- **Search, stars, On this day, tags, an entry's day, journals and an entry's journal, an empty journal, and renaming and deleting a journal (J4a–J4i)**
   add slots and events on top of these; the spec lists them. The journal
   switcher, like the other filters, is a view and is not persisted, and new
   entries are filed in the selected journal (Personal under "All journals").

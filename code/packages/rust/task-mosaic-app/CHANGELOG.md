@@ -1,5 +1,29 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — Compose text wears its box
+
+- No code change here. On Compose a `Text` now wears its part's padding,
+  background, corners, size and border (`mosaic-emit-compose`). In the renders,
+  the "Up next" count and the due date are pills, labels have their padding,
+  and Calendar's today badge can be drawn. `TaskAppUiTest` still passes, and
+  the emitted-control contract's two error-text markers match the new call
+  shape.
+
+## [Unreleased] — Calendar day names centred on Compose
+
+- No code change here. On Compose a `Text`'s `text-align` is now lowered
+  (`mosaic-emit-compose`), so the Calendar view's Sun–Sat names are
+  centred over their columns as on the web. Only `03c-calendar` changes;
+  `TaskAppUiTest` still passes.
+
+## [Unreleased] — Compose rows share their width
+
+- No code change here. On Compose, a control's `width: 100%` in a Row is now
+  its share of the Row (`mosaic-emit-compose`). In the renders, the sidebar's
+  project buttons span the sidebar, *New project* takes what `+` leaves, and
+  a task row's name takes the row's slack, as on the web. `TaskAppUiTest`
+  still passes.
+
 ## [Unreleased] — the screenshot harness visits every view
 
 - `conformance/compose/TaskAppScreenshots.kt` now also renders Board, Sheet,

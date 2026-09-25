@@ -477,7 +477,84 @@ is later work.
 **Events:** `onSelectJournal { index }`, `onNewJournalNameChange { value }`,
 `onAddJournal`.
 
+## An entry's journal (J4g)
+
+The editor says which journal the draft belongs to, and Save can move it.
+The engine already has `MoveEntry`.
+
+**The picker.** Above the Date field, when there is more than one journal,
+the editor shows a *Journal* `SegmentedControl` (a third mount, after the
+pane's two). It lists each journal by name, in the pane's order but without
+"All journals", with the draft's journal selected. Choosing another option
+changes only the draft; choosing the selected one again does nothing.
+
+**The draft's journal.** `draft_journal` joins the draft (in the snapshot,
+`#[serde(default)]`, so older snapshots still load):
+- a new draft starts in the pane's selected journal, or Personal under "All
+  journals" (this replaces J4f's rule, and says the same thing);
+- opening an entry sets it to the entry's journal, and Cancel reloads it;
+- Save files a new entry there, and runs `MoveEntry` for an existing entry
+  whose journal changed. As with the date, the move is checked before
+  anything is written, so a refused Save writes nothing;
+- a draft whose journal no longer exists (a restored snapshot) falls back
+  to the entry's own journal, or Personal for a new draft.
+
+An entry moved out of the journal the pane is filtered to leaves the
+timeline but stays open in the editor, like unstarring under *Starred only*.
+
+**Slots:** `draft-journal-options` (`list<text>`), `draft-journal-index`
+(`number`), `has-journals` (`bool`, more than one journal).
+
+**Events:** `onDraftJournalChange { index }`.
+
+## An empty journal (J4h)
+
+A journal can be empty while others are not: a newly added one, or one
+whose entries were moved away. Until now the pane then showed nothing below
+the filters, as if the list had failed to load.
+
+A fourth `EmptyState` mount says so instead: "No entries in this journal",
+with "New entries you write while it is selected are filed here." It shows
+when a journal is selected, that journal has no entries, and there is no
+search (a search that finds nothing is `no-matches`, as before). The pane
+picks one empty state, in this order:
+
+1. `timeline-empty`: no entries in any journal ("No entries yet");
+2. `no-matches`: searching, and nothing matches;
+3. `journal-empty`: the selected journal has no entries;
+4. `no-starred`: *Starred only*, and nothing starred;
+5. otherwise the timeline.
+
+`journal-empty` comes before `no-starred` because it is the more accurate
+reason: with no entries there is nothing to star.
+
+**Slots:** `journal-empty` (`bool`).
+
+## Renaming and deleting a journal (J4i)
+
+The engine has `RenameJournal` and `DeleteJournal { move_entries_to }`.
+Under the *New journal* row, while a journal (not "All journals") is
+selected, a row offers **Rename** and **Delete journal**.
+
+**Rename** gives the selected journal the name in the *New journal* field,
+trimmed, and clears the field. A blank name does nothing. A name the engine
+refuses (a duplicate, too long, or several lines) is said in
+`journal-error`, the same words as for Add. Personal can be renamed; its id
+does not change.
+
+**Delete journal** removes the selected journal and **moves its entries to
+Personal**. It never deletes entries, so no confirmation is needed. The
+pane then shows "All journals", and a draft filed in the deleted journal
+falls back as J4g's `draft_journal()` already does. Personal itself cannot
+be deleted: restoring a snapshot requires it, so the button is not offered
+while Personal is selected.
+
+**Slots:** `can-rename-journal` (`bool`: a journal is selected),
+`can-delete-journal` (`bool`: a journal other than Personal is selected).
+
+**Events:** `onRenameJournal`, `onDeleteJournal`.
+
 ## Deferred
 
 The web host (J5c-2), launching on the remaining native lanes, packaging and release (J5); the markdown preview;
-(search J4a, stars J4b, on-this-day J4c, tags J4d, an entry's day J4e and journals J4f are above); moving an entry between journals; export (needs a host file-save effect on native hosts); importing the TypeScript app's entries.
+(search J4a, stars J4b, on-this-day J4c, tags J4d, an entry's day J4e and journals J4f an entry's journal J4g, an empty journal J4h and renaming and deleting a journal J4i are above); export (needs a host file-save effect on native hosts); importing the TypeScript app's entries.

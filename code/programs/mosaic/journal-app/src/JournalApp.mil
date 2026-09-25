@@ -67,6 +67,18 @@ component JournalApp {
   slot selected-journal-index : number ;
   slot new-journal-name : text ;
   slot journal-error : text ;
+  // An entry's journal (J4g): the editor's picker lists the journals (no
+  // "All journals"), the draft's selected; shown when there are several.
+  slot draft-journal-options : list<text> ;
+  slot draft-journal-index : number ;
+  slot has-journals : bool ;
+  // An empty journal (J4h): a journal is selected, it has no entries, and
+  // there is no search. Shown before no-starred, the lesser reason.
+  slot journal-empty : bool ;
+  // Renaming and deleting a journal (J4i): offered while one is selected;
+  // Personal can be renamed but not deleted (a restore requires it).
+  slot can-rename-journal : bool ;
+  slot can-delete-journal : bool ;
 
   emit onSelectEntry ( index : number ) ;
   emit onNewEntry ;
@@ -89,4 +101,10 @@ component JournalApp {
   emit onSelectJournal ( index : number ) ;
   emit onNewJournalNameChange ( value : text ) ;
   emit onAddJournal ;
+  // An option of draft-journal-options; Save files or moves the entry there.
+  emit onDraftJournalChange ( index : number ) ;
+  // Rename the selected journal to the New journal field's name; delete it,
+  // moving its entries to Personal.
+  emit onRenameJournal ;
+  emit onDeleteJournal ;
 }
