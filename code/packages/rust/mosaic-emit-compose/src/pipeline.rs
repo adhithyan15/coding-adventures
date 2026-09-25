@@ -7505,6 +7505,13 @@ fn emit_host_button(
     //
     // `backgroundColor` is Material 2's parameter name; this emitter targets
     // `androidx.compose.material`, not material3's `containerColor`.
+    //
+    // `disabledBackgroundColor` is the SAME expression. Left out, a disabled
+    // button fell back to Material's `onSurface` at 12% alpha over the light
+    // theme's surface -- near-white on Engram's dark Collection panel ("Delete
+    // note" / "Delete note type" while nothing is selected). On the web a
+    // disabled button keeps its authored background unless the package styles
+    // `state disabled`; so does this.
     let mut style = style;
     let button_colors = match style.as_mut().and_then(|s| {
         s.background
@@ -7514,7 +7521,7 @@ fn emit_host_button(
         Some((expr, segment, modifier)) => {
             *modifier = modifier.replace(&segment, "");
             Some(format!(
-                "ButtonDefaults.buttonColors(backgroundColor = {expr})"
+                "ButtonDefaults.buttonColors(backgroundColor = {expr}, disabledBackgroundColor = {expr})"
             ))
         }
         None => None,
@@ -11065,8 +11072,12 @@ mod tests {
         // modifier -- Material paints its own container over the modifier,
         // so the authored colour would reach the source and not the screen
         // (#14912).
+        // ...and keeps it when disabled: Material's default disabled colour
+        // is `onSurface` at 12% over a light surface, near-white on a dark app.
         assert!(
-            out.contains("ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF87171))"),
+            out.contains(
+                "ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF87171), disabledBackgroundColor = Color(0xFFF87171))"
+            ),
             "got:\n{out}"
         );
         assert!(
@@ -11190,9 +11201,13 @@ mod tests {
         // The state-layer chain is MOVED into `buttonColors` verbatim, not
         // re-derived, so this asserts the same expression it always did --
         // only the channel carrying it changed (#14912).
-        assert!(out.contains(
-            "ButtonDefaults.buttonColors(backgroundColor = if (_mosaicTruthy(( selected ))) Color(0xFFFFFFFF) else if (size == \"compact\") Color(0xFFFFAA00) else if (variant == \"danger\") Color(0xFFDC3545) else Color(0xFF111111))"
-        ), "model slot order or conditional style is wrong:\n{out}");
+        let chain = "if (_mosaicTruthy(( selected ))) Color(0xFFFFFFFF) else if (size == \"compact\") Color(0xFFFFAA00) else if (variant == \"danger\") Color(0xFFDC3545) else Color(0xFF111111)";
+        assert!(
+            out.contains(&format!(
+                "ButtonDefaults.buttonColors(backgroundColor = {chain}, disabledBackgroundColor = {chain})"
+            )),
+            "model slot order or conditional style is wrong:\n{out}"
+        );
         assert!(
             out.contains(".padding((if (size == \"compact\") 6 else 8).dp)"),
             "layered padding did not retain a Dp type:\n{out}"

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-09-24 (disabled buttons)
+
+- **A disabled `HostButton` keeps its authored background.** `ButtonDefaults.buttonColors(backgroundColor = …)` sets only the enabled colour. A disabled button therefore fell back to Material's `disabledBackgroundColor`, `onSurface` at 12% over the light theme's surface, which is near-white. On Engram's dark Collection panel, "Delete note" and "Delete note type" rendered as blank pale pills while nothing was selected, found with the Engram screenshot harness (#15987). `disabledBackgroundColor` is now the same expression. That matches the web, where a disabled button keeps its authored background unless the package styles `state disabled`. Rendered: the two buttons show their crimson in Engram's Decks screen, the other five Engram screens and every Trestle view are byte-identical, and the emitter's 210 tests pass.
 ## 2026-09-24 (wrap rows)
 
 - **A wrapping Row of fraction-width items stretches each line, as CSS does.** CSS lays `flex-wrap: wrap` out in lines, and `align-items` defaults to `stretch`, so every item on a line is as tall as the tallest. `FlowRow` leaves items at their own heights. In Calendar, the week with an event was ragged: the event's day ran about 55px below its neighbours, whose borders stopped at their 96px `min-height`. `fillMaxRowHeight()` cannot fix it, because it measures an item against the line's *remaining* width and so collapsed the cells into one line (see the lesson in `lessons.d`).
