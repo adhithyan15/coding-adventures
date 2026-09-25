@@ -1,7 +1,8 @@
 # UI87 — `files.save`, and file-effect handlers shared by every host
 
-**Status:** proposed (design note; nothing implemented). Needs a decision
-before Journal export (J4 of #14416) is built.
+**Status:** decided (revision 3, 2026-09-25); nothing implemented yet. The
+owner chose (A), generalised: **Mosaic provides shared per-OS host libraries**
+for platform capabilities, and no application carries its own copy (§7).
 
 **Builds on:**
 - [UI47 — host capability effects](UI47-host-capability-effects.md), which
@@ -106,6 +107,84 @@ reference implementation of `files.save`.
    also Markdown (readable, one-way)? Or Day One's JSON?
 4. **Order:** Compose and web first (the lanes Journal is driven on in CI),
    then the rest?
+
+## 7. Decided: shared per-OS host libraries (revision 3)
+
+The owner's answer to §5.1 goes further than (A): Mosaic should provide the
+operating-system capabilities itself, as libraries every generated app gets,
+with a generalised core, rather than per-app handler files. This section
+replaces §3.3 and answers §5.
+
+### 7.1 What ships where
+
+One **platform library per backend**, shipped by `mosaic-app-bindings`
+beside the runtime-binding template it already ships, and so copied into every
+generated project the same way:
+
+| backend | library | per-OS inside it |
+| --- | --- | --- |
+| Compose | `MosaicPlatformEffects.kt` | desktop: `java.awt.FileDialog` (the native macOS/Windows/GTK dialog, not Swing's); Android (UI89): `ActivityResultContracts` |
+| SwiftUI | `MosaicPlatformEffects.swift` | macOS: `NSOpenPanel` / `NSSavePanel`; iOS/iPadOS (UI89): `UIDocumentPickerViewController` |
+| Flutter | `mosaic_platform_effects.dart` | `file_selector` on desktop; share sheet for save on mobile |
+| Qt | `MosaicPlatformEffects.{h,cpp}` | `QFileDialog` (native where the platform has one) |
+| XAML | `MosaicPlatformEffects.cs` | `FileOpenPicker` / `FileSavePicker` |
+| web family | `mosaic-file-effects.mjs` (exists) | `showOpenFilePicker` / `showSaveFilePicker`, falling back to `<input type=file>` and a download link |
+
+The generalised core is the **contract**, not code: each library answers the
+same kinds with the same payloads, limits and results (§3.1, UI59), and each
+has a conformance test driving it through its host's test harness.
+
+### 7.2 Routing: which handler answers a kind
+
+The generated entry point already installs the package's `[host_effects]`
+handler (UI47 §5.5). It now also installs the platform library, and routes
+each effect by **kind**:
+
+1. a kind the package **claims** goes to the package handler;
+2. a **standard kind** (`files.open`, `files.save`, later more) goes to the
+   platform library;
+3. anything else completes as `failed { "message": "unsupported effect kind" }`,
+   so an unanswered `Await` never wedges snapshot and restore (UI47 §8.1).
+
+A package claims kinds in its manifest:
+
+```toml
+[host_effects]
+handlers = [
+  { backend = "qt", include = "engram_effects.h", install = "installEngramEffects",
+    kinds = ["importAnki", "exportAnki"] },
+]
+```
+
+A handler without `kinds` keeps today's meaning (it receives every
+non-standard kind), so existing packages build unchanged. A package that
+lists a standard kind overrides the platform library for it; that is the
+escape hatch, used deliberately and visibly.
+
+### 7.3 Answers to §5
+
+1. **(A), generalised** to per-OS host libraries (§7.1–7.2).
+2. **Naming:** `files.*` everywhere. The browser executor answers `files.*` and
+   keeps `file.*` as an alias until VisiCalc migrates. It also accepts UI59's
+   `accept` list alongside its `mimeType` + `extension` pair.
+3. **Export format:** Journal's own versioned JSON first, because it
+   round-trips with Import. Markdown (readable, one-way) is a later option.
+4. **Order:** Compose and web first, with Journal export as the first consumer;
+   then SwiftUI, Qt, XAML, Flutter; then mobile with UI89.
+
+### 7.4 Migration
+
+- `photo-picker-app` drops its four per-backend `files.open` handlers and uses
+  the platform library, becoming the second consumer.
+- Engram's `importAnki` / `exportAnki` can later become `files.open` /
+  `files.save` plus Rust-side parsing, which removes about 1,300 lines of
+  per-backend handler code. That is a separate change.
+
+### 7.5 First PRs
+
+1. `files.save` and routing in the Compose platform library, with a
+   conformance test; the browser executor answering `files.*`.
+2. Journal export (Compose and web) on top of it.
 
 ## 6. What this does not decide
 
