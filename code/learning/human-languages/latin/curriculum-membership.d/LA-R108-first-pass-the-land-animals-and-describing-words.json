@@ -1,0 +1,11 @@
+{
+  "id": "LA-R108-first-pass-the-land-animals-and-describing-words",
+  "pathSegment": "LA-PATH-108-VESTIS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-108-VESTIS",
+      "order": 5
+    }
+  ]
+}

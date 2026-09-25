@@ -1,0 +1,11 @@
+{
+  "id": "LA-C103-heri",
+  "pathSegment": "LA-PATH-103-ANNUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-103-ANNUS",
+      "order": 1
+    }
+  ]
+}

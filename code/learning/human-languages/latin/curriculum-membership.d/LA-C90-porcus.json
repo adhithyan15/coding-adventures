@@ -1,0 +1,11 @@
+{
+  "id": "LA-C90-porcus",
+  "pathSegment": "LA-PATH-90-ANIMALIA1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-90-ANIMALIA1",
+      "order": 4
+    }
+  ]
+}

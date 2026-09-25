@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:a2e3bc3fcde33f99",
+  "lessonIds": [
+    "LA-C73-puella",
+    "LA-C73-senex",
+    "LA-C73-regina",
+    "LA-C73-nauta",
+    "LA-C73-poeta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch73.txt",
+  "json": "latin/narration/ch73.json",
+  "textHash": "fnv1a64:03308438af1e8e52",
+  "jsonHash": "fnv1a64:249c52bbe1e6ce35",
+  "findings": []
+}

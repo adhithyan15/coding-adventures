@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:ae248384e646e73c",
+  "lessonIds": [
+    "LA-C90-equus",
+    "LA-C90-bos",
+    "LA-C90-ovis",
+    "LA-C90-capra",
+    "LA-C90-porcus"
+  ],
+  "tex": "latin/book/chapters/ch90-horse-ox-sheep-goat-pig.tex"
+}

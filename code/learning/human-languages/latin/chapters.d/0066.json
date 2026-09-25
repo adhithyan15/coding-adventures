@@ -1,0 +1,19 @@
+{
+  "chapter": 66,
+  "title": "Chest, Leg, Cheek, Nail, Healthy",
+  "label": "ch:la-chest-leg-cheek-nail-healthy",
+  "canDo": "I can name the chest, a leg, a cheek and a nail, and say healthy.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C66-sanus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: i can name the chest, a leg, a cheek and a nail, and say healthy.",
+    "assesses": [
+      "LA-LEX-C66-CORPUS4-03",
+      "LA-LEX-C66-CORPUS4-04",
+      "LA-LEX-C66-CORPUS4-05"
+    ]
+  }
+}

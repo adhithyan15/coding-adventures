@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:9d80fc4cfa8bff46",
+  "lessonIds": [
+    "LA-C97-facilis",
+    "LA-C97-difficilis",
+    "LA-C97-carus",
+    "LA-C97-fortis",
+    "LA-C97-sapiens"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch97.txt",
+  "json": "latin/narration/ch97.json",
+  "textHash": "fnv1a64:f4fbf47e28f8b657",
+  "jsonHash": "fnv1a64:cdae2d67220e6544",
+  "findings": []
+}

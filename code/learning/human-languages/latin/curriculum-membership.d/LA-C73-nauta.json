@@ -1,0 +1,11 @@
+{
+  "id": "LA-C73-nauta",
+  "pathSegment": "LA-PATH-73-HOMINES2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-73-HOMINES2",
+      "order": 3
+    }
+  ]
+}

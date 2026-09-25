@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:249abf75099def26",
+  "lessonIds": [
+    "LA-C102-procul",
+    "LA-C102-supra",
+    "LA-C102-infra",
+    "LA-C102-intra",
+    "LA-C102-extra"
+  ],
+  "tex": "latin/book/chapters/ch102-far-above-below-inside-outside.tex"
+}

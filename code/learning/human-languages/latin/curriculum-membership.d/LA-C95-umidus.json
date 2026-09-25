@@ -1,0 +1,11 @@
+{
+  "id": "LA-C95-umidus",
+  "pathSegment": "LA-PATH-95-CALIDUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-95-CALIDUS",
+      "order": 3
+    }
+  ]
+}

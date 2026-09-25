@@ -1,0 +1,11 @@
+{
+  "id": "LA-C64-cor",
+  "pathSegment": "LA-PATH-64-CORPUS2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-64-CORPUS2",
+      "order": 3
+    }
+  ]
+}

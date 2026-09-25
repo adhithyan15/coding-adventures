@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:46c37aa2d79a9959",
+  "lessonIds": [
+    "LA-C71-maritus",
+    "LA-C71-uxor",
+    "LA-C71-liberi",
+    "LA-C71-infans",
+    "LA-C71-patruus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch71.txt",
+  "json": "latin/narration/ch71.json",
+  "textHash": "fnv1a64:3fb240bbc22a35bc",
+  "jsonHash": "fnv1a64:e192c67609ca7f27",
+  "findings": []
+}

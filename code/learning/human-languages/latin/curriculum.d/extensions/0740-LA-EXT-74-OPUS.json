@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-74-OPUS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a citizen, a cook, a merchant, a farmer and a field.",
+  "prerequisites": []
+}

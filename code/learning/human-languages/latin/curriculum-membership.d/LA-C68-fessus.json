@@ -1,0 +1,11 @@
+{
+  "id": "LA-C68-fessus",
+  "pathSegment": "LA-PATH-68-AEGER",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-68-AEGER",
+      "order": 1
+    }
+  ]
+}

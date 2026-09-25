@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:3ce2a4eda2a7a1ec",
+  "lessonIds": [
+    "LA-C64-collum",
+    "LA-C64-umerus",
+    "LA-C64-genu",
+    "LA-C64-cor",
+    "LA-C64-sanguis"
+  ],
+  "tex": "latin/book/chapters/ch64-neck-shoulder-knee-heart.tex"
+}

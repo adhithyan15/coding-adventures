@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C97-sapiens",
+    "language": "latin",
+    "chapter": 97,
+    "sequence": 3500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab60c2a2f71b5c38"
+  },
+  "findings": []
+}

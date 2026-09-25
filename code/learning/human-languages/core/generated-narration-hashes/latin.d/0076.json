@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:44ff94c4c27b82d6",
+  "lessonIds": [
+    "LA-C76-lavo",
+    "LA-C76-coquo",
+    "LA-C76-vendo",
+    "LA-C76-nato",
+    "LA-C76-voco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch76.txt",
+  "json": "latin/narration/ch76.json",
+  "textHash": "fnv1a64:6afece5434d96c88",
+  "jsonHash": "fnv1a64:f30252f3e9fd0e12",
+  "findings": []
+}

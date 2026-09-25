@@ -1,0 +1,11 @@
+{
+  "id": "LA-C64-umerus",
+  "pathSegment": "LA-PATH-64-CORPUS2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-64-CORPUS2",
+      "order": 1
+    }
+  ]
+}

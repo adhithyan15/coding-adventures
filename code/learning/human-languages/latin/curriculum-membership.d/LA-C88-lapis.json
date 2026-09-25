@@ -1,0 +1,11 @@
+{
+  "id": "LA-C88-lapis",
+  "pathSegment": "LA-PATH-88-TERRA",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-88-TERRA",
+      "order": 0
+    }
+  ]
+}

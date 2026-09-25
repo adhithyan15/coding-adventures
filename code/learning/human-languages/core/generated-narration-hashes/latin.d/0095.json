@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:964c95d0fe94f575",
+  "lessonIds": [
+    "LA-C95-calidus",
+    "LA-C95-frigidus",
+    "LA-C95-siccus",
+    "LA-C95-umidus",
+    "LA-C95-dulcis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch95.txt",
+  "json": "latin/narration/ch95.json",
+  "textHash": "fnv1a64:188fe6d488669f13",
+  "jsonHash": "fnv1a64:e1e2592ae949ebd1",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Wash, Cook, Sell, Swim, Call",
+  "label": "ch:la-wash-cook-sell-swim-call",
+  "canDo": "I can say to wash, to cook, to sell, to swim and to call.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C76-voco",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can say to wash, to cook, to sell, to swim and to call.",
+    "assesses": [
+      "LA-LEX-C76-VERBA2-03",
+      "LA-LEX-C76-VERBA2-04",
+      "LA-LEX-C76-VERBA2-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C63-nasus",
+  "pathSegment": "LA-PATH-63-CORPUS1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-63-CORPUS1",
+      "order": 4
+    }
+  ]
+}

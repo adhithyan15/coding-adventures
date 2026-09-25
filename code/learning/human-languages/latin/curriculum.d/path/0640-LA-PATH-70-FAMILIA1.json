@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-70-FAMILIA1",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "LA-EXT-70-FAMILIA1"
+  ],
+  "after": []
+}

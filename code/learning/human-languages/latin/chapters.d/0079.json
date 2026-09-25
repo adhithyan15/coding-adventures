@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "Food and Meals",
+  "label": "ch:la-food-and-meals",
+  "canDo": "I can name food, dinner, lunch, breakfast and meat.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "LA-C79-caro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can name food, dinner, lunch, breakfast and meat.",
+    "assesses": [
+      "LA-LEX-C79-CIBUS1-03",
+      "LA-LEX-C79-CIBUS1-04",
+      "LA-LEX-C79-CIBUS1-05"
+    ]
+  }
+}

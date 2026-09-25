@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:f4b8c9b24134c965",
+  "lessonIds": [
+    "LA-C63-bracchium",
+    "LA-C63-digitus",
+    "LA-C63-dens",
+    "LA-C63-lingua",
+    "LA-C63-nasus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch63.txt",
+  "json": "latin/narration/ch63.json",
+  "textHash": "fnv1a64:8f061c67b72cba44",
+  "jsonHash": "fnv1a64:e23d92c747c139a6",
+  "findings": []
+}

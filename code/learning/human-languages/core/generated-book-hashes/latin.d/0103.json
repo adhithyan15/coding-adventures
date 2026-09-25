@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:9e9ce0885d77121d",
+  "lessonIds": [
+    "LA-C103-hodie",
+    "LA-C103-heri",
+    "LA-C103-annus",
+    "LA-C103-mensis",
+    "LA-C103-aurora"
+  ],
+  "tex": "latin/book/chapters/ch103-today-yesterday-year-month-dawn.tex"
+}

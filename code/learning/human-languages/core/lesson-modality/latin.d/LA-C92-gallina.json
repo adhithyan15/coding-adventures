@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C92-gallina",
+    "language": "latin",
+    "chapter": 92,
+    "sequence": 3220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d79a347ac2efa15"
+  },
+  "findings": []
+}

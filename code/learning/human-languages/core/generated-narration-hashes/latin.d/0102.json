@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:c92dce8f29259c1c",
+  "lessonIds": [
+    "LA-C102-procul",
+    "LA-C102-supra",
+    "LA-C102-infra",
+    "LA-C102-intra",
+    "LA-C102-extra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch102.txt",
+  "json": "latin/narration/ch102.json",
+  "textHash": "fnv1a64:c250cba80f6fcb6b",
+  "jsonHash": "fnv1a64:5dc5c5d5dd3f6f7e",
+  "findings": []
+}
