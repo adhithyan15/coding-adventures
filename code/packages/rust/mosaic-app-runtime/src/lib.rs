@@ -597,10 +597,13 @@ impl<A: MosaicApp> MosaicRuntime<A> {
             .app
             .environment_changed(environment)
             .map_err(RuntimeError::Application)?;
-        self.environment = environment;
+        // Committed with the sequence and revision, never before a fallible
+        // step: a reaction with invalid effects poisons the runtime without
+        // moving what it reports.
         match reaction {
             Some(app_update) => {
                 self.accept_effects(&app_update)?;
+                self.environment = environment;
                 self.state = RuntimeState::Running {
                     last_sequence: sequence,
                     revision: next_revision,
@@ -608,6 +611,7 @@ impl<A: MosaicApp> MosaicRuntime<A> {
                 Ok(Update::from_app(self.protocol_version, next_revision, app_update))
             }
             None => {
+                self.environment = environment;
                 self.state = RuntimeState::Running {
                     last_sequence: sequence,
                     revision,
