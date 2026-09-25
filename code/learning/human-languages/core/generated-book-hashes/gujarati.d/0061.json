@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:6e02995384f529f1",
+  "lessonIds": [
+    "GU-C61-plate",
+    "GU-C61-bowl",
+    "GU-C61-spoon",
+    "GU-C61-cup",
+    "GU-C61-pot"
+  ],
+  "tex": "gujarati/book/chapters/ch61-plate-bowl-and-spoon.tex"
+}

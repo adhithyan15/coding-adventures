@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C73-new",
+    "language": "gujarati",
+    "chapter": 73,
+    "sequence": 3720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:459aaf1ae8f896e7"
+  },
+  "findings": []
+}

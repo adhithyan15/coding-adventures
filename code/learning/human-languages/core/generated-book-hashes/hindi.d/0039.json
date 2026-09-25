@@ -1,12 +1,13 @@
 {
   "language": "hindi",
   "chapter": 39,
-  "sourceHash": "fnv1a64:68a9d50f44aeee20",
+  "sourceHash": "fnv1a64:c68655a2b2fa010f",
   "lessonIds": [
     "HI-C39-dost",
     "HI-C39-baccha",
     "HI-C39-aadmi",
-    "HI-C39-aurat"
+    "HI-C39-aurat",
+    "HI-S135-letter-au"
   ],
   "tex": "hindi/book/chapters/ch39-people-around-you.tex"
 }

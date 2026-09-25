@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:5169a276f790670e",
+  "lessonIds": [
+    "GU-C52-kaka",
+    "GU-C52-kaki",
+    "GU-C52-mama",
+    "GU-C52-mami",
+    "GU-C52-husband"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch52.txt",
+  "json": "gujarati/narration/ch52.json",
+  "textHash": "fnv1a64:f39e7eab2bd8cf58",
+  "jsonHash": "fnv1a64:0c48957614ff1273",
+  "findings": []
+}

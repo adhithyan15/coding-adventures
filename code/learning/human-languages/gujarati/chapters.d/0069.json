@@ -1,0 +1,19 @@
+{
+  "chapter": 69,
+  "title": "Things That Shine, Fly and Swim",
+  "label": "ch:gu-things-that-shine-fly-and-swim",
+  "canDo": "I can name a star, a parrot, a peacock, a sparrow and a fish.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C69-fish",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 69: i can name a star, a parrot, a peacock, a sparrow and a fish.",
+    "assesses": [
+      "GU-LEX-C69-SKY-03",
+      "GU-LEX-C69-SKY-04",
+      "GU-LEX-C69-SKY-05"
+    ]
+  }
+}

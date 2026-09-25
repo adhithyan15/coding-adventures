@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-57-MARKET",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "GU-EXT-57-MARKET"
+  ],
+  "after": []
+}

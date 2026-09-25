@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C64-stone",
+    "language": "gujarati",
+    "chapter": 64,
+    "sequence": 3280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5cb21090b9d8dc9"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Cow, Buffalo and Goat",
+  "label": "ch:gu-cow-buffalo-and-goat",
+  "canDo": "I can name a cow, a buffalo, a goat, a dog and a mouse.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C67-mouse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can name a cow, a buffalo, a goat, a dog and a mouse.",
+    "assesses": [
+      "GU-LEX-C67-ANIMALS1-03",
+      "GU-LEX-C67-ANIMALS1-04",
+      "GU-LEX-C67-ANIMALS1-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C51-mother",
+  "pathSegment": "GU-PATH-51-FAMILY1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-51-FAMILY1",
+      "order": 1
+    }
+  ]
+}

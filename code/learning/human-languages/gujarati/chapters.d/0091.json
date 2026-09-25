@@ -1,0 +1,19 @@
+{
+  "chapter": 91,
+  "title": "Welcome, Congratulations, Sorry",
+  "label": "ch:gu-welcome-congratulations-sorry",
+  "canDo": "I can say welcome, congratulations and good wishes, apologise, and say okay.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GU-R91-second-pass-time-numbers-town-and-people",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 91: i can say welcome, congratulations and good wishes, apologise, and say okay.",
+    "assesses": [
+      "GU-LEX-C91-COURTESY-03",
+      "GU-LEX-C91-COURTESY-04",
+      "GU-LEX-C91-COURTESY-05"
+    ]
+  }
+}

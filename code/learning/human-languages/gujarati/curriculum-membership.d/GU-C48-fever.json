@@ -1,0 +1,11 @@
+{
+  "id": "GU-C48-fever",
+  "pathSegment": "GU-PATH-48-BODY3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-48-BODY3",
+      "order": 3
+    }
+  ]
+}

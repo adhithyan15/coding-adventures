@@ -1,0 +1,19 @@
+{
+  "chapter": 77,
+  "title": "Always, Sometimes, Now, Later",
+  "label": "ch:gu-always-sometimes-now-later",
+  "canDo": "I can say always, sometimes, now, later and before.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "GU-C77-before",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 77: i can say always, sometimes, now, later and before.",
+    "assesses": [
+      "GU-LEX-C77-WHEN-03",
+      "GU-LEX-C77-WHEN-04",
+      "GU-LEX-C77-WHEN-05"
+    ]
+  }
+}

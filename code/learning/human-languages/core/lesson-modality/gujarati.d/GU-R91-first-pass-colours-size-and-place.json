@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-R91-first-pass-colours-size-and-place",
+    "language": "gujarati",
+    "chapter": 91,
+    "sequence": 4660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17491e4dcfc48837"
+  },
+  "findings": []
+}

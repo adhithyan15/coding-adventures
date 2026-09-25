@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-S147-letter-na-retroflex
 spine_node: SPINE-MEET-GREET
-sequence: 975
+sequence: 1641
 delivery: script
-chapter: 36
+chapter: 50
 type: writing
 headword: "ण"
 gloss: the single character ण — the last consonant in the book that nobody had drawn
@@ -35,6 +35,8 @@ reviews_of: [HI-S146-letter-va]
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-146] -->
+
+[PAUSE 1s] You have said **प्रणाम** (*praṇām*). The letter in its middle, before the **ा**, is the one this lesson writes.
 
 [PAUSE 1s] Before the new one: **व** — which letter shares its loop?
 

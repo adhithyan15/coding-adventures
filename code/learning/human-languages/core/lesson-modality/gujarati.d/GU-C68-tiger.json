@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C68-tiger",
+    "language": "gujarati",
+    "chapter": 68,
+    "sequence": 3440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15a459f3a748091d"
+  },
+  "findings": []
+}

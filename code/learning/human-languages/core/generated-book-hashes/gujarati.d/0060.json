@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:290f6237cf5947a3",
+  "lessonIds": [
+    "GU-C60-chilli",
+    "GU-C60-salt",
+    "GU-C60-thepla",
+    "GU-C60-jalebi",
+    "GU-C60-puri"
+  ],
+  "tex": "gujarati/book/chapters/ch60-salt-chilli-and-something-sweet.tex"
+}

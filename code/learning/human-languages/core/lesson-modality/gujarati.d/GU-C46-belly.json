@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C46-belly",
+    "language": "gujarati",
+    "chapter": 46,
+    "sequence": 2360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86a7119b52044d94"
+  },
+  "findings": []
+}

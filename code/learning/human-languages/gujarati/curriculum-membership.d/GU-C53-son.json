@@ -1,0 +1,11 @@
+{
+  "id": "GU-C53-son",
+  "pathSegment": "GU-PATH-53-FAMILY3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-53-FAMILY3",
+      "order": 1
+    }
+  ]
+}

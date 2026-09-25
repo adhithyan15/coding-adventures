@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:3284d2832d45606c",
+  "lessonIds": [
+    "GU-C80-hour",
+    "GU-C80-minute",
+    "GU-C80-holiday",
+    "GU-C80-festival",
+    "GU-C80-holi"
+  ],
+  "tex": "gujarati/book/chapters/ch80-hours-minutes-and-holidays.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:23e1eb6b219e371e",
+  "lessonIds": [
+    "GU-C60-chilli",
+    "GU-C60-salt",
+    "GU-C60-thepla",
+    "GU-C60-jalebi",
+    "GU-C60-puri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch60.txt",
+  "json": "gujarati/narration/ch60.json",
+  "textHash": "fnv1a64:5bb093deb6c7ee19",
+  "jsonHash": "fnv1a64:fe7373bd0d50f75f",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "Bed, Table, Fan and Lock",
+  "label": "ch:gu-bed-table-fan-and-lock",
+  "canDo": "I can name a bed, a cot, a table, a fan and a lock.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "GU-C62-lock",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: i can name a bed, a cot, a table, a fan and a lock.",
+    "assesses": [
+      "GU-LEX-C62-FURNITURE-03",
+      "GU-LEX-C62-FURNITURE-04",
+      "GU-LEX-C62-FURNITURE-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C86-phone",
+  "pathSegment": "GU-PATH-86-JOURNEY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-86-JOURNEY",
+      "order": 3
+    }
+  ]
+}

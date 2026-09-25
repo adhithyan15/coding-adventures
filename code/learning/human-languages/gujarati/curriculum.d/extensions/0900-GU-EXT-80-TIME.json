@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-80-TIME",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an hour, a minute, a holiday, a festival and Holi.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:ebb7102221a6c44a",
+  "lessonIds": [
+    "GU-C48-knee",
+    "GU-C48-heart",
+    "GU-C48-blood",
+    "GU-C48-fever",
+    "GU-C48-cough"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch48.txt",
+  "json": "gujarati/narration/ch48.json",
+  "textHash": "fnv1a64:3e0c828ec89559fc",
+  "jsonHash": "fnv1a64:153e466c472f74ae",
+  "findings": []
+}

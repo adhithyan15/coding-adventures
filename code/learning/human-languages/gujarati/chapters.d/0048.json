@@ -1,0 +1,19 @@
+{
+  "chapter": 48,
+  "title": "Knee, Heart and a Fever",
+  "label": "ch:gu-knee-heart-and-a-fever",
+  "canDo": "I can name the knee, the heart and blood, and say I have a fever or a cough.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GU-C48-cough",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 48: i can name the knee, the heart and blood, and say I have a fever or a cough.",
+    "assesses": [
+      "GU-LEX-C48-BODY3-03",
+      "GU-LEX-C48-BODY3-04",
+      "GU-LEX-C48-BODY3-05"
+    ]
+  }
+}

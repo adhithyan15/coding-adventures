@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C66-ice",
+    "language": "gujarati",
+    "chapter": 66,
+    "sequence": 3370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6982b989c5585f17"
+  },
+  "findings": []
+}

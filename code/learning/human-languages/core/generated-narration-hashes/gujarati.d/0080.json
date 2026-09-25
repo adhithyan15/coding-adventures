@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:bfadd8b774059bd6",
+  "lessonIds": [
+    "GU-C80-hour",
+    "GU-C80-minute",
+    "GU-C80-holiday",
+    "GU-C80-festival",
+    "GU-C80-holi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch80.txt",
+  "json": "gujarati/narration/ch80.json",
+  "textHash": "fnv1a64:464c5cde3b166d74",
+  "jsonHash": "fnv1a64:e7da91ee7567411f",
+  "findings": []
+}

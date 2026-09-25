@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:194d9fe2a21db0b3",
+  "lessonIds": [
+    "GU-C64-flower",
+    "GU-C64-leaf",
+    "GU-C64-mountain",
+    "GU-C64-forest",
+    "GU-C64-stone"
+  ],
+  "tex": "gujarati/book/chapters/ch64-flower-mountain-and-forest.tex"
+}

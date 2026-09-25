@@ -1,0 +1,19 @@
+{
+  "chapter": 49,
+  "title": "Pain, Medicine and Rest",
+  "label": "ch:gu-pain-medicine-and-rest",
+  "canDo": "I can talk about pain, medicine and rest, and say I am hungry or thirsty.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GU-C49-thirst",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 49: i can talk about pain, medicine and rest, and say I am hungry or thirsty.",
+    "assesses": [
+      "GU-LEX-C49-CARE-03",
+      "GU-LEX-C49-CARE-04",
+      "GU-LEX-C49-CARE-05"
+    ]
+  }
+}
