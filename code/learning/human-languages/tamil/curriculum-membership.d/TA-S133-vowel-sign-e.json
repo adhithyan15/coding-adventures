@@ -1,0 +1,11 @@
+{
+  "id": "TA-S133-vowel-sign-e",
+  "pathSegment": "TA-PATH-110-LETTERS-YOU",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-110-LETTERS-YOU",
+      "order": 3
+    }
+  ]
+}

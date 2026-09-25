@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S132-vowel-sign-ii",
+    "language": "tamil",
+    "chapter": 110,
+    "sequence": 4720,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ac01235d377bce25",
+    "detachableSegments": [
+      "Script you'll notice: ◌ீ",
+      "Writing: ◌ீ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

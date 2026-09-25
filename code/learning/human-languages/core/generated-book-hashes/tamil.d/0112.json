@@ -1,0 +1,14 @@
+{
+  "language": "tamil",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:d21cf6aa4d3f2946",
+  "lessonIds": [
+    "TA-S137-letter-nya",
+    "TA-S138-letter-uu",
+    "TA-S139-letter-o",
+    "TA-S140-letter-ssa",
+    "TA-R112-letters-first-pass",
+    "TA-R112-letters-second-pass"
+  ],
+  "tex": "tamil/book/chapters/ch112-letters-from-days-towns-gladness.tex"
+}

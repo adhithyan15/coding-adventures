@@ -176,15 +176,17 @@ describe("the real corpus", () => {
   );
 
   it("draws a filmstrip for every Tamil letter lesson whose letter has a cited ductus", () => {
-    // 21 lessons, 20 letters (20 lessons / 19 letters on the first rollout; the
-    // Script-block fallback added one lesson for one more letter). வ has both TA-S01-va and the guided copy TA-W00, and
+    // 30 lessons, 29 letters (20 lessons / 19 letters on the first rollout; the
+    // Script-block fallback added one lesson for one more letter; chapters
+    // 109-112 added nine cited letters the reader had read in words since
+    // chapter 1 but never written). வ has both TA-S01-va and the guided copy TA-W00, and
     // the ledger draws the letter once. A letter lesson
     // whose glyph has no cited ductus (vowel signs, the pulli) is a candidate
     // that is not drawn; citing its stroke order is what moves this number,
     // never an edit here alone.
     const tamil = targets.filter((target) => target.lessonId.startsWith("TA-"));
-    expect(tamil).toHaveLength(21);
-    expect(new Set(tamil.map((target) => target.glyph)).size).toBe(20);
+    expect(tamil).toHaveLength(30);
+    expect(new Set(tamil.map((target) => target.glyph)).size).toBe(29);
   });
 
   it("draws every switched-on track exactly the letters its ductus cites", () => {
@@ -212,7 +214,7 @@ describe("the real corpus", () => {
       MW: 32,
       RU: 18,
       SA: 39,
-      TA: 21,
+      TA: 30,
       TE: 9,
       UR: 12,
       ZH: 58,

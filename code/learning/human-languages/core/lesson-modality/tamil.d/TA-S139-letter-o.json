@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S139-letter-o",
+    "language": "tamil",
+    "chapter": 112,
+    "sequence": 4790,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:830c9c3f9e85b6ff",
+    "detachableSegments": [
+      "Script you'll notice: ஒ",
+      "Writing: ஒ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

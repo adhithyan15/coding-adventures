@@ -1,0 +1,11 @@
+{
+  "id": "TA-S138-letter-uu",
+  "pathSegment": "TA-PATH-112-LETTERS-LAST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-112-LETTERS-LAST",
+      "order": 1
+    }
+  ]
+}

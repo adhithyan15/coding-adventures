@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S127-letter-i",
+    "language": "tamil",
+    "chapter": 109,
+    "sequence": 4670,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:920d87e0a9993b96",
+    "detachableSegments": [
+      "Script you'll notice: இ",
+      "Writing: இ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}
