@@ -2774,6 +2774,7 @@ fn build_package_inner(
                 host_asset_dependencies: &manifest.host_assets.dependencies,
                 host_effects: &manifest.host_effects,
                 initial_window_size: manifest.app.initial_window_size.as_ref(),
+                layouts: &manifest.app.layouts,
             })?;
             artifacts.extend(shell_artifacts);
         }
@@ -3516,6 +3517,8 @@ struct ProjectShellOptions<'a> {
     /// Optional application-owned initial desktop window dimensions. Browser
     /// and mobile shells deliberately ignore this project-shell metadata.
     initial_window_size: Option<&'a WindowSize>,
+    /// `[[app.layouts]]` (UI48 §7.2).
+    layouts: &'a [mosaic_package_manifest::layouts::LayoutRule],
 }
 
 fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, BuildError> {
@@ -3534,6 +3537,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         host_asset_dependencies,
         host_effects,
         initial_window_size,
+        layouts,
     } = options;
     // Re-read the triple. This duplicates `compile_one_component`'s
     // file-loading logic; we accept the redundancy because the shell
@@ -3967,9 +3971,11 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             }
         }
         Backend::SwiftUI => {
+            let layout_variants = swiftui_layout_choices(src_dir, component, layouts)?;
             let sw_opts = mosaic_emit_swiftui::pipeline::EmitOptions {
                 emit_project: true,
                 require_runtime: project_shell_requires_runtime(profile, runtime_library),
+                layout_variants: layout_variants.clone(),
                 ..Default::default()
             };
             let r = mosaic_emit_swiftui::pipeline::from_pipeline_with_options(
@@ -4055,6 +4061,14 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                         backend_dir.join(format!("Sources/App/{exported_component}.swift"));
                     write_file(&component_nested, component_source.as_bytes())?;
                     written.push(component_nested);
+                }
+                // And the root's layout variants the shell can switch to.
+                for choice in &layout_variants {
+                    let file = format!("{component}.{}.swift", choice.variant);
+                    let source = read_to_string(&backend_dir.join(&file))?;
+                    let nested = backend_dir.join("Sources/App").join(&file);
+                    write_file(&nested, source.as_bytes())?;
+                    written.push(nested);
                 }
             }
         }
@@ -4235,6 +4249,41 @@ fn xaml_main_with_initial_window_size(
         size.width, size.height
     );
     replace_unique_generated_statement(generated, initialize, &resized, component, Backend::Xaml)
+}
+
+/// The layout variants a SwiftUI shell switches between (UI48 §7.2): the
+/// package's `[[app.layouts]]` rules, or the conventional ones for the
+/// variants the root component has. A rule for a variant with no
+/// `<Component>.<variant>.mll` is an error, not a silently dead rule.
+fn swiftui_layout_choices(
+    src_dir: &Path,
+    component: &str,
+    declared: &[mosaic_package_manifest::layouts::LayoutRule],
+) -> Result<Vec<mosaic_emit_swiftui::pipeline::LayoutChoice>, BuildError> {
+    let variants: Vec<String> = discover_variants(src_dir, component)?
+        .into_iter()
+        .flatten()
+        .collect();
+    let rules = mosaic_package_manifest::layouts::effective_layout_rules(declared, &variants);
+    rules
+        .into_iter()
+        .map(|rule| {
+            if !variants.contains(&rule.variant) {
+                return Err(BuildError::Io(format!(
+                    "`[[app.layouts]]` selects variant `{}`, but {component} has no {component}.{}.mll",
+                    rule.variant, rule.variant
+                )));
+            }
+            Ok(mosaic_emit_swiftui::pipeline::LayoutChoice {
+                variant: rule.variant,
+                conditions: rule
+                    .conditions
+                    .into_iter()
+                    .map(|(axis, value)| (axis.key().to_string(), value))
+                    .collect(),
+            })
+        })
+        .collect()
 }
 
 fn swift_app_with_initial_window_size(
@@ -5935,11 +5984,21 @@ fn compile_one_component(
         )
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
-        Backend::SwiftUI => mosaic_emit_swiftui::pipeline::from_pipeline(
-            &mosmodel_out.component,
-            &layout_out.def,
-            &style_def,
-        )
+        // A named variant names its own view and shares the default's event
+        // type, so one app can carry every variant (UI48 ENV2).
+        Backend::SwiftUI => match variant {
+            None => mosaic_emit_swiftui::pipeline::from_pipeline(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+            ),
+            Some(variant) => mosaic_emit_swiftui::pipeline::from_pipeline_variant(
+                &mosmodel_out.component,
+                &layout_out.def,
+                &style_def,
+                variant,
+            ),
+        }
         .map(|r| r.output)
         .map_err(|e| pipeline_emit_err(component, e))?,
         Backend::Qt => mosaic_emit_qt::pipeline::from_pipeline(
@@ -10395,6 +10454,74 @@ layout NativeEvents {
             emit_project: true,
             theme: None,
         }
+    }
+
+    // UI48 ENV2/ENV3: every layout variant in one SwiftUI app, and a
+    // selector to switch between them.
+
+    fn card_package_with_touch_variant() -> TempDir {
+        let pkg = card_package();
+        fs::write(
+            pkg.path().join("src/Card.touch.mll"),
+            "layout Card { Text [ root ] ( content : slot: label ) }\n",
+        )
+        .unwrap();
+        pkg
+    }
+
+    #[test]
+    fn a_swiftui_app_carries_its_touch_variant_and_selects_it_by_convention() {
+        let pkg = card_package_with_touch_variant();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).expect("SwiftUI shell");
+        let variant =
+            fs::read_to_string(out.path().join("swiftui/Sources/App/Card.touch.swift")).unwrap();
+        assert!(variant.contains("struct CardTouchView: View {"), "{variant}");
+        assert!(!variant.contains("enum CardEvent"), "{variant}");
+        let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
+        assert!(app.contains("case \"touch\":"), "{app}");
+        assert!(
+            app.contains("if environment.value(\"pointer\") == \"coarse\" { return \"touch\" }"),
+            "{app}"
+        );
+    }
+
+    #[test]
+    fn declared_layout_rules_reach_the_swiftui_selector() {
+        let pkg = card_package_with_touch_variant();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"touch\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).expect("SwiftUI shell");
+        let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
+        assert!(
+            app.contains("if environment.value(\"size-class\") == \"compact\" { return \"touch\" }"),
+            "{app}"
+        );
+        assert!(!app.contains("\"pointer\") == \"coarse\""), "the declared rule replaces the convention");
+    }
+
+    #[test]
+    fn a_layout_rule_for_a_missing_variant_is_refused() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[[app.layouts]]\nvariant = \"compact\"\nsize-class = \"compact\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).unwrap_err();
+        assert!(error.to_string().contains("Card.compact.mll"), "{error}");
+    }
+
+    #[test]
+    fn a_swiftui_app_without_variants_has_no_selector() {
+        let pkg = card_package();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).expect("SwiftUI shell");
+        let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
+        assert!(!app.contains("MosaicLayoutSelector"), "{app}");
     }
 
     /// UI89 §2.1: an .xcframework runtime is linked into the SwiftUI package,
