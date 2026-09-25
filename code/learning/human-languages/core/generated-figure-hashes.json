@@ -25,10 +25,143 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TA-S01-va",
+      "sourceHash": "fnv1a64:564f25c80649bce2",
+      "svgHash": "fnv1a64:d23f81e83f23241b",
+      "svg": "tamil/book/figures/TA-S01-va-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S02-nna",
+      "sourceHash": "fnv1a64:015daba73d122cba",
+      "svgHash": "fnv1a64:820f4e191cb17f51",
+      "svg": "tamil/book/figures/TA-S02-nna-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S03-nnna",
+      "sourceHash": "fnv1a64:6bfb1e336841058a",
+      "svgHash": "fnv1a64:624d604f408af02a",
+      "svg": "tamil/book/figures/TA-S03-nnna-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S04-na",
+      "sourceHash": "fnv1a64:5b416cb7b4056d6e",
+      "svgHash": "fnv1a64:e5e5a9af84c1319a",
+      "svg": "tamil/book/figures/TA-S04-na-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S05-rra",
+      "sourceHash": "fnv1a64:b89892377138c8a4",
+      "svgHash": "fnv1a64:09bf9f5ee32368fa",
+      "svg": "tamil/book/figures/TA-S05-rra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S06-ka",
+      "sourceHash": "fnv1a64:8edefb51c1c92796",
+      "svgHash": "fnv1a64:6be2e514d749e213",
+      "svg": "tamil/book/figures/TA-S06-ka-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S07-ma",
+      "sourceHash": "fnv1a64:99ae5488b6827fc0",
+      "svgHash": "fnv1a64:ed14f3d9121838bd",
+      "svg": "tamil/book/figures/TA-S07-ma-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S101-letter-pa",
+      "sourceHash": "fnv1a64:4b01ef0c98cdf85f",
+      "svgHash": "fnv1a64:bc0750545385552a",
+      "svg": "tamil/book/figures/TA-S101-letter-pa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S112-letter-e",
+      "sourceHash": "fnv1a64:678b3071c3a1c351",
+      "svgHash": "fnv1a64:c045095415c83528",
+      "svg": "tamil/book/figures/TA-S112-letter-e-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S113-letter-la",
+      "sourceHash": "fnv1a64:eb855030e5f75907",
+      "svgHash": "fnv1a64:10396d4bfe289602",
+      "svg": "tamil/book/figures/TA-S113-letter-la-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S115-letter-llla",
+      "sourceHash": "fnv1a64:29ed809f86120385",
+      "svgHash": "fnv1a64:f5db594a43b953d2",
+      "svg": "tamil/book/figures/TA-S115-letter-llla-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S116-letter-ca",
+      "sourceHash": "fnv1a64:38d28ae01a1b8d7f",
+      "svgHash": "fnv1a64:2a37644cb02184c3",
+      "svg": "tamil/book/figures/TA-S116-letter-ca-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S117-letter-ra",
+      "sourceHash": "fnv1a64:626db9935d662930",
+      "svgHash": "fnv1a64:8b2958e73eaae58b",
+      "svg": "tamil/book/figures/TA-S117-letter-ra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S118-letter-tta",
+      "sourceHash": "fnv1a64:6330ee462e208c80",
+      "svgHash": "fnv1a64:c269ed25bdf30fec",
+      "svg": "tamil/book/figures/TA-S118-letter-tta-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TA-S119-letter-a",
       "sourceHash": "fnv1a64:dde5a30b59a43527",
       "svgHash": "fnv1a64:af26fbf896d7c06c",
       "svg": "tamil/book/figures/TA-S119-letter-a-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S120-letter-aa",
+      "sourceHash": "fnv1a64:d6d38cf51c486820",
+      "svgHash": "fnv1a64:0991dfa7bfa6d974",
+      "svg": "tamil/book/figures/TA-S120-letter-aa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S122-letter-ta",
+      "sourceHash": "fnv1a64:ae09384df2b52fd4",
+      "svgHash": "fnv1a64:ba24077cbf35dfec",
+      "svg": "tamil/book/figures/TA-S122-letter-ta-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S124-letter-ya",
+      "sourceHash": "fnv1a64:44df7d151fd922a6",
+      "svgHash": "fnv1a64:c71d63f8171a542a",
+      "svg": "tamil/book/figures/TA-S124-letter-ya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-S125-letter-u",
+      "sourceHash": "fnv1a64:d4a168fc12ac9f77",
+      "svgHash": "fnv1a64:c5b736bf1e69930c",
+      "svg": "tamil/book/figures/TA-S125-letter-u-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W00-va-guided-copy",
+      "sourceHash": "fnv1a64:9050f01510ff35ec",
+      "svgHash": "fnv1a64:d23f81e83f23241b",
+      "svg": "tamil/book/figures/TA-W00-va-guided-copy-filmstrip.svg"
     }
   ]
 }

@@ -32,6 +32,8 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { SCRIPTS } from "../src/scriptdata.ts";
+import { loadLessons } from "@coding-adventures/human-language-data/src/loader.ts";
+import { filmstripCandidates } from "@coding-adventures/human-language-data/src/figure-targets.ts";
 import { ductusFor, boundsOf, parseFont } from "../src/index.ts";
 import type { GlyphOutline } from "../src/ductusview.ts";
 import {
@@ -55,6 +57,15 @@ interface FigureTarget {
   glyph?: string;
 }
 
+// Loading every lesson is the slow part of building the ledger (seconds, not
+// milliseconds), and the candidate list cannot change during one test run, so
+// it is read once per file rather than once per generation.
+let candidateCache: ReturnType<typeof filmstripCandidates> | undefined;
+function letterLessonCandidates(): ReturnType<typeof filmstripCandidates> {
+  candidateCache ??= filmstripCandidates(loadLessons(CURRICULUM_ROOT));
+  return candidateCache;
+}
+
 function filmstripTargets(): Array<{ script: string; glyph: string }> {
   const config = JSON.parse(
     readFileSync(join(CURRICULUM_ROOT, "core", "figure-generation.json"), "utf8"),
@@ -70,6 +81,17 @@ function filmstripTargets(): Array<{ script: string; glyph: string }> {
     wanted.set(`${target.script}:${target.glyph}`, {
       script: target.script,
       glyph: target.glyph,
+    });
+  }
+  // HL-C443: single-letter writing lessons on switched-on tracks are candidates
+  // too. A DECLARED target without a cited ductus is an authoring error and
+  // throws below; a derived candidate without one is simply not drawn, because
+  // the candidate list is every letter lesson, cited or not.
+  for (const candidate of letterLessonCandidates()) {
+    if (ductusFor(candidate.glyph, candidate.script) === undefined) continue;
+    wanted.set(`${candidate.script}:${candidate.glyph}`, {
+      script: candidate.script,
+      glyph: candidate.glyph,
     });
   }
   return [...wanted.values()];

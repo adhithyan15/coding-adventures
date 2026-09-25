@@ -75,4 +75,31 @@ That is about 380 filmstrips that could print today.
    derive from base letter + sign. Nothing implements that yet. Conjuncts need
    their own cited records.
 
+### The shape of the writing ramp (project owner, 2026-09-25)
+
+Writing must be gentle in the same way vocabulary is:
+
+- **Teach a letter from a word the reader already knows.** A letter lesson
+  follows the first word lesson that uses the letter. The reader copies a
+  letter out of a word they can already say, never a letter out of nowhere.
+  This is HL11's drizzled ramp, and where it exists it stays the rule.
+- **One letter at a time, then combinations.** Single letters come first.
+  Consonant + vowel-sign forms and conjuncts come only after both of their
+  parts have been taught, and a combination is drawn as its parts.
+- **Eventually every letter.** A track's writing ramp is incomplete while any
+  letter of its inventory has no letter lesson. Some letters appear in no word
+  the track teaches yet: for example Telugu ఙ ఛ ఝ ఱ and the independent vowels
+  ఈ ఊ ఓ ఔ, and Hindi's independent इ. For those, the fix is a vocabulary
+  lesson whose word needs the letter, followed by the letter lesson. A letter
+  taught in isolation does not count.
+
+The work that follows from this:
+
+- A per-track measure: inventory letters with a letter lesson; letters with no
+  anchoring word; letter lessons that come BEFORE their anchoring word.
+- Gates that let each of those numbers fall and never rise.
+
+The filmstrip goes on the letter lesson, so it always lands right after the
+word that introduced the letter.
+
 HL11 §5.2's rule stands throughout: no citation, no pen path, no figure.
