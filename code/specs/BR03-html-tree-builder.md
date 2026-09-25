@@ -18,7 +18,7 @@ WHATWG specification describes tree construction:
 
 - There is **no insertion-mode state machine.** State is about thirty booleans
   and side lists (`explicit_body_end_seen`,
-  `anchors_below_closed_formatting_markers`, …). The specification's 23
+  `anchors_below_closed_formatting_markers`, …). The specification's 21
   insertion modes are recovered from combinations of them.
 - The **stack of open elements** is a list of index paths into an owned tree,
   and there is no list of active formatting elements as the specification
@@ -54,9 +54,9 @@ by side.
 
 | specification | type or function |
 |---|---|
-| §13.2.4.1 insertion mode | `enum InsertionMode { Initial, BeforeHtml, BeforeHead, InHead, InHeadNoscript, AfterHead, InBody, Text, InTable, InTableText, InCaption, InColumnGroup, InTableBody, InRow, InCell, InSelect, InSelectInTable, InTemplate, AfterBody, InFrameset, AfterFrameset, AfterAfterBody, AfterAfterFrameset }` |
+| §13.2.4.1 insertion mode | `enum InsertionMode { Initial, BeforeHtml, BeforeHead, InHead, InHeadNoscript, AfterHead, InBody, Text, InTable, InTableText, InCaption, InColumnGroup, InTableBody, InRow, InCell, InTemplate, AfterBody, InFrameset, AfterFrameset, AfterAfterBody, AfterAfterFrameset }` |
 | §13.2.4.1 original insertion mode, stack of template insertion modes | fields on `TreeBuilder` |
-| §13.2.4.2 stack of open elements | `OpenElements` over `NodeId`s, with the scope predicates (`has_element_in_scope`, list-item, button, table, select scope) |
+| §13.2.4.2 stack of open elements | `OpenElements` over `NodeId`s, with the scope predicates (default, list-item, button and table scope) |
 | §13.2.4.3 list of active formatting elements | `ActiveFormatting` with markers, the Noah's Ark clause, reconstruction |
 | §13.2.4.4 element pointers | `head_element`, `form_element` |
 | §13.2.4.5 other state | `scripting`, `frameset_ok`, `foster_parenting` |
@@ -75,6 +75,13 @@ by side.
 - **Parse errors:** each rule reports the specification's error code where it
   names one, with the token's position, so BR02 P2's "errors compared by code
   and position" can start here.
+- **The current specification, not a remembered one.** When `<select>`
+  became customizable (2025) the "in select" and "in select in table" modes
+  and "select scope" were removed; `select`, `option`, `optgroup`, `hr` and
+  `input` are now handled by the "in body" rules, and `select` bounds the
+  default scope. The html5lib corpus follows the current text, and so does
+  this crate. Section numbers in the code are the current ones (§13.2.6.4.16
+  is "in template").
 - **No test input is recognised anywhere** (BR02 §3). A case the builder does
   not pass is a declared expected failure with its reason.
 
@@ -95,20 +102,31 @@ by side.
 ## 5. Order of work
 
 1. Crate skeleton: arena tree, `OpenElements`, `ActiveFormatting`, the
-   dispatcher, and every insertion mode outside tables, select and template:
-   `Initial` through `AfterHead`, `InHeadNoscript`, `InBody` with formatting
-   elements and the adoption agency algorithm, `Text`, `AfterBody`, the frameset
-   modes and the after-after modes. Harness plus expected-failure list. A token
-   that reaches a mode not yet written is handled by the `InBody` rules and
-   reported as a `tree-builder-mode-not-implemented` diagnostic.
+   dispatcher, and every insertion mode outside tables: `Initial` through
+   `AfterHead`, `InHeadNoscript`, `InBody` with formatting elements, the
+   adoption agency algorithm and select, `Text`, `InTemplate`, `AfterBody`, the
+   frameset modes and the after-after modes. Harness plus expected-failure
+   list. A token that reaches a mode not yet written is handled by the
+   `InBody` rules and reported as a `tree-builder-mode-not-implemented`
+   diagnostic.
 2. Tables: `InTable` through `InCell`, foster parenting, `InTableText`.
-3. `InSelect` and `InSelectInTable`, `InTemplate` and the template mode stack.
-4. Foreign content: SVG and MathML adjustments, integration points, CDATA.
-5. Fragment parsing (§13.4).
-6. Errors by code and position.
-7. The switch: `html-parser` delegates tree construction to the new crate. Its
+3. Foreign content: SVG and MathML adjustments, integration points, CDATA.
+4. Fragment parsing (§13.4).
+5. Errors by code and position.
+6. The switch: `html-parser` delegates tree construction to the new crate. Its
    repair passes, `normalize_document_shell` and the synthetic fragment
    attribute are deleted.
+
+Work outside this crate that the corpus exposes:
+
+- **Script-data tokenization.** `html-lexer` does not end a script at
+  `</script ` followed by end of file, at `</script/ >`, or at `</script>`
+  after `<!--</scrip `. `html-parser` compensates by rescanning script text in
+  its tree builder (`rfind_script_end_marker`); this crate does not, so those
+  31 cases stay listed until the lexer is fixed.
+- **`<selectedcontent>`** mirrors the selected `<option>` through DOM
+  insertion steps, not tree construction. It arrives with BR02 P4 (a real
+  DOM).
 
 Each step is its own PR and shrinks the expected-failure list.
 
