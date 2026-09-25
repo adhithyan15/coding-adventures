@@ -1,6 +1,7 @@
 mod common;
 
 use common::{actual_dom_dump_for_tree_case, parse_tree_construction_cases};
+use common::is_expected_failure;
 use serde::Deserialize;
 use std::collections::{BTreeMap, HashMap};
 
@@ -181,9 +182,6 @@ const HEAD_BODY_CROSS_AXIS_CASES: &[HeadBodyCrossAxisCase] = &[
     },
 ];
 const POST_PARSE_REPAIR_EVIDENCE: &[(&str, &str)] = &[
-    ("scripted-adoption01-dat-1", "head-text-mode"),
-    ("scripted-webkit01-dat-1", "head-text-mode"),
-    ("scripted-webkit01-dat-2", "head-text-mode"),
     ("tests26-dat-4", "body-boundary"),
     ("tests26-dat-1251", "body-boundary"),
     ("tricky01-dat-3", "body-boundary"),
@@ -258,6 +256,15 @@ fn whatwg_head_body_audit_cases_match_parser_dom_dump() {
             panic!("case `{}` ({}) parse failed: {error}", case.id, case.axis)
         });
 
+        // A declared expected failure (BR02 §3) must still fail.
+        if is_expected_failure(&case.source) {
+            assert_ne!(
+                actual, source_case.document,
+                "case `{}` now passes; remove it from tree-construction-expected-failures.txt",
+                case.source
+            );
+            continue;
+        }
         assert_eq!(
             actual, source_case.document,
             "case `{}` ({}) failed for input {:?}",
