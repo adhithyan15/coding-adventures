@@ -75,7 +75,34 @@ growth after UI29-1.
 | `disabled`     | slot ref | no       | bool — when true, the checkbox is non-interactive               |
 | `indeterminate`| slot ref | no       | bool — tri-state display (only honoured where the platform supports it; otherwise treated as `checked=false`) |
 | `label`        | slot ref / string | no | inline label rendered alongside the box; when absent, the userland host wraps the primitive in its own layout for the label text |
-| `onToggle`     | emit ref | no       | fires when the user toggles the box (mouse click or Space key); payload `checked: bool` carries the new state |
+| `onToggle`     | emit ref | no       | fires when the user toggles the box (mouse click or Space key); the payload is chosen by the target emit's declared parameter (§2.1.1) |
+
+`checked`, `disabled` and `indeterminate` also accept an expression, such as
+`( row[4] )` inside a `For`. The value is read by truthiness, the same rule
+`If ( when: … )` uses, so a text marker `"1"` / `""` works.
+
+#### 2.1.1 The `onToggle` payload (revision 2026-09-25)
+
+The payload follows the rule `HostButton` already uses inside a `For`
+(UI37 §1). It depends on the target emit's declared parameter:
+
+| target emit | payload |
+|---|---|
+| `emit onX ;` (no parameter) | none |
+| `emit onX ( index : number ) ;` inside a `For` | the enclosing `For`'s row index |
+| any other single parameter, e.g. `( checked : bool )` | the new checked state |
+
+The index form is what a list of checkboxes needs. The toggle alone cannot
+say *which* row changed, and before this revision a checklist had to draw a
+toggle `HostButton` beside a "☐" glyph to get the row
+(`mosaic-pkg-checklist`, C2 of #14018). The app flips its own stored state for
+that row; the new checked value is implied, because the box always shows the
+app's state.
+
+A `number` parameter never receives a 0/1 flag. Outside a `For` there is no
+row to carry, which leaves the emitter in the same position as a `HostButton`
+with that emit: it has no value to pass, so the generated code does not
+compile.
 
 ### 2.2 Children
 
