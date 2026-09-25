@@ -1,0 +1,5 @@
+# test262 results that pass at the `parse` level (V8C09 §4).
+# Measured at test262 7ab7fafa0003f73fc85c1b95d88094d33f7eb8bd. This list may only grow: a listed id
+# that stops passing fails the gate. Regenerate with --update.
+#
+# Empty until the first run against the pinned suite (the next PR).

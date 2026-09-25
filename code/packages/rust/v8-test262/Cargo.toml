@@ -1,0 +1,19 @@
+[package]
+name = "coding-adventures-v8-test262"
+version = "0.1.0"
+edition = "2021"
+description = "test262 conformance runner for the V8C JavaScript engine (V8C09): reads each test's YAML header, expands strict/sloppy runs, judges results by level (parse first), and gates on a grow-only expected-pass list."
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "v8_test262"
+path = "src/lib.rs"
+
+[[bin]]
+name = "v8-test262"
+path = "src/main.rs"
+
+[dependencies]
+coding-adventures-javascript-parser = { path = "../javascript-parser" }
+coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
+serde_json = "1"

@@ -8,6 +8,7 @@ resolver = "2"
 # (independent of this `members` list) and applies the documented SKIP.
 exclude = ["os-kernel"]
 members = [
+    "v8-test262",
     "browser-bookmarks",
     "bounded-json",
     "browser-bookmarks-file",
