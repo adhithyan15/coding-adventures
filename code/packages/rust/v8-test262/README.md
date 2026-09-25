@@ -59,7 +59,15 @@ Exit status is 0 with no regressions, 1 when a listed test stops passing, and
 - `tests/fixtures/`: small hand-written files in test262's format for the
   runner's own tests. No test262 file is copied here.
 
-## What the first parse run will show
+## The first parse run (2026-09-25)
+
+At test262 `7ab7faf`, **69,017 of 102,955** results pass at the parse level
+(843 skipped: module goal). The biggest gaps are the grammar parser's missing
+early errors and Script/Module goals, in `language/expressions` and
+`language/statements`, then newer syntax such as `Temporal` and `RegExp`
+features. CI (`v8-test262.yml`) fails if any listed result stops passing.
+
+## Why the first parse run showed that
 
 `javascript-parser` is grammar-driven: it has no separate Script and Module
 goals, and it does not implement the specification's early errors (duplicate
