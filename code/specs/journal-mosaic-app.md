@@ -223,6 +223,40 @@ VisiCalc's host.
   Journal and its `deploy-journal.yml` are untouched; retiring them is J5
   release work.
 
+### Published at /journal/ (J5d)
+
+The owner decided (2026-09-25) that this app **replaces** the old TypeScript
+Journal on the web.
+
+**What was there.** `deploy-journal.yml` built the old app and published it with
+`actions/deploy-pages`, as a Pages *artifact*. The site is not built from
+artifacts; it is built from the `gh-pages` branch, where every other app is
+published into its own directory. So `/journal/` was never served: it returns
+404, although every run reported success. The artifact deployment also names
+the whole site as its target, which is the wrong mechanism for one
+subdirectory.
+
+**What replaces it.** `deploy-journal.yml` now publishes this app the way
+`deploy-task-app.yml` publishes Trestle:
+
+- on a push to `main` touching the Mosaic Journal, its runtime or its
+  toolchain;
+- the web host built with a **release** wasm (`JOURNAL_WASM_PROFILE=release`;
+  the default stays debug for local development and tests);
+- the bundle checked by `verify_relocatable_bundle.py` from a subdirectory;
+- the wasm checked to be in the bundle and fetched by a **relative** URL;
+- pushed with `peaceiris/actions-gh-pages` into `gh-pages` under `journal/`,
+  with `keep_files: true` so sibling sites stay.
+
+Two changes make the bundle relocatable, as #13832 did for Trestle: Vite's
+`base` is `"./"`, and the page fetches `journal_mosaic_app.wasm` relative to the
+document instead of from `/`.
+
+**Data.** The old app kept its entries under its own storage keys, and this app
+uses `journal-mosaic/state`, so neither can overwrite the other. Importing the
+old app's entries stays deferred. The old app's code and its Electron release
+(`release-journal.yml`) are unchanged; retiring them is a separate decision.
+
 ## Search (J4a)
 
 A search field above the timeline turns it into search results. The engine
@@ -556,5 +590,5 @@ while Personal is selected.
 
 ## Deferred
 
-The web host (J5c-2), launching on the remaining native lanes, packaging and release (J5); the markdown preview;
+Launching on the remaining native lanes, packaging and release (J5); the markdown preview;
 (search J4a, stars J4b, on-this-day J4c, tags J4d, an entry's day J4e and journals J4f an entry's journal J4g, an empty journal J4h and renaming and deleting a journal J4i are above); export (needs a host file-save effect on native hosts); importing the TypeScript app's entries.

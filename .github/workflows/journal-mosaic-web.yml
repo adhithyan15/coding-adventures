@@ -1,8 +1,8 @@
 name: Journal (Mosaic) in the browser
 
 # J5c of #14416: the Journal web host (code/programs/mosaic/journal-app/host/web)
-# over the journal-mosaic-app wasm runtime. The OLD TypeScript Journal and its
-# deploy-journal.yml are separate and untouched.
+# over the journal-mosaic-app wasm runtime. This checks it on every PR;
+# deploy-journal.yml publishes it to /journal/ on merge (J5d).
 
 on:
   pull_request:

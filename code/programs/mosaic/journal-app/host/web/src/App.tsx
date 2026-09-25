@@ -66,7 +66,9 @@ export async function loadRuntime(
 }
 
 export async function loadApplication(): Promise<MosaicHost> {
-  const response = await fetch("/journal_mosaic_app.wasm");
+  // Relative to the page, not the site root: the app is published under
+  // /journal/ (J5d), where "/journal_mosaic_app.wasm" would be a 404.
+  const response = await fetch(new URL("journal_mosaic_app.wasm", document.baseURI));
   if (!response.ok) throw new Error(`Could not load Journal (${response.status})`);
   return loadRuntime(await response.arrayBuffer());
 }

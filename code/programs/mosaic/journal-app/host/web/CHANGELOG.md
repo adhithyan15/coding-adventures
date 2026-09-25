@@ -2,6 +2,17 @@
 
 ## 0.1.0 — unreleased
 
+- **Published at /journal/ (J5d).** The owner decided this app replaces the
+  old TypeScript Journal on the web. `deploy-journal.yml` now builds this host
+  and pushes it into `gh-pages/journal/`, as Trestle is published. The old
+  workflow published a Pages artifact that this site never serves, so
+  `/journal/` had been a 404.
+  - The bundle is relocatable: Vite `base: "./"`, and the page fetches
+    `journal_mosaic_app.wasm` relative to the document instead of from `/`.
+  - `JOURNAL_WASM_PROFILE=release` builds the runtime optimised for the site
+    (670 KB); the default stays debug for tests and the dev server.
+  - Checked by serving the release bundle from `/coding-adventures/journal/`:
+    it boots with no console errors, and a saved entry survives a reload.
 - **Renaming and deleting a journal (J4i)** needs no host code. A new test
   renames Work to Office, deletes it, finds its entry in Personal, and checks
   that Personal offers no *Delete journal*, through the real wasm.
