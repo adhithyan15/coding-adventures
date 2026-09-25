@@ -28,9 +28,10 @@ emit onToggle ( index : number ) ;  emit onAnswerYes ( index : number ) ;
 emit onAnswerNo ( index : number ) ;  emit onComplete ;  emit onAbandon ;
 ```
 
-A check item is a toggle button beside a ☐/☑ mark, not a checkbox. Inside a
-`For`, a button's click carries its row index on every backend, but a
-checkbox's toggle carries only the new boolean.
+A check item is the platform's own checkbox (`HostCheckbox`), labelled with the
+item's name; a ticked item is muted. Inside a `For`, its `onToggle
+( index : number )` carries the row index on every backend (UI29-2 §2.1.1), so
+the host knows which item to flip.
 
 ## Testing
 

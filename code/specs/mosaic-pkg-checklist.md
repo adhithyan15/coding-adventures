@@ -53,13 +53,18 @@ The rows are exactly task-core's `checklist_run(..).rows` — the **visible**
 items, so an unanswered question shows no branch and the component never has to
 know about branches at all.
 
-### Why buttons, not checkboxes
+### A check item is a real checkbox
 
-A check item is a `HostButton` beside a ☐/☑ mark, reporting `selected` (UI86)
-when ticked, not a `HostCheckbox`. Inside a `For`, a `HostButton`'s click carries
-its row index (UI37) on every backend; a checkbox's toggle carries only the new
-boolean, which cannot say *which* item. A toggle button whose pressed state is
-the tick is also the accessible reading of "mark this item done".
+A check item is a `HostCheckbox` labelled with the item's name: the platform's
+own checkbox, with its native role, keyboard and focus behaviour. A ticked item
+uses its own part (`checklist-item-done`) so it can be muted.
+
+*Revision 2026-09-25.* The first version drew a toggle `HostButton` beside a
+"☐"/"☑" text glyph, because a checkbox's toggle carried only the new Boolean,
+which cannot say *which* item. UI29-2 §2.1.1 now gives `onToggle` the enclosing
+`For`'s row index when the emit declares `( index : number )`, the rule
+`HostButton` already followed, so the glyph and the button are gone. The app
+flips the item's stored state, as it did for the button.
 
 Each answer is two buttons, Yes and No, the chosen one `selected` — a two-option
 segmented choice, which is what a decision is. Completing is gated on the host's

@@ -64,10 +64,11 @@ fn interface_matches_spec() {
     assert_eq!(emits, ["onToggle", "onAnswerYes", "onAnswerNo", "onComplete", "onAbandon"]);
 }
 
-/// The layout promises of the spec: a heading; every row button reports the
+/// The layout promises of the spec: a heading; every answer button reports the
 /// kernel selected state and carries the row index (HostButton inside a For);
-/// no conditional compares strings (truthy markers only); finishing actions are
-/// label-gated; no HostButton has children (#15921).
+/// a check item is a real HostCheckbox (UI29-2 §2.1.1), checked when ticked,
+/// never a "☐" glyph; no conditional compares strings (truthy markers only);
+/// finishing actions are label-gated; no HostButton has children (#15921).
 #[test]
 fn layout_keeps_the_specs_promises() {
     let (_, layout) = compiled();
@@ -80,16 +81,26 @@ fn layout_keeps_the_specs_promises() {
     for button in nodes.iter().filter(|n| n.tag == "HostButton") {
         assert!(button.children.is_empty(), "{:?} has children", button.part_name);
         let part = button.part_name.as_deref().unwrap();
-        if part.starts_with("checklist-item-button")
-            || part.starts_with("checklist-yes")
-            || part.starts_with("checklist-no")
-        {
+        if part.starts_with("checklist-yes") || part.starts_with("checklist-no") {
             let selected = prop(button, "selected").expect("row buttons report selection");
             assert_eq!(selected.contains("true"), part.ends_with("-on") || part.ends_with("-done"), "{part}");
             toggles += 1;
         }
     }
-    assert_eq!(toggles, 6, "item done/undone + yes on/off + no on/off");
+    assert_eq!(toggles, 4, "yes on/off + no on/off");
+
+    let checkboxes: Vec<_> = nodes.iter().filter(|n| n.tag == "HostCheckbox").collect();
+    assert_eq!(checkboxes.len(), 2, "one checkbox for a ticked item, one for an unticked");
+    for checkbox in checkboxes {
+        let part = checkbox.part_name.as_deref().unwrap();
+        let checked = prop(checkbox, "checked").expect("a check item states its tick");
+        assert_eq!(checked.contains("true"), part == "checklist-item-done", "{part}");
+        assert_eq!(prop(checkbox, "onToggle"), Some("EmitRef(\"onToggle\")".to_string()));
+    }
+    assert!(
+        !nodes.iter().any(|n| prop(n, "content").is_some_and(|c| c.contains('☐') || c.contains('☑'))),
+        "no glyph stands in for a checkbox"
+    );
 
     for n in nodes.iter().filter(|n| n.tag == "If") {
         let when = prop(n, "when").unwrap();

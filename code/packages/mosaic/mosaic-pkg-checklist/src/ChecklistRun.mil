@@ -15,12 +15,12 @@
 // (an unanswered question shows no branch) — so this component never needs to
 // know about branches. See the spec for the row fields.
 //
-// Why a check item is a button, not a checkbox
-// --------------------------------------------
-// Inside a For, a HostButton's click carries its row index (UI37) on every
-// backend; a checkbox's toggle carries only the new boolean, which cannot say
-// WHICH item. So an item is a toggle button (`selected` = ticked, UI86) beside a
-// ☐/☑ mark — also the accessible reading of "mark this done".
+// A check item is a real checkbox
+// -------------------------------
+// Each item is a native HostCheckbox labelled with its name. Inside a For, a
+// checkbox whose onToggle targets `( index : number )` reports its row index,
+// as a HostButton's click does (UI29-2 §2.1.1), so `onToggle` says WHICH item
+// changed; the app flips that item's stored state.
 
 component ChecklistRun {
   // The run's name, announced as a heading.
