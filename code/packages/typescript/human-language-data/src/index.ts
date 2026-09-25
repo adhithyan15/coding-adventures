@@ -487,6 +487,13 @@ export {
 } from "./letter-ledger.js";
 
 export {
+  measureLetterAnchoring,
+  type LetterAnchoring,
+  type LetterAnchoringReport,
+  type LetterLessonAnchor,
+  type TrackLetterAnchoring,
+} from "./letter-anchoring.js";
+export {
   measureScriptClosure,
   type ScriptClosureReport,
   type ClosureViolation,

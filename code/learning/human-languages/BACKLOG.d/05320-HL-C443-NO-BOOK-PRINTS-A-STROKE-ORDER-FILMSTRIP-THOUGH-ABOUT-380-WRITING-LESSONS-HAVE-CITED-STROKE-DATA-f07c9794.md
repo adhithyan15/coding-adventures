@@ -120,6 +120,42 @@ The work that follows from this:
   anchoring word; letter lessons that come BEFORE their anchoring word.
 - Gates that let each of those numbers fall and never rise.
 
+Progress (2026-09-25): the measure exists. `measureLetterAnchoring`
+(`human-language-data/src/letter-anchoring.ts`) sorts every letter lesson on
+every non-Latin track into one of four groups:
+
+- **anchored:** an earlier word headword holds the letter;
+- **builds-toward:** the word comes later in the same chapter;
+- **cold:** no such word;
+- **unmeasured:** a Han component. Telling whether 亻 belongs to 你 needs
+  decomposition data.
+
+It also lists the **unwritten** letters: read in a word, but written by no
+letter lesson. `tests/letter-anchoring.test.ts` pins per-track ceilings that
+may fall and must not rise.
+
+Measured: 845 letter lessons, where a letter set like "வ, க" or "௧ ௨ ௩"
+counts as one. 490 are anchored, 190 builds-toward, 156 cold and 9
+unmeasured. There are 93 unwritten letters.
+
+The fixes, biggest first:
+
+- **Unwritten.** Arabic 18, Persian 18, Urdu 16, Malayalam 9, Bengali 5,
+  Japanese 5. Each fix is one letter lesson that follows the first word using
+  the letter. Tamil's 14 are done: chapters 109-112 hold one lesson per letter,
+  each naming its word, which takes Tamil to 0.
+- **Cold.** Marathi 43, Gujarati 34, Kannada 19, Telugu 13, Malayalam 12,
+  Hindi 9. These are mostly alphabet-first openings, where the letters come
+  before any word. The fix moves the letter lesson after its first word, or
+  adds a word first.
+- **Builds-toward.** Chinese 51, Marwadi 49, Japanese 32. Here the word
+  follows the letter within the same chapter. The fix reorders the letter
+  lesson to come after the word.
+
+Still to measure: inventory letters that appear in NO word. The unwritten list
+only sees letters some word already shows, so letters like Telugu ఙ ఛ ఝ ఱ need
+a script inventory to be counted.
+
 The filmstrip goes on the letter lesson, so it always lands right after the
 word that introduced the letter.
 

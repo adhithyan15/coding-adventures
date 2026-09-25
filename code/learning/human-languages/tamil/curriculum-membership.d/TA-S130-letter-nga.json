@@ -1,0 +1,11 @@
+{
+  "id": "TA-S130-letter-nga",
+  "pathSegment": "TA-PATH-110-LETTERS-YOU",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-110-LETTERS-YOU",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "language": "tamil",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:4f796dc3246bb507",
+  "lessonIds": [
+    "TA-S130-letter-nga",
+    "TA-S131-letter-lla",
+    "TA-S132-vowel-sign-ii",
+    "TA-S133-vowel-sign-e"
+  ],
+  "tex": "tamil/book/chapters/ch110-letters-from-you-and-your-name.tex"
+}

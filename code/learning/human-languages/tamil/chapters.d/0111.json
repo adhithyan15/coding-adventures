@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "Letters From Counting",
+  "label": "ch:ta-letters-from-counting",
+  "canDo": "I can write the letters ai and ee and the vowel sign uu, and find each one in the numbers I count with.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TA-S136-letter-ee",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can write the letters ai and ee and the vowel sign uu, and find each one in the numbers I count with.",
+    "assesses": [
+      "TA-SCRIPT-RECOG-134",
+      "TA-SCRIPT-RECOG-135",
+      "TA-SCRIPT-RECOG-136"
+    ]
+  }
+}

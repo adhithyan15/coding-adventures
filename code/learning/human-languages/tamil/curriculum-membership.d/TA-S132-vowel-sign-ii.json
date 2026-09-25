@@ -1,0 +1,11 @@
+{
+  "id": "TA-S132-vowel-sign-ii",
+  "pathSegment": "TA-PATH-110-LETTERS-YOU",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-110-LETTERS-YOU",
+      "order": 2
+    }
+  ]
+}

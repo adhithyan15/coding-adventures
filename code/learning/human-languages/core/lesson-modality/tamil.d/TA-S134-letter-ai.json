@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S134-letter-ai",
+    "language": "tamil",
+    "chapter": 111,
+    "sequence": 4740,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a3f196ace4939646",
+    "detachableSegments": [
+      "Script you'll notice: ஐ",
+      "Writing: ஐ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

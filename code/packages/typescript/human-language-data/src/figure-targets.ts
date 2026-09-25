@@ -112,7 +112,7 @@ export function filmstripBlockIndex(lesson: ParsedLesson): number {
 }
 
 /** The first Writing block, else the first Script block; `-1` when neither. */
-function letterBlockIndex(lesson: ParsedLesson): number {
+export function letterBlockIndex(lesson: ParsedLesson): number {
   const writing = lesson.blocks.findIndex((block) => isWritingBlock(block.title));
   if (writing !== -1) return writing;
   return lesson.blocks.findIndex((block) => isScriptBlock(block.title));

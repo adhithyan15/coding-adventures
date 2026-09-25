@@ -1,0 +1,11 @@
+{
+  "id": "TA-S136-letter-ee",
+  "pathSegment": "TA-PATH-111-LETTERS-COUNT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-111-LETTERS-COUNT",
+      "order": 2
+    }
+  ]
+}

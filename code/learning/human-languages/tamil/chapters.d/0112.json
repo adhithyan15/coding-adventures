@@ -1,0 +1,20 @@
+{
+  "chapter": 112,
+  "title": "Letters From Days, Towns and Gladness",
+  "label": "ch:ta-letters-from-days-towns-gladness",
+  "canDo": "I can write the letters nya, uu, o and ssa, and find each one in a word I already say.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TA-R112-letters-second-pass",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 112: i can write the letters nya, uu, o and ssa, and find each one in a word I already say.",
+    "assesses": [
+      "TA-SCRIPT-RECOG-137",
+      "TA-SCRIPT-RECOG-138",
+      "TA-SCRIPT-RECOG-139",
+      "TA-SCRIPT-RECOG-140"
+    ]
+  }
+}

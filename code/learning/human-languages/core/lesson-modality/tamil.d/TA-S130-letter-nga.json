@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S130-letter-nga",
+    "language": "tamil",
+    "chapter": 110,
+    "sequence": 4700,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ed3ec3124353b648",
+    "detachableSegments": [
+      "Script you'll notice: ங",
+      "Writing: ங"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

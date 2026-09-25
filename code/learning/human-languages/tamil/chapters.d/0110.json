@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Letters From You and Your Name",
+  "label": "ch:ta-letters-from-you-and-your-name",
+  "canDo": "I can write the letters nga and lla and the vowel signs ii and e, and find each one in niingal or peyar.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-S133-vowel-sign-e",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can write the letters nga and lla and the vowel signs ii and e, and find each one in niingal or peyar.",
+    "assesses": [
+      "TA-SCRIPT-RECOG-131",
+      "TA-SCRIPT-RECOG-132",
+      "TA-SCRIPT-RECOG-133"
+    ]
+  }
+}
