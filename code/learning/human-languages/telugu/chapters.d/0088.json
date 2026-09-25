@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "The People Around You",
+  "label": "ch:te-people",
+  "canDo": "I can talk about children, a boy or a girl, a person, and a relative when people introduce themselves.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TE-C88-relative",
+    "kind": "production",
+    "summary": "Complete TE-C88-relative: introduce the people around you.",
+    "assesses": [
+      "TE-LEX-C88-PEOPLE-03",
+      "TE-LEX-C88-PEOPLE-04",
+      "TE-LEX-C88-PEOPLE-05"
+    ]
+  }
+}

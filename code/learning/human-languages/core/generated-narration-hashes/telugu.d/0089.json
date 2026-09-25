@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:17a69fbe0a16f536",
+  "lessonIds": [
+    "TE-C89-job",
+    "TE-C89-language",
+    "TE-C89-english",
+    "TE-C89-wedding",
+    "TE-C89-address"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch89.txt",
+  "json": "telugu/narration/ch89.json",
+  "textHash": "fnv1a64:5a40881aaa413b05",
+  "jsonHash": "fnv1a64:574d0438d68e521f",
+  "findings": []
+}

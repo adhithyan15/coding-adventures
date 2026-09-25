@@ -1,0 +1,11 @@
+{
+  "id": "TE-C91-whereto",
+  "pathSegment": "TE-PATH-91-GREET",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-91-GREET",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:c1fd9a621c262993",
+  "lessonIds": [
+    "TE-C88-children",
+    "TE-C88-boy",
+    "TE-C88-girl",
+    "TE-C88-person",
+    "TE-C88-relative"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch88.txt",
+  "json": "telugu/narration/ch88.json",
+  "textHash": "fnv1a64:d4d5f954155471e9",
+  "jsonHash": "fnv1a64:da19f486a0db1509",
+  "findings": []
+}

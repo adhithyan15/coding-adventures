@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:1f6bb7db5c08b5f6",
+  "lessonIds": [
+    "TE-C91-areyouwell",
+    "TE-C91-longtime",
+    "TE-C91-whatsnew",
+    "TE-C91-whereto",
+    "TE-C91-eaten",
+    "TE-R91-second-pass-greetings",
+    "TE-R91-second-pass-people"
+  ],
+  "tex": "telugu/book/chapters/ch91-greetings-people-say.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-88-PEOPLE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "TE-EXT-88-PEOPLE"
+  ],
+  "after": []
+}

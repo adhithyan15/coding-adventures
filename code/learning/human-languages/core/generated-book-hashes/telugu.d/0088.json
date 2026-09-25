@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:250b0062a05e3787",
+  "lessonIds": [
+    "TE-C88-children",
+    "TE-C88-boy",
+    "TE-C88-girl",
+    "TE-C88-person",
+    "TE-C88-relative"
+  ],
+  "tex": "telugu/book/chapters/ch88-people.tex"
+}

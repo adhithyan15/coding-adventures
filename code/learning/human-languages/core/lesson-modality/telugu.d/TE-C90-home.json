@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C90-home",
+    "language": "telugu",
+    "chapter": 90,
+    "sequence": 3360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44476f8fdeb0bb4a"
+  },
+  "findings": []
+}

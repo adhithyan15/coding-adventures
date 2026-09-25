@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "On the Way Out",
+  "label": "ch:te-on-the-way-out",
+  "canDo": "I can tell someone to take care and to come soon, say I am going home, suggest we leave, and take my leave politely.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "TE-C90-letsgo",
+    "kind": "production",
+    "summary": "Complete TE-C90-letsgo: leave a visit well.",
+    "assesses": [
+      "TE-LEX-C90-LEAVE-03",
+      "TE-LEX-C90-LEAVE-04",
+      "TE-LEX-C90-LEAVE-05"
+    ]
+  }
+}
