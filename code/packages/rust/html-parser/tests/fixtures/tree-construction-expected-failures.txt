@@ -14,3 +14,4 @@ scripted/webkit01.dat:1 — needs a script engine: document.write feeds the toke
 scripted/webkit01.dat:2 — needs a script engine: nested document.write feeds the tokenizer (BR02 P9)
 scripted_foster01.dat:1 — needs a script engine: the script removes <html> and re-appends the table mid-parse (BR02 P9)
 scripted_foster01.dat:2 — needs a script engine: the script removes <html> and re-appends the table mid-parse (BR02 P9)
+template.dat:124 — in a template-context fragment, </form> must close the open <div> (upstream: "FG" at the top level); the parser keeps the div open ("EF" inside it). Imported 2026-09-25 (BR02 P1.3); fix with the spec-structured tree builder (BR02 P2)

@@ -1,5 +1,5 @@
 {
-  "case_count": 434,
+  "case_count": 435,
   "cases": [
     {
       "axis": "block-formatting-boundary",
@@ -2604,13 +2604,19 @@
       "id": "template-dat-52",
       "reason": "block and heading boundaries around table insertion and foster parenting modes",
       "source": "template.dat:52"
+    },
+    {
+      "axis": "block-fragment-context",
+      "id": "template-dat-124",
+      "reason": "block boundary handling inside html5lib fragment contexts",
+      "source": "template.dat:124"
     }
   ],
   "counts_by_axis": {
     "block-foreign-boundary": 56,
     "block-form-boundary": 55,
     "block-formatting-boundary": 66,
-    "block-fragment-context": 32,
+    "block-fragment-context": 33,
     "block-grouping-boundary": 89,
     "block-heading-boundary": 13,
     "block-list-container-boundary": 18,

@@ -3,8 +3,9 @@
 Last audited: 2026-08-09
 
 > **What the pass count does and does not show (2026-09-25, BR02 §2).** Every
-> checked corpus case produces the expected tree **except six declared expected
-> failures** (`tests/fixtures/tree-construction-expected-failures.txt`): the
+> checked corpus case produces the expected tree **except seven declared
+> expected failures** (six scripted cases, and `template.dat:124`, imported
+> 2026-09-25 as the last missing upstream case) (`tests/fixtures/tree-construction-expected-failures.txt`): the
 > `scripted/*` and `scripted_foster01` cases, which run a script mid-parse.
 > Until 2026-09-25 the parser "passed" them by matching their exact script
 > text and rewriting the tree; that code is removed, and they stay expected
