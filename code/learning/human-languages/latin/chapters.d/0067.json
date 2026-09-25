@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Fever, Cough, Pain",
+  "label": "ch:la-fever-cough-pain",
+  "canDo": "I can name a fever, a cough, pain, medicine and an illness.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C67-morbus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can name a fever, a cough, pain, medicine and an illness.",
+    "assesses": [
+      "LA-LEX-C67-MORBUS-03",
+      "LA-LEX-C67-MORBUS-04",
+      "LA-LEX-C67-MORBUS-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C102-intra",
+  "pathSegment": "LA-PATH-102-LOCUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-102-LOCUS",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-96-PULCHER",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "LA-EXT-96-PULCHER"
+  ],
+  "after": []
+}

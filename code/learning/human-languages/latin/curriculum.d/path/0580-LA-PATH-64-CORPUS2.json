@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-64-CORPUS2",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "LA-EXT-64-CORPUS2"
+  ],
+  "after": []
+}

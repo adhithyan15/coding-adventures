@@ -1,0 +1,11 @@
+{
+  "id": "LA-C73-regina",
+  "pathSegment": "LA-PATH-73-HOMINES2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-73-HOMINES2",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-89-CAELUM",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "LA-EXT-89-CAELUM"
+  ],
+  "after": []
+}

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- **Export (J6a).** New event `onExportJournal` emits one `Await`
+  `files.save` effect (UI87 §7): `suggestedName` `journal-YYYY-MM-DD.json`
+  (the user's today), `accept` `application/json`, and the bytes of Journal's
+  own versioned JSON (`{format, schema, version, state}`), which loads back
+  through the same validating `restore`. `complete_effect` reports the answer
+  in the new `export-status` slot ("Exported to NAME", "Downloaded NAME" for
+  the browser's download fallback, "Couldn't export: MESSAGE", nothing when
+  cancelled), with an announcement; host text is cleaned (no control
+  characters, at most 255). `exporting` disables the button while an export
+  is outstanding; a second press changes nothing. A journal over 16 MiB is
+  refused before any effect. Neither is persisted. Uses the repo's own
+  `coding_adventures_base64`. Five new tests (65 total).
+
 - **Renaming and deleting a journal (J4i).** New events `onRenameJournal` and
   `onDeleteJournal`. New slots `can-rename-journal` (a journal is selected) and
   `can-delete-journal` (a journal other than Personal is selected).

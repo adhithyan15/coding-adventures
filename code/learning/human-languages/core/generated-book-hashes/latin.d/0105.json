@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:9dd422c5e92ae018",
+  "lessonIds": [
+    "LA-C105-raro",
+    "LA-C105-iam",
+    "LA-C105-tum",
+    "LA-C105-multum",
+    "LA-C105-parum"
+  ],
+  "tex": "latin/book/chapters/ch105-rarely-already-then-much-little.tex"
+}

@@ -2,6 +2,11 @@
 
 ## 0.1.0 — unreleased
 
+- **Export (J6a).** An `export-bar` row under the journal actions holds an
+  *Export* button (`export-journal`, disabled while `exporting`), and an
+  `export-status` line says what the last export did. Styled like *Rename*;
+  the status is muted, not an error colour. Rendered on Compose, both themes.
+
 - **Renaming and deleting a journal (J4i).** Under the *New journal* row, while
   a journal is selected, a `journal-actions` row offers *Rename* (Add's
   style; it uses the field's name) and *Delete journal* (in the draft

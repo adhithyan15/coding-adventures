@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C106-quadraginta",
+    "language": "latin",
+    "chapter": 106,
+    "sequence": 3920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3d799a974c75bdca"
+  },
+  "findings": []
+}

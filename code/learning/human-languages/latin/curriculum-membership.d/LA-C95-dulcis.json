@@ -1,0 +1,11 @@
+{
+  "id": "LA-C95-dulcis",
+  "pathSegment": "LA-PATH-95-CALIDUS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-95-CALIDUS",
+      "order": 4
+    }
+  ]
+}

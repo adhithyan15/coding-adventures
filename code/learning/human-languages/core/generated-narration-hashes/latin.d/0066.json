@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:69e8e1a3b4c86b4c",
+  "lessonIds": [
+    "LA-C66-pectus",
+    "LA-C66-crus",
+    "LA-C66-gena",
+    "LA-C66-unguis",
+    "LA-C66-sanus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch66.txt",
+  "json": "latin/narration/ch66.json",
+  "textHash": "fnv1a64:2634ea2186eaafd0",
+  "jsonHash": "fnv1a64:dec237e65b52ee4d",
+  "findings": []
+}

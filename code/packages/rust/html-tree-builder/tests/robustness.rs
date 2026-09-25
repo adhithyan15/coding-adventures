@@ -164,3 +164,31 @@ fn marker_segmented_formatting_lists() {
     source.push_str(&"<b></b>".repeat(20_000));
     parse(&source);
 }
+
+// Tables (BR03 step 2): foster parenting and the table modes' reprocessing.
+
+#[test]
+fn foster_parented_content_floods() {
+    parse(&("<table>".to_string() + &"x<div><b>y".repeat(20_000)));
+}
+
+#[test]
+fn nested_tables_and_cells() {
+    let output = parse(&"<table><tr><td>".repeat(10_000));
+    assert!(depth(&output.document.children) <= MAX_TREE_DEPTH);
+}
+
+#[test]
+fn table_structure_tokens_in_every_mode() {
+    let noise = "<caption><col><colgroup><tbody><tr><td><th></td></tr></tbody></caption></table>";
+    parse(&("<table>".to_string() + &noise.repeat(5_000)));
+}
+
+#[test]
+fn foster_parenting_stays_linear() {
+    // Security review of step 2: every foster-parented node goes in front of
+    // the open table, and with a child vector each insert scanned for it.
+    let output = parse(&("<table>".to_string() + &"a<br>".repeat(100_000)));
+    let body_children = output.document.children.len();
+    assert_eq!(body_children, 1);
+}

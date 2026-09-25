@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C76-coquo",
+    "language": "latin",
+    "chapter": 76,
+    "sequence": 2400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d19896168a1f5586"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:d4a44c5307c9e9a2",
+  "lessonIds": [
+    "LA-C79-cibus",
+    "LA-C79-cena",
+    "LA-C79-prandium",
+    "LA-C79-ientaculum",
+    "LA-C79-caro"
+  ],
+  "tex": "latin/book/chapters/ch79-food-and-meals.tex"
+}

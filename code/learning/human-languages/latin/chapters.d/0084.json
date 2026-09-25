@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "Chest, Paper, Pen, Tablet, Mirror",
+  "label": "ch:la-chest-paper-pen-tablet-mirror",
+  "canDo": "I can name a chest, paper, a writing stick, a tablet and a mirror.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "LA-C84-speculum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: i can name a chest, paper, a writing stick, a tablet and a mirror.",
+    "assesses": [
+      "LA-LEX-C84-RES1-03",
+      "LA-LEX-C84-RES1-04",
+      "LA-LEX-C84-RES1-05"
+    ]
+  }
+}

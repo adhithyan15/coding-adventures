@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:08537ab649d295fd",
+  "lessonIds": [
+    "LA-C98-dives",
+    "LA-C98-pauper",
+    "LA-C98-stultus",
+    "LA-C98-satis",
+    "LA-C98-nimis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch98.txt",
+  "json": "latin/narration/ch98.json",
+  "textHash": "fnv1a64:926eb8c758fad700",
+  "jsonHash": "fnv1a64:5ef2805b8e6dc41a",
+  "findings": []
+}

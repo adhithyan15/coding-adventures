@@ -1,0 +1,19 @@
+{
+  "chapter": 99,
+  "title": "Get to Know, Care For, Tell, Praise, Move",
+  "label": "ch:la-get-to-know-care-for-tell-praise-move",
+  "canDo": "I can say to get to know, to care for, to tell, to praise and to move.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C99-moveo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: i can say to get to know, to care for, to tell, to praise and to move.",
+    "assesses": [
+      "LA-LEX-C99-VERBA5-03",
+      "LA-LEX-C99-VERBA5-04",
+      "LA-LEX-C99-VERBA5-05"
+    ]
+  }
+}

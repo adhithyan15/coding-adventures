@@ -1,0 +1,19 @@
+{
+  "chapter": 81,
+  "title": "Grain, Flour, Pear, Fig, Nut",
+  "label": "ch:la-grain-flour-pear-fig-nut",
+  "canDo": "I can name grain, flour, a pear, a fig and a nut.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "LA-C81-nux",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: i can name grain, flour, a pear, a fig and a nut.",
+    "assesses": [
+      "LA-LEX-C81-CIBUS3-03",
+      "LA-LEX-C81-CIBUS3-04",
+      "LA-LEX-C81-CIBUS3-05"
+    ]
+  }
+}

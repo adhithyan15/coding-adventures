@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-97-FACILIS",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "LA-EXT-97-FACILIS"
+  ],
+  "after": []
+}

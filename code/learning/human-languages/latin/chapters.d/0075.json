@@ -1,0 +1,19 @@
+{
+  "chapter": 75,
+  "title": "Work, Sing, Dance, Laugh, Weep",
+  "label": "ch:la-work-sing-dance-laugh-weep",
+  "canDo": "I can say to work, to sing, to dance, to laugh and to weep.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C75-fleo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 75: i can say to work, to sing, to dance, to laugh and to weep.",
+    "assesses": [
+      "LA-LEX-C75-VERBA1-03",
+      "LA-LEX-C75-VERBA1-04",
+      "LA-LEX-C75-VERBA1-05"
+    ]
+  }
+}

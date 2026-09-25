@@ -1,0 +1,11 @@
+{
+  "id": "LA-C80-oleum",
+  "pathSegment": "LA-PATH-80-CIBUS2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-80-CIBUS2",
+      "order": 1
+    }
+  ]
+}

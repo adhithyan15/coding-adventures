@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C87-lacus",
+    "language": "latin",
+    "chapter": 87,
+    "sequence": 2970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee70edbe8bd58afc"
+  },
+  "findings": []
+}

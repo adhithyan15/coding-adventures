@@ -1,0 +1,11 @@
+{
+  "id": "LA-C107-oppidum",
+  "pathSegment": "LA-PATH-107-URBS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-107-URBS",
+      "order": 1
+    }
+  ]
+}

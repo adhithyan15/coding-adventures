@@ -158,6 +158,26 @@ style JournalApp {
     color     : "#f87171" ;
     font-size : 14 ;
   }
+
+  // Export (J6a).
+  part export-bar {
+    gap : 6 ;
+  }
+
+  part export-journal {
+    padding       : 8 ;
+    background    : "#111827" ;
+    color         : "#f9fafb" ;
+    border-width  : 1 ;
+    border-color  : "#374151" ;
+    border-radius : 4 ;
+    font-size     : 14 ;
+  }
+
+  part export-status {
+    color     : "#9ca3af" ;
+    font-size : 14 ;
+  }
   // An entry's journal (J4g): the picker's block mirrors the Date field's.
   part journal-block {
     gap : 4 ;

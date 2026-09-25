@@ -1,0 +1,19 @@
+{
+  "chapter": 65,
+  "title": "Hair, Belly, Back, Forehead, Beard",
+  "label": "ch:la-hair-belly-back-forehead-beard",
+  "canDo": "I can name hair, the belly, the back, the forehead and a beard.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C65-barba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: i can name hair, the belly, the back, the forehead and a beard.",
+    "assesses": [
+      "LA-LEX-C65-CORPUS3-03",
+      "LA-LEX-C65-CORPUS3-04",
+      "LA-LEX-C65-CORPUS3-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "Kitchen, Roof, Lamp, Cup, Knife",
+  "label": "ch:la-kitchen-roof-lamp-cup-knife",
+  "canDo": "I can name a kitchen, a roof, a lamp, a cup and a knife.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "LA-C83-culter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can name a kitchen, a roof, a lamp, a cup and a knife.",
+    "assesses": [
+      "LA-LEX-C83-DOMUS2-03",
+      "LA-LEX-C83-DOMUS2-04",
+      "LA-LEX-C83-DOMUS2-05"
+    ]
+  }
+}

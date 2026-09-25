@@ -1,0 +1,11 @@
+{
+  "id": "LA-C81-nux",
+  "pathSegment": "LA-PATH-81-CIBUS3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-81-CIBUS3",
+      "order": 4
+    }
+  ]
+}

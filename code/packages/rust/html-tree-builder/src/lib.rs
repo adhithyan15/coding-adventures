@@ -21,10 +21,9 @@
 //! | §13.2.6 tree construction | [`tree_builder::TreeBuilder`], one method per mode |
 //! | §13.2.6.4.7 adoption agency algorithm | `TreeBuilder::adoption_agency` |
 //!
-//! **Not written yet** (BR03 §5): the table insertion modes, foreign
-//! content, fragment parsing, and parse errors by specification code. A token that reaches an unwritten mode is handled by the `InBody`
-//! rules and reported as `tree-builder-mode-not-implemented`; the corpus cases
-//! that need them are listed in `tests/fixtures/expected-failures.txt`.
+//! **Not written yet** (BR03 §5): foreign content, fragment parsing, and
+//! parse errors by specification code. The corpus cases that need them are
+//! listed in `tests/fixtures/expected-failures.txt`.
 //!
 //! ```
 //! use coding_adventures_html_tree_builder::{parse_document, html5lib, TreeBuilderOptions};

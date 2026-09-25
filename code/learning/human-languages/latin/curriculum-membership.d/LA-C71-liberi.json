@@ -1,0 +1,11 @@
+{
+  "id": "LA-C71-liberi",
+  "pathSegment": "LA-PATH-71-FAMILIA2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-71-FAMILIA2",
+      "order": 2
+    }
+  ]
+}

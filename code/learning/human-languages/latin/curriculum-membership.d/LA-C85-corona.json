@@ -1,0 +1,11 @@
+{
+  "id": "LA-C85-corona",
+  "pathSegment": "LA-PATH-85-RES2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-85-RES2",
+      "order": 3
+    }
+  ]
+}

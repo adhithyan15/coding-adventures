@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C94-levis",
+    "language": "latin",
+    "chapter": 94,
+    "sequence": 3330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7f5c0d106c5ac2e"
+  },
+  "findings": []
+}

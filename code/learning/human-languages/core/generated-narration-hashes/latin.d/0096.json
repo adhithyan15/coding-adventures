@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:d29701b4846db909",
+  "lessonIds": [
+    "LA-C96-pulcher",
+    "LA-C96-rotundus",
+    "LA-C96-vacuus",
+    "LA-C96-clarus",
+    "LA-C96-obscurus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch96.txt",
+  "json": "latin/narration/ch96.json",
+  "textHash": "fnv1a64:c5d7a5210f151f66",
+  "jsonHash": "fnv1a64:13b43133514f5bcd",
+  "findings": []
+}

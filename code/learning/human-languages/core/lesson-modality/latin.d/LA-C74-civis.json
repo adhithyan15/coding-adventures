@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C74-civis",
+    "language": "latin",
+    "chapter": 74,
+    "sequence": 2290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1aa49c9a6cf246e2"
+  },
+  "findings": []
+}

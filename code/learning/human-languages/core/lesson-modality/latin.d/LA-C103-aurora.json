@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C103-aurora",
+    "language": "latin",
+    "chapter": 103,
+    "sequence": 3800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df92daeddc3bd950"
+  },
+  "findings": []
+}

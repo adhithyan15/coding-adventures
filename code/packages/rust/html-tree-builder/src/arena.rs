@@ -108,7 +108,15 @@ pub enum NodeKind {
 struct NodeRecord {
     kind: NodeKind,
     parent: Option<NodeId>,
-    children: Vec<NodeId>,
+    // Children as a doubly linked list, as html5ever's rcdom keeps them, so
+    // inserting before a node, finding the node before one, and detaching are
+    // all O(1). Foster parenting inserts every stray node in front of an open
+    // table; with a child vector each of those inserts scanned for the table,
+    // and 1 MB of `<table>` + `a<br>`... took 38 s (security review, step 2).
+    first_child: Option<NodeId>,
+    last_child: Option<NodeId>,
+    previous_sibling: Option<NodeId>,
+    next_sibling: Option<NodeId>,
     /// For a template's contents fragment: the `<template>` it belongs to.
     /// Not a parent (the fragment is not a child of anything), but depth
     /// is measured through it, because the contents print — and are laid
@@ -136,7 +144,10 @@ impl Arena {
             nodes: vec![NodeRecord {
                 kind: NodeKind::Document,
                 parent: None,
-                children: Vec::new(),
+                first_child: None,
+                last_child: None,
+                previous_sibling: None,
+                next_sibling: None,
                 host: None,
             }],
         }
@@ -146,7 +157,10 @@ impl Arena {
         self.nodes.push(NodeRecord {
             kind,
             parent: None,
-            children: Vec::new(),
+            first_child: None,
+            last_child: None,
+            previous_sibling: None,
+            next_sibling: None,
             host: None,
         });
         NodeId(self.nodes.len() - 1)
@@ -217,34 +231,64 @@ impl Arena {
         self.nodes[id.0].parent
     }
 
-    pub fn children(&self, id: NodeId) -> &[NodeId] {
-        &self.nodes[id.0].children
+    /// `id`'s children, first to last.
+    pub fn children(&self, id: NodeId) -> Vec<NodeId> {
+        let mut children = Vec::new();
+        let mut cursor = self.nodes[id.0].first_child;
+        while let Some(child) = cursor {
+            children.push(child);
+            cursor = self.nodes[child.0].next_sibling;
+        }
+        children
     }
 
-    /// Take `child` out of its parent's child list, if it has a parent.
+    /// Take `child` out of its parent's child list, if it has a parent. O(1).
     pub fn detach(&mut self, child: NodeId) {
-        if let Some(parent) = self.nodes[child.0].parent.take() {
-            self.nodes[parent.0].children.retain(|&node| node != child);
+        let Some(parent) = self.nodes[child.0].parent.take() else {
+            return;
+        };
+        let previous = self.nodes[child.0].previous_sibling.take();
+        let next = self.nodes[child.0].next_sibling.take();
+        match previous {
+            Some(previous) => self.nodes[previous.0].next_sibling = next,
+            None => self.nodes[parent.0].first_child = next,
+        }
+        match next {
+            Some(next) => self.nodes[next.0].previous_sibling = previous,
+            None => self.nodes[parent.0].last_child = previous,
         }
     }
 
     /// Append `child` as `parent`'s last child, moving it if it already had a
-    /// parent (as the DOM's `appendChild` does).
+    /// parent (as the DOM's `appendChild` does). O(1).
     pub fn append(&mut self, parent: NodeId, child: NodeId) {
         self.detach(child);
+        let last = self.nodes[parent.0].last_child;
         self.nodes[child.0].parent = Some(parent);
-        self.nodes[parent.0].children.push(child);
+        self.nodes[child.0].previous_sibling = last;
+        match last {
+            Some(last) => self.nodes[last.0].next_sibling = Some(child),
+            None => self.nodes[parent.0].first_child = Some(child),
+        }
+        self.nodes[parent.0].last_child = Some(child);
     }
 
     /// Insert `child` into `parent` immediately before `reference`, which must
-    /// be one of `parent`'s children; otherwise append.
+    /// be one of `parent`'s children; otherwise append. O(1).
     pub fn insert_before(&mut self, parent: NodeId, child: NodeId, reference: NodeId) {
+        if child == reference || self.nodes[reference.0].parent != Some(parent) {
+            self.append(parent, child);
+            return;
+        }
         self.detach(child);
+        let previous = self.nodes[reference.0].previous_sibling;
         self.nodes[child.0].parent = Some(parent);
-        let children = &mut self.nodes[parent.0].children;
-        match children.iter().position(|&node| node == reference) {
-            Some(index) => children.insert(index, child),
-            None => children.push(child),
+        self.nodes[child.0].previous_sibling = previous;
+        self.nodes[child.0].next_sibling = Some(reference);
+        self.nodes[reference.0].previous_sibling = Some(child);
+        match previous {
+            Some(previous) => self.nodes[previous.0].next_sibling = Some(child),
+            None => self.nodes[parent.0].first_child = Some(child),
         }
     }
 
@@ -276,24 +320,21 @@ impl Arena {
     /// Move every child of `from` to the end of `to`, in order (adoption agency
     /// step 4.17).
     pub fn reparent_children(&mut self, from: NodeId, to: NodeId) {
-        let children = std::mem::take(&mut self.nodes[from.0].children);
-        for child in &children {
-            self.nodes[child.0].parent = Some(to);
+        for child in self.children(from) {
+            self.append(to, child);
         }
-        self.nodes[to.0].children.extend(children);
     }
 
     /// The child immediately before `reference` in `parent`, or `parent`'s last
     /// child when there is no reference. Inserting a character looks here to
-    /// decide whether to extend an existing Text node.
+    /// decide whether to extend an existing Text node. O(1).
     pub fn child_before(&self, parent: NodeId, reference: Option<NodeId>) -> Option<NodeId> {
-        let children = &self.nodes[parent.0].children;
         match reference {
-            None => children.last().copied(),
-            Some(reference) => {
-                let index = children.iter().position(|&node| node == reference)?;
-                index.checked_sub(1).map(|before| children[before])
+            None => self.nodes[parent.0].last_child,
+            Some(reference) if self.nodes[reference.0].parent == Some(parent) => {
+                self.nodes[reference.0].previous_sibling
             }
+            Some(_) => None,
         }
     }
 
@@ -309,7 +350,7 @@ impl Arena {
     pub fn to_document_capped(&self) -> (Document, bool) {
         let mut document = Document::new();
         let mut flattened = false;
-        for &child in self.children(Self::DOCUMENT) {
+        for child in self.children(Self::DOCUMENT) {
             if let Some(node) = self.to_node(child, &mut flattened) {
                 document.push_child(node);
             }
@@ -321,8 +362,8 @@ impl Arena {
     /// the children of its root `html` element this way.
     pub fn to_nodes(&self, parent: NodeId) -> Vec<Node> {
         self.children(parent)
-            .iter()
-            .filter_map(|&child| self.to_node(child, &mut false))
+            .into_iter()
+            .filter_map(|child| self.to_node(child, &mut false))
             .collect()
     }
 
@@ -411,7 +452,7 @@ mod tests {
         arena.append(a, text);
         arena.append(b, text);
         assert!(arena.children(a).is_empty());
-        assert_eq!(arena.children(b), &[text]);
+        assert_eq!(arena.children(b), vec![text]);
         assert_eq!(arena.parent(text), Some(b));
     }
 
@@ -423,7 +464,7 @@ mod tests {
         let first = arena.create(NodeKind::Comment("first".into()));
         arena.append(parent, last);
         arena.insert_before(parent, first, last);
-        assert_eq!(arena.children(parent), &[first, last]);
+        assert_eq!(arena.children(parent), vec![first, last]);
         assert_eq!(arena.child_before(parent, Some(last)), Some(first));
         assert_eq!(arena.child_before(parent, Some(first)), None);
         assert_eq!(arena.child_before(parent, None), Some(last));
@@ -468,6 +509,51 @@ mod tests {
     }
 
     #[test]
+    fn detach_relinks_first_middle_and_last_children() {
+        let mut arena = Arena::new();
+        let parent = arena.create_element(Namespace::Html, "div", Vec::new());
+        let nodes: Vec<_> = (0..4)
+            .map(|index| arena.create(NodeKind::Text(index.to_string())))
+            .collect();
+        for &node in &nodes {
+            arena.append(parent, node);
+        }
+        arena.detach(nodes[1]);
+        assert_eq!(arena.children(parent), vec![nodes[0], nodes[2], nodes[3]]);
+        arena.detach(nodes[0]);
+        arena.detach(nodes[3]);
+        assert_eq!(arena.children(parent), vec![nodes[2]]);
+        assert_eq!(arena.child_before(parent, None), Some(nodes[2]));
+        assert_eq!(arena.child_before(parent, Some(nodes[2])), None);
+        assert_eq!(arena.parent(nodes[1]), None);
+        // Detaching twice, or a node with no parent, is a no-op.
+        arena.detach(nodes[1]);
+        arena.detach(nodes[2]);
+        assert!(arena.children(parent).is_empty());
+    }
+
+    #[test]
+    fn insert_before_a_non_child_appends_and_moves_are_consistent() {
+        let mut arena = Arena::new();
+        let parent = arena.create_element(Namespace::Html, "div", Vec::new());
+        let other = arena.create_element(Namespace::Html, "div", Vec::new());
+        let stranger = arena.create(NodeKind::Comment("elsewhere".into()));
+        arena.append(other, stranger);
+        let a = arena.create(NodeKind::Comment("a".into()));
+        let b = arena.create(NodeKind::Comment("b".into()));
+        arena.insert_before(parent, a, stranger);
+        assert_eq!(arena.children(parent), vec![a]);
+        arena.insert_before(parent, b, a);
+        assert_eq!(arena.children(parent), vec![b, a]);
+        // Moving `a` in front of `b` within the same parent.
+        arena.insert_before(parent, a, b);
+        assert_eq!(arena.children(parent), vec![a, b]);
+        // Inserting a node before itself leaves it in place (at the end).
+        arena.insert_before(parent, b, b);
+        assert_eq!(arena.children(parent), vec![a, b]);
+    }
+
+    #[test]
     fn reparent_children_moves_all_in_order() {
         let mut arena = Arena::new();
         let from = arena.create_element(Namespace::Html, "b", Vec::new());
@@ -478,7 +564,7 @@ mod tests {
         arena.append(from, two);
         arena.reparent_children(from, to);
         assert!(arena.children(from).is_empty());
-        assert_eq!(arena.children(to), &[one, two]);
+        assert_eq!(arena.children(to), vec![one, two]);
         assert_eq!(arena.parent(two), Some(to));
     }
 }

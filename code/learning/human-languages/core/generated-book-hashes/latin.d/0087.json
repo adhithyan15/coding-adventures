@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:a48e6f8885c7b089",
+  "lessonIds": [
+    "LA-C87-flumen",
+    "LA-C87-lacus",
+    "LA-C87-rivus",
+    "LA-C87-fons",
+    "LA-C87-ora"
+  ],
+  "tex": "latin/book/chapters/ch87-river-lake-stream-spring-coast.tex"
+}

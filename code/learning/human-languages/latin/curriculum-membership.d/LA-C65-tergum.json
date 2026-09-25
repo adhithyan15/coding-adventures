@@ -1,0 +1,11 @@
+{
+  "id": "LA-C65-tergum",
+  "pathSegment": "LA-PATH-65-CORPUS3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-65-CORPUS3",
+      "order": 2
+    }
+  ]
+}

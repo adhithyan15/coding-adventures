@@ -1,0 +1,11 @@
+{
+  "id": "LA-C74-agricola",
+  "pathSegment": "LA-PATH-74-OPUS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-74-OPUS",
+      "order": 3
+    }
+  ]
+}

@@ -76,14 +76,27 @@ use journal_core::{
     MAX_BODY_BYTES, MAX_ID_BYTES, MAX_JOURNALS, MAX_JOURNAL_NAME_CHARS, MAX_TITLE_CHARS,
 };
 use mosaic_app_runtime::{
-    Announcement, AppUpdate, Event, MosaicApp, Politeness, Snapshot, StartContext,
-    MAX_UTC_OFFSET_MINUTES, MIN_UTC_OFFSET_MINUTES,
+    Announcement, AppUpdate, Delivery, Effect, EffectCompletionError, EffectId, EffectResult,
+    Event, MosaicApp, Politeness, Snapshot, StartContext, MAX_EFFECT_ID, MAX_UTC_OFFSET_MINUTES,
+    MIN_UTC_OFFSET_MINUTES,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 const SNAPSHOT_SCHEMA: &str = "journal-mosaic-app/state";
 const SNAPSHOT_VERSION: u32 = 1;
+
+/// The `format` of an export file (J6a): Journal's own versioned JSON, so a
+/// later Import can load it with the same validating `restore`.
+const EXPORT_FORMAT: &str = "coding-adventures-journal";
+
+/// The largest file `files.save` takes (UI87 §3.1). A bigger journal is
+/// refused before any effect, with a message.
+const MAX_EXPORT_BYTES: usize = 16 * 1024 * 1024;
+
+/// The longest file name shown in the export status line; a host's answer
+/// is data, and a status line is not the place for an unbounded string.
+const MAX_EXPORT_NAME_CHARS: usize = 255;
 const DEFAULT_JOURNAL: &str = "journal-personal";
 const MS_PER_DAY: u64 = 86_400_000;
 /// Highest entry counter a snapshot may carry. Well past any real journal, and
@@ -150,6 +163,13 @@ pub struct JournalMosaicApp {
     /// The *New journal* field, and why the engine refused its last name.
     new_journal_name: String,
     journal_error: String,
+    /// The next id for an effect this app asks the host for (J6a).
+    next_effect_id: EffectId,
+    /// The outstanding Export's `files.save` effect, if any. Not persisted: a
+    /// pending Await blocks snapshots anyway (UI47 §8.1).
+    export_effect: Option<EffectId>,
+    /// What the last Export did, for the status line; `""` for nothing.
+    export_status: String,
 }
 
 impl Default for JournalMosaicApp {
@@ -205,6 +225,9 @@ impl JournalMosaicApp {
             journal_filter: None,
             new_journal_name: String::new(),
             journal_error: String::new(),
+            next_effect_id: 1,
+            export_effect: None,
+            export_status: String::new(),
             state: AppState {
                 journal,
                 target: Target::New,
@@ -274,6 +297,8 @@ impl JournalMosaicApp {
                 .map_or(0, |i| i as i64 + 1),
             "new-journal-name": self.new_journal_name,
             "journal-error": self.journal_error,
+            "export-status": self.export_status,
+            "exporting": self.export_effect.is_some(),
             "draft-journal-options": self
                 .journals_ordered()
                 .iter()
@@ -494,6 +519,62 @@ impl JournalMosaicApp {
         AppUpdate::new(self.props())
     }
 
+    // ── export (J6a) ─────────────────────────────────────────────────────────
+
+    /// Ask the host to save the whole journal to a file the person chooses,
+    /// through the standard `files.save` effect (UI87 §7). The bytes are the
+    /// journal as it is now (UI47 §8.3); nothing in the journal changes.
+    ///
+    /// ```text
+    ///   onExportJournal ──▶ export file (versioned JSON) ──▶ base64
+    ///        ──▶ Effect { Await, "files.save", {suggestedName, accept, bytes} }
+    ///        ··· host shows its save dialog ···
+    ///   complete_effect(ok / cancelled / failed) ──▶ export-status
+    /// ```
+    fn export(&mut self) -> AppUpdate {
+        // One at a time: the button is disabled while one is outstanding, and a
+        // second press that arrives anyway changes nothing.
+        if self.export_effect.is_some() {
+            return self.update();
+        }
+        let file = json!({
+            "format": EXPORT_FORMAT,
+            "schema": SNAPSHOT_SCHEMA,
+            "version": SNAPSHOT_VERSION,
+            "state": &self.state,
+        });
+        let Ok(bytes) = serde_json::to_vec(&file) else {
+            self.export_status = "Couldn't export: the journal could not be written.".to_string();
+            return self.update();
+        };
+        if bytes.len() > MAX_EXPORT_BYTES {
+            self.export_status =
+                "Couldn't export: the journal is larger than the 16 MiB a file can hold.".to_string();
+            return self.update();
+        }
+        if self.next_effect_id > MAX_EFFECT_ID {
+            self.export_status = "Couldn't export: restart Journal and try again.".to_string();
+            return self.update();
+        }
+        let id = self.next_effect_id;
+        self.next_effect_id += 1;
+        self.export_effect = Some(id);
+        self.export_status = "Exporting\u{2026}".to_string();
+        let today = today((self.clock)(), self.utc_offset_minutes);
+        let mut update = self.update();
+        update.effects.push(Effect {
+            id,
+            delivery: Delivery::Await,
+            kind: "files.save".to_string(),
+            payload: json!({
+                "suggestedName": format!("journal-{}.json", today.to_iso()),
+                "accept": ["application/json"],
+                "bytes": coding_adventures_base64::encode(&bytes, &coding_adventures_base64::STANDARD),
+            }),
+        });
+        update
+    }
+
     fn announced(&self, message: &str) -> AppUpdate {
         let mut update = self.update();
         update.announcements.push(Announcement {
@@ -514,6 +595,11 @@ impl JournalMosaicApp {
         }
         if !matches!(name.as_ref(), "onAddJournal" | "onRenameJournal") {
             self.journal_error.clear();
+        }
+        // The export status describes the last Export; moving on clears it,
+        // unless an export is still outstanding.
+        if name != "onExportJournal" && self.export_effect.is_none() {
+            self.export_status.clear();
         }
         match name.as_ref() {
             "onSelectEntry" => {
@@ -633,6 +719,7 @@ impl JournalMosaicApp {
                 self.new_journal_name = value;
                 Ok(self.update())
             }
+            "onExportJournal" => Ok(self.export()),
             "onAddJournal" => self.add_journal(),
             "onRenameJournal" => self.rename_journal(),
             "onDeleteJournal" => self.delete_journal(),
@@ -963,6 +1050,40 @@ impl MosaicApp for JournalMosaicApp {
         })
     }
 
+    /// The answer to an Export's `files.save` (J6a). The journal is unchanged
+    /// whatever the answer; only the status line says what happened.
+    fn complete_effect(
+        &mut self,
+        id: EffectId,
+        result: EffectResult,
+    ) -> Result<AppUpdate, EffectCompletionError<Self::Error>> {
+        // The runtime forwards only ids this app is awaiting; the only one is
+        // the export. Anything else is answered by re-rendering, changing nothing.
+        if self.export_effect != Some(id) {
+            return Ok(self.update());
+        }
+        self.export_effect = None;
+        self.export_status = match result {
+            EffectResult::Ok(value) => {
+                let name = displayable_name(value.get("name").and_then(Value::as_str));
+                if value.get("download").and_then(Value::as_bool) == Some(true) {
+                    format!("Downloaded {name}")
+                } else {
+                    format!("Exported to {name}")
+                }
+            }
+            EffectResult::Cancelled(_) => String::new(),
+            EffectResult::Failed(failure) => {
+                format!("Couldn't export: {}", displayable_name(Some(&failure.message)))
+            }
+        };
+        if self.export_status.is_empty() {
+            return Ok(self.update());
+        }
+        let message = self.export_status.clone();
+        Ok(self.announced(&message))
+    }
+
     fn snapshot(&self) -> Result<Option<Snapshot>, Self::Error> {
         let bytes =
             serde_json::to_vec(&self.state).map_err(|_| JournalAppError::InvalidSnapshot)?;
@@ -1084,6 +1205,38 @@ fn canonical_event_name(name: &str) -> std::borrow::Cow<'_, str> {
         )),
         _ => std::borrow::Cow::Borrowed(name),
     }
+}
+
+/// A host-supplied name or message, made fit for a status line: control
+/// characters and the invisible format characters that reorder or hide text
+/// (a right-to-left override can make `journal<RLO>nosj.exe` read as a JSON
+/// file) dropped, at most [`MAX_EXPORT_NAME_CHARS`] characters, and a
+/// placeholder when there is none.
+fn displayable_name(text: Option<&str>) -> String {
+    let cleaned: String = text
+        .unwrap_or("")
+        .chars()
+        .filter(|c| !c.is_control() && !is_invisible_format(*c))
+        .take(MAX_EXPORT_NAME_CHARS)
+        .collect();
+    if cleaned.trim().is_empty() {
+        "the file".to_string()
+    } else {
+        cleaned
+    }
+}
+
+/// Bidirectional controls and zero-width characters (Unicode's format
+/// characters that change how surrounding text is shown).
+fn is_invisible_format(c: char) -> bool {
+    matches!(
+        c,
+        '\u{061C}'
+            | '\u{200B}'..='\u{200F}'
+            | '\u{202A}'..='\u{202E}'
+            | '\u{2060}'..='\u{2069}'
+            | '\u{FEFF}'
+    )
 }
 
 /// The user's today: the local date at `now_ms`, `utc_offset_minutes` east
@@ -1388,6 +1541,8 @@ mod tests {
                 "draft-journal-options",
                 "draft-tags",
                 "draft-title",
+                "export-status",
+                "exporting",
                 "has-journals",
                 "has-on-this-day",
                 "has-tags",
@@ -2627,4 +2782,106 @@ mod tests {
             .unwrap()
             .contains("9999"));
     }
+
+    // ── export (J6a) ─────────────────────────────────────────────────────────
+
+    fn export_effect(update: &AppUpdate) -> &Effect {
+        assert_eq!(update.effects.len(), 1, "one files.save effect");
+        &update.effects[0]
+    }
+
+    #[test]
+    fn export_asks_the_host_for_a_files_save_of_the_versioned_journal() {
+        let mut a = app();
+        write(&mut a, "Rain", "It rained.");
+        let update = send(&mut a, "onExportJournal", json!({})).unwrap();
+        let effect = export_effect(&update);
+        assert_eq!(effect.kind, "files.save");
+        assert_eq!(effect.delivery, Delivery::Await);
+        assert_eq!(effect.payload["suggestedName"], "journal-2026-09-24.json");
+        assert_eq!(effect.payload["accept"], json!(["application/json"]));
+        assert_eq!(update.props["exporting"], true);
+
+        // The bytes are Journal's own versioned JSON, and they load back
+        // through the same validating restore an Import will use.
+        let encoded = effect.payload["bytes"].as_str().unwrap();
+        let bytes =
+            coding_adventures_base64::decode(encoded, &coding_adventures_base64::STANDARD).unwrap();
+        let file: Value = serde_json::from_slice(&bytes).unwrap();
+        assert_eq!(file["format"], EXPORT_FORMAT);
+        assert_eq!(file["schema"], SNAPSHOT_SCHEMA);
+        assert_eq!(file["version"], SNAPSHOT_VERSION);
+        let mut b = app();
+        b.restore(Snapshot {
+            schema: SNAPSHOT_SCHEMA.to_string(),
+            version: SNAPSHOT_VERSION,
+            bytes: serde_json::to_vec(&file["state"]).unwrap(),
+        })
+        .unwrap();
+        assert_eq!(rows(&b), rows(&a));
+    }
+
+    #[test]
+    fn a_second_export_while_one_is_outstanding_changes_nothing() {
+        let mut a = app();
+        send(&mut a, "onExportJournal", json!({})).unwrap();
+        let again = send(&mut a, "onExportJournal", json!({})).unwrap();
+        assert!(again.effects.is_empty());
+        assert_eq!(again.props["exporting"], true);
+    }
+
+    #[test]
+    fn each_answer_is_reported_and_the_journal_is_unchanged() {
+        for (result, expected) in [
+            (EffectResult::Ok(json!({ "name": "journal.json" })), "Exported to journal.json"),
+            (
+                EffectResult::Ok(json!({ "name": "journal.json", "download": true })),
+                "Downloaded journal.json",
+            ),
+            (EffectResult::Cancelled(mosaic_app_runtime::EmptyOutcome {}), ""),
+            (
+                EffectResult::Failed(mosaic_app_runtime::EffectFailure {
+                    message: "disk full".to_string(),
+                }),
+                "Couldn't export: disk full",
+            ),
+        ] {
+            let mut a = app();
+            write(&mut a, "Rain", "It rained.");
+            let before = rows(&a);
+            let id = export_effect(&send(&mut a, "onExportJournal", json!({})).unwrap()).id;
+            let update = a.complete_effect(id, result).unwrap();
+            assert_eq!(update.props["export-status"], expected);
+            assert_eq!(update.props["exporting"], false);
+            assert_eq!(update.announcements.is_empty(), expected.is_empty());
+            assert_eq!(rows(&a), before);
+        }
+    }
+
+    #[test]
+    fn a_hostile_answer_is_cleaned_for_the_status_line() {
+        let mut a = app();
+        let id = export_effect(&send(&mut a, "onExportJournal", json!({})).unwrap()).id;
+        let long = format!("{}\u{0007}.json", "x".repeat(400));
+        let update = a.complete_effect(id, EffectResult::Ok(json!({ "name": long }))).unwrap();
+        let status = update.props["export-status"].as_str().unwrap();
+        assert!(!status.contains('\u{0007}'));
+
+        let mut b = app();
+        let id = export_effect(&send(&mut b, "onExportJournal", json!({})).unwrap()).id;
+        let disguised = "journal\u{202E}nosj.exe";
+        let update = b.complete_effect(id, EffectResult::Ok(json!({ "name": disguised }))).unwrap();
+        assert_eq!(update.props["export-status"], "Exported to journalnosj.exe");
+        assert!(status.chars().count() <= "Exported to ".len() + MAX_EXPORT_NAME_CHARS);
+    }
+
+    #[test]
+    fn the_status_clears_when_the_person_moves_on() {
+        let mut a = app();
+        let id = export_effect(&send(&mut a, "onExportJournal", json!({})).unwrap()).id;
+        a.complete_effect(id, EffectResult::Ok(json!({ "name": "j.json" }))).unwrap();
+        let props = send(&mut a, "onNewEntry", json!({})).unwrap().props;
+        assert_eq!(props["export-status"], "");
+    }
+
 }

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C79-caro",
+  "pathSegment": "LA-PATH-79-CIBUS1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-79-CIBUS1",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,963 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 108,
+  "title": "Bridge, Farmhouse, Clothes, Tunic, Shoe",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:4f511ab5c3c94797",
+  "lessons": [
+    {
+      "id": "LA-C108-pons",
+      "sequence": 4010,
+      "title": "pōns, pontis — a bridge",
+      "headword": "pōns, pontis",
+      "romanization": "pōns, pontis",
+      "gloss": "a bridge",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59cba02b417895b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a temple, then the Latin for a shop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pōns, pontis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pōns, pontis — \"a bridge\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for bridge, farmhouse, clothes, tunic, shoe."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōns",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōns*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pōns, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pōns*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pōns",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pōns*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a temple, then the Latin for a shop, then say pōns again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a temple, then the Latin for a shop, then say *pōns* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pōns, pontis mean? (\"A bridge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C108-villa",
+      "sequence": 4020,
+      "title": "vīlla, vīllae — a farmhouse, a country house",
+      "headword": "vīlla, vīllae",
+      "romanization": "vīlla, vīllae",
+      "gloss": "a farmhouse, a country house",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5e6d3ebedfd92d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a shop, then the Latin for a bridge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vīlla, vīllae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vīlla, vīllae — \"a farmhouse, a country house\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for bridge, farmhouse, clothes, tunic, shoe."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīlla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīlla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vīlla, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vīlla*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vīlla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vīlla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a shop, then the Latin for a bridge, then say vīlla again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a shop, then the Latin for a bridge, then say *vīlla* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vīlla, vīllae mean? (\"A farmhouse, a country house\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C108-vestis",
+      "sequence": 4030,
+      "title": "vestis, vestis — clothing, a garment",
+      "headword": "vestis, vestis",
+      "romanization": "vestis, vestis",
+      "gloss": "clothing, a garment",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b158409a04fac6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a bridge, then the Latin for a farmhouse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: vestis, vestis",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vestis, vestis — \"clothing, a garment\". English vest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for bridge, farmhouse, clothes, tunic, shoe."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vestis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vestis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vestis, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vestis*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vestis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vestis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a bridge, then the Latin for a farmhouse, then say vestis again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a bridge, then the Latin for a farmhouse, then say *vestis* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does vestis, vestis mean? (\"Clothing, a garment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C108-tunica",
+      "sequence": 4040,
+      "title": "tunica, tunicae — a tunic",
+      "headword": "tunica, tunicae",
+      "romanization": "tunica, tunicae",
+      "gloss": "a tunic",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0bd1379562b5409",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for a farmhouse, then the Latin for clothing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tunica, tunicae",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tunica, tunicae — \"a tunic\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for bridge, farmhouse, clothes, tunic, shoe."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tunica",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tunica*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tunica, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tunica*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tunica",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tunica*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for a farmhouse, then the Latin for clothing, then say tunica again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for a farmhouse, then the Latin for clothing, then say *tunica* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tunica, tunicae mean? (\"A tunic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C108-calceus",
+      "sequence": 4050,
+      "title": "calceus, calceī — a shoe",
+      "headword": "calceus, calceī",
+      "romanization": "calceus, calceī",
+      "gloss": "a shoe",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0caafed54703c00e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for clothing, then the Latin for a tunic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: calceus, calceī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "calceus, calceī — \"a shoe\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for bridge, farmhouse, clothes, tunic, shoe."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calceus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *calceus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "calceus, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *calceus*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say calceus",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *calceus*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for clothing, then the Latin for a tunic, then say calceus again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for clothing, then the Latin for a tunic, then say *calceus* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does calceus, calceī mean? (\"A shoe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R108-first-pass-the-land-animals-and-describing-words",
+      "sequence": 4060,
+      "title": "The land, animals and describing words — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 86-96",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ecc3f0c25726c9ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a tunic and a shoe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tree, a flower, a leaf, a forest, a mountain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tree, a flower, a leaf, a forest, a mountain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a river, a lake, a stream, a spring, a coast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a river, a lake, a stream, a spring, a coast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stone, sand, a hill, a valley, a cave",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stone, sand, a hill, a valley, a cave]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cloud, rain, snow, a plain, a shore",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cloud, rain, snow, a plain, a shore]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a horse, an ox, a sheep, a goat, a pig",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a horse, an ox, a sheep, a goat, a pig]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bird, a wolf, a lion, a bear, a snake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bird, a wolf, a lion, a bear, a snake]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mouse, a hen, a donkey, an elephant, a deer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mouse, a hen, a donkey, an elephant, a deer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "big, small, long, short, high; deep",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: big, small, long, short, high; deep]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "new, old, light, fast, slow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: new, old, light, fast, slow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hot, cold, dry, wet, sweet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hot, cold, dry, wet, sweet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beautiful, round, empty, bright, dark",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: beautiful, round, empty, bright, dark]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A tree? (arbor, arboris.) A flower? (flōs, flōris.) A leaf? (folium, foliī.) A forest? (silva, silvae.) A mountain? (mōns, montis.) A river? (flūmen, flūminis.) A lake? (lacus, lacūs.) A stream? (rīvus, rīvī.) A spring? (fōns, fontis.) A coast? (ōra, ōrae.) A stone? (lapis, lapidis.) Sand? (harēna, harēnae.) A hill? (collis, collis.) A valley? (vallis, vallis.) A cave? (spēlunca, spēluncae.) A cloud? (nūbēs, nūbis.) Rain? (pluvia, pluviae.) Snow? (nix, nivis.) A plain? (campus, campī.) A shore? (lītus, lītoris.) A horse? (equus, equī.) An ox? (bōs, bovis.) A sheep? (ovis, ovis.) A goat? (capra, caprae.) A pig? (porcus, porcī.) A bird? (avis, avis.) A wolf? (lupus, lupī.) A lion? (leō, leōnis.) A bear? (ursus, ursī.) A snake? (serpēns, serpentis.) A mouse? (mūs, mūris.) A hen? (gallīna, gallīnae.) A donkey? (asinus, asinī.) An elephant? (elephantus, elephantī.) A deer? (cervus, cervī.) Big? (magnus, magna, magnum.) Small? (parvus, parva, parvum.) Long? (longus, longa, longum.) Short? (brevis, breve.) High; deep? (altus, alta, altum.) New? (novus, nova, novum.) Old? (vetus, veteris.) Light? (levis, leve.) Fast? (celer, celeris, celere.) Slow? (lentus, lenta, lentum.) Hot? (calidus, calida, calidum.) Cold? (frīgidus, frīgida, frīgidum.) Dry? (siccus, sicca, siccum.) Wet? (ūmidus, ūmida, ūmidum.) Sweet? (dulcis, dulce.) Beautiful? (pulcher, pulchra, pulchrum.) Round? (rotundus, rotunda, rotundum.) Empty? (vacuus, vacua, vacuum.) Bright? (clārus, clāra, clārum.) Dark? (obscūrus, obscūra, obscūrum.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R108-second-pass-verbs-time-numbers-and-the-town",
+      "sequence": 4070,
+      "title": "Verbs, time, numbers and the town — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 97-108",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f0bd47e8ddc4e7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for easy and difficult."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "easy, difficult, dear; costly, brave, wise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: easy, difficult, dear; costly, brave, wise]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rich, poor, foolish, enough, too much",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rich, poor, foolish, enough, too much]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get to know, to care for, to tell, to praise, to move",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get to know, to care for, to tell, to praise, to move]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fight, to sail, to prepare, to touch, to pull",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fight, to sail, to prepare, to touch, to pull]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to rise, to wander; to be wrong, to flee, at once, then",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to rise, to wander; to be wrong, to flee, at once, then]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "far away, above, below, inside, outside",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: far away, above, below, inside, outside]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "today, yesterday, a year, a month, the dawn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: today, yesterday, a year, a month, the dawn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "often, always, never, now, soon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: often, always, never, now, soon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rarely, already, then, much, too little",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rarely, already, then, much, too little]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thirty, forty, fifty, a hundred, a thousand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thirty, forty, fifty, a hundred, a thousand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a city, a town, a forum, a temple, a shop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a city, a town, a forum, a temple, a shop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bridge, a farmhouse, clothing, a tunic, a shoe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bridge, a farmhouse, clothing, a tunic, a shoe]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Easy? (facilis, facile.) Difficult? (difficilis, difficile.) Dear; costly? (cārus, cāra, cārum.) Brave? (fortis, forte.) Wise? (sapiēns, sapientis.) Rich? (dīves, dīvitis.) Poor? (pauper, pauperis.) Foolish? (stultus, stulta, stultum.) Enough? (satis.) Too much? (nimis.) To get to know? (cognōscō, cognōscere.) To care for? (cūrō, cūrāre.) To tell? (nārrō, nārrāre.) To praise? (laudō, laudāre.) To move? (moveō, movēre.) To fight? (pugnō, pugnāre.) To sail? (nāvigō, nāvigāre.) To prepare? (parō, parāre.) To touch? (tangō, tangere.) To pull? (trahō, trahere.) To rise? (surgō, surgere.) To wander; to be wrong? (errō, errāre.) To flee? (fugiō, fugere.) At once? (statim.) Then? (deinde.) Far away? (procul.) Above? (suprā.) Below? (īnfrā.) Inside? (intrā.) Outside? (extrā.) Today? (hodiē.) Yesterday? (herī.) A year? (annus, annī.) A month? (mēnsis, mēnsis.) The dawn? (aurōra, aurōrae.) Often? (saepe.) Always? (semper.) Never? (numquam.) Now? (nunc.) Soon? (mox.) Rarely? (rārō.) Already? (iam.) Then? (tum.) Much? (multum.) Too little? (parum.) Thirty? (trīgintā.) Forty? (quadrāgintā.) Fifty? (quīnquāgintā.) A hundred? (centum.) A thousand? (mīlle.) A city? (urbs, urbis.) A town? (oppidum, oppidī.) A forum? (forum, forī.) A temple? (templum, templī.) A shop? (taberna, tabernae.) A bridge? (pōns, pontis.) A farmhouse? (vīlla, vīllae.) Clothing? (vestis, vestis.) A tunic? (tunica, tunicae.) A shoe? (calceus, calceī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

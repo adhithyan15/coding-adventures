@@ -2,6 +2,15 @@
 
 ## 0.1.0 — unreleased
 
+- **A parse budget keeps CI alive.** The first CI runs on `main` were killed
+  by the runner after about 27 minutes: one 3.2 MB test,
+  `staging/sm/String/string-upper-lower-mapping.js`, made javascript-parser
+  allocate about 35 GB (peak RSS 35.5 GB locally; `staging` alone). The shared
+  packrat parser memoises a deep clone of each subtree per (rule, position).
+  Sources over `PARSE_BUDGET_BYTES` (1 MiB) are now skipped with that reason,
+  and stay on the pass list. `staging` peaks at 1.1 GB instead. Real fix:
+  share memoised subtrees in `parser`.
+
 - **The first parse-level list, and the CI gate.** Measured at test262
   `7ab7faf`: **69,017 of 102,955 results pass** (67%); 843 are skipped (module
   goal). `expected/parse.txt` lists every passing id, so the gate now fails on

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-105-QUANTUM",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "LA-EXT-105-QUANTUM"
+  ],
+  "after": []
+}

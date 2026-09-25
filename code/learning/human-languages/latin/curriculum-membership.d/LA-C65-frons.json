@@ -1,0 +1,11 @@
+{
+  "id": "LA-C65-frons",
+  "pathSegment": "LA-PATH-65-CORPUS3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-65-CORPUS3",
+      "order": 3
+    }
+  ]
+}

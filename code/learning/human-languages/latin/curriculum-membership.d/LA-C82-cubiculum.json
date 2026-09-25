@@ -1,0 +1,11 @@
+{
+  "id": "LA-C82-cubiculum",
+  "pathSegment": "LA-PATH-82-DOMUS1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-82-DOMUS1",
+      "order": 4
+    }
+  ]
+}

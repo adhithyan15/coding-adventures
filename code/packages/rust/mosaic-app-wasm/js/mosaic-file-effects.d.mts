@@ -12,4 +12,5 @@ export interface MosaicFileEffects {
   /** Dispose this executor before destroying the originating MosaicHost. */
   dispose(): void;
 }
-export function createBrowserFileEffects(host: MosaicHost): MosaicFileEffects;
+/** `environment` defaults to `globalThis`; a test passes a fake with the pickers. */
+export function createBrowserFileEffects(host: MosaicHost, environment?: object): MosaicFileEffects;

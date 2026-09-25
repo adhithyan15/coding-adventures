@@ -1,0 +1,11 @@
+{
+  "id": "LA-C72-vicinus",
+  "pathSegment": "LA-PATH-72-HOMINES1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-72-HOMINES1",
+      "order": 1
+    }
+  ]
+}

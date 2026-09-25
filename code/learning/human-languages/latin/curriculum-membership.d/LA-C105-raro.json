@@ -1,0 +1,11 @@
+{
+  "id": "LA-C105-raro",
+  "pathSegment": "LA-PATH-105-QUANTUM",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-105-QUANTUM",
+      "order": 0
+    }
+  ]
+}

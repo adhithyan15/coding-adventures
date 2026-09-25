@@ -1,0 +1,11 @@
+{
+  "id": "LA-C78-timeo",
+  "pathSegment": "LA-PATH-78-VERBA4",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-78-VERBA4",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C95-frigidus",
+  "pathSegment": "LA-PATH-95-CALIDUS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-95-CALIDUS",
+      "order": 1
+    }
+  ]
+}

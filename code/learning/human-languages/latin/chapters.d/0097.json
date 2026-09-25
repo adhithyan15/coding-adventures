@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "Easy, Hard, Dear, Brave, Wise",
+  "label": "ch:la-easy-hard-dear-brave-wise",
+  "canDo": "I can say easy, difficult, dear, brave and wise.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C97-sapiens",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can say easy, difficult, dear, brave and wise.",
+    "assesses": [
+      "LA-LEX-C97-FACILIS-03",
+      "LA-LEX-C97-FACILIS-04",
+      "LA-LEX-C97-FACILIS-05"
+    ]
+  }
+}
