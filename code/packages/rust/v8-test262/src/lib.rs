@@ -56,8 +56,14 @@ pub enum Outcome {
 /// (`Err(message)`). The real parser in production; a stub in unit tests.
 pub type ParseFn = dyn Fn(&str) -> Result<(), String> + Sync;
 
-/// The real parser, run on a thread with a generous stack so a deeply nested
-/// test fails as a rejected parse instead of taking the runner down.
+/// The largest test or harness file the runner reads. test262 files are a few
+/// kilobytes; anything far larger is not a test262 file and is failed, not read.
+pub const MAX_FILE_BYTES: u64 = 8 * 1024 * 1024;
+
+/// The real parser, run on its own thread with a generous stack. A parser
+/// **panic** is caught and reported as a rejected parse. A stack **overflow**
+/// is not catchable in Rust -- it aborts the process -- so the large stack
+/// makes it unlikely rather than impossible; `MAX_FILE_BYTES` bounds the input.
 pub fn javascript_parse(source: &str) -> Result<(), String> {
     let source = source.to_string();
     let worker = std::thread::Builder::new()
@@ -109,7 +115,10 @@ fn collect_js(root: &Path, dir: &Path, out: &mut Vec<String>) -> std::io::Result
         let kind = entry.file_type()?;
         if kind.is_dir() {
             collect_js(root, &path, out)?;
-        } else if kind.is_file() && path.extension().is_some_and(|ext| ext == "js") {
+        } else if kind.is_file()
+            && path.extension().is_some_and(|ext| ext == "js")
+            && !entry.file_name().to_string_lossy().chars().any(char::is_control)
+        {
             let relative = path.strip_prefix(root).expect("walked under root");
             out.push(
                 relative
@@ -186,7 +195,7 @@ pub fn run_parse_level(suite: &Suite, paths: &[String], parse: &ParseFn) -> Resu
 
     for path in paths {
         let full = suite.root.join("test").join(path);
-        let source = match fs::read_to_string(&full) {
+        let source = match read_bounded(&full) {
             Ok(source) => source,
             Err(error) => {
                 results
@@ -257,9 +266,15 @@ fn judge_parse(
         return Outcome::Fail(format!("rejected a valid program: {}", first_line(&error)));
     }
     for file in harness_files(metadata, variant) {
+        // Every test262 include is a plain file name at the top of `harness/`.
+        // Anything else -- a path, `..`, an absolute path -- could name a file
+        // outside the suite (or a device such as /dev/zero), so it fails the
+        // test instead of being read.
+        if !is_bare_file_name(&file) {
+            return Outcome::Fail(format!("harness {file}: an include must be a bare file name"));
+        }
         let verdict = harness_cache.entry(file.clone()).or_insert_with(|| {
-            let path = suite.root.join("harness").join(&file);
-            match fs::read_to_string(&path) {
+            match read_bounded(&suite.root.join("harness").join(&file)) {
                 Ok(harness) => parse(&harness),
                 Err(error) => Err(format!("missing: {error}")),
             }
@@ -269,6 +284,29 @@ fn judge_parse(
         }
     }
     Outcome::Pass
+}
+
+fn is_bare_file_name(name: &str) -> bool {
+    !name.is_empty()
+        && !name.starts_with('.')
+        && !name.contains(['/', '\\'])
+        && !Path::new(name).is_absolute()
+}
+
+/// Read a regular file of at most `MAX_FILE_BYTES` as UTF-8. A directory,
+/// device or pipe is refused before it is opened for reading.
+fn read_bounded(path: &Path) -> std::io::Result<String> {
+    let metadata = fs::metadata(path)?;
+    if !metadata.is_file() {
+        return Err(std::io::Error::other("not a regular file"));
+    }
+    if metadata.len() > MAX_FILE_BYTES {
+        return Err(std::io::Error::other(format!(
+            "{} bytes is larger than the {MAX_FILE_BYTES}-byte limit",
+            metadata.len()
+        )));
+    }
+    fs::read_to_string(path)
 }
 
 fn first_line(text: &str) -> &str {
@@ -375,14 +413,30 @@ mod tests {
         let suite = fixture_suite();
         let paths = suite.test_paths(&[]).unwrap();
         let results = run_parse_level(&suite, &paths, &stub);
-        // 10 files: six run twice (sloppy + strict), three run once
-        // (only-strict, resolution, module), and no-header fails once = 16.
-        assert_eq!(results.outcomes.len(), 16);
+        // 11 files: seven run twice (sloppy + strict), three run once
+        // (only-strict, resolution, module), and no-header fails once = 18.
+        assert_eq!(results.outcomes.len(), 18);
         let [pass, fail, skip] = results.summary()["language/parse"];
-        assert_eq!((pass, fail, skip), (7, 7, 2));
+        assert_eq!((pass, fail, skip), (7, 9, 2));
         assert_eq!(results.skip_reasons().values().sum::<usize>(), 2);
-        assert_eq!(results.judged().len(), 14);
+        assert_eq!(results.judged().len(), 16);
         assert_eq!(results.passes().len(), 7);
+    }
+
+    #[test]
+    fn an_include_must_be_a_bare_file_name() {
+        for bad in ["../x.js", "/etc/passwd", "sub/x.js", ".hidden.js", "", "a\\b.js"] {
+            assert!(!is_bare_file_name(bad), "{bad:?}");
+        }
+        assert!(is_bare_file_name("compareArray.js"));
+
+        let suite = fixture_suite();
+        let paths = suite.test_paths(&["language/parse/escaping-include.js".to_string()]).unwrap();
+        let results = run_parse_level(&suite, &paths, &stub);
+        match outcome(&results, "language/parse/escaping-include.js#sloppy") {
+            Outcome::Fail(message) => assert!(message.contains("bare file name"), "{message}"),
+            other => panic!("expected a failure, got {other:?}"),
+        }
     }
 
     #[test]

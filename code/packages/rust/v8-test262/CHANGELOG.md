@@ -22,6 +22,12 @@
     pinned `TEST262_REVISION` (read from `.git` without running git).
   - Pinned test262 `7ab7fafa0003f73fc85c1b95d88094d33f7eb8bd`. The first
     parse-level list is empty until the first run against that revision.
-  - 18 tests: the runner's rules on hand-written fixtures with a stub parser,
+  - Hardened after security review: an `includes:` entry must be a bare file
+    name (no path, `..` or absolute path, so nothing outside `harness/` or a
+    device like `/dev/zero` is read); test and harness files must be regular
+    files of at most 8 MiB; file names with control characters are skipped.
+    A parser panic is a rejected parse; a stack overflow still aborts, which
+    the large parser stack makes unlikely.
+  - 19 tests: the runner's rules on hand-written fixtures with a stub parser,
     plus the real `javascript-parser` on the same fixtures. No test262 file is
     copied into the repository.
