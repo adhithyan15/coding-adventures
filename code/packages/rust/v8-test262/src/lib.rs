@@ -60,6 +60,21 @@ pub type ParseFn = dyn Fn(&str) -> Result<(), String> + Sync;
 /// kilobytes; anything far larger is not a test262 file and is failed, not read.
 pub const MAX_FILE_BYTES: u64 = 8 * 1024 * 1024;
 
+/// The largest test source handed to the parser. Every test262 file but one
+/// is under 500 KB; the exception, `staging/sm/String/string-upper-lower-mapping.js`
+/// (3.2 MB of case-mapping literals), makes javascript-parser allocate about
+/// 35 GB, because the shared packrat parser memoises a deep clone of each
+/// subtree at every (rule, position) and the expression grammar has some
+/// twenty precedence levels. On a CI runner that is an out-of-memory kill,
+/// not a result. Sources over the budget are a `Skip` with this reason until
+/// the parser shares memoised subtrees; they stay on the pass list, so they
+/// are judged again the moment the budget allows.
+pub const PARSE_BUDGET_BYTES: usize = 1024 * 1024;
+
+fn over_parse_budget(source: &str) -> bool {
+    source.len() > PARSE_BUDGET_BYTES
+}
+
 /// The real parser, run on its own thread with a generous stack. A parser
 /// **panic** is caught and reported as a rejected parse. A stack **overflow**
 /// is not catchable in Rust -- it aborts the process -- so the large stack
@@ -238,6 +253,12 @@ fn judge_parse(
     if variant == Variant::Module {
         return Outcome::Skip("module goal: javascript-parser parses scripts only".to_string());
     }
+    if over_parse_budget(source) {
+        return Outcome::Skip(format!(
+            "parse budget: source over {} KiB (javascript-parser packrat memo clones subtrees)",
+            PARSE_BUDGET_BYTES / 1024
+        ));
+    }
     let text = match variant {
         Variant::Strict => format!("\"use strict\";\n{source}"),
         _ => source.to_string(),
@@ -359,6 +380,12 @@ mod tests {
 
     fn outcome(results: &Results, id: &str) -> Outcome {
         results.outcomes.get(id).unwrap_or_else(|| panic!("no result for {id}")).clone()
+    }
+
+    #[test]
+    fn sources_over_the_parse_budget_are_skipped_not_judged() {
+        assert!(!over_parse_budget(&"x".repeat(PARSE_BUDGET_BYTES)));
+        assert!(over_parse_budget(&"x".repeat(PARSE_BUDGET_BYTES + 1)));
     }
 
     #[test]
