@@ -1,0 +1,11 @@
+{
+  "id": "GU-C61-cup",
+  "pathSegment": "GU-PATH-61-TABLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-61-TABLE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 56,
+  "title": "Sing, Dance, Laugh, Listen, Learn",
+  "label": "ch:gu-sing-dance-laugh-listen-learn",
+  "canDo": "I can say to sing, to dance, to laugh, to listen and to learn.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GU-C56-shikhvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 56: i can say to sing, to dance, to laugh, to listen and to learn.",
+    "assesses": [
+      "GU-LEX-C56-VOICE-03",
+      "GU-LEX-C56-VOICE-04",
+      "GU-LEX-C56-VOICE-05"
+    ]
+  }
+}

@@ -1,8 +1,8 @@
 Hindi, chapter 14: Seasons.
-3 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+4 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 वसंत, ग्रीष्म, वर्षा, शरद्, हेमंत, शिशिर — six seasons, not four.
 
 Warm-up.
@@ -36,7 +36,7 @@ Wrap-up Recall.
 How many seasons does Hindi's traditional ऋतु calendar recognize? (Six, not four.) Which season has no clean Western equivalent, and why? (वर्षा varṣā, the monsoon — a real, distinct season central to the subcontinent's climate.) Is this just extra vocabulary added to a four-season frame? (No — it's a genuinely different structural division of the year.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 ◌ँ (candrabindu) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ँ and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -74,7 +74,7 @@ Wrap-up Recall.
 Which character is this — ◌ँ (candrabindu)? What does it add to the syllable before it? (A nasal.) Name one word you already say that contains it.
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 घ (gha) — a letter arriving before its words.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: घ, Script: ahead of its words, on purpose and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -116,3 +116,45 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What sound does घ carry? (gha, with breath.) Have you met a word that uses it yet? (No — it arrived first.) How many pen lifts? (Two.)
+
+
+Lesson 4 of 4.
+ऋ (ṛ (Hindi ri)) — the independent vowel waiting inside ऋतु.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ऋ and its Hindi value and Writing: ऋ — supported formation until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 1 second]
+You have said ऋतु (ṛtu), "season". Its first letter is the one this lesson writes.
+[pause 2 seconds]
+Find च in चार. Say ca. Then put the word away.
+One new character comes next: the first letter of the word you have met.
+
+Script you'll notice: ऋ and its Hindi value.
+ऋ (ṛ (Hindi ri)) is an independent vowel. The careful transliteration is ṛ. In modern Hindi words such as ऋतु, you will normally hear it as ri, so ऋतु is said ritu. Keep both labels honest: ṛ tells you which inherited Devanagari vowel this is; ri tells you what ordinary Hindi speech does with it.
+Look for the right stem and headline, then the hooked and rounded body hanging to their left. Do not confuse ऋ (ṛ (Hindi ri)) with र: र is the consonant ra; ऋ (ṛ (Hindi ri)) stands on its own as a vowel letter.
+
+Writing: ऋ — supported formation.
+Keep ऋ (ṛ (Hindi ri)) visible for this first pass.
+1. sweep the short upper-left shoulder right, then turn down-left through its hook.
+2. lift and curve around the rounded middle body, continuing into the lower rightward tail.
+3. lift and draw the right stem from top to bottom.
+4. lift and draw the headline from left to right.
+Pen lifts: 3. This is one sourced learner order, not a claim that every school joins the strokes identically. Source: Saurmandal, “Devanagari ऋ (ṛ (Hindi ri)) stroke order.svg,” panels 1–4, Wikimedia Commons, 5 August 2023.
+[pause 1 second]
+[once you have stopped driving — trace: ऋ (ṛ (Hindi ri)) twice while saying ri]
+[your turn — copy: ऋ (ṛ (Hindi ri)) once beside the visible model]
+[pause 8 seconds for the answer]
+[once you have stopped driving — point: to the letter, then say “independent vowel — not र”]
+
+Guided Practice — delayed recall.
+Cover the model.
+[pause 5 seconds]
+Which independent vowel did you learn? Say ri, then write it once. Reopen the model only after the attempt and repair only the first differing stroke.
+
+Wrap-up Recall — no-model checkpoint.
+Close the model again. You have met the word ritu, “season.” Write its first Devanagari character from memory.
+[pause 3 seconds]
+What is the careful transliteration of ऋ (ṛ (Hindi ri))? (ṛ.) How is it normally pronounced in Hindi ऋतु? (ri.) Write ऋ (ṛ (Hindi ri)) once more without looking.
+[question — say your answer, then pause 25 seconds]
+With no model or character bank, write the independent vowel at the start of ritu.

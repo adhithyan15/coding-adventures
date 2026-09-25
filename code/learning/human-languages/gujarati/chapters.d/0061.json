@@ -1,0 +1,19 @@
+{
+  "chapter": 61,
+  "title": "Plate, Bowl and Spoon",
+  "label": "ch:gu-plate-bowl-and-spoon",
+  "canDo": "I can name a plate, a bowl, a spoon, a cup and a cooking pot.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GU-C61-pot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 61: i can name a plate, a bowl, a spoon, a cup and a cooking pot.",
+    "assesses": [
+      "GU-LEX-C61-TABLE-03",
+      "GU-LEX-C61-TABLE-04",
+      "GU-LEX-C61-TABLE-05"
+    ]
+  }
+}

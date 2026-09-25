@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:0676fcaced436e0e",
+  "lessonIds": [
+    "GU-C58-rice-grain",
+    "GU-C58-flour",
+    "GU-C58-ghee",
+    "GU-C58-yogurt",
+    "GU-C58-buttermilk"
+  ],
+  "tex": "gujarati/book/chapters/ch58-in-the-pantry.tex"
+}

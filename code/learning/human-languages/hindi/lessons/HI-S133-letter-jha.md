@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-S133-letter-jha
 spine_node: SPINE-MEET-GREET
-sequence: 825
+sequence: 831
 delivery: script
-chapter: 31
+chapter: 32
 type: writing
 headword: "झ"
 gloss: the single character झ — the breathy partner of the letter drawn one chapter ago
@@ -35,6 +35,8 @@ reviews_of: [HI-S132-letter-ja]
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-132] -->
+
+[PAUSE 1s] You know **साँझ** (*sāñjh*), "dusk". This lesson writes its last letter.
 
 [PAUSE 1s] Before the new one: **ज** — what sound does it carry?
 
@@ -103,6 +105,5 @@ because of the crossbar.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-133, HI-SCRIPT-RECOG-132] -->
 
 [PAUSE 3s] Which letter is **झ** the breathy partner of? (**ज**.) How many pen
-lifts does it take, and why one more than **ज**? (Three — the crossbar.) Have you met a
-word that uses it yet? (No — this is the first letter taught ahead of its
-words.)
+lifts does it take, and why one more than **ज**? (Three — the crossbar.) Which word
+did it come from? (**साँझ**.)

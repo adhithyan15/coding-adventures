@@ -1,0 +1,11 @@
+{
+  "id": "GU-C87-shirt",
+  "pathSegment": "GU-PATH-87-CLOTHES",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-87-CLOTHES",
+      "order": 1
+    }
+  ]
+}

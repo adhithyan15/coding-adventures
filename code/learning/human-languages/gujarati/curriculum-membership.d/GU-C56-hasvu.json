@@ -1,0 +1,11 @@
+{
+  "id": "GU-C56-hasvu",
+  "pathSegment": "GU-PATH-56-VOICE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-56-VOICE",
+      "order": 2
+    }
+  ]
+}

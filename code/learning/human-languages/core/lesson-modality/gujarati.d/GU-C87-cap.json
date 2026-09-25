@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C87-cap",
+    "language": "gujarati",
+    "chapter": 87,
+    "sequence": 4440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12b6379346bb2e1c"
+  },
+  "findings": []
+}

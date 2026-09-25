@@ -84,18 +84,65 @@ canonical `sequence` order.
 | 271-278 | 43 | Past Five, and the Balance Turns Over | `GU-C39-chha` -> `GU-C39-saat` -> `GU-W22-ttha` -> `GU-C39-aath` -> `GU-C39-nav` -> `GU-C39-das` -> `GU-C39-ordinal-reach` -> `GU-R39-one-to-ten` |
 | 279-281 | 44 | Reading — Six Words, Six Lines, and a Whole Meeting | `GU-C44-words` -> `GU-C44-lines` -> `GU-C44-pehli-vanchan` |
 | 282-285 | 45 | Letters From Home and Money | `GU-W45-gha` -> `GU-W45-ai-sign` -> `GU-R45-letters-first-pass` -> `GU-R45-letters-second-pass` |
+| 286-290 | 46 | Head to Foot | `GU-C46-head` -> `GU-C46-leg` -> `GU-C46-belly` -> `GU-C46-tooth` -> `GU-C46-hair` |
+| 291-295 | 47 | Finger, Throat and Tongue | `GU-C47-finger` -> `GU-C47-throat` -> `GU-C47-shoulder` -> `GU-C47-lip` -> `GU-C47-tongue` |
+| 296-300 | 48 | Knee, Heart and a Fever | `GU-C48-knee` -> `GU-C48-heart` -> `GU-C48-blood` -> `GU-C48-fever` -> `GU-C48-cough` |
+| 301-305 | 49 | Pain, Medicine and Rest | `GU-C49-pain` -> `GU-C49-medicine` -> `GU-C49-rest` -> `GU-C49-hunger` -> `GU-C49-thirst` |
+| 306-310 | 50 | How It Feels | `GU-C50-happiness` -> `GU-C50-anger` -> `GU-C50-fear` -> `GU-C50-worry` -> `GU-C50-tiredness` |
+| 311-315 | 51 | Father, Mother, Grandparents | `GU-C51-father` -> `GU-C51-mother` -> `GU-C51-grandfather` -> `GU-C51-grandmother` -> `GU-C51-child` |
+| 316-320 | 52 | Uncles, Aunts and a Husband | `GU-C52-kaka` -> `GU-C52-kaki` -> `GU-C52-mama` -> `GU-C52-mami` -> `GU-C52-husband` |
+| 321-325 | 53 | Wife, Son, Daughter and Guests | `GU-C53-wife` -> `GU-C53-son` -> `GU-C53-daughter` -> `GU-C53-relative` -> `GU-C53-guest` |
+| 326-330 | 54 | Sit, Walk, Get Up, Sleep, Play | `GU-C54-besvu` -> `GU-C54-chalvu` -> `GU-C54-uthvu` -> `GU-C54-suvu` -> `GU-C54-ramvu` |
+| 331-335 | 55 | Cook, Wash, Give, Bring, Drink | `GU-C55-randhvu` -> `GU-C55-dhovu` -> `GU-C55-aapvu` -> `GU-C55-laavvu` -> `GU-C55-pivu` |
+| 336-340 | 56 | Sing, Dance, Laugh, Listen, Learn | `GU-C56-gaavu` -> `GU-C56-naachvu` -> `GU-C56-hasvu` -> `GU-C56-saambhalvu` -> `GU-C56-shikhvu` |
+| 341-345 | 57 | Buying and Selling | `GU-C57-kharidvu` -> `GU-C57-vechvu` -> `GU-C57-price` -> `GU-C57-rupees` -> `GU-C57-coin` |
+| 346-350 | 58 | In the Pantry | `GU-C58-rice-grain` -> `GU-C58-flour` -> `GU-C58-ghee` -> `GU-C58-yogurt` -> `GU-C58-buttermilk` |
+| 351-355 | 59 | Fruit and Vegetables | `GU-C59-fruit` -> `GU-C59-banana` -> `GU-C59-apple` -> `GU-C59-potatoes` -> `GU-C59-tomato` |
+| 356-360 | 60 | Salt, Chilli and Something Sweet | `GU-C60-chilli` -> `GU-C60-salt` -> `GU-C60-thepla` -> `GU-C60-jalebi` -> `GU-C60-puri` |
+| 361-365 | 61 | Plate, Bowl and Spoon | `GU-C61-plate` -> `GU-C61-bowl` -> `GU-C61-spoon` -> `GU-C61-cup` -> `GU-C61-pot` |
+| 366-370 | 62 | Bed, Table, Fan and Lock | `GU-C62-bed` -> `GU-C62-cot` -> `GU-C62-table` -> `GU-C62-fan` -> `GU-C62-lock` |
+| 371-375 | 63 | Roof, Wall and Garden | `GU-C63-roof` -> `GU-C63-wall` -> `GU-C63-courtyard` -> `GU-C63-garden` -> `GU-C63-address` |
+| 376-380 | 64 | Flower, Mountain and Forest | `GU-C64-flower` -> `GU-C64-leaf` -> `GU-C64-mountain` -> `GU-C64-forest` -> `GU-C64-stone` |
+| 381-385 | 65 | Sea, Lake and Well | `GU-C65-sea` -> `GU-C65-lake` -> `GU-C65-well` -> `GU-C65-sand` -> `GU-C65-soil` |
+| 386-390 | 66 | Wind, Cloud and Heat | `GU-C66-wind` -> `GU-C66-cloud` -> `GU-C66-heat` -> `GU-C66-ice` -> `GU-C66-fog` |
+| 391-395 | 67 | Cow, Buffalo and Goat | `GU-C67-cow` -> `GU-C67-buffalo` -> `GU-C67-goat` -> `GU-C67-dog` -> `GU-C67-mouse` |
+| 396-402 | 68 | Tiger, Lion and Elephant | `GU-C68-tiger` -> `GU-C68-lion` -> `GU-C68-elephant` -> `GU-C68-monkey` -> `GU-C68-snake` -> `GU-R68-first-pass-the-body-the-family-and-the-house` -> `GU-R68-second-pass-food-the-land-and-animals` |
+| 403-407 | 69 | Things That Shine, Fly and Swim | `GU-C69-star` -> `GU-C69-parrot` -> `GU-C69-peacock` -> `GU-C69-sparrow` -> `GU-C69-fish` |
+| 408-412 | 70 | Red, Yellow, Green | `GU-C70-red` -> `GU-C70-yellow` -> `GU-C70-green` -> `GU-C70-blue` -> `GU-C70-black` |
+| 413-417 | 71 | White, Brown, Pink, and What Looks Good | `GU-C71-white` -> `GU-C71-brown` -> `GU-C71-pink` -> `GU-C71-beautiful` -> `GU-C71-bad` |
+| 418-422 | 72 | Big and Small, Long and Short | `GU-C72-big` -> `GU-C72-small` -> `GU-C72-long` -> `GU-C72-short` -> `GU-C72-heavy` |
+| 423-427 | 73 | Light, New, Old, Hot, Cheap | `GU-C73-light` -> `GU-C73-new` -> `GU-C73-old` -> `GU-C73-hot` -> `GU-C73-cheap` |
+| 428-432 | 74 | Dear, Near, Far, Up and Down | `GU-C74-expensive` -> `GU-C74-near` -> `GU-C74-far` -> `GU-C74-up` -> `GU-C74-down` |
+| 433-437 | 75 | Ahead, Behind, In and Out | `GU-C75-ahead` -> `GU-C75-behind` -> `GU-C75-inside` -> `GU-C75-outside` -> `GU-C75-between` |
+| 438-442 | 76 | A Lot, All, Slowly, Quickly, Again | `GU-C76-alot` -> `GU-C76-all` -> `GU-C76-slowly` -> `GU-C76-quickly` -> `GU-C76-again` |
+| 443-447 | 77 | Always, Sometimes, Now, Later | `GU-C77-always` -> `GU-C77-sometimes` -> `GU-C77-now` -> `GU-C77-later` -> `GU-C77-before` |
+| 448-452 | 78 | Monday to Friday | `GU-C78-monday` -> `GU-C78-tuesday` -> `GU-C78-wednesday` -> `GU-C78-thursday` -> `GU-C78-friday` |
+| 453-457 | 79 | The Weekend, Tomorrow and Yesterday | `GU-C79-saturday` -> `GU-C79-sunday` -> `GU-C79-tomorrow` -> `GU-C79-yesterday` -> `GU-C79-time` |
+| 458-462 | 80 | Hours, Minutes and Holidays | `GU-C80-hour` -> `GU-C80-minute` -> `GU-C80-holiday` -> `GU-C80-festival` -> `GU-C80-holi` |
+| 463-467 | 81 | Eleven to Sixteen | `GU-C81-eleven` -> `GU-C81-twelve` -> `GU-C81-thirteen` -> `GU-C81-fifteen` -> `GU-C81-sixteen` |
+| 468-472 | 82 | Seventeen to Forty | `GU-C82-seventeen` -> `GU-C82-eighteen` -> `GU-C82-twenty` -> `GU-C82-thirty` -> `GU-C82-forty` |
+| 473-477 | 83 | Fifty to a Thousand, and How Much | `GU-C83-fifty` -> `GU-C83-hundred` -> `GU-C83-thousand` -> `GU-C83-howmuch` -> `GU-C83-which` |
+| 478-482 | 84 | Around Town | `GU-C84-clinic` -> `GU-C84-bank` -> `GU-C84-police` -> `GU-C84-ground` -> `GU-C84-bridge` |
+| 483-487 | 85 | Bus, Train and Plane | `GU-C85-bus` -> `GU-C85-train` -> `GU-C85-station` -> `GU-C85-plane` -> `GU-C85-port` |
+| 488-492 | 86 | On a Journey | `GU-C86-journey` -> `GU-C86-ticket` -> `GU-C86-map` -> `GU-C86-phone` -> `GU-C86-post` |
+| 493-497 | 87 | What We Wear | `GU-C87-dhoti` -> `GU-C87-shirt` -> `GU-C87-sandals` -> `GU-C87-cap` -> `GU-C87-umbrella` |
+| 498-502 | 88 | Glasses, Bag, Wallet, Letter, Gift | `GU-C88-glasses` -> `GU-C88-bag` -> `GU-C88-wallet` -> `GU-C88-letter` -> `GU-C88-gift` |
+| 503-507 | 89 | Questions and Answers | `GU-C89-student` -> `GU-C89-question` -> `GU-C89-answer` -> `GU-C89-bhanvu` -> `GU-C89-shikhavvu` |
+| 508-512 | 90 | Weddings, Birthdays and Work | `GU-C90-wedding` -> `GU-C90-birthday` -> `GU-C90-age` -> `GU-C90-field` -> `GU-C90-merchant` |
+| 513-519 | 91 | Welcome, Congratulations, Sorry | `GU-C91-welcome` -> `GU-C91-congratulations` -> `GU-C91-goodwishes` -> `GU-C91-apology` -> `GU-C91-okay` -> `GU-R91-first-pass-colours-size-and-place` -> `GU-R91-second-pass-time-numbers-town-and-people` |
 
 ## Current boundary
 
-The current book contains 43 chapters and 277 lessons. It teaches every
+The current book contains 91 chapters and 519 lessons. It teaches every
 Gujarati form the book shows -- 45 of them, measured by deriving the taught set
 from the corpus rather than from any list -- includes the complete pre-A1
 writing-stage ladder, and carries the doorway, conversation, number and core-verb material
 through measured distant retrieval. Every native-script headword carries a
 romanization, so no lesson asks the reader to decode a sign nobody taught, and
-no lesson shows a glyph the book has not already introduced. It has begun, but
-has not completed, the 300-headword pre-A1 vocabulary target, which now stands
-at 72. Chapters 35-41 close the joining column, which stood at 0 of 11: the
+no lesson shows a glyph the book has not already introduced. Chapters 46-91 complete
+the 300-headword pre-A1 vocabulary target: 230 new headwords, nineteen of them
+verbs, each chained into the next two lessons and closed by four reviews, all
+written in signs the book already teaches. Chapters 35-41 close the joining column, which stood at 0 of 11: the
 book can now negate a sentence, apologise, join two clauses, report a thought,
 give a reason, suppose a condition, describe rather than name, and ask who,
 where, when and how many. Ten of the eleven joining devices needed no new sign
@@ -105,7 +152,7 @@ cardinal count from five to ten for one new sign -- the retroflex aspirate
 **ઠ**, which eight needs and the other four numbers do not -- and ships the rule
 that makes every ordinal from seventh upward derivable rather than taught. The
 Gujarati DIGITS remain zero of ten and are now the column's only reading gap
-below ten. Later
+below ten. Further
 vocabulary, composition, timed mocks, rubrics, calibration, and
 book-only learner evidence remain explicit backlog rather than present-tense
 readiness claims.

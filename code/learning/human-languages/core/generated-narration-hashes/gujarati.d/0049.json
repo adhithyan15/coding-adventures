@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:93d82ec50574e983",
+  "lessonIds": [
+    "GU-C49-pain",
+    "GU-C49-medicine",
+    "GU-C49-rest",
+    "GU-C49-hunger",
+    "GU-C49-thirst"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch49.txt",
+  "json": "gujarati/narration/ch49.json",
+  "textHash": "fnv1a64:7c1f0baa85e3480a",
+  "jsonHash": "fnv1a64:9a4312cdcd77b423",
+  "findings": []
+}

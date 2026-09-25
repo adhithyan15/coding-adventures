@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:4ce0b3783e742804",
+  "lessonIds": [
+    "GU-C54-besvu",
+    "GU-C54-chalvu",
+    "GU-C54-uthvu",
+    "GU-C54-suvu",
+    "GU-C54-ramvu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch54.txt",
+  "json": "gujarati/narration/ch54.json",
+  "textHash": "fnv1a64:716b8710564684b3",
+  "jsonHash": "fnv1a64:7a3981ec8e4a1d30",
+  "findings": []
+}

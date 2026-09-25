@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-72-SIZE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say big, small, long, short and heavy.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C73-old",
+  "pathSegment": "GU-PATH-73-QUALITY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-73-QUALITY",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C71-beautiful",
+  "pathSegment": "GU-PATH-71-COLOUR2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-71-COLOUR2",
+      "order": 3
+    }
+  ]
+}

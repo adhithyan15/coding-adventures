@@ -1,0 +1,11 @@
+{
+  "id": "GU-C54-ramvu",
+  "pathSegment": "GU-PATH-54-MOVE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GU-EXT-54-MOVE",
+      "order": 4
+    }
+  ]
+}

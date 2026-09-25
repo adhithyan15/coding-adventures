@@ -1,0 +1,8 @@
+{
+  "id": "GU-EXT-66-WEATHER",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the wind, a cloud, the heat, ice and fog.",
+  "prerequisites": []
+}

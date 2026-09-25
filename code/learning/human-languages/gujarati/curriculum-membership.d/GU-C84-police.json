@@ -1,0 +1,11 @@
+{
+  "id": "GU-C84-police",
+  "pathSegment": "GU-PATH-84-TOWN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-84-TOWN",
+      "order": 2
+    }
+  ]
+}

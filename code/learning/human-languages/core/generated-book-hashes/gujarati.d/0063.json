@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:9fae4ff82d87555d",
+  "lessonIds": [
+    "GU-C63-roof",
+    "GU-C63-wall",
+    "GU-C63-courtyard",
+    "GU-C63-garden",
+    "GU-C63-address"
+  ],
+  "tex": "gujarati/book/chapters/ch63-roof-wall-and-garden.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C76-quickly",
+    "language": "gujarati",
+    "chapter": 76,
+    "sequence": 3890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acbba69f6c6cca5a"
+  },
+  "findings": []
+}

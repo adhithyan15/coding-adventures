@@ -1,0 +1,9 @@
+{
+  "id": "GU-PATH-48-BODY3",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "GU-EXT-48-BODY3"
+  ],
+  "after": []
+}

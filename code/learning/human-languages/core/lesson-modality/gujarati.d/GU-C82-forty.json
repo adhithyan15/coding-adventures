@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C82-forty",
+    "language": "gujarati",
+    "chapter": 82,
+    "sequence": 4200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:580b7402af05e9c3"
+  },
+  "findings": []
+}

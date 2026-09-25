@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C88-glasses",
+    "language": "gujarati",
+    "chapter": 88,
+    "sequence": 4460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6bc431b4d0f23b27"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GU-C50-anger",
+  "pathSegment": "GU-PATH-50-FEEL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-50-FEEL",
+      "order": 1
+    }
+  ]
+}

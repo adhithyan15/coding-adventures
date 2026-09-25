@@ -1,0 +1,11 @@
+{
+  "id": "GU-C52-kaki",
+  "pathSegment": "GU-PATH-52-FAMILY2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-52-FAMILY2",
+      "order": 1
+    }
+  ]
+}

@@ -121,7 +121,17 @@ it("closes Gujarati doorway R4 at position 134", () => {
   //    0   closed.
   // The lessons sit at the end of the track, far past the checkpoint at 134, so
   // every position assertion above is untouched.
-  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(362);
+  // 362 -> 874. The pre-A1 vocabulary tranche, chapters 46-91 (230 headwords,
+  // four reviews), decomposed against the atoms that own each missed window:
+  //   +415 on the tranche's own 230 atoms. Each word is chained, so the next
+  //        two lessons revisit it (R1, and the gate's two revisits); its R2,
+  //        R3 and R4 windows (205 / 130 / 80) are not yet reached by any later
+  //        lesson. This is the same shape every chained tranche has.
+  //    +97 PRE-EXISTING: older atoms' R2-R4 windows that did not exist until the
+  //        track grew 285 -> 519 lessons (459 old-atom slots, from 362).
+  // The lessons sit at the end of the track, far past the checkpoint at 134, so
+  // every position assertion above is untouched.
+  expect(afterCheckpoint.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(874);
   expect(
     afterCheckpoint.reinforcement.filter(
       (defect) => doorway.includes(defect.atom) && defect.missed.includes("R4"),

@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:b9778f87099cd551",
+  "lessonIds": [
+    "GU-C54-besvu",
+    "GU-C54-chalvu",
+    "GU-C54-uthvu",
+    "GU-C54-suvu",
+    "GU-C54-ramvu"
+  ],
+  "tex": "gujarati/book/chapters/ch54-sit-walk-get-up-sleep-play.tex"
+}

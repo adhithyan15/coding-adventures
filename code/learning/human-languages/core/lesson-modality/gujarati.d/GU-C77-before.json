@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C77-before",
+    "language": "gujarati",
+    "chapter": 77,
+    "sequence": 3950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1a34d423e266e44"
+  },
+  "findings": []
+}

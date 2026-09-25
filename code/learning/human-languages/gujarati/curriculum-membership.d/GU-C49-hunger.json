@@ -1,0 +1,11 @@
+{
+  "id": "GU-C49-hunger",
+  "pathSegment": "GU-PATH-49-CARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GU-EXT-49-CARE",
+      "order": 3
+    }
+  ]
+}

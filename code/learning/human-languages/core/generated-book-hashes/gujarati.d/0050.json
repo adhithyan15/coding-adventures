@@ -1,0 +1,13 @@
+{
+  "language": "gujarati",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:3521546bb5e60e3f",
+  "lessonIds": [
+    "GU-C50-happiness",
+    "GU-C50-anger",
+    "GU-C50-fear",
+    "GU-C50-worry",
+    "GU-C50-tiredness"
+  ],
+  "tex": "gujarati/book/chapters/ch50-how-it-feels.tex"
+}

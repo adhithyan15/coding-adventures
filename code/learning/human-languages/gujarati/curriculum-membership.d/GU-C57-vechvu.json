@@ -1,0 +1,11 @@
+{
+  "id": "GU-C57-vechvu",
+  "pathSegment": "GU-PATH-57-MARKET",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GU-EXT-57-MARKET",
+      "order": 1
+    }
+  ]
+}

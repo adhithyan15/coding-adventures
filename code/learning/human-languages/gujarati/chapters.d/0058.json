@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "In the Pantry",
+  "label": "ch:gu-in-the-pantry",
+  "canDo": "I can name rice grains, flour, ghee, yogurt and buttermilk.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GU-C58-buttermilk",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 58: i can name rice grains, flour, ghee, yogurt and buttermilk.",
+    "assesses": [
+      "GU-LEX-C58-PANTRY-03",
+      "GU-LEX-C58-PANTRY-04",
+      "GU-LEX-C58-PANTRY-05"
+    ]
+  }
+}

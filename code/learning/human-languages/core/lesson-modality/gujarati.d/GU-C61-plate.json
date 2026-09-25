@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C61-plate",
+    "language": "gujarati",
+    "chapter": 61,
+    "sequence": 3090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8299ea5239c46d05"
+  },
+  "findings": []
+}

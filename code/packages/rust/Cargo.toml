@@ -198,6 +198,7 @@ members = [
     "mosaic-ios-project",
     "html-lexer",
     "html-parser",
+    "html-tree-builder",
     "html-to-layout",
     "html-to-paint",
     "venture-browser-core",

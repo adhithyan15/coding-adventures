@@ -5,9 +5,9 @@ introduces_senses: []
 introduces_culture_claims: []
 id: HI-S135-letter-au
 spine_node: SPINE-MEET-GREET
-sequence: 865
+sequence: 1091
 delivery: script
-chapter: 34
+chapter: 39
 type: writing
 headword: "औ"
 gloss: the single character औ — the standing form of the mark drawn one chapter ago, and the most pen lifts in the book
@@ -35,6 +35,8 @@ reviews_of: [HI-S134-vowel-sign-au]
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-134] -->
+
+[PAUSE 1s] You have said **औरत** (*aurat*), "woman". Its first letter is the one this lesson writes.
 
 [PAUSE 1s] Before the new one: **◌ौ** — how does it differ from **◌ो**?
 

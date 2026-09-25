@@ -1,0 +1,19 @@
+{
+  "chapter": 74,
+  "title": "Dear, Near, Far, Up and Down",
+  "label": "ch:gu-dear-near-far-up-and-down",
+  "canDo": "I can say expensive, near, far, up and down.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GU-C74-down",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: i can say expensive, near, far, up and down.",
+    "assesses": [
+      "GU-LEX-C74-WHERE1-03",
+      "GU-LEX-C74-WHERE1-04",
+      "GU-LEX-C74-WHERE1-05"
+    ]
+  }
+}

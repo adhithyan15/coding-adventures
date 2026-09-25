@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:1809d7cda6b74835",
+  "lessonIds": [
+    "GU-C59-fruit",
+    "GU-C59-banana",
+    "GU-C59-apple",
+    "GU-C59-potatoes",
+    "GU-C59-tomato"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch59.txt",
+  "json": "gujarati/narration/ch59.json",
+  "textHash": "fnv1a64:def037f5a995f4ec",
+  "jsonHash": "fnv1a64:f2ad01f4fd9f3efb",
+  "findings": []
+}

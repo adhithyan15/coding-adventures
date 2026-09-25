@@ -1,0 +1,19 @@
+{
+  "chapter": 47,
+  "title": "Finger, Throat and Tongue",
+  "label": "ch:gu-finger-throat-and-tongue",
+  "canDo": "I can name a finger, the throat, a shoulder, the lips and the tongue.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GU-C47-tongue",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 47: i can name a finger, the throat, a shoulder, the lips and the tongue.",
+    "assesses": [
+      "GU-LEX-C47-BODY2-03",
+      "GU-LEX-C47-BODY2-04",
+      "GU-LEX-C47-BODY2-05"
+    ]
+  }
+}

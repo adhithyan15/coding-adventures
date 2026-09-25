@@ -1,0 +1,19 @@
+{
+  "language": "gujarati",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:ce3b446ee8f3b36b",
+  "lessonIds": [
+    "GU-C57-kharidvu",
+    "GU-C57-vechvu",
+    "GU-C57-price",
+    "GU-C57-rupees",
+    "GU-C57-coin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "gujarati/narration/ch57.txt",
+  "json": "gujarati/narration/ch57.json",
+  "textHash": "fnv1a64:bdadd415ab5136b2",
+  "jsonHash": "fnv1a64:b6d6044105e51338",
+  "findings": []
+}

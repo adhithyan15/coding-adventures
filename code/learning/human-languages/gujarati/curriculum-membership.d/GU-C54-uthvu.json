@@ -1,0 +1,11 @@
+{
+  "id": "GU-C54-uthvu",
+  "pathSegment": "GU-PATH-54-MOVE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GU-EXT-54-MOVE",
+      "order": 2
+    }
+  ]
+}

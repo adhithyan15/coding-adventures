@@ -1,0 +1,14 @@
+[package]
+name = "coding-adventures-html-tree-builder"
+version = "0.1.0"
+edition = "2021"
+description = "HTML tree construction written the way the WHATWG specification describes it (BR03)"
+
+[dependencies]
+coding-adventures-html-lexer = { path = "../html-lexer" }
+dom-core = { path = "../dom-core" }
+
+[dev-dependencies]
+# The corpus lives with html-parser, and the two builders are compared case by
+# case (BR03 §4). A development dependency only: nothing ships with it.
+coding-adventures-html-parser = { path = "../html-parser" }

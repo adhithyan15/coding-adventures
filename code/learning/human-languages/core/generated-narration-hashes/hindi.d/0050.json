@@ -1,19 +1,20 @@
 {
   "language": "hindi",
   "chapter": 50,
-  "sourceHash": "fnv1a64:8e2710f66dfccbd0",
+  "sourceHash": "fnv1a64:19c8a6720cc68d47",
   "lessonIds": [
     "HI-C50-gratitude",
     "HI-C50-favour",
     "HI-C50-respect",
     "HI-C50-blessing",
-    "HI-C50-salutation"
+    "HI-C50-salutation",
+    "HI-S147-letter-na-retroflex"
   ],
   "voiceLessons": 5,
   "drivablePrefix": 5,
   "text": "hindi/narration/ch50.txt",
   "json": "hindi/narration/ch50.json",
-  "textHash": "fnv1a64:99e0aff181d6fd66",
-  "jsonHash": "fnv1a64:adcd3feea63c1634",
+  "textHash": "fnv1a64:ed6b63ae88daca4d",
+  "jsonHash": "fnv1a64:75adf1d37f6f77b5",
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "Around Town",
+  "label": "ch:gu-around-town",
+  "canDo": "I can name a clinic, a bank, the police, an open ground and a bridge.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "GU-C84-bridge",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: i can name a clinic, a bank, the police, an open ground and a bridge.",
+    "assesses": [
+      "GU-LEX-C84-TOWN-03",
+      "GU-LEX-C84-TOWN-04",
+      "GU-LEX-C84-TOWN-05"
+    ]
+  }
+}
