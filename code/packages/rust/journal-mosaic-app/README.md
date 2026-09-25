@@ -62,3 +62,16 @@ cargo test -p journal-mosaic-app
 cargo build -p journal-mosaic-app --target wasm32-unknown-unknown
 node --test js/wasm.test.mjs   # the real wasm through mosaic-host.mjs
 ```
+
+On Compose, `conformance/compose/` holds two harnesses that run inside an
+emitted project (`mosaic-compile pkg code/programs/mosaic/journal-app
+--backend compose --emit-project --runtime-library <this crate's dylib>`, then
+copy the file into `src/test/kotlin`):
+
+- `JournalUiTest` drives the generated editor over this runtime: write, save,
+  reopen from the timeline, delete. Run it twice on one
+  `MOSAIC_APP_STATE_PATH`, the second time with `MOSAIC_EXPECT_RESTORED=1`,
+  and the second launch must find the entry the first one kept. CI runs both
+  launches in the Linux Compose lane.
+- `JournalScreenshots` writes PNGs to `MOSAIC_SHOT_DIR` for a person to look
+  at. It asserts only that rendering succeeds.

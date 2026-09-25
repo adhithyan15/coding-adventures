@@ -48,6 +48,14 @@
   - The name field is capped at `MAX_JOURNAL_NAME_CHARS` as typed.
   - A new entry is filed in the selected journal, or in Personal under All.
   - `JournalScreenshots` adds 10-work-journal and 11-journal-error.
+- `conformance/compose/JournalUiTest.kt`: Journal on Compose is DRIVEN in CI,
+  not only compiled. The first launch writes and saves two entries through
+  the generated editor, reopens one from the timeline and deletes it; a
+  second launch on the same state file (`MOSAIC_EXPECT_RESTORED=1`) must find
+  the survivor, delete it and show the empty journal. It also sends a
+  malformed `onTitleChange` through the binding and checks that the snapshot
+  is unchanged. The Linux Compose lane now builds the distributable, checks
+  that it bundles this runtime, and runs both launches.
 - **An entry's day (J4e).** `draft_date` joins the draft (`#[serde(default)]`).
   Save parses it with `Date::parse_iso` BEFORE writing, then runs
   `CreateEntry` with that day, or `EditEntry` plus `SetEntryDate` when the
