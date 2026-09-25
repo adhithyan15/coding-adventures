@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-98-REPLY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "TE-EXT-98-REPLY"
+  ],
+  "after": []
+}

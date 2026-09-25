@@ -1,0 +1,11 @@
+{
+  "id": "TE-C97-crying",
+  "pathSegment": "TE-PATH-97-MOOD",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-97-MOOD",
+      "order": 1
+    }
+  ]
+}

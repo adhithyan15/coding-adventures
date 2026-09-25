@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:0485ff065440519c",
+  "lessonIds": [
+    "TE-C94-pardon",
+    "TE-C94-apology",
+    "TE-C94-offer",
+    "TE-C94-need",
+    "TE-C94-introduction"
+  ],
+  "tex": "telugu/book/chapters/ch94-offers-apologies.tex"
+}

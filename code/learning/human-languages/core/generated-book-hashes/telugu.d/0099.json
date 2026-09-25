@@ -1,0 +1,15 @@
+{
+  "language": "telugu",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:118ae4aa7225493d",
+  "lessonIds": [
+    "TE-C99-namaste",
+    "TE-C99-delight",
+    "TE-C99-congrats",
+    "TE-C99-gift",
+    "TE-C99-invitation",
+    "TE-R99-second-pass-welcome",
+    "TE-R99-second-pass-names-moods"
+  ],
+  "tex": "telugu/book/chapters/ch99-welcomes-gifts.tex"
+}

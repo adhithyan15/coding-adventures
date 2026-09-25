@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C98-enough",
+    "language": "telugu",
+    "chapter": 98,
+    "sequence": 3800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db8b1729b293b003"
+  },
+  "findings": []
+}

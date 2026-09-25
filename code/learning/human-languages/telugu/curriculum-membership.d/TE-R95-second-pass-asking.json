@@ -1,0 +1,11 @@
+{
+  "id": "TE-R95-second-pass-asking",
+  "pathSegment": "TE-PATH-95-ASK",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TE-EXT-95-ASK",
+      "order": 5
+    }
+  ]
+}

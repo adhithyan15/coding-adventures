@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C95-howsay",
+    "language": "telugu",
+    "chapter": 95,
+    "sequence": 3620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:677ded70a99629e3"
+  },
+  "findings": []
+}

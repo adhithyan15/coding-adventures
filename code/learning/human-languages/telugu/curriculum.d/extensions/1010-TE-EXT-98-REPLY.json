@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-98-REPLY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can answer with nothing, not yet, that will do, that's true, and that's the one.",
+  "prerequisites": []
+}

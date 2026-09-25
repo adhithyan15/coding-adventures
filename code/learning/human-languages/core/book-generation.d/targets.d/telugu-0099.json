@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 99,
+  "output": "telugu/book/chapters/ch99-welcomes-gifts.tex",
+  "scriptSet": "telugu-comparisons"
+}

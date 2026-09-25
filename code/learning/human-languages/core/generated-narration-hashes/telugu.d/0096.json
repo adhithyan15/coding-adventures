@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:76ca1b67fcdefe08",
+  "lessonIds": [
+    "TE-C96-surname",
+    "TE-C96-nickname",
+    "TE-C96-age",
+    "TE-C96-birthday",
+    "TE-C96-signature"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch96.txt",
+  "json": "telugu/narration/ch96.json",
+  "textHash": "fnv1a64:94d6d6f081f362c9",
+  "jsonHash": "fnv1a64:742f0aeba9cca926",
+  "findings": []
+}

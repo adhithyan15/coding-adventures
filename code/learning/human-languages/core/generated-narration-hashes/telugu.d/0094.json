@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:435c23698a380ee5",
+  "lessonIds": [
+    "TE-C94-pardon",
+    "TE-C94-apology",
+    "TE-C94-offer",
+    "TE-C94-need",
+    "TE-C94-introduction"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch94.txt",
+  "json": "telugu/narration/ch94.json",
+  "textHash": "fnv1a64:a9d6c8fd5f14a184",
+  "jsonHash": "fnv1a64:b936dd4337be60ab",
+  "findings": []
+}

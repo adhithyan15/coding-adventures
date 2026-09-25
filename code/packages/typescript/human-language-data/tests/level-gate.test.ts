@@ -105,26 +105,33 @@ describe("the gate that would have caught the A2 claim", () => {
     // criteria, and has since closed A1 as well. The finding this test names is
     // unaffected — overstating is a track touching HIGHER than it has attained, not a
     // track having attained nothing — so the 23 stands and the zero does not.
-    expect(gate.summary.tracksWithAnyLevel).toBe(1);
-    // Which rung, and only that rung. Checking every level is the point: pinning one
+    // 1 -> 2: Telugu closed its last pre-A1 criterion (vocabulary, 300 headwords)
+    // with chapters 92-99, the second track to attain any level.
+    expect(gate.summary.tracksWithAnyLevel).toBe(2);
+    // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
-    // C2. What changed is WHICH rung is the exception — pre-A1, then A1 — so the
-    // exception is now read off `spanish.attained` rather than hard-coded. That keeps
-    // the anti-spurious sweep intact without conscripting the next tranche to climb
-    // a rung into editing this loop.
-    const held = gate.tracks.find((t) => t.language === "spanish")!.attained!;
-    for (const [level, count] of Object.entries(gate.summary.attainedByLevel)) {
-      expect(count).toBe(level === held ? 1 : 0);
+    // C2. The tracks that hold a rung are pinned by name, and the per-level counts
+    // are derived from that map, so a track climbing a rung edits one entry here
+    // and the anti-spurious sweep stays intact.
+    const HELD: Readonly<Record<string, string>> = { spanish: "A1", telugu: "pre-A1" };
+    const expectedByLevel = new Map<string, number>();
+    for (const level of Object.values(HELD)) {
+      expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }
-    // Anti-vacuity: the loop above is only meaningful if `held` names a real rung that
-    // the summary actually counts. A `held` of some level absent from `attainedByLevel`
-    // would make every arm of the ternary read 0 and the sweep would check nothing.
-    expect(Object.keys(gate.summary.attainedByLevel)).toContain(held);
-    // And the count agrees with the tracks it is a count OF — the summary is derived
-    // from `tracks`, so a summary that drifts from it is the bug this would catch.
-    expect(gate.tracks.filter((t) => t.attained !== null).map((t) => t.language)).toEqual([
-      "spanish",
-    ]);
+    for (const [level, count] of Object.entries(gate.summary.attainedByLevel)) {
+      expect(count, level).toBe(expectedByLevel.get(level) ?? 0);
+    }
+    // Anti-vacuity: every pinned rung must be one the summary actually counts, or
+    // the sweep above would read 0 for it and check nothing.
+    for (const level of Object.values(HELD)) {
+      expect(Object.keys(gate.summary.attainedByLevel)).toContain(level);
+    }
+    // And the summary agrees with the tracks it is a count OF — it is derived from
+    // `tracks`, so a summary that drifts from it is the bug this would catch.
+    const attained = Object.fromEntries(
+      gate.tracks.filter((t) => t.attained !== null).map((t) => [t.language, t.attained]),
+    );
+    expect(attained).toEqual(HELD);
   });
 
   it("names which criterion failed and by how much, not just that one did", () => {

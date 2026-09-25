@@ -1,6 +1,9 @@
 ## HL-C424-76d7dbdd — Clearing Telugu pre-A1 is three blockers, not 79 words, and adding the words makes one of them worse
 
-**Status: OPEN.** Found by reading the per-track ladder the gap report now prints
+**Status: CLOSED (2026-09-25) — Telugu attains pre-A1.** The trap below was
+avoided by building revisits into each vocabulary tranche (chapters 84-99, 80
+words, each word lesson practising the two atoms before it and each tranche
+closing on two review lessons), so reinforcement never reopened. Found by reading the per-track ladder the gap report now prints
 (`#15904`), then reading the track's full blocker list rather than only its
 worst one.
 

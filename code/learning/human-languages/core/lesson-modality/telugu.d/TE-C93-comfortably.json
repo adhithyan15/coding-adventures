@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C93-comfortably",
+    "language": "telugu",
+    "chapter": 93,
+    "sequence": 3520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1252870f23bf3726"
+  },
+  "findings": []
+}

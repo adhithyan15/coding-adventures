@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "At the Doctor",
+  "label": "ch:te-at-the-doctor",
+  "canDo": "I can say I have a cold, a wound or feel weak, and talk about medicine and the hospital.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TE-C92-weakness",
+    "kind": "production",
+    "summary": "Complete TE-C92-weakness: tell a doctor what is wrong.",
+    "assesses": [
+      "TE-LEX-C92-DOCTOR-03",
+      "TE-LEX-C92-DOCTOR-04",
+      "TE-LEX-C92-DOCTOR-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C94-need",
+  "pathSegment": "TE-PATH-94-POLITE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-94-POLITE",
+      "order": 3
+    }
+  ]
+}

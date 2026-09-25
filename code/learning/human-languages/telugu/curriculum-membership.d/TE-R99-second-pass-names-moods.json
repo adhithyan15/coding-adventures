@@ -1,0 +1,11 @@
+{
+  "id": "TE-R99-second-pass-names-moods",
+  "pathSegment": "TE-PATH-99-WELCOME",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "TE-EXT-99-WELCOME",
+      "order": 6
+    }
+  ]
+}

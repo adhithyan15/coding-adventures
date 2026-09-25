@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C99-congrats",
+    "language": "telugu",
+    "chapter": 99,
+    "sequence": 3850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c10832477e67c34f"
+  },
+  "findings": []
+}

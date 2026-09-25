@@ -1,0 +1,21 @@
+{
+  "language": "telugu",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:413045e0d3561771",
+  "lessonIds": [
+    "TE-C99-namaste",
+    "TE-C99-delight",
+    "TE-C99-congrats",
+    "TE-C99-gift",
+    "TE-C99-invitation",
+    "TE-R99-second-pass-welcome",
+    "TE-R99-second-pass-names-moods"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "telugu/narration/ch99.txt",
+  "json": "telugu/narration/ch99.json",
+  "textHash": "fnv1a64:31c6124594744d4c",
+  "jsonHash": "fnv1a64:83f5892176b3f327",
+  "findings": []
+}
