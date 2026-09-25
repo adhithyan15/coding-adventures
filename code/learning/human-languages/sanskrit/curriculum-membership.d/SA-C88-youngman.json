@@ -1,0 +1,11 @@
+{
+  "id": "SA-C88-youngman",
+  "pathSegment": "SA-PATH-88-PEOPLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-88-PEOPLE",
+      "order": 1
+    }
+  ]
+}

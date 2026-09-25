@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:b5ee9865e3e72018",
+  "lessonIds": [
+    "SA-C84-temple",
+    "SA-C84-hospital",
+    "SA-C84-field",
+    "SA-C84-farmer",
+    "SA-C84-merchant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch84.txt",
+  "json": "sanskrit/narration/ch84.json",
+  "textHash": "fnv1a64:299de0f94929c43a",
+  "jsonHash": "fnv1a64:22457515ccbe2e0c",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:f66791ca33a40c82",
+  "lessonIds": [
+    "SA-C86-friday",
+    "SA-C86-saturday",
+    "SA-C86-sunday",
+    "SA-C86-time",
+    "SA-C86-moment"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch86.txt",
+  "json": "sanskrit/narration/ch86.json",
+  "textHash": "fnv1a64:edf0777ef234a89a",
+  "jsonHash": "fnv1a64:2d65aa6c33fea82f",
+  "findings": []
+}

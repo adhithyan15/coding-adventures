@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "Temple, Hospital and Field",
+  "label": "ch:sa-temple-hospital-field",
+  "canDo": "I can name a temple, a hospital and a field, a farmer and a merchant.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "SA-C84-merchant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: i can name a temple, a hospital and a field, a farmer and a merchant.",
+    "assesses": [
+      "SA-LEX-C84-PLACES-03",
+      "SA-LEX-C84-PLACES-04",
+      "SA-LEX-C84-PLACES-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C77-bathroom",
+  "pathSegment": "SA-PATH-77-HOME",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-77-HOME",
+      "order": 2
+    }
+  ]
+}

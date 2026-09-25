@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-67-NEEDS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I am sleepy, hungry or thirsty, ask for rest, and say I am at ease.",
+  "prerequisites": []
+}

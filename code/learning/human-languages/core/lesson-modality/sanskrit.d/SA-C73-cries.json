@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C73-cries",
+    "language": "sanskrit",
+    "chapter": 73,
+    "sequence": 3390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78fc73ade4c1cb8c"
+  },
+  "findings": []
+}

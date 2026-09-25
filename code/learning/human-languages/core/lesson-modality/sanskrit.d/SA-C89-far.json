@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C89-far",
+    "language": "sanskrit",
+    "chapter": 89,
+    "sequence": 4200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a5c91bb306b45df"
+  },
+  "findings": []
+}

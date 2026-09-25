@@ -1,0 +1,19 @@
+{
+  "chapter": 70,
+  "title": "Nail, Knee and Shoulder",
+  "label": "ch:sa-nail-knee-shoulder",
+  "canDo": "I can name a nail, the knee, the back, the shoulder and the lip.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-C70-lip",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 70: i can name a nail, the knee, the back, the shoulder and the lip.",
+    "assesses": [
+      "SA-LEX-C70-BODY2-03",
+      "SA-LEX-C70-BODY2-04",
+      "SA-LEX-C70-BODY2-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-73-VOICE",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "SA-EXT-73-VOICE"
+  ],
+  "after": []
+}

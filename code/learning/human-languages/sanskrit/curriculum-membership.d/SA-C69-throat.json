@@ -1,0 +1,11 @@
+{
+  "id": "SA-C69-throat",
+  "pathSegment": "SA-PATH-69-BODY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-69-BODY",
+      "order": 1
+    }
+  ]
+}

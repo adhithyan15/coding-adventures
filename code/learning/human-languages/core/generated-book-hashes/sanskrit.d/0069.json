@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:3c077a576f4e0922",
+  "lessonIds": [
+    "SA-C69-eye",
+    "SA-C69-throat",
+    "SA-C69-belly",
+    "SA-C69-forehead",
+    "SA-C69-tongue"
+  ],
+  "tex": "sanskrit/book/chapters/ch69-eye-throat-tongue.tex"
+}

@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 80,
+  "output": "sanskrit/book/chapters/ch80-crow-parrot-peacock.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

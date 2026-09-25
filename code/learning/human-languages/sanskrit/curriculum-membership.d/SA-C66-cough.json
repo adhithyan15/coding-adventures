@@ -1,0 +1,11 @@
+{
+  "id": "SA-C66-cough",
+  "pathSegment": "SA-PATH-66-UNWELL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-66-UNWELL",
+      "order": 1
+    }
+  ]
+}

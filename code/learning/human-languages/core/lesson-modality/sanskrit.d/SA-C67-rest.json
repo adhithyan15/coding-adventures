@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C67-rest",
+    "language": "sanskrit",
+    "chapter": 67,
+    "sequence": 3100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60ac807454da3629"
+  },
+  "findings": []
+}

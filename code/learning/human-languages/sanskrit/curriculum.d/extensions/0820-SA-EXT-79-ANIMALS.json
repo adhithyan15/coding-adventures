@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-79-ANIMALS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name an elephant, a horse, a camel, a mouse and a cat.",
+  "prerequisites": []
+}

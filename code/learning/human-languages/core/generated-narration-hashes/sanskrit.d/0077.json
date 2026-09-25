@@ -1,0 +1,21 @@
+{
+  "language": "sanskrit",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:23f7e70d05c77bd8",
+  "lessonIds": [
+    "SA-C77-room",
+    "SA-C77-kitchen",
+    "SA-C77-bathroom",
+    "SA-C77-roof",
+    "SA-C77-key",
+    "SA-R77-first-pass-body-and-feelings",
+    "SA-R77-second-pass-doing-and-going"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "sanskrit/narration/ch77.txt",
+  "json": "sanskrit/narration/ch77.json",
+  "textHash": "fnv1a64:161f35534f6163e2",
+  "jsonHash": "fnv1a64:360215f30af352d6",
+  "findings": []
+}

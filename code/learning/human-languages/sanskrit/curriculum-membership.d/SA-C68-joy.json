@@ -1,0 +1,11 @@
+{
+  "id": "SA-C68-joy",
+  "pathSegment": "SA-PATH-68-FEELINGS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "SA-EXT-68-FEELINGS",
+      "order": 4
+    }
+  ]
+}

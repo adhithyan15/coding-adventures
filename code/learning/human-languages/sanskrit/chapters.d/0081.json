@@ -1,0 +1,19 @@
+{
+  "chapter": 81,
+  "title": "Tree, Seed and Root",
+  "label": "ch:sa-tree-seed-root",
+  "canDo": "I can name a tree, a seed, a root, a garden and a forest.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "SA-C81-forest",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: i can name a tree, a seed, a root, a garden and a forest.",
+    "assesses": [
+      "SA-LEX-C81-PLANTS-03",
+      "SA-LEX-C81-PLANTS-04",
+      "SA-LEX-C81-PLANTS-05"
+    ]
+  }
+}

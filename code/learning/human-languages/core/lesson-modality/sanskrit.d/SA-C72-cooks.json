@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C72-cooks",
+    "language": "sanskrit",
+    "chapter": 72,
+    "sequence": 3320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30e52d50fc862113"
+  },
+  "findings": []
+}

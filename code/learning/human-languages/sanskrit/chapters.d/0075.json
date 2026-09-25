@@ -1,0 +1,19 @@
+{
+  "chapter": 75,
+  "title": "Getting There",
+  "label": "ch:sa-getting-there",
+  "canDo": "I can name a vehicle, a chariot, a boat and an aeroplane, and say someone goes in.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "SA-C75-enters",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 75: i can name a vehicle, a chariot, a boat and an aeroplane, and say someone goes in.",
+    "assesses": [
+      "SA-LEX-C75-TRAVEL-03",
+      "SA-LEX-C75-TRAVEL-04",
+      "SA-LEX-C75-TRAVEL-05"
+    ]
+  }
+}

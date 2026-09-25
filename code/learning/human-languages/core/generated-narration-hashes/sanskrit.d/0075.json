@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:8e00ed462faec6d7",
+  "lessonIds": [
+    "SA-C75-vehicle",
+    "SA-C75-chariot",
+    "SA-C75-boat",
+    "SA-C75-plane",
+    "SA-C75-enters"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch75.txt",
+  "json": "sanskrit/narration/ch75.json",
+  "textHash": "fnv1a64:acc6933b5611aef6",
+  "jsonHash": "fnv1a64:36131c53bf61dd14",
+  "findings": []
+}

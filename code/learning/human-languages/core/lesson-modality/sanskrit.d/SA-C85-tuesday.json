@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C85-tuesday",
+    "language": "sanskrit",
+    "chapter": 85,
+    "sequence": 4010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a9da36dd22c855c"
+  },
+  "findings": []
+}

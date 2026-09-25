@@ -1,0 +1,19 @@
+{
+  "chapter": 66,
+  "title": "Not Well",
+  "label": "ch:sa-not-well",
+  "canDo": "I can name a fever, a cough, pain and illness, and wish someone health.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C66-health",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: i can name a fever, a cough, pain and illness, and wish someone health.",
+    "assesses": [
+      "SA-LEX-C66-UNWELL-03",
+      "SA-LEX-C66-UNWELL-04",
+      "SA-LEX-C66-UNWELL-05"
+    ]
+  }
+}

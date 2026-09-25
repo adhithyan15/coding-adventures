@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:97238d9373d90deb",
+  "lessonIds": [
+    "SA-C87-eleven",
+    "SA-C87-twelve",
+    "SA-C87-twenty",
+    "SA-C87-hundred",
+    "SA-C87-thousand"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch87.txt",
+  "json": "sanskrit/narration/ch87.json",
+  "textHash": "fnv1a64:039dd550691ed5d1",
+  "jsonHash": "fnv1a64:4f54f12164e71a44",
+  "findings": []
+}

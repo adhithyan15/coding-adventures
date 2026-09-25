@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 75,
+  "output": "sanskrit/book/chapters/ch75-getting-there.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

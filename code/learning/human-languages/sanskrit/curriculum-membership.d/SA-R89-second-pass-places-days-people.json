@@ -1,0 +1,11 @@
+{
+  "id": "SA-R89-second-pass-places-days-people",
+  "pathSegment": "SA-PATH-89-DESCRIBE",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "SA-EXT-89-DESCRIBE",
+      "order": 6
+    }
+  ]
+}

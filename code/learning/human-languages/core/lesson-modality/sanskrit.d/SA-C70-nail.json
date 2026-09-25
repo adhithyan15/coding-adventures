@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C70-nail",
+    "language": "sanskrit",
+    "chapter": 70,
+    "sequence": 3220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38390b8e433d9494"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "How It Feels",
+  "label": "ch:sa-how-it-feels",
+  "canDo": "I can name sorrow, fear, anger, shyness and joy.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "SA-C68-joy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can name sorrow, fear, anger, shyness and joy.",
+    "assesses": [
+      "SA-LEX-C68-FEELINGS-03",
+      "SA-LEX-C68-FEELINGS-04",
+      "SA-LEX-C68-FEELINGS-05"
+    ]
+  }
+}

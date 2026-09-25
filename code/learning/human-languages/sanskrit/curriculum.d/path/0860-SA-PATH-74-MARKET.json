@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-74-MARKET",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "SA-EXT-74-MARKET"
+  ],
+  "after": []
+}

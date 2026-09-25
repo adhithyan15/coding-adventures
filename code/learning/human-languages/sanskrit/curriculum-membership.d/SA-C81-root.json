@@ -1,0 +1,11 @@
+{
+  "id": "SA-C81-root",
+  "pathSegment": "SA-PATH-81-PLANTS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-81-PLANTS",
+      "order": 2
+    }
+  ]
+}

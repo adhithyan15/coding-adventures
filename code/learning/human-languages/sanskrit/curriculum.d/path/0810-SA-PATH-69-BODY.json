@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-69-BODY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "SA-EXT-69-BODY"
+  ],
+  "after": []
+}

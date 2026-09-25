@@ -1,0 +1,11 @@
+{
+  "id": "SA-C74-shop",
+  "pathSegment": "SA-PATH-74-MARKET",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-74-MARKET",
+      "order": 3
+    }
+  ]
+}

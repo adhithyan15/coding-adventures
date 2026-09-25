@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C78-banana",
+    "language": "sanskrit",
+    "chapter": 78,
+    "sequence": 3650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54f413ba163327cf"
+  },
+  "findings": []
+}

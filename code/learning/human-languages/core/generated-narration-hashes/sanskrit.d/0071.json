@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:7be708c78e1a091d",
+  "lessonIds": [
+    "SA-C71-runs",
+    "SA-C71-walks",
+    "SA-C71-sits",
+    "SA-C71-standsup",
+    "SA-C71-falls"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch71.txt",
+  "json": "sanskrit/narration/ch71.json",
+  "textHash": "fnv1a64:50af497045a6e557",
+  "jsonHash": "fnv1a64:189778472e949ebe",
+  "findings": []
+}

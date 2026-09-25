@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 68,
+  "output": "sanskrit/book/chapters/ch68-how-it-feels.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

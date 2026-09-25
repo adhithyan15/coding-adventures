@@ -1,0 +1,864 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 89,
+  "title": "Beautiful, Far and Near",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:5918fa468a665eca",
+  "lessons": [
+    {
+      "id": "SA-C89-beautiful",
+      "sequence": 4190,
+      "title": "सुन्दरः (sundaraḥ) — beautiful",
+      "headword": "सुन्दरः",
+      "romanization": "sundaraḥ",
+      "gloss": "beautiful",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64bd060df6c5f0d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a son, then the Sanskrit for a daughter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुन्दरः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुन्दरः (sundaraḥ) — \"beautiful\". सुन्दरः मयूरः — \"a beautiful peacock\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Before the noun, and it agrees."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sundaraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sundaraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sundaraḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sundaraḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sundaraḥ mayūraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sundaraḥ mayūraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a son, then the Sanskrit for a daughter, then say sundaraḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a son, then the Sanskrit for a daughter, then say *sundaraḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सुन्दरः (sundaraḥ) mean? (\"Beautiful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C89-far",
+      "sequence": 4200,
+      "title": "दूरम् (dūram) — far",
+      "headword": "दूरम्",
+      "romanization": "dūram",
+      "gloss": "far",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a5c91bb306b45df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for a daughter, then the Sanskrit for beautiful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दूरम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दूरम् (dūram) — \"far\". विद्यालयः दूरम् — \"the school is far\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How far away it is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dūram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dūram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dūram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dūram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for a daughter, then the Sanskrit for beautiful, then say dūram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for a daughter, then the Sanskrit for beautiful, then say *dūram* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दूरम् (dūram) mean? (\"Far\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C89-near",
+      "sequence": 4210,
+      "title": "समीपम् (samīpam) — near",
+      "headword": "समीपम्",
+      "romanization": "samīpam",
+      "gloss": "near",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dec35bb081be5aab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for beautiful, then the Sanskrit for far."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: समीपम्",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समीपम् (samīpam) — \"near\", the opposite of दूरम् (dūram)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The other side of far."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samīpam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samīpam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samīpam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samīpam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say samīpam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *samīpam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for beautiful, then the Sanskrit for far, then say samīpam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for beautiful, then the Sanskrit for far, then say *samīpam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does समीपम् (samīpam) mean? (\"Near\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C89-hard",
+      "sequence": 4220,
+      "title": "कठिनः (kaṭhinaḥ) — hard, difficult",
+      "headword": "कठिनः",
+      "romanization": "kaṭhinaḥ",
+      "gloss": "hard, difficult",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7a510564148e27e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for far, then the Sanskrit for near."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कठिनः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कठिनः (kaṭhinaḥ) — \"hard\", both to touch and to do. कठिनः पाठः — \"a hard lesson\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What a hard lesson is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭhinaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭhinaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭhinaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭhinaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kaṭhinaḥ pāṭhaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kaṭhinaḥ pāṭhaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for far, then the Sanskrit for near, then say kaṭhinaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for far, then the Sanskrit for near, then say *kaṭhinaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कठिनः (kaṭhinaḥ) mean? (\"Hard, difficult\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C89-sweet",
+      "sequence": 4230,
+      "title": "मधुरः (madhuraḥ) — sweet",
+      "headword": "मधुरः",
+      "romanization": "madhuraḥ",
+      "gloss": "sweet",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b459e5c22c6048f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Sanskrit for near, then the Sanskrit for hard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मधुरः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मधुरः (madhuraḥ) — \"sweet\", from मधु, \"honey\". मधुरम् आम्रम् — \"a sweet mango\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Honey, as a describing word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhuraḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhuraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhuraḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhuraḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say madhuram āmram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *madhuram āmram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Sanskrit for near, then the Sanskrit for hard, then say madhuraḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Sanskrit for near, then the Sanskrit for hard, then say *madhuraḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मधुरः (madhuraḥ) mean? (\"Sweet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R89-first-pass-food-animals-nature",
+      "sequence": 4240,
+      "title": "Fruit, animals and the land — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over food, animals, plants, water and school",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5fb3fd57d77f80e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"a hard lesson\", then \"a sweet mango\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mango, a banana, oil, flatbread, sweet rice pudding",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mango, a banana, oil, flatbread, sweet rice pudding]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an elephant, a horse, a camel, a mouse, a cat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an elephant, a horse, a camel, a mouse, a cat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crow, a parrot, a peacock, a tortoise, a frog",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crow, a parrot, a peacock, a tortoise, a frog]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tree, a seed, a root, a garden, a forest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tree, a seed, a root, a garden, a forest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lake, a well, a pond, an island, a river bank",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lake, a well, a pond, an island, a river bank]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a school, a student, a teacher, a lesson, an exam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a school, a student, a teacher, a lesson, an exam]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Mango, banana, oil, bread, pudding? (आम्रम्, कदलीफलम्, तैलम्, रोटिका, पायसम्.) Elephant, horse, camel, mouse, cat? (गजः, अश्वः, उष्ट्रः, मूषकः, मार्जारः.) Crow, parrot, peacock, tortoise, frog? (काकः, शुकः, मयूरः, कूर्मः, मण्डूकः.) Tree, seed, root, garden, forest? (वृक्षः, बीजम्, मूलम्, उद्यानम्, अरण्यम्.) Lake, well, pond, island, shore? (सरः, कूपः, तडागः, द्वीपः, तीरम्.) School, student, teacher, lesson, exam? (विद्यालयः, छात्रः, अध्यापकः, पाठः, परीक्षा.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-R89-second-pass-places-days-people",
+      "sequence": 4250,
+      "title": "Places, days and people — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over places, the week, numbers, people and describing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1d86e9dfb395e13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask where the temple is, then where the hospital is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a field, a farmer, a merchant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a field, a farmer, a merchant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a week; Monday, Tuesday, Wednesday, Thursday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a week; Monday, Tuesday, Wednesday, Thursday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Friday, Saturday, Sunday; ask the time; one moment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Friday, Saturday, Sunday; ask the time; one moment]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eleven, twelve, twenty, a hundred, a thousand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: eleven, twelve, twenty, a hundred, a thousand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a girl, a young man, my friend (a woman's), my son, my daughter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a girl, a young man, my friend (a woman's), my son, my daughter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a beautiful peacock; far; near; a hard lesson; a sweet mango",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a beautiful peacock; far; near; a hard lesson; a sweet mango]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Temple, hospital, field, farmer, merchant? (मन्दिरम्, चिकित्सालयः, क्षेत्रम्, कृषकः, वणिक्.) Week? (सप्ताहः.) Monday to Sunday? (सोमवासरः, मंगलवासरः, बुधवासरः, गुरुवासरः, शुक्रवासरः, शनिवासरः, रविवासरः.) Time, moment? (समयः, क्षणः.) Eleven, twelve, twenty, hundred, thousand? (एकादश, द्वादश, विंशतिः, शतम्, सहस्रम्.) Girl, young man, friend, son, daughter? (बालिका, युवकः, सखी, पुत्रः, पुत्री.) Beautiful, far, near, hard, sweet? (सुन्दरः (sundaraḥ), दूरम् (dūram), समीपम् (samīpam), कठिनः (kaṭhinaḥ), मधुरः (madhuraḥ).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

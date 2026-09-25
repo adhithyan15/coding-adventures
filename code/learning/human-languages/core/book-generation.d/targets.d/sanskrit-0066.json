@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 66,
+  "output": "sanskrit/book/chapters/ch66-not-well.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}
