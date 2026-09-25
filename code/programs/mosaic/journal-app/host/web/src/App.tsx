@@ -7,11 +7,14 @@
 //   * loads the wasm, giving it the clock it imports (journal.now_ms);
 //   * passes props through (kebab-case keys become camelCase);
 //   * sends every event straight to the runtime, then files the snapshot away;
-//   * restores the last snapshot on boot.
+//   * restores the last snapshot on boot;
+//   * runs the standard file effects the runtime asks for (J6a Export) through
+//     Mosaic's browser platform library, mosaic-file-effects.mjs (UI87 §7).
 import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { JournalApp as Light, type JournalAppEvent } from "./components/light/react/JournalApp";
 import { JournalApp as Dark } from "./components/dark/react/JournalApp";
 import { loadMosaicModule, type MosaicHost, type MosaicUpdate } from "../../../../../../packages/rust/mosaic-app-wasm/js/mosaic-host.mjs";
+import { createBrowserFileEffects, type MosaicFileEffects } from "../../../../../../packages/rust/mosaic-app-wasm/js/mosaic-file-effects.mjs";
 import { browserStorage, readStored, setAside, STATE_KEY, writeSnapshot } from "./persistence";
 
 function prefersDark(): boolean {
@@ -81,14 +84,21 @@ function camelProps(props: Record<string, unknown>): Props {
   ) as Props;
 }
 
+/** The standard kinds the browser platform library answers (UI87 §7). */
+const FILE_EFFECT_KINDS = new Set(["files.open", "files.save"]);
+
 export function App({
   load = loadApplication,
   storage = browserStorage(),
+  environment = globalThis,
 }: {
   load?: () => Promise<MosaicHost>;
   storage?: Storage | null;
+  /** Where the file pickers live; a test passes a fake. */
+  environment?: typeof globalThis;
 }) {
   const host = useRef<MosaicHost | null>(null);
+  const files = useRef<MosaicFileEffects | null>(null);
   const [update, setUpdate] = useState<MosaicUpdate | null>(null);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -119,6 +129,7 @@ export function App({
           return;
         }
         host.current = app;
+        files.current = createBrowserFileEffects(app, environment);
         let first = app.update;
         const { snapshot, raw } = readStored(storage);
         if (raw !== null) {
@@ -138,10 +149,13 @@ export function App({
       });
     return () => {
       live = false;
+      // The executor first: it ignores any dialog still open after this.
+      files.current?.dispose();
+      files.current = null;
       owned?.dispose();
       host.current = null;
     };
-  }, [load, storage]);
+  }, [load, storage, environment]);
 
   const persist = (app: MosaicHost) => {
     if (!storage || stale.current) return;
@@ -153,18 +167,43 @@ export function App({
     }
   };
 
+  /**
+   * Run the file effects an update asks for. Called synchronously from the
+   * click that raised them, because the browser only opens a file picker
+   * inside a user gesture. The answer is a new update; it may ask for more.
+   */
+  const runFileEffects = (app: MosaicHost, next: MosaicUpdate) => {
+    const executor = files.current;
+    const awaited = next.effects.filter(effect => effect.delivery === "await" && FILE_EFFECT_KINDS.has(effect.kind));
+    if (!executor || awaited.length === 0) return false;
+    for (const effect of awaited) {
+      executor
+        .run(effect)
+        .then(answered => {
+          if (!answered || host.current !== app) return;
+          setUpdate(answered);
+          if (!runFileEffects(app, answered)) persist(app);
+        })
+        .catch(reason => setError(String(reason)));
+    }
+    return true;
+  };
+
   const dispatch = ({ type, ...payload }: JournalAppEvent) => {
     const app = host.current;
     if (!app) return;
+    let next: MosaicUpdate;
     try {
-      setUpdate(app.dispatch(type, payload));
+      next = app.dispatch(type, payload);
+      setUpdate(next);
       setError("");
     } catch (reason) {
       // The runtime refused the event and left its state as it was.
       setError(String(reason));
       return;
     }
-    persist(app);
+    // A pending Await blocks snapshots (UI47 §8.1): save once it is answered.
+    if (!runFileEffects(app, next)) persist(app);
   };
 
   if (!update) {
