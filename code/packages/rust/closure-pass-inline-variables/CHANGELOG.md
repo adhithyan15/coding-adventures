@@ -76,8 +76,46 @@ console.log(x);      // node prints 9; we emit eval("x=9");console.log(1)
 
 `v20260915` emits byte-identical output, so this is exact parity, not a
 divergence — Closure at ADVANCED documents that it does not support `eval`
-modifying locals. Recorded so it is not rediscovered as a bug. `with` is
-refused outright by the oracle.
+modifying locals. Recorded so it is not rediscovered as a bug.
+
+### Fixed — `with` could make propagation unsound, on any binding kind
+
+Found in review. A `with` block resolves identifiers against a runtime object,
+so `var x=1; with(JSON.parse('{"x":9}')) console.log(x)` prints `9`, and
+folding `x` to `1` is wrong. The oracle rejects `with` outright, but closurec
+compiles it, so the exposure was ours. The pass now declines every candidate in
+a program containing a `WithStatement` — including on the `const` path, where
+the hole predates this release.
+
+### Fixed — the strong-proof path bypassed the multi-use size budget
+
+Also found in review, and new in this release. The `strong_proof` branch
+returned before the `literal_cost(..) > MAX_MULTIUSE_LITERAL_LEN` check, so a
+long literal read at several sites was duplicated into all of them — meaning a
+`var` optimized *worse* than the same program written with `const`, which is
+backwards. The budget now applies to a scalar strong-proof candidate too. A
+structured candidate stays exempt: what it plants is the scalar a chain
+resolved to, never the literal.
+
+### Fixed — propagation was quadratic in the number of candidates
+
+New in this release and the reason it mattered: `propagate_structured` did two
+whole-program `serde_json::to_value` calls plus a full `Program::clone()` for
+every candidate. CLOC28 only sent rare object/array literals down that path;
+CLOC29 sends every top-level scalar `let`/`var`, which is the common case.
+
+Measured on N separate top-level bindings each read once, at ADVANCED:
+
+| N | before | after | `const` baseline |
+|---|---|---|---|
+| 200 | 0.57s | 0.26s | 0.14s |
+| 800 | 10.56s | 1.89s | 0.65s |
+
+The program is now serialized once per sweep and shared across candidates, and
+the post-rewrite count is derived arithmetically — `propagate_all` returns how
+many sites it rewrote, and each rewrite removes exactly one mention, so
+`remaining == total - replaced`. The residual growth is the per-candidate
+clone, tracked separately.
 
 10 tests added.
 

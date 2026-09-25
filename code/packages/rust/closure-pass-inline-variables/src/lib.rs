@@ -426,13 +426,54 @@ fn inline_variables_program(
     // when there is at least one use and either it is single-use or the
     // literal is short enough for the multi-use budget.
     let mut changed = false;
+    // A `with` block resolves identifiers against a runtime object, so a
+    // name that looks like a read of this binding may be a property of
+    // whatever `with` was handed:
+    //
+    //     var x = 1;
+    //     with (JSON.parse('{"x":9}')) { console.log(x); }   // prints 9
+    //
+    // No static scan can tell, so no binding in such a program is
+    // propagatable. The reference compiler never faces this — it rejects
+    // `with` outright (`JSC_USE_OF_WITH`) — but closurec compiles it, so
+    // the exposure is ours and the guard has to be ours too. This covers
+    // the `const` path as well, where the same hole predates CLOC29.
+    if program_contains_with(&serde_json::to_value(&*program).unwrap_or(serde_json::Value::Null)) {
+        return false;
+    }
+    // Serialized ONCE for every strong-proof candidate, not once per
+    // candidate. Committing a candidate only ever REMOVES mentions of that
+    // candidate's own name — what gets planted is a scalar literal, which
+    // contains no identifiers — so no other candidate's mention count or
+    // write status can change underneath this snapshot.
+    let before = if candidates.iter().any(|c| c.strong_proof) {
+        serde_json::to_value(&*program).ok()
+    } else {
+        None
+    };
     for cand in &candidates {
         // CLOC28/CLOC29 take a different route to the same question: a
         // structured candidate because what it rewrites is a chain rather
         // than an identifier, a scalar `let`/`var` because the `count_uses_*`
         // tally below cannot see a write to it.
         if cand.strong_proof {
-            if let Some(sites) = propagate_structured(program, cand) {
+            // The multi-use size budget applies to a SCALAR candidate on this
+            // path exactly as it does on the counter path below: the literal
+            // is duplicated into each site, so a long one must not be. Without
+            // this a `var` optimized WORSE than the same program written with
+            // `const` — the budget declined for `const` and nothing declined
+            // here. A structured candidate is exempt because what it plants is
+            // the scalar a chain resolved to, never the literal itself.
+            if !cand.structured
+                && literal_cost(&cand.value) > MAX_MULTIUSE_LITERAL_LEN
+                && count_uses_program(program, &cand.name) > 1
+            {
+                continue;
+            }
+            let Some(before) = before.as_ref() else {
+                continue;
+            };
+            if let Some(sites) = propagate_structured(program, cand, before) {
                 changed = true;
                 propagated.push(PropagatedConst {
                     name: cand.name.clone(),
@@ -453,7 +494,7 @@ fn inline_variables_program(
         if uses > 1 && literal_cost(&cand.value) > MAX_MULTIUSE_LITERAL_LEN {
             continue; // literal too large to duplicate across the uses
         }
-        if propagate_all(program, cand) {
+        if propagate_all(program, cand) > 0 {
             changed = true;
             // CV: the literal was substituted into all `uses` sites (gate
             // above guarantees `uses > 0`), after which the `const`
@@ -1147,15 +1188,33 @@ fn count_uses_member(
 /// Writes are the one thing the count cannot catch, because a rewritten
 /// `o.a++` would remove the occurrence *and* corrupt the program into
 /// `1++`. Those are excluded up front by [`has_write_occurrence`].
-fn propagate_structured(program: &mut Program, cand: &ConstCandidate) -> Option<usize> {
-    let before = serde_json::to_value(&*program).ok()?;
-    let total = structured::count_name_mentions(&before, &cand.name);
+/// `before` is the serialized program, computed ONCE per sweep by the
+/// caller and shared across candidates.
+///
+/// It used to be built here, which made the pass quadratic: two whole-program
+/// `serde_json::to_value` calls plus a full `Program::clone()` for every
+/// candidate. With CLOC28 that cost only bit on top-level object/array
+/// literals, which are rare. CLOC29 routes every top-level scalar `let`/`var`
+/// through the same proof, which is the common case, and the cost showed:
+/// 800 separate top-level `var`s took 10.6s against 0.7s for the same program
+/// written with `const`, growing ~4.3x per doubling.
+///
+/// Two of the three whole-program passes are now gone. The `after` count is
+/// derived arithmetically rather than re-serialized: `propagate_all` returns
+/// how many sites it rewrote, and each rewrite removes exactly one mention of
+/// the name, so `remaining == total - replaced`.
+fn propagate_structured(
+    program: &mut Program,
+    cand: &ConstCandidate,
+    before: &serde_json::Value,
+) -> Option<usize> {
+    let total = structured::count_name_mentions(before, &cand.name);
     // Exactly one mention is the declaration's own binding target and
     // nothing else, so there is nothing to rewrite.
     if total <= 1 {
         return None;
     }
-    if has_write_occurrence(&before, &cand.name) {
+    if has_write_occurrence(before, &cand.name) {
         return None;
     }
     // A read of the binding inside its OWN initializer runs while the
@@ -1176,11 +1235,14 @@ fn propagate_structured(program: &mut Program, cand: &ConstCandidate) -> Option<
     }
 
     let mut trial = program.clone();
-    if !propagate_all(&mut trial, cand) {
+    let replaced = propagate_all(&mut trial, cand);
+    if replaced == 0 {
         return None;
     }
-    let after = serde_json::to_value(&trial).ok()?;
-    let remaining = structured::count_name_mentions(&after, &cand.name);
+    // Each rewrite replaces exactly one mention of the name — a bare
+    // identifier for a scalar, a chain's root for a structured candidate —
+    // so the surviving count follows by subtraction. No second walk.
+    let remaining = total.saturating_sub(replaced);
     if remaining != 1 {
         // Anything beyond the declaration itself still mentions the name:
         // an escape, an unresolvable read, a write, or an AST shape this
@@ -1190,6 +1252,24 @@ fn propagate_structured(program: &mut Program, cand: &ConstCandidate) -> Option<
 
     *program = trial;
     Some(total - 1)
+}
+
+/// Does the serialized program contain a `with` statement anywhere?
+///
+/// Fails closed by construction: it looks for the node type rather than
+/// reasoning about scope, so any program containing one disables
+/// propagation entirely rather than trying to decide which names are safe.
+fn program_contains_with(v: &serde_json::Value) -> bool {
+    match v {
+        serde_json::Value::Object(map) => {
+            if map.get("type").and_then(serde_json::Value::as_str) == Some("WithStatement") {
+                return true;
+            }
+            map.values().any(program_contains_with)
+        }
+        serde_json::Value::Array(items) => items.iter().any(program_contains_with),
+        _ => false,
+    }
 }
 
 /// Is `name` written anywhere in the serialized program — assigned to,
@@ -1246,10 +1326,10 @@ fn structured_repr(expr: &Expression) -> String {
 /// Replace EVERY use of `cand.name` in the program with a clone of the
 /// constant's literal value. Returns whether any replacement was made.
 /// The walk does not short-circuit — it rewrites all use sites.
-fn propagate_all(program: &mut Program, cand: &ConstCandidate) -> bool {
-    let mut changed = false;
+fn propagate_all(program: &mut Program, cand: &ConstCandidate) -> usize {
+    let mut changed = 0usize;
     for item in &mut program.body {
-        changed |= match item {
+        changed += match item {
             ProgramItem::Declaration(d) => propagate_in_decl(d, cand),
             ProgramItem::Statement(s) => propagate_in_stmt(s, cand),
         };
@@ -1257,19 +1337,19 @@ fn propagate_all(program: &mut Program, cand: &ConstCandidate) -> bool {
     changed
 }
 
-fn propagate_in_decl(decl: &mut Declaration, cand: &ConstCandidate) -> bool {
-    let mut changed = false;
+fn propagate_in_decl(decl: &mut Declaration, cand: &ConstCandidate) -> usize {
+    let mut changed = 0usize;
     match decl {
         Declaration::VariableDeclaration(vd) => {
             for d in &mut vd.declarations {
                 if let Some(init) = &mut d.init {
-                    changed |= propagate_in_expr(init, cand);
+                    changed += propagate_in_expr(init, cand);
                 }
             }
         }
         Declaration::FunctionDeclaration(fd) => {
             for s in &mut fd.body.body {
-                changed |= propagate_in_stmt(s, cand);
+                changed += propagate_in_stmt(s, cand);
             }
         }
         // Substitute the const into the same positions `count_uses_decl`
@@ -1284,27 +1364,27 @@ fn propagate_in_decl(decl: &mut Declaration, cand: &ConstCandidate) -> bool {
         Declaration::ExportAllDeclaration(_) => {}
         Declaration::ClassDeclaration(cd) => {
             if let Some(sup) = &mut cd.super_class {
-                changed |= propagate_in_expr(sup, cand);
+                changed += propagate_in_expr(sup, cand);
             }
             for member in &mut cd.body {
                 match member {
                     ClassMember::Method(m) => {
                         for s in &mut m.value.body.body {
-                            changed |= propagate_in_stmt(s, cand);
+                            changed += propagate_in_stmt(s, cand);
                         }
                     }
                     // Propagate the const into a field initializer, kept in
                     // lockstep with `count_uses_decl`.
                     ClassMember::Field(f) => {
                         if let Some(v) = &mut f.value {
-                            changed |= propagate_in_expr(v, cand);
+                            changed += propagate_in_expr(v, cand);
                         }
                     }
                     // Propagate the const into the static-init block's statements,
                     // kept in lockstep with `count_uses` (which counts them).
                     ClassMember::StaticBlock(b) => {
                         for s in &mut b.body {
-                            changed |= propagate_in_stmt(s, cand);
+                            changed += propagate_in_stmt(s, cand);
                         }
                     }
                 }
@@ -1314,37 +1394,37 @@ fn propagate_in_decl(decl: &mut Declaration, cand: &ConstCandidate) -> bool {
     changed
 }
 
-fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> bool {
-    let mut changed = false;
+fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> usize {
+    let mut changed = 0usize;
     match stmt {
-        Statement::Declaration(d) => changed |= propagate_in_decl(d, cand),
+        Statement::Declaration(d) => changed += propagate_in_decl(d, cand),
         Statement::Tagged(t) => match t {
             TaggedStatement::ExpressionStatement(es) => {
-                changed |= propagate_in_expr(&mut es.expression, cand)
+                changed += propagate_in_expr(&mut es.expression, cand)
             }
             TaggedStatement::BlockStatement(b) => {
                 for s in &mut b.body {
-                    changed |= propagate_in_stmt(s, cand);
+                    changed += propagate_in_stmt(s, cand);
                 }
             }
             TaggedStatement::IfStatement(is) => {
-                changed |= propagate_in_expr(&mut is.test, cand);
-                changed |= propagate_in_stmt(&mut is.consequent, cand);
+                changed += propagate_in_expr(&mut is.test, cand);
+                changed += propagate_in_stmt(&mut is.consequent, cand);
                 if let Some(alt) = &mut is.alternate {
-                    changed |= propagate_in_stmt(alt, cand);
+                    changed += propagate_in_stmt(alt, cand);
                 }
             }
             TaggedStatement::WhileStatement(ws) => {
-                changed |= propagate_in_expr(&mut ws.test, cand);
-                changed |= propagate_in_stmt(&mut ws.body, cand);
+                changed += propagate_in_expr(&mut ws.test, cand);
+                changed += propagate_in_stmt(&mut ws.body, cand);
             }
             TaggedStatement::WithStatement(ws) => {
-                changed |= propagate_in_expr(&mut ws.object, cand);
-                changed |= propagate_in_stmt(&mut ws.body, cand);
+                changed += propagate_in_expr(&mut ws.object, cand);
+                changed += propagate_in_stmt(&mut ws.body, cand);
             }
             TaggedStatement::DoWhileStatement(ds) => {
-                changed |= propagate_in_expr(&mut ds.test, cand);
-                changed |= propagate_in_stmt(&mut ds.body, cand);
+                changed += propagate_in_expr(&mut ds.test, cand);
+                changed += propagate_in_stmt(&mut ds.body, cand);
             }
             TaggedStatement::ForStatement(fs) => {
                 if let Some(init) = &mut fs.init {
@@ -1352,68 +1432,68 @@ fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> bool {
                         ForInit::VariableDeclaration(vd) => {
                             for d in &mut vd.declarations {
                                 if let Some(i) = &mut d.init {
-                                    changed |= propagate_in_expr(i, cand);
+                                    changed += propagate_in_expr(i, cand);
                                 }
                             }
                         }
-                        ForInit::Expression(e) => changed |= propagate_in_expr(e, cand),
+                        ForInit::Expression(e) => changed += propagate_in_expr(e, cand),
                     }
                 }
                 if let Some(test) = &mut fs.test {
-                    changed |= propagate_in_expr(test, cand);
+                    changed += propagate_in_expr(test, cand);
                 }
                 if let Some(update) = &mut fs.update {
-                    changed |= propagate_in_expr(update, cand);
+                    changed += propagate_in_expr(update, cand);
                 }
-                changed |= propagate_in_stmt(&mut fs.body, cand);
+                changed += propagate_in_stmt(&mut fs.body, cand);
             }
             TaggedStatement::ForInStatement(fs) => {
                 match &mut fs.left {
                     ForInit::VariableDeclaration(vd) => {
                         for d in &mut vd.declarations {
                             if let Some(i) = &mut d.init {
-                                changed |= propagate_in_expr(i, cand);
+                                changed += propagate_in_expr(i, cand);
                             }
                         }
                     }
-                    ForInit::Expression(e) => changed |= propagate_in_expr(e, cand),
+                    ForInit::Expression(e) => changed += propagate_in_expr(e, cand),
                 }
-                changed |= propagate_in_expr(&mut fs.right, cand);
-                changed |= propagate_in_stmt(&mut fs.body, cand);
+                changed += propagate_in_expr(&mut fs.right, cand);
+                changed += propagate_in_stmt(&mut fs.body, cand);
             }
             TaggedStatement::ForOfStatement(fs) => {
                 match &mut fs.left {
                     ForInit::VariableDeclaration(vd) => {
                         for d in &mut vd.declarations {
                             if let Some(i) = &mut d.init {
-                                changed |= propagate_in_expr(i, cand);
+                                changed += propagate_in_expr(i, cand);
                             }
                         }
                     }
-                    ForInit::Expression(e) => changed |= propagate_in_expr(e, cand),
+                    ForInit::Expression(e) => changed += propagate_in_expr(e, cand),
                 }
-                changed |= propagate_in_expr(&mut fs.right, cand);
-                changed |= propagate_in_stmt(&mut fs.body, cand);
+                changed += propagate_in_expr(&mut fs.right, cand);
+                changed += propagate_in_stmt(&mut fs.body, cand);
             }
             TaggedStatement::ReturnStatement(rs) => {
                 if let Some(a) = &mut rs.argument {
-                    changed |= propagate_in_expr(a, cand);
+                    changed += propagate_in_expr(a, cand);
                 }
             }
             TaggedStatement::ThrowStatement(ts) => {
-                changed |= propagate_in_expr(&mut ts.argument, cand)
+                changed += propagate_in_expr(&mut ts.argument, cand)
             }
             TaggedStatement::LabeledStatement(ls) => {
-                changed |= propagate_in_stmt(&mut ls.body, cand)
+                changed += propagate_in_stmt(&mut ls.body, cand)
             }
             TaggedStatement::SwitchStatement(ss) => {
-                changed |= propagate_in_expr(&mut ss.discriminant, cand);
+                changed += propagate_in_expr(&mut ss.discriminant, cand);
                 for c in &mut ss.cases {
                     if let Some(test) = &mut c.test {
-                        changed |= propagate_in_expr(test, cand);
+                        changed += propagate_in_expr(test, cand);
                     }
                     for s in &mut c.consequent {
-                        changed |= propagate_in_stmt(s, cand);
+                        changed += propagate_in_stmt(s, cand);
                     }
                 }
             }
@@ -1423,16 +1503,16 @@ fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> bool {
                 // upstream by the decl-count guard, so any `cand.name` use
                 // reached here truly resolves to the candidate.
                 for s in &mut ts.block.body {
-                    changed |= propagate_in_stmt(s, cand);
+                    changed += propagate_in_stmt(s, cand);
                 }
                 if let Some(h) = &mut ts.handler {
                     for s in &mut h.body.body {
-                        changed |= propagate_in_stmt(s, cand);
+                        changed += propagate_in_stmt(s, cand);
                     }
                 }
                 if let Some(f) = &mut ts.finalizer {
                     for s in &mut f.body {
-                        changed |= propagate_in_stmt(s, cand);
+                        changed += propagate_in_stmt(s, cand);
                     }
                 }
             }
@@ -1445,7 +1525,7 @@ fn propagate_in_stmt(stmt: &mut Statement, cand: &ConstCandidate) -> bool {
     changed
 }
 
-fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
+fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> usize {
     // CLOC28. For a structured candidate the unit of replacement is the
     // whole member chain, not the identifier: `o.a.b.c` becomes the scalar
     // the path resolves to, and a bare `o` is left alone (it is an escape,
@@ -1458,7 +1538,7 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
                     if let Some(v) = structured::resolve(&cand.value, &keys) {
                         if is_literal(v) {
                             *expr = v.clone();
-                            return true;
+                            return 1;
                         }
                     }
                 }
@@ -1473,12 +1553,12 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
     if let Expression::Identifier(id) = expr {
         if !cand.structured && id.name == cand.name {
             *expr = cand.value.clone();
-            return true;
+            return 1;
         }
-        return false;
+        return 0;
     }
 
-    let mut changed = false;
+    let mut changed = 0usize;
     match expr {
         // Identifier handled above; literals have no sub-expressions.
         Expression::Identifier(_)
@@ -1495,70 +1575,70 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
         | Expression::ImportMeta(_)
         | Expression::UndefinedLiteral(_) => {}
         Expression::BinaryExpression(be) => {
-            changed |= propagate_in_expr(&mut be.left, cand);
-            changed |= propagate_in_expr(&mut be.right, cand);
+            changed += propagate_in_expr(&mut be.left, cand);
+            changed += propagate_in_expr(&mut be.right, cand);
         }
         Expression::LogicalExpression(le) => {
-            changed |= propagate_in_expr(&mut le.left, cand);
-            changed |= propagate_in_expr(&mut le.right, cand);
+            changed += propagate_in_expr(&mut le.left, cand);
+            changed += propagate_in_expr(&mut le.right, cand);
         }
-        Expression::UnaryExpression(ue) => changed |= propagate_in_expr(&mut ue.argument, cand),
-        Expression::UpdateExpression(ue) => changed |= propagate_in_expr(&mut ue.argument, cand),
+        Expression::UnaryExpression(ue) => changed += propagate_in_expr(&mut ue.argument, cand),
+        Expression::UpdateExpression(ue) => changed += propagate_in_expr(&mut ue.argument, cand),
         Expression::AssignmentExpression(ae) => {
             // The target identifier is a write — never replaced (a
             // `const` can't be assigned, and you can't assign to a
             // literal). Only the member-object side and the RHS recurse.
             if let AssignmentTarget::MemberExpression(m) = &mut ae.left {
-                changed |= propagate_in_member(m, cand);
+                changed += propagate_in_member(m, cand);
             }
-            changed |= propagate_in_expr(&mut ae.right, cand);
+            changed += propagate_in_expr(&mut ae.right, cand);
         }
         Expression::ConditionalExpression(ce) => {
-            changed |= propagate_in_expr(&mut ce.test, cand);
-            changed |= propagate_in_expr(&mut ce.consequent, cand);
-            changed |= propagate_in_expr(&mut ce.alternate, cand);
+            changed += propagate_in_expr(&mut ce.test, cand);
+            changed += propagate_in_expr(&mut ce.consequent, cand);
+            changed += propagate_in_expr(&mut ce.alternate, cand);
         }
         Expression::CallExpression(ce) => {
-            changed |= propagate_in_expr(&mut ce.callee, cand);
+            changed += propagate_in_expr(&mut ce.callee, cand);
             for a in &mut ce.arguments {
-                changed |= propagate_in_expr(a, cand);
+                changed += propagate_in_expr(a, cand);
             }
         }
         Expression::NewExpression(ne) => {
-            changed |= propagate_in_expr(&mut ne.callee, cand);
+            changed += propagate_in_expr(&mut ne.callee, cand);
             for a in &mut ne.arguments {
-                changed |= propagate_in_expr(a, cand);
+                changed += propagate_in_expr(a, cand);
             }
         }
         Expression::SequenceExpression(se) => {
             for e in &mut se.expressions {
-                changed |= propagate_in_expr(e, cand);
+                changed += propagate_in_expr(e, cand);
             }
         }
-        Expression::MemberExpression(m) => changed |= propagate_in_member(m, cand),
+        Expression::MemberExpression(m) => changed += propagate_in_member(m, cand),
         // `a?.b` / `a?.[k]` — propagate into the object and (computed only)
         // property exactly as `propagate_in_member` does for a plain member.
         Expression::OptionalMemberExpression(m) => {
-            changed |= propagate_in_expr(&mut m.object, cand);
+            changed += propagate_in_expr(&mut m.object, cand);
             // Only a computed property `o?.[expr]` is a use position; a
             // non-computed `?.name` is a property name.
             if m.computed {
-                changed |= propagate_in_expr(&mut m.property, cand);
+                changed += propagate_in_expr(&mut m.property, cand);
             }
         }
         // `a?.()` — propagate into callee and each argument, as for a call.
         Expression::OptionalCallExpression(ce) => {
-            changed |= propagate_in_expr(&mut ce.callee, cand);
+            changed += propagate_in_expr(&mut ce.callee, cand);
             for a in &mut ce.arguments {
-                changed |= propagate_in_expr(a, cand);
+                changed += propagate_in_expr(a, cand);
             }
         }
         // A chain expression transparently wraps its optional-chain spine —
         // descend into the inner expression.
-        Expression::ChainExpression(c) => changed |= propagate_in_expr(&mut c.expression, cand),
+        Expression::ChainExpression(c) => changed += propagate_in_expr(&mut c.expression, cand),
         Expression::ArrayExpression(ae) => {
             for el in ae.elements.iter_mut().flatten() {
-                changed |= propagate_in_expr(el, cand);
+                changed += propagate_in_expr(el, cand);
             }
         }
         Expression::ObjectExpression(oe) => {
@@ -1569,16 +1649,16 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
                         // identifier / string / number key is a property name.
                         if prop.computed {
                             if let PropertyKey::Expression(e) = &mut prop.key {
-                                changed |= propagate_in_expr(e, cand);
+                                changed += propagate_in_expr(e, cand);
                             }
                         }
-                        changed |= propagate_in_expr(&mut prop.value, cand);
+                        changed += propagate_in_expr(&mut prop.value, cand);
                     }
                     // Object spread `...expr` — recurse into the spread
                     // argument the same way the property arm recurses into
                     // prop.value.
                     ObjectMember::Spread(s) => {
-                        changed |= propagate_in_expr(&mut s.argument, cand);
+                        changed += propagate_in_expr(&mut s.argument, cand);
                     }
                 }
             }
@@ -1589,7 +1669,7 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
         // and the substitution walk cover the same positions.
         Expression::FunctionExpression(fe) => {
             for s in &mut fe.body.body {
-                changed |= propagate_in_stmt(s, cand);
+                changed += propagate_in_stmt(s, cand);
             }
         }
         // Propagate the candidate into a class expression, mirroring the
@@ -1600,26 +1680,26 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
         // method KEY is a property name, never a substitutable use.
         Expression::ClassExpression(ce) => {
             if let Some(sup) = &mut ce.super_class {
-                changed |= propagate_in_expr(sup, cand);
+                changed += propagate_in_expr(sup, cand);
             }
             for member in &mut ce.body {
                 match member {
                     ClassMember::Method(m) => {
                         for s in &mut m.value.body.body {
-                            changed |= propagate_in_stmt(s, cand);
+                            changed += propagate_in_stmt(s, cand);
                         }
                     }
                     // Propagate the const into a field initializer.
                     ClassMember::Field(f) => {
                         if let Some(v) = &mut f.value {
-                            changed |= propagate_in_expr(v, cand);
+                            changed += propagate_in_expr(v, cand);
                         }
                     }
                     // Propagate the const into the static-init block's statements,
                     // kept in lockstep with `count_uses` (which counts them).
                     ClassMember::StaticBlock(b) => {
                         for s in &mut b.body {
-                            changed |= propagate_in_stmt(s, cand);
+                            changed += propagate_in_stmt(s, cand);
                         }
                     }
                 }
@@ -1631,30 +1711,30 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
         Expression::ArrowFunctionExpression(ae) => match &mut ae.body {
             ArrowBody::Block(b) => {
                 for s in &mut b.body {
-                    changed |= propagate_in_stmt(s, cand);
+                    changed += propagate_in_stmt(s, cand);
                 }
             }
-            ArrowBody::Expression(e) => changed |= propagate_in_expr(e, cand),
+            ArrowBody::Expression(e) => changed += propagate_in_expr(e, cand),
         },
         // Propagate into each `${…}` insert. Quasis are leaf strings and
         // hold no substitutable reference.
         Expression::TemplateLiteral(t) => {
             for e in &mut t.expressions {
-                changed |= propagate_in_expr(e, cand);
+                changed += propagate_in_expr(e, cand);
             }
         }
         // Propagate into the tag callee and each `${…}` insert.
         Expression::TaggedTemplateExpression(t) => {
-            changed |= propagate_in_expr(&mut t.tag, cand);
+            changed += propagate_in_expr(&mut t.tag, cand);
             for e in &mut t.quasi.expressions {
-                changed |= propagate_in_expr(e, cand);
+                changed += propagate_in_expr(e, cand);
             }
         }
         // Propagate into the spread argument (`...name`).
-        Expression::SpreadElement(s) => changed |= propagate_in_expr(&mut s.argument, cand),
-        Expression::YieldExpression(y) => { if let Some(a) = &mut y.argument { changed |= propagate_in_expr(a, cand); } }
-        Expression::AwaitExpression(a) => changed |= propagate_in_expr(&mut a.argument, cand),
-        Expression::ImportExpression(e) => changed |= propagate_in_expr(&mut e.source, cand),
+        Expression::SpreadElement(s) => changed += propagate_in_expr(&mut s.argument, cand),
+        Expression::YieldExpression(y) => { if let Some(a) = &mut y.argument { changed += propagate_in_expr(a, cand); } }
+        Expression::AwaitExpression(a) => changed += propagate_in_expr(&mut a.argument, cand),
+        Expression::ImportExpression(e) => changed += propagate_in_expr(&mut e.source, cand),
     }
     changed
 }
@@ -1662,12 +1742,12 @@ fn propagate_in_expr(expr: &mut Expression, cand: &ConstCandidate) -> bool {
 fn propagate_in_member(
     m: &mut coding_adventures_javascript_ast::MemberExpression,
     cand: &ConstCandidate,
-) -> bool {
+) -> usize {
     let mut changed = propagate_in_expr(&mut m.object, cand);
     // Only a computed property `o[expr]` is a use position; a
     // non-computed `.name` is a property name.
     if m.computed {
-        changed |= propagate_in_expr(&mut m.property, cand);
+        changed += propagate_in_expr(&mut m.property, cand);
     }
     changed
 }
@@ -1896,6 +1976,58 @@ mod tests {
         assert_eq!(
             propagate_source("var x = x;console.log(x);"),
             "var x=x;console.log(x);"
+        );
+    }
+
+    // ---- Review findings, each pinned -----------------------------------
+
+    /// A `with` block resolves identifiers against a runtime object, so a
+    /// name that looks like a read of the binding may be a property of
+    /// whatever `with` was handed. The oracle rejects `with` outright, but
+    /// closurec compiles it, so the guard has to be ours.
+    #[test]
+    fn refuses_every_candidate_in_a_program_containing_with() {
+        assert_eq!(
+            propagate_source("var x = 1;with (o) { console.log(x); }"),
+            "var x=1;with(o){console.log(x)};"
+        );
+    }
+
+    /// The same guard covers the `const` path, where the hole predates
+    /// CLOC29 — hence the open-world helper, which is the `const` route.
+    #[test]
+    fn refuses_a_const_candidate_too_when_with_is_present() {
+        assert_eq!(
+            propagate_source_open_world("const x = 1;with (o) { console.log(x); }"),
+            "const x=1;with(o){console.log(x)};"
+        );
+    }
+
+    /// The strong-proof path must honour the multi-use size budget the
+    /// counter path enforces. Without this a `var` duplicated a long
+    /// literal into every site while the same program written with `const`
+    /// declined — a `var` optimizing WORSE than a `const`.
+    #[test]
+    fn respects_the_multiuse_size_budget_on_the_strong_proof_path() {
+        let long = "y".repeat(100);
+        let src = format!("var S = \"{long}\";a(S);b(S);c(S);d(S);");
+        let out = propagate_source(&src);
+        assert!(
+            out.contains("a(S)") && out.contains("d(S)"),
+            "long literal should NOT be duplicated across four sites: {out}"
+        );
+    }
+
+    /// A single site is always worth it, budget or not — the whole
+    /// declaration goes away.
+    #[test]
+    fn still_propagates_a_long_literal_to_a_single_site() {
+        let long = "y".repeat(100);
+        let src = format!("var S = \"{long}\";a(S);");
+        let out = propagate_source(&src);
+        assert!(
+            out.contains(&format!("a(\"{long}\")")),
+            "single site should still fold: {out}"
         );
     }
 

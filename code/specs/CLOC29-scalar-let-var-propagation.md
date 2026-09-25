@@ -91,8 +91,27 @@ console.log(x);        // node prints 9; we emit eval("x=9");console.log(1);
 Upstream v20260915 emits **byte-identical** output, so this is exact parity
 rather than a divergence — Closure at ADVANCED documents that it does not
 support `eval` modifying local variables. It is recorded here so the next
-reader does not rediscover it as a bug. `with` is refused outright by the
-oracle (strict mode), so there is no exposure there.
+reader does not rediscover it as a bug.
+
+`with` is a different story, and an earlier draft of this spec got it wrong.
+The oracle does reject `with` outright (`JSC_USE_OF_WITH`, exit 1) — but that
+protects *upstream*, not us, because **closurec compiles `with`**. So the
+exposure was ours alone:
+
+```js
+var x = 1;
+function mk() { return JSON.parse('{"x":9}'); }
+with (mk()) { console.log(x); }      // node prints 9; we folded x to 1
+```
+
+A `with` block resolves identifiers against a runtime object, so a name that
+looks like a read of the binding may be a property of whatever `with` was
+handed, and no static scan can tell. The pass now refuses to propagate
+anything in a program containing a `WithStatement`. That guard covers the
+`const` path too, where the same hole predated CLOC29.
+
+The lesson generalises: "the oracle rejects this input" only removes exposure
+when *we* reject it too. Parity arguments need both halves checked.
 
 Function-*local* scalars are still not propagated (`ladder_t6_local_const_*`,
 `ladder_t6_local_let_*` remain in the ledger): the pass collects only
