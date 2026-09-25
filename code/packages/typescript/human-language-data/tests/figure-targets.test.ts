@@ -141,19 +141,33 @@ describe("the real corpus", () => {
     expect(new Set(tamil.map((target) => target.glyph)).size).toBe(19);
   });
 
-  it("draws the Devanagari tracks from one shared, cited ductus", () => {
-    // Second rollout: hindi, marathi, sanskrit and marwadi all write Devanagari
-    // and share its 44 cited letters, so a letter drawn once serves four books.
-    const count = (prefix: string) =>
-      targets.filter((target) => target.lessonId.startsWith(`${prefix}-`)).length;
-    expect({ HI: count("HI"), MR: count("MR"), SA: count("SA"), MW: count("MW") }).toEqual({
+  it("draws every switched-on track exactly the letters its ductus cites", () => {
+    // Rollouts: tamil; then the four Devanagari tracks, which share one cited
+    // ductus (a letter drawn once serves four books); then every other track
+    // with any cited ductus. Kannada, malayalam and telugu cite only vowels and
+    // chillus, so only those letter lessons print a filmstrip until their
+    // consonants are sourced. Chinese, russian and urdu print none YET: their
+    // writing-lesson headwords are not a single grapheme (a character with its
+    // reading, an upper/lower pair), which HL-C443 records as the next step.
+    const counts: Record<string, number> = {};
+    for (const target of targets) {
+      const prefix = target.lessonId.split("-")[0]!;
+      counts[prefix] = (counts[prefix] ?? 0) + 1;
+    }
+    expect(counts).toEqual({
+      AR: 1,
+      FA: 4,
+      GU: 28,
       HI: 36,
+      JA: 1,
+      KA: 13,
+      ML: 13,
       MR: 37,
-      SA: 39,
       MW: 6,
+      SA: 39,
+      TA: 20,
+      TE: 9,
     });
-    const devanagari = targets.filter((target) => target.script === "devanagari");
-    expect(new Set(devanagari.map((target) => target.glyph)).size).toBeLessThanOrEqual(44);
   });
 
   it("prints every resolved filmstrip in its chapter", () => {

@@ -75,6 +75,22 @@ That is about 380 filmstrips that could print today.
    derive from base letter + sign. Nothing implements that yet. Conjuncts need
    their own cited records.
 
+### Progress
+
+- **Mechanism shipped in #16015.** Filmstrip targets are now derived, the book
+  places each figure, and a gate fails if a figure is never printed.
+- **Tamil first,** then the four Devanagari tracks.
+- **Then every other track with any cited ductus.** 207 lessons now print a
+  filmstrip.
+- **Next: headword formats the derivation does not read yet.**
+  - chinese (72 cited letters), russian (18) and urdu (12) print none
+  - arabic and japanese print one each
+
+  In these tracks a writing lesson's headword is not one grapheme. It is a
+  character with its reading, or an upper and lower pair. The fix is a
+  per-track extractor that reads the letter out of such a headword, instead of
+  requiring the whole headword to be one grapheme.
+
 ### The shape of the writing ramp (project owner, 2026-09-25)
 
 Writing must be gentle in the same way vocabulary is:

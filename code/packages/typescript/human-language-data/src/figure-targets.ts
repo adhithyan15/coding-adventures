@@ -64,6 +64,19 @@ export const DERIVED_FILMSTRIP_SCRIPTS: Readonly<Record<string, string>> = {
   marathi: "devanagari",
   sanskrit: "devanagari",
   marwadi: "devanagari",
+  // HL-C443 third rollout: every other track with any cited ductus. A track
+  // whose letters are mostly uncited (kannada, malayalam, telugu: vowels and
+  // chillus only) still gets exactly the letters that ARE cited, no more.
+  gujarati: "gujarati",
+  arabic: "arabic",
+  persian: "perso-arabic",
+  urdu: "urdu-nastaliq",
+  russian: "cyrillic",
+  chinese: "chinese",
+  japanese: "japanese",
+  kannada: "kannada",
+  malayalam: "malayalam",
+  telugu: "telugu",
 };
 
 const GRAPHEMES = new Intl.Segmenter("und", { granularity: "grapheme" });
