@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:9403ee6c363a6263",
+  "lessonIds": [
+    "RU-C47-sugar",
+    "RU-C47-honey",
+    "RU-C47-rice",
+    "RU-C47-mushroom",
+    "RU-C47-glass"
+  ],
+  "tex": "russian/book/chapters/ch47-sugar-honey-rice-mushrooms-and-a-glass.tex"
+}

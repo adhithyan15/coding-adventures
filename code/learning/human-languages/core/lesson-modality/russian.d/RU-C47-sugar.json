@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C47-sugar",
+    "language": "russian",
+    "chapter": 47,
+    "sequence": 2300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f90cd7b8c0ded85"
+  },
+  "findings": []
+}

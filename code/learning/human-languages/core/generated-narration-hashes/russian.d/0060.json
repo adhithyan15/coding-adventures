@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:6d04f436526bd3ae",
+  "lessonIds": [
+    "RU-C60-dog",
+    "RU-C60-cat",
+    "RU-C60-horse",
+    "RU-C60-cow",
+    "RU-C60-pig"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch60.txt",
+  "json": "russian/narration/ch60.json",
+  "textHash": "fnv1a64:28a0d5f502df4c3f",
+  "jsonHash": "fnv1a64:57c937cd31941b20",
+  "findings": []
+}

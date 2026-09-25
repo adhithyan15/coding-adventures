@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:931c552485daa6e3",
+  "lessonIds": [
+    "RU-C32-pain",
+    "RU-C32-illness",
+    "RU-C32-medicine",
+    "RU-C32-doctor",
+    "RU-C32-hospital"
+  ],
+  "tex": "russian/book/chapters/ch32-pain-illness-medicine-doctor.tex"
+}

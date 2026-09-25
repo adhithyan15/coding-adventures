@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C65-short",
+    "language": "russian",
+    "chapter": 65,
+    "sequence": 3260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c81b760ddb82318f"
+  },
+  "findings": []
+}

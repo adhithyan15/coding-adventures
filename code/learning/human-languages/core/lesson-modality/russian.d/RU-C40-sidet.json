@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C40-sidet",
+    "language": "russian",
+    "chapter": 40,
+    "sequence": 1960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5222f7fd7b1d86c"
+  },
+  "findings": []
+}

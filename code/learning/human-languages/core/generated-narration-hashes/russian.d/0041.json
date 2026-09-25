@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:1c5fa3b29844ff47",
+  "lessonIds": [
+    "RU-C41-slushat",
+    "RU-C41-uchit",
+    "RU-C41-otvechat",
+    "RU-C41-zhdat",
+    "RU-C41-davat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch41.txt",
+  "json": "russian/narration/ch41.json",
+  "textHash": "fnv1a64:246d3c7710065544",
+  "jsonHash": "fnv1a64:08df061a89c560bc",
+  "findings": []
+}

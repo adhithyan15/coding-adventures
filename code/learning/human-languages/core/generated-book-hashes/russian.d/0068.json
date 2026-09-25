@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:c3543b96c6de26b2",
+  "lessonIds": [
+    "RU-C68-day",
+    "RU-C68-week",
+    "RU-C68-month",
+    "RU-C68-year",
+    "RU-C68-evening"
+  ],
+  "tex": "russian/book/chapters/ch68-day-week-month-year-evening.tex"
+}

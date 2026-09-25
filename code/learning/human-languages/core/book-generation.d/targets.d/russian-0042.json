@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 42,
+  "output": "russian/book/chapters/ch42-open-close-drink-question-answer.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

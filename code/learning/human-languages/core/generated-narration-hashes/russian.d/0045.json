@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:3ba1f93ef7a22a62",
+  "lessonIds": [
+    "RU-C45-potatoes",
+    "RU-C45-tomato",
+    "RU-C45-onion",
+    "RU-C45-cucumber",
+    "RU-C45-carrot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch45.txt",
+  "json": "russian/narration/ch45.json",
+  "textHash": "fnv1a64:ffd826182b23a883",
+  "jsonHash": "fnv1a64:976e8749a9e94031",
+  "findings": []
+}

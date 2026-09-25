@@ -1,0 +1,11 @@
+{
+  "id": "RU-C56-forest",
+  "pathSegment": "RU-PATH-56-NATURE2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-56-NATURE2",
+      "order": 1
+    }
+  ]
+}

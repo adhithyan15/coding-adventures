@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:49cf6a559ab3089e",
+  "lessonIds": [
+    "RU-C58-sky",
+    "RU-C58-sun",
+    "RU-C58-moon",
+    "RU-C58-star",
+    "RU-C58-cloud"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch58.txt",
+  "json": "russian/narration/ch58.json",
+  "textHash": "fnv1a64:447cb7435953d8bc",
+  "jsonHash": "fnv1a64:029bf80c4b0288be",
+  "findings": []
+}

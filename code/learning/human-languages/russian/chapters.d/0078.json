@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Bank, Station, Museum, Theatre, Restaurant",
+  "label": "ch:ru-bank-station-museum-theatre-restaurant",
+  "canDo": "I can name a bank, a station, a museum, a theatre and a restaurant.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "RU-C78-restaurant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can name a bank, a station, a museum, a theatre and a restaurant.",
+    "assesses": [
+      "RU-LEX-C78-TOWN2-03",
+      "RU-LEX-C78-TOWN2-04",
+      "RU-LEX-C78-TOWN2-05"
+    ]
+  }
+}

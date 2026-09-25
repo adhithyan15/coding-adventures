@@ -1,0 +1,11 @@
+{
+  "id": "RU-C48-room",
+  "pathSegment": "RU-PATH-48-HOME1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-48-HOME1",
+      "order": 1
+    }
+  ]
+}

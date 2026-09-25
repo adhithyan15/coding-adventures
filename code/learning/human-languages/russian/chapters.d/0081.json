@@ -1,0 +1,17 @@
+{
+  "chapter": 81,
+  "title": "The Letter Yo",
+  "label": "ch:ru-letter-yo",
+  "canDo": "I can write yo, the letter with two dots, and find it in words I already say.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "RU-R81-letters-second-pass",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: i can write yo, the letter with two dots, and find it in words I already say.",
+    "assesses": [
+      "RU-SCRIPT-C81-YO-01"
+    ]
+  }
+}

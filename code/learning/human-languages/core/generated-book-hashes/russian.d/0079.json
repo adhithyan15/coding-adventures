@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:41c899fa57eced53",
+  "lessonIds": [
+    "RU-C79-bus",
+    "RU-C79-train",
+    "RU-C79-plane",
+    "RU-C79-car",
+    "RU-C79-bridge"
+  ],
+  "tex": "russian/book/chapters/ch79-bus-train-plane-car-bridge.tex"
+}

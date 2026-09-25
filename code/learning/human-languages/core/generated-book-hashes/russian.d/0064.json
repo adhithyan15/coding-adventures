@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:e60fdc32fb5667f6",
+  "lessonIds": [
+    "RU-C64-yellow",
+    "RU-C64-beautiful",
+    "RU-C64-good",
+    "RU-C64-bad",
+    "RU-C64-new"
+  ],
+  "tex": "russian/book/chapters/ch64-yellow-beautiful-good-bad-new.tex"
+}

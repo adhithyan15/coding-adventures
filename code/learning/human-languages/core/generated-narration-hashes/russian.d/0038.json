@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:7eea2d571642b0a4",
+  "lessonIds": [
+    "RU-C38-rabotat",
+    "RU-C38-pet",
+    "RU-C38-tantsevat",
+    "RU-C38-smeyatsya",
+    "RU-C38-plakat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch38.txt",
+  "json": "russian/narration/ch38.json",
+  "textHash": "fnv1a64:6ac345752677cd67",
+  "jsonHash": "fnv1a64:e21d5daddaae17e2",
+  "findings": []
+}

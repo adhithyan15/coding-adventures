@@ -1,0 +1,11 @@
+{
+  "id": "RU-C79-plane",
+  "pathSegment": "RU-PATH-79-TRAVEL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-79-TRAVEL",
+      "order": 2
+    }
+  ]
+}

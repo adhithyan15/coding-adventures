@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C73-alot",
+    "language": "russian",
+    "chapter": 73,
+    "sequence": 3650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ac2c47897f0c546"
+  },
+  "findings": []
+}

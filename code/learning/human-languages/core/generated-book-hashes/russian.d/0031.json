@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:e6baf57b7dff22b2",
+  "lessonIds": [
+    "RU-C31-back",
+    "RU-C31-tongue",
+    "RU-C31-lip",
+    "RU-C31-face",
+    "RU-C31-blood"
+  ],
+  "tex": "russian/book/chapters/ch31-back-tongue-lip-face-blood.tex"
+}

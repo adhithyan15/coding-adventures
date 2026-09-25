@@ -1,0 +1,19 @@
+{
+  "chapter": 70,
+  "title": "Monday to Saturday",
+  "label": "ch:ru-monday-to-saturday",
+  "canDo": "I can name Monday, Wednesday, Thursday, Friday and Saturday.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "RU-C70-saturday",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 70: i can name Monday, Wednesday, Thursday, Friday and Saturday.",
+    "assesses": [
+      "RU-LEX-C70-WEEK1-03",
+      "RU-LEX-C70-WEEK1-04",
+      "RU-LEX-C70-WEEK1-05"
+    ]
+  }
+}

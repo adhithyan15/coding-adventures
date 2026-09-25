@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:811111138af6955d",
+  "lessonIds": [
+    "RU-C77-city",
+    "RU-C77-street",
+    "RU-C77-shop",
+    "RU-C77-market",
+    "RU-C77-school"
+  ],
+  "tex": "russian/book/chapters/ch77-city-street-shop-market-school.tex"
+}

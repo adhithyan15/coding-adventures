@@ -1,0 +1,19 @@
+{
+  "chapter": 31,
+  "title": "Back, Tongue, Lip, Face, Blood",
+  "label": "ch:ru-back-tongue-lip-face-blood",
+  "canDo": "I can name the back, the tongue, a lip, the face and blood.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C31-blood",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 31: i can name the back, the tongue, a lip, the face and blood.",
+    "assesses": [
+      "RU-LEX-C31-BODY3-03",
+      "RU-LEX-C31-BODY3-04",
+      "RU-LEX-C31-BODY3-05"
+    ]
+  }
+}

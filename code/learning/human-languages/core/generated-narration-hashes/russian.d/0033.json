@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:0f1a5d10aac8ede3",
+  "lessonIds": [
+    "RU-C33-temperature",
+    "RU-C33-cough",
+    "RU-C33-rest",
+    "RU-C33-hunger",
+    "RU-C33-thirst"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch33.txt",
+  "json": "russian/narration/ch33.json",
+  "textHash": "fnv1a64:ad1ce13d412b4d98",
+  "jsonHash": "fnv1a64:b6354c24634baaf2",
+  "findings": []
+}

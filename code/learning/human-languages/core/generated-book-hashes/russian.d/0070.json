@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:322fcf3590e27db8",
+  "lessonIds": [
+    "RU-C70-monday",
+    "RU-C70-wednesday",
+    "RU-C70-thursday",
+    "RU-C70-friday",
+    "RU-C70-saturday"
+  ],
+  "tex": "russian/book/chapters/ch70-monday-to-saturday.tex"
+}

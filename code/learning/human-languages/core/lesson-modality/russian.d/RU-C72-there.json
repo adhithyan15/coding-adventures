@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C72-there",
+    "language": "russian",
+    "chapter": 72,
+    "sequence": 3580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cd43675e76a67eb"
+  },
+  "findings": []
+}

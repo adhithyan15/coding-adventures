@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:3a3988a218f1dab3",
+  "lessonIds": [
+    "RU-C65-big",
+    "RU-C65-small",
+    "RU-C65-old",
+    "RU-C65-long",
+    "RU-C65-short"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch65.txt",
+  "json": "russian/narration/ch65.json",
+  "textHash": "fnv1a64:f37130e3834471fa",
+  "jsonHash": "fnv1a64:03e04afd02b77611",
+  "findings": []
+}

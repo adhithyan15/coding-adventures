@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:5adf20929a3f825c",
+  "lessonIds": [
+    "RU-C34-joy",
+    "RU-C34-fear",
+    "RU-C34-anger",
+    "RU-C34-sadness",
+    "RU-C34-tiredness"
+  ],
+  "tex": "russian/book/chapters/ch34-joy-fear-anger-sadness-tiredness.tex"
+}

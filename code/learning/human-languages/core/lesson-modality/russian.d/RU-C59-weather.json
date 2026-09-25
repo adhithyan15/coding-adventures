@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C59-weather",
+    "language": "russian",
+    "chapter": 59,
+    "sequence": 2950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e53e134e6554221e"
+  },
+  "findings": []
+}

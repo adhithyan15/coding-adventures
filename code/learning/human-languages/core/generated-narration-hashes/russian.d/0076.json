@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:74fbdc4a249f34b8",
+  "lessonIds": [
+    "RU-C76-forty",
+    "RU-C76-fifty",
+    "RU-C76-ninety",
+    "RU-C76-thousand",
+    "RU-C76-country"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch76.txt",
+  "json": "russian/narration/ch76.json",
+  "textHash": "fnv1a64:90e083db392e0306",
+  "jsonHash": "fnv1a64:c8922a70a8fa0d1d",
+  "findings": []
+}

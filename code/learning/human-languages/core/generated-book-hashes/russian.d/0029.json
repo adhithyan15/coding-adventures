@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:6b0641680790e3c8",
+  "lessonIds": [
+    "RU-C29-head",
+    "RU-C29-hand",
+    "RU-C29-leg",
+    "RU-C29-belly",
+    "RU-C29-tooth"
+  ],
+  "tex": "russian/book/chapters/ch29-head-hand-leg-belly-tooth.tex"
+}

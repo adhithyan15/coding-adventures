@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:bae3cf26adb18650",
+  "lessonIds": [
+    "RU-C64-yellow",
+    "RU-C64-beautiful",
+    "RU-C64-good",
+    "RU-C64-bad",
+    "RU-C64-new"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch64.txt",
+  "json": "russian/narration/ch64.json",
+  "textHash": "fnv1a64:9e4b963e3c7e7039",
+  "jsonHash": "fnv1a64:992b5eca0b7782f5",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:64beba7e4c9a27c1",
+  "lessonIds": [
+    "RU-C67-easy",
+    "RU-C67-hard",
+    "RU-C67-expensive",
+    "RU-C67-cheap",
+    "RU-C67-badly"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch67.txt",
+  "json": "russian/narration/ch67.json",
+  "textHash": "fnv1a64:3db105e499d675ba",
+  "jsonHash": "fnv1a64:79a6f07e9ae9b385",
+  "findings": []
+}

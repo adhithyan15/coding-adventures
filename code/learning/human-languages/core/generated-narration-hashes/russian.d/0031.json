@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:fdd81cf4689d1843",
+  "lessonIds": [
+    "RU-C31-back",
+    "RU-C31-tongue",
+    "RU-C31-lip",
+    "RU-C31-face",
+    "RU-C31-blood"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch31.txt",
+  "json": "russian/narration/ch31.json",
+  "textHash": "fnv1a64:8d92078ceab801f0",
+  "jsonHash": "fnv1a64:7a03b9fa100d2bd0",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C45-onion",
+    "language": "russian",
+    "chapter": 45,
+    "sequence": 2220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3c18f4de866a14b"
+  },
+  "findings": []
+}

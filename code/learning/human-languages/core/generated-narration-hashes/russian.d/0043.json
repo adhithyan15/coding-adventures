@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:1570ad6e49cb5c3b",
+  "lessonIds": [
+    "RU-C43-meat",
+    "RU-C43-fish",
+    "RU-C43-egg",
+    "RU-C43-butter",
+    "RU-C43-salt"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch43.txt",
+  "json": "russian/narration/ch43.json",
+  "textHash": "fnv1a64:e33e81afc9a9d5f3",
+  "jsonHash": "fnv1a64:9f0a9855ddda7689",
+  "findings": []
+}

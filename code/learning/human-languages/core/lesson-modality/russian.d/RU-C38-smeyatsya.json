@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C38-smeyatsya",
+    "language": "russian",
+    "chapter": 38,
+    "sequence": 1880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9adc8fbd44e9797d"
+  },
+  "findings": []
+}

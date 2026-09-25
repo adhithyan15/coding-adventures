@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:a86de778a39a4793",
+  "lessonIds": [
+    "RU-C75-already",
+    "RU-C75-quickly",
+    "RU-C75-eleven",
+    "RU-C75-twelve",
+    "RU-C75-zero"
+  ],
+  "tex": "russian/book/chapters/ch75-already-quickly-eleven-twelve-zero.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-66-TEMP",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "RU-EXT-66-TEMP"
+  ],
+  "after": []
+}

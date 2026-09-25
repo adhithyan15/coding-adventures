@@ -1,0 +1,11 @@
+{
+  "id": "RU-C80-church",
+  "pathSegment": "RU-PATH-80-PLACES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-80-PLACES",
+      "order": 2
+    }
+  ]
+}

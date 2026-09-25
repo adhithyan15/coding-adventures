@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C40-spat",
+    "language": "russian",
+    "chapter": 40,
+    "sequence": 1950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82b59dfe90680a9d"
+  },
+  "findings": []
+}

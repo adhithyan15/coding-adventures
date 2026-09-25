@@ -1,0 +1,19 @@
+{
+  "chapter": 32,
+  "title": "Pain, Illness, Medicine, Doctor",
+  "label": "ch:ru-pain-illness-medicine-doctor",
+  "canDo": "I can name pain, an illness, medicine, a doctor and a hospital.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C32-hospital",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 32: i can name pain, an illness, medicine, a doctor and a hospital.",
+    "assesses": [
+      "RU-LEX-C32-HEALTH1-03",
+      "RU-LEX-C32-HEALTH1-04",
+      "RU-LEX-C32-HEALTH1-05"
+    ]
+  }
+}

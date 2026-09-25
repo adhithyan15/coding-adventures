@@ -1,0 +1,11 @@
+{
+  "id": "RU-C57-sand",
+  "pathSegment": "RU-PATH-57-NATURE3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-57-NATURE3",
+      "order": 1
+    }
+  ]
+}

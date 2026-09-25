@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C63-blue",
+    "language": "russian",
+    "chapter": 63,
+    "sequence": 3150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09765f7c2e8aa7df"
+  },
+  "findings": []
+}

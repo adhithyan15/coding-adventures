@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:819c90b8aed53302",
+  "lessonIds": [
+    "RU-C37-neighbour",
+    "RU-C37-guest",
+    "RU-C37-teacher",
+    "RU-C37-pupil",
+    "RU-C37-work"
+  ],
+  "tex": "russian/book/chapters/ch37-neighbour-guest-teacher-pupil-work.tex"
+}

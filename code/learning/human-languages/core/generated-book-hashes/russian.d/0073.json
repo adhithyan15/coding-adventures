@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:ab46fcb02ebdc393",
+  "lessonIds": [
+    "RU-C73-below",
+    "RU-C73-left",
+    "RU-C73-right",
+    "RU-C73-alot",
+    "RU-C73-alittle"
+  ],
+  "tex": "russian/book/chapters/ch73-below-left-right-a-lot-a-little.tex"
+}

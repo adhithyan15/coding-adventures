@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C48-kitchen",
+    "language": "russian",
+    "chapter": 48,
+    "sequence": 2370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25839c754c31c405"
+  },
+  "findings": []
+}

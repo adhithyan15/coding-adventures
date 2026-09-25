@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:787f872f204c31a7",
+  "lessonIds": [
+    "RU-C35-son",
+    "RU-C35-daughter",
+    "RU-C35-grandmother",
+    "RU-C35-husband",
+    "RU-C35-wife"
+  ],
+  "tex": "russian/book/chapters/ch35-son-daughter-grandmother-husband-wife.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:b10b6589ea851aab",
+  "lessonIds": [
+    "RU-C51-cup",
+    "RU-C51-plate",
+    "RU-C51-spoon",
+    "RU-C51-knife",
+    "RU-C51-fork"
+  ],
+  "tex": "russian/book/chapters/ch51-cup-plate-spoon-knife-fork.tex"
+}

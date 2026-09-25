@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:38b41cdc8dc24280",
+  "lessonIds": [
+    "RU-C50-wall",
+    "RU-C50-roof",
+    "RU-C50-garden",
+    "RU-C50-bathroom",
+    "RU-C50-clock"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch50.txt",
+  "json": "russian/narration/ch50.json",
+  "textHash": "fnv1a64:94d02e1c9c3d29a5",
+  "jsonHash": "fnv1a64:aee7ccb24ea27128",
+  "findings": []
+}

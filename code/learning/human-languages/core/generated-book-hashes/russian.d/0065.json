@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:feb9d6f93c4827ab",
+  "lessonIds": [
+    "RU-C65-big",
+    "RU-C65-small",
+    "RU-C65-old",
+    "RU-C65-long",
+    "RU-C65-short"
+  ],
+  "tex": "russian/book/chapters/ch65-big-small-old-long-short.tex"
+}

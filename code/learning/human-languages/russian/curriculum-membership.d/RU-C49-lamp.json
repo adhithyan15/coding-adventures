@@ -1,0 +1,11 @@
+{
+  "id": "RU-C49-lamp",
+  "pathSegment": "RU-PATH-49-HOME2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-49-HOME2",
+      "order": 3
+    }
+  ]
+}

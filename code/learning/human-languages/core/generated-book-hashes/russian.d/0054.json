@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:5f53e7cf90cf09d3",
+  "lessonIds": [
+    "RU-C54-lesson",
+    "RU-C54-word",
+    "RU-C54-address",
+    "RU-C54-ticket",
+    "RU-C54-map",
+    "RU-R54-first-pass-the-body-family-and-verbs",
+    "RU-R54-second-pass-food-the-house-and-things"
+  ],
+  "tex": "russian/book/chapters/ch54-lesson-word-address-ticket-map.tex"
+}

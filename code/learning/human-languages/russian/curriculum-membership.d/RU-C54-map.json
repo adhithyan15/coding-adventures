@@ -1,0 +1,11 @@
+{
+  "id": "RU-C54-map",
+  "pathSegment": "RU-PATH-54-WORDS",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-54-WORDS",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C31-blood",
+    "language": "russian",
+    "chapter": 31,
+    "sequence": 1540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcf444da83ba2235"
+  },
+  "findings": []
+}

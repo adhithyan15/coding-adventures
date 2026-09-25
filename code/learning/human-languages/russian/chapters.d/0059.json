@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "Rain, Snow, Wind, Weather, World",
+  "label": "ch:ru-rain-snow-wind-weather-world",
+  "canDo": "I can name rain, snow, the wind and the weather, and the world.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C59-world",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: i can name rain, snow, the wind and the weather, and the world.",
+    "assesses": [
+      "RU-LEX-C59-WEATHER-03",
+      "RU-LEX-C59-WEATHER-04",
+      "RU-LEX-C59-WEATHER-05"
+    ]
+  }
+}

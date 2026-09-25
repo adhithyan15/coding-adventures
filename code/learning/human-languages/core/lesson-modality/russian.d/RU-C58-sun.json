@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C58-sun",
+    "language": "russian",
+    "chapter": 58,
+    "sequence": 2880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:672ed8e32954b9dc"
+  },
+  "findings": []
+}

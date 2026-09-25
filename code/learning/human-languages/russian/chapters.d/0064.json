@@ -1,0 +1,19 @@
+{
+  "chapter": 64,
+  "title": "Yellow, Beautiful, Good, Bad, New",
+  "label": "ch:ru-yellow-beautiful-good-bad-new",
+  "canDo": "I can say yellow, beautiful, good, bad and new.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C64-new",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 64: i can say yellow, beautiful, good, bad and new.",
+    "assesses": [
+      "RU-LEX-C64-COLOUR2-03",
+      "RU-LEX-C64-COLOUR2-04",
+      "RU-LEX-C64-COLOUR2-05"
+    ]
+  }
+}

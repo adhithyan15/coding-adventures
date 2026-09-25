@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:1048718f8431678e",
+  "lessonIds": [
+    "RU-C78-bank",
+    "RU-C78-station",
+    "RU-C78-museum",
+    "RU-C78-theatre",
+    "RU-C78-restaurant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch78.txt",
+  "json": "russian/narration/ch78.json",
+  "textHash": "fnv1a64:ae93084bb28701fb",
+  "jsonHash": "fnv1a64:6e4a4e4861e6b382",
+  "findings": []
+}

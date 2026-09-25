@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C50-roof",
+    "language": "russian",
+    "chapter": 50,
+    "sequence": 2460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c43bd5c355e2a970"
+  },
+  "findings": []
+}

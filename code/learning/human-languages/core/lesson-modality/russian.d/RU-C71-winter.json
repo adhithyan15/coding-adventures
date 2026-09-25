@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C71-winter",
+    "language": "russian",
+    "chapter": 71,
+    "sequence": 3530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c41afa858b706613"
+  },
+  "findings": []
+}

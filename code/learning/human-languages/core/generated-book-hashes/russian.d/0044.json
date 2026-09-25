@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:7d83772e716ed534",
+  "lessonIds": [
+    "RU-C44-fruit",
+    "RU-C44-apple",
+    "RU-C44-pear",
+    "RU-C44-cherry",
+    "RU-C44-berry"
+  ],
+  "tex": "russian/book/chapters/ch44-fruit-apple-pear-cherry-berry.tex"
+}

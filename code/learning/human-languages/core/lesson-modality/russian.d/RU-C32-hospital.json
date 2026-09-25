@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C32-hospital",
+    "language": "russian",
+    "chapter": 32,
+    "sequence": 1590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d54bf72fe3325a1"
+  },
+  "findings": []
+}

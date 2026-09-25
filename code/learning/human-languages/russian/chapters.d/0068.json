@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Day, Week, Month, Year, Evening",
+  "label": "ch:ru-day-week-month-year-evening",
+  "canDo": "I can name a day, a week, a month, a year and the evening.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "RU-C68-evening",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can name a day, a week, a month, a year and the evening.",
+    "assesses": [
+      "RU-LEX-C68-TIME1-03",
+      "RU-LEX-C68-TIME1-04",
+      "RU-LEX-C68-TIME1-05"
+    ]
+  }
+}

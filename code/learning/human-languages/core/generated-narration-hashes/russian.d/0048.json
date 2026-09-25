@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:14a089e9fbb9eafd",
+  "lessonIds": [
+    "RU-C48-house",
+    "RU-C48-room",
+    "RU-C48-kitchen",
+    "RU-C48-window",
+    "RU-C48-door"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch48.txt",
+  "json": "russian/narration/ch48.json",
+  "textHash": "fnv1a64:8b08da312c1cb437",
+  "jsonHash": "fnv1a64:2ebf4a1ec37ccda6",
+  "findings": []
+}

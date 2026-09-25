@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:44479ff05b809363",
+  "lessonIds": [
+    "RU-C45-potatoes",
+    "RU-C45-tomato",
+    "RU-C45-onion",
+    "RU-C45-cucumber",
+    "RU-C45-carrot"
+  ],
+  "tex": "russian/book/chapters/ch45-potatoes-tomato-onion-cucumber-carrot.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C61-bear",
+    "language": "russian",
+    "chapter": 61,
+    "sequence": 3050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3d63715ac8555cc"
+  },
+  "findings": []
+}

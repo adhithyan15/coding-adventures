@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-80-PLACES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a hotel, a pharmacy, a church, a park and a taxi.",
+  "prerequisites": []
+}

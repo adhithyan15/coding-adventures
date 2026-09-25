@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:72434974d37f7913",
+  "lessonIds": [
+    "RU-C79-bus",
+    "RU-C79-train",
+    "RU-C79-plane",
+    "RU-C79-car",
+    "RU-C79-bridge"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch79.txt",
+  "json": "russian/narration/ch79.json",
+  "textHash": "fnv1a64:5b55f69d39cd9b43",
+  "jsonHash": "fnv1a64:a60d296783926b63",
+  "findings": []
+}

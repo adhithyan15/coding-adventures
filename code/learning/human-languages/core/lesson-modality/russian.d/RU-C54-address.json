@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C54-address",
+    "language": "russian",
+    "chapter": 54,
+    "sequence": 2670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78ea0bfd9aa5c49c"
+  },
+  "findings": []
+}

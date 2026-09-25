@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:f65b2dc850b879e0",
+  "lessonIds": [
+    "RU-C72-here",
+    "RU-C72-there",
+    "RU-C72-far",
+    "RU-C72-near",
+    "RU-C72-above"
+  ],
+  "tex": "russian/book/chapters/ch72-here-there-far-near-up-above.tex"
+}

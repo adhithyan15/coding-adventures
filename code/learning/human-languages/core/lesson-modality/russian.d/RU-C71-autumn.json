@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C71-autumn",
+    "language": "russian",
+    "chapter": 71,
+    "sequence": 3560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b74c302cbd63fb66"
+  },
+  "findings": []
+}

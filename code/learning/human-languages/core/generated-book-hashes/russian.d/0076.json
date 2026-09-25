@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:4e8f5ce4d50402d5",
+  "lessonIds": [
+    "RU-C76-forty",
+    "RU-C76-fifty",
+    "RU-C76-ninety",
+    "RU-C76-thousand",
+    "RU-C76-country"
+  ],
+  "tex": "russian/book/chapters/ch76-forty-fifty-ninety-a-thousand-a-country.tex"
+}

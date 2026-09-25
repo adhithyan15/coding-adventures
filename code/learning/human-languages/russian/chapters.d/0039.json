@@ -1,0 +1,19 @@
+{
+  "chapter": 39,
+  "title": "Wash, Cook, Buy, Sell, Swim",
+  "label": "ch:ru-wash-cook-buy-sell-swim",
+  "canDo": "I can say to wash, to cook, to buy, to sell and to swim.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C39-plavat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 39: i can say to wash, to cook, to buy, to sell and to swim.",
+    "assesses": [
+      "RU-LEX-C39-VERB2-03",
+      "RU-LEX-C39-VERB2-04",
+      "RU-LEX-C39-VERB2-05"
+    ]
+  }
+}

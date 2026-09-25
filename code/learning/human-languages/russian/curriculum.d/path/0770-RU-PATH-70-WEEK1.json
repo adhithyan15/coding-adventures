@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-70-WEEK1",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "RU-EXT-70-WEEK1"
+  ],
+  "after": []
+}

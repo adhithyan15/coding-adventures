@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:14839b90a97d1e09",
+  "lessonIds": [
+    "RU-C57-stone",
+    "RU-C57-sand",
+    "RU-C57-shore",
+    "RU-C57-island",
+    "RU-C57-field"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch57.txt",
+  "json": "russian/narration/ch57.json",
+  "textHash": "fnv1a64:7ce5055e736da6bb",
+  "jsonHash": "fnv1a64:011a9ccbb44d60f0",
+  "findings": []
+}

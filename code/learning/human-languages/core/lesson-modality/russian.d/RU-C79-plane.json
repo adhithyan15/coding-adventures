@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C79-plane",
+    "language": "russian",
+    "chapter": 79,
+    "sequence": 3940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acf5e166fcf5c10b"
+  },
+  "findings": []
+}

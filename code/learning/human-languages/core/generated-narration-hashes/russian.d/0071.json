@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:f8e761e840d4c12f",
+  "lessonIds": [
+    "RU-C71-sunday",
+    "RU-C71-winter",
+    "RU-C71-spring",
+    "RU-C71-summer",
+    "RU-C71-autumn"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch71.txt",
+  "json": "russian/narration/ch71.json",
+  "textHash": "fnv1a64:3d2317f3d717800f",
+  "jsonHash": "fnv1a64:f26fffe3210cb664",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:e839bc6e5a40a3bd",
+  "lessonIds": [
+    "RU-C44-fruit",
+    "RU-C44-apple",
+    "RU-C44-pear",
+    "RU-C44-cherry",
+    "RU-C44-berry"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch44.txt",
+  "json": "russian/narration/ch44.json",
+  "textHash": "fnv1a64:2cc0fa6a136d55b7",
+  "jsonHash": "fnv1a64:994ae358df741f60",
+  "findings": []
+}

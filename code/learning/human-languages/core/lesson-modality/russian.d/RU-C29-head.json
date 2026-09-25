@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C29-head",
+    "language": "russian",
+    "chapter": 29,
+    "sequence": 1400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:819c2f591869d69e"
+  },
+  "findings": []
+}

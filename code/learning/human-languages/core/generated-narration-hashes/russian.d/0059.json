@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:e0f31f92bd455433",
+  "lessonIds": [
+    "RU-C59-rain",
+    "RU-C59-snow",
+    "RU-C59-wind",
+    "RU-C59-weather",
+    "RU-C59-world"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch59.txt",
+  "json": "russian/narration/ch59.json",
+  "textHash": "fnv1a64:bb1c675bd6009dcd",
+  "jsonHash": "fnv1a64:e4dd7a8816d0305e",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:53f6c763c5497625",
+  "lessonIds": [
+    "RU-C66-hot",
+    "RU-C66-cold",
+    "RU-C66-warm",
+    "RU-C66-fast",
+    "RU-C66-slow"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch66.txt",
+  "json": "russian/narration/ch66.json",
+  "textHash": "fnv1a64:5108b41b3bf4c3ec",
+  "jsonHash": "fnv1a64:2b4e010d43be929c",
+  "findings": []
+}

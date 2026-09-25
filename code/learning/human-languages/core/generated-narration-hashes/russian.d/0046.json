@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:c7137d2db6905128",
+  "lessonIds": [
+    "RU-C46-breakfast",
+    "RU-C46-lunch",
+    "RU-C46-dinner",
+    "RU-C46-porridge",
+    "RU-C46-pie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch46.txt",
+  "json": "russian/narration/ch46.json",
+  "textHash": "fnv1a64:f88fcf533c536a95",
+  "jsonHash": "fnv1a64:7c98f6192cadb5a7",
+  "findings": []
+}

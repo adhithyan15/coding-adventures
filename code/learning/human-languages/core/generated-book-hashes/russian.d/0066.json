@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:c959158b2b466a87",
+  "lessonIds": [
+    "RU-C66-hot",
+    "RU-C66-cold",
+    "RU-C66-warm",
+    "RU-C66-fast",
+    "RU-C66-slow"
+  ],
+  "tex": "russian/book/chapters/ch66-hot-cold-warm-fast-slow.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:f364512725c31615",
+  "lessonIds": [
+    "RU-C52-book",
+    "RU-C52-pen",
+    "RU-C52-paper",
+    "RU-C52-notebook",
+    "RU-C52-pencil"
+  ],
+  "tex": "russian/book/chapters/ch52-book-pen-paper-notebook-pencil.tex"
+}

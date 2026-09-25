@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C41-uchit",
+    "language": "russian",
+    "chapter": 41,
+    "sequence": 2010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:deafab9318c4c774"
+  },
+  "findings": []
+}

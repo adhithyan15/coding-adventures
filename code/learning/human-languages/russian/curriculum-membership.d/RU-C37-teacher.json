@@ -1,0 +1,11 @@
+{
+  "id": "RU-C37-teacher",
+  "pathSegment": "RU-PATH-37-PEOPLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-37-PEOPLE",
+      "order": 2
+    }
+  ]
+}

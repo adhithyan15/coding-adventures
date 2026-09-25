@@ -1,0 +1,11 @@
+{
+  "id": "RU-C47-honey",
+  "pathSegment": "RU-PATH-47-PANTRY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-47-PANTRY",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,990 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 80,
+  "title": "Hotel, Pharmacy, Church, Park, Taxi",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:41c7bbbdd6752884",
+  "lessons": [
+    {
+      "id": "RU-C80-hotel",
+      "sequence": 3970,
+      "title": "гостиница (gostínitsa) — a hotel",
+      "headword": "гостиница",
+      "romanization": "gostínitsa",
+      "gloss": "a hotel",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc90f06d6298e5aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a car, then the Russian for a bridge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: гостиница",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "гостиница (gostínitsa) — \"a hotel\". Built on гость, guest."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for hotel, pharmacy, church, park, taxi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gostínitsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gostínitsa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gostínitsa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gostínitsa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gostínitsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gostínitsa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a car, then the Russian for a bridge, then say gostínitsa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a car, then the Russian for a bridge, then say *gostínitsa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does гостиница (gostínitsa) mean? (\"A hotel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C80-pharmacy",
+      "sequence": 3980,
+      "title": "аптека (aptéka) — a pharmacy",
+      "headword": "аптека",
+      "romanization": "aptéka",
+      "gloss": "a pharmacy",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:67f9bbc4f3b30639",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a bridge, then the Russian for a hotel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: аптека",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "аптека (aptéka) — \"a pharmacy\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for hotel, pharmacy, church, park, taxi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aptéka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aptéka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aptéka, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aptéka*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say aptéka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *aptéka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a bridge, then the Russian for a hotel, then say aptéka again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a bridge, then the Russian for a hotel, then say *aptéka* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does аптека (aptéka) mean? (\"A pharmacy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C80-church",
+      "sequence": 3990,
+      "title": "церковь (tsérkov) — a church",
+      "headword": "церковь",
+      "romanization": "tsérkov",
+      "gloss": "a church",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9fadbd74bada52d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a hotel, then the Russian for a pharmacy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: церковь",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "церковь (tsérkov) — \"a church\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for hotel, pharmacy, church, park, taxi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsérkov",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsérkov*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsérkov, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsérkov*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tsérkov",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tsérkov*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a hotel, then the Russian for a pharmacy, then say tsérkov again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a hotel, then the Russian for a pharmacy, then say *tsérkov* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does церковь (tsérkov) mean? (\"A church\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C80-park",
+      "sequence": 4000,
+      "title": "парк (park) — a park",
+      "headword": "парк",
+      "romanization": "park",
+      "gloss": "a park",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2750cc5e4ca01e9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a pharmacy, then the Russian for a church."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: парк",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "парк (park) — \"a park\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for hotel, pharmacy, church, park, taxi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "park",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *park*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "park, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *park*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say park",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *park*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a pharmacy, then the Russian for a church, then say park again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a pharmacy, then the Russian for a church, then say *park* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does парк mean? (\"A park\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C80-taxi",
+      "sequence": 4010,
+      "title": "такси (taksí) — a taxi",
+      "headword": "такси",
+      "romanization": "taksí",
+      "gloss": "a taxi",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62579ef44ede6af3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a church, then the Russian for a park."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: такси",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "такси (taksí) — \"a taxi\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for hotel, pharmacy, church, park, taxi."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taksí",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taksí*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taksí, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taksí*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say taksí",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *taksí*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a church, then the Russian for a park, then say taksí again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a church, then the Russian for a park, then say *taksí* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does такси (taksí) mean? (\"A taxi\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R80-first-pass-nature-animals-and-describing-words",
+      "sequence": 4020,
+      "title": "Nature, animals and describing words — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 55-67",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8244a74bd9cc6cb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a park and a taxi."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tree, a flower, a leaf; a sheet of paper, grass, a village",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tree, a flower, a leaf; a sheet of paper, grass, a village]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mountain, a forest, a river, a lake, the sea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mountain, a forest, a river, a lake, the sea]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stone, sand, a shore, an island, a field",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stone, sand, a shore, an island, a field]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sky, the sun, the moon, a star, a cloud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sky, the sun, the moon, a star, a cloud]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rain, snow, the wind, the weather, the world; peace",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rain, snow, the wind, the weather, the world; peace]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a dog, a cat, a horse, a cow, a pig",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a dog, a cat, a horse, a cow, a pig]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bird, a mouse, a wolf, a bear, a fox",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bird, a mouse, a wolf, a bear, a fox]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hare, a snake, a hen, a duck, a goat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hare, a snake, a hen, a duck, a goat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "white, black, red, blue, green",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: white, black, red, blue, green]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yellow, beautiful, good, bad, new",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: yellow, beautiful, good, bad, new]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "big, small, old, long, short",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: big, small, old, long, short]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hot, cold, warm, fast, slow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hot, cold, warm, fast, slow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "light; easy, hard, expensive; dear, cheap, badly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: light; easy, hard, expensive; dear, cheap, badly]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A tree? (дерево.) A flower? (цветок.) A leaf; a sheet of paper? (лист.) Grass? (трава.) A village? (деревня.) A mountain? (гора.) A forest? (лес.) A river? (река.) A lake? (озеро.) The sea? (море.) A stone? (камень.) Sand? (песок.) A shore? (берег.) An island? (остров.) A field? (поле.) The sky? (небо.) The sun? (солнце.) The moon? (луна.) A star? (звезда.) A cloud? (облако.) Rain? (дождь.) Snow? (снег.) The wind? (ветер.) The weather? (погода.) The world; peace? (мир.) A dog? (собака.) A cat? (кошка.) A horse? (лошадь.) A cow? (корова.) A pig? (свинья.) A bird? (птица.) A mouse? (мышь.) A wolf? (волк.) A bear? (медведь.) A fox? (лиса.) A hare? (заяц.) A snake? (змея.) A hen? (курица.) A duck? (утка.) A goat? (коза.) White? (белый.) Black? (чёрный.) Red? (красный.) Blue? (синий.) Green? (зелёный.) Yellow? (жёлтый.) Beautiful? (красивый.) Good? (хороший.) Bad? (плохой.) New? (новый.) Big? (большой.) Small? (маленький.) Old? (старый.) Long? (длинный.) Short? (короткий.) Hot? (горячий.) Cold? (холодный.) Warm? (тёплый.) Fast? (быстрый.) Slow? (медленный.) Light; easy? (лёгкий.) Hard? (трудный.) Expensive; dear? (дорогой.) Cheap? (дешёвый.) Badly? (плохо.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R80-second-pass-time-place-numbers-and-the-town",
+      "sequence": 4030,
+      "title": "Time, place, numbers and the town — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 68-80",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8927d1077cd34de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a day and a week."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a day, a week, a month, a year, the evening",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a day, a week, a month, a year, the evening]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "today, yesterday, an hour, a minute, time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: today, yesterday, an hour, a minute, time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Monday, Wednesday, Thursday, Friday, Saturday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Monday, Wednesday, Thursday, Friday, Saturday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sunday, winter, spring, summer, autumn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Sunday, winter, spring, summer, autumn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "here, there, far, near, up above",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: here, there, far, near, up above]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "below, on the left, on the right, a lot, a little",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: below, on the left, on the right, a lot, a little]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "always, sometimes, never, now, later",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: always, sometimes, never, now, later]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "already, quickly, eleven, twelve, zero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: already, quickly, eleven, twelve, zero]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "forty, fifty, ninety, a thousand, a country",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: forty, fifty, ninety, a thousand, a country]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a city, a street, a shop, a market, a school",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a city, a street, a shop, a market, a school]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bank, a railway station, a museum, a theatre, a restaurant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bank, a railway station, a museum, a theatre, a restaurant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bus, a train, an aeroplane, a car, a bridge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bus, a train, an aeroplane, a car, a bridge]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hotel, a pharmacy, a church, a park, a taxi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hotel, a pharmacy, a church, a park, a taxi]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A day? (день.) A week? (неделя.) A month? (месяц.) A year? (год.) The evening? (вечер.) Today? (сегодня.) Yesterday? (вчера.) An hour? (час.) A minute? (минута.) Time? (время.) Monday? (понедельник.) Wednesday? (среда.) Thursday? (четверг.) Friday? (пятница.) Saturday? (суббота.) Sunday? (воскресенье.) Winter? (зима.) Spring? (весна.) Summer? (лето.) Autumn? (осень.) Here? (здесь.) There? (там.) Far? (далеко.) Near? (близко.) Up above? (наверху.) Below? (внизу.) On the left? (слева.) On the right? (справа.) A lot? (много.) A little? (мало.) Always? (всегда.) Sometimes? (иногда.) Never? (никогда.) Now? (сейчас.) Later? (потом.) Already? (уже.) Quickly? (быстро.) Eleven? (одиннадцать.) Twelve? (двенадцать.) Zero? (ноль.) Forty? (сорок.) Fifty? (пятьдесят.) Ninety? (девяносто.) A thousand? (тысяча.) A country? (страна.) A city? (город.) A street? (улица.) A shop? (магазин.) A market? (рынок.) A school? (школа.) A bank? (банк.) A railway station? (вокзал.) A museum? (музей.) A theatre? (театр.) A restaurant? (ресторан.) A bus? (автобус.) A train? (поезд.) An aeroplane? (самолёт.) A car? (машина.) A bridge? (мост.) A hotel? (гостиница (gostínitsa).) A pharmacy? (аптека (aptéka).) A church? (церковь (tsérkov).) A park? (парк.) A taxi? (такси (taksí).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

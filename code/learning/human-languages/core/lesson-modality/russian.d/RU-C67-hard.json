@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C67-hard",
+    "language": "russian",
+    "chapter": 67,
+    "sequence": 3330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ace604f831b7ff9"
+  },
+  "findings": []
+}

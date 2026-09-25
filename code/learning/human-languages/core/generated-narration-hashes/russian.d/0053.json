@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:c54b8b9408d3e40a",
+  "lessonIds": [
+    "RU-C53-bag",
+    "RU-C53-phone",
+    "RU-C53-umbrella",
+    "RU-C53-money",
+    "RU-C53-gift"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch53.txt",
+  "json": "russian/narration/ch53.json",
+  "textHash": "fnv1a64:4e417f1dfe35a420",
+  "jsonHash": "fnv1a64:4bc5b9a40cc74bda",
+  "findings": []
+}

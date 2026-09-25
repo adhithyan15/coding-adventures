@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:5fcfc518edef8abe",
+  "lessonIds": [
+    "RU-C69-today",
+    "RU-C69-yesterday",
+    "RU-C69-hour",
+    "RU-C69-minute",
+    "RU-C69-time"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch69.txt",
+  "json": "russian/narration/ch69.json",
+  "textHash": "fnv1a64:ceba2ea762da1bec",
+  "jsonHash": "fnv1a64:95ba33c4e803d095",
+  "findings": []
+}

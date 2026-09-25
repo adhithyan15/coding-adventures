@@ -1,0 +1,11 @@
+{
+  "id": "RU-C32-medicine",
+  "pathSegment": "RU-PATH-32-HEALTH1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-32-HEALTH1",
+      "order": 2
+    }
+  ]
+}

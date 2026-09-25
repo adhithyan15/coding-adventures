@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:41c7bbbdd6752884",
+  "lessonIds": [
+    "RU-C80-hotel",
+    "RU-C80-pharmacy",
+    "RU-C80-church",
+    "RU-C80-park",
+    "RU-C80-taxi",
+    "RU-R80-first-pass-nature-animals-and-describing-words",
+    "RU-R80-second-pass-time-place-numbers-and-the-town"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch80.txt",
+  "json": "russian/narration/ch80.json",
+  "textHash": "fnv1a64:b266ffd1ddaa6673",
+  "jsonHash": "fnv1a64:3becf5ea1d55ccd0",
+  "findings": []
+}

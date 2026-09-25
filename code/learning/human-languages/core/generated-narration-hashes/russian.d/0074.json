@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:8bf69101840c5221",
+  "lessonIds": [
+    "RU-C74-always",
+    "RU-C74-sometimes",
+    "RU-C74-never",
+    "RU-C74-now",
+    "RU-C74-later"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch74.txt",
+  "json": "russian/narration/ch74.json",
+  "textHash": "fnv1a64:9113c4b2cce65386",
+  "jsonHash": "fnv1a64:c72733b0d324f262",
+  "findings": []
+}
