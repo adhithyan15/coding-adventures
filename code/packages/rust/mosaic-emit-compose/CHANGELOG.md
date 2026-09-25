@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-24 (number inputs)
+
+- **`HostNumberInput` is a `BasicTextField`, like `HostInput`.** It lowered to Material's `TextField`, which enforces a 280×56dp minimum and paints its own filled container inside the part's border. On Engram's Deck options (found with the Engram screenshot harness):
+  - every number field was twice the height of the text fields;
+  - the five review-factor fields overflowed the panel and drew "Hard multiplier" and "Easy bonus" over each other;
+  - the leech row and the bury checkboxes were pushed out of the panel.
+
+  The part's style now owns the box, as for a text field. The field also takes the same width decisions (`fillMaxWidth()` outside a Row, a percentage's weight in one), because `HostNumberInput` joins `parts_filling_width` and `leaf_parts_row_weighted`. The Material `placeholder` is gone: a number's text is never empty, so it never showed.
+  - Rendered: Engram's Options fits the panel with every label visible, and Browse's Cards field is compact. The other Engram screens and every Trestle view are byte-identical. Native-complete (0) and Trestle's emitted-control contract pass.
+
 ## 2026-09-24 (disabled buttons)
 
 - **A disabled `HostButton` keeps its authored background.** `ButtonDefaults.buttonColors(backgroundColor = …)` sets only the enabled colour. A disabled button therefore fell back to Material's `disabledBackgroundColor`, `onSurface` at 12% over the light theme's surface, which is near-white. On Engram's dark Collection panel, "Delete note" and "Delete note type" rendered as blank pale pills while nothing was selected, found with the Engram screenshot harness (#15987). `disabledBackgroundColor` is now the same expression. That matches the web, where a disabled button keeps its authored background unless the package styles `state disabled`. Rendered: the two buttons show their crimson in Engram's Decks screen, the other five Engram screens and every Trestle view are byte-identical, and the emitter's 210 tests pass.
