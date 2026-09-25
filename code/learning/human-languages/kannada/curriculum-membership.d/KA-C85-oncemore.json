@@ -1,0 +1,11 @@
+{
+  "id": "KA-C85-oncemore",
+  "pathSegment": "KA-PATH-85-SLOWLY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-85-SLOWLY",
+      "order": 1
+    }
+  ]
+}

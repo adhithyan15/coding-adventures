@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:95fd964b9410e6b6",
+  "lessonIds": [
+    "KA-C84-thirst",
+    "KA-C84-weariness",
+    "KA-C84-sweat",
+    "KA-C84-hospital",
+    "KA-C84-tablet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch84.txt",
+  "json": "kannada/narration/ch84.json",
+  "textHash": "fnv1a64:6bbbb5c5ea01b12c",
+  "jsonHash": "fnv1a64:7d9614d59fbbbe10",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C85-loudly",
+  "pathSegment": "KA-PATH-85-SLOWLY",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "KA-EXT-85-SLOWLY",
+      "order": 2
+    }
+  ]
+}

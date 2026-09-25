@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C83-fear",
+    "language": "kannada",
+    "chapter": 83,
+    "sequence": 3060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5561b53b901cedf"
+  },
+  "findings": []
+}

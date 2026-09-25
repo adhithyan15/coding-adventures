@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C88-comein",
+    "language": "kannada",
+    "chapter": 88,
+    "sequence": 3320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c8730d907b34c72"
+  },
+  "findings": []
+}

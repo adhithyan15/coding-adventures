@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:fb427a53d8e40d6d",
+  "lessonIds": [
+    "KA-C82-tiredness",
+    "KA-C82-cold",
+    "KA-C82-cough",
+    "KA-C82-headache",
+    "KA-C82-rest"
+  ],
+  "tex": "kannada/book/chapters/ch82-not-feeling-well.tex"
+}

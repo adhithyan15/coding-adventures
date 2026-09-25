@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "Not Feeling Well",
+  "label": "ch:ka-not-feeling-well",
+  "canDo": "I can say I am tired, have a cold, a cough or a headache, and that I need rest.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C82-rest",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can say I am tired, have a cold, a cough or a headache, and that I need rest.",
+    "assesses": [
+      "KA-LEX-C82-UNWELL-03",
+      "KA-LEX-C82-UNWELL-04",
+      "KA-LEX-C82-UNWELL-05"
+    ]
+  }
+}

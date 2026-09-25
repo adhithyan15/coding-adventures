@@ -1,0 +1,11 @@
+{
+  "id": "KA-C84-weariness",
+  "pathSegment": "KA-PATH-84-BODY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-84-BODY",
+      "order": 1
+    }
+  ]
+}

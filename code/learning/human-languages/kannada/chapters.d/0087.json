@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Quick Replies",
+  "label": "ch:ka-quick-replies",
+  "canDo": "I can say really?, nothing, oh no!, is that so? and the same one.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "KA-C87-thesame",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can say really?, nothing, oh no!, is that so? and the same one.",
+    "assesses": [
+      "KA-LEX-C87-REPLIES-03",
+      "KA-LEX-C87-REPLIES-04",
+      "KA-LEX-C87-REPLIES-05"
+    ]
+  }
+}

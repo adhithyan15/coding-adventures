@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-89-CARE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "KA-EXT-89-CARE"
+  ],
+  "after": []
+}

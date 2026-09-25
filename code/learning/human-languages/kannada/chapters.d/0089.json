@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "Take Care on the Way",
+  "label": "ch:ka-take-care-on-the-way",
+  "canDo": "I can tell someone to take care and go safely, say it is late, suggest we go, and name a holiday.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "KA-R89-second-pass-repair-replies-welcome",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can tell someone to take care and go safely, say it is late, suggest we go, and name a holiday.",
+    "assesses": [
+      "KA-LEX-C89-CARE-03",
+      "KA-LEX-C89-CARE-04",
+      "KA-LEX-C89-CARE-05"
+    ]
+  }
+}

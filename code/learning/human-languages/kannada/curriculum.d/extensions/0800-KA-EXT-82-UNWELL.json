@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-82-UNWELL",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I am tired, have a cold, a cough or a headache, and that I need rest.",
+  "prerequisites": []
+}

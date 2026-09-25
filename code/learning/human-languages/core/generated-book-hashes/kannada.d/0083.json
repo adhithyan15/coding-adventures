@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:5f51354d8cdc893b",
+  "lessonIds": [
+    "KA-C83-sadness",
+    "KA-C83-worry",
+    "KA-C83-fear",
+    "KA-C83-anger",
+    "KA-C83-laughter"
+  ],
+  "tex": "kannada/book/chapters/ch83-how-you-feel-inside.tex"
+}

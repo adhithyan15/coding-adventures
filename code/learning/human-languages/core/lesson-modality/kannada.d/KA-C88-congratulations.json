@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C88-congratulations",
+    "language": "kannada",
+    "chapter": 88,
+    "sequence": 3290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2f0e3e682746c72"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C83-anger",
+  "pathSegment": "KA-PATH-83-FEELINGS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-83-FEELINGS",
+      "order": 3
+    }
+  ]
+}

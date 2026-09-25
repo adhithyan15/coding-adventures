@@ -1,0 +1,11 @@
+{
+  "id": "KA-C86-oneminute",
+  "pathSegment": "KA-PATH-86-WAIT",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "KA-EXT-86-WAIT",
+      "order": 0
+    }
+  ]
+}

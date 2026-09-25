@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "The Body Asks",
+  "label": "ch:ka-the-body-asks",
+  "canDo": "I can say I am thirsty or worn out, name sweat, and ask for a hospital or a tablet.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C84-tablet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: i can say I am thirsty or worn out, name sweat, and ask for a hospital or a tablet.",
+    "assesses": [
+      "KA-LEX-C84-BODY-03",
+      "KA-LEX-C84-BODY-04",
+      "KA-LEX-C84-BODY-05"
+    ]
+  }
+}
