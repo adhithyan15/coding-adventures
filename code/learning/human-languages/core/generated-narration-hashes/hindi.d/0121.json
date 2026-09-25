@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:90d9f895d632d148",
+  "lessonIds": [
+    "HI-C121-dhyanrakhie",
+    "HI-C121-sambhalkar",
+    "HI-C121-shubhyatra",
+    "HI-C121-phiraiega",
+    "HI-C121-chalie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch121.txt",
+  "json": "hindi/narration/ch121.json",
+  "textHash": "fnv1a64:c8dcb72ff41c9b20",
+  "jsonHash": "fnv1a64:4cf8fa2f12de71bb",
+  "findings": []
+}

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed — Compose `files.open` is answered by Mosaic's platform library
+
+Every Compose app now gets `MosaicPlatformEffects.kt` (UI87 §7), which answers
+`files.open` itself because this package's handler claims no `kinds`. On
+Compose, `host/compose/PhotoPickerEffects.kt` is therefore no longer reached;
+it is removed, with the other backends' copies, when this app migrates onto
+the platform libraries (UI87 §7.4).
+
 ### Added
 
 - `host/qt/PhotoPickerEffects.{h,cpp}` — the Qt `[host_effects]`

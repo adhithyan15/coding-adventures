@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:913d8fe407292bf0",
+  "lessonIds": [
+    "TA-C99-drink",
+    "TA-C99-present",
+    "TA-C99-welcomeformal",
+    "TA-C99-forgive",
+    "TA-C99-dontworry"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 0,
+  "text": "tamil/narration/ch99.txt",
+  "json": "tamil/narration/ch99.json",
+  "textHash": "fnv1a64:24c8f9c398437d14",
+  "jsonHash": "fnv1a64:fa8ae80ab76df13e",
+  "findings": []
+}

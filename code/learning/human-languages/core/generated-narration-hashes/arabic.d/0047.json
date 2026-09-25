@@ -1,0 +1,18 @@
+{
+  "language": "arabic",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:645e82c057938ea8",
+  "lessonIds": [
+    "AR-W47-alif-hamza-below",
+    "AR-W47-alif-maqsura",
+    "AR-W47-fa",
+    "AR-W47-qaf"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "arabic/narration/ch47.txt",
+  "json": "arabic/narration/ch47.json",
+  "textHash": "fnv1a64:5a0c047f6ef3562b",
+  "jsonHash": "fnv1a64:3347aaaf1ca1cd81",
+  "findings": []
+}

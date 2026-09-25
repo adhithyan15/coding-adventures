@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S129-letter-sa",
+    "language": "tamil",
+    "chapter": 109,
+    "sequence": 4690,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ed1807c6fc7ec11e",
+    "detachableSegments": [
+      "Script you'll notice: ஸ",
+      "Writing: ஸ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

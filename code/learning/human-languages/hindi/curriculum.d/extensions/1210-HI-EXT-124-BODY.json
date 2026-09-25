@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-124-BODY",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I am hungry, thirsty or sleepy, that I am sweating, and that I have a headache.",
+  "prerequisites": []
+}

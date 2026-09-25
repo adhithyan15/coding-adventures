@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Boys, Girls, Husbands, Wives",
+  "label": "ch:hi-husbands-wives",
+  "canDo": "I can talk about a boy or a girl, a husband or a wife, and a relative.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-C118-rishtedar",
+    "kind": "production",
+    "summary": "Complete HI-C118-rishtedar: the people in an introduction.",
+    "assesses": [
+      "HI-LEX-C118-SPOUSE-03",
+      "HI-LEX-C118-SPOUSE-04",
+      "HI-LEX-C118-SPOUSE-05"
+    ]
+  }
+}

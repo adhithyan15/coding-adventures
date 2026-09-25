@@ -1,0 +1,841 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 106,
+  "title": "See You Soon",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:33d17617e4874756",
+  "lessons": [
+    {
+      "id": "KA-C106-farewell",
+      "sequence": 4230,
+      "title": "ವಿದಾಯ (vidāya) — farewell",
+      "headword": "ವಿದಾಯ",
+      "romanization": "vidāya",
+      "gloss": "farewell",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:655e0d931b29e2e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for love, then the Kannada for appreciation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ವಿದಾಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ವಿದಾಯ (vidāya) — \"farewell\", a formal parting word for speeches and letters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The formal goodbye."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidāya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidāya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vidāya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vidāya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for love, then the Kannada for appreciation, then say vidāya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for love, then the Kannada for appreciation, then say *vidāya* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ವಿದಾಯ (vidāya) mean? (\"Farewell\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C106-today",
+      "sequence": 4240,
+      "title": "ಇವತ್ತು (ivattu) — today",
+      "headword": "ಇವತ್ತು",
+      "romanization": "ivattu",
+      "gloss": "today",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f6cdac1caf101ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for appreciation, then the Kannada for farewell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಇವತ್ತು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಇವತ್ತು (ivattu) — \"today\". ನಾಳೆ (nāḷe) is \"tomorrow\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The day before tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ivattu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ivattu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ivattu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ivattu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ivattu, then nāḷe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ivattu*, then *nāḷe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for appreciation, then the Kannada for farewell, then say ivattu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for appreciation, then the Kannada for farewell, then say *ivattu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಇವತ್ತು (ivattu) mean? (\"Today\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C106-later",
+      "sequence": 4250,
+      "title": "ನಂತರ (nantara) — later, afterwards",
+      "headword": "ನಂತರ",
+      "romanization": "nantara",
+      "gloss": "later, afterwards",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8c4c89c4aae4c43",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for farewell, then the Kannada for today."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಂತರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಂತರ (nantara) — \"later, afterwards\". ಆಮೇಲೆ (āmēle) says the same in everyday speech."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A second word for later."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nantara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nantara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nantara, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nantara*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nantara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nantara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for farewell, then the Kannada for today, then say nantara again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for farewell, then the Kannada for today, then say *nantara* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಂತರ (nantara) mean? (\"Later, afterwards\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C106-phone",
+      "sequence": 4260,
+      "title": "ಫೋನ್ ಮಾಡಿ (phōn māḍi) — please phone",
+      "headword": "ಫೋನ್ ಮಾಡಿ",
+      "romanization": "phōn māḍi",
+      "gloss": "please phone",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a90f76b46d08f13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for today, then the Kannada for later."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಫೋನ್ ಮಾಡಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಫೋನ್ ಮಾಡಿ (phōn māḍi) — \"please phone (me)\", literally \"please do a phone\". ಮಾಡಿ is the polite form of ಮಾಡು, \"do\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A way to stay in touch after goodbye."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phōn māḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phōn māḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phōn māḍi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phōn māḍi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say phōn māḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *phōn māḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for today, then the Kannada for later, then say phōn māḍi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for today, then the Kannada for later, then say *phōn māḍi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಫೋನ್ ಮಾಡಿ (phōn māḍi) mean? (\"Please phone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C106-seeyou",
+      "sequence": 4270,
+      "title": "ಸಿಗುತ್ತೇನೆ (siguttēne) — I'll see you",
+      "headword": "ಸಿಗುತ್ತೇನೆ",
+      "romanization": "siguttēne",
+      "gloss": "I'll see you",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f077d574e39966d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for later, then the Kannada for please phone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸಿಗುತ್ತೇನೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸಿಗುತ್ತೇನೆ (siguttēne) — \"I'll see you\", literally \"I will be met\". It is the same verb as ಸಿಗೋಣ (sigōṇa), \"let's meet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾಳೆ ಸಿಗುತ್ತೇನೆ (nāḷe siguttēne) — \"I'll see you tomorrow\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The last word of the tranche: a promise to meet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siguttēne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siguttēne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siguttēne, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siguttēne*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nāḷe siguttēne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nāḷe siguttēne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for later, then the Kannada for please phone, then say siguttēne again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for later, then the Kannada for please phone, then say *siguttēne* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸಿಗುತ್ತೇನೆ (siguttēne) mean? (\"I'll see you\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R106-first-pass-moods-body-find",
+      "sequence": 4280,
+      "title": "Out and about — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over moods, the body, finding your way and asking politely",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:808a0965a4d0359e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask a friend to phone you, and promise to see them tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "name boredom, enthusiasm, shyness, alarm and peace of mind",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: name boredom, enthusiasm, shyness, alarm and peace of mind]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "take a breath; name skin and blood; say you have a stomach ache; ask someone's weight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: take a breath; name skin and blood; say you have a stomach ache; ask someone's weight]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask for the map and one ticket; ask where the bus stop is; ask if it is near",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask for the map and one ticket; ask where the bus stop is; ask if it is near]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "please open the door; please close it; please stop here; please call the doctor; it's urgent!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: please open the door; please close it; please stop here; please call the doctor; it's urgent!]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Boredom? (ಬೇಸರ.) Enthusiasm? (ಉತ್ಸಾಹ.) Shyness? (ನಾಚಿಕೆ.) Alarm? (ಗಾಬರಿ.) Peace of mind? (ನೆಮ್ಮದಿ.) Breath, skin, blood? (ಉಸಿರು, ಚರ್ಮ, ರಕ್ತ.) Stomach ache? (ಹೊಟ್ಟೆನೋವು.) Weight? (ತೂಕ.) Map, ticket, bus, station? (ನಕ್ಷೆ, ಟಿಕೆಟ್, ಬಸ್, ನಿಲ್ದಾಣ.) Near? (ಹತ್ತಿರ.) Open, close, stop, call? (ತೆರೆಯಿರಿ, ಮುಚ್ಚಿ, ನಿಲ್ಲಿಸಿ, ಕರೆಯಿರಿ.) Urgent? (ತುರ್ತು.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R106-second-pass-home-work-wishes",
+      "sequence": 4290,
+      "title": "Home, work and the road — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over replies, home, work, wishes and parting",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e064dbc8f15074de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tell someone about your home and the street it is on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I want a different one; I made a mistake; everything is fine; only one; for no reason",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I want a different one; I made a mistake; everything is fine; only one; for no reason]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "name your city, your country and a state",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: name your city, your country and a state]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "name business, a worker, the police, a driver and a shop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: name business, a worker, the police, a driver and a shop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "festival greetings; thank a host for their hospitality; name love and appreciation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: festival greetings; thank a host for their hospitality; name love and appreciation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farewell; today; later; please phone; I'll see you tomorrow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: farewell; today; later; please phone; I'll see you tomorrow]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Other? (ಬೇರೆ.) Wrong? (ತಪ್ಪು.) All? (ಎಲ್ಲಾ.) Only one? (ಒಂದೇ.) For no reason? (ಸುಮ್ಮನೆ.) House, street, city, country, state? (ಮನೆ, ಬೀದಿ, ನಗರ, ದೇಶ, ರಾಜ್ಯ.) Business, worker, police, driver, shop? (ವ್ಯಾಪಾರ, ಕೆಲಸಗಾರ, ಪೊಲೀಸ್, ಚಾಲಕ, ಅಂಗಡಿ.) Best wishes? (ಶುಭಾಶಯಗಳು.) Festival? (ಹಬ್ಬ.) Hospitality? (ಆತಿಥ್ಯ.) Love? (ಪ್ರೀತಿ.) Appreciation? (ಮೆಚ್ಚುಗೆ.) Farewell? (ವಿದಾಯ (vidāya).) Today? (ಇವತ್ತು (ivattu).) Later? (ನಂತರ (nantara).) Please phone? (ಫೋನ್ ಮಾಡಿ (phōn māḍi).) I'll see you? (ಸಿಗುತ್ತೇನೆ (siguttēne).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

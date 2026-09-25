@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 65,
+  "output": "sanskrit/book/chapters/ch65-the-last-letter-read.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

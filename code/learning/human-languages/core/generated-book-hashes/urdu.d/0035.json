@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:af0b442f69ac05f6",
+  "lessonIds": [
+    "UR-W35-jim",
+    "UR-W35-bari-he",
+    "UR-W35-khe",
+    "UR-W35-che"
+  ],
+  "tex": "urdu/book/chapters/ch35-ur-letters-of-the-hook-family.tex"
+}

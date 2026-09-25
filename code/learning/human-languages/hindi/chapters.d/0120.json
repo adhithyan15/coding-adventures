@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Forms and Introductions",
+  "label": "ch:hi-forms-and-introductions",
+  "canDo": "I can sign a form, talk about an identity card, introduce myself, and say it was nice to meet someone.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-C120-milkar",
+    "kind": "production",
+    "summary": "Complete HI-C120-milkar: from the form to the handshake.",
+    "assesses": [
+      "HI-LEX-C120-FORM-03",
+      "HI-LEX-C120-FORM-04",
+      "HI-LEX-C120-FORM-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:0404334330bfa882",
+  "lessonIds": [
+    "HI-C123-kyahaal",
+    "HI-C123-sabthik",
+    "HI-C123-bahutdin",
+    "HI-C123-kyachal",
+    "HI-C123-khanakhaya"
+  ],
+  "tex": "hindi/book/chapters/ch123-hows-it-going.tex"
+}

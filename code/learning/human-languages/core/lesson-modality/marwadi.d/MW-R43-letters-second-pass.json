@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R43-letters-second-pass",
+    "language": "marwadi",
+    "chapter": 43,
+    "sequence": 3490,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d5d160339313b907"
+  },
+  "findings": []
+}

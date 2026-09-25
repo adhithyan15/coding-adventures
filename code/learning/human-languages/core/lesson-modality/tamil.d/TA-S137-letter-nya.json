@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "TA-S137-letter-nya",
+    "language": "tamil",
+    "chapter": 112,
+    "sequence": 4770,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:228e65c0f78d959e",
+    "detachableSegments": [
+      "Script you'll notice: ஞ",
+      "Writing: ஞ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

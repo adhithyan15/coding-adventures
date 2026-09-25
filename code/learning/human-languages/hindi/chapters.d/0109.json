@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Laughter and Tears",
+  "label": "ch:hi-laughter-and-tears",
+  "canDo": "I can talk about laughter and tears, sorrow, being alone, and something cold to drink.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "HI-C109-thanda",
+    "kind": "production",
+    "summary": "Complete HI-C109-thanda: moods, and one plain comfort.",
+    "assesses": [
+      "HI-LEX-C109-MOOD-03",
+      "HI-LEX-C109-MOOD-04",
+      "HI-LEX-C109-MOOD-05"
+    ]
+  }
+}

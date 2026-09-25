@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "See You Soon",
+  "label": "ch:ka-see-you-soon",
+  "canDo": "I can say farewell, today and later, ask someone to phone, and say I'll see them.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "KA-R106-second-pass-home-work-wishes",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can say farewell, today and later, ask someone to phone, and say I'll see them.",
+    "assesses": [
+      "KA-LEX-C106-SOON-03",
+      "KA-LEX-C106-SOON-04",
+      "KA-LEX-C106-SOON-05"
+    ]
+  }
+}

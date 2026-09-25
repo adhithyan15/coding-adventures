@@ -1,0 +1,11 @@
+{
+  "id": "BN-R41-letters-first-pass",
+  "pathSegment": "BN-PATH-041-LETTERS-LAST",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "BN-EXT-041-LETTERS-LAST",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C94-write",
+  "pathSegment": "TA-PATH-94-LOST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-94-LOST",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C107-seeyoulater",
+  "pathSegment": "TA-PATH-107-LEAVE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-107-LEAVE",
+      "order": 2
+    }
+  ]
+}

@@ -78,17 +78,6 @@
    "upstream_exit": 0,
    "upstream_stdout": "for(var a=0;a<3;a++)console.log(a);\n"
   },
-  "ladder_t4_if_else_advanced": {
-   "closurec_exit": 0,
-   "closurec_stdout": "var x=1;x?console.log(1):console.log(2);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "ADVANCED",
-   "reason": "closurec does not propagate a known binding into the condition, so the branch survives as a ternary instead of collapsing. Upstream folds it away entirely. This is the CCR-068 value-propagation gap.",
-   "rung": "if_else",
-   "tier": 4,
-   "upstream_exit": 0,
-   "upstream_stdout": "console.log(1);\n"
-  },
   "ladder_t4_if_else_simple": {
    "closurec_exit": 0,
    "closurec_stdout": "var x=1;x?console.log(1):console.log(2);\n",
@@ -99,17 +88,6 @@
    "tier": 4,
    "upstream_exit": 0,
    "upstream_stdout": "var x=1;console.log(1);\n"
-  },
-  "ladder_t4_switch_advanced": {
-   "closurec_exit": 0,
-   "closurec_stdout": "var x=1;switch(x){case 1:console.log(1);break;default:console.log(2)};\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "ADVANCED",
-   "reason": "Upstream propagates the scrutinee `x = 1`, selects the live case and discards the rest of the switch, leaving only its effect. closurec emits the input unchanged. Single-use value propagation, CCR-068. The emitter punctuation that used to differ here is fixed (CCR-073).",
-   "rung": "switch",
-   "tier": 4,
-   "upstream_exit": 0,
-   "upstream_stdout": "console.log(1);\n"
   },
   "ladder_t4_try_catch_advanced": {
    "closurec_exit": 0,
@@ -314,17 +292,6 @@
    "tier": 6,
    "upstream_exit": 0,
    "upstream_stdout": "for(let a of[1,2,3])console.log(a);\n"
-  },
-  "ladder_t6_let_const_advanced": {
-   "closurec_exit": 0,
-   "closurec_stdout": "let a=1;console.log(a+2);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15863",
-   "level": "ADVANCED",
-   "reason": "At SIMPLE this runs the OPPOSITE way to every other rung: closurec propagates the const into its use site and upstream does not, so we optimize MORE than the oracle. That may be a win or an unsound propagation \u2014 tracked as CCR-078. At ADVANCED the ordinary CCR-068 gap applies.",
-   "rung": "let_const",
-   "tier": 6,
-   "upstream_exit": 0,
-   "upstream_stdout": "console.log(3);\n"
   },
   "ladder_t6_let_const_simple": {
    "closurec_exit": 0,
@@ -619,28 +586,6 @@
    "tier": 7,
    "upstream_exit": 0,
    "upstream_stdout": "console.log(new function(){return typeof new.target});\n"
-  },
-  "ladder_t7_nullish_advanced": {
-   "closurec_exit": 0,
-   "closurec_stdout": "var a=null;console.log(a??2);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "ADVANCED",
-   "reason": "closurec does not propagate a single-use value or function into its use site and eliminate the binding; upstream reduces the program to its observable effect. This is the CCR-068 value-propagation gap.",
-   "rung": "nullish",
-   "tier": 7,
-   "upstream_exit": 0,
-   "upstream_stdout": "console.log(2);\n"
-  },
-  "ladder_t7_optional_chain_advanced": {
-   "closurec_exit": 0,
-   "closurec_stdout": "var o={a:{b:1}};console.log(o?.a?.b);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "ADVANCED",
-   "reason": "closurec does not propagate a single-use value or function into its use site and eliminate the binding; upstream reduces the program to its observable effect. This is the CCR-068 value-propagation gap.",
-   "rung": "optional_chain",
-   "tier": 7,
-   "upstream_exit": 0,
-   "upstream_stdout": "console.log(1);\n"
   },
   "ladder_t7_private_field_advanced": {
    "closurec_exit": 0,

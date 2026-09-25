@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-W114-chha",
+    "language": "malayalam",
+    "chapter": 114,
+    "sequence": 4250,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5de5f238e05f945f",
+    "detachableSegments": [
+      "Script you'll notice: ഛ",
+      "Writing: ഛ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

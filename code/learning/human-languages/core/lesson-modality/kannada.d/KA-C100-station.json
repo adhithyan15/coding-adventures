@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C100-station",
+    "language": "kannada",
+    "chapter": 100,
+    "sequence": 3960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:decb80d656c34012"
+  },
+  "findings": []
+}

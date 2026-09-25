@@ -1,0 +1,8 @@
+{
+  "id": "KA-EXT-86-WAIT",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for a minute, ask someone to wait or show me, and say I did not hear or did not understand.",
+  "prerequisites": []
+}

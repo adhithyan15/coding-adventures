@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:61309d940b5fb0cf",
+  "lessonIds": [
+    "HI-C112-sahi",
+    "HI-C112-galat",
+    "HI-C112-pakka",
+    "HI-C112-sachme",
+    "HI-C112-are"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch112.txt",
+  "json": "hindi/narration/ch112.json",
+  "textHash": "fnv1a64:799dc811ff727dc7",
+  "jsonHash": "fnv1a64:aa826351d2096ce3",
+  "findings": []
+}

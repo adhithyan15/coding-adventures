@@ -44,7 +44,12 @@ it("pins Arabic lesson-content budgets", () =>
     // per-lesson budgets to count. Every one of the fifteen went onto an EXISTING
     // path segment whose spine_node already matched, so no new chapter, segment or
     // extension either.
-    lessons: 144,
+    //
+    // 144 -> 160: HL-C443 chapters 46-49 add fourteen letter lessons (one per
+    // letter the reader had read in words and never written) and two reviews.
+    // RE-MEASURED against the tree. Idioms, senses and culture claims stay at
+    // 2 / 3 / 14: a letter lesson introduces one script atom and nothing else.
+    lessons: 160,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,

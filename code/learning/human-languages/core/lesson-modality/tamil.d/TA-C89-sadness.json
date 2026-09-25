@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C89-sadness",
+    "language": "tamil",
+    "chapter": 89,
+    "sequence": 3700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6049eb9df6a496c2"
+  },
+  "findings": []
+}

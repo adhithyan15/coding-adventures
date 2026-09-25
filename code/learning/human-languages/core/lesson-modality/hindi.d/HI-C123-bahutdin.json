@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C123-bahutdin",
+    "language": "hindi",
+    "chapter": 123,
+    "sequence": 5490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:048929c385f383b9"
+  },
+  "findings": []
+}

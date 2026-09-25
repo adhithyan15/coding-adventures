@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Exactly, Really, Nothing",
+  "label": "ch:ta-exactly-really-nothing",
+  "canDo": "I can say exactly, ask really?, answer nothing and not yet, and say the same one.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TA-C95-same",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say exactly, ask really?, answer nothing and not yet, and say the same one.",
+    "assesses": [
+      "TA-LEX-C95-RIGHT-03",
+      "TA-LEX-C95-RIGHT-04",
+      "TA-LEX-C95-RIGHT-05"
+    ]
+  }
+}

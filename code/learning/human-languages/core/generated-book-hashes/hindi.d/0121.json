@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:7083d1b919fb5f5f",
+  "lessonIds": [
+    "HI-C121-dhyanrakhie",
+    "HI-C121-sambhalkar",
+    "HI-C121-shubhyatra",
+    "HI-C121-phiraiega",
+    "HI-C121-chalie"
+  ],
+  "tex": "hindi/book/chapters/ch121-take-care.tex"
+}

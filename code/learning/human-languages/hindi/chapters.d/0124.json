@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Hungry, Thirsty, Sleepy",
+  "label": "ch:hi-hungry-thirsty-sleepy",
+  "canDo": "I can say I am hungry, thirsty or sleepy, that I am sweating, and that I have a headache.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "HI-C124-sirdard",
+    "kind": "production",
+    "summary": "Complete HI-C124-sirdard: say what the body needs.",
+    "assesses": [
+      "HI-LEX-C124-BODY-03",
+      "HI-LEX-C124-BODY-04",
+      "HI-LEX-C124-BODY-05"
+    ]
+  }
+}

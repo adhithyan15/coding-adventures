@@ -1,0 +1,11 @@
+{
+  "id": "UR-W35-bari-he",
+  "pathSegment": "UR-PATH-035-LETTERS-HOOK",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-035-LETTERS-HOOK",
+      "order": 1
+    }
+  ]
+}

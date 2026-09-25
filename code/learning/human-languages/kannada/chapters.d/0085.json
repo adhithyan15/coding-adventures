@@ -1,0 +1,19 @@
+{
+  "chapter": 85,
+  "title": "Slowly, Once More",
+  "label": "ch:ka-slowly-once-more",
+  "canDo": "I can ask someone to speak slowly, say it once more, speak louder, tell me the meaning, and write it down.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "KA-C85-writeit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 85: i can ask someone to speak slowly, say it once more, speak louder, tell me the meaning, and write it down.",
+    "assesses": [
+      "KA-LEX-C85-SLOWLY-03",
+      "KA-LEX-C85-SLOWLY-04",
+      "KA-LEX-C85-SLOWLY-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:e338d264d464596d",
+  "lessonIds": [
+    "HI-C124-bhukha",
+    "HI-C124-pyasa",
+    "HI-C124-nindaa",
+    "HI-C124-pasina",
+    "HI-C124-sirdard"
+  ],
+  "tex": "hindi/book/chapters/ch124-hungry-thirsty-sleepy.tex"
+}

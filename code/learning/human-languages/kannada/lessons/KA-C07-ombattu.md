@@ -19,9 +19,9 @@ duration:
 requires:
   knowledge: [KA-ETYMON-C07-NUMBERS-6-10-03, KA-LEX-C07-ONDU-01]
 introduces:
-  knowledge: [KA-LEX-C07-OMBATTU-01]
+  knowledge: [KA-LEX-C07-OMBATTU-01, KA-SCRIPT-C08-DAYAVITTU-04]
 practises:
-  knowledge: [KA-LEX-C07-OMBATTU-01, KA-ETYMON-C07-NUMBERS-6-10-03, KA-LEX-C07-ONDU-01, KA-SCRIPT-RECOG-110, KA-SCRIPT-RECOG-05]
+  knowledge: [KA-LEX-C07-OMBATTU-01, KA-SCRIPT-C08-DAYAVITTU-04, KA-ETYMON-C07-NUMBERS-6-10-03, KA-LEX-C07-ONDU-01, KA-SCRIPT-RECOG-110, KA-SCRIPT-RECOG-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -49,18 +49,29 @@ one decided by the letter after it and never by the mark itself.
 
 That is the whole rule, and it holds everywhere in Kannada: read the ಂ forwards.
 
+## Sounds you'll need: a doubled letter stacks
+<!-- hl-knowledge: introduces=[KA-SCRIPT-C08-DAYAVITTU-04]; assesses=[] -->
+
+Now look at the end of the word: **ತ್ತು** — a **doubled** *t*. The first **ತ್** is
+*ta* silenced by the **virama** (its vowel cut), and it tucks **under** the next
+letter as an *ottu* (a subscript form) before **ತು** *tu*. Kannada writes a double
+consonant by **stacking**, not by repeating side by side — the Roman alphabet just
+writes "tt".
+
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-OMBATTU-01, KA-SCRIPT-RECOG-110, KA-SCRIPT-RECOG-05, KA-LEX-C07-ONDU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-OMBATTU-01, KA-SCRIPT-C08-DAYAVITTU-04, KA-SCRIPT-RECOG-110, KA-SCRIPT-RECOG-05, KA-LEX-C07-ONDU-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ombattu" — the m comes from the ಬ]
 - [YOU LOOK: at ಒಂಬತ್ತು and find the ಂ — the same mark *ondu* and *eṇṭu* carry]
+- [YOU LOOK: at ತ್ತು and find the small *t* tucked under the second one]
 - [YOU SAY: the count so far — "…ēḷu, eṇṭu, ombattu"]
 - [YOU RECALL: say *ondu*]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-OMBATTU-01, KA-LEX-C07-ONDU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-OMBATTU-01, KA-SCRIPT-C08-DAYAVITTU-04, KA-LEX-C07-ONDU-01] -->
 
-[PAUSE 3s] What is "nine"? (*Ombattu*.) Why does the ಂ say *m* here and *n* in
+[PAUSE 3s] What is "nine"? (*Ombattu*.) How does Kannada write its double *tt*?
+(**Stacked** — the first *t* tucks under the second.) Why does the ಂ say *m* here and *n* in
 *ondu*? (It takes the nasal the **next** letter asks for — ಬ wants *m*, ದ wants
 *n*.)

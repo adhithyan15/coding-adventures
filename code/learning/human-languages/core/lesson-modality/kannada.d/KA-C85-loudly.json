@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C85-loudly",
+    "language": "kannada",
+    "chapter": 85,
+    "sequence": 3160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93d6b76ae3bfc9a4"
+  },
+  "findings": []
+}

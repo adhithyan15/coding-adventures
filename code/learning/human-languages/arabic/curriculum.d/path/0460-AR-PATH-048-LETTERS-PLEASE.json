@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-048-LETTERS-PLEASE",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "AR-EXT-048-LETTERS-PLEASE"
+  ],
+  "after": []
+}

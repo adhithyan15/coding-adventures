@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C101-fathersyoungerbrother",
+    "language": "tamil",
+    "chapter": 101,
+    "sequence": 4300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9af361a78477c6d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:71f0e827fb136cab",
+  "lessonIds": [
+    "KA-C103-house",
+    "KA-C103-street",
+    "KA-C103-city",
+    "KA-C103-country",
+    "KA-C103-state"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch103.txt",
+  "json": "kannada/narration/ch103.json",
+  "textHash": "fnv1a64:d4600c178086efaa",
+  "jsonHash": "fnv1a64:1ab83fdd5e7d2ef8",
+  "findings": []
+}

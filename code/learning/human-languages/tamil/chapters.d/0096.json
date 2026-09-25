@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Not at All, Is That So?",
+  "label": "ch:ta-not-at-all",
+  "canDo": "I can say not at all, react with is that so and really, agree that's right, and say I don't know.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TA-C96-dontknow",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: i can say not at all, react with is that so and really, agree that's right, and say I don't know.",
+    "assesses": [
+      "TA-LEX-C96-NOTATALL-03",
+      "TA-LEX-C96-NOTATALL-04",
+      "TA-LEX-C96-NOTATALL-05"
+    ]
+  }
+}

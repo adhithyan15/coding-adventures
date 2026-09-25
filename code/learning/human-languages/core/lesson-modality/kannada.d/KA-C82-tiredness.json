@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C82-tiredness",
+    "language": "kannada",
+    "chapter": 82,
+    "sequence": 2990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc7fd4839333d2a9"
+  },
+  "findings": []
+}

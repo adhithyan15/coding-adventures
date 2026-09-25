@@ -3064,6 +3064,14 @@ jobs:
             xvfb-run -a gradle --no-daemon --stacktrace --rerun-tasks -p "$journal_output/compose" \
               test --tests JournalUiTest
 
+          # The platform library's own behaviour (UI87 §7): every Compose app
+          # gets MosaicPlatformEffects.kt, and this drives its open/save logic,
+          # limits and routing with fake dialogs -- no display needed.
+          cp code/packages/rust/mosaic-app-bindings/conformance/compose/MosaicPlatformEffectsTest.kt \
+            "$journal_output/compose/src/test/kotlin/MosaicPlatformEffectsTest.kt"
+          gradle --no-daemon --stacktrace -p "$journal_output/compose" \
+            test --tests MosaicPlatformEffectsTest
+
           toolkit_output="$RUNNER_TEMP/mosaic-compose-toolkit"
           cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/packages/mosaic/mosaic-pkg-toolkit --backend compose --output "$toolkit_output" --emit-project
           gradle --no-daemon --stacktrace -p "$toolkit_output/compose" compileKotlin

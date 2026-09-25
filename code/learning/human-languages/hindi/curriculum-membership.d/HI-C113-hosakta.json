@@ -1,0 +1,11 @@
+{
+  "id": "HI-C113-hosakta",
+  "pathSegment": "HI-PATH-113-NOTHING",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-113-NOTHING",
+      "order": 4
+    }
+  ]
+}

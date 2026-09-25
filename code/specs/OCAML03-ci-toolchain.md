@@ -120,6 +120,24 @@ circular and MUST NOT count as fresh-solve evidence. The checked receipt is
 evidence of the fresh solve, not a claim that packages are portable across
 runner families.
 
+## Triggers
+
+`.github/workflows/build-ocaml.yml` runs on pushes to `main` and on pull
+requests into `main`, and only when a path it owns changes: OCaml packages and
+programs, this spec family, the toolchain lock and its tests and fixtures, the
+scaffold fixtures, or the workflow itself. It does **not** watch
+`.github/workflows/ci.yml`. The generic workflow's OCaml wiring is validated by
+`ci.yml` itself: its unconditional `contracts` job runs
+`test_ocaml_toolchain_lock.py`, which checks that wiring, on every change. The
+lock contract requires the job and its "Verify repo-wide metadata contracts"
+step to stay unconditional and to keep running that test, so a `ci.yml` edit
+cannot drop the check it is now the only trigger for.
+
+*Revision 2026-09-25.* The first version pushed on every branch and watched
+`ci.yml`. Every pull request therefore ran the three-target matrix twice (push
+and pull request), and every unrelated edit to `ci.yml` ran it too, competing
+with other work for runners. The lock contract pins the narrower triggers.
+
 ## Workflow behavior and security
 
 `.github/workflows/build-ocaml.yml` runs a fail-fast-disabled three-target

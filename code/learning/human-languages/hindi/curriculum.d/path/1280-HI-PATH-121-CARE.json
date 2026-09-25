@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-121-CARE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "HI-EXT-121-CARE"
+  ],
+  "after": []
+}

@@ -651,7 +651,7 @@ fn well_formedness_rejects_every_way_of_switching_a_rung_off() {
 fn reviewed_divergence_count_is_pinned() {
     assert_eq!(
         load_ledger().len(),
-        64,
+        59,
         "reviewed divergence ledger changed — see the note on this test"
     );
 }

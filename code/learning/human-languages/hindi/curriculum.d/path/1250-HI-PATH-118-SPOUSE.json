@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-118-SPOUSE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "HI-EXT-118-SPOUSE"
+  ],
+  "after": []
+}

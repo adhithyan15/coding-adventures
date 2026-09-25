@@ -1,0 +1,11 @@
+{
+  "id": "HI-W128-letter-nya",
+  "pathSegment": "HI-PATH-128-LETTERS-LAST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-128-LETTERS-LAST",
+      "order": 2
+    }
+  ]
+}

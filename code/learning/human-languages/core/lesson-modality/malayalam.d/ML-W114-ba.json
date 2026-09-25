@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-W114-ba",
+    "language": "malayalam",
+    "chapter": 114,
+    "sequence": 4230,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4b8a03ea4a561a07",
+    "detachableSegments": [
+      "Script you'll notice: ബ",
+      "Writing: ബ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,17 @@
+{
+  "language": "tamil",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:8fb8dd146e7803ab",
+  "lessonIds": [
+    "TA-C97-definitely",
+    "TA-C97-thatshow",
+    "TA-C97-whynot"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
+  "text": "tamil/narration/ch97.txt",
+  "json": "tamil/narration/ch97.json",
+  "textHash": "fnv1a64:7e1df1ff000c758d",
+  "jsonHash": "fnv1a64:ae22aff976ecaa8d",
+  "findings": []
+}

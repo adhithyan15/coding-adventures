@@ -1,0 +1,11 @@
+{
+  "id": "TA-C88-headache",
+  "pathSegment": "TA-PATH-88-DOCTOR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-88-DOCTOR",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:2c49f8f1297c689d",
+  "lessonIds": [
+    "TA-S130-letter-nga",
+    "TA-S131-letter-lla",
+    "TA-S132-vowel-sign-ii",
+    "TA-S133-vowel-sign-e"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "tamil/narration/ch110.txt",
+  "json": "tamil/narration/ch110.json",
+  "textHash": "fnv1a64:affcc62b9b8f2bd8",
+  "jsonHash": "fnv1a64:54d15146b18a72bb",
+  "findings": []
+}

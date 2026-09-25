@@ -1,0 +1,11 @@
+{
+  "id": "HI-C126-samajhnahin",
+  "pathSegment": "HI-PATH-126-WHAT",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-126-WHAT",
+      "order": 1
+    }
+  ]
+}

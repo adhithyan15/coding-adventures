@@ -1,0 +1,29 @@
+{
+  "lesson": {
+    "id": "HI-W128-vowel-sign-i",
+    "language": "hindi",
+    "chapter": 128,
+    "sequence": 5740,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "sight-cue"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:177fd62f6ee55ee9",
+    "detachableSegments": [
+      "Script you'll notice: ◌ि",
+      "Writing: ◌ि"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

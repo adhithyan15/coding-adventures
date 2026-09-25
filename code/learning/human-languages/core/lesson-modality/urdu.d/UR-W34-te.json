@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "UR-W34-te",
+    "language": "urdu",
+    "chapter": 34,
+    "sequence": 1760,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f0753e63ba6148d7",
+    "detachableSegments": [
+      "Script you'll notice: ت",
+      "Writing: ت"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C102-onlyone",
+  "pathSegment": "KA-PATH-102-THISWAY",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-102-THISWAY",
+      "order": 3
+    }
+  ]
+}

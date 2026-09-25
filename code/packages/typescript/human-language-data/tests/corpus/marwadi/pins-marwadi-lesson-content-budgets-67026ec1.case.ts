@@ -24,7 +24,8 @@ it("pins Marwadi lesson-content budgets", () =>
     // 346 -> 347: HL-C428, one `review` lesson giving the four-skill refusal its
     // second revisit. No new atom.
     //
-    lessons: 347,
+    // 347 -> 350: HL-C443: the letter chapter adds one letter lesson per letter the reader had read in words and never written, plus two reviews. RE-MEASURED against the tree; a letter lesson introduces one script atom and no idiom, sense or culture claim.
+    lessons: 350,
     idioms: 7,
     senses: 3,
     cultureClaims: 5,

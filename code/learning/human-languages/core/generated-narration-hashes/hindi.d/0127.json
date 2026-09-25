@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:561ff18bf0f57f57",
+  "lessonIds": [
+    "HI-C127-malumnahin",
+    "HI-C127-bilkulnahin",
+    "HI-C127-sachmuch",
+    "HI-C127-achhaji",
+    "HI-C127-chalega",
+    "HI-R127-second-pass-repair",
+    "HI-R127-second-pass-body-mood"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch127.txt",
+  "json": "hindi/narration/ch127.json",
+  "textHash": "fnv1a64:9ae4f6b06b1f4055",
+  "jsonHash": "fnv1a64:3010171be21d80d8",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:fe9f22ce7a4d7200",
+  "lessonIds": [
+    "KA-C84-thirst",
+    "KA-C84-weariness",
+    "KA-C84-sweat",
+    "KA-C84-hospital",
+    "KA-C84-tablet"
+  ],
+  "tex": "kannada/book/chapters/ch84-the-body-asks.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-023-LETTERS-HOOK",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "script",
+  "canDo": "I can write he-ye jimi, jim, khe and che, and tell the four apart by their dots.",
+  "prerequisites": []
+}

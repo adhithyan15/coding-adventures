@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:b0d7112ee0e004a9",
+  "lessonIds": [
+    "FA-W26-fe",
+    "FA-W26-ghaf",
+    "FA-W26-alef-madd",
+    "FA-R26-letters-first-pass",
+    "FA-R26-letters-second-pass"
+  ],
+  "tex": "persian/book/chapters/ch26-fa-letters-from-thinking-and-coming.tex"
+}

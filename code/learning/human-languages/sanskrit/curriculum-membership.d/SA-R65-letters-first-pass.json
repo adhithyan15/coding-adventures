@@ -1,0 +1,11 @@
+{
+  "id": "SA-R65-letters-first-pass",
+  "pathSegment": "SA-PATH-065-LETTERS-LAST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "SA-EXT-065-LETTERS-LAST",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Grandparents, Aunts and Uncles",
+  "label": "ch:ta-grandparents",
+  "canDo": "I can name grandparents, an uncle and an aunt, and my father's younger brother.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C101-fathersyoungerbrother",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can name grandparents, an uncle and an aunt, and my father's younger brother.",
+    "assesses": [
+      "TA-LEX-C101-GRAND-03",
+      "TA-LEX-C101-GRAND-04",
+      "TA-LEX-C101-GRAND-05"
+    ]
+  }
+}

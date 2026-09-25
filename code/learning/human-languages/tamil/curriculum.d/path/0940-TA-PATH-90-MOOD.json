@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-90-MOOD",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "TA-EXT-90-MOOD"
+  ],
+  "after": []
+}

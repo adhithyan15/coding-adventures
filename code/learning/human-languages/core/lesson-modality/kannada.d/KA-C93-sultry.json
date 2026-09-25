@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C93-sultry",
+    "language": "kannada",
+    "chapter": 93,
+    "sequence": 3570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bae315f31b437f7a"
+  },
+  "findings": []
+}

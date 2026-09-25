@@ -1,0 +1,17 @@
+{
+  "language": "sanskrit",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:6affe8d62e5ab4ae",
+  "lessonIds": [
+    "SA-W65-letter-nga",
+    "SA-R65-letters-first-pass",
+    "SA-R65-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "sanskrit/narration/ch65.txt",
+  "json": "sanskrit/narration/ch65.json",
+  "textHash": "fnv1a64:d4327a7e57b2640a",
+  "jsonHash": "fnv1a64:7f118da67efe57d0",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C106-zukam",
+  "pathSegment": "HI-PATH-106-UNWELL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-106-UNWELL",
+      "order": 1
+    }
+  ]
+}

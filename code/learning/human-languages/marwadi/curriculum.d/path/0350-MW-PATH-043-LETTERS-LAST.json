@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-043-LETTERS-LAST",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "MW-EXT-043-LETTERS-LAST"
+  ],
+  "after": []
+}

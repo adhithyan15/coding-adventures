@@ -1,0 +1,11 @@
+{
+  "id": "KA-C86-didnthear",
+  "pathSegment": "KA-PATH-86-WAIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-86-WAIT",
+      "order": 3
+    }
+  ]
+}

@@ -15,6 +15,13 @@ documented in this file.
   the case were regenerated, and every audit test now consults the shared
   expected-failure list.
 
+- **Unflagged tree-construction cases are checked in both scripting modes
+  (BR02 P1.2).** html5lib's rule is that a case without `#script-on` or
+  `#script-off` must build the same tree either way. They ran only with
+  scripting on; `unflagged_cases_match_with_scripting_off` now runs every one
+  of them again with scripting off. All pass. A future difference would be
+  listed as `<source>#script-off` in the expected-failure file.
+
 - **Removed the code that answered scripted conformance cases by string
   matching (BR02 P1.1).** `apply_scripted_tree_construction_side_effects` ran
   whenever scripting was enabled -- including on real pages -- and recognised

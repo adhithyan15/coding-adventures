@@ -124,6 +124,19 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         )
         self.assertIn('rm -f "$journal_ui_state"', block)
 
+    def test_platform_effects_library_is_driven_in_the_journal_lane(self) -> None:
+        """UI87 §7: the Compose platform library every app gets is exercised
+        with fake dialogs in the Journal project, not only compiled."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# The platform library's own behaviour (UI87 §7)")
+        block = workflow[start:workflow.index("\n\n", start)]
+        self.assertIn(
+            "cp code/packages/rust/mosaic-app-bindings/conformance/compose/MosaicPlatformEffectsTest.kt",
+            block,
+        )
+        self.assertIn("test --tests MosaicPlatformEffectsTest", block)
+
     def test_task_app_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_compose_runtime(

@@ -300,6 +300,8 @@ Which two numbers should you trust least as family cousins? (Eight and nine — 
 Lesson 11 of 12.
 ಒಂಬತ್ತು (ombattu) — nine, and the anusvara's third face.
 
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
 Warm-up.
 [pause 2 seconds]
 In ondu the ಂ said n. In eṇṭu it said ṇ. Watch what it does next.
@@ -309,11 +311,16 @@ You'll want to know: ಒಂಬತ್ತು.
 Now the ಂ sits in front of ಬ, and a nasal made with the lips is what a b wants next to it — so it says m. One written mark, three sounds so far, each one decided by the letter after it and never by the mark itself.
 That is the whole rule, and it holds everywhere in Kannada: read the ಂ forwards.
 
+Sounds you'll need: a doubled letter stacks.
+Now look at the end of the word: ತ್ತು — a doubled t. The first ತ್ is ta silenced by the virama (its vowel cut), and it tucks under the next letter as an ottu (a subscript form) before ತು tu. Kannada writes a double consonant by stacking, not by repeating side by side — the Roman alphabet just writes "tt".
+
 Guided Practice.
 [pause 1 second]
 [your turn — say: "ombattu" — the m comes from the ಬ]
 [pause 8 seconds for the answer]
 [your turn — look: at ಒಂಬತ್ತು (ombattu) and find the ಂ — the same mark ondu and eṇṭu carry]
+[pause 8 seconds for the answer]
+[your turn — look: at ತ್ತು and find the small t tucked under the second one]
 [pause 8 seconds for the answer]
 [your turn — say: the count so far — "…ēḷu, eṇṭu, ombattu"]
 [pause 8 seconds for the answer]
@@ -322,7 +329,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What is "nine"? (Ombattu.) Why does the ಂ say m here and n in ondu? (It takes the nasal the next letter asks for — ಬ wants m, ದ wants n.)
+What is "nine"? (Ombattu.) How does Kannada write its double tt? (Stacked — the first t tucks under the second.) Why does the ಂ say m here and n in ondu? (It takes the nasal the next letter asks for — ಬ wants m, ದ wants n.)
 
 
 Lesson 12 of 12.

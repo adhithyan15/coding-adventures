@@ -1,0 +1,11 @@
+{
+  "id": "TA-C98-invitation",
+  "pathSegment": "TA-PATH-98-WELCOME",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-98-WELCOME",
+      "order": 1
+    }
+  ]
+}

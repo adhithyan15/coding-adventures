@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "This Way, That Way",
+  "label": "ch:ka-this-way-that-way",
+  "canDo": "I can say other, wrong, all, only one, and for no reason.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "KA-C102-fornoreason",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can say other, wrong, all, only one, and for no reason.",
+    "assesses": [
+      "KA-LEX-C102-THISWAY-03",
+      "KA-LEX-C102-THISWAY-04",
+      "KA-LEX-C102-THISWAY-05"
+    ]
+  }
+}

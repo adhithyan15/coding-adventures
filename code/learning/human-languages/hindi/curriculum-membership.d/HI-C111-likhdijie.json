@@ -1,0 +1,11 @@
+{
+  "id": "HI-C111-likhdijie",
+  "pathSegment": "HI-PATH-111-ASK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-111-ASK",
+      "order": 4
+    }
+  ]
+}

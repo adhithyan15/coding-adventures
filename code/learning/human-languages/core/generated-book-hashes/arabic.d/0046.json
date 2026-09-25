@@ -1,0 +1,11 @@
+{
+  "language": "arabic",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:8f4ad7c7114d89f6",
+  "lessonIds": [
+    "AR-W46-shin",
+    "AR-W46-sad",
+    "AR-W46-dal"
+  ],
+  "tex": "arabic/book/chapters/ch46-ar-letters-from-greetings.tex"
+}

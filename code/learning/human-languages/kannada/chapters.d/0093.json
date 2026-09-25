@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Hot, Cold and Hurt",
+  "label": "ch:ka-hot-cold-and-hurt",
+  "canDo": "I can say I feel dizzy or hot, that I am at ease, and name a wound and vomiting.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "KA-C93-vomiting",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say I feel dizzy or hot, that I am at ease, and name a wound and vomiting.",
+    "assesses": [
+      "KA-LEX-C93-WEATHER-03",
+      "KA-LEX-C93-WEATHER-04",
+      "KA-LEX-C93-WEATHER-05"
+    ]
+  }
+}

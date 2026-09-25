@@ -1,0 +1,11 @@
+{
+  "id": "HI-R115-second-pass-reactions",
+  "pathSegment": "HI-PATH-115-COMEIN",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "HI-EXT-115-COMEIN",
+      "order": 6
+    }
+  ]
+}

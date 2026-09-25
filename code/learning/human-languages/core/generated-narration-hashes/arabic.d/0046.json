@@ -1,0 +1,17 @@
+{
+  "language": "arabic",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:848e5a8df63c407f",
+  "lessonIds": [
+    "AR-W46-shin",
+    "AR-W46-sad",
+    "AR-W46-dal"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "arabic/narration/ch46.txt",
+  "json": "arabic/narration/ch46.json",
+  "textHash": "fnv1a64:da5aec05da8451a6",
+  "jsonHash": "fnv1a64:6d0c6713b83984f7",
+  "findings": []
+}

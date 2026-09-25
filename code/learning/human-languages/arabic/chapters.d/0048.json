@@ -1,0 +1,19 @@
+{
+  "chapter": 48,
+  "title": "Letters From Please, Sorry and Tomorrow",
+  "label": "ch:ar-letters-from-please-and-sorry",
+  "canDo": "I can write dad, alif madda, zay and ghayn, and find each one in a word I already say.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "AR-W48-ghayn",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 48: i can write dad, alif madda, zay and ghayn, and find each one in a word I already say.",
+    "assesses": [
+      "AR-SCRIPT-C48-ALIF-MADDA-01",
+      "AR-SCRIPT-C48-ZAY-01",
+      "AR-SCRIPT-C48-GHAYN-01"
+    ]
+  }
+}

@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Counting One to Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:76b1d2d214eff293",
+  "sourceHash": "fnv1a64:76f24bef39fedb73",
   "lessons": [
     {
       "id": "KA-C07-ondu",
@@ -1288,13 +1288,20 @@
       "romanization": "ombattu",
       "gloss": "nine — one mark, whichever nasal the next letter needs",
       "script": "kannada",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d5aba7c58c876997",
-      "notice": null,
+      "sourceHash": "fnv1a64:284c9f2d81059df8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -1334,6 +1341,17 @@
         },
         {
           "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need: a doubled letter stacks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now look at the end of the word: ತ್ತು — a doubled t. The first ತ್ is ta silenced by the virama (its vowel cut), and it tucks under the next letter as an ottu (a subscript form) before ತು tu. Kannada writes a double consonant by stacking, not by repeating side by side — the Roman alphabet just writes \"tt\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1363,6 +1381,15 @@
             },
             {
               "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ತ್ತು and find the small t tucked under the second one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at ತ್ತು and find the small *t* tucked under the second one]"
+            },
+            {
+              "kind": "prompt",
               "action": "SAY",
               "instruction": "the count so far — \"…ēḷu, eṇṭu, ombattu\"",
               "spoken": true,
@@ -1382,7 +1409,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1394,7 +1421,7 @@
             },
             {
               "kind": "speech",
-              "text": "What is \"nine\"? (Ombattu.) Why does the ಂ say m here and n in ondu? (It takes the nasal the next letter asks for — ಬ wants m, ದ wants n.)"
+              "text": "What is \"nine\"? (Ombattu.) How does Kannada write its double tt? (Stacked — the first t tucks under the second.) Why does the ಂ say m here and n in ondu? (It takes the nasal the next letter asks for — ಬ wants m, ದ wants n.)"
             }
           ]
         }

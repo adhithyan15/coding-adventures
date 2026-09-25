@@ -1,0 +1,11 @@
+{
+  "id": "HI-C115-lijie",
+  "pathSegment": "HI-PATH-115-COMEIN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-115-COMEIN",
+      "order": 2
+    }
+  ]
+}

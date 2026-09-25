@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Fear, Anger, Sadness",
+  "label": "ch:hi-fear-anger-sadness",
+  "canDo": "I can say I am afraid, angry, sad or troubled, and tell someone not to worry.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "HI-C108-chinta",
+    "kind": "production",
+    "summary": "Complete HI-C108-chinta: name a feeling and answer someone else's.",
+    "assesses": [
+      "HI-LEX-C108-FEEL-03",
+      "HI-LEX-C108-FEEL-04",
+      "HI-LEX-C108-FEEL-05"
+    ]
+  }
+}

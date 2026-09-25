@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Welcome and Congratulations",
+  "label": "ch:ka-welcome-and-congratulations",
+  "canDo": "I can congratulate someone, speak of an invitation and a gift, say come in, and welcome a guest.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "KA-C88-welcome",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can congratulate someone, speak of an invitation and a gift, say come in, and welcome a guest.",
+    "assesses": [
+      "KA-LEX-C88-WELCOME-03",
+      "KA-LEX-C88-WELCOME-04",
+      "KA-LEX-C88-WELCOME-05"
+    ]
+  }
+}

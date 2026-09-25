@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "Language, Wedding, Birthday",
+  "label": "ch:ta-language-wedding-birthday",
+  "canDo": "I can talk about languages and English, a wedding, an address and a birthday.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C104-birthday",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can talk about languages and English, a wedding, an address and a birthday.",
+    "assesses": [
+      "TA-LEX-C104-ABOUT-03",
+      "TA-LEX-C104-ABOUT-04",
+      "TA-LEX-C104-ABOUT-05"
+    ]
+  }
+}

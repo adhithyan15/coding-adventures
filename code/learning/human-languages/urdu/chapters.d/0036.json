@@ -1,0 +1,19 @@
+{
+  "chapter": 36,
+  "title": "Letters With Marks of Their Own",
+  "label": "ch:ur-letters-marks-of-their-own",
+  "canDo": "I can write dal, the retroflex re, do-chashmi he and gaf, and find each one in a word I already say.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "UR-W36-gaf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 36: i can write dal, the retroflex re, do-chashmi he and gaf, and find each one in a word I already say.",
+    "assesses": [
+      "UR-SCRIPT-C36-RRE-01",
+      "UR-SCRIPT-C36-DO-CHASHMI-HE-01",
+      "UR-SCRIPT-C36-GAF-01"
+    ]
+  }
+}

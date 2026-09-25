@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "FA-W22-ze",
+    "language": "persian",
+    "chapter": 22,
+    "sequence": 1000,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d3f4031f8d6508e4",
+    "detachableSegments": [
+      "Script you'll notice: ز",
+      "Writing: ز"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

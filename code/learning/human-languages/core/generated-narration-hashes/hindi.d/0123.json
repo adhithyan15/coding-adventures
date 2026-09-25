@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:2290c65f90667a55",
+  "lessonIds": [
+    "HI-C123-kyahaal",
+    "HI-C123-sabthik",
+    "HI-C123-bahutdin",
+    "HI-C123-kyachal",
+    "HI-C123-khanakhaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch123.txt",
+  "json": "hindi/narration/ch123.json",
+  "textHash": "fnv1a64:ea79d932c0899716",
+  "jsonHash": "fnv1a64:916053227060fa6d",
+  "findings": []
+}

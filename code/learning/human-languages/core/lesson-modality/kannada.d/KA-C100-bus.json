@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C100-bus",
+    "language": "kannada",
+    "chapter": 100,
+    "sequence": 3950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9dd622bba0a32d26"
+  },
+  "findings": []
+}

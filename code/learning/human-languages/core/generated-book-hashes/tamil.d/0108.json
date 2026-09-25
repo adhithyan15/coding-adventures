@@ -1,0 +1,15 @@
+{
+  "language": "tamil",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:44c908ccefe578cc",
+  "lessonIds": [
+    "TA-C108-eaten",
+    "TA-C108-longtime",
+    "TA-C108-whatsnew",
+    "TA-C108-areyouwell",
+    "TA-C108-howareyou",
+    "TA-R108-second-pass-leave-greet",
+    "TA-R108-second-pass-care"
+  ],
+  "tex": "tamil/book/chapters/ch108-greetings-people-say.tex"
+}

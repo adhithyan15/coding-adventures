@@ -1,0 +1,11 @@
+{
+  "id": "TA-C96-adada",
+  "pathSegment": "TA-PATH-96-NOTATALL",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-96-NOTATALL",
+      "order": 2
+    }
+  ]
+}

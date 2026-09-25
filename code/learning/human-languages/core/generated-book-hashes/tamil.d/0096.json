@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:46dbe6077ddd33d9",
+  "lessonIds": [
+    "TA-C96-notatall",
+    "TA-C96-isthatso",
+    "TA-C96-adada",
+    "TA-C96-thatsright",
+    "TA-C96-dontknow"
+  ],
+  "tex": "tamil/book/chapters/ch96-not-at-all.tex"
+}

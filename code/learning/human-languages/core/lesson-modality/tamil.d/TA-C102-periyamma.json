@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C102-periyamma",
+    "language": "tamil",
+    "chapter": 102,
+    "sequence": 4320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4eb80bede477c5ab"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:f7f3d5c5c9d39be9",
+  "lessonIds": [
+    "KA-C86-oneminute",
+    "KA-C86-wait",
+    "KA-C86-show",
+    "KA-C86-didnthear",
+    "KA-C86-didntunderstand"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch86.txt",
+  "json": "kannada/narration/ch86.json",
+  "textHash": "fnv1a64:5b853be34694c728",
+  "jsonHash": "fnv1a64:a30400fcb07c6e18",
+  "findings": []
+}

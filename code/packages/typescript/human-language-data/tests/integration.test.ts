@@ -219,7 +219,9 @@ describe("real curriculum", () => {
       // script ladder has taught and the ten digits -- which is why the chapter
       // ends on figures rather than prose: a price and a platform number are the
       // first Persian a reader can take off a page without knowing the letters.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]);
+      // 21 -> 26: HL-C443, one lesson per letter the reader had read in words and
+      // never written -- eighteen letters in chapters 22-26, each from its word.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
@@ -276,7 +278,10 @@ describe("real curriculum", () => {
       // has actually taught, which is why the passage says nothing about tea,
       // shoes or goodbyes: چائے, جوتا and خدا حافظ each contain a letter this
       // track has not reached.
-      26, 27, 28, 29, 30, 31, 32, 33]);
+      // 33 -> 37: HL-C443, one lesson per letter the reader had read in words and
+      // never written -- sixteen letters in chapters 34-37, each from its word,
+      // which also reaches the خ and د of خدا حافظ.
+      26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37]);
     expect(
       books.books
         .find((book) => book.language === "russian")
@@ -315,7 +320,9 @@ describe("real curriculum", () => {
       // bounded by vocabulary rather than by the alphabet -- it had already
       // taught every letter it needed, which is what twenty-six chapters of
       // script work buys.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]);
+      // 27 -> 28: HL-C443, the small я. The word for I is written small inside a
+      // sentence, and only the capital Я had a lesson of its own.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]);
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

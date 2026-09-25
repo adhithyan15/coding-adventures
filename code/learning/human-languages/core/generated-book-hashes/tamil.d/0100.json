@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:5e762f51ae7602f4",
+  "lessonIds": [
+    "TA-C100-children",
+    "TA-C100-boy",
+    "TA-C100-husband",
+    "TA-C100-wife",
+    "TA-C100-relative"
+  ],
+  "tex": "tamil/book/chapters/ch100-children-husbands-wives.tex"
+}

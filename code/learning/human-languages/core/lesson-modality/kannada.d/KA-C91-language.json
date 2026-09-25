@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C91-language",
+    "language": "kannada",
+    "chapter": 91,
+    "sequence": 3500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7843fd5a6ced30e6"
+  },
+  "findings": []
+}

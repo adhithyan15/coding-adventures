@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:668965992de9879b",
+  "lessonIds": [
+    "HI-C113-kuchnahin",
+    "HI-C113-abhinahin",
+    "HI-C113-kafi",
+    "HI-C113-vahi",
+    "HI-C113-hosakta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch113.txt",
+  "json": "hindi/narration/ch113.json",
+  "textHash": "fnv1a64:98fb819e5a2f292a",
+  "jsonHash": "fnv1a64:11c8803ee710a8a9",
+  "findings": []
+}

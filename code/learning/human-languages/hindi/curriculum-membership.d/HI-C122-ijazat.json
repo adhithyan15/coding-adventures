@@ -1,0 +1,11 @@
+{
+  "id": "HI-C122-ijazat",
+  "pathSegment": "HI-PATH-122-LATE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-122-LATE",
+      "order": 3
+    }
+  ]
+}

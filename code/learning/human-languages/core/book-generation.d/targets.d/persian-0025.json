@@ -1,0 +1,7 @@
+{
+  "language": "persian",
+  "chapter": 25,
+  "output": "persian/book/chapters/ch25-fa-letters-that-share-a-sound.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "fa"
+}

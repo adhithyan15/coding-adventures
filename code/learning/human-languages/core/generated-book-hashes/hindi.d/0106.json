@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:dcaf1e2fba694a04",
+  "lessonIds": [
+    "HI-C106-thakan",
+    "HI-C106-zukam",
+    "HI-C106-khansi",
+    "HI-C106-bimar",
+    "HI-C106-tabiyat"
+  ],
+  "tex": "hindi/book/chapters/ch106-not-feeling-well.tex"
+}

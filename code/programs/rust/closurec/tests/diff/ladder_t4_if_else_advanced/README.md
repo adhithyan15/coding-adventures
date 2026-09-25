@@ -27,16 +27,5 @@ java -Duser.language=en -Duser.country=US -Duser.timezone=UTC -Dfile.encoding=UT
 
 ## Status
 
-**Known divergence** — see `tests/ladder/divergences.json`.
+Matches upstream byte for byte.
 
-## Divergence
-
-`closurec` currently emits:
-
-```js
-var x=1;x?console.log(1):console.log(2);
-```
-
-closurec does not propagate a known binding into the condition, so the branch survives as a ternary instead of collapsing. Upstream folds it away entirely. This is the CCR-068 value-propagation gap.
-
-Tracked in https://github.com/adhithyan15/coding-adventures/issues/15837. The divergence is pinned in `tests/ladder/divergences.json`, so closing the gap fails this fixture's harness assertion — that failure is the signal to delete the ledger entry.

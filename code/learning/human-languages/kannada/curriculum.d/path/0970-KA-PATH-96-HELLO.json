@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-96-HELLO",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "KA-EXT-96-HELLO"
+  ],
+  "after": []
+}

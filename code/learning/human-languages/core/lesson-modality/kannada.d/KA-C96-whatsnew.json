@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C96-whatsnew",
+    "language": "kannada",
+    "chapter": 96,
+    "sequence": 3720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86d6e6523dcb9d74"
+  },
+  "findings": []
+}

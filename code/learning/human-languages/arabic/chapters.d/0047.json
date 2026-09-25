@@ -1,0 +1,19 @@
+{
+  "chapter": 47,
+  "title": "Letters From Goodbyes and Pardons",
+  "label": "ch:ar-letters-from-goodbyes",
+  "canDo": "I can write alif with hamza below, alif maqsura, fa and qaf, and find each one in a goodbye or a pardon I already say.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "AR-W47-qaf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 47: i can write alif with hamza below, alif maqsura, fa and qaf, and find each one in a goodbye or a pardon I already say.",
+    "assesses": [
+      "AR-SCRIPT-C47-ALIF-MAQSURA-01",
+      "AR-SCRIPT-C47-FA-01",
+      "AR-SCRIPT-C47-QAF-01"
+    ]
+  }
+}

@@ -105,26 +105,23 @@ describe("the committed Malayalam A1 inventory", () => {
     // `shown` HOLDS AT 69 and the directly-owned overlap holds at 60: the five
     // print only glyphs the track already shows, which is what a recall of
     // pieces taught one per chapter should do. No NEW glyph opens.
-    expect(lessons).toHaveLength(493);
+    // 493 -> 504: HL-C443 chapters 113-114, one letter lesson for each of the
+    // nine glyphs below and two reviews. THE OPEN SET EMPTIES, which is the
+    // point of the chapters: every one of the nine now heads a writing lesson,
+    // so the directly-owned overlap rises 60 -> 69 and meets `shown`. `shown`
+    // holds at 69 -- the eleven lessons print no glyph the track had not shown.
+    // The nine, with the counts they carried when they closed (fields/tokens):
+    // ള 25/19, ശ 19/14, ങ 15/13, ർ 12/12, ധ 8/7, ബ 6/5, ൈ 6/6, ഖ 3/3, ഛ 2/2.
+    expect(lessons).toHaveLength(504);
     expect(shown.size).toBe(69);
-    expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(60);
-    expect(open).toEqual([
-      { glyph: "ള", fields: 25, tokens: 19 },
-      { glyph: "ശ", fields: 19, tokens: 14 },
-      { glyph: "ങ", fields: 15, tokens: 13 },
-      { glyph: "ർ", fields: 12, tokens: 12 },
-      { glyph: "ധ", fields: 8, tokens: 7 },
-      { glyph: "ബ", fields: 6, tokens: 5 },
-      { glyph: "ൈ", fields: 6, tokens: 6 },
-      { glyph: "ഖ", fields: 3, tokens: 3 },
-      { glyph: "ഛ", fields: 2, tokens: 2 },
-    ]);
+    expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(69);
+    expect(open).toEqual([]);
 
     const point = inventory.points.find((candidate) => candidate.id === "ML-A1-SCR-12");
-    expect(point?.label).toBe("the nine headword characters without a direct script-lesson owner");
+    expect(point?.label).toBe("every headword character has a direct script-lesson owner");
     expect(point?.note).toContain("69 distinct Malayalam characters");
-    expect(point?.note).toContain("60 occur in the headword of a writing/script lesson");
-    expect(point?.note).toContain("U+0D36 is open, while U+0D37 ഷ is directly owned");
+    expect(point?.note).toContain("all 69 occur in the headword of a writing/script lesson");
+    expect(point?.note).toContain("U+0D36 ശ is directly owned by ML-W113-sha, and U+0D37 ഷ by ML-S121-letter-ssa");
   }, 60_000);
 
   it("keeps every point's probe key, and never an empty probe", () => {

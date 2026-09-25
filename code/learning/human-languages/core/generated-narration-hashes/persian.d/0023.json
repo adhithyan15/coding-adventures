@@ -1,0 +1,18 @@
+{
+  "language": "persian",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:158b29dd18b6ed00",
+  "lessonIds": [
+    "FA-W23-he-jimi",
+    "FA-W23-jim",
+    "FA-W23-khe",
+    "FA-W23-che"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "persian/narration/ch23.txt",
+  "json": "persian/narration/ch23.json",
+  "textHash": "fnv1a64:624de07d39953319",
+  "jsonHash": "fnv1a64:1f8a966ed3f3e5fa",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C92-english",
+  "pathSegment": "KA-PATH-92-WORK",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-92-WORK",
+      "order": 4
+    }
+  ]
+}

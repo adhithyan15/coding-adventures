@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-107-DOCTOR",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk to a doctor, find a hospital, say I am hurt or feel weak, and talk about health.",
+  "prerequisites": []
+}

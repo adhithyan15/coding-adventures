@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-84-BODY",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "KA-EXT-84-BODY"
+  ],
+  "after": []
+}

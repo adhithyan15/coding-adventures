@@ -1,0 +1,21 @@
+{
+  "language": "kannada",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:534b1b745f73d802",
+  "lessonIds": [
+    "KA-C97-pardon",
+    "KA-C97-introduction",
+    "KA-C97-grateful",
+    "KA-C97-dontforget",
+    "KA-C97-kindness",
+    "KA-R97-first-pass-people-work",
+    "KA-R97-second-pass-body-table-greetings"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "kannada/narration/ch97.txt",
+  "json": "kannada/narration/ch97.json",
+  "textHash": "fnv1a64:7a68bbf9a45e7291",
+  "jsonHash": "fnv1a64:95a2d3b792f37a14",
+  "findings": []
+}

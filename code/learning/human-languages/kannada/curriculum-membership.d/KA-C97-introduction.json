@@ -1,0 +1,11 @@
+{
+  "id": "KA-C97-introduction",
+  "pathSegment": "KA-PATH-97-GRATEFUL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-97-GRATEFUL",
+      "order": 1
+    }
+  ]
+}

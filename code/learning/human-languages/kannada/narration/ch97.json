@@ -1,0 +1,840 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 97,
+  "title": "Grateful and Sorry",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:534b1b745f73d802",
+  "lessons": [
+    {
+      "id": "KA-C97-pardon",
+      "sequence": 3760,
+      "title": "ಕ್ಷಮೆ (kṣame) — pardon, forgiveness",
+      "headword": "ಕ್ಷಮೆ",
+      "romanization": "kṣame",
+      "gloss": "pardon, forgiveness",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0023c3869901fe3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for hello, then the Kannada for are you well."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕ್ಷಮೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕ್ಷಮೆ (kṣame) — \"pardon, forgiveness\". You know its verb from ಕ್ಷಮಿಸಿ (kṣamisi), \"excuse me\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಕ್ಷಮೆ ಇರಲಿ (kṣame irali) — \"please forgive me\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The noun behind excuse me."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣame",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣame*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣame, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣame*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kṣame irali",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kṣame irali*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for hello, then the Kannada for are you well, then say kṣame again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for hello, then the Kannada for are you well, then say *kṣame* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಕ್ಷಮೆ (kṣame) mean? (\"Pardon, forgiveness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C97-introduction",
+      "sequence": 3770,
+      "title": "ಪರಿಚಯ (paricaya) — an introduction, acquaintance",
+      "headword": "ಪರಿಚಯ",
+      "romanization": "paricaya",
+      "gloss": "an introduction, acquaintance",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bdf3104883064176",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for are you well, then the Kannada for pardon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಪರಿಚಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಪರಿಚಯ (paricaya) — \"an introduction, acquaintance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿಮ್ಮ ಪರಿಚಯ ಸಂತೋಷ (nimma paricaya santōṣa) — \"pleased to meet you\", literally \"your acquaintance is a joy\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A formal pleased to meet you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paricaya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paricaya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paricaya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paricaya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nimma paricaya santōṣa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nimma paricaya santōṣa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for are you well, then the Kannada for pardon, then say paricaya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for are you well, then the Kannada for pardon, then say *paricaya* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಪರಿಚಯ (paricaya) mean? (\"An introduction, acquaintance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C97-grateful",
+      "sequence": 3780,
+      "title": "ಆಭಾರಿ (ābhāri) — grateful, obliged",
+      "headword": "ಆಭಾರಿ",
+      "romanization": "ābhāri",
+      "gloss": "grateful, obliged",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb4150710a9ed12c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for pardon, then the Kannada for an introduction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆಭಾರಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆಭಾರಿ (ābhāri) — \"grateful, obliged\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ನಿಮಗೆ ಆಭಾರಿ (nānu nimage ābhāri) — \"I am grateful to you\", a deeper thanks than ಧನ್ಯವಾದ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A thank-you with more weight."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābhāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābhāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābhāri, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābhāri*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say nānu nimage ābhāri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *nānu nimage ābhāri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for pardon, then the Kannada for an introduction, then say ābhāri again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for pardon, then the Kannada for an introduction, then say *ābhāri* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆಭಾರಿ (ābhāri) mean? (\"Grateful, obliged\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C97-dontforget",
+      "sequence": 3790,
+      "title": "ಮರೆಯಬೇಡಿ (mareyabēḍi) — please don't forget",
+      "headword": "ಮರೆಯಬೇಡಿ",
+      "romanization": "mareyabēḍi",
+      "gloss": "please don't forget",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:52422bf6face6e19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for an introduction, then the Kannada for grateful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಮರೆಯಬೇಡಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಮರೆಯಬೇಡಿ (mareyabēḍi) — \"please don't forget\", from ಮರೆ (mare), \"to forget\", with the polite ‑ಬೇಡಿ of ಚಿಂತೆ ಮಾಡಬೇಡಿ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A kind reminder at parting."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mareyabēḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mareyabēḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mareyabēḍi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mareyabēḍi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mareyabēḍi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mareyabēḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for an introduction, then the Kannada for grateful, then say mareyabēḍi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for an introduction, then the Kannada for grateful, then say *mareyabēḍi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಮರೆಯಬೇಡಿ (mareyabēḍi) mean? (\"Please don't forget\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C97-kindness",
+      "sequence": 3800,
+      "title": "ದಯೆ (daye) — kindness, compassion",
+      "headword": "ದಯೆ",
+      "romanization": "daye",
+      "gloss": "kindness, compassion",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3cb730518469c836",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Kannada for grateful, then the Kannada for don't forget."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ದಯೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ದಯೆ (daye) — \"kindness, compassion\". It is the daya inside ದಯವಿಟ್ಟು, \"please\", the word the book took apart early on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The kindness hidden inside please."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say daye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *daye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Kannada for grateful, then the Kannada for don't forget, then say daye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Kannada for grateful, then the Kannada for don't forget, then say *daye* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ದಯೆ (daye) mean? (\"Kindness, compassion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R97-first-pass-people-work",
+      "sequence": 3810,
+      "title": "Who you are — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over family, yourself, school and work",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01b7ba0f31ca6929",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask a friend not to forget, and name the kindness inside please."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "name a grandson, a granddaughter, a relative, the neighbours and an uncle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: name a grandson, a granddaughter, a relative, the neighbours and an uncle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask someone's address and home town; name a birthday, a wedding and a language",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask someone's address and home town; name a birthday, a wedding and a language]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "name a school, a college and an office; ask someone's job; say you know English",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: name a school, a college and an office; ask someone's job; say you know English]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Grandson, granddaughter? (ಮೊಮ್ಮಗ, ಮೊಮ್ಮಗಳು.) Relative? (ಸಂಬಂಧಿಕ.) Neighbours? (ನೆರೆಯವರು.) Uncle? (ಮಾವ.) Address? (ವಿಳಾಸ.) Birthday? (ಹುಟ್ಟುಹಬ್ಬ.) Wedding? (ಮದುವೆ.) Home town? (ಊರು.) Language? (ಭಾಷೆ.) School, college, office? (ಶಾಲೆ, ಕಾಲೇಜು, ಕಚೇರಿ.) Job? (ಉದ್ಯೋಗ.) English? (ಇಂಗ್ಲಿಷ್.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-R97-second-pass-body-table-greetings",
+      "sequence": 3820,
+      "title": "A day of small talk — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over weather and the body, the table, replies, greetings and courtesy",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8d7b418f65f7ba6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You meet a friend at lunchtime. Ask if they have eaten, and what's new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "you feel dizzy; it is hot and sticky; are you at ease?; I got hurt; I feel like vomiting",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: you feel dizzy; it is hot and sticky; are you at ease?; I got hurt; I feel like vomiting]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask for a snack, a spoon, a glass of water and a plate; ask the price",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask for a snack, a spoon, a glass of water and a plate; ask the price]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "not possible; not like that; oh, I see; maybe; certainly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: not possible; not like that; oh, I see; maybe; certainly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "long time!; hello on the phone; are you well?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: long time!; hello on the phone; are you well?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "please forgive me; pleased to meet you; I am grateful to you",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: please forgive me; pleased to meet you; I am grateful to you]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Dizzy? (ತಲೆಸುತ್ತು.) Sultry? (ಸೆಕೆ.) At ease? (ಆರಾಮ.) A wound? (ಗಾಯ.) Vomiting? (ವಾಂತಿ.) Snack, spoon, glass, plate? (ತಿಂಡಿ, ಚಮಚ, ಲೋಟ, ತಟ್ಟೆ.) Price? (ಬೆಲೆ.) Not possible? (ಸಾಧ್ಯವಿಲ್ಲ.) Not like that? (ಹಾಗಲ್ಲ.) Oh, I see? (ಓಹೋ.) Maybe? (ಇರಬಹುದು.) Certainly? (ಖಚಿತವಾಗಿ.) Have you eaten? (ಊಟ ಆಯ್ತಾ?) What's new? (ಏನು ಸಮಾಚಾರ?) Long time? (ತುಂಬಾ ದಿನ ಆಯ್ತು.) Hello? (ಹಲೋ.) Are you well? (ಕ್ಷೇಮವೇ?) Pardon? (ಕ್ಷಮೆ (kṣame).) Introduction? (ಪರಿಚಯ (paricaya).) Grateful? (ಆಭಾರಿ (ābhāri).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

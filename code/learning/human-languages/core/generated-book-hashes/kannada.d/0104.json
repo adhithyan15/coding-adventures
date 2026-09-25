@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:72fd8ae29cf5053d",
+  "lessonIds": [
+    "KA-C104-business",
+    "KA-C104-worker",
+    "KA-C104-police",
+    "KA-C104-driver",
+    "KA-C104-shop"
+  ],
+  "tex": "kannada/book/chapters/ch104-people-at-work.tex"
+}

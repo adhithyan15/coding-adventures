@@ -1,0 +1,19 @@
+{
+  "chapter": 99,
+  "title": "Gifts, Welcomes, Apologies",
+  "label": "ch:ta-gifts-welcomes",
+  "canDo": "I can offer a drink, name a gift given with affection, welcome formally, ask forgiveness, and say don't worry.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TA-C99-dontworry",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: i can offer a drink, name a gift given with affection, welcome formally, ask forgiveness, and say don't worry.",
+    "assesses": [
+      "TA-LEX-C99-HOST-03",
+      "TA-LEX-C99-HOST-04",
+      "TA-LEX-C99-HOST-05"
+    ]
+  }
+}

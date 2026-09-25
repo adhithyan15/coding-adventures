@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:bb0fabd4cfaa5cce",
+  "lessonIds": [
+    "HI-C111-hindime",
+    "HI-C111-kaisekahte",
+    "HI-C111-dikhaie",
+    "HI-C111-sunai",
+    "HI-C111-likhdijie"
+  ],
+  "tex": "hindi/book/chapters/ch111-how-do-you-say-it.tex"
+}

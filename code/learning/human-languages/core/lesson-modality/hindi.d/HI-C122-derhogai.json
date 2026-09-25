@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C122-derhogai",
+    "language": "hindi",
+    "chapter": 122,
+    "sequence": 5430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9fdaa39ed337043"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:4e3628deae861872",
+  "lessonIds": [
+    "TA-C96-notatall",
+    "TA-C96-isthatso",
+    "TA-C96-adada",
+    "TA-C96-thatsright",
+    "TA-C96-dontknow"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch96.txt",
+  "json": "tamil/narration/ch96.json",
+  "textHash": "fnv1a64:7540d3831604afe9",
+  "jsonHash": "fnv1a64:fc651c5097829482",
+  "findings": []
+}

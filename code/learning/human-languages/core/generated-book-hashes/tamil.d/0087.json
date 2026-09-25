@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:3edc926ae119c0f6",
+  "lessonIds": [
+    "TA-C87-tiredness",
+    "TA-C87-cold",
+    "TA-C87-cough",
+    "TA-C87-weariness",
+    "TA-C87-rest"
+  ],
+  "tex": "tamil/book/chapters/ch87-not-feeling-well.tex"
+}

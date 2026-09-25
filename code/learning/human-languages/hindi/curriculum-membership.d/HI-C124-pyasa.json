@@ -1,0 +1,11 @@
+{
+  "id": "HI-C124-pyasa",
+  "pathSegment": "HI-PATH-124-BODY",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-124-BODY",
+      "order": 1
+    }
+  ]
+}

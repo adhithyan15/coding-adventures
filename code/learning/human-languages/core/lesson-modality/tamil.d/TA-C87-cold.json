@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C87-cold",
+    "language": "tamil",
+    "chapter": 87,
+    "sequence": 3610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f02e00eba706fe1b"
+  },
+  "findings": []
+}

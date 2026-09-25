@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Open, Close, Stop, Call",
+  "label": "ch:ka-open-close-stop-call",
+  "canDo": "I can politely ask someone to open, close, stop or call, and say it is urgent.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "KA-C101-urgent",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can politely ask someone to open, close, stop or call, and say it is urgent.",
+    "assesses": [
+      "KA-LEX-C101-OPEN-03",
+      "KA-LEX-C101-OPEN-04",
+      "KA-LEX-C101-OPEN-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-R89-second-pass-repair-replies-welcome",
+    "language": "kannada",
+    "chapter": 89,
+    "sequence": 3400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f30697ba3d294f3"
+  },
+  "findings": []
+}

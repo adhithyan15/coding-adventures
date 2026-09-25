@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:f8bae31510608d51",
+  "lessonIds": [
+    "HI-C122-chhutti",
+    "HI-C122-derhogai",
+    "HI-C122-aramse",
+    "HI-C122-ijazat",
+    "HI-C122-janahai"
+  ],
+  "tex": "hindi/book/chapters/ch122-getting-late.tex"
+}

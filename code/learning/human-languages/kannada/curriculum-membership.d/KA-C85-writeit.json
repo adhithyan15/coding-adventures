@@ -1,0 +1,11 @@
+{
+  "id": "KA-C85-writeit",
+  "pathSegment": "KA-PATH-85-SLOWLY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "KA-EXT-85-SLOWLY",
+      "order": 4
+    }
+  ]
+}

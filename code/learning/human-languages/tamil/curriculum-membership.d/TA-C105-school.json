@@ -1,0 +1,11 @@
+{
+  "id": "TA-C105-school",
+  "pathSegment": "TA-PATH-105-WORK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-105-WORK",
+      "order": 3
+    }
+  ]
+}

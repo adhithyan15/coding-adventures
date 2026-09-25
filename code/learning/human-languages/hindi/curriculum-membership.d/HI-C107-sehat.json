@@ -1,0 +1,11 @@
+{
+  "id": "HI-C107-sehat",
+  "pathSegment": "HI-PATH-107-DOCTOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-107-DOCTOR",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "language": "urdu",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:5009d9bec109450f",
+  "lessonIds": [
+    "UR-W34-be",
+    "UR-W34-te",
+    "UR-W34-tte"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "urdu/narration/ch34.txt",
+  "json": "urdu/narration/ch34.json",
+  "textHash": "fnv1a64:9059ce92ba7e2cd3",
+  "jsonHash": "fnv1a64:f22b25d5e90d380a",
+  "findings": []
+}

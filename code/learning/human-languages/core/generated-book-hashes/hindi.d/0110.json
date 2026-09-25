@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:f541ec56d2d8f147",
+  "lessonIds": [
+    "HI-C110-dobara",
+    "HI-C110-zorse",
+    "HI-C110-ekminat",
+    "HI-C110-rukie",
+    "HI-C110-matlab"
+  ],
+  "tex": "hindi/book/chapters/ch110-once-more-please.tex"
+}

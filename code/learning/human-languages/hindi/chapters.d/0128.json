@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Letters You Have Read All Along",
+  "label": "ch:hi-letters-read-all-along",
+  "canDo": "I can write the short i sign, the letter i and the letter nya, and find each one in a word I already say.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "HI-R128-letters-second-pass",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can write the short i sign, the letter i and the letter nya, and find each one in a word I already say.",
+    "assesses": [
+      "HI-SCRIPT-C128-I-SIGN-01",
+      "HI-SCRIPT-C128-I-01",
+      "HI-SCRIPT-C128-NYA-01"
+    ]
+  }
+}

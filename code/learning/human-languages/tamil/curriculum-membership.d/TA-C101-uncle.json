@@ -1,0 +1,11 @@
+{
+  "id": "TA-C101-uncle",
+  "pathSegment": "TA-PATH-101-GRAND",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-101-GRAND",
+      "order": 2
+    }
+  ]
+}

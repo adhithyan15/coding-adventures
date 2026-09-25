@@ -1,0 +1,11 @@
+{
+  "id": "FA-R26-letters-first-pass",
+  "pathSegment": "FA-PATH-026-LETTERS-LAST",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-026-LETTERS-LAST",
+      "order": 3
+    }
+  ]
+}

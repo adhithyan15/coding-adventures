@@ -1,0 +1,11 @@
+{
+  "language": "russian",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:cd971d5b4c28ac8a",
+  "lessonIds": [
+    "RU-W28-ya-small",
+    "RU-R28-letters-first-pass",
+    "RU-R28-letters-second-pass"
+  ],
+  "tex": "russian/book/chapters/ch28-the-small-ya.tex"
+}

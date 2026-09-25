@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Take Care, Go Safely",
+  "label": "ch:ta-take-care",
+  "canDo": "I can tell someone to take care and go safely, say it is late, suggest we go, and talk about a holiday.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "TA-C106-holiday",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can tell someone to take care and go safely, say it is late, suggest we go, and talk about a holiday.",
+    "assesses": [
+      "TA-LEX-C106-CARE-03",
+      "TA-LEX-C106-CARE-04",
+      "TA-LEX-C106-CARE-05"
+    ]
+  }
+}

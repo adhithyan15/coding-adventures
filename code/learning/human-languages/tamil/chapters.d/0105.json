@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "Signature, Work, School",
+  "label": "ch:ta-signature-work-school",
+  "canDo": "I can sign my name, say what my work is, and talk about college and school.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C105-school",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: i can sign my name, say what my work is, and talk about college and school.",
+    "assesses": [
+      "TA-LEX-C105-WORK-02",
+      "TA-LEX-C105-WORK-03",
+      "TA-LEX-C105-WORK-04"
+    ]
+  }
+}

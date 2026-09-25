@@ -1,0 +1,11 @@
+{
+  "id": "KA-C98-alarm",
+  "pathSegment": "KA-PATH-98-MOODS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-98-MOODS",
+      "order": 3
+    }
+  ]
+}

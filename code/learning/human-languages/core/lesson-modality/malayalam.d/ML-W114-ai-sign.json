@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ML-W114-ai-sign",
+    "language": "malayalam",
+    "chapter": 114,
+    "sequence": 4260,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3e005e7352377b8d",
+    "detachableSegments": [
+      "Script you'll notice: ◌ൈ",
+      "Writing: ◌ൈ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C89-letsgo",
+  "pathSegment": "KA-PATH-89-CARE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-89-CARE",
+      "order": 3
+    }
+  ]
+}

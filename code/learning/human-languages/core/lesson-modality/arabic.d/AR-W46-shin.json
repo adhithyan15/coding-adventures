@@ -1,0 +1,27 @@
+{
+  "lesson": {
+    "id": "AR-W46-shin",
+    "language": "arabic",
+    "chapter": 46,
+    "sequence": 1280,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:92a6581437cc085f",
+    "detachableSegments": [
+      "Script you'll notice: ش",
+      "Writing: ش"
+    ]
+  },
+  "findings": []
+}

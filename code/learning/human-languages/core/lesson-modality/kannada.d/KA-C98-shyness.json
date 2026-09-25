@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C98-shyness",
+    "language": "kannada",
+    "chapter": 98,
+    "sequence": 3850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0496678766fad53"
+  },
+  "findings": []
+}

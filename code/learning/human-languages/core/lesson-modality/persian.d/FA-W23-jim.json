@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "FA-W23-jim",
+    "language": "persian",
+    "chapter": 23,
+    "sequence": 1030,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8319928e24226a23",
+    "detachableSegments": [
+      "Script you'll notice: ج",
+      "Writing: ج"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -2,6 +2,42 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.60.0] - 2026-09-25
+
+### Fixed — a number used as an access base needs parentheses the source never had
+
+A `NumericLiteral` is `PREC_PRIMARY`, so precedence alone never wraps it as a
+member-access base. Two renderings of one break the operator that follows:
+
+```js
+(1).b      // emitted as 1.b    — SyntaxError: the `.` reads as a decimal point
+(-3)?.b    // emitted as -3?.b  — parses as -(3?.b): NaN, not undefined
+```
+
+The second is the dangerous shape: valid JavaScript, no crash, no diagnostic,
+a **silently wrong value**.
+
+This is only reachable because constant propagation plants numbers where the
+source had an identifier — `var o={a:-3}; o?.a?.b` resolves to `-3?.b`. Nobody
+writes `1.b` by hand, which is why it survived: the emitter is correct for
+every input a parser can produce and wrong only for ASTs a pass synthesises.
+Found in review of CLOC30, which widened the set of shapes that reach it; the
+plain-member form (`var o={a:1}; o.a.b` → `1.b`) was already broken before
+that.
+
+`emit_plain_access_base` now parenthesizes such a base, and
+`emit_optional_member` / `emit_optional_call` — which bypassed it entirely,
+emitting their object at `PREC_PRIMARY` directly — consult the same check. The
+`ChainExpression` rule stays exclusive to the plain path, where it is a
+semantic requirement rather than a lexical one.
+
+The guard is lexical, not "parenthesize every number": a float or exponent
+form has already consumed its own `.`, so `1.5.toFixed` and `1e3.b` stay bare.
+Only a bare integer (before `.`) and any negative (before `.` or `?.`) need
+wrapping.
+
+3 tests added.
+
 ## [0.59.0] - 2026-09-21
 
 ### Fixed - the program's last statement is terminated, whatever kind it is (CCR-073)

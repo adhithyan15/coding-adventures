@@ -32,7 +32,8 @@ it("pins Russian lesson-content budgets", () =>
     // third exists because ли had NO later revisit at all and the gate wants
     // two. No new atoms and no new headwords.
     //
-    lessons: 148,
+    // 148 -> 151: HL-C443: the letter chapter adds one letter lesson per letter the reader had read in words and never written, plus two reviews. RE-MEASURED against the tree; a letter lesson introduces one script atom and no idiom, sense or culture claim.
+    lessons: 151,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,

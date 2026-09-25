@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-122-LATE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "HI-EXT-122-LATE"
+  ],
+  "after": []
+}

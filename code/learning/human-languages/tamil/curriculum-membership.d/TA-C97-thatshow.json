@@ -1,0 +1,11 @@
+{
+  "id": "TA-C97-thatshow",
+  "pathSegment": "TA-PATH-97-SURE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-97-SURE",
+      "order": 1
+    }
+  ]
+}

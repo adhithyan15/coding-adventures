@@ -1,0 +1,19 @@
+{
+  "language": "kannada",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:948fa0dfc5441bbb",
+  "lessonIds": [
+    "KA-C94-snack",
+    "KA-C94-spoon",
+    "KA-C94-glass",
+    "KA-C94-plate",
+    "KA-C94-price"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "kannada/narration/ch94.txt",
+  "json": "kannada/narration/ch94.json",
+  "textHash": "fnv1a64:562fbee9d6e873ab",
+  "jsonHash": "fnv1a64:121f2166f7017c94",
+  "findings": []
+}

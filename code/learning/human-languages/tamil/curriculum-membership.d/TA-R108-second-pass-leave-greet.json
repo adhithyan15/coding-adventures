@@ -1,0 +1,11 @@
+{
+  "id": "TA-R108-second-pass-leave-greet",
+  "pathSegment": "TA-PATH-108-GREET",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TA-EXT-108-GREET",
+      "order": 5
+    }
+  ]
+}

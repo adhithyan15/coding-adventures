@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-049-LETTERS-FOOD",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "AR-EXT-049-LETTERS-FOOD"
+  ],
+  "after": []
+}

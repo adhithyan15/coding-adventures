@@ -1,0 +1,11 @@
+{
+  "id": "KA-R97-second-pass-body-table-greetings",
+  "pathSegment": "KA-PATH-97-GRATEFUL",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "KA-EXT-97-GRATEFUL",
+      "order": 6
+    }
+  ]
+}

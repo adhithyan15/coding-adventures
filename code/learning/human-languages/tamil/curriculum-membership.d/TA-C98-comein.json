@@ -1,0 +1,11 @@
+{
+  "id": "TA-C98-comein",
+  "pathSegment": "TA-PATH-98-WELCOME",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-98-WELCOME",
+      "order": 3
+    }
+  ]
+}

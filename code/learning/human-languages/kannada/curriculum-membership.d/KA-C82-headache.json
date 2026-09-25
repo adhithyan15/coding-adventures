@@ -1,0 +1,11 @@
+{
+  "id": "KA-C82-headache",
+  "pathSegment": "KA-PATH-82-UNWELL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "KA-EXT-82-UNWELL",
+      "order": 3
+    }
+  ]
+}

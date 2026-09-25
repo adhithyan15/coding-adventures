@@ -1,0 +1,517 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 111,
+  "title": "Letters From Counting",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:f8de55f08c759f36",
+  "lessons": [
+    {
+      "id": "TA-S134-letter-ai",
+      "sequence": 4740,
+      "title": "ஐ (ai) — the letter that opens ஐந்து",
+      "headword": "ஐ",
+      "romanization": "ai",
+      "gloss": "the single character ஐ — the letter that opens ஐந்து",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a3f196ace4939646",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ஐ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஐ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read ◌ீ and ◌ெ aloud, and write each once."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ஐந்து (aintu), \"five\". You have read it for a long time. This lesson takes one character out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ஐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஐ — ai."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens ஐந்து (aintu), \"five\". You wrote its sign ◌ை two chapters ago, on the end of இல்லை. This is the independent shape of the same vowel, for a word that begins with ai."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ஐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start here: curl inward around the upper-left spiral, then lift."
+            },
+            {
+              "kind": "speech",
+              "text": "2. put the pen down again and draw the central upright upward, then lift."
+            },
+            {
+              "kind": "speech",
+              "text": "3. put the pen down again and sweep around the upper-right loop and return left across the middle, then lift."
+            },
+            {
+              "kind": "speech",
+              "text": "4. put the pen down again and circle the lower-left bowl back toward the centre, then lift."
+            },
+            {
+              "kind": "speech",
+              "text": "5. put the pen down again and descend and circle through the lower-right bowl — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 4."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Info-farmer, Writing Tamil 10.gif, ஐ (ai) stroke-order animation (Wikimedia Commons, CC BY-SA 3.0, 2008), cross-checked with Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I Frame 11 (University of Texas at Austin), p. 194."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ஐந்து and point at ஐ (ai) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ஐந்து** and point at ஐ inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ஐ three times, saying ai as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ஐ three times, saying *ai* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "◌ெ, then ஐ (ai), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ◌ெ, then ஐ, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஐந்து aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஐந்து** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ஐ? (ai.) Which word did it come from? (ஐந்து, aintu, \"five\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-S135-vowel-sign-uu",
+      "sequence": 4750,
+      "title": "◌ூ (ū) — the long u on மூன்று",
+      "headword": "ூ",
+      "romanization": "ū",
+      "gloss": "the single character ◌ூ — the long u on மூன்று",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1d05d6602d0c1acc",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ◌ூ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ூ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read ◌ெ and ஐ (ai) aloud, and write each once."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say மூன்று (mūṉṟu), \"three\". You have read it for a long time. This lesson takes one character out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ◌ூ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "◌ூ — ū."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the long ū on மூன்று (mūṉṟu), \"three\". Like its short partner ◌ு, which you already write, this sign changes shape with the consonant it joins, so copy it as it sits on மூ, the form you already read."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ◌ூ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ◌ூ (ū) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at மூன்று and point at ◌ூ (ū) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **மூன்று** and point at ◌ூ inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "◌ூ three times, saying ū as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ◌ூ three times, saying *ū* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ஐ (ai), then ◌ூ (ū), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ஐ, then ◌ூ, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மூன்று aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மூன்று** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ◌ூ? (ū.) Which word did it come from? (மூன்று, mūṉṟu, \"three\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-S136-letter-ee",
+      "sequence": 4760,
+      "title": "ஏ (ē) — the letter that opens ஏழு",
+      "headword": "ஏ",
+      "romanization": "ē",
+      "gloss": "the single character ஏ — the letter that opens ஏழு",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9a22d6d6c0a1b4a6",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ஏ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஏ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read ஐ (ai) and ◌ூ (ū) aloud, and write each once."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say ஏழு (ēḻu), \"seven\". You have read it for a long time. This lesson takes one character out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ஏ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஏ — ē."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens ஏழு (ēḻu), \"seven\". You already write its sign ◌ே from பேசு; ஏ is the independent shape of the same long vowel, for the front of a word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ஏ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start here: sweep from the inner curl around the broad left loop."
+            },
+            {
+              "kind": "speech",
+              "text": "2. without lifting, climb the outer left side into the crown."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, carry the top bar to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "4. without lifting, retrace left and draw the right upright down."
+            },
+            {
+              "kind": "speech",
+              "text": "5. without lifting, continue down-left along the diagonal foot."
+            },
+            {
+              "kind": "speech",
+              "text": "6. without lifting, turn at the foot and finish back up-right — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 0. The pen never leaves the paper."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Module 7, ஏ (ē), with Appendix I: Hand-movements, Frame 7 (University of Texas at Austin), p. 193."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at ஏழு and point at ஏ (ē) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **ஏழு** and point at ஏ inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ஏ three times, saying ē as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ஏ three times, saying *ē* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "◌ூ (ū), then ஏ (ē), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ◌ூ, then ஏ, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஏழு aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஏழு** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ஏ? (ē.) Which word did it come from? (ஏழு, ēḻu, \"seven\".)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

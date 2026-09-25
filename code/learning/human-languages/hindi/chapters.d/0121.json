@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Take Care",
+  "label": "ch:hi-take-care",
+  "canDo": "I can tell someone to take care and go carefully, wish them a good journey, ask them to come again, and say let's go.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "HI-C121-chalie",
+    "kind": "production",
+    "summary": "Complete HI-C121-chalie: leave a visit well.",
+    "assesses": [
+      "HI-LEX-C121-CARE-03",
+      "HI-LEX-C121-CARE-04",
+      "HI-LEX-C121-CARE-05"
+    ]
+  }
+}

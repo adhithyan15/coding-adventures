@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-105-WISHES",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "KA-EXT-105-WISHES"
+  ],
+  "after": []
+}

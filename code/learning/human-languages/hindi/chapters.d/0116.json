@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Grandparents, and Which Side",
+  "label": "ch:hi-grandparents",
+  "canDo": "I can name my four grandparents and my father's younger brother, and say which side of the family each is on.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "HI-C116-chacha",
+    "kind": "production",
+    "summary": "Complete HI-C116-chacha: introduce the family, side by side.",
+    "assesses": [
+      "HI-LEX-C116-GRAND-03",
+      "HI-LEX-C116-GRAND-04",
+      "HI-LEX-C116-GRAND-05"
+    ]
+  }
+}

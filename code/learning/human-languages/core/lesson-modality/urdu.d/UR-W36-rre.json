@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "UR-W36-rre",
+    "language": "urdu",
+    "chapter": 36,
+    "sequence": 1830,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6793eccfded6e959",
+    "detachableSegments": [
+      "Script you'll notice: ڑ",
+      "Writing: ڑ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

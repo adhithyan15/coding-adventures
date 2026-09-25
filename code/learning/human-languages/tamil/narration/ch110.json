@@ -1,0 +1,675 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 110,
+  "title": "Letters From You and Your Name",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:2c49f8f1297c689d",
+  "lessons": [
+    {
+      "id": "TA-S130-letter-nga",
+      "sequence": 4700,
+      "title": "ங (ṅa) — the nasal before the க in நீங்கள்",
+      "headword": "ங",
+      "romanization": "ṅa",
+      "gloss": "the single character ங — the nasal before the க in நீங்கள்",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ed3ec3124353b648",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ங",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ங and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read ◌ை and ஸ aloud, and write each once."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say நீங்கள் (nīṅgaḷ), \"you (respectful)\". You have read it for a long time. This lesson takes one character out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ங",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ங — ṅa."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the nasal in the middle of நீங்கள் (nīṅgaḷ), the respectful \"you\". Say nīṅgaḷ slowly: the ṅ is made at the back of the mouth, where k is made, which is why ங (ṅa) nearly always stands right before க."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ங",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start here: draw the detached upright down, then lift."
+            },
+            {
+              "kind": "speech",
+              "text": "2. put the pen down again and climb the tall left body."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, carry the top bar right and return inward."
+            },
+            {
+              "kind": "speech",
+              "text": "4. without lifting, descend into the rounded inner turn."
+            },
+            {
+              "kind": "speech",
+              "text": "5. without lifting, carry the low bar to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "6. without lifting, return left and finish up the inner stem — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 2, ங (ṅa) (University of Texas at Austin), p. 191."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at நீங்கள் and point at ங (ṅa) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **நீங்கள்** and point at ங inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ங three times, saying ṅa as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ங three times, saying *ṅa* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ஸ, then ங (ṅa), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ஸ, then ங, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "நீங்கள் aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நீங்கள்** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ங? (ṅa.) Which word did it come from? (நீங்கள், nīṅgaḷ, \"you (respectful)\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-S131-letter-lla",
+      "sequence": 4710,
+      "title": "ள (ḷa) — the l at the end of நீங்கள்",
+      "headword": "ள",
+      "romanization": "ḷa",
+      "gloss": "the single character ள — the l at the end of நீங்கள்",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f9083f6c6b3a11c5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ள",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ள and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read ஸ and ங (ṅa) aloud, and write each once."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say நீங்கள் (nīṅgaḷ), \"you (respectful)\". You have read it for a long time. This lesson takes one character out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ள",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ள — ḷa."
+            },
+            {
+              "kind": "speech",
+              "text": "It closes நீங்கள் (nīṅgaḷ). This is the Tamil l made with the tongue curled back. You already write ல (la) and ழ (ḻa); ள (ḷa) is the third l, and the dot under the romanization (ḷ) is how the book tells them apart."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ள",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start here: curl around the large left loop."
+            },
+            {
+              "kind": "speech",
+              "text": "2. without lifting, turn inward through the loop."
+            },
+            {
+              "kind": "speech",
+              "text": "3. without lifting, descend around the inner curl, then lift."
+            },
+            {
+              "kind": "speech",
+              "text": "4. put the pen down again and rise on the adjoining upright."
+            },
+            {
+              "kind": "speech",
+              "text": "5. without lifting, carry the top bar right, then lift."
+            },
+            {
+              "kind": "speech",
+              "text": "6. put the pen down again and descend the separate right upright — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 2."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 12, ள (ḷa) (University of Texas at Austin), p. 195."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at நீங்கள் and point at ள (ḷa) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **நீங்கள்** and point at ள inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ள three times, saying ḷa as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ள three times, saying *ḷa* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ங (ṅa), then ள (ḷa), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ங, then ள, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "நீங்கள் aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நீங்கள்** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ள? (ḷa.) Which word did it come from? (நீங்கள், nīṅgaḷ, \"you (respectful)\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-S132-vowel-sign-ii",
+      "sequence": 4720,
+      "title": "◌ீ (ī) — the long i on நீ",
+      "headword": "ீ",
+      "romanization": "ī",
+      "gloss": "the single character ◌ீ — the long i on நீ",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ac01235d377bce25",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ◌ீ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ீ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read ங (ṅa) and ள (ḷa) aloud, and write each once."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say நீ (nī), \"you (familiar)\". You have read it for a long time. This lesson takes one character out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ◌ீ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "◌ீ — ī."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the sign on நீ (nī), \"you\". You already write its short partner ◌ி (i), the hook from நன்றி. The long sign ◌ீ ends in a curl instead of an open hook. One curl more, one beat longer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ◌ீ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ◌ீ (ī) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at நீ and point at ◌ீ (ī) inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **நீ** and point at ◌ீ inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "◌ீ three times, saying ī as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ◌ீ three times, saying *ī* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ள (ḷa), then ◌ீ (ī), from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ள, then ◌ீ, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "நீ aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நீ** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ◌ீ? (ī.) Which word did it come from? (நீ, nī, \"you (familiar)\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-S133-vowel-sign-e",
+      "sequence": 4730,
+      "title": "◌ெ — the short e in பெயர்",
+      "headword": "ெ",
+      "romanization": "e",
+      "gloss": "the single character ◌ெ — the short e in பெயர்",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9235d0e8157350f0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ◌ெ",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ெ and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: read ள (ḷa) and ◌ீ (ī) aloud, and write each once."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say பெயர் (peyar), \"name\". You have read it for a long time. This lesson takes one character out of it and puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ◌ெ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "◌ெ — e."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the sign on the first syllable of பெயர் (peyar), \"name\". Like ◌ை, it is written on the left of its consonant and sounded after it. You already know its long partner ◌ே (ē) from பேசு. Put the two side by side and compare the shapes: that difference is the difference between pe and pē."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ◌ெ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen on ◌ெ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at பெயர் and point at ◌ெ inside it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at **பெயர்** and point at ◌ெ inside it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "◌ெ three times, saying e as you finish each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ◌ெ three times, saying *e* as you finish each one]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "◌ீ (ī), then ◌ெ, from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ◌ீ, then ◌ெ, from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பெயர் aloud once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பெயர்** aloud once more]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which character is this — ◌ெ? (e.) Which word did it come from? (பெயர், peyar, \"name\".)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

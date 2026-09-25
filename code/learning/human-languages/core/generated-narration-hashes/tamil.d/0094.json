@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:407432ddf7968241",
+  "lessonIds": [
+    "TA-C94-dontunderstand",
+    "TA-C94-write",
+    "TA-C94-onemoretime",
+    "TA-C94-whatsaid"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "tamil/narration/ch94.txt",
+  "json": "tamil/narration/ch94.json",
+  "textHash": "fnv1a64:62a124d224d4044f",
+  "jsonHash": "fnv1a64:2114c3455f26197d",
+  "findings": []
+}

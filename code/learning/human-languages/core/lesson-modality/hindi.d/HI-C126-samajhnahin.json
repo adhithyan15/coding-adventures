@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C126-samajhnahin",
+    "language": "hindi",
+    "chapter": 126,
+    "sequence": 5630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:477acd45448c3ac6"
+  },
+  "findings": []
+}

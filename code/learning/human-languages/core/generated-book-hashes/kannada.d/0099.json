@@ -1,0 +1,13 @@
+{
+  "language": "kannada",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:be81d3609f1abebe",
+  "lessonIds": [
+    "KA-C99-breath",
+    "KA-C99-skin",
+    "KA-C99-blood",
+    "KA-C99-stomachache",
+    "KA-C99-weight"
+  ],
+  "tex": "kannada/book/chapters/ch99-the-body-again.tex"
+}

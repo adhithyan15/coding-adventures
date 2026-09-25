@@ -1,0 +1,19 @@
+{
+  "chapter": 22,
+  "title": "Letters That Never Join Forward",
+  "label": "ch:fa-letters-never-join-forward",
+  "canDo": "I can write re, ze and dal, and find each one in a word I already say.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FA-W22-dal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 22: i can write re, ze and dal, and find each one in a word I already say.",
+    "assesses": [
+      "FA-SCRIPT-C22-RE-01",
+      "FA-SCRIPT-C22-ZE-01",
+      "FA-SCRIPT-C22-DAL-01"
+    ]
+  }
+}

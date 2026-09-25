@@ -1,0 +1,9 @@
+{
+  "id": "KA-PATH-102-THISWAY",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "KA-EXT-102-THISWAY"
+  ],
+  "after": []
+}

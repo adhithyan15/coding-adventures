@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:ba1d1e1bcf0d6d4d",
+  "lessonIds": [
+    "HI-C119-naukri",
+    "HI-C119-pesha",
+    "HI-C119-shadi",
+    "HI-C119-shadishuda",
+    "HI-C119-janmdin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch119.txt",
+  "json": "hindi/narration/ch119.json",
+  "textHash": "fnv1a64:572a320db1994b06",
+  "jsonHash": "fnv1a64:48b6250cce8a3e51",
+  "findings": []
+}

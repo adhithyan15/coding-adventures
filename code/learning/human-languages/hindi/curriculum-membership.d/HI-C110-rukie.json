@@ -1,0 +1,11 @@
+{
+  "id": "HI-C110-rukie",
+  "pathSegment": "HI-PATH-110-AGAIN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-110-AGAIN",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-S128-vowel-sign-ai",
+  "pathSegment": "TA-PATH-109-LETTERS-FIRST",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-109-LETTERS-FIRST",
+      "order": 1
+    }
+  ]
+}

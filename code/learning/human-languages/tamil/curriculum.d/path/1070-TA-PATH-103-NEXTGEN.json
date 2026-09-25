@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-103-NEXTGEN",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "TA-EXT-103-NEXTGEN"
+  ],
+  "after": []
+}
