@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C84-temple",
+    "language": "sanskrit",
+    "chapter": 84,
+    "sequence": 3940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a44b235b484fd718"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:bfb3110057e037bd",
+  "lessonIds": [
+    "SA-C81-tree",
+    "SA-C81-seed",
+    "SA-C81-root",
+    "SA-C81-garden",
+    "SA-C81-forest"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch81.txt",
+  "json": "sanskrit/narration/ch81.json",
+  "textHash": "fnv1a64:a9b2b4783c296387",
+  "jsonHash": "fnv1a64:09b298cadc3da378",
+  "findings": []
+}

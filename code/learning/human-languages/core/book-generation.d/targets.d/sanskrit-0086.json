@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 86,
+  "output": "sanskrit/book/chapters/ch86-friday-to-sunday.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

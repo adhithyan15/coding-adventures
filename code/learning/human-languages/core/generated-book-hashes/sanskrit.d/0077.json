@@ -1,0 +1,15 @@
+{
+  "language": "sanskrit",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:d696c1325ed61b99",
+  "lessonIds": [
+    "SA-C77-room",
+    "SA-C77-kitchen",
+    "SA-C77-bathroom",
+    "SA-C77-roof",
+    "SA-C77-key",
+    "SA-R77-first-pass-body-and-feelings",
+    "SA-R77-second-pass-doing-and-going"
+  ],
+  "tex": "sanskrit/book/chapters/ch77-rooms-of-the-house.tex"
+}

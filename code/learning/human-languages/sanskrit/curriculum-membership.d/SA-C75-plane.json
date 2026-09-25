@@ -1,0 +1,11 @@
+{
+  "id": "SA-C75-plane",
+  "pathSegment": "SA-PATH-75-TRAVEL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-75-TRAVEL",
+      "order": 3
+    }
+  ]
+}

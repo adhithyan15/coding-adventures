@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C79-camel",
+    "language": "sanskrit",
+    "chapter": 79,
+    "sequence": 3710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a00527d1ff6c6058"
+  },
+  "findings": []
+}

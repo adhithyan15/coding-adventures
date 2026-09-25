@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C75-enters",
+    "language": "sanskrit",
+    "chapter": 75,
+    "sequence": 3510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e725c877cf1bf318"
+  },
+  "findings": []
+}

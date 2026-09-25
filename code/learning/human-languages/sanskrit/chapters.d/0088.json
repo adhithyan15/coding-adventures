@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Girls, Boys and Friends",
+  "label": "ch:sa-girls-boys-friends",
+  "canDo": "I can name a girl, a young man, a woman's friend, a son and a daughter.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "SA-C88-daughter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can name a girl, a young man, a woman's friend, a son and a daughter.",
+    "assesses": [
+      "SA-LEX-C88-PEOPLE-03",
+      "SA-LEX-C88-PEOPLE-04",
+      "SA-LEX-C88-PEOPLE-05"
+    ]
+  }
+}

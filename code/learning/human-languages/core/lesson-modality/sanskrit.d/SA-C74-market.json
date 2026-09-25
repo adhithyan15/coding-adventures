@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C74-market",
+    "language": "sanskrit",
+    "chapter": 74,
+    "sequence": 3460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66e940b6ae3a8315"
+  },
+  "findings": []
+}

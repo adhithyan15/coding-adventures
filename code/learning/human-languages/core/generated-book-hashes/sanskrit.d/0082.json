@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:4b3668ddede13dc8",
+  "lessonIds": [
+    "SA-C82-lake",
+    "SA-C82-well",
+    "SA-C82-pond",
+    "SA-C82-island",
+    "SA-C82-shore"
+  ],
+  "tex": "sanskrit/book/chapters/ch82-lake-well-shore.tex"
+}

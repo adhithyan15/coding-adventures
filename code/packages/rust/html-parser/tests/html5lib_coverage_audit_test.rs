@@ -84,16 +84,14 @@ fn html5lib_coverage_audit_fixture_matches_checked_local_corpora() {
     );
     assert_eq!(audit.tree_construction.upstream_cases, 1952);
     assert_eq!(audit.tree_construction.local_cases, tree_cases.len());
-    assert_eq!(audit.tree_construction.local_cases, 2654);
-    assert_eq!(audit.tree_construction.missing, 1);
+    // 2655: template.dat:124 imported (BR02 P1.3); nothing upstream is missing.
+    assert_eq!(audit.tree_construction.local_cases, 2655);
+    assert_eq!(audit.tree_construction.missing, 0);
     assert_eq!(
         audit.tree_construction.missing_sources.len(),
         audit.tree_construction.missing
     );
-    assert_eq!(
-        audit.tree_construction.missing_sources,
-        ["template.dat:124"]
-    );
+    assert!(audit.tree_construction.missing_sources.is_empty());
     assert_eq!(
         missing_source_count(&audit.tree_construction, "processing-instructions.dat:"),
         0

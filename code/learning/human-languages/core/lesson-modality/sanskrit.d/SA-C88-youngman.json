@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C88-youngman",
+    "language": "sanskrit",
+    "chapter": 88,
+    "sequence": 4150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f66979b8d03237a"
+  },
+  "findings": []
+}

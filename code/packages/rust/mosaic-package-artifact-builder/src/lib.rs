@@ -1183,6 +1183,15 @@ fn compose_runtime_destination(path: &Path) -> Result<(&'static str, &'static st
     Ok((platform, file_name))
 }
 
+/// Whether a selected runtime is an `.xcframework` -- a directory holding a
+/// static library per platform, linked into a SwiftUI package for iOS and
+/// iPadOS (UI89 §2.1) -- rather than a single cdylib file.
+fn is_xcframework(path: &Path) -> bool {
+    path.extension()
+        .and_then(|value| value.to_str())
+        .is_some_and(|extension| extension.eq_ignore_ascii_case("xcframework"))
+}
+
 fn validate_runtime_library_selection(
     opts: &BuildOptions,
     runtime_library: Option<&Path>,
@@ -1190,6 +1199,33 @@ fn validate_runtime_library_selection(
     let Some(path) = runtime_library else {
         return Ok(());
     };
+    if is_xcframework(path) {
+        if opts.backend != Backend::SwiftUI {
+            return Err(BuildError::InvalidRuntimeLibrary {
+                path: path.to_path_buf(),
+                reason: "an .xcframework runtime is linked statically, which only the SwiftUI backend does"
+                    .to_string(),
+            });
+        }
+        if !opts.emit_project {
+            return Err(BuildError::InvalidRuntimeLibrary {
+                path: path.to_path_buf(),
+                reason: "--runtime-library requires --emit-project".to_string(),
+            });
+        }
+        // Checked without following a link: the directory itself, and its
+        // manifest, must be real.
+        let is_dir = fs::symlink_metadata(path).is_ok_and(|meta| meta.is_dir());
+        let has_manifest = fs::symlink_metadata(path.join("Info.plist")).is_ok_and(|meta| meta.is_file());
+        if !is_dir || !has_manifest {
+            return Err(BuildError::InvalidRuntimeLibrary {
+                path: path.to_path_buf(),
+                reason: "an .xcframework must be a directory with an Info.plist (xcodebuild -create-xcframework)"
+                    .to_string(),
+            });
+        }
+        return Ok(());
+    }
     if !matches!(
         opts.backend,
         Backend::Compose | Backend::Flutter | Backend::Qt | Backend::SwiftUI | Backend::Xaml
@@ -1582,6 +1618,51 @@ fn install_xaml_runtime_library(source: &Path, backend_dir: &Path) -> Result<Pat
     })?;
     write_file(&target, &bytes)?;
     Ok(target)
+}
+
+/// Copy a statically built runtime's `.xcframework` into the package, where
+/// its `Package.swift` links it (UI89 §2.1). Only directories and regular
+/// files are copied: a symbolic link inside the framework is refused rather
+/// than followed, so the copy cannot read outside the directory selected.
+fn install_swiftui_static_runtime(source: &Path, backend_dir: &Path) -> Result<PathBuf, BuildError> {
+    let target = backend_dir.join(mosaic_app_bindings::SWIFT_STATIC_RUNTIME_PATH);
+    if target.exists() {
+        fs::remove_dir_all(&target).map_err(|error| BuildError::InvalidRuntimeLibrary {
+            path: target.clone(),
+            reason: format!("cannot replace the previous runtime: {error}"),
+        })?;
+    }
+    copy_directory_without_links(source, &target)?;
+    Ok(target)
+}
+
+fn copy_directory_without_links(source: &Path, target: &Path) -> Result<(), BuildError> {
+    let refuse = |reason: String| BuildError::InvalidRuntimeLibrary {
+        path: source.to_path_buf(),
+        reason,
+    };
+    create_dir_all(target)?;
+    let entries = fs::read_dir(source).map_err(|error| refuse(format!("cannot read: {error}")))?;
+    for entry in entries {
+        let entry = entry.map_err(|error| refuse(format!("cannot read: {error}")))?;
+        let kind = entry
+            .file_type()
+            .map_err(|error| refuse(format!("cannot read: {error}")))?;
+        let destination = target.join(entry.file_name());
+        if kind.is_symlink() {
+            return Err(refuse(format!(
+                "{} is a symbolic link; an .xcframework runtime must contain only files and directories",
+                entry.path().display()
+            )));
+        } else if kind.is_dir() {
+            copy_directory_without_links(&entry.path(), &destination)?;
+        } else if kind.is_file() {
+            let bytes = fs::read(entry.path())
+                .map_err(|error| refuse(format!("cannot read {}: {error}", entry.path().display())))?;
+            write_file(&destination, &bytes)?;
+        }
+    }
+    Ok(())
 }
 
 fn install_swiftui_runtime_library(
@@ -2745,6 +2826,9 @@ fn build_package_inner(
             Backend::Compose => install_compose_runtime_library(source, &backend_dir)?,
             Backend::Flutter => install_flutter_runtime_library(source, &backend_dir)?,
             Backend::Qt => install_qt_runtime_library(source, &backend_dir)?,
+            Backend::SwiftUI if is_xcframework(source) => {
+                install_swiftui_static_runtime(source, &backend_dir)?
+            }
             Backend::SwiftUI => install_swiftui_runtime_library(source, &backend_dir)?,
             Backend::Xaml => install_xaml_runtime_library(source, &backend_dir)?,
             _ => unreachable!("runtime library selection was validated before emission"),
@@ -3896,11 +3980,19 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
             )
             .map_err(|e| pipeline_emit_err(component, e))?;
             if let Some(proj) = r.project {
-                let bundle_runtime = runtime_library.is_some();
-                let package_swift = mosaic_app_bindings::swift_package_with_runtime_binding(
+                // A cdylib is bundled as a resource and dlopen'd (macOS); an
+                // .xcframework is linked statically (iOS/iPadOS, UI89 §2.1).
+                let static_runtime = runtime_library.is_some_and(is_xcframework);
+                let bundle_runtime = runtime_library.is_some() && !static_runtime;
+                let bound_package = mosaic_app_bindings::swift_package_with_runtime_binding(
                     &proj.package_swift,
                     bundle_runtime,
                 );
+                let package_swift = if static_runtime {
+                    mosaic_app_bindings::swift_package_with_static_runtime(&bound_package)
+                } else {
+                    bound_package
+                };
                 let app_swift = swift_app_with_initial_window_size(
                     &swift_app_with_host_effects(
                         &mosaic_app_bindings::swift_app_with_runtime_binding(
@@ -3914,7 +4006,9 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 )?;
                 let runtime_binding =
                     mosaic_app_bindings::swift_runtime_binding_for_application(package_name);
-                let runtime_distribution = if bundle_runtime {
+                let runtime_distribution = if static_runtime {
+                    "The selected target Rust engine is an `.xcframework` of static libraries, linked into the package at `Runtime/MosaicAppRuntime.xcframework` (iOS and iPadOS do not allow loading an app's own dylib; UI89). The loader calls it directly; no environment variable applies."
+                } else if bundle_runtime {
                     "The selected target Rust engine is copied into SwiftPM's `Runtime` resource bundle and resolved through `Bundle.module`; no environment variable or global library install is required."
                 } else {
                     "No Rust engine was bundled. For development, set `MOSAIC_APP_LIBRARY` to the target dylib path. Strict SwiftUI builds should be regenerated with `--runtime-library <target cdylib>`."
@@ -10272,6 +10366,108 @@ layout NativeEvents {
         assert!(report.contains("runtime.library-not-bundled"));
         assert!(report.contains("--runtime-library <target cdylib>"));
         assert!(!out.path().join("swiftui/Package.swift").exists());
+    }
+
+    fn card_package() -> TempDir {
+        let pkg = make_package("mosaic-pkg-card", &["Card"]);
+        fs::write(pkg.path().join("src/Card.mil"), "component Card { slot label : text ; }\n").unwrap();
+        fs::write(
+            pkg.path().join("src/Card.mll"),
+            "layout Card { Text [ root ] ( content : slot: label ) }\n",
+        )
+        .unwrap();
+        pkg
+    }
+
+    fn fake_xcframework(root: &Path) -> PathBuf {
+        let framework = root.join("CardRuntime.xcframework");
+        fs::create_dir_all(framework.join("ios-arm64")).unwrap();
+        fs::write(framework.join("Info.plist"), b"<plist/>").unwrap();
+        fs::write(framework.join("ios-arm64/libcard.a"), b"static-runtime").unwrap();
+        framework
+    }
+
+    fn swiftui_options(pkg: &TempDir, out: &TempDir, backend: Backend) -> BuildOptions {
+        BuildOptions {
+            package_root: pkg.path().to_path_buf(),
+            output_root: out.path().to_path_buf(),
+            backend,
+            emit_project: true,
+            theme: None,
+        }
+    }
+
+    /// UI89 §2.1: an .xcframework runtime is linked into the SwiftUI package,
+    /// not bundled as a resource, and the loader is told to call it directly.
+    #[test]
+    fn swiftui_links_a_selected_xcframework_runtime_statically() {
+        let pkg = card_package();
+        let framework = fake_xcframework(pkg.path());
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+        )
+        .expect("native-complete SwiftUI shell with a static runtime");
+
+        let installed = out.path().join("swiftui/Runtime/MosaicAppRuntime.xcframework");
+        assert!(result.artifacts.contains(&installed));
+        assert_eq!(fs::read(installed.join("ios-arm64/libcard.a")).unwrap(), b"static-runtime");
+        assert!(installed.join("Info.plist").is_file());
+
+        let package = fs::read_to_string(out.path().join("swiftui/Package.swift")).unwrap();
+        assert!(package.contains("path: \"Runtime/MosaicAppRuntime.xcframework\""), "{package}");
+        assert!(package.contains("cSettings: [.define(\"MOSAIC_RUNTIME_STATIC\")]"), "{package}");
+        assert!(!package.contains("resources:"), "{package}");
+
+        let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
+        assert!(!app.contains("Bundle.module"), "a linked runtime has no bundled path");
+        let readme = fs::read_to_string(out.path().join("swiftui/README.md")).unwrap();
+        assert!(readme.contains("Runtime/MosaicAppRuntime.xcframework"));
+    }
+
+    #[test]
+    fn an_xcframework_is_refused_for_other_backends_and_when_malformed() {
+        let pkg = card_package();
+        let framework = fake_xcframework(pkg.path());
+        let out = TempDir::new().unwrap();
+        let error = build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::Compose),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+        )
+        .unwrap_err();
+        assert!(matches!(error, BuildError::InvalidRuntimeLibrary { .. }), "{error:?}");
+
+        let not_a_framework = pkg.path().join("Empty.xcframework");
+        fs::create_dir_all(&not_a_framework).unwrap();
+        let error = build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&not_a_framework),
+        )
+        .unwrap_err();
+        assert!(matches!(error, BuildError::InvalidRuntimeLibrary { .. }), "{error:?}");
+    }
+
+    /// A link inside the framework is refused rather than followed, so the
+    /// copy cannot read outside the directory the caller selected.
+    #[cfg(unix)]
+    #[test]
+    fn a_symbolic_link_inside_an_xcframework_is_refused() {
+        let pkg = card_package();
+        let framework = fake_xcframework(pkg.path());
+        std::os::unix::fs::symlink("/etc/hosts", framework.join("ios-arm64/leak")).unwrap();
+        let out = TempDir::new().unwrap();
+        let error = build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+        )
+        .unwrap_err();
+        assert!(matches!(error, BuildError::InvalidRuntimeLibrary { .. }), "{error:?}");
+        assert!(!out.path().join("swiftui/Runtime/MosaicAppRuntime.xcframework/ios-arm64/leak").exists());
     }
 
     #[test]

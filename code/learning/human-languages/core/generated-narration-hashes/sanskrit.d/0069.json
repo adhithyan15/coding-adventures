@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:304a42b33a1cf2c8",
+  "lessonIds": [
+    "SA-C69-eye",
+    "SA-C69-throat",
+    "SA-C69-belly",
+    "SA-C69-forehead",
+    "SA-C69-tongue"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch69.txt",
+  "json": "sanskrit/narration/ch69.json",
+  "textHash": "fnv1a64:67eb04e0b1a76600",
+  "jsonHash": "fnv1a64:42e87bf3c7288008",
+  "findings": []
+}

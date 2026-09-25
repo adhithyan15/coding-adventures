@@ -1,5 +1,5 @@
 {
-  "case_count": 131,
+  "case_count": 132,
   "cases": [
     {
       "axis": "head-body-template",
@@ -786,6 +786,12 @@
       "id": "template-dat-123",
       "reason": "ordinary template start/end tags and content model boundaries",
       "source": "template.dat:123"
+    },
+    {
+      "axis": "template-fragment-context",
+      "id": "template-dat-124",
+      "reason": "fragment parsing with template as the context element",
+      "source": "template.dat:124"
     }
   ],
   "counts_by_axis": {
@@ -797,7 +803,7 @@
     "rawtext-template": 4,
     "select-template": 6,
     "table-template": 45,
-    "template-fragment-context": 3,
+    "template-fragment-context": 4,
     "template-shell": 6
   },
   "description": "Focused parser audit over selected html5lib tree-construction cases that stress template insertion modes, nested template stacks, EOF recovery, and template interactions with tables, selects, framesets, document shells, text modes, foreign content, and fragment contexts.",

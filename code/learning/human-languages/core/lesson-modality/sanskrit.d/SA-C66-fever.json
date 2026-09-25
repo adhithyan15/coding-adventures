@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C66-fever",
+    "language": "sanskrit",
+    "chapter": 66,
+    "sequence": 3020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40a29a1190d8d98d"
+  },
+  "findings": []
+}

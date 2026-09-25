@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-81-PLANTS",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a tree, a seed, a root, a garden and a forest.",
+  "prerequisites": []
+}

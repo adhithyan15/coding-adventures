@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:5b8e7c078e09c3dc",
+  "lessonIds": [
+    "SA-C79-elephant",
+    "SA-C79-horse",
+    "SA-C79-camel",
+    "SA-C79-mouse",
+    "SA-C79-cat"
+  ],
+  "tex": "sanskrit/book/chapters/ch79-elephant-horse-camel.tex"
+}

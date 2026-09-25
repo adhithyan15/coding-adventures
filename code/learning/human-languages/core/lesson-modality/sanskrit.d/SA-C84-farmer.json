@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C84-farmer",
+    "language": "sanskrit",
+    "chapter": 84,
+    "sequence": 3970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d90215424437aba4"
+  },
+  "findings": []
+}

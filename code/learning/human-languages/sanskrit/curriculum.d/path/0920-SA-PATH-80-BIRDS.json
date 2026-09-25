@@ -1,0 +1,9 @@
+{
+  "id": "SA-PATH-80-BIRDS",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "SA-EXT-80-BIRDS"
+  ],
+  "after": []
+}

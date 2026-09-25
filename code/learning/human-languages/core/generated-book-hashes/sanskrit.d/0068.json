@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:5f6dbc6e5f86b748",
+  "lessonIds": [
+    "SA-C68-sorrow",
+    "SA-C68-fear",
+    "SA-C68-anger",
+    "SA-C68-shyness",
+    "SA-C68-joy"
+  ],
+  "tex": "sanskrit/book/chapters/ch68-how-it-feels.tex"
+}

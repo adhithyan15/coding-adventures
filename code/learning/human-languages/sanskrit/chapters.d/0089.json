@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "Beautiful, Far and Near",
+  "label": "ch:sa-beautiful-far-near",
+  "canDo": "I can say something is beautiful, far, near, hard or sweet.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "SA-R89-second-pass-places-days-people",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can say something is beautiful, far, near, hard or sweet.",
+    "assesses": [
+      "SA-LEX-C89-DESCRIBE-03",
+      "SA-LEX-C89-DESCRIBE-04",
+      "SA-LEX-C89-DESCRIBE-05"
+    ]
+  }
+}

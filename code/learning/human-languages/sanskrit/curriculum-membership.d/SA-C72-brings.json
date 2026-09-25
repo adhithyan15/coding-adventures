@@ -1,0 +1,11 @@
+{
+  "id": "SA-C72-brings",
+  "pathSegment": "SA-PATH-72-HOUSEWORK",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "SA-EXT-72-HOUSEWORK",
+      "order": 3
+    }
+  ]
+}

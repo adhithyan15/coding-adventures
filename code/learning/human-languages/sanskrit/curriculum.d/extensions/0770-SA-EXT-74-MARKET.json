@@ -1,0 +1,8 @@
+{
+  "id": "SA-EXT-74-MARKET",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say someone buys, and name money, a price, a shop and a market.",
+  "prerequisites": []
+}

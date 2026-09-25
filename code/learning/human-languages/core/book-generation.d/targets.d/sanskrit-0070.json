@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 70,
+  "output": "sanskrit/book/chapters/ch70-nail-knee-shoulder.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-R77-first-pass-body-and-feelings",
+  "pathSegment": "SA-PATH-77-HOME",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "SA-EXT-77-HOME",
+      "order": 5
+    }
+  ]
+}

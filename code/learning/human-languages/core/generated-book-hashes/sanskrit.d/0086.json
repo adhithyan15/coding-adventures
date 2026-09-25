@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:b13d61526b3640a2",
+  "lessonIds": [
+    "SA-C86-friday",
+    "SA-C86-saturday",
+    "SA-C86-sunday",
+    "SA-C86-time",
+    "SA-C86-moment"
+  ],
+  "tex": "sanskrit/book/chapters/ch86-friday-to-sunday.tex"
+}

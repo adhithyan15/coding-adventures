@@ -1,0 +1,7 @@
+{
+  "language": "sanskrit",
+  "chapter": 85,
+  "output": "sanskrit/book/chapters/ch85-days-of-the-week.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "sk"
+}

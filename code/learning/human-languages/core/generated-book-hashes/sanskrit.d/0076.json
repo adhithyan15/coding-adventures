@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:7f7d44f7f3f338ea",
+  "lessonIds": [
+    "SA-C76-rain",
+    "SA-C76-cold",
+    "SA-C76-heat",
+    "SA-C76-spring",
+    "SA-C76-summer"
+  ],
+  "tex": "sanskrit/book/chapters/ch76-rain-cold-heat.tex"
+}

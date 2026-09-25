@@ -37,7 +37,16 @@ for desktop only; it follows the native targets (§6).
 
 ### 2.1 The Rust runtime, linked statically
 
-- App crates gain `staticlib` in `crate-type`.
+*Implemented 2026-09-25, with two refinements over the first draft:* the app
+crates keep `cdylib` + `rlib`, and `code/scripts/build-mosaic-xcframework.sh`
+builds the static library with `cargo rustc --crate-type staticlib`, so no
+crate changes; and the simulator slice is one fat library (Apple silicon and
+Intel, joined with `lipo`), because a generic simulator build links both. The
+runtime is selected with `--runtime-library <name>.xcframework`, and the loader
+calls it directly under `MOSAIC_RUNTIME_STATIC` (a runtime reached only by
+`dlsym` would be dropped from a static archive by the linker).
+
+- ~~App crates gain `staticlib` in `crate-type`.~~ (see above)
 - The artifact builder builds `aarch64-apple-ios`, `aarch64-apple-ios-sim`
   and `x86_64-apple-ios` and bundles them as an **`.xcframework`**
   (`xcodebuild -create-xcframework`). `runtime_file_name` accepts `.a` and

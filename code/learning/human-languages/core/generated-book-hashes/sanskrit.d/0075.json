@@ -1,0 +1,13 @@
+{
+  "language": "sanskrit",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:1e2122ab48ee2c45",
+  "lessonIds": [
+    "SA-C75-vehicle",
+    "SA-C75-chariot",
+    "SA-C75-boat",
+    "SA-C75-plane",
+    "SA-C75-enters"
+  ],
+  "tex": "sanskrit/book/chapters/ch75-getting-there.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C72-washes",
+  "pathSegment": "SA-PATH-72-HOUSEWORK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-72-HOUSEWORK",
+      "order": 2
+    }
+  ]
+}

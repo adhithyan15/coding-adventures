@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-C71-runs",
+    "language": "sanskrit",
+    "chapter": 71,
+    "sequence": 3270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21b7febb6a2f6aa4"
+  },
+  "findings": []
+}

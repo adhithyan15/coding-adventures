@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "SA-R89-first-pass-food-animals-nature",
+    "language": "sanskrit",
+    "chapter": 89,
+    "sequence": 4240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5fb3fd57d77f80e"
+  },
+  "findings": []
+}

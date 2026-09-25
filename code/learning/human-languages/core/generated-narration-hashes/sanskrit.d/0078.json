@@ -1,0 +1,19 @@
+{
+  "language": "sanskrit",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:fffa3e0e49b1beaa",
+  "lessonIds": [
+    "SA-C78-mango",
+    "SA-C78-banana",
+    "SA-C78-oil",
+    "SA-C78-bread",
+    "SA-C78-payasam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "sanskrit/narration/ch78.txt",
+  "json": "sanskrit/narration/ch78.json",
+  "textHash": "fnv1a64:085380936abb2de1",
+  "jsonHash": "fnv1a64:923b317969d24d69",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "SA-C88-friend",
+  "pathSegment": "SA-PATH-88-PEOPLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "SA-EXT-88-PEOPLE",
+      "order": 2
+    }
+  ]
+}
