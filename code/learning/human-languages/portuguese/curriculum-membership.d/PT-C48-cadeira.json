@@ -1,0 +1,11 @@
+{
+  "id": "PT-C48-cadeira",
+  "pathSegment": "PT-PATH-48-CASA1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-48-CASA1",
+      "order": 4
+    }
+  ]
+}

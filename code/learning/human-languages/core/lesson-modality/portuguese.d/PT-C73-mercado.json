@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C73-mercado",
+    "language": "portuguese",
+    "chapter": 73,
+    "sequence": 3310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abcefbe3838dd8c2"
+  },
+  "findings": []
+}

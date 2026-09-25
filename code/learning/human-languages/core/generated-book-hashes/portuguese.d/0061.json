@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:760d44c07301a611",
+  "lessonIds": [
+    "PT-C61-passaro",
+    "PT-C61-rato",
+    "PT-C61-lobo",
+    "PT-C61-urso",
+    "PT-C61-raposa"
+  ],
+  "tex": "portuguese/book/chapters/ch61-bird-mouse-wolf-bear-fox.tex"
+}

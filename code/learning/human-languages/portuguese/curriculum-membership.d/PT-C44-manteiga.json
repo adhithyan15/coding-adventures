@@ -1,0 +1,11 @@
+{
+  "id": "PT-C44-manteiga",
+  "pathSegment": "PT-PATH-44-COMIDA1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-44-COMIDA1",
+      "order": 2
+    }
+  ]
+}

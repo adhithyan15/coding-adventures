@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-67-ADJ4",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "PT-EXT-67-ADJ4"
+  ],
+  "after": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C48-cozinha",
+  "pathSegment": "PT-PATH-48-CASA1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-48-CASA1",
+      "order": 1
+    }
+  ]
+}

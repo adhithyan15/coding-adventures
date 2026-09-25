@@ -1,0 +1,19 @@
+{
+  "chapter": 37,
+  "title": "Daughter, Grandparents, Husband, Wife",
+  "label": "ch:pt-daughter-grandparents-husband-wife",
+  "canDo": "I can name a daughter, a grandfather, a grandmother, a husband and a wife.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PT-C37-esposa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 37: i can name a daughter, a grandfather, a grandmother, a husband and a wife.",
+    "assesses": [
+      "PT-LEX-C37-FAMILIA1-03",
+      "PT-LEX-C37-FAMILIA1-04",
+      "PT-LEX-C37-FAMILIA1-05"
+    ]
+  }
+}

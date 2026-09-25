@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:fc4764d57fbf3843",
+  "lessonIds": [
+    "PT-C68-forte",
+    "PT-C68-fraco",
+    "PT-C68-rico",
+    "PT-C68-pobre",
+    "PT-C68-amarelo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch68.txt",
+  "json": "portuguese/narration/ch68.json",
+  "textHash": "fnv1a64:f2103a7956a7596c",
+  "jsonHash": "fnv1a64:783be7da5c8524ac",
+  "findings": []
+}

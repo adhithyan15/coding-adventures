@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:b6954790548e7137",
+  "lessonIds": [
+    "PT-C58-campo",
+    "PT-C58-ceu",
+    "PT-C58-sol",
+    "PT-C58-estrela",
+    "PT-C58-nuvem"
+  ],
+  "tex": "portuguese/book/chapters/ch58-field-sky-sun-star-cloud.tex"
+}

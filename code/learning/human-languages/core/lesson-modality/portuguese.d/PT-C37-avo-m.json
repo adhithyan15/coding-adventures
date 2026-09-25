@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C37-avo-m",
+    "language": "portuguese",
+    "chapter": 37,
+    "sequence": 1470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d259782d6da813f4"
+  },
+  "findings": []
+}

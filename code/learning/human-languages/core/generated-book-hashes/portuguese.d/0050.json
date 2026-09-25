@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:fba25491f00ca8ef",
+  "lessonIds": [
+    "PT-C50-lampada",
+    "PT-C50-sala",
+    "PT-C50-chao",
+    "PT-C50-escada",
+    "PT-C50-espelho"
+  ],
+  "tex": "portuguese/book/chapters/ch50-lamp-living-room-floor-stairs-mirror.tex"
+}

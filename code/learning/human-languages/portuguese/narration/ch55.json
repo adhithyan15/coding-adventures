@@ -1,0 +1,990 @@
+{
+  "version": 1,
+  "language": "portuguese",
+  "chapter": 55,
+  "title": "Enter, Go Out, Come Back, Study, Travel",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:954e2952358e76f1",
+  "lessons": [
+    {
+      "id": "PT-C55-entrar",
+      "sequence": 2360,
+      "title": "entrar — to go in, to enter",
+      "headword": "entrar",
+      "romanization": "entrar",
+      "gloss": "to go in, to enter",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d20da32bb6f4ae60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for a ticket, then the Portuguese for a map."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: entrar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "entrar — \"to go in, to enter\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "entrar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *entrar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "entrar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *entrar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say entrar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *entrar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for a ticket, then the Portuguese for a map, then say entrar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for a ticket, then the Portuguese for a map, then say *entrar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does entrar mean? (\"To go in, to enter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C55-sair",
+      "sequence": 2370,
+      "title": "sair — to go out, to leave",
+      "headword": "sair",
+      "romanization": "sair",
+      "gloss": "to go out, to leave",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c27b0e34c176910",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for a map, then the Portuguese for to go in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sair — \"to go out, to leave\". The opposite of entrar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sair*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sair, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sair*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sair*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for a map, then the Portuguese for to go in, then say sair again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for a map, then the Portuguese for to go in, then say *sair* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sair mean? (\"To go out, to leave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C55-voltar",
+      "sequence": 2380,
+      "title": "voltar — to come back, to return",
+      "headword": "voltar",
+      "romanization": "voltar",
+      "gloss": "to come back, to return",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8c22ac45d070018",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to go in, then the Portuguese for to go out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: voltar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "voltar — \"to come back, to return\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voltar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *voltar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "voltar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *voltar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say voltar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *voltar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to go in, then the Portuguese for to go out, then say voltar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to go in, then the Portuguese for to go out, then say *voltar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does voltar mean? (\"To come back, to return\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C55-estudar",
+      "sequence": 2390,
+      "title": "estudar — to study",
+      "headword": "estudar",
+      "romanization": "estudar",
+      "gloss": "to study",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7295e4d7fbe88153",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to go out, then the Portuguese for to come back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: estudar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "estudar — \"to study\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estudar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estudar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "estudar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *estudar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say estudar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *estudar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to go out, then the Portuguese for to come back, then say estudar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to go out, then the Portuguese for to come back, then say *estudar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does estudar mean? (\"To study\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C55-viajar",
+      "sequence": 2400,
+      "title": "viajar — to travel",
+      "headword": "viajar",
+      "romanization": "viajar",
+      "gloss": "to travel",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de73de2ace9dd4b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Portuguese for to come back, then the Portuguese for to study."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: viajar",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "viajar — \"to travel\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viajar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viajar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viajar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viajar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say viajar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *viajar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Portuguese for to come back, then the Portuguese for to study, then say viajar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Portuguese for to come back, then the Portuguese for to study, then say *viajar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does viajar mean? (\"To travel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R55-first-pass-the-body-family-and-doing",
+      "sequence": 2410,
+      "title": "The body, family and doing — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 30-42",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aeaaad0def7790f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to study and to travel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an arm, a leg, a foot, a finger; a toe, a tooth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an arm, a leg, a foot, a finger; a toe, a tooth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the tongue; a language, the nose, the neck, a shoulder, a knee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the tongue; a language, the nose, the neck, a shoulder, a knee]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the back, hair, the belly, the face, blood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the back, hair, the belly, the face, blood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "skin, a nail, the chin, the throat, the stomach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: skin, a nail, the chin, the throat, the stomach]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pain, a fever, a cough, medicine, a hospital",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pain, a fever, a cough, medicine, a hospital]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an illness, hunger, thirst, tiredness, joy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an illness, hunger, thirst, tiredness, joy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fear, anger, sadness, happy, sad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fear, anger, sadness, happy, sad]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a daughter, a grandfather, a grandmother, a husband, a wife",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a daughter, a grandfather, a grandmother, a husband, a wife]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an uncle, an aunt, a cousin, a grandson, a granddaughter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an uncle, an aunt, a cousin, a grandson, a granddaughter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a child, a neighbour, a guest, a boy, a girl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a child, a neighbour, a guest, a boy, a girl]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sing, to dance, to laugh, to cry, to wash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sing, to dance, to laugh, to cry, to wash]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cook, to sell, to call, to sleep, to sit down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cook, to sell, to call, to sleep, to sit down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to run, to hear, to teach, to learn, to open",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to run, to hear, to teach, to learn, to open]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An arm? (o braço.) A leg? (a perna.) A foot? (o pé.) A finger; a toe? (o dedo.) A tooth? (o dente.) The tongue; a language? (a língua.) The nose? (o nariz.) The neck? (o pescoço.) A shoulder? (o ombro.) A knee? (o joelho.) The back? (as costas.) Hair? (o cabelo.) The belly? (a barriga.) The face? (o rosto.) Blood? (o sangue.) Skin? (a pele.) A nail? (a unha.) The chin? (o queixo.) The throat? (a garganta.) The stomach? (o estômago.) Pain? (a dor.) A fever? (a febre.) A cough? (a tosse.) Medicine? (o remédio.) A hospital? (o hospital.) An illness? (a doença.) Hunger? (a fome.) Thirst? (a sede.) Tiredness? (o cansaço.) Joy? (a alegria.) Fear? (o medo.) Anger? (a raiva.) Sadness? (a tristeza.) Happy? (feliz.) Sad? (triste.) A daughter? (a filha.) A grandfather? (o avô.) A grandmother? (a avó.) A husband? (o marido.) A wife? (a esposa.) An uncle? (o tio.) An aunt? (a tia.) A cousin? (o primo.) A grandson? (o neto.) A granddaughter? (a neta.) A child? (a criança.) A neighbour? (o vizinho.) A guest? (o convidado.) A boy? (o menino.) A girl? (a menina.) To sing? (cantar.) To dance? (dançar.) To laugh? (rir.) To cry? (chorar.) To wash? (lavar.) To cook? (cozinhar.) To sell? (vender.) To call? (chamar.) To sleep? (dormir.) To sit down? (sentar.) To run? (correr.) To hear? (ouvir.) To teach? (ensinar.) To learn? (aprender.) To open? (abrir.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-R55-second-pass-food-the-house-and-things",
+      "sequence": 2420,
+      "title": "Food, the house and things — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 43-55",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dafdf15ee2ada5e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to close and to drink."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to close, to drink, to eat, to give, to live",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to close, to drink, to eat, to give, to live]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meat, fish, butter, salt, chicken",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: meat, fish, butter, salt, chicken]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fruit, an apple, a banana, an orange, a grape",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fruit, an apple, a banana, an orange, a grape]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a potato, a tomato, an onion, a carrot, beans",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a potato, a tomato, an onion, a carrot, beans]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cake, honey, lunch, dinner, a lemon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cake, honey, lunch, dinner, a lemon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a house, a kitchen, a window, a table, a chair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a house, a kitchen, a window, a table, a chair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bed, a key, a wall, a roof, a garden",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bed, a key, a wall, a roof, a garden]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lamp; a light bulb, the living room, the floor, stairs; a ladder, a mirror",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lamp; a light bulb, the living room, the floor, stairs; a ladder, a mirror]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a glass, a plate; a dish, a spoon, a knife, a fork",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a glass, a plate; a dish, a spoon, a knife, a fork]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pen, paper, a notebook, a pencil, a bag",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pen, paper, a notebook, a pencil, a bag]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a phone, an umbrella, money, a present, a watch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a phone, an umbrella, money, a present, a watch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "glasses, a box, a suitcase, a ticket, a map",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: glasses, a box, a suitcase, a ticket, a map]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to go in, to go out, to come back, to study, to travel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to go in, to go out, to come back, to study, to travel]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To close? (fechar.) To drink? (beber.) To eat? (comer.) To give? (dar.) To live? (viver.) Meat? (a carne.) Fish? (o peixe.) Butter? (a manteiga.) Salt? (o sal.) Chicken? (o frango.) Fruit? (a fruta.) An apple? (a maçã.) A banana? (a banana.) An orange? (a laranja.) A grape? (a uva.) A potato? (a batata.) A tomato? (o tomate.) An onion? (a cebola.) A carrot? (a cenoura.) Beans? (o feijão.) A cake? (o bolo.) Honey? (o mel.) Lunch? (o almoço.) Dinner? (o jantar.) A lemon? (o limão.) A house? (a casa.) A kitchen? (a cozinha.) A window? (a janela.) A table? (a mesa.) A chair? (a cadeira.) A bed? (a cama.) A key? (a chave.) A wall? (a parede.) A roof? (o telhado.) A garden? (o jardim.) A lamp; a light bulb? (a lâmpada.) The living room? (a sala.) The floor? (o chão.) Stairs; a ladder? (a escada.) A mirror? (o espelho.) A glass? (o copo.) A plate; a dish? (o prato.) A spoon? (a colher.) A knife? (a faca.) A fork? (o garfo.) A pen? (a caneta.) Paper? (o papel.) A notebook? (o caderno.) A pencil? (o lápis.) A bag? (a bolsa.) A phone? (o telefone.) An umbrella? (o guarda-chuva.) Money? (o dinheiro.) A present? (o presente.) A watch? (o relógio.) Glasses? (os óculos.) A box? (a caixa.) A suitcase? (a mala.) A ticket? (o bilhete.) A map? (o mapa.) To go in? (entrar.) To go out? (sair.) To come back? (voltar.) To study? (estudar.) To travel? (viajar.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

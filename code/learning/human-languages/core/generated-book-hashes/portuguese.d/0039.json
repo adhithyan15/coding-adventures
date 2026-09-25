@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:e224958ff0aba580",
+  "lessonIds": [
+    "PT-C39-crianca",
+    "PT-C39-vizinho",
+    "PT-C39-convidado",
+    "PT-C39-menino",
+    "PT-C39-menina"
+  ],
+  "tex": "portuguese/book/chapters/ch39-child-neighbour-guest-boy-girl.tex"
+}

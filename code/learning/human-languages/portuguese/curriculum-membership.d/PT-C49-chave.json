@@ -1,0 +1,11 @@
+{
+  "id": "PT-C49-chave",
+  "pathSegment": "PT-PATH-49-CASA2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-49-CASA2",
+      "order": 1
+    }
+  ]
+}

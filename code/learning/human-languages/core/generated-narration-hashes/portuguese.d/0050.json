@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:5a37b5075b005283",
+  "lessonIds": [
+    "PT-C50-lampada",
+    "PT-C50-sala",
+    "PT-C50-chao",
+    "PT-C50-escada",
+    "PT-C50-espelho"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch50.txt",
+  "json": "portuguese/narration/ch50.json",
+  "textHash": "fnv1a64:c7ee4d1c5428a168",
+  "jsonHash": "fnv1a64:51f73be2d99d97aa",
+  "findings": []
+}

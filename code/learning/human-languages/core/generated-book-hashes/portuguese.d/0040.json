@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:4bd03502eac192ad",
+  "lessonIds": [
+    "PT-C40-cantar",
+    "PT-C40-dancar",
+    "PT-C40-rir",
+    "PT-C40-chorar",
+    "PT-C40-lavar"
+  ],
+  "tex": "portuguese/book/chapters/ch40-sing-dance-laugh-cry-wash.tex"
+}

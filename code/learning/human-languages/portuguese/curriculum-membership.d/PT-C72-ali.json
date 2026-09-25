@@ -1,0 +1,11 @@
+{
+  "id": "PT-C72-ali",
+  "pathSegment": "PT-PATH-72-ONDE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-72-ONDE",
+      "order": 1
+    }
+  ]
+}

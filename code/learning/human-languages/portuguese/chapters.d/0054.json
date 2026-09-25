@@ -1,0 +1,19 @@
+{
+  "chapter": 54,
+  "title": "Glasses, Box, Suitcase, Ticket, Map",
+  "label": "ch:pt-glasses-box-suitcase-ticket-map",
+  "canDo": "I can name glasses, a box, a suitcase, a ticket and a map.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PT-C54-mapa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 54: i can name glasses, a box, a suitcase, a ticket and a map.",
+    "assesses": [
+      "PT-LEX-C54-COISAS3-03",
+      "PT-LEX-C54-COISAS3-04",
+      "PT-LEX-C54-COISAS3-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C71-cedo",
+  "pathSegment": "PT-PATH-71-QUANDO2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-71-QUANDO2",
+      "order": 3
+    }
+  ]
+}

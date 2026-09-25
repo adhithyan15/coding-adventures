@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:db03347b27910690",
+  "lessonIds": [
+    "PT-C73-cidade",
+    "PT-C73-rua",
+    "PT-C73-loja",
+    "PT-C73-mercado",
+    "PT-C73-banco"
+  ],
+  "tex": "portuguese/book/chapters/ch73-city-street-shop-market-bank.tex"
+}

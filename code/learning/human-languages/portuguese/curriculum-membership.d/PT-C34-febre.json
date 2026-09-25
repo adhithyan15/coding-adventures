@@ -1,0 +1,11 @@
+{
+  "id": "PT-C34-febre",
+  "pathSegment": "PT-PATH-34-SAUDE1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-34-SAUDE1",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:dda10bfe82c523c1",
+  "lessonIds": [
+    "PT-C41-cozinhar",
+    "PT-C41-vender",
+    "PT-C41-chamar",
+    "PT-C41-dormir",
+    "PT-C41-sentar"
+  ],
+  "tex": "portuguese/book/chapters/ch41-cook-sell-call-sleep-sit.tex"
+}

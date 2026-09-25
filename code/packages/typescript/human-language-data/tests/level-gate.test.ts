@@ -116,7 +116,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // 7 -> 8: Gujarati, with chapters 46-91 (230 headwords, nineteen verbs).
     // 8 -> 9: Latin, with chapters 63-108 (230 headwords, thirty-three verbs).
     // 9 -> 10: Russian, with chapters 29-80 (260 headwords, twenty-three verbs).
-    expect(gate.summary.tracksWithAnyLevel).toBe(10);
+    // 10 -> 11: Portuguese, with chapters 30-81 (260 headwords, thirty-five
+    // verbs), which also give SPINE-RESPOND-BASIC its first Portuguese segments.
+    expect(gate.summary.tracksWithAnyLevel).toBe(11);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
     // C2. The tracks that hold a rung are pinned by name, and the per-level counts
@@ -133,6 +135,7 @@ describe("the gate that would have caught the A2 claim", () => {
       gujarati: "pre-A1",
       latin: "pre-A1",
       russian: "pre-A1",
+      portuguese: "pre-A1",
     };
     const expectedByLevel = new Map<string, number>();
     for (const level of Object.values(HELD)) {

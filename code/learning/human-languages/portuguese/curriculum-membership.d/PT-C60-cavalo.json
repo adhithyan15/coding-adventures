@@ -1,0 +1,11 @@
+{
+  "id": "PT-C60-cavalo",
+  "pathSegment": "PT-PATH-60-ANIMAIS1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-60-ANIMAIS1",
+      "order": 2
+    }
+  ]
+}

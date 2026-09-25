@@ -1,0 +1,11 @@
+{
+  "id": "PT-C35-cansaco",
+  "pathSegment": "PT-PATH-35-SAUDE2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-35-SAUDE2",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:44ddcfc1924bb71a",
+  "lessonIds": [
+    "PT-C81-lembrar",
+    "PT-C81-esquecer",
+    "PT-C81-procurar",
+    "PT-C81-perder",
+    "PT-C81-chegar",
+    "PT-R81-first-pass-nature-animals-and-describing-words",
+    "PT-R81-second-pass-time-the-town-clothes-and-more-verbs"
+  ],
+  "tex": "portuguese/book/chapters/ch81-remember-forget-look-for-lose-arrive.tex"
+}
