@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+### Changed — a check item is a real `HostCheckbox`
+
+- A check item is the platform's own checkbox, labelled with the item's name,
+  instead of a toggle `HostButton` beside a "☐"/"☑" text glyph. It has the
+  native checkbox role, keyboard and focus behaviour, and the glyph's font
+  fallback (small and top-aligned on Compose) is gone.
+- `onToggle ( index : number )` is unchanged: UI29-2 §2.1.1 now gives a
+  checkbox in a `For` the row index, the rule `HostButton` already followed.
+- Parts: `checklist-item` / `checklist-item-done` style the checkbox label
+  (the done item is muted). `checklist-box`, `checklist-box-done`,
+  `checklist-item-button` and `checklist-item-button-done` are removed. Label
+  size is the platform's own: Qt's `CheckBox` does not lower `font-size`, and
+  the native gate allows no drop.
+- Rendered in Trestle on Compose, both themes: ticking an item through the
+  checkbox flips exactly that row ("1 of 1 done") and mutes it; unticking
+  restores it.
+
 ### Added — `ChecklistRun` (0.1.0, C2 of #14018)
 
 - **What it shows:** working through one checklist run. A title (heading),

@@ -5753,9 +5753,15 @@ fn emit_compose_tree(
             text_ctx,
             for_payload,
         ),
-        "HostCheckbox" => {
-            emit_host_checkbox(node, depth, component_name, emits, part_styles, text_ctx)
-        }
+        "HostCheckbox" => emit_host_checkbox(
+            node,
+            depth,
+            component_name,
+            emits,
+            part_styles,
+            text_ctx,
+            for_payload,
+        ),
         "HostRadio" => emit_host_radio(node, depth, component_name, emits, part_styles, text_ctx),
         "HostLink" => emit_host_link(
             node,
@@ -8079,6 +8085,7 @@ fn emit_host_checkbox(
     emits: &[EmitDecl],
     part_styles: &PartStyleMap,
     text_ctx: Option<&TextStyleCtx>,
+    for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = "    ".repeat(depth);
     let inner = "    ".repeat(depth + 1);
@@ -8108,21 +8115,16 @@ fn emit_host_checkbox(
                 "if ({cond}) ToggleableState.Indeterminate else if ({checked_expr}) ToggleableState.On else ToggleableState.Off"
             );
             let new_checked_expr = format!("({toggle_state_expr}) != ToggleableState.On");
-            let on_click = if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
-                let case = pascalize(&strip_on_prefix(emit_name));
-                validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
-                let arity = emits
-                    .iter()
-                    .find(|e| e.name == *emit_name)
-                    .map(|e| e.params.len())
-                    .unwrap_or(0);
-                if arity == 0 {
-                    format!("dispatch({component_name}Event.{case})")
-                } else {
-                    format!("dispatch({component_name}Event.{case}({new_checked_expr}))")
-                }
-            } else {
-                "/* no onToggle bound */".to_string()
+            let on_click = match find_emit_ref_prop(node, "onToggle") {
+                Some(emit_name) => checkbox_toggle_dispatch(
+                    emit_name,
+                    emits,
+                    component_name,
+                    for_payload,
+                    &new_checked_expr,
+                )?
+                .0,
+                None => "/* no onToggle bound */".to_string(),
             };
             (
                 "TriStateCheckbox",
@@ -8131,26 +8133,24 @@ fn emit_host_checkbox(
             )
         }
         None => {
-            let on_checked = if let Some(emit_name) = find_emit_ref_prop(node, "onToggle") {
-                let case = pascalize(&strip_on_prefix(emit_name));
-                validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
-                let arity = emits
-                    .iter()
-                    .find(|e| e.name == *emit_name)
-                    .map(|e| e.params.len())
-                    .unwrap_or(0);
-                if arity == 0 {
-                    format!("dispatch({component_name}Event.{case})")
-                } else {
-                    format!("dispatch({component_name}Event.{case}(checked))")
-                }
-            } else {
-                "/* no onToggle bound */".to_string()
+            // `onCheckedChange` hands the lambda the new state; it is named
+            // only when the dispatch sends it, so an index payload does not
+            // leave an unused `checked` behind.
+            let (on_checked, uses_checked) = match find_emit_ref_prop(node, "onToggle") {
+                Some(emit_name) => checkbox_toggle_dispatch(
+                    emit_name,
+                    emits,
+                    component_name,
+                    for_payload,
+                    "checked",
+                )?,
+                None => ("/* no onToggle bound */".to_string(), false),
             };
+            let lambda_param = if uses_checked { "checked" } else { "_" };
             (
                 "Checkbox",
                 format!("checked = {checked_expr},"),
-                format!("onCheckedChange = {{ checked -> {on_checked} }},"),
+                format!("onCheckedChange = {{ {lambda_param} -> {on_checked} }},"),
             )
         }
     };
@@ -8203,6 +8203,48 @@ fn emit_host_checkbox(
         writeln!(out, "{pad})").unwrap();
         Ok(out)
     }
+}
+
+/// The `dispatch(...)` a `HostCheckbox`'s `onToggle` runs (UI29-2 §2.1.1).
+///
+/// The payload follows the target emit's declared parameter, the same rule
+/// `HostButton` uses inside a `For`:
+///
+/// | target emit             | dispatched                         |
+/// |-------------------------|------------------------------------|
+/// | `onX ;`                 | `Event.X`                          |
+/// | `onX ( index : number )`| `Event.X(i)`, the `For`'s row index |
+/// | anything else           | `Event.X(<new checked>)`           |
+///
+/// The index form is what a list of checkboxes needs: the toggle alone cannot
+/// say which row changed. Returns the dispatch and whether it reads
+/// `new_checked`, so the caller can leave the lambda parameter unnamed.
+fn checkbox_toggle_dispatch(
+    emit_name: &str,
+    emits: &[EmitDecl],
+    component_name: &str,
+    for_payload: Option<ForPayloadScope<'_>>,
+    new_checked: &str,
+) -> Result<(String, bool), PipelineEmitError> {
+    let case = pascalize(&strip_on_prefix(emit_name));
+    validate_safe_identifier(&case).map_err(PipelineEmitError::UnsafeEmitName)?;
+    let params = emits
+        .iter()
+        .find(|e| e.name == emit_name)
+        .map(|e| e.params.as_slice())
+        .unwrap_or(&[]);
+    Ok(match params {
+        [] => (format!("dispatch({component_name}Event.{case})"), false),
+        [param] if param.r#type == EmitPayloadType::Number => {
+            // Same as a HostButton with this emit: outside a `For` there is
+            // no row, and the marker keeps the gap visible in the output.
+            let index = for_payload
+                .and_then(|scope| scope.index)
+                .unwrap_or("/* TODO: payload */");
+            (format!("dispatch({component_name}Event.{case}({index}))"), false)
+        }
+        _ => (format!("dispatch({component_name}Event.{case}({new_checked}))"), true),
+    })
 }
 
 fn emit_host_radio(
@@ -11317,6 +11359,78 @@ mod tests {
         assert!(
             out.contains("Text(text = item)"),
             "expected HostButton label to use For item binding, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 §2.1.1: a `HostCheckbox` in a `For` whose `onToggle` targets
+    /// `( index : number )` dispatches the row index, like a `HostButton` —
+    /// never the toggled Boolean, which could not say which row changed.
+    #[test]
+    fn host_checkbox_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "Checklist",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit_decl(
+                "onToggle",
+                vec![param("index", EmitPayloadType::Number)],
+            )],
+        );
+        let l = layout(
+            "Checklist",
+            node(
+                "Column",
+                vec![],
+                vec![node(
+                    "For",
+                    vec![
+                        LayoutProp {
+                            name: "each".into(),
+                            value: LayoutPropValue::SlotRef("items".into()),
+                        },
+                        LayoutProp {
+                            name: "as".into(),
+                            value: LayoutPropValue::Keyword("item".into()),
+                        },
+                        LayoutProp {
+                            name: "index".into(),
+                            value: LayoutPropValue::Keyword("i".into()),
+                        },
+                    ],
+                    vec![node(
+                        "HostCheckbox",
+                        vec![
+                            LayoutProp {
+                                name: "checked".into(),
+                                value: LayoutPropValue::Expr("item".into()),
+                            },
+                            LayoutProp {
+                                name: "label".into(),
+                                value: LayoutPropValue::Keyword("item".into()),
+                            },
+                            LayoutProp {
+                                name: "onToggle".into(),
+                                value: LayoutPropValue::EmitRef("onToggle".into()),
+                            },
+                        ],
+                        vec![],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Checklist"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("checked = _mosaicTruthy(item),"),
+            "expected the row expression to drive the box by truthiness, got:\n{out}"
+        );
+        assert!(
+            out.contains("onCheckedChange = { _ -> dispatch(ChecklistEvent.Toggle(i)) },"),
+            "expected the checkbox to dispatch the row index, got:\n{out}"
         );
     }
 

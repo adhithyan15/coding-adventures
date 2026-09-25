@@ -35,40 +35,17 @@ style ChecklistRun {
     color     : "#212529" ;
     font-size : 14 ;
   }
+  // A check item is a HostCheckbox; these colour its label (the platform's
+  // own size -- Qt's CheckBox does not lower font-size). A ticked item is
+  // muted.
   part checklist-item {
-    gap : 6 ;
+    color     : "#212529" ;
   }
   part checklist-item-done {
-    gap : 6 ;
-  }
-  part checklist-box {
     color     : "#6c757d" ;
-    font-size : 16 ;
-  }
-  part checklist-box-done {
-    color     : "#198754" ;
-    font-size : 16 ;
   }
   part checklist-actions {
     gap : 8 ;
-  }
-  part checklist-item-button {
-    padding       : 6 ;
-    background    : "transparent" ;
-    color         : "#212529" ;
-    border-width  : 1 ;
-    border-color  : "#ffffff" ;
-    border-radius : 4 ;
-    font-size     : 14 ;
-  }
-  part checklist-item-button-done {
-    padding       : 6 ;
-    background    : "transparent" ;
-    color         : "#6c757d" ;
-    border-width  : 1 ;
-    border-color  : "#ffffff" ;
-    border-radius : 4 ;
-    font-size     : 14 ;
   }
   part checklist-yes {
     padding       : 6 ;

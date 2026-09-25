@@ -2751,7 +2751,7 @@ fn emit_widget_tree_inner(
         return emit_host_button(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostCheckbox" {
-        return emit_host_checkbox(node, indent, part_styles, component, emits);
+        return emit_host_checkbox(node, indent, part_styles, component, emits, ctx);
     }
     if node.tag == "HostRadio" {
         return emit_host_radio(node, indent, part_styles, component, emits, ctx);
@@ -5878,25 +5878,43 @@ fn emit_host_checkbox(
     _part_styles: &HashMap<String, String>,
     component: &str,
     emits: &[EmitDecl],
+    ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    let checked_expr: String = if let Some(slot) = find_slot_ref_prop(node, "checked") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel)?;
-        camel
-    } else {
-        "false".to_string()
+    // A slot keeps its bare name (a Bool slot). Inside a `For` the state is
+    // usually a row expression such as `row[4]`, a "1"/"" text marker, so a
+    // loop binding or expression is read by truthiness (UI29-2 §2.1).
+    let checked_expr: String = match find_prop_value(node, "checked") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            validate_slot_or_field_name(&camel)?;
+            camel
+        }
+        Some(LayoutPropValue::Keyword(k)) if k == "true" || k == "false" => k.clone(),
+        Some(LayoutPropValue::Keyword(binding)) => {
+            let camel = to_camel_case_first_lower(binding);
+            validate_slot_or_field_name(&camel)?;
+            format!("_mosaicTruthy({camel})")
+        }
+        Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => {
+            format!("_mosaicTruthy(({}))", expression.trim())
+        }
+        _ => "false".to_string(),
     };
     // The label is a sibling Text widget if bound; the bare Checkbox
-    // doesn't carry an inline label like CheckboxListTile would.
-    let label: Option<String> = if let Some(s) = find_string_prop(node, "label") {
-        Some(format!("Text(\"{}\")", escape_dart_string(s)))
-    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel)?;
-        Some(format!("Text({camel})"))
-    } else {
-        None
+    // doesn't carry an inline label like CheckboxListTile would. It takes
+    // the same forms as a HostButton label, so a row can name itself.
+    let label: Option<String> = match find_prop_value(node, "label") {
+        Some(LayoutPropValue::String(s)) => Some(format!("Text(\"{}\")", escape_dart_string(s))),
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&camel)?;
+            Some(format!("Text({camel})"))
+        }
+        Some(LayoutPropValue::Expr(text)) if !text.trim().is_empty() => {
+            Some(format!("Text({})", text.trim()))
+        }
+        _ => None,
     };
 
     // onToggle dispatch wiring.  Mirrors the HostInput onChange
@@ -5911,7 +5929,7 @@ fn emit_host_checkbox(
         let args = emits
             .iter()
             .find(|emit| emit.name == *emit_name)
-            .map(host_checkbox_event_args)
+            .map(|emit| host_checkbox_event_args(emit, ctx))
             .transpose()?
             .unwrap_or_default();
         format!("dispatch({component}Event{case}({args}))")
@@ -5969,7 +5987,15 @@ pub fn host_checkbox_has_native_semantics(node: &LayoutNode) -> bool {
     matches!(checkbox_indeterminate_expr(node), Ok(Some(_)))
 }
 
-fn host_checkbox_event_args(emit: &EmitDecl) -> Result<String, PipelineEmitError> {
+/// The named arguments a `HostCheckbox`'s `onToggle` event receives
+/// (UI29-2 §2.1.1). An `( index : number )` emit inside a `For` gets the row
+/// index, exactly as a `HostButton` would: the toggle alone cannot say which
+/// row of a list changed. Every other shape reads Flutter's nullable new
+/// value `v`.
+fn host_checkbox_event_args(emit: &EmitDecl, ctx: TableCtx) -> Result<String, PipelineEmitError> {
+    if matches!(emit.params.as_slice(), [param] if param.r#type == EmitPayloadType::Number) {
+        return host_button_event_args(emit, ctx);
+    }
     emit.params
         .iter()
         .map(|param| {
@@ -9068,6 +9094,65 @@ mod tests {
         let out = &r.output;
         assert!(out.contains("onPressed: () => dispatch(XEventClick())"));
         assert!(out.contains("Text(\"Save\")"));
+    }
+
+    /// UI29-2 §2.1.1: in a `For`, an `( index : number )` `onToggle` gets the
+    /// row index (not a 0/1 flag), and a row expression drives the box by
+    /// truthiness.
+    #[test]
+    fn host_checkbox_inside_indexed_for_dispatches_index_payload() {
+        let m = component(
+            "Checklist",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![emit(
+                "onToggle",
+                vec![EmitParam {
+                    name: "index".into(),
+                    r#type: EmitPayloadType::Number,
+                }],
+            )],
+        );
+        let prop = |name: &str, value: LayoutPropValue| LayoutProp {
+            name: name.into(),
+            value,
+        };
+        let l = layout(
+            "Checklist",
+            node_with(
+                "Column",
+                vec![],
+                vec![node_with(
+                    "For",
+                    vec![
+                        prop("each", LayoutPropValue::SlotRef("items".into())),
+                        prop("as", LayoutPropValue::Keyword("item".into())),
+                        prop("index", LayoutPropValue::Keyword("i".into())),
+                    ],
+                    vec![node_with(
+                        "HostCheckbox",
+                        vec![
+                            prop("checked", LayoutPropValue::Expr("item".into())),
+                            prop("label", LayoutPropValue::Expr("item".into())),
+                            prop("onToggle", LayoutPropValue::EmitRef("onToggle".into())),
+                        ],
+                        vec![],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(&m, &l, &empty_style("Checklist"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains(
+                "Row(children: [material.Checkbox(value: _mosaicTruthy((item)), onChanged: (v) { dispatch(ChecklistEventToggle(index: i)); }), Text(item)])"
+            ),
+            "expected an index-dispatching checkbox labelled by the row, got:\n{out}"
+        );
     }
 
     #[test]

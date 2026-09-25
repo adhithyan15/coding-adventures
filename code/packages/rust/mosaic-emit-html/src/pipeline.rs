@@ -2277,6 +2277,19 @@ fn emit_host_checkbox(
         Some(LayoutPropValue::SlotRef(s)) => {
             write!(attrs, " data-checked=\"{{{{{}}}}}\"", camel(s)).unwrap();
         }
+        // Inside a `For`: a loop binding or a row marker such as
+        // `( row[4] )`, substituted per row and read by the runtime's
+        // `truthy` (UI29-2 §2.1). Only a data path can be substituted.
+        Some(LayoutPropValue::Keyword(k)) => {
+            let safe = escape_mustache_braces(&escape_html_attr(k));
+            write!(attrs, " data-checked=\"{{{{{safe}}}}}\"").unwrap();
+        }
+        Some(LayoutPropValue::Expr(expr)) => {
+            if let Some(path) = mustache_path(strip_outer_parens(expr.trim())) {
+                let safe = escape_mustache_braces(&escape_html_attr(&path));
+                write!(attrs, " data-checked=\"{{{{{safe}}}}}\"").unwrap();
+            }
+        }
         _ => {}
     }
 
@@ -2307,6 +2320,9 @@ fn emit_host_checkbox(
     // `onToggle` → `data-on-toggle` marker. The host's template engine
     // (or a hydration pass) can read this and attach a real `onchange`
     // listener that dispatches `{ type: <emit-name>, checked: el.checked }`.
+    // The runtime fills each declared parameter by name, so an
+    // `( index : number )` emit already receives the row's loop index
+    // (UI29-2 §2.1.1).
     if let Some(LayoutPropValue::EmitRef(emit_name)) = find_prop(node, "onToggle") {
         write!(attrs, " data-on-toggle=\"{}\"", escape_html_attr(emit_name)).unwrap();
     }
@@ -2319,6 +2335,19 @@ fn emit_host_checkbox(
     let label_body: Option<String> = match find_prop(node, "label") {
         Some(LayoutPropValue::String(lit)) => Some(escape_html_text(lit)),
         Some(LayoutPropValue::SlotRef(s)) => Some(format!("{{{{{}}}}}", camel(s))),
+        // A loop binding or row expression names the row, as on HostButton.
+        Some(LayoutPropValue::Keyword(k)) => Some(format!(
+            "{{{{{}}}}}",
+            escape_mustache_braces(&escape_html_text(k))
+        )),
+        Some(LayoutPropValue::Expr(expr)) => {
+            let trimmed = strip_outer_parens(expr.trim());
+            let path = mustache_path(trimmed).unwrap_or_else(|| trimmed.to_string());
+            Some(format!(
+                "{{{{{}}}}}",
+                escape_mustache_braces(&escape_html_text(&path))
+            ))
+        }
         _ => None,
     };
 
@@ -7179,6 +7208,35 @@ mod tests {
     /// UI29-2 HTML test 1 — bare HostCheckbox lowers to a minimal
     /// `<input type="checkbox">`. No data-* markers, no `checked`, no
     /// label wrap.
+    /// UI29-2 §2.1: inside a `For`, a row marker drives `checked` through
+    /// the runtime's `truthy`, and a row expression is the label.
+    #[test]
+    fn host_checkbox_row_expressions_become_dotted_paths() {
+        let l = layout(
+            "F",
+            node_with_props(
+                "HostCheckbox",
+                vec![
+                    LayoutProp {
+                        name: "checked".to_string(),
+                        value: LayoutPropValue::Expr("( row [ 4 ] )".to_string()),
+                    },
+                    LayoutProp {
+                        name: "label".to_string(),
+                        value: LayoutPropValue::Expr("( row [ 2 ] )".to_string()),
+                    },
+                ],
+            ),
+        );
+        let out = from_pipeline(&component("F", vec![]), &l, &empty_style("F"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("<label><input type=\"checkbox\" data-checked=\"{{row.4}}\"> {{row.2}}</label>"),
+            "got:\n{out}"
+        );
+    }
+
     #[test]
     fn host_checkbox_empty_lowers_to_bare_input() {
         let out = from_pipeline(

@@ -4,6 +4,9 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.
+  - The index form reuses `HostButton`'s `data-mosaic-index` dispatch. `checked` reads a loop binding or row expression by truthiness; a binding or expression label renders through `HostButton`'s escaped label body.
+
 - Implement WebComponent table numeric typography and scoped editor inheritance;
   retain direct table input/button nodes and nested tables (#15713).
 

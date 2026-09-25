@@ -10,7 +10,7 @@
 //           Text [ checklist-question ]
 //           Yes button (selected when row[4]) · No button (selected when row[5])
 //         Else                         — a check item
-//           ☑ + HostButton (selected) when row[4], else ☐ + HostButton
+//           HostCheckbox, checked (and muted) when row[4]
 //     Row [ checklist-actions ]
 //       If (complete-label) HostButton · If (abandon-label) HostButton
 //
@@ -65,25 +65,22 @@ layout ChecklistRun {
           }
         }
         Else {
+          // The platform's own checkbox. `onToggle ( index : number )`
+          // carries this row's index (UI29-2 §2.1.1). A ticked item is its
+          // own part so it can be muted.
           If ( when: ( row[4] ) ) {
-            Row [ checklist-item-done ] {
-              Text [ checklist-box-done ] ( content : "☑" )
-              HostButton [ checklist-item-button-done ] (
-                label : ( row[2] ) ,
-                selected : true ,
-                onClick : emit: onToggle
-              )
-            }
+            HostCheckbox [ checklist-item-done ] (
+              checked : true ,
+              label : ( row[2] ) ,
+              onToggle : emit: onToggle
+            )
           }
           Else {
-            Row [ checklist-item ] {
-              Text [ checklist-box ] ( content : "☐" )
-              HostButton [ checklist-item-button ] (
-                label : ( row[2] ) ,
-                selected : false ,
-                onClick : emit: onToggle
-              )
-            }
+            HostCheckbox [ checklist-item ] (
+              checked : false ,
+              label : ( row[2] ) ,
+              onToggle : emit: onToggle
+            )
           }
         }
       }

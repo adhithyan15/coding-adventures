@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.
+  - The runtime already fills an `( index : number )` parameter from the loop index by name. New: `checked` and `label` accept a loop binding or row expression as a dotted mustache path, and `data-checked` is read by the runtime's `truthy`.
+
 - A labelled multiline `Input` now has an accessible name (J3b-pre, #14416).
   UI25's legacy `Input` was dispatched to a separate `emit_input` that ignored
   `a11y-label`, `disabled` and `auto-focus`, even though the `HostInput` branch

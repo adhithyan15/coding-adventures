@@ -4021,7 +4021,7 @@ fn emit_view_tree(
         // Style choice (`.checkbox` macOS / `.switch` cross-platform) is
         // left to a userland modifier or a follow-up that adds
         // platform-conditional emission; for v1 the default style ships.
-        "HostCheckbox" => emit_host_checkbox(node, indent)?,
+        "HostCheckbox" => emit_host_checkbox(node, indent, emits, for_payload)?,
         "HostRadio" => emit_host_radio(node, indent)?,
         "HostSlider" => emit_host_slider(node, indent, emits)?,
 
@@ -5655,32 +5655,53 @@ fn layout_has_button_selected(node: &LayoutNode) -> bool {
 /// correctly respects a trailing `.disabled(...)` modifier. See
 /// `checkbox_indeterminate_expr` for how the condition is derived, and
 /// `emit_host_checkbox_mixed` for the swapped-primitive emission.
-fn emit_host_checkbox(node: &LayoutNode, indent: usize) -> Result<String, PipelineEmitError> {
+fn emit_host_checkbox(
+    node: &LayoutNode,
+    indent: usize,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
 
-    // Resolve the `checked:` slot. We need the camelCased name for the
-    // binding getter. Missing slot falls back to a `false` constant so
-    // the file compiles.
-    let checked_expr: String = match find_slot_ref_prop(node, "checked") {
-        Some(slot) => {
+    // Resolve `checked:`. A slot keeps its bare name (a Bool slot). Inside a
+    // `For` the state is usually a row expression such as `row[4]`, a "1"/""
+    // text marker, so a loop binding or expression is read by truthiness
+    // (UI29-2 §2.1). Missing falls back to a `false` constant so the file
+    // compiles.
+    let checked_expr: String = match find_prop_value(node, "checked") {
+        Some(LayoutPropValue::SlotRef(slot)) => {
             let camel = to_camel_case_first_lower(slot);
             validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
             camel
         }
-        None => "false".to_string(),
+        Some(LayoutPropValue::Keyword(k)) if k == "true" || k == "false" => k.clone(),
+        Some(LayoutPropValue::Keyword(binding)) => {
+            let camel = to_camel_case_first_lower(binding);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            format!("_mosaicTruthy({camel})")
+        }
+        Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => format!(
+            "_mosaicTruthy({})",
+            swift_collection_index_expr(expression.trim(), for_payload)
+        ),
+        _ => "false".to_string(),
     };
 
     // Label argument — first positional argument to Toggle. String
-    // literal → `"..."`; slot ref → bare identifier (SwiftUI accepts
-    // any `StringProtocol`); missing → empty string literal.
-    let label_arg: String = if let Some(s) = find_string_prop(node, "label") {
-        format!("\"{}\"", escape_swift_string(s))
-    } else if let Some(slot) = find_slot_ref_prop(node, "label") {
-        let camel = to_camel_case_first_lower(slot);
-        validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
-        camel
-    } else {
-        "\"\"".to_string()
+    // literal → `"..."`; slot ref or loop binding → bare identifier (SwiftUI
+    // accepts any `StringProtocol`); a row expression → the expression with
+    // its loop index rewritten; missing → empty string literal.
+    let label_arg: String = match find_prop_value(node, "label") {
+        Some(LayoutPropValue::String(s)) => format!("\"{}\"", escape_swift_string(s)),
+        Some(LayoutPropValue::SlotRef(name)) | Some(LayoutPropValue::Keyword(name)) => {
+            let camel = to_camel_case_first_lower(name);
+            validate_slot_or_field_name(&camel).map_err(PipelineEmitError::UnsafeSlotName)?;
+            camel
+        }
+        Some(LayoutPropValue::Expr(expression)) if !expression.trim().is_empty() => {
+            swift_collection_index_expr(expression.trim(), for_payload)
+        }
+        _ => "\"\"".to_string(),
     };
 
     let mod_pad = " ".repeat(indent + 4);
@@ -5700,26 +5721,31 @@ fn emit_host_checkbox(node: &LayoutNode, indent: usize) -> Result<String, Pipeli
     };
 
     if let Some(indeterminate_cond) = checkbox_indeterminate_expr(node)? {
+        let new_value_expr = format!("{indeterminate_cond} ? true : !{checked_expr}");
+        let action_body = match find_emit_ref_prop(node, "onToggle") {
+            Some(emit_name) => {
+                checkbox_toggle_dispatch(emit_name, emits, for_payload, &new_value_expr)?
+            }
+            None => "()".to_string(),
+        };
         return emit_host_checkbox_mixed(
-            node,
             indent,
             &checked_expr,
             &label_arg,
             &indeterminate_cond,
+            &action_body,
             disabled_modifier.as_deref(),
         );
     }
 
     // Binding form. With onToggle: a Binding(get:set:) whose setter
-    // dispatches the new value. Without: a .constant() that makes the
-    // toggle read-only but still type-checks.
+    // dispatches. Without: a .constant() that makes the toggle read-only but
+    // still type-checks.
     let binding_expr: String = match find_emit_ref_prop(node, "onToggle") {
         Some(emit_name) => {
-            let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-            validate_emit_name(&case_name)?;
-            format!(
-                "Binding(get: {{ {checked_expr} }}, set: {{ newValue in dispatch(.{case_name}(checked: newValue)) }})"
-            )
+            let dispatch = checkbox_toggle_dispatch(emit_name, emits, for_payload, "newValue")?;
+            let parameter = if dispatch.contains("newValue") { "newValue" } else { "_" };
+            format!("Binding(get: {{ {checked_expr} }}, set: {{ {parameter} in {dispatch} }})")
         }
         None => format!(".constant({checked_expr})"),
     };
@@ -5731,6 +5757,36 @@ fn emit_host_checkbox(node: &LayoutNode, indent: usize) -> Result<String, Pipeli
     }
 
     Ok(out)
+}
+
+/// The `dispatch(...)` a `HostCheckbox`'s `onToggle` runs (UI29-2 §2.1.1).
+///
+/// | target emit              | dispatched                              |
+/// |--------------------------|-----------------------------------------|
+/// | `onX ;`                  | `.x`                                    |
+/// | `onX ( index : number )` | `.x(index: i)`, the `For`'s row index   |
+/// | anything else            | `.x(checked: <new_checked>)`            |
+///
+/// The index form reuses `HostButton`'s payload builder, so a checkbox in a
+/// list names its row exactly as a button there would; the toggle alone
+/// cannot say which row changed.
+fn checkbox_toggle_dispatch(
+    emit_name: &str,
+    emits: &[EmitDecl],
+    for_payload: Option<ForPayloadScope<'_>>,
+    new_checked: &str,
+) -> Result<String, PipelineEmitError> {
+    let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
+    validate_emit_name(&case_name)?;
+    let emit = emits.iter().find(|e| e.name == emit_name);
+    match emit.map(|e| e.params.as_slice()) {
+        Some([]) => Ok(format!("dispatch(.{case_name})")),
+        Some([param]) if param.r#type == EmitPayloadType::Number => {
+            let args = host_button_event_args(emit.expect("matched above"), for_payload)?;
+            Ok(format!("dispatch(.{case_name}({args}))"))
+        }
+        Some(_) | None => Ok(format!("dispatch(.{case_name}(checked: {new_checked}))")),
+    }
 }
 
 /// Whether `indeterminate:` is authored in a form the emitter can act
@@ -5783,27 +5839,17 @@ fn checkbox_indeterminate_expr(node: &LayoutNode) -> Result<Option<String>, Pipe
 /// `Toggle` path's `.constant()` fallback — the control renders but
 /// taps have no effect).
 fn emit_host_checkbox_mixed(
-    node: &LayoutNode,
     indent: usize,
     checked_expr: &str,
     label_arg: &str,
     indeterminate_cond: &str,
+    action_body: &str,
     disabled_modifier: Option<&str>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
     let inner_pad = " ".repeat(indent + 4);
     let content_pad = " ".repeat(indent + 8);
     let mod_pad = " ".repeat(indent + 4);
-
-    let new_value_expr = format!("{indeterminate_cond} ? true : !{checked_expr}");
-    let action_body: String = match find_emit_ref_prop(node, "onToggle") {
-        Some(emit_name) => {
-            let case_name = to_camel_case_first_lower(&strip_on_prefix(emit_name));
-            validate_emit_name(&case_name)?;
-            format!("dispatch(.{case_name}(checked: {new_value_expr}))")
-        }
-        None => "()".to_string(),
-    };
 
     let mut out = String::new();
     writeln!(out, "{pad}Button(action: {{ {action_body} }}) {{").unwrap();
@@ -9765,6 +9811,60 @@ mod tests {
             // An empty name falls back to the visible label (#15427).
             out.contains(".accessibilityLabel(_mosaicA11yName(item, fallback: item))"),
             "expected HostButton accessible name to use the For expression, got:\n{out}"
+        );
+    }
+
+    /// UI29-2 §2.1.1: in a `For`, an `( index : number )` `onToggle` gets the
+    /// row index, and a row expression drives the Toggle by truthiness.
+    #[test]
+    fn host_checkbox_inside_indexed_for_dispatches_index_payload() {
+        let layout = layout_with(
+            "Checklist",
+            container_node(
+                "Column",
+                vec![node_with_props(
+                    "For",
+                    vec![
+                        prop_slot_ref("each", "rows"),
+                        prop_keyword("as", "row"),
+                        prop_keyword("index", "i"),
+                    ],
+                    vec![leaf(
+                        "HostCheckbox",
+                        vec![
+                            prop_expr("checked", "row[4]"),
+                            prop_expr("label", "row[2]"),
+                            prop_emit_ref("onToggle", "onToggle"),
+                        ],
+                    )],
+                )],
+            ),
+        );
+        let out = from_pipeline(
+            &component(
+                "Checklist",
+                vec![slot(
+                    "rows",
+                    SlotType::List(Box::new(ListInnerType::List(Box::new(
+                        ListInnerType::Text,
+                    )))),
+                    true,
+                )],
+                vec![emit(
+                    "onToggle",
+                    vec![param("index", EmitPayloadType::Number)],
+                )],
+            ),
+            &layout,
+            &empty_style("Checklist"),
+        )
+        .unwrap()
+        .output;
+        assert!(
+            out.contains(
+                "Toggle(row[2], isOn: Binding(get: { _mosaicTruthy(row[4]) }, set: { _ in dispatch(.toggle(index: i)) }))"
+            ),
+            "expected an index-dispatching Toggle labelled by the row, got:\n{out}"
         );
     }
 
