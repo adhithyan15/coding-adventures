@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C89-worry",
+    "language": "tamil",
+    "chapter": 89,
+    "sequence": 3710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1e7999c6d9e9254"
+  },
+  "findings": []
+}

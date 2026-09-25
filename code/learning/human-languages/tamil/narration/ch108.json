@@ -1,0 +1,859 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 108,
+  "title": "Greetings People Actually Say",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:d2144aa40e71a4a7",
+  "lessons": [
+    {
+      "id": "TA-C108-eaten",
+      "sequence": 4600,
+      "title": "சாப்பிட்டீர்களா? (cāppiṭṭīrkaḷā?) — have you eaten?",
+      "headword": "சாப்பிட்டீர்களா?",
+      "romanization": "cāppiṭṭīrkaḷā?",
+      "gloss": "have you eaten?",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:563ea44e4304eeaf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a good journey, then the Tamil for come again."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சாப்பிட்டீர்களா?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சாப்பிட்டீர்களா? (cāppiṭṭīrkaḷā?) — \"have you eaten?\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Around a mealtime it is a greeting and a kindness, built on சாப்பிடு, \"eat\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A greeting about food."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāppiṭṭīrkaḷā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāppiṭṭīrkaḷā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāppiṭṭīrkaḷā?, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāppiṭṭīrkaḷā?*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask cāppiṭṭīrkaḷā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask *cāppiṭṭīrkaḷā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a good journey, then the Tamil for come again, then say cāppiṭṭīrkaḷā? again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a good journey, then the Tamil for come again, then say *cāppiṭṭīrkaḷā?* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சாப்பிட்டீர்களா? (cāppiṭṭīrkaḷā?) mean? (\"Have you eaten?\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C108-longtime",
+      "sequence": 4610,
+      "title": "ரொம்ப நாளாச்சு (rompa nāḷāccu) — it's been a long time",
+      "headword": "ரொம்ப நாளாச்சு",
+      "romanization": "rompa nāḷāccu",
+      "gloss": "it's been a long time",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9aba787b57d683ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for come again, then the Tamil for have you eaten."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ரொம்ப நாளாச்சு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ரொம்ப நாளாச்சு (rompa nāḷāccu) — \"it's been a long time\", in everyday speech."
+            },
+            {
+              "kind": "speech",
+              "text": "ரொம்ப is spoken \"very\"; நாள் is \"day\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A greeting for someone you have not seen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rompa nāḷāccu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rompa nāḷāccu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rompa nāḷāccu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rompa nāḷāccu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say rompa nāḷāccu!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *rompa nāḷāccu!*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for come again, then the Tamil for have you eaten, then say rompa nāḷāccu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for come again, then the Tamil for have you eaten, then say *rompa nāḷāccu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ரொம்ப நாளாச்சு (rompa nāḷāccu) mean? (\"It's been a long time\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C108-whatsnew",
+      "sequence": 4620,
+      "title": "என்ன விசேஷம்? (eṉṉa vicēṣam?) — what's new?",
+      "headword": "என்ன விசேஷம்?",
+      "romanization": "eṉṉa vicēṣam?",
+      "gloss": "what's new?",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:586ceb23c5c177f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for have you eaten, then the Tamil for it's been a long time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: என்ன விசேஷம்?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "என்ன விசேஷம்? (eṉṉa vicēṣam?) — \"what's new?\", literally \"what's special?\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A friendly opener."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉṉa vicēṣam?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉṉa vicēṣam?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṉṉa vicēṣam?, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṉṉa vicēṣam?*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask eṉṉa vicēṣam?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask *eṉṉa vicēṣam?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for have you eaten, then the Tamil for it's been a long time, then say eṉṉa vicēṣam? again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for have you eaten, then the Tamil for it's been a long time, then say *eṉṉa vicēṣam?* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does என்ன விசேஷம்? (eṉṉa vicēṣam?) mean? (\"What's new?\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C108-areyouwell",
+      "sequence": 4630,
+      "title": "நல்லா இருக்கீங்களா? (nallā irukkīṅkaḷā?) — are you well? (spoken)",
+      "headword": "நல்லா இருக்கீங்களா?",
+      "romanization": "nallā irukkīṅkaḷā?",
+      "gloss": "are you well? (spoken)",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2e4ed33a05dc873",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for it's been a long time, then the Tamil for what's new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நல்லா இருக்கீங்களா?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நல்லா இருக்கீங்களா? (nallā irukkīṅkaḷā?) — \"are you well?\", as people say it."
+            },
+            {
+              "kind": "speech",
+              "text": "நல்லா is spoken நன்றாக, \"well\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The spoken shape of a question you know."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nallā irukkīṅkaḷā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nallā irukkīṅkaḷā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nallā irukkīṅkaḷā?, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nallā irukkīṅkaḷā?*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask nallā irukkīṅkaḷā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask *nallā irukkīṅkaḷā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for it's been a long time, then the Tamil for what's new, then say nallā irukkīṅkaḷā? again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for it's been a long time, then the Tamil for what's new, then say *nallā irukkīṅkaḷā?* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நல்லா இருக்கீங்களா? (nallā irukkīṅkaḷā?) mean? (\"Are you well? (spoken)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C108-howareyou",
+      "sequence": 4640,
+      "title": "எப்படி இருக்கீங்க? (eppaṭi irukkīṅka?) — how are you? (spoken)",
+      "headword": "எப்படி இருக்கீங்க?",
+      "romanization": "eppaṭi irukkīṅka?",
+      "gloss": "how are you? (spoken)",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68cfb8b1c22468b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for what's new, then the Tamil for are you well."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: எப்படி இருக்கீங்க?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எப்படி இருக்கீங்க? (eppaṭi irukkīṅka?) — \"how are you?\", the everyday spoken form."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the written எப்படி இருக்கிறீர்கள்? worn short in speech."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five greetings people actually use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eppaṭi irukkīṅka?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eppaṭi irukkīṅka?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eppaṭi irukkīṅka?, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eppaṭi irukkīṅka?*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask eppaṭi irukkīṅka?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask *eppaṭi irukkīṅka?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for what's new, then the Tamil for are you well, then say eppaṭi irukkīṅka? again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for what's new, then the Tamil for are you well, then say *eppaṭi irukkīṅka?* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does எப்படி இருக்கீங்க? (eppaṭi irukkīṅka?) mean? (\"How are you? (spoken)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R108-second-pass-leave-greet",
+      "sequence": 4650,
+      "title": "Hello and goodbye, the everyday way — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over leaving and greeting",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22196e09358a1681",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You meet an old friend around lunchtime. Say two things."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: written and spoken",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "spoken",
+                "written"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "spoken: நல்லா. written: நன்றாக.",
+                "spoken: இருக்கீங்க. written: இருக்கிறீர்கள்."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Spoken Tamil wears the written forms short. Both are right; they are for different places."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask a friend how they are, the spoken way; then what's new",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask a friend how they are, the spoken way; then what's new]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at the door: shall we leave? see you later",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at the door: shall we leave? see you later]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wish a traveller a good journey; ask them to come again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: wish a traveller a good journey; ask them to come again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "take your leave formally",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: take your leave formally]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "I take my leave? (விடைபெறுகிறேன்.) Shall we leave? (கிளம்பலாமா?) See you later? (அப்புறம் பார்க்கலாம்.) A good journey? (இனிய பயணம்.) Come again? (மீண்டும் வாருங்கள்.) Have you eaten? (சாப்பிட்டீர்களா? (cāppiṭṭīrkaḷā?)) Long time? (ரொம்ப நாளாச்சு (rompa nāḷāccu).) What's new? (என்ன விசேஷம்? (eṉṉa vicēṣam?)) Are you well? (நல்லா இருக்கீங்களா? (nallā irukkīṅkaḷā?)) How are you? (எப்படி இருக்கீங்க? (eppaṭi irukkīṅka?))"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R108-second-pass-care",
+      "sequence": 4660,
+      "title": "Leaving well — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over taking care and the last greetings",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b12951712bca2260",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "It has got late. Say so, and suggest you all go."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tell your host to take care; they tell you to go safely",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tell your host to take care; they tell you to go safely]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tomorrow is a holiday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say tomorrow is a holiday]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "next week, greet the same host: are you well? how are you?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: next week, greet the same host: are you well? how are you?]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Take care? (பார்த்துக்கொள்ளுங்கள்.) Safely? (பத்திரமாக.) It's late? (நேரமாகிவிட்டது.) Let's go? (போகலாம்.) A holiday? (விடுமுறை.) Are you well? (நல்லா இருக்கீங்களா? (nallā irukkīṅkaḷā?)) How are you? (எப்படி இருக்கீங்க? (eppaṭi irukkīṅka?))"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

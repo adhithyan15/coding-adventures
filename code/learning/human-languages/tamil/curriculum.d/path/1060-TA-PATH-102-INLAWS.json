@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-102-INLAWS",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "TA-EXT-102-INLAWS"
+  ],
+  "after": []
+}

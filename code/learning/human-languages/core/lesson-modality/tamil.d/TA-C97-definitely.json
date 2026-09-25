@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C97-definitely",
+    "language": "tamil",
+    "chapter": 97,
+    "sequence": 4080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:720ac1371a096e80"
+  },
+  "findings": []
+}

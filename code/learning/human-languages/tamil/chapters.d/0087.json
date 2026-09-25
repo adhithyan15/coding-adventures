@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Not Feeling Well",
+  "label": "ch:ta-not-feeling-well",
+  "canDo": "I can say I am tired or weary, have a cold or a cough, and tell someone to rest.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "TA-C87-rest",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can say I am tired or weary, have a cold or a cough, and tell someone to rest.",
+    "assesses": [
+      "TA-LEX-C87-UNWELL-03",
+      "TA-LEX-C87-UNWELL-04",
+      "TA-LEX-C87-UNWELL-05"
+    ]
+  }
+}

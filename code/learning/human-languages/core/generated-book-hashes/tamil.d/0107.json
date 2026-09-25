@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:448216f5530cab7e",
+  "lessonIds": [
+    "TA-C107-takeleave",
+    "TA-C107-shallwego",
+    "TA-C107-seeyoulater",
+    "TA-C107-goodjourney",
+    "TA-C107-comeagain"
+  ],
+  "tex": "tamil/book/chapters/ch107-see-you-later.tex"
+}

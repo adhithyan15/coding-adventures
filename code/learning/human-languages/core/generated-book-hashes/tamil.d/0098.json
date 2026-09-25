@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:852326ee02bbbdd2",
+  "lessonIds": [
+    "TA-C98-congrats",
+    "TA-C98-invitation",
+    "TA-C98-gift",
+    "TA-C98-comein",
+    "TA-C98-eat"
+  ],
+  "tex": "tamil/book/chapters/ch98-come-eat-drink.tex"
+}

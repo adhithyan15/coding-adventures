@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:d87e9fe2996f14ba",
+  "lessonIds": [
+    "TA-C98-congrats",
+    "TA-C98-invitation",
+    "TA-C98-gift",
+    "TA-C98-comein",
+    "TA-C98-eat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch98.txt",
+  "json": "tamil/narration/ch98.json",
+  "textHash": "fnv1a64:cbefea826d61f81e",
+  "jsonHash": "fnv1a64:7d417ce217427a16",
+  "findings": []
+}

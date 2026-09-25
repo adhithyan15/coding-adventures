@@ -1,0 +1,11 @@
+{
+  "id": "TA-C88-sweat",
+  "pathSegment": "TA-PATH-88-DOCTOR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-88-DOCTOR",
+      "order": 4
+    }
+  ]
+}

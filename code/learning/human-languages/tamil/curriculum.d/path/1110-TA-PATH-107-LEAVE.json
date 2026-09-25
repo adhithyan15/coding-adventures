@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-107-LEAVE",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "TA-EXT-107-LEAVE"
+  ],
+  "after": []
+}

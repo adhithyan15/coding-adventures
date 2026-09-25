@@ -1,0 +1,11 @@
+{
+  "id": "TA-C93-howsay",
+  "pathSegment": "TA-PATH-93-ASK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-93-ASK",
+      "order": 2
+    }
+  ]
+}

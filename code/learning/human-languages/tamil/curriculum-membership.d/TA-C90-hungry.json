@@ -1,0 +1,11 @@
+{
+  "id": "TA-C90-hungry",
+  "pathSegment": "TA-PATH-90-MOOD",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-90-MOOD",
+      "order": 4
+    }
+  ]
+}

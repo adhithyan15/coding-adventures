@@ -1,0 +1,11 @@
+{
+  "id": "TA-C105-college",
+  "pathSegment": "TA-PATH-105-WORK",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-105-WORK",
+      "order": 2
+    }
+  ]
+}

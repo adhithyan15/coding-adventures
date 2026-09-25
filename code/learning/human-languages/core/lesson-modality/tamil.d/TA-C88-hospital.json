@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C88-hospital",
+    "language": "tamil",
+    "chapter": 88,
+    "sequence": 3650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91a2e39af974e2c9"
+  },
+  "findings": []
+}

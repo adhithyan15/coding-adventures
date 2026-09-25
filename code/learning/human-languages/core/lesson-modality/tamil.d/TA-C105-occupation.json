@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C105-occupation",
+    "language": "tamil",
+    "chapter": 105,
+    "sequence": 4470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58317e87da683ac9"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-94-LOST",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I do not understand, ask someone to write it down, ask for one more time, and ask what they said.",
+  "prerequisites": []
+}

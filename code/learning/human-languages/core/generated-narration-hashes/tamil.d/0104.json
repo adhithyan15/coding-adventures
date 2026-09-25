@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:332846492fdb09b2",
+  "lessonIds": [
+    "TA-C104-language",
+    "TA-C104-english",
+    "TA-C104-wedding",
+    "TA-C104-address",
+    "TA-C104-birthday"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch104.txt",
+  "json": "tamil/narration/ch104.json",
+  "textHash": "fnv1a64:8cddca0f9daefd9f",
+  "jsonHash": "fnv1a64:580e881056a34114",
+  "findings": []
+}

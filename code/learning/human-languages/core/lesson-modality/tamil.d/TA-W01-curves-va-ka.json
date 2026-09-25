@@ -18,9 +18,10 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:2c2e171ca2be012a",
+    "sourceHash": "fnv1a64:9b62a0e543aed0b9",
     "detachableSegments": [
-      "Script you'll notice: The script is the shape of its writing surface"
+      "Script you'll notice: The script is the shape of its writing surface",
+      "Script you'll notice: The vowel you get for free"
     ],
     "delivery": "script"
   },

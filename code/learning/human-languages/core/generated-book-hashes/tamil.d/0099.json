@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:1b41f56e3943af09",
+  "lessonIds": [
+    "TA-C99-drink",
+    "TA-C99-present",
+    "TA-C99-welcomeformal",
+    "TA-C99-forgive",
+    "TA-C99-dontworry"
+  ],
+  "tex": "tamil/book/chapters/ch99-gifts-welcomes.tex"
+}

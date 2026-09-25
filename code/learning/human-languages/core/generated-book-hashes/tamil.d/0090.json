@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:0daefb918361dff0",
+  "lessonIds": [
+    "TA-C90-laughter",
+    "TA-C90-crying",
+    "TA-C90-tears",
+    "TA-C90-alone",
+    "TA-C90-hungry"
+  ],
+  "tex": "tamil/book/chapters/ch90-laughter-and-tears.tex"
+}

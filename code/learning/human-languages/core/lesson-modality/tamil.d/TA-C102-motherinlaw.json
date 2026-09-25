@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C102-motherinlaw",
+    "language": "tamil",
+    "chapter": 102,
+    "sequence": 4330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1766ae6bf350b721"
+  },
+  "findings": []
+}

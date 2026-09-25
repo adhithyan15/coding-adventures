@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-108-GREET",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can greet someone the way Tamil speakers do day to day: have you eaten, long time, what's new, are you well, how are you.",
+  "prerequisites": []
+}

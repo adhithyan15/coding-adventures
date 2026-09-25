@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "Come, Eat, Drink",
+  "label": "ch:ta-come-eat-drink",
+  "canDo": "I can welcome a guest, offer food and drink, congratulate, and talk about gifts and invitations.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "TA-C98-eat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 98: i can welcome a guest, offer food and drink, congratulate, and talk about gifts and invitations.",
+    "assesses": [
+      "TA-LEX-C98-WELCOME-03",
+      "TA-LEX-C98-WELCOME-04",
+      "TA-LEX-C98-WELCOME-05"
+    ]
+  }
+}

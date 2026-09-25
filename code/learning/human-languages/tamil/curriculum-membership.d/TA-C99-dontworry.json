@@ -1,0 +1,11 @@
+{
+  "id": "TA-C99-dontworry",
+  "pathSegment": "TA-PATH-99-HOST",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-99-HOST",
+      "order": 4
+    }
+  ]
+}

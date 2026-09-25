@@ -107,8 +107,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // track having attained nothing — so the 23 stands and the zero does not.
     // 1 -> 2: Telugu closed its last pre-A1 criterion (vocabulary, 300 headwords)
     // with chapters 92-99, the second track to attain any level. 2 -> 3: Hindi
-    // closed the same criterion with chapters 106-127.
-    expect(gate.summary.tracksWithAnyLevel).toBe(3);
+    // closed the same criterion with chapters 106-127. 3 -> 4: Tamil, with chapters
+    // 87-108 and the split of its one over-budget script lesson.
+    expect(gate.summary.tracksWithAnyLevel).toBe(4);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
     // C2. The tracks that hold a rung are pinned by name, and the per-level counts
@@ -118,6 +119,7 @@ describe("the gate that would have caught the A2 claim", () => {
       spanish: "A1",
       telugu: "pre-A1",
       hindi: "pre-A1",
+      tamil: "pre-A1",
     };
     const expectedByLevel = new Map<string, number>();
     for (const level of Object.values(HELD)) {

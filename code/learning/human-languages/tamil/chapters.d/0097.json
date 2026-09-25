@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "Definitely, and Why Not",
+  "label": "ch:ta-definitely",
+  "canDo": "I can say definitely, that's how it is, and why not.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "TA-C97-whynot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can say definitely, that's how it is, and why not.",
+    "assesses": [
+      "TA-LEX-C97-SURE-01",
+      "TA-LEX-C97-SURE-02",
+      "TA-LEX-C97-SURE-03"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-98-WELCOME",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "TA-EXT-98-WELCOME"
+  ],
+  "after": []
+}

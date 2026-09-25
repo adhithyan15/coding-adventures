@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Children, Husbands, Wives",
+  "label": "ch:ta-children-husbands-wives",
+  "canDo": "I can talk about children, a boy, a husband or wife, and a relative.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "TA-C100-relative",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can talk about children, a boy, a husband or wife, and a relative.",
+    "assesses": [
+      "TA-LEX-C100-FAMILY-03",
+      "TA-LEX-C100-FAMILY-04",
+      "TA-LEX-C100-FAMILY-05"
+    ]
+  }
+}

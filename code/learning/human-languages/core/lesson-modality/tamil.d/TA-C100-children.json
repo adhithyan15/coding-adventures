@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C100-children",
+    "language": "tamil",
+    "chapter": 100,
+    "sequence": 4210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54b404cd9dbb50df"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:29b7cbe9df419581",
+  "lessonIds": [
+    "TA-C95-exactly",
+    "TA-C95-really",
+    "TA-C95-nothing",
+    "TA-C95-notyet",
+    "TA-C95-same"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch95.txt",
+  "json": "tamil/narration/ch95.json",
+  "textHash": "fnv1a64:3aa1628c49214a5c",
+  "jsonHash": "fnv1a64:68f96e5ad389aa74",
+  "findings": []
+}

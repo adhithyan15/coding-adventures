@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:01c5d281b298fb8a",
+  "lessonIds": [
+    "TA-C104-language",
+    "TA-C104-english",
+    "TA-C104-wedding",
+    "TA-C104-address",
+    "TA-C104-birthday"
+  ],
+  "tex": "tamil/book/chapters/ch104-language-wedding-birthday.tex"
+}

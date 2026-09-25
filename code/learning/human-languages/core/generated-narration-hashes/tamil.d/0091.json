@@ -1,0 +1,18 @@
+{
+  "language": "tamil",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:4dbbc5c7cfa76b94",
+  "lessonIds": [
+    "TA-C91-sunshine",
+    "TA-C91-heat",
+    "TA-C91-sleepy",
+    "TA-C91-well"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "tamil/narration/ch91.txt",
+  "json": "tamil/narration/ch91.json",
+  "textHash": "fnv1a64:e452971e70c1c7ab",
+  "jsonHash": "fnv1a64:35bd9cc84682acca",
+  "findings": []
+}

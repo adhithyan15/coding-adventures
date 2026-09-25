@@ -1,0 +1,11 @@
+{
+  "id": "TA-C107-goodjourney",
+  "pathSegment": "TA-PATH-107-LEAVE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-107-LEAVE",
+      "order": 3
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:71f494dbecd5fd6d",
+  "sourceHash": "fnv1a64:3ac229609a6f9b4c",
   "lessons": [
     {
       "id": "TA-C05-pesu",
@@ -260,7 +260,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e5aa86b1748302a8",
+      "sourceHash": "fnv1a64:a156b103adc5c12a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -300,15 +300,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Tamil is an abugida, like Devanagari: a consonant already contains a vowel."
-            },
-            {
-              "kind": "speech",
-              "text": "க is not \"k\". க is \"ka\"."
-            },
-            {
-              "kind": "speech",
-              "text": "Every consonant carries a built-in a until a later mark removes or replaces it."
+              "text": "The last lesson showed that Tamil is an abugida: a consonant already carries a built-in a. Here are the first two consonants that carry it."
             }
           ]
         },

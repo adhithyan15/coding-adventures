@@ -1,0 +1,11 @@
+{
+  "id": "TA-C108-howareyou",
+  "pathSegment": "TA-PATH-108-GREET",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-108-GREET",
+      "order": 4
+    }
+  ]
+}

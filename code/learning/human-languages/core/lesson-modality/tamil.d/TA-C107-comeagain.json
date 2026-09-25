@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C107-comeagain",
+    "language": "tamil",
+    "chapter": 107,
+    "sequence": 4590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72f42bb5e51b900f"
+  },
+  "findings": []
+}

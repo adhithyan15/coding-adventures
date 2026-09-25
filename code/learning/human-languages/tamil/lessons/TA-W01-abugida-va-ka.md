@@ -15,9 +15,9 @@ roots: [tamil-abugida]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [TA-SCRIPT-CURVES-VA-KA-01]
+  knowledge: [TA-SCRIPT-CURVES-VA-KA-01, TA-SCRIPT-ABUGIDA-VA-KA-01]
 introduces:
-  knowledge: [TA-SCRIPT-ABUGIDA-VA-KA-01, TA-SCRIPT-ABUGIDA-VA-KA-02, TA-SCRIPT-ABUGIDA-VA-KA-03, TA-SOUND-ABUGIDA-VA-KA-04]
+  knowledge: [TA-SCRIPT-ABUGIDA-VA-KA-02, TA-SCRIPT-ABUGIDA-VA-KA-03, TA-SOUND-ABUGIDA-VA-KA-04]
 practises:
   knowledge: [TA-SCRIPT-CURVES-VA-KA-01, TA-SCRIPT-ABUGIDA-VA-KA-01, TA-SCRIPT-ABUGIDA-VA-KA-02, TA-SCRIPT-ABUGIDA-VA-KA-03, TA-SOUND-ABUGIDA-VA-KA-04]
 skills: [reading, writing]
@@ -37,14 +37,10 @@ reviews_of: [TA-W01-curves-va-ka, TA-C01-vanakkam]
 sound that arrives for free inside every consonant.
 
 ## Script you'll notice: The vowel you get for free
-<!-- hl-knowledge: introduces=[TA-SCRIPT-ABUGIDA-VA-KA-01]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-ABUGIDA-VA-KA-01] -->
 
-Tamil is an **abugida**, like Devanagari: a consonant already contains a vowel.
-
-> **க is not "k". க is "ka".**
-
-Every consonant carries a built-in **a** until a later mark removes or replaces
-it.
+The last lesson showed that Tamil is an **abugida**: a consonant already carries
+a built-in **a**. Here are the first two consonants that carry it.
 
 ## Script you'll notice: வ — "va"
 <!-- hl-knowledge: introduces=[TA-SCRIPT-ABUGIDA-VA-KA-02]; assesses=[] -->

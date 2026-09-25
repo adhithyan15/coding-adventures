@@ -1,0 +1,9 @@
+{
+  "id": "TA-PATH-91-WEATHER",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "TA-EXT-91-WEATHER"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C91-sleepy",
+    "language": "tamil",
+    "chapter": 91,
+    "sequence": 3820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e08cb2fc2f51f902"
+  },
+  "findings": []
+}

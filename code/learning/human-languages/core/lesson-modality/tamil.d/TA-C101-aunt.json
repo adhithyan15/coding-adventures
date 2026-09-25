@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C101-aunt",
+    "language": "tamil",
+    "chapter": 101,
+    "sequence": 4290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b03d51a3bb3c7dca"
+  },
+  "findings": []
+}
