@@ -9,16 +9,16 @@ headword: ദയവായി
 gloss: please (dayavāyi — "as a compassion," from ദയ daya "compassion")
 romanization: "dayavāyi"
 concept_tag: COURTESY-PLEASE
-prerequisites: [ML-C01-athe]
+prerequisites: [ML-C01-athe, ML-C04-poyi-varaam]
 sounds: [malayalam-vowel-sign-aa, malayalam-vowel-sign-i, malayalam-va]
 roots: [daya-compassion]
 etymology_hook: "ദയവായി = 'as a compassion' — Malayalam asks please with daya, like Tamil, Kannada, Telugu, Arabic faḍl and Hindi kṛpā"
 duration:
   max_seconds: 283
 requires:
-  knowledge: []
+  knowledge: [ML-CONCEPT-C08-DAYAVAYI-04]
 introduces:
-  knowledge: [ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03, ML-CONCEPT-C08-DAYAVAYI-04]
+  knowledge: [ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03]
 practises:
   knowledge: [ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03, ML-CONCEPT-C08-DAYAVAYI-04]
 skills: [listening, speaking, reading]
@@ -76,12 +76,11 @@ form of the verb — endings like **‑ൂ** (*-ū*) or **‑ണം** (*-aṇa�
 front when you want the courtesy spoken aloud.
 
 ## The word, taken apart
-<!-- hl-knowledge: introduces=[ML-CONCEPT-C08-DAYAVAYI-04]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C08-DAYAVAYI-04] -->
 
 The heart of the word is **വാ** — *va* stretched by the **long‑ā** sign **ാ**
-(*-ā*) — then **യി**, *ya* + the *i* sign (**ി**). Malayalam's rounded letters
-hang their vowel-signs to the right; the long **ാ** is simply a tall stroke after
-the consonant, the same *ā* you would meet across the Dravidian scripts.
+(*-ā*) — then **യി**, *ya* + the *i* sign (**ി**). You met both signs in **പോയി
+വരാം**: the same tall stroke, the same *yi*.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C08-DAYAVAYI-01, ML-CONCEPT-C08-DAYAVAYI-02, ML-CONCEPT-C08-DAYAVAYI-03, ML-CONCEPT-C08-DAYAVAYI-04] -->
