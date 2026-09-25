@@ -39,17 +39,11 @@
               </div>
             <!-- mosaic-else -->
               <!-- mosaic-if when="( row [ 4 ] )" -->
-                <div style="display: flex; flex-direction: row; gap: 6px">
-                  <span style="color: #198754; font-size: 16px">☑</span>
-                  <!-- emit "onToggle" dropped: HTML is static -->
-                  <button data-on-click="onToggle" aria-pressed="true" style="padding: 6px; background: transparent; color: #6c757d; border-width: 1px; border-color: #ffffff; border-radius: 4px; font-size: 14px">{{row.2}}</button>
-                </div>
+                <!-- emit "onToggle" dropped: HTML is static -->
+                <label><input type="checkbox" checked data-on-toggle="onToggle" style="color: #6c757d"> {{row.2}}</label>
               <!-- mosaic-else -->
-                <div style="display: flex; flex-direction: row; gap: 6px">
-                  <span style="color: #6c757d; font-size: 16px">☐</span>
-                  <!-- emit "onToggle" dropped: HTML is static -->
-                  <button data-on-click="onToggle" aria-pressed="false" style="padding: 6px; background: transparent; color: #212529; border-width: 1px; border-color: #ffffff; border-radius: 4px; font-size: 14px">{{row.2}}</button>
-                </div>
+                <!-- emit "onToggle" dropped: HTML is static -->
+                <label><input type="checkbox" data-on-toggle="onToggle" style="color: #212529"> {{row.2}}</label>
               <!-- /mosaic-if -->
             <!-- /mosaic-if -->
           </div>
