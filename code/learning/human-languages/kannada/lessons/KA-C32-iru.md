@@ -9,7 +9,7 @@ headword: ಇರು
 gloss: to be, to exist, to stay — and the three-piece machine every Kannada verb is built on
 romanization: iru
 concept_tag: VERB-BE
-prerequisites: [KA-C31-shubha-madhyahna]
+prerequisites: [KA-C31-shubha-madhyahna, KA-C31-krushi]
 sounds: [independent-i, kannada-geminate-dda]
 roots: [dravidian-iru-be]
 etymology_hook: "ಇರು is native Dravidian *iru- 'be, remain, stay', kept unchanged by Tamil as இரு while Telugu went its own way with ఉండు; ಇರುತ್ತೇನೆ is literally be + present + I, three pieces glued in that order, and the last piece already means 'I'"
@@ -17,11 +17,11 @@ reviews_of: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [KA-LEX-ANCHOR-KRUSHI]
 introduces:
   knowledge: [KA-LEX-C32-IRU-01, KA-GRAMMAR-C32-IRU-02]
 practises:
-  knowledge: [KA-LEX-C32-IRU-01, KA-GRAMMAR-C32-IRU-02]
+  knowledge: [KA-LEX-C32-IRU-01, KA-GRAMMAR-C32-IRU-02, KA-LEX-ANCHOR-KRUSHI]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ variety: standard-colloquial
 # ಇರು (iru) — "to be," and the machine inside every Kannada verb
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-ANCHOR-KRUSHI] -->
 
 [PAUSE 2s] Thirty-one chapters of words. Now the engine room. Kannada builds a
 verb the way you thread beads on a string, and this first verb carries the

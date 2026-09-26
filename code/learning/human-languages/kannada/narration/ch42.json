@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:65379b85dc029c09",
+  "sourceHash": "fnv1a64:68ace5fa8c6f7260",
   "lessons": [
     {
       "id": "KA-C42-big",
@@ -703,6 +703,111 @@
       ]
     },
     {
+      "id": "KA-C42-jnaana",
+      "sequence": 1014,
+      "title": "ಜ್ಞಾನ (jñāna) — knowledge",
+      "headword": "ಜ್ಞಾನ",
+      "romanization": "jñāna",
+      "gloss": "knowledge",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a15793064b7ac1af",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಜ್ಞಾನ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜ್ಞಾನ — jñāna — \"knowledge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: jñāna. Look at its shape as you say it: the next lesson takes one piece of it, ಞ (ña), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jñāna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jñāna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jñāna, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jñāna*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"knowledge\"? (ಜ್ಞಾನ, jñāna.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-S133-letter-nya",
       "sequence": 1015,
       "title": "ಞ (ña) — one character, and the stack it hides in",
@@ -717,7 +822,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:120670979d66a10c",
+      "sourceHash": "fnv1a64:fd3b1b93a6b16a86",
       "notice": {
         "modality": "pen",
         "needs": [

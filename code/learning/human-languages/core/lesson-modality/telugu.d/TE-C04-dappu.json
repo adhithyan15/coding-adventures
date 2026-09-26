@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C04-dappu",
+    "language": "telugu",
+    "chapter": 4,
+    "sequence": 204,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0b95d5f25f2cbf73"
+  },
+  "findings": []
+}

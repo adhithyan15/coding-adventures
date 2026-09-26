@@ -1,11 +1,11 @@
 {
   "id": "SA-S220-letter-cha",
   "pathSegment": "SA-PATH-100",
-  "pathOrder": 44,
+  "pathOrder": 45,
   "extensions": [
     {
       "id": "SA-EXT-100-SCRIPT-RECOGNITION",
-      "order": 44
+      "order": 45
     }
   ]
 }

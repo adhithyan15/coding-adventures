@@ -9,7 +9,7 @@ headword: ನಾಯಿ, ಬೆಕ್ಕು
 gloss: dog and cat — naayi is a solid, ancient native Dravidian root, no mystery at all; bekku is a DIFFERENT ancient Dravidian "wildcat" root, distinct from Tamil's everyday word for cat
 romanization: "nāyi, bekku"
 concept_tag: KA-ANIMALS
-prerequisites: [KA-C20-hannondu-ippattu, KA-C16-tingalugalu, KA-C17-madhyaahna-madhyaraatri]
+prerequisites: [KA-C20-hannondu-ippattu, KA-C16-tingalugalu, KA-C17-madhyaahna-madhyaraatri, KA-C20-jhari]
 sounds: [kannada-vowel-sign-e, kannada-geminate-kk]
 roots: [dravidian-naay-dog, dravidian-veruku-wildcat]
 etymology_hook: "ನಾಯಿ (nāyi, 'dog') is a solid, native Proto-Dravidian root — no mystery, unlike the tangled dog-words of Spanish, Hindi, and English; ಬೆಕ್ಕು (bekku, 'cat') is cognate with a DIFFERENT ancient Dravidian root, the same one behind Tamil/Malayalam's word for wildcat/civet cat — Kannada's everyday cat-word and Tamil's everyday cat-word (pūnai) come from two genuinely separate Dravidian roots"
@@ -17,11 +17,11 @@ reviews_of: [KA-C20-hannondu-ippattu]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02]
+  knowledge: [KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02, KA-LEX-ANCHOR-JHARI]
 introduces:
   knowledge: [KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02]
 practises:
-  knowledge: [KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02, KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03]
+  knowledge: [KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02, KA-LEX-C16-TINGALUGALU-01, KA-PRAGMATICS-C16-TINGALUGALU-02, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-01, KA-ETYMON-C17-MADHYAAHNA-MADHYARAATRI-02, KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03, KA-LEX-ANCHOR-JHARI]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ variety: standard-colloquial
 # ನಾಯಿ, ಬೆಕ್ಕು — solid ground, and a genuine split
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02, KA-LEX-ANCHOR-JHARI] -->
 
 [PAUSE 2s] After a whole arc of mystery dog-words — Spanish's *perro*,
 English's *dog*, Hindi's *kuttā* — here's the opposite: a dog-word with

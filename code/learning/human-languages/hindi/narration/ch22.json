@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cadd51c9a6308046",
+  "sourceHash": "fnv1a64:f4b56c5d9695aecb",
   "lessons": [
     {
       "id": "HI-S127-letter-u",
@@ -191,6 +191,111 @@
       ]
     },
     {
+      "id": "HI-C22-uun",
+      "sequence": 704,
+      "title": "ऊन (ūn) — wool",
+      "headword": "ऊन",
+      "romanization": "ūn",
+      "gloss": "wool",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:ab3f250c8d97c879",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ऊन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऊन — ūn — \"wool\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ūn. Look at its shape as you say it: the next lesson takes one piece of it, ऊ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūn, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūn*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"wool\"? (ऊन, ūn.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "HI-S128-letter-uu",
       "sequence": 705,
       "title": "ऊ (ū) — the same letter, holding the note longer",
@@ -206,7 +311,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e20e5cef77fc3695",
+      "sourceHash": "fnv1a64:4c71b267c4e9a6ef",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -394,6 +499,111 @@
       ]
     },
     {
+      "id": "HI-C22-os",
+      "sequence": 706,
+      "title": "ओस (os) — dew",
+      "headword": "ओस",
+      "romanization": "os",
+      "gloss": "dew",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:55ae0d39dcd32ea5",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ओस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ओस — os — \"dew\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: os. Look at its shape as you say it: the next lesson takes one piece of it, ओ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "os",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *os*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "os, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *os*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"dew\"? (ओस, os.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "HI-S129-letter-o",
       "sequence": 707,
       "title": "ओ — a letter you can already draw most of",
@@ -408,7 +618,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c2422515294b1fbb",
+      "sourceHash": "fnv1a64:a86a346edd24040b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -622,7 +832,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:943ab3f68b271baa",
+      "sourceHash": "fnv1a64:f3165a7fe0bf8dfc",
       "notice": null,
       "blocks": [
         {

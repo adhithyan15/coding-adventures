@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Morning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8bd7cf0d1b014de4",
+  "sourceHash": "fnv1a64:bbf75caa6a49e1ca",
   "lessons": [
     {
       "id": "KA-C26-belagge",
@@ -130,6 +130,111 @@
       ]
     },
     {
+      "id": "KA-C26-iiju",
+      "sequence": 554,
+      "title": "ಈಜು (īju) — swimming; to swim",
+      "headword": "ಈಜು",
+      "romanization": "īju",
+      "gloss": "swimming; to swim",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:28d5b573f11348f1",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಈಜು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಈಜು — īju — \"swimming; to swim\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: īju. Look at its shape as you say it: the next lesson takes one piece of it, ಈ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īju",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īju*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "īju, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *īju*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"swimming; to swim\"? (ಈಜು, īju.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-S130-letter-ii",
       "sequence": 555,
       "title": "ಈ (ī) — one character, standing where you have only seen it riding",
@@ -145,7 +250,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:59e6f2441ac899aa",
+      "sourceHash": "fnv1a64:ce8260518972824c",
       "notice": {
         "modality": "pen",
         "needs": [

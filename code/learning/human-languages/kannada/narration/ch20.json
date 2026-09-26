@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers 11–20 and Weather",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:079c5c2ba3a92877",
+  "sourceHash": "fnv1a64:2fc293eeb3702318",
   "lessons": [
     {
       "id": "KA-C20-hannondu-ippattu",
@@ -375,6 +375,111 @@
       ]
     },
     {
+      "id": "KA-C20-jhari",
+      "sequence": 491,
+      "title": "ಝರಿ (jhari) — a stream",
+      "headword": "ಝರಿ",
+      "romanization": "jhari",
+      "gloss": "a stream",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:41770b2a09b9db90",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಝರಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಝರಿ — jhari — \"a stream\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: jhari. Look at its shape as you say it: the next lesson takes one piece of it, ಝ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhari",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhari*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhari, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhari*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a stream\"? (ಝರಿ, jhari.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-S128-letter-jha",
       "sequence": 492,
       "title": "ಝ (jha) — one character, and the pattern it completes",
@@ -389,7 +494,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:75e3347eea0c3331",
+      "sourceHash": "fnv1a64:09fbdffd38d16cb2",
       "notice": {
         "modality": "pen",
         "needs": [

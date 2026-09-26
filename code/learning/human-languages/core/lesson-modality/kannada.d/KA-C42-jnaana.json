@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C42-jnaana",
+    "language": "kannada",
+    "chapter": 42,
+    "sequence": 1014,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a15793064b7ac1af"
+  },
+  "findings": []
+}

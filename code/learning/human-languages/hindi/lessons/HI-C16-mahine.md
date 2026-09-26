@@ -12,18 +12,18 @@ headword: जनवरी फ़रवरी मार्च अप्रैल 
 gloss: the Gregorian months — borrowed English/international names, running ALONGSIDE the traditional Vikram Samvat calendar's own six-ritu-linked months
 romanization: "janvarī farvarī mārc aprail maī jūn julāī agast sitambar aktūbar navambar disambar"
 concept_tag: HI-MONTHS
-prerequisites: [HI-C15-paani-roti]
+prerequisites: [HI-C15-paani-roti, HI-C15-dhol]
 sounds: [nukta-f, devanagari-long-ii]
 roots: [gregorian-months-borrowed, vikrama-samvat-sanskrit]
 etymology_hook: "janvarii, maarch, agast... are borrowed English/international month-names for everyday civil use — Hindu tradition keeps a SEPARATE calendar, Vikram Samvat, whose months (Chaitra, Vaishaakh...) map onto the SIX ritu from the seasons lesson, not four Western seasons"
 duration:
   max_seconds: 253
 requires:
-  knowledge: [HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02]
+  knowledge: [HI-CONCEPT-C15-PAANI-ROTI-01, HI-CONCEPT-C15-PAANI-ROTI-02, HI-LEX-ANCHOR-DHOL]
 introduces:
   knowledge: [HI-CONCEPT-C16-MAHINE-01, HI-CONCEPT-C16-MAHINE-02]
 practises:
-  knowledge: [HI-CONCEPT-C16-MAHINE-01, HI-CONCEPT-C16-MAHINE-02]
+  knowledge: [HI-CONCEPT-C16-MAHINE-01, HI-CONCEPT-C16-MAHINE-02, HI-LEX-ANCHOR-DHOL]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [HI-C15-paani-roti]
 # जनवरी to दिसंबर — borrowed names, and a second calendar underneath
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-ANCHOR-DHOL] -->
 
 [PAUSE 2s] Like Arabic, Hindi doesn't have just **one** set of months —
 everyday civil life and traditional/religious life run on **two different

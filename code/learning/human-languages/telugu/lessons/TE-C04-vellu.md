@@ -9,17 +9,17 @@ headword: వెళ్ళు
 gloss: to go (and వచ్చు, to come)
 romanization: "veḷḷu"
 concept_tag: TE-VERB-VELLU
-prerequisites: [TE-C03-nenu]
+prerequisites: [TE-C03-nenu, TE-C04-dappu]
 sounds: [retroflex-ll, cc]
 roots: [vellu-go-dravidian, vaccu-come-dravidian]
 duration:
   max_seconds: 130
 requires:
-  knowledge: []
+  knowledge: [TE-LEX-ANCHOR-DAPPU]
 introduces:
   knowledge: [TE-LEX-C04-VELLU-01, TE-ETYMON-C04-VELLU-02]
 practises:
-  knowledge: [TE-LEX-C04-VELLU-01, TE-ETYMON-C04-VELLU-02]
+  knowledge: [TE-LEX-C04-VELLU-01, TE-ETYMON-C04-VELLU-02, TE-LEX-ANCHOR-DAPPU]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ reviews_of: []
 # వెళ్ళు (veḷḷu) — "go," and వచ్చు (come)
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-ANCHOR-DAPPU] -->
 
 [PAUSE 2s] Two everyday verbs — and together they make the Telugu goodbye.
 

@@ -1,8 +1,8 @@
 Bengali, chapter 4: In Front, Underneath, and On Its Own.
-9 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+10 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 9.
+Lesson 1 of 10.
 নাম (nām) — a whole word, read, with nothing new in it.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -34,7 +34,7 @@ How many new pieces were in this lesson? (None.) What does the mātrā do to the
 Source: Unicode Bengali chart.
 
 
-Lesson 2 of 9.
+Lesson 2 of 10.
 ি (-i) — the i-sign, written before the consonant it is heard after.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -64,7 +64,32 @@ Which side of its consonant is ি (-i) written on? (The left.) Which side is it
 Source: Unicode Bengali chart.
 
 
-Lesson 3 of 9.
+Lesson 3 of 10.
+ইট (iṭ) — a brick.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before the new word: say the last thing you learned, once, out loud.
+
+You'll want to know: ইট.
+ইট — iṭ — "a brick".
+Say it: iṭ. Look at its shape as you say it: the next lesson takes one piece of it, ই, and writes it on its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: iṭ]
+[pause 8 seconds for the answer]
+[your turn — say: iṭ, and what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "a brick"? (ইট, iṭ.)
+
+
+Lesson 4 of 10.
 ই — the independent i.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -93,7 +118,7 @@ When does a vowel get its own full letter? (When there is no consonant to lean o
 Source: Unicode Bengali chart.
 
 
-Lesson 4 of 9.
+Lesson 5 of 10.
 ত (tô) — the consonant ta, the dental one.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -122,7 +147,7 @@ Where does the tongue touch for ত (tô) — the teeth or the ridge behind them
 Source: Unicode Bengali chart.
 
 
-Lesson 5 of 9.
+Lesson 6 of 10.
 ু (-u) — the u-sign, hanging below the line.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -152,7 +177,7 @@ Which side of its consonant does ু (-u) sit on? (Underneath.) Is the sound the
 Source: Unicode Bengali chart.
 
 
-Lesson 6 of 9.
+Lesson 7 of 10.
 তুমি (tumi) — the familiar you, read.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -181,7 +206,7 @@ In তুমি (tumi), where is the u-sign? (Under the first letter.) Where is 
 Source: Unicode Bengali chart.
 
 
-Lesson 7 of 9.
+Lesson 8 of 10.
 য (jô) — the letter that is written y and said j.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -212,7 +237,7 @@ What does য (jô) say standing alone? (j.) What does it say hung under another
 Source: Unicode Bengali chart.
 
 
-Lesson 8 of 9.
+Lesson 9 of 10.
 ঁ ((chôndrobindu)) — the moon-and-dot.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -243,7 +268,7 @@ Where does ঁ ((chôndrobindu)) sit? (Above the head-line — the only mark tha
 Source: Unicode Bengali chart.
 
 
-Lesson 9 of 9.
+Lesson 10 of 10.
 হ্যাঁ (hyã) — yes, read whole.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.

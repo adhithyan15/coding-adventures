@@ -1,11 +1,11 @@
 {
   "id": "ML-S131-chillu-nn",
   "pathSegment": "ML-PATH-100",
-  "pathOrder": 10,
+  "pathOrder": 12,
   "extensions": [
     {
       "id": "ML-EXT-100-SCRIPT-RECOGNITION",
-      "order": 10
+      "order": 12
     }
   ]
 }

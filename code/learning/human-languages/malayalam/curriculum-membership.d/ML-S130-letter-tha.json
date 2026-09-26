@@ -1,11 +1,11 @@
 {
   "id": "ML-S130-letter-tha",
   "pathSegment": "ML-PATH-100",
-  "pathOrder": 44,
+  "pathOrder": 52,
   "extensions": [
     {
       "id": "ML-EXT-100-SCRIPT-RECOGNITION",
-      "order": 44
+      "order": 52
     }
   ]
 }

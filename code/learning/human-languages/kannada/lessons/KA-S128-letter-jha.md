@@ -9,17 +9,17 @@ type: writing
 headword: "ಝ"
 gloss: the single character ಝ — the breathed partner of ಜ, completing a pattern you have met six times
 romanization: "jha"
-prerequisites: [KA-S127-letter-uu]
+prerequisites: [KA-S127-letter-uu, KA-C20-jhari]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-127]
+  knowledge: [KA-SCRIPT-RECOG-127, KA-LEX-ANCHOR-JHARI]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-128]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-127, KA-SCRIPT-RECOG-128]
+  knowledge: [KA-SCRIPT-RECOG-127, KA-SCRIPT-RECOG-128, KA-LEX-ANCHOR-JHARI]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [KA-S127-letter-uu]
 # ಝ — one character, and the pattern it completes
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-127] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-127, KA-LEX-ANCHOR-JHARI] -->
 
 [PAUSE 1s] Before the new one: ಊ — short or long?
 

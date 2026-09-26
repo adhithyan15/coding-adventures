@@ -1,0 +1,11 @@
+{
+  "id": "BN-C06-eka",
+  "pathSegment": "BN-PATH-001",
+  "pathOrder": 28,
+  "extensions": [
+    {
+      "id": "BN-EXT-021-SCRIPT-VOWEL-BODIES",
+      "order": 12
+    }
+  ]
+}

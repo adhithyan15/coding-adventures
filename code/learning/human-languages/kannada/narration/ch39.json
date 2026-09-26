@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Tea, Coffee, Milk",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5fe29c9afd0e38f4",
+  "sourceHash": "fnv1a64:0692d1d0cdbeb96b",
   "lessons": [
     {
       "id": "KA-C39-chaha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:066ab078a5b10d19",
+      "sourceHash": "fnv1a64:5517f0ea5c675e10",
       "notice": null,
       "blocks": [
         {

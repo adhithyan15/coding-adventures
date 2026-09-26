@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 15,
-  "sourceHash": "fnv1a64:fa848338da5e7c44",
+  "sourceHash": "fnv1a64:6c2657e6a558e5bf",
   "lessonIds": [
     "SA-C15-big",
     "SA-C15-small",
@@ -10,6 +10,7 @@
     "SA-C15-new",
     "SA-S121-letter-u",
     "SA-C15-old",
+    "SA-C15-mauna",
     "SA-C15-adjective-system",
     "SA-S118-letter-ssa",
     "SA-S115-vowel-sign-au"

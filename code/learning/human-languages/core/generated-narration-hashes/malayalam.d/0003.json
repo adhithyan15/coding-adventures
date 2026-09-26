@@ -1,9 +1,10 @@
 {
   "language": "malayalam",
   "chapter": 3,
-  "sourceHash": "fnv1a64:769e43efd8486c68",
+  "sourceHash": "fnv1a64:ac8abf8d91315424",
   "lessonIds": [
     "ML-C03-engane",
+    "ML-C03-ola",
     "ML-S126-letter-oo",
     "ML-C03-sukhamaano",
     "ML-S139-vowel-sign-e",
@@ -18,7 +19,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch03.txt",
   "json": "malayalam/narration/ch03.json",
-  "textHash": "fnv1a64:e29d8078ed7e4928",
-  "jsonHash": "fnv1a64:a4b15caf2b0ba47e",
+  "textHash": "fnv1a64:a862bcde8372e84f",
+  "jsonHash": "fnv1a64:ec6ab1d3f921a649",
   "findings": []
 }

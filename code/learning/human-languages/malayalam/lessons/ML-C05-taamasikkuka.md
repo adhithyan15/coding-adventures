@@ -9,17 +9,17 @@ headword: താമസിക്കുക
 gloss: to live, to stay
 romanization: "tāmasikkuka"
 concept_tag: ML-VERB-TAAMASIKKUKA
-prerequisites: [ML-C05-samsaarikkuka]
+prerequisites: [ML-C05-samsaarikkuka, ML-C05-thooval]
 sounds: [long-aa, double-kk]
 roots: [taamasa-sanskrit]
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [ML-LEX-ANCHOR-THOOVAL]
 introduces:
   knowledge: [ML-LEX-TAAMASIKKUKA-01, ML-CONCEPT-C05-POSTPOSITION-IL-01]
 practises:
-  knowledge: [ML-LEX-TAAMASIKKUKA-01, ML-CONCEPT-C05-POSTPOSITION-IL-01]
+  knowledge: [ML-LEX-TAAMASIKKUKA-01, ML-CONCEPT-C05-POSTPOSITION-IL-01, ML-LEX-ANCHOR-THOOVAL]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-C05-samsaarikkuka, ML-C05-njaan-malayalam-samsaarikkunnu]
 # താമസിക്കുക (tāmasikkuka) — "to live, to stay"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-THOOVAL] -->
 
 [PAUSE 2s] A second verb, so you can say where you live — and again the Sanskrit
 layer shows.

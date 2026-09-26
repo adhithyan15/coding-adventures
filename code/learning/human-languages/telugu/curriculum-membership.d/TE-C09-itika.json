@@ -1,0 +1,11 @@
+{
+  "id": "TE-C09-itika",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 33,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 33
+    }
+  ]
+}

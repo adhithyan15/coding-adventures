@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C22-uun",
+    "language": "hindi",
+    "chapter": 22,
+    "sequence": 704,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ab3f250c8d97c879"
+  },
+  "findings": []
+}

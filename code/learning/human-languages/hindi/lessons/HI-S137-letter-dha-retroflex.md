@@ -12,17 +12,17 @@ type: writing
 headword: "ढ"
 gloss: the single character ढ — the shortest build in this book, and the last letter to arrive before its words
 romanization: "ḍha"
-prerequisites: [HI-S136-letter-gha]
+prerequisites: [HI-S136-letter-gha, HI-C15-dhol]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [HI-SCRIPT-RECOG-136]
+  knowledge: [HI-SCRIPT-RECOG-136, HI-LEX-ANCHOR-DHOL]
 introduces:
   knowledge: [HI-SCRIPT-RECOG-137]
 practises:
-  knowledge: [HI-SCRIPT-RECOG-136, HI-SCRIPT-RECOG-137]
+  knowledge: [HI-SCRIPT-RECOG-136, HI-SCRIPT-RECOG-137, HI-LEX-ANCHOR-DHOL]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [HI-S136-letter-gha]
 # ढ — one lift, and the last one to come early
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-136] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-136, HI-LEX-ANCHOR-DHOL] -->
 
 [PAUSE 1s] Before the new one: **घ** — how many pen lifts did it take?
 

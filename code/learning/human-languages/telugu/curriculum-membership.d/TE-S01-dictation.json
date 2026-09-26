@@ -1,11 +1,11 @@
 {
   "id": "TE-S01-dictation",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 22,
+  "pathOrder": 23,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 22
+      "order": 23
     }
   ]
 }

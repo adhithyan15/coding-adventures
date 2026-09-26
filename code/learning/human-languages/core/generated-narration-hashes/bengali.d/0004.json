@@ -1,10 +1,11 @@
 {
   "language": "bengali",
   "chapter": 4,
-  "sourceHash": "fnv1a64:b7ce9a6b5871f5d8",
+  "sourceHash": "fnv1a64:ec3c7e925aa0bc2e",
   "lessonIds": [
     "BN-W02-naam-read",
     "BN-W02-i-matra",
+    "BN-C04-it",
     "BN-W04-i-indep",
     "BN-W02-ta",
     "BN-W02-u-matra",
@@ -17,7 +18,7 @@
   "drivablePrefix": 0,
   "text": "bengali/narration/ch04.txt",
   "json": "bengali/narration/ch04.json",
-  "textHash": "fnv1a64:54914e9652364355",
-  "jsonHash": "fnv1a64:17311fefd15d2ba8",
+  "textHash": "fnv1a64:cfd09a4054beb3d8",
+  "jsonHash": "fnv1a64:6b949028d5193a2f",
   "findings": []
 }

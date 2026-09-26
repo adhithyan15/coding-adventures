@@ -81,7 +81,9 @@ it("pins Sanskrit lesson-content budgets", () =>
     // lessons (seventeen of them verbs) and four reviews. Each word lesson
     // introduces one lexical atom and no idiom, sense or culture claim, so the
     // three content totals stay at 11 / 12 / 13. Re-measured against the tree.
-    lessons: 486,
+    // 486 -> 487: HL-C443 anchor word मौन, placed before the ौ letter lesson so
+    // the sign is taken from a word the reader already says.
+    lessons: 487,
     idioms: 11,
     senses: 12,
     cultureClaims: 13,

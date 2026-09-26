@@ -1,11 +1,11 @@
 {
   "id": "HI-S146-letter-va",
   "pathSegment": "HI-PATH-100",
-  "pathOrder": 54,
+  "pathOrder": 58,
   "extensions": [
     {
       "id": "HI-EXT-100-SCRIPT-RECOGNITION",
-      "order": 43
+      "order": 47
     }
   ]
 }

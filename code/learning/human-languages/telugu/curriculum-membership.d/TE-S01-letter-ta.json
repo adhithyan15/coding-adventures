@@ -1,11 +1,11 @@
 {
   "id": "TE-S01-letter-ta",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 19,
+  "pathOrder": 20,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 19
+      "order": 20
     }
   ]
 }

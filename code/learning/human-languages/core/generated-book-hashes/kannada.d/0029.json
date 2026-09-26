@@ -1,9 +1,10 @@
 {
   "language": "kannada",
   "chapter": 29,
-  "sourceHash": "fnv1a64:ab5d6a73a5857d96",
+  "sourceHash": "fnv1a64:b45553342ad9e2f0",
   "lessonIds": [
     "KA-C29-shubhodaya",
+    "KA-C29-oota",
     "KA-S125-letter-oo"
   ],
   "tex": "kannada/book/chapters/ch29-good-morning.tex"

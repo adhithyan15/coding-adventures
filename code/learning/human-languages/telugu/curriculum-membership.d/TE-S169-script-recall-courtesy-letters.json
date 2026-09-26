@@ -1,11 +1,11 @@
 {
   "id": "TE-S169-script-recall-courtesy-letters",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 71,
+  "pathOrder": 74,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 71
+      "order": 74
     }
   ]
 }

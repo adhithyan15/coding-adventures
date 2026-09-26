@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 21,
-  "sourceHash": "fnv1a64:76cbf5960e718a1e",
+  "sourceHash": "fnv1a64:19dae8bac725b762",
   "lessonIds": [
     "KA-C21-naayi-bekku"
   ],
@@ -10,6 +10,6 @@
   "text": "kannada/narration/ch21.txt",
   "json": "kannada/narration/ch21.json",
   "textHash": "fnv1a64:4c8d6d43b9be7edc",
-  "jsonHash": "fnv1a64:252a323b1c3a581b",
+  "jsonHash": "fnv1a64:0a70ff0e715edc82",
   "findings": []
 }

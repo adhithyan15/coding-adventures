@@ -1,0 +1,11 @@
+{
+  "id": "ML-C02-penkutti",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 11,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 11
+    }
+  ]
+}

@@ -1,10 +1,12 @@
 {
   "language": "hindi",
   "chapter": 22,
-  "sourceHash": "fnv1a64:cadd51c9a6308046",
+  "sourceHash": "fnv1a64:f4b56c5d9695aecb",
   "lessonIds": [
     "HI-S127-letter-u",
+    "HI-C22-uun",
     "HI-S128-letter-uu",
+    "HI-C22-os",
     "HI-S129-letter-o",
     "HI-C22-gyarah-bees"
   ],
@@ -12,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "hindi/narration/ch22.txt",
   "json": "hindi/narration/ch22.json",
-  "textHash": "fnv1a64:6af71cd2ec40bf33",
-  "jsonHash": "fnv1a64:0bc1da0b91a146d3",
+  "textHash": "fnv1a64:98fb1f3e9c153fbc",
+  "jsonHash": "fnv1a64:372763968f8ff6a5",
   "findings": []
 }

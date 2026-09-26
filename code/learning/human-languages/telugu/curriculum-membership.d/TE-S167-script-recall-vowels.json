@@ -1,11 +1,11 @@
 {
   "id": "TE-S167-script-recall-vowels",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 69,
+  "pathOrder": 72,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 69
+      "order": 72
     }
   ]
 }

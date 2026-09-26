@@ -1,10 +1,12 @@
 {
   "language": "hindi",
   "chapter": 22,
-  "sourceHash": "fnv1a64:c2c26bc19abc9279",
+  "sourceHash": "fnv1a64:c35a669c91c3c74c",
   "lessonIds": [
     "HI-S127-letter-u",
+    "HI-C22-uun",
     "HI-S128-letter-uu",
+    "HI-C22-os",
     "HI-S129-letter-o",
     "HI-C22-gyarah-bees"
   ],
