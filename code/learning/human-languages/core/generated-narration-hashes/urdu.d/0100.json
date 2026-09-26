@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:df9d984a399fa19d",
+  "lessonIds": [
+    "UR-C100-chauraha",
+    "UR-C100-aspas",
+    "UR-C100-sath",
+    "UR-C100-bazar",
+    "UR-C100-thana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch100.txt",
+  "json": "urdu/narration/ch100.json",
+  "textHash": "fnv1a64:ac28089b0c5a008e",
+  "jsonHash": "fnv1a64:5aa8324bd1776012",
+  "findings": []
+}

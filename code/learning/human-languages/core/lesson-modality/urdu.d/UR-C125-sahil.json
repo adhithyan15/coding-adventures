@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C125-sahil",
+    "language": "urdu",
+    "chapter": 125,
+    "sequence": 6570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:535a62ab4b016b46"
+  },
+  "findings": []
+}

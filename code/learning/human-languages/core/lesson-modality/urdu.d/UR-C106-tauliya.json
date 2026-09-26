@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C106-tauliya",
+    "language": "urdu",
+    "chapter": 106,
+    "sequence": 5510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b0c2864d510e5e3"
+  },
+  "findings": []
+}

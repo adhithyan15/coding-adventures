@@ -1,0 +1,11 @@
+{
+  "id": "UR-C135-thaka",
+  "pathSegment": "UR-PATH-135-QUAL135",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-135-QUAL135",
+      "order": 3
+    }
+  ]
+}

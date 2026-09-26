@@ -1,0 +1,11 @@
+{
+  "id": "UR-C135-hoshiyar",
+  "pathSegment": "UR-PATH-135-QUAL135",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-135-QUAL135",
+      "order": 2
+    }
+  ]
+}

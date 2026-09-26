@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C126-gadha",
+    "language": "urdu",
+    "chapter": 126,
+    "sequence": 6640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1aa568da2ea9dc7"
+  },
+  "findings": []
+}

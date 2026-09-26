@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Drawer, Letter, Letter, Pencil, Exercise book",
+  "label": "ch:ur-drawer-letter-letter-pencil-exercise-book",
+  "canDo": "I can say a drawer, a letter, a letter, a pencil and an exercise book.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C113-kapi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say a drawer, a letter, a letter, a pencil and an exercise book.",
+    "assesses": [
+      "UR-LEX-C113-THINGS113-03",
+      "UR-LEX-C113-THINGS113-04",
+      "UR-LEX-C113-THINGS113-05"
+    ]
+  }
+}

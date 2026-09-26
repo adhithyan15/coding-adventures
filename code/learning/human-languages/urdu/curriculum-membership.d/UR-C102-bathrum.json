@@ -1,0 +1,11 @@
+{
+  "id": "UR-C102-bathrum",
+  "pathSegment": "UR-PATH-102-LOC102",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-102-LOC102",
+      "order": 1
+    }
+  ]
+}

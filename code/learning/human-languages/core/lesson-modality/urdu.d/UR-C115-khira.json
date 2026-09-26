@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C115-khira",
+    "language": "urdu",
+    "chapter": 115,
+    "sequence": 6030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74c80bc2817a4dce"
+  },
+  "findings": []
+}

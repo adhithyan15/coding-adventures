@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:84ca69677070be71",
+  "lessonIds": [
+    "UR-C134-gila",
+    "UR-C134-sukha",
+    "UR-C134-chaura",
+    "UR-C134-tang",
+    "UR-C134-gahra"
+  ],
+  "tex": "urdu/book/chapters/ch134-wet-dry-wide-narrow-deep.tex"
+}

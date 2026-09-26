@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C100-chauraha",
+    "language": "urdu",
+    "chapter": 100,
+    "sequence": 5200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18cbb75ec772c72c"
+  },
+  "findings": []
+}

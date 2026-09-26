@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:4bb123d9c561a126",
+  "lessonIds": [
+    "UR-C101-mahal",
+    "UR-C101-park",
+    "UR-C101-sinema",
+    "UR-C101-maidan",
+    "UR-C101-darvaza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch101.txt",
+  "json": "urdu/narration/ch101.json",
+  "textHash": "fnv1a64:3f1c2db2005530c9",
+  "jsonHash": "fnv1a64:201301b316361e61",
+  "findings": []
+}

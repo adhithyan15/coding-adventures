@@ -1,0 +1,11 @@
+{
+  "id": "UR-C105-irada",
+  "pathSegment": "UR-PATH-105-WANT105",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-105-WANT105",
+      "order": 1
+    }
+  ]
+}

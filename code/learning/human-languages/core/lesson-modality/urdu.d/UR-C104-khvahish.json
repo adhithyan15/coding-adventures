@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C104-khvahish",
+    "language": "urdu",
+    "chapter": 104,
+    "sequence": 5430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a3688c5ab4da2d3"
+  },
+  "findings": []
+}

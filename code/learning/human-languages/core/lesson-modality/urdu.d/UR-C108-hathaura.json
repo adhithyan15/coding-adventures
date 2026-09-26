@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C108-hathaura",
+    "language": "urdu",
+    "chapter": 108,
+    "sequence": 5610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f357cd3db9f22cda"
+  },
+  "findings": []
+}

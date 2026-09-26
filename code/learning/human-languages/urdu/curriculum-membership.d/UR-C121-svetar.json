@@ -1,0 +1,11 @@
+{
+  "id": "UR-C121-svetar",
+  "pathSegment": "UR-PATH-121-THINGS121",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-121-THINGS121",
+      "order": 2
+    }
+  ]
+}

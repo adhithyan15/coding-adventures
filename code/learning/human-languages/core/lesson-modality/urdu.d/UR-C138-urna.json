@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C138-urna",
+    "language": "urdu",
+    "chapter": 138,
+    "sequence": 7260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:933d18ca5d9eb0e0"
+  },
+  "findings": []
+}

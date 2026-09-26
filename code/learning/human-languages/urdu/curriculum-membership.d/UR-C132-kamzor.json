@@ -1,0 +1,11 @@
+{
+  "id": "UR-C132-kamzor",
+  "pathSegment": "UR-PATH-132-QUAL132",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-132-QUAL132",
+      "order": 4
+    }
+  ]
+}

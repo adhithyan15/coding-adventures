@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C89-donon",
+    "language": "urdu",
+    "chapter": 89,
+    "sequence": 4590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11e043cc2bb1b9a6"
+  },
+  "findings": []
+}

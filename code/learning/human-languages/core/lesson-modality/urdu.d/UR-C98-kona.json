@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C98-kona",
+    "language": "urdu",
+    "chapter": 98,
+    "sequence": 5000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a75786bf590aa4d0"
+  },
+  "findings": []
+}

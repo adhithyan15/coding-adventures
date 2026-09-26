@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C116-khajur",
+    "language": "urdu",
+    "chapter": 116,
+    "sequence": 6090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfb6d83523c84834"
+  },
+  "findings": []
+}

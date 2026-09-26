@@ -1,0 +1,11 @@
+{
+  "id": "UR-C125-chirya",
+  "pathSegment": "UR-PATH-125-THINGS125",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-125-THINGS125",
+      "order": 4
+    }
+  ]
+}

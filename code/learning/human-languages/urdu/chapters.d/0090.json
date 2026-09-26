@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "All, Oneself, Which one?, One, Here",
+  "label": "ch:ur-all-oneself-which-one-one-here",
+  "canDo": "I can say all, oneself, which one?, the one and here.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C90-idhar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 90: i can say all, oneself, which one?, the one and here.",
+    "assesses": [
+      "UR-LEX-C90-DEF90-03",
+      "UR-LEX-C90-DEF90-04",
+      "UR-LEX-C90-DEF90-05"
+    ]
+  }
+}

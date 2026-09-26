@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C123-ghas",
+    "language": "urdu",
+    "chapter": 123,
+    "sequence": 6470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:843b309683a02c55"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C122-batan",
+  "pathSegment": "UR-PATH-122-THINGS122",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-122-THINGS122",
+      "order": 1
+    }
+  ]
+}

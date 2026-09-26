@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:7572514c7227180b",
+  "lessonIds": [
+    "UR-C90-tamam",
+    "UR-C90-khud",
+    "UR-C90-kaunsa",
+    "UR-C90-vala",
+    "UR-C90-idhar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch90.txt",
+  "json": "urdu/narration/ch90.json",
+  "textHash": "fnv1a64:2981aaa0d2e827f6",
+  "jsonHash": "fnv1a64:cd42c2f2c5eb7be2",
+  "findings": []
+}

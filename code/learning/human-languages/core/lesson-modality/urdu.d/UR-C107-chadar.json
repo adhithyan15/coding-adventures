@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C107-chadar",
+    "language": "urdu",
+    "chapter": 107,
+    "sequence": 5570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5cda3b48274f0bd"
+  },
+  "findings": []
+}

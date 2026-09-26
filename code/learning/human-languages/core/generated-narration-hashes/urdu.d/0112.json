@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:47283f1e916b9515",
+  "lessonIds": [
+    "UR-C112-machis",
+    "UR-C112-khilauna",
+    "UR-C112-gend",
+    "UR-C112-patang",
+    "UR-C112-palang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch112.txt",
+  "json": "urdu/narration/ch112.json",
+  "textHash": "fnv1a64:764c478746ccc6d7",
+  "jsonHash": "fnv1a64:6a62d3aff729026f",
+  "findings": []
+}

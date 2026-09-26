@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R99-letters-first-pass",
+    "language": "urdu",
+    "chapter": 99,
+    "sequence": 5120,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8a5c39bf23719a64"
+  },
+  "findings": []
+}

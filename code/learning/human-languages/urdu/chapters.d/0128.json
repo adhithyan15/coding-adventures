@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Deer, Pigeon, Parrot, Bear, Waist",
+  "label": "ch:ur-deer-pigeon-parrot-bear-waist",
+  "canDo": "I can say a deer, a pigeon, a parrot, a bear and the waist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C128-kamar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can say a deer, a pigeon, a parrot, a bear and the waist.",
+    "assesses": [
+      "UR-LEX-C128-THINGS128-03",
+      "UR-LEX-C128-THINGS128-04",
+      "UR-LEX-C128-THINGS128-05"
+    ]
+  }
+}

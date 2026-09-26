@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:4d59cf298286f6d7",
+  "lessonIds": [
+    "UR-C115-adrak",
+    "UR-C115-gobhi",
+    "UR-C115-matar",
+    "UR-C115-khira",
+    "UR-C115-tarbuz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch115.txt",
+  "json": "urdu/narration/ch115.json",
+  "textHash": "fnv1a64:388ca5c00b307489",
+  "jsonHash": "fnv1a64:9e34bde9466dfa52",
+  "findings": []
+}

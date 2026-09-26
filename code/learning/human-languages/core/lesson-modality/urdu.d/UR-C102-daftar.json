@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C102-daftar",
+    "language": "urdu",
+    "chapter": 102,
+    "sequence": 5330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70e568cd825748f8"
+  },
+  "findings": []
+}

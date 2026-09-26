@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:a9875e0dfadb1122",
+  "lessonIds": [
+    "UR-C138-girna",
+    "UR-C138-urna",
+    "UR-C138-tairna",
+    "UR-C138-bajana",
+    "UR-C138-chhuna"
+  ],
+  "tex": "urdu/book/chapters/ch138-to-fall-to-fly-to-swim-to-play-to-touch.tex"
+}

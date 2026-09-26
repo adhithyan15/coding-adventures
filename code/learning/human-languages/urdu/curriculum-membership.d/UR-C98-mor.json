@@ -1,0 +1,11 @@
+{
+  "id": "UR-C98-mor",
+  "pathSegment": "UR-PATH-98-LOC98",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-98-LOC98",
+      "order": 4
+    }
+  ]
+}

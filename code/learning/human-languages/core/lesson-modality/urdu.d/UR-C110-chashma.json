@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C110-chashma",
+    "language": "urdu",
+    "chapter": 110,
+    "sequence": 5740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd16b88a14435a0a"
+  },
+  "findings": []
+}

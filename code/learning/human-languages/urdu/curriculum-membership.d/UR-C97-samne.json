@@ -1,0 +1,11 @@
+{
+  "id": "UR-C97-samne",
+  "pathSegment": "UR-PATH-97-LOC97",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-97-LOC97",
+      "order": 1
+    }
+  ]
+}

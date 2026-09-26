@@ -1,0 +1,19 @@
+{
+  "chapter": 94,
+  "title": "Every day, Weather, Spring, Summer, Winter",
+  "label": "ch:ur-every-day-weather-spring-summer-winter",
+  "canDo": "I can say every day, the weather, spring, summer and winter.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "UR-C94-sardiyan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 94: i can say every day, the weather, spring, summer and winter.",
+    "assesses": [
+      "UR-LEX-C94-TIME94-03",
+      "UR-LEX-C94-TIME94-04",
+      "UR-LEX-C94-TIME94-05"
+    ]
+  }
+}

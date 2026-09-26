@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C133-javan",
+    "language": "urdu",
+    "chapter": 133,
+    "sequence": 7000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5e3bf660668edce"
+  },
+  "findings": []
+}

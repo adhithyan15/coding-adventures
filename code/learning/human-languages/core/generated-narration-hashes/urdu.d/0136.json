@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:8bc80e50b0ad6470",
+  "lessonIds": [
+    "UR-C136-pyasa",
+    "UR-C136-taza",
+    "UR-C136-kachcha",
+    "UR-C136-pakka",
+    "UR-C136-gulabi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch136.txt",
+  "json": "urdu/narration/ch136.json",
+  "textHash": "fnv1a64:1bfbe361465d289d",
+  "jsonHash": "fnv1a64:00e4499431d5e629",
+  "findings": []
+}

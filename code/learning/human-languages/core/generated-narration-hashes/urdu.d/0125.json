@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:8399b0215ed07cb0",
+  "lessonIds": [
+    "UR-C125-andhi",
+    "UR-C125-zamin",
+    "UR-C125-sahil",
+    "UR-C125-jazira",
+    "UR-C125-chirya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch125.txt",
+  "json": "urdu/narration/ch125.json",
+  "textHash": "fnv1a64:240a1fee4b0d06c4",
+  "jsonHash": "fnv1a64:2008655fd3fe4639",
+  "findings": []
+}

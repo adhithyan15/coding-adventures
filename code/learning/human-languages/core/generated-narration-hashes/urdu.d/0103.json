@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:3fb8008154d2eaf2",
+  "lessonIds": [
+    "UR-C103-hawaijahaz",
+    "UR-C103-relgari",
+    "UR-C103-pas",
+    "UR-C103-sakna",
+    "UR-C103-pana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch103.txt",
+  "json": "urdu/narration/ch103.json",
+  "textHash": "fnv1a64:d7ac7f5f7a1ca60d",
+  "jsonHash": "fnv1a64:1ad080b4f7657330",
+  "findings": []
+}

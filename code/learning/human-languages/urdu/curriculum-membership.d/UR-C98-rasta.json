@@ -1,0 +1,11 @@
+{
+  "id": "UR-C98-rasta",
+  "pathSegment": "UR-PATH-98-LOC98",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-98-LOC98",
+      "order": 2
+    }
+  ]
+}

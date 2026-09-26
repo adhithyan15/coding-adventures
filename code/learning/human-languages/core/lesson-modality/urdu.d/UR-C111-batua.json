@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C111-batua",
+    "language": "urdu",
+    "chapter": 111,
+    "sequence": 5800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57599112f7d5e199"
+  },
+  "findings": []
+}

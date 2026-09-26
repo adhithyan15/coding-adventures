@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:e6c078ad8b40b244",
+  "lessonIds": [
+    "UR-C106-dhaga",
+    "UR-C106-tauliya",
+    "UR-C106-kanghi",
+    "UR-C106-shisha",
+    "UR-C106-takiya"
+  ],
+  "tex": "urdu/book/chapters/ch106-thread-towel-comb-glass-pillow.tex"
+}

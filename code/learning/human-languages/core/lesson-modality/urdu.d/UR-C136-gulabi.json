@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C136-gulabi",
+    "language": "urdu",
+    "chapter": 136,
+    "sequence": 7190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ef37b81e75a99d2"
+  },
+  "findings": []
+}

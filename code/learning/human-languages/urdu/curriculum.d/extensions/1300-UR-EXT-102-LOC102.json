@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-102-LOC102",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a kitchen, a bathroom, a ticket, an office and a library.",
+  "prerequisites": []
+}

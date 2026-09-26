@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C131-dhima",
+    "language": "urdu",
+    "chapter": 131,
+    "sequence": 6890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97886c6109d9139e"
+  },
+  "findings": []
+}

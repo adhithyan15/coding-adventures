@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:8da847c9beaeb67c",
+  "lessonIds": [
+    "UR-C92-mangal",
+    "UR-C92-budh",
+    "UR-C92-baje",
+    "UR-C92-sarhe",
+    "UR-C92-sava"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch92.txt",
+  "json": "urdu/narration/ch92.json",
+  "textHash": "fnv1a64:b386d3436fcc5012",
+  "jsonHash": "fnv1a64:130a60a70c31f5c6",
+  "findings": []
+}

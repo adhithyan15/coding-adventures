@@ -1,0 +1,11 @@
+{
+  "id": "UR-C122-dastane",
+  "pathSegment": "UR-PATH-122-THINGS122",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-122-THINGS122",
+      "order": 3
+    }
+  ]
+}

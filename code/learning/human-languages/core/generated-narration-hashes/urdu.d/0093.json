@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:6dfba7e78791b693",
+  "lessonIds": [
+    "UR-C93-paune",
+    "UR-C93-adha",
+    "UR-C93-ab",
+    "UR-C93-tab",
+    "UR-C93-kab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch93.txt",
+  "json": "urdu/narration/ch93.json",
+  "textHash": "fnv1a64:8ca2a6632bb978de",
+  "jsonHash": "fnv1a64:a724123107e36c42",
+  "findings": []
+}

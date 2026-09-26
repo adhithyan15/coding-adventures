@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:fbaf3acf5d5caf07",
+  "lessonIds": [
+    "UR-C122-chappal",
+    "UR-C122-batan",
+    "UR-C122-tai",
+    "UR-C122-dastane",
+    "UR-C122-pahari"
+  ],
+  "tex": "urdu/book/chapters/ch122-sandal-button-tie-gloves-hill.tex"
+}

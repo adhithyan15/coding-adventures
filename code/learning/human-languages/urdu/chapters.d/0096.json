@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Moment, When, Where, To the right, To the left",
+  "label": "ch:ur-moment-when-where-to-the-right-to-the-left",
+  "canDo": "I can say a moment, when, where, to the right and to the left.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "UR-C96-baen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: i can say a moment, when, where, to the right and to the left.",
+    "assesses": [
+      "UR-LEX-C96-TIME96-03",
+      "UR-LEX-C96-TIME96-04",
+      "UR-LEX-C96-TIME96-05"
+    ]
+  }
+}

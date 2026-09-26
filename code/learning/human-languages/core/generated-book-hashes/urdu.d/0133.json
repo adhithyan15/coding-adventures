@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:e27de3f657ff8f0b",
+  "lessonIds": [
+    "UR-C133-javan",
+    "UR-C133-burha",
+    "UR-C133-pyara",
+    "UR-C133-narm",
+    "UR-C133-sakht"
+  ],
+  "tex": "urdu/book/chapters/ch133-young-old-lovely-soft-hard.tex"
+}

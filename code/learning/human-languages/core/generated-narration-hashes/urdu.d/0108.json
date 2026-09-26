@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:6ba0ed5e22c4909b",
+  "lessonIds": [
+    "UR-C108-kil",
+    "UR-C108-hathaura",
+    "UR-C108-tala",
+    "UR-C108-pankha",
+    "UR-C108-bijli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch108.txt",
+  "json": "urdu/narration/ch108.json",
+  "textHash": "fnv1a64:14107119680db747",
+  "jsonHash": "fnv1a64:86df09b0dc3bbd64",
+  "findings": []
+}

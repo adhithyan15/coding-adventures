@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:95673549426c1352",
+  "lessonIds": [
+    "UR-C89-sab",
+    "UR-C89-har",
+    "UR-C89-koi",
+    "UR-C89-kuchh",
+    "UR-C89-donon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch89.txt",
+  "json": "urdu/narration/ch89.json",
+  "textHash": "fnv1a64:af23a84cdf6cf1a1",
+  "jsonHash": "fnv1a64:352eea084feadd0e",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C117-tel",
+  "pathSegment": "UR-PATH-117-THINGS117",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-117-THINGS117",
+      "order": 3
+    }
+  ]
+}

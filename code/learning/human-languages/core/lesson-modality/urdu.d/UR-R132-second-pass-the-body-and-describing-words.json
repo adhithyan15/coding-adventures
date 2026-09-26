@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R132-second-pass-the-body-and-describing-words",
+    "language": "urdu",
+    "chapter": 132,
+    "sequence": 6960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ad860e9c0a6dbe7"
+  },
+  "findings": []
+}

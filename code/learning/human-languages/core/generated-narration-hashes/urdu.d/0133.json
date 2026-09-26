@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:a485ee41b3db201b",
+  "lessonIds": [
+    "UR-C133-javan",
+    "UR-C133-burha",
+    "UR-C133-pyara",
+    "UR-C133-narm",
+    "UR-C133-sakht"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch133.txt",
+  "json": "urdu/narration/ch133.json",
+  "textHash": "fnv1a64:f0c61153deb832bd",
+  "jsonHash": "fnv1a64:b60063d19d08eca1",
+  "findings": []
+}

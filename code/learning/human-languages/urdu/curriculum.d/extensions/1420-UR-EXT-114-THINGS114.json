@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-114-THINGS114",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an exam, a language, a vegetable, an onion and garlic.",
+  "prerequisites": []
+}

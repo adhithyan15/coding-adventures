@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C90-vala",
+    "language": "urdu",
+    "chapter": 90,
+    "sequence": 4630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d80f43da23beb0bf"
+  },
+  "findings": []
+}
