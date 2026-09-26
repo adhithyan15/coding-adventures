@@ -28,7 +28,7 @@
 // ---------------------------------------------------------------------
 // None of the geometry above is computed here. `@coding-adventures/script-
 // ductus` owns the pen paths, reads the font, and renders the frames; it writes
-// them into the curriculum as `data/ductus/filmstrip-geometry.json`. This file
+// them into the curriculum as per-script owners in `data/ductus/filmstrip-geometry.d/`. This file
 // reads that ledger and does one job the ledger cannot: LAY THE FRAMES OUT for
 // a printed page — a grid, panel borders, a heading, and the citation.
 //
@@ -55,6 +55,12 @@
 
 import { fnv1a64 } from "./hash.js";
 import type { GeneratedFigure } from "./figure.js";
+import { join } from "node:path";
+import {
+  META_SHARD,
+  readMaybeSharded,
+  type Shard,
+} from "./shard.js";
 
 // ---------------------------------------------------------------------------
 // The ledger, as this package sees it
@@ -105,6 +111,72 @@ export interface FilmstripLedger {
 
 /** Where the ledger lives, relative to the curriculum root. */
 export const FILMSTRIP_LEDGER_PATH = "data/ductus/filmstrip-geometry.json";
+export const FILMSTRIP_LEDGER_DIRECTORY = "data/ductus/filmstrip-geometry.d";
+
+function exactKeys(value: Record<string, unknown>, expected: string[], label: string): void {
+  const actual = Object.keys(value).sort();
+  const wanted = [...expected].sort();
+  if (actual.length !== wanted.length || actual.some((key, index) => key !== wanted[index])) {
+    throw new Error(`${label} must contain exactly: ${wanted.join(", ")}`);
+  }
+}
+
+/** Reassemble deterministic per-script filmstrip owners into the public ledger. */
+export function mergeFilmstripLedgerShards(shards: Shard[]): FilmstripLedger {
+  const meta = shards.find((shard) => shard.name === META_SHARD);
+  if (meta === undefined || typeof meta.value !== "object" || meta.value === null || Array.isArray(meta.value)) {
+    throw new Error(`filmstrip geometry shards require one ${META_SHARD} object`);
+  }
+  const metadata = meta.value as Record<string, unknown>;
+  exactKeys(metadata, ["version", "generator"], META_SHARD);
+  if (metadata.version !== 1 || typeof metadata.generator !== "string") {
+    throw new Error(`${META_SHARD} must declare version 1 and a generator`);
+  }
+
+  const entries: FilmstripEntry[] = [];
+  const seen = new Set<string>();
+  for (const shard of shards) {
+    if (shard.name === META_SHARD) continue;
+    const match = /^([a-z][a-z0-9-]*)\.json$/.exec(shard.name);
+    if (match === null || typeof shard.value !== "object" || shard.value === null || Array.isArray(shard.value)) {
+      throw new Error(`unsafe filmstrip geometry owner '${shard.name}'`);
+    }
+    const owner = shard.value as Record<string, unknown>;
+    exactKeys(owner, ["script", "entries"], shard.name);
+    const script = match[1]!;
+    if (owner.script !== script || !Array.isArray(owner.entries) || owner.entries.length === 0) {
+      throw new Error(`${shard.name} must own a non-empty '${script}' entry list`);
+    }
+    for (const raw of owner.entries) {
+      if (typeof raw !== "object" || raw === null || Array.isArray(raw)) {
+        throw new Error(`${shard.name} contains a non-object entry`);
+      }
+      const entry = raw as unknown as FilmstripEntry;
+      if (entry.script !== script || typeof entry.glyph !== "string" || entry.glyph.length === 0) {
+        throw new Error(`${shard.name} contains an entry owned by another script`);
+      }
+      const key = `${script}:${entry.glyph}`;
+      if (seen.has(key)) throw new Error(`duplicate filmstrip geometry entry '${key}'`);
+      seen.add(key);
+      entries.push(entry);
+    }
+  }
+  if (entries.length === 0) throw new Error("filmstrip geometry owner set must not be empty");
+  entries.sort((left, right) =>
+    left.script === right.script
+      ? left.glyph < right.glyph ? -1 : left.glyph > right.glyph ? 1 : 0
+      : left.script < right.script ? -1 : 1,
+  );
+  return { version: 1, generator: metadata.generator, entries };
+}
+
+/** Load the generated filmstrip ledger from its per-script owners or legacy monolith. */
+export function loadFilmstripLedger(root: string): FilmstripLedger {
+  return readMaybeSharded<FilmstripLedger>(
+    join(root, FILMSTRIP_LEDGER_PATH),
+    mergeFilmstripLedgerShards,
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Checking a fragment before it becomes part of a committed file

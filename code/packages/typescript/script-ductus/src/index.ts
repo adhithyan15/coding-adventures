@@ -102,6 +102,7 @@ export {
   type FilmstripEntry,
   type FilmstripLedger,
   FILMSTRIP_LEDGER_PATH,
+  FILMSTRIP_LEDGER_DIRECTORY,
   FILMSTRIP_LEDGER_GENERATOR,
   FILMSTRIP_LEDGER_OPTIONS,
   buildFilmstripEntry,

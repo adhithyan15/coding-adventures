@@ -940,7 +940,7 @@ npm run check:figures
 ```
 
 `core/figure-generation.json` binds each figure to one canonical lesson and a safe
-`<track>/book/figures/*.svg` target. `core/generated-figure-hashes.json` fingerprints
+`<track>/book/figures/*.svg` target. `core/generated-figure-hashes.d/` fingerprints
 the figure-driving source subset and the exact SVG separately, so either a stale
 claim or an edited artifact fails `--check`.
 
@@ -959,7 +959,7 @@ Two kinds exist:
     "output": "tamil/book/figures/TA-S119-letter-a-filmstrip.svg" }
   ```
 
-  The geometry comes from `data/ductus/filmstrip-geometry.json`, which
+  The geometry comes from per-script owners in `data/ductus/filmstrip-geometry.d/`, which
   `@coding-adventures/script-ductus` generates from its cited pen paths and the
   vendored font and byte-checks in its own suite. **Adding a filmstrip target is
   two steps**: declare it here, then run `npm run generate:filmstrip-ledger` in

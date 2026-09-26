@@ -2,7 +2,7 @@
 // filmstrip-ledger.test.ts — generator AND gate for the book's filmstrip data
 // ---------------------------------------------------------------------------
 //
-// This one file both WRITES `data/ductus/filmstrip-geometry.json` and CHECKS
+// This one file both WRITES `data/ductus/filmstrip-geometry.d/` and CHECKS
 // that the committed copy still matches what the current pen paths and fonts
 // produce. Which of the two it does is decided by Vite's mode:
 //
@@ -27,7 +27,7 @@
 // ---------------------------------------------------------------------------
 
 import { beforeAll, describe, expect, it } from "vitest";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -42,6 +42,7 @@ import {
   captionSizeFor,
   serialiseFilmstripLedger,
   FILMSTRIP_LEDGER_PATH,
+  FILMSTRIP_LEDGER_DIRECTORY,
   type FilmstripEntry,
 } from "../src/filmstrip-ledger.ts";
 
@@ -144,6 +145,21 @@ function currentLedgerBytes(): string {
   return serialiseFilmstripLedger(buildFilmstripLedger(entries));
 }
 
+function currentLedgerOwnerBytes(): Map<string, string> {
+  const ledger = JSON.parse(currentLedgerBytes()) as ReturnType<typeof buildFilmstripLedger>;
+  const outputs = new Map<string, string>([
+    ["_meta.json", `${JSON.stringify({ version: ledger.version, generator: ledger.generator }, null, 2)}\n`],
+  ]);
+  const scripts = [...new Set(ledger.entries.map((entry) => entry.script))].sort();
+  for (const script of scripts) {
+    outputs.set(
+      `${script}.json`,
+      `${JSON.stringify({ script, entries: ledger.entries.filter((entry) => entry.script === script) }, null, 2)}\n`,
+    );
+  }
+  return outputs;
+}
+
 // These tests assert BYTES, not speed. Building the ledger renders every printed
 // letter (21 since HL-C443 derived Tamil's letter lessons) and the first build
 // also loads the whole curriculum to find those lessons; on a shared CI runner
@@ -154,34 +170,56 @@ function currentLedgerBytes(): string {
 const LEDGER_BUILD_TIMEOUT_MS = 60_000;
 
 describe("the printed filmstrip ledger", { timeout: LEDGER_BUILD_TIMEOUT_MS }, () => {
-  const path = join(CURRICULUM_ROOT, FILMSTRIP_LEDGER_PATH);
+  const directory = join(CURRICULUM_ROOT, FILMSTRIP_LEDGER_DIRECTORY);
 
   beforeAll(() => {
     letterLessonCandidates();
   }, 120_000);
 
   it("matches the pen paths and fonts it was generated from", () => {
-    const expected = currentLedgerBytes();
+    const expected = currentLedgerOwnerBytes();
+    expect(
+      existsSync(join(CURRICULUM_ROOT, FILMSTRIP_LEDGER_PATH)),
+      `${FILMSTRIP_LEDGER_PATH} is a forbidden generated monolith`,
+    ).toBe(false);
 
     if (import.meta.env.MODE === "write") {
-      mkdirSync(dirname(path), { recursive: true });
-      writeFileSync(path, expected, "utf8");
+      mkdirSync(directory, { recursive: true });
+      for (const [name, bytes] of expected) writeFileSync(join(directory, name), bytes, "utf8");
     }
 
-    let actual: string;
+    let names: string[];
     try {
-      actual = readFileSync(path, "utf8");
+      const stat = lstatSync(directory);
+      if (stat.isSymbolicLink() || !stat.isDirectory()) throw new Error("not a real directory");
+      names = readdirSync(directory).sort();
     } catch {
       throw new Error(
-        `${FILMSTRIP_LEDGER_PATH} is missing — run ` +
+        `${FILMSTRIP_LEDGER_DIRECTORY} is missing — run ` +
           `\`npm run generate:filmstrip-ledger\` in script-ductus`,
       );
     }
-    expect(
-      actual,
-      `${FILMSTRIP_LEDGER_PATH} is stale — run ` +
-        `\`npm run generate:filmstrip-ledger\` in script-ductus`,
-    ).toBe(expected);
+    if (import.meta.env.MODE === "write") {
+      for (const name of names) {
+        if (!expected.has(name) && /^[a-z_][a-z0-9_-]*\.json$/.test(name)) {
+          const stale = join(directory, name);
+          const stat = lstatSync(stale);
+          if (stat.isFile() && !stat.isSymbolicLink()) unlinkSync(stale);
+        }
+      }
+      names = readdirSync(directory).sort();
+    }
+    expect(names, `${FILMSTRIP_LEDGER_DIRECTORY} owner set is stale`).toEqual([...expected.keys()]);
+    for (const [name, bytes] of expected) {
+      const path = join(directory, name);
+      const stat = lstatSync(path);
+      expect(stat.isFile() && !stat.isSymbolicLink(), `${path} must be a real file`).toBe(true);
+      expect(
+        readFileSync(path, "utf8"),
+        `${FILMSTRIP_LEDGER_DIRECTORY}/${name} is stale — run ` +
+          `\`npm run generate:filmstrip-ledger\` in script-ductus`,
+      ).toBe(bytes);
+    }
   });
 
   it("is byte-identical when generated twice", () => {

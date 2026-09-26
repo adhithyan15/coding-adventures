@@ -30,7 +30,7 @@
 // silent:
 //
 //   * the filmstrip ledger is byte-checked by `check:filmstrip-ledger`;
-//   * every SVG is hashed in `core/generated-figure-hashes.json`;
+//   * every SVG is hashed in one track owner under `core/generated-figure-hashes.d/`;
 //   * every book chapter is hashed as well.
 //
 // So a headword edit fails three checks until someone regenerates, and the
