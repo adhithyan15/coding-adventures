@@ -101,6 +101,47 @@ build does not see it.
 - Host effects: `ActivityResultContracts.OpenDocument` / `CreateDocument`, the
   photo picker.
 
+### 3.4 Android, designed
+
+Written before implementation, from what the Compose backend emits today
+(checked on `main` with Trestle). Four things in that output are desktop-only
+and are the seams to cut:
+
+| today | desktop-only because | seam |
+|---|---|---|
+| `Main.kt` holds both `fun main() = application { Window(…) }` and the shared `MosaicApp(host)` composable | `application`/`Window` exist only on desktop | split: `MosaicAppShell.kt` (shared: `MosaicApp`, `MosaicComposeHost`, the prop helpers) and `Main.kt` (desktop `main`) |
+| components with drag and drop read `event.awtTransferable` | AWT | the component calls two platform functions, `mosaicDragText(event)` and `mosaicDragTransfer(text)`, defined in `MosaicPlatform.kt`, one per platform (desktop: AWT; Android: `ClipData`) |
+| `MosaicPlatformEffects.kt` opens `java.awt.FileDialog` | AWT | desktop-only file; Android gets its own library later (§3.3, step 6) and installs nothing until then |
+| `MosaicRuntimeHost` finds its state under `user.home`, its library through `compose.application.resources.dir` | JVM desktop properties | `MosaicRuntimeHost.load(stateDirectory = …)`: the Android activity passes `filesDir`; JNA loads `libmosaic_app.so` from `jniLibs` by name |
+
+Each seam lands first with desktop output unchanged, byte-for-byte except for
+the moved code (PR A). Then:
+
+- **The project.** A Compose build with `--emit-project` also writes
+  `compose/android/`, a second Gradle project beside the desktop one (the same
+  arrangement as `swiftui/iOS/`): `settings.gradle.kts`, `build.gradle.kts`
+  with `com.android.application`, Kotlin Android and the Compose compiler
+  plugin, `src/main/AndroidManifest.xml`, and one activity,
+  `MosaicActivity`, whose `onCreate` calls `setContent { MosaicApp(host) }`.
+  Its source sets name the shared files in `../src/main/kotlin` explicitly and
+  never `Main.kt` or `MosaicPlatformEffects.kt`; its own
+  `MosaicPlatform.kt` supplies the Android side of each seam. The
+  application id and label come from `[app] bundle-identifier` /
+  `display-name` (UI32), as on iOS.
+- **The runtime.** `code/scripts/build-mosaic-android-libs.sh <cargo package>
+  <jniLibs dir>` builds the app crate as a `cdylib` for `arm64-v8a`,
+  `armeabi-v7a`, `x86_64` and `x86` with `cargo ndk` into
+  `jniLibs/<abi>/libmosaic_app.so`; `--runtime-library <dir>` pointing at such
+  a directory installs it into the Android project. JNA comes from its Android
+  `aar`.
+- **Pinned toolchain:** Android Gradle Plugin and Gradle wrapper versions in
+  the generated files, `compileSdk`/`targetSdk` 36, `minSdk` 26, NDK r28
+  (28.2.13676358). CI's Ubuntu images carry the SDK and NDK.
+- **The gate.** CI builds the debug APK for Trestle with the real runtime,
+  checks every ABI's `libmosaic_app.so` exports `mosaic_app_create`, boots an
+  x86_64 emulator, installs, launches `MosaicActivity`, and requires the
+  process to be alive ten seconds later — the iOS gate's shape.
+
 ## 4. CI
 
 | lane | builds | drives |
