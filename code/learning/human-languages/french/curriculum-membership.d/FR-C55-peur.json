@@ -1,0 +1,11 @@
+{
+  "id": "FR-C55-peur",
+  "pathSegment": "FR-PATH-55-SENTIR7",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-55-SENTIR7",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C96-puis",
+    "language": "french",
+    "chapter": 96,
+    "sequence": 4200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c987612e0b3cdb4d"
+  },
+  "findings": []
+}

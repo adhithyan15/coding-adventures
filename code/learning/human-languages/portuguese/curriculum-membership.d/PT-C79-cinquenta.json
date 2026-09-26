@@ -1,0 +1,11 @@
+{
+  "id": "PT-C79-cinquenta",
+  "pathSegment": "PT-PATH-79-NUMEROS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-79-NUMEROS",
+      "order": 1
+    }
+  ]
+}

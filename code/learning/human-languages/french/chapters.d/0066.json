@@ -1,0 +1,19 @@
+{
+  "chapter": 66,
+  "title": "Draw, Paint, Count, Win, Hide",
+  "label": "ch:fr-draw-paint-count-win-hide",
+  "canDo": "I can say to draw, to paint, to count, to win, to hide.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C66-cacher",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: i can say to draw, to paint, to count, to win, to hide.",
+    "assesses": [
+      "FR-LEX-C66-VERBES18-03",
+      "FR-LEX-C66-VERBES18-04",
+      "FR-LEX-C66-VERBES18-05"
+    ]
+  }
+}

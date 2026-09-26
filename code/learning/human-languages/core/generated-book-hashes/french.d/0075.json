@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:929d9ad79414d5b9",
+  "lessonIds": [
+    "FR-C75-sol",
+    "FR-C75-escalier",
+    "FR-C75-miroir",
+    "FR-C75-salon",
+    "FR-C75-canape"
+  ],
+  "tex": "french/book/chapters/ch75-floor-stairs-mirror-living-room-sofa.tex"
+}

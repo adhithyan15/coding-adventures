@@ -1,0 +1,11 @@
+{
+  "id": "PT-C59-fogo",
+  "pathSegment": "PT-PATH-59-TEMPO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-59-TEMPO",
+      "order": 4
+    }
+  ]
+}

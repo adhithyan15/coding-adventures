@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:52555a1bd0878d20",
+  "lessonIds": [
+    "PT-C72-aqui",
+    "PT-C72-ali",
+    "PT-C72-longe",
+    "PT-C72-perto",
+    "PT-C72-depressa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch72.txt",
+  "json": "portuguese/narration/ch72.json",
+  "textHash": "fnv1a64:5b66807a33528172",
+  "jsonHash": "fnv1a64:302e09e715456470",
+  "findings": []
+}

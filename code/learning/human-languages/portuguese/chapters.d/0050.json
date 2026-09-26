@@ -1,0 +1,19 @@
+{
+  "chapter": 50,
+  "title": "Lamp, Living Room, Floor, Stairs, Mirror",
+  "label": "ch:pt-lamp-living-room-floor-stairs-mirror",
+  "canDo": "I can name a lamp, the living room, the floor, the stairs and a mirror.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "PT-C50-espelho",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 50: i can name a lamp, the living room, the floor, the stairs and a mirror.",
+    "assesses": [
+      "PT-LEX-C50-CASA3-03",
+      "PT-LEX-C50-CASA3-04",
+      "PT-LEX-C50-CASA3-05"
+    ]
+  }
+}

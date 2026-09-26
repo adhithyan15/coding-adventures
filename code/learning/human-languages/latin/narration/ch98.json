@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Rich, Poor, Foolish, Enough, Too Much",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:08537ab649d295fd",
+  "sourceHash": "fnv1a64:e011070a7a68ac31",
   "lessons": [
     {
       "id": "LA-C98-dives",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d22f8bbae7a109fc",
+      "sourceHash": "fnv1a64:f6c1dadb8479cf50",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for rich, poor, foolish, enough, too much."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:895f1a973a5b561a",
+      "sourceHash": "fnv1a64:5817e80196491bda",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for rich, poor, foolish, enough, too much."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab6b3120f58d4dc1",
+      "sourceHash": "fnv1a64:53f99e79110e1231",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for rich, poor, foolish, enough, too much."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:520a3c4def40d4cd",
+      "sourceHash": "fnv1a64:8dd0d4c4306fd66d",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for rich, poor, foolish, enough, too much."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5c3e127b6260512",
+      "sourceHash": "fnv1a64:badb5358711daf1c",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for rich, poor, foolish, enough, too much."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "Socks, Thirty, Forty, Fifty, Hundred",
+  "label": "ch:fr-socks-thirty-forty-fifty-hundred",
+  "canDo": "I can name socks, thirty, forty, fifty, a hundred.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FR-R105-second-pass-time-the-town-clothes-and-numbers",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: i can name socks, thirty, forty, fifty, a hundred.",
+    "assesses": [
+      "FR-LEX-C105-HABITS57-03",
+      "FR-LEX-C105-HABITS57-04",
+      "FR-LEX-C105-HABITS57-05"
+    ]
+  }
+}

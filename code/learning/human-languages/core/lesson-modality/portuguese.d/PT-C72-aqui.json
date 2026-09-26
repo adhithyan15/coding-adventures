@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C72-aqui",
+    "language": "portuguese",
+    "chapter": 72,
+    "sequence": 3230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:615dd3856c02e112"
+  },
+  "findings": []
+}

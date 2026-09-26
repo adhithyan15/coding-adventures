@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:811d0e0903fd0334",
+  "lessonIds": [
+    "RU-C30-hair",
+    "RU-C30-finger",
+    "RU-C30-neck",
+    "RU-C30-shoulder",
+    "RU-C30-knee"
+  ],
+  "tex": "russian/book/chapters/ch30-hair-finger-neck-shoulder-knee.tex"
+}

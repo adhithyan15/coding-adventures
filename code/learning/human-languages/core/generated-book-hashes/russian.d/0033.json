@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:47b09cf7ac05431b",
+  "lessonIds": [
+    "RU-C33-temperature",
+    "RU-C33-cough",
+    "RU-C33-rest",
+    "RU-C33-hunger",
+    "RU-C33-thirst"
+  ],
+  "tex": "russian/book/chapters/ch33-fever-cough-rest-hunger-thirst.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:5968d2f68c63d2be",
+  "lessonIds": [
+    "PT-C66-rapido",
+    "PT-C66-lento",
+    "PT-C66-facil",
+    "PT-C66-dificil",
+    "PT-C66-caro"
+  ],
+  "tex": "portuguese/book/chapters/ch66-fast-slow-easy-hard-dear.tex"
+}

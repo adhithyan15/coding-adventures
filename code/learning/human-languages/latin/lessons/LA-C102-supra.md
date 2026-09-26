@@ -45,7 +45,7 @@ reviews_of: [LA-C102-procul]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for far, above, below, inside, outside.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C102-LOCUS-02, LA-LEX-C101-VERBA7-05, LA-LEX-C102-LOCUS-01] -->

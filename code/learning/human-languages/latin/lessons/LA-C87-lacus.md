@@ -45,7 +45,7 @@ reviews_of: [LA-C87-flumen]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for river, lake, stream, spring, coast.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C87-AQUA-02, LA-LEX-C86-ARBOR-05, LA-LEX-C87-AQUA-01] -->

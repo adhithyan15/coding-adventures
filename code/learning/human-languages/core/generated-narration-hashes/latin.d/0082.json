@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 82,
-  "sourceHash": "fnv1a64:0851dd13bb6d307f",
+  "sourceHash": "fnv1a64:4e2614ec6c9740af",
   "lessonIds": [
     "LA-C82-mensa",
     "LA-C82-sella",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch82.txt",
   "json": "latin/narration/ch82.json",
-  "textHash": "fnv1a64:1f61be7ed14bc531",
-  "jsonHash": "fnv1a64:204ca2f4546dae61",
+  "textHash": "fnv1a64:3afe6ebe659e593c",
+  "jsonHash": "fnv1a64:a8f73ee29bceaf40",
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C54-ticket",
+  "pathSegment": "RU-PATH-54-WORDS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-54-WORDS",
+      "order": 3
+    }
+  ]
+}

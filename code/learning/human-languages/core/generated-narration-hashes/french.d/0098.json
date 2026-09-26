@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:6b439933b3d3dde5",
+  "lessonIds": [
+    "FR-C98-hier",
+    "FR-C98-souvent",
+    "FR-C98-parfois",
+    "FR-C98-ville",
+    "FR-C98-rue"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch98.txt",
+  "json": "french/narration/ch98.json",
+  "textHash": "fnv1a64:9108698ab927bd04",
+  "jsonHash": "fnv1a64:7b93a72dcb7fb2ae",
+  "findings": []
+}

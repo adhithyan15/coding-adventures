@@ -1,0 +1,11 @@
+{
+  "id": "FR-C67-fruit",
+  "pathSegment": "FR-PATH-67-VERBES19",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-67-VERBES19",
+      "order": 3
+    }
+  ]
+}

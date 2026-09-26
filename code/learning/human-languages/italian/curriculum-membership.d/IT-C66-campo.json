@@ -1,0 +1,11 @@
+{
+  "id": "IT-C66-campo",
+  "pathSegment": "IT-PATH-66-NATURA3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-66-NATURA3",
+      "order": 2
+    }
+  ]
+}

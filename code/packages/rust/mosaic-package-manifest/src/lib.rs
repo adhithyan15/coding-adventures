@@ -70,6 +70,7 @@
 //! | `InvalidKernelVersion`  | `kernel.version` is anything other than `"1"`         |
 //! | `InvalidSemverString`   | `package.version` or a dependency value not semver-y  |
 //! | `InvalidInitialWindowSize` | either `[app]` initial-window dimension is zero |
+//! | `InvalidLayoutRule`     | an `[[app.layouts]]` rule could not work (UI48 §7.2) |
 //! | `InvalidStylePath`      | `[styles].token_palette` is not a safe relative JSON path |
 //! | `DuplicateHostEffectHandler` | two `[host_effects].handlers` for one backend |
 //! | `HostEffectFileWithoutHandler` | a `[host_effects].files` backend declares no handler |
@@ -79,6 +80,8 @@
 //! Each error is *one cause, one variant* — no compound errors, no batched
 //! collection.  The first thing wrong with the manifest is the only thing
 //! the caller hears about; fixing it and re-running is the workflow.
+
+pub mod layouts;
 
 use std::collections::{HashMap, HashSet};
 use std::fs;
@@ -127,6 +130,10 @@ pub struct StylesSection {
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct AppSection {
     pub initial_window_size: Option<WindowSize>,
+    /// `[[app.layouts]]`: which environment selects which layout variant, in
+    /// order (UI48 §7.2). Empty means the conventional names select themselves;
+    /// see [`layouts::effective_layout_rules`].
+    pub layouts: Vec<layouts::LayoutRule>,
 }
 
 /// A desktop window's initial logical-pixel dimensions.
@@ -296,6 +303,9 @@ pub enum ManifestError {
     /// `[app]` declared a desktop window outside the portable positive
     /// signed-32-bit range accepted by every target window API.
     InvalidInitialWindowSize { width: u32, height: u32 },
+    /// An `[[app.layouts]]` rule names an unknown axis or value, repeats a
+    /// variant, or could hide the rules after it.
+    InvalidLayoutRule(String),
     /// `[styles].token_palette` was not a safe, portable package-relative
     /// JSON path.
     InvalidStylePath(String),
@@ -381,6 +391,9 @@ impl std::fmt::Display for ManifestError {
                 f,
                 "invalid `[app]` initial window size {width}x{height} (both dimensions must be between 1 and 2147483647)"
             ),
+            Self::InvalidLayoutRule(detail) => {
+                write!(f, "invalid `[[app.layouts]]` rule: {detail}")
+            }
             Self::InvalidStylePath(path) => write!(
                 f,
                 "invalid style resource path `{path}` (must be a package-relative .json path without `.` or `..` components)"
@@ -474,6 +487,7 @@ struct RawApp {
     initial_window_width: Option<u32>,
     #[serde(rename = "initial-window-height")]
     initial_window_height: Option<u32>,
+    layouts: Option<Vec<layouts::RawLayoutRule>>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -744,8 +758,11 @@ fn validate_app(raw: Option<RawApp>) -> Result<AppSection, ManifestError> {
             });
         }
     };
+    let layouts = layouts::validate_layout_rules(raw.layouts.unwrap_or_default())
+        .map_err(ManifestError::InvalidLayoutRule)?;
     Ok(AppSection {
         initial_window_size,
+        layouts,
     })
 }
 
@@ -1097,6 +1114,32 @@ version = "1"
         assert!(pkg.app.initial_window_size.is_none());
         assert!(pkg.host_assets.files.is_empty());
         assert_eq!(pkg.kernel.version, "1");
+    }
+
+    #[test]
+    fn parses_layout_rules_in_the_order_written() {
+        let src = r#"
+[package]
+name = "task-app"
+version = "0.1.0"
+description = "Task application"
+license = "MIT"
+[components]
+exports = ["TaskApp"]
+[[app.layouts]]
+variant = "touch"
+pointer = "coarse"
+[[app.layouts]]
+variant = "compact"
+size-class = "compact"
+[kernel]
+version = "1"
+"#;
+        let pkg = parse(src).expect("manifest valid");
+        let names: Vec<&str> = pkg.app.layouts.iter().map(|rule| rule.variant.as_str()).collect();
+        assert_eq!(names, ["touch", "compact"], "order is the order written, not alphabetical");
+        let bad = src.replace("pointer = \"coarse\"", "pointer = \"mouse\"");
+        assert!(matches!(parse(&bad), Err(ManifestError::InvalidLayoutRule(_))));
     }
 
     #[test]

@@ -8,7 +8,7 @@ type: word
 headword: ottavo / ottava
 gloss: "eighth — the one that takes a different ending, and the eight notes named after it"
 concept_tag: IT-ORDINAL-OTTAVO
-prerequisites: [IT-C27-settimo, IT-C26-terzo, IT-C23-persona, IT-C13-nero-bianco, IT-C13-rosso-blu, IT-C02-come-stai, IT-C02-come-sta]
+prerequisites: [IT-C27-settimo, IT-C26-terzo, IT-C23-persona, IT-C13-nero-bianco, IT-C13-rosso-blu, IT-C02-come-stai, IT-C02-come-sta, IT-C13-colori-origini]
 sounds: [double-tt]
 roots: []
 etymology_hook: "otto gives ottavo, not otto plus the ending the last four took -- Latin octavus already had -avus and Italian inherited the oddity; l'ottava in music is the eighth note, where the names begin again"

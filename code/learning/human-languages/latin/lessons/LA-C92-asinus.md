@@ -45,7 +45,7 @@ reviews_of: [LA-C92-gallina]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for mouse, hen, donkey, elephant, deer.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C92-ANIMALIA3-03, LA-LEX-C92-ANIMALIA3-01, LA-LEX-C92-ANIMALIA3-02] -->

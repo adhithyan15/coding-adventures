@@ -1,0 +1,11 @@
+{
+  "id": "FR-C95-toujours",
+  "pathSegment": "FR-PATH-95-ADJ47",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-95-ADJ47",
+      "order": 4
+    }
+  ]
+}

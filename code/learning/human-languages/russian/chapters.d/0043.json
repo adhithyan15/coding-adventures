@@ -1,0 +1,19 @@
+{
+  "chapter": 43,
+  "title": "Meat, Fish, Egg, Butter, Salt",
+  "label": "ch:ru-meat-fish-egg-butter-salt",
+  "canDo": "I can name meat, fish, an egg, butter and salt.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "RU-C43-salt",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 43: i can name meat, fish, an egg, butter and salt.",
+    "assesses": [
+      "RU-LEX-C43-FOOD1-03",
+      "RU-LEX-C43-FOOD1-04",
+      "RU-LEX-C43-FOOD1-05"
+    ]
+  }
+}

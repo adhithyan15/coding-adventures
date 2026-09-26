@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:1a14457418e39ea9",
+  "lessonIds": [
+    "PT-C57-rio",
+    "PT-C57-lago",
+    "PT-C57-pedra",
+    "PT-C57-areia",
+    "PT-C57-ilha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch57.txt",
+  "json": "portuguese/narration/ch57.json",
+  "textHash": "fnv1a64:db84c242cf59b2ad",
+  "jsonHash": "fnv1a64:3ddad699811777aa",
+  "findings": []
+}

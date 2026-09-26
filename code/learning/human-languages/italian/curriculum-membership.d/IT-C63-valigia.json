@@ -1,0 +1,11 @@
+{
+  "id": "IT-C63-valigia",
+  "pathSegment": "IT-PATH-63-COSE3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-63-COSE3",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C74-parque",
+  "pathSegment": "PT-PATH-74-CIDADE2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-74-CIDADE2",
+      "order": 4
+    }
+  ]
+}

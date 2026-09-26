@@ -8,7 +8,7 @@ type: practice
 headword: ce qu'on n'entend pas
 gloss: "one sound rule and the four spellings that hang off it, run over the whole book"
 concept_tag: FR-REVIEW-SILENT
-prerequisites: [FR-C38-pas-de]
+prerequisites: [FR-C38-pas-de, FR-C23-vert-jaune-more, FR-C22-chien-chat-more]
 sounds: []
 roots: []
 duration:

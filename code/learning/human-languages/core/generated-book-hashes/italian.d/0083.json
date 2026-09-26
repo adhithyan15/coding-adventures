@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:e8bfffe7dea7ab08",
+  "lessonIds": [
+    "IT-C83-ponte",
+    "IT-C83-parco",
+    "IT-C83-chiesa",
+    "IT-C83-museo",
+    "IT-C83-ristorante"
+  ],
+  "tex": "italian/book/chapters/ch83-bridge-park-church-museum-restaurant.tex"
+}

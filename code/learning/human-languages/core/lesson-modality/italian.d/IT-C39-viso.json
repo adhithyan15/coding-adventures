@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C39-viso",
+    "language": "italian",
+    "chapter": 39,
+    "sequence": 1520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d1e16afaaa91e1d"
+  },
+  "findings": []
+}

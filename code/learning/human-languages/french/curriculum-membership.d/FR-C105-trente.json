@@ -1,0 +1,11 @@
+{
+  "id": "FR-C105-trente",
+  "pathSegment": "FR-PATH-105-HABITS57",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-105-HABITS57",
+      "order": 1
+    }
+  ]
+}

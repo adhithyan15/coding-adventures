@@ -1,0 +1,11 @@
+{
+  "id": "FR-C99-banque",
+  "pathSegment": "FR-PATH-99-VILLE51",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-99-VILLE51",
+      "order": 2
+    }
+  ]
+}

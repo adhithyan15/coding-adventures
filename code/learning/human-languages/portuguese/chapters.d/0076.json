@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Village, Post Office, Police, Theatre, Library",
+  "label": "ch:pt-village-post-office-police-theatre-library",
+  "canDo": "I can name a village, the post office, the police, a theatre and a library.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "PT-C76-biblioteca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can name a village, the post office, the police, a theatre and a library.",
+    "assesses": [
+      "PT-LEX-C76-CIDADE4-03",
+      "PT-LEX-C76-CIDADE4-04",
+      "PT-LEX-C76-CIDADE4-05"
+    ]
+  }
+}

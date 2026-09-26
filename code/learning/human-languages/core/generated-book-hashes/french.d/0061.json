@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:57c17c630f8d3ccb",
+  "lessonIds": [
+    "FR-C61-enseigner",
+    "FR-C61-boire",
+    "FR-C61-manger",
+    "FR-C61-donner",
+    "FR-C61-vivre"
+  ],
+  "tex": "french/book/chapters/ch61-teach-drink-eat-give-live.tex"
+}

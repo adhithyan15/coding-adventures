@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "Big, Small, New, Old, Beautiful",
+  "label": "ch:it-big-small-new-old-beautiful",
+  "canDo": "I can name big, small, new, old, beautiful.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "IT-C72-bello",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can name big, small, new, old, beautiful.",
+    "assesses": [
+      "IT-LEX-C72-AGG1-03",
+      "IT-LEX-C72-AGG1-04",
+      "IT-LEX-C72-AGG1-05"
+    ]
+  }
+}

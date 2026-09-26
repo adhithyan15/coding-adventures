@@ -1,8 +1,8 @@
 Italian, chapter 13: Colours.
-2 lessons. All 2 can be done entirely by ear.
+3 lessons. All 3 can be done entirely by ear.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 nero, bianco — one Roman, one Lombard.
 
 Warm-up.
@@ -40,7 +40,7 @@ Wrap-up Recall.
 Which colour is Rome's own? (Nero from niger.) Where does bianco come from? (Germanic blank, "shining" — likely via the Lombards.) Why is that surprising? (Latin normally lends to Germanic, not the reverse.) Where did albus survive? (In alba, "dawn," and albume — no longer a colour.) Next: rosso and blu, and one more traveller.
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 rosso, blu — and the blue Italy plays in.
 
 Warm-up.
@@ -63,14 +63,6 @@ The word, taken apart: azzurro.
 Italian has a second blue, and it's the famous one: azzurro, from Arabic lāzaward ("lapis lazuli"), itself from Persian lāžward. The initial l- was swallowed — heard as an article and dropped — leaving azur/azzurro. The same journey gave Spanish and Portuguese azul, French azur, and English azure.
 Italy's national teams are gli Azzurri, "the blue ones" — named, at the end of a very long chain, after a blue stone mined in Afghanistan.
 
-What you've built: the colour paths.
-[a table of 5 rows, read aloud]
-Italian: nero. source: Latin niger.
-Italian: bianco. source: Germanic blank.
-Italian: rosso. source: Latin russus (ancient PIE root).
-Italian: blu. source: Germanic blāo.
-Italian: azzurro. source: Arabic lāzaward.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: "rosso, blu, azzurro"]
@@ -85,3 +77,32 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Is rosso related to English red by borrowing or descent? (Descent — PIE h₁rewdʰ-.) Which two Italian colours are Germanic loans? (Bianco and blu.) Where does azzurro come from? (Arabic lāzaward, "lapis lazuli" — via Persian; the l- was lost as if it were an article.) What are Italy's teams called? (Gli Azzurri.) Next chapter: attaching these colours to the nouns you know.
+
+
+Lesson 3 of 3.
+The colour paths — five colours, three roads.
+
+Warm-up.
+[pause 2 seconds]
+Say rosso and blu. One came down from Latin; the other walked in from the north. Which is which?
+
+What you've built: the colour paths.
+[a table of 5 rows, read aloud]
+Italian: nero. source: Latin niger.
+Italian: bianco. source: Germanic blank.
+Italian: rosso. source: Latin russus (ancient PIE root).
+Italian: blu. source: Germanic blāo.
+Italian: azzurro. source: Arabic lāzaward.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: the two Latin colours — "nero, rosso"]
+[pause 8 seconds for the answer]
+[your turn — say: the two Germanic colours — "bianco, blu"]
+[pause 8 seconds for the answer]
+[your turn — say: the one from Arabic — "azzurro"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How many roads do Italian's five colours come by? (Three: Latin for nero and rosso, Germanic for bianco and blu, Arabic for azzurro.)

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:e9d3c033bba2d37a",
+  "lessonIds": [
+    "PT-C73-cidade",
+    "PT-C73-rua",
+    "PT-C73-loja",
+    "PT-C73-mercado",
+    "PT-C73-banco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch73.txt",
+  "json": "portuguese/narration/ch73.json",
+  "textHash": "fnv1a64:73cc3dea537629ef",
+  "jsonHash": "fnv1a64:6f65acaeb9d74b02",
+  "findings": []
+}

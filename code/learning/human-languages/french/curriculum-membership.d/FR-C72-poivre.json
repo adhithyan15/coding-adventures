@@ -1,0 +1,11 @@
+{
+  "id": "FR-C72-poivre",
+  "pathSegment": "FR-PATH-72-CUISINE24",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-72-CUISINE24",
+      "order": 3
+    }
+  ]
+}

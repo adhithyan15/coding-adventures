@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C30-pe",
+    "language": "portuguese",
+    "chapter": 30,
+    "sequence": 1130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2527cc7d2840cc2d"
+  },
+  "findings": []
+}

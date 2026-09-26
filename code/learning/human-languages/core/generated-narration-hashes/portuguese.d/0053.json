@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:3aa76e469719a911",
+  "lessonIds": [
+    "PT-C53-telefone",
+    "PT-C53-guarda-chuva",
+    "PT-C53-dinheiro",
+    "PT-C53-presente",
+    "PT-C53-relogio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch53.txt",
+  "json": "portuguese/narration/ch53.json",
+  "textHash": "fnv1a64:69b381abecc0bd00",
+  "jsonHash": "fnv1a64:28027520524f3fa9",
+  "findings": []
+}

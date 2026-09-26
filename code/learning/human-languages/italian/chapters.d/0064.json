@@ -1,0 +1,19 @@
+{
+  "chapter": 64,
+  "title": "Tree, Flower, Leaf, Mountain, Wood",
+  "label": "ch:it-tree-flower-leaf-mountain-wood",
+  "canDo": "I can name a tree, a flower, a leaf, a mountain, a wood.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "IT-C64-bosco",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 64: i can name a tree, a flower, a leaf, a mountain, a wood.",
+    "assesses": [
+      "IT-LEX-C64-NATURA1-03",
+      "IT-LEX-C64-NATURA1-04",
+      "IT-LEX-C64-NATURA1-05"
+    ]
+  }
+}

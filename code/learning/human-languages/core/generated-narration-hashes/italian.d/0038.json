@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:fbf7519855203a17",
+  "lessonIds": [
+    "IT-C38-lingua",
+    "IT-C38-collo",
+    "IT-C38-spalla",
+    "IT-C38-schiena",
+    "IT-C38-capelli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch38.txt",
+  "json": "italian/narration/ch38.json",
+  "textHash": "fnv1a64:c23d152ac3f4dbe6",
+  "jsonHash": "fnv1a64:e7ffe38e6f265803",
+  "findings": []
+}

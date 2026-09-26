@@ -45,7 +45,7 @@ reviews_of: [LA-C75-laboro]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for work, sing, dance, laugh, weep.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C75-VERBA1-02, LA-LEX-C74-OPUS-05, LA-LEX-C75-VERBA1-01] -->

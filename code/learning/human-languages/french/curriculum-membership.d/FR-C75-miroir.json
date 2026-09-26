@@ -1,0 +1,11 @@
+{
+  "id": "FR-C75-miroir",
+  "pathSegment": "FR-PATH-75-MAISON27",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-75-MAISON27",
+      "order": 2
+    }
+  ]
+}

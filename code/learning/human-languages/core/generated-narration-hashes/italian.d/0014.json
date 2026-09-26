@@ -1,16 +1,17 @@
 {
   "language": "italian",
   "chapter": 14,
-  "sourceHash": "fnv1a64:cf4b53b18112d826",
+  "sourceHash": "fnv1a64:2af0c2ddce50d60c",
   "lessonIds": [
     "IT-C14-avere",
-    "IT-C14-eta"
+    "IT-C14-eta",
+    "IT-C14-avere-o-essere"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "italian/narration/ch14.txt",
   "json": "italian/narration/ch14.json",
-  "textHash": "fnv1a64:dcb61b2646ca0757",
-  "jsonHash": "fnv1a64:1f2b21a5a96ec298",
+  "textHash": "fnv1a64:5b98debfbaea91ff",
+  "jsonHash": "fnv1a64:de90765fecd14a40",
   "findings": []
 }

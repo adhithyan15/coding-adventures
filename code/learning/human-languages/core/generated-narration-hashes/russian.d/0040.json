@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:ef410e02a45d607d",
+  "lessonIds": [
+    "RU-C40-spat",
+    "RU-C40-sidet",
+    "RU-C40-stoyat",
+    "RU-C40-bezhat",
+    "RU-C40-igrat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch40.txt",
+  "json": "russian/narration/ch40.json",
+  "textHash": "fnv1a64:e45f30d3cc0f211e",
+  "jsonHash": "fnv1a64:190b493ac1d376ee",
+  "findings": []
+}

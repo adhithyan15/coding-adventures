@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 94,
-  "sourceHash": "fnv1a64:f0b4ad70f8866ea1",
+  "sourceHash": "fnv1a64:6a8749d86dfa4f5a",
   "lessonIds": [
     "LA-C94-novus",
     "LA-C94-vetus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch94.txt",
   "json": "latin/narration/ch94.json",
-  "textHash": "fnv1a64:da1ac7b0483636bf",
-  "jsonHash": "fnv1a64:05a8bbd7a632cec6",
+  "textHash": "fnv1a64:c83346516ab1c44e",
+  "jsonHash": "fnv1a64:a857f63321f075e7",
   "findings": []
 }

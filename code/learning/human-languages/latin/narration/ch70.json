@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Son, Daughter, Grandparents",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f09dc3dacbe2d4ab",
+  "sourceHash": "fnv1a64:dc57bb624ca66215",
   "lessons": [
     {
       "id": "LA-C70-filius",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73153e1657525f5c",
+      "sourceHash": "fnv1a64:1c5ac116e5d78b76",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for son, daughter, grandparents."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd63b616abafb850",
+      "sourceHash": "fnv1a64:52e861affbb237e6",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for son, daughter, grandparents."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:089cc0b853766ac7",
+      "sourceHash": "fnv1a64:1148c2565176cdff",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for son, daughter, grandparents."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5966cd28671b6458",
+      "sourceHash": "fnv1a64:b959339c020c3d94",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for son, daughter, grandparents."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5133bb375a12a334",
+      "sourceHash": "fnv1a64:385a38896f50a30c",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for son, daughter, grandparents."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -45,7 +45,7 @@ reviews_of: [LA-C90-capra]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for horse, ox, sheep, goat, pig.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C90-ANIMALIA1-05, LA-LEX-C90-ANIMALIA1-03, LA-LEX-C90-ANIMALIA1-04] -->

@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:a9a69cd8c39d8844",
+  "lessonIds": [
+    "PT-C58-campo",
+    "PT-C58-ceu",
+    "PT-C58-sol",
+    "PT-C58-estrela",
+    "PT-C58-nuvem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch58.txt",
+  "json": "portuguese/narration/ch58.json",
+  "textHash": "fnv1a64:4859db028b5ed4ad",
+  "jsonHash": "fnv1a64:241a7a64e02ba963",
+  "findings": []
+}

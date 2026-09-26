@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C38-rabotat",
+    "language": "russian",
+    "chapter": 38,
+    "sequence": 1850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a07226c2b53e7af"
+  },
+  "findings": []
+}

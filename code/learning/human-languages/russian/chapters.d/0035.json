@@ -1,0 +1,19 @@
+{
+  "chapter": 35,
+  "title": "Son, Daughter, Grandmother, Husband, Wife",
+  "label": "ch:ru-son-daughter-grandmother-husband-wife",
+  "canDo": "I can name a son, a daughter, a grandmother, a husband and a wife.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "RU-C35-wife",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 35: i can name a son, a daughter, a grandmother, a husband and a wife.",
+    "assesses": [
+      "RU-LEX-C35-FAMILY1-03",
+      "RU-LEX-C35-FAMILY1-04",
+      "RU-LEX-C35-FAMILY1-05"
+    ]
+  }
+}

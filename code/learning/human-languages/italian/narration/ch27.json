@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Sesto al Decimo",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:41251cd629daaf58",
+  "sourceHash": "fnv1a64:b91ec2975bc3b2ab",
   "lessons": [
     {
       "id": "IT-C27-sesto",
@@ -400,7 +400,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5613dfb67fa783f1",
+      "sourceHash": "fnv1a64:7869ae54bca3b61f",
       "notice": null,
       "blocks": [
         {

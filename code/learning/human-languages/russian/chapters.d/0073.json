@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "Below, Left, Right, A Lot, A Little",
+  "label": "ch:ru-below-left-right-a-lot-a-little",
+  "canDo": "I can say below, on the left, on the right, a lot and a little.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "RU-C73-alittle",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can say below, on the left, on the right, a lot and a little.",
+    "assesses": [
+      "RU-LEX-C73-WHERE2-03",
+      "RU-LEX-C73-WHERE2-04",
+      "RU-LEX-C73-WHERE2-05"
+    ]
+  }
+}

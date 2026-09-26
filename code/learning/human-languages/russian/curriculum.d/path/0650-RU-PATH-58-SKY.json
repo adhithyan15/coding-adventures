@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-58-SKY",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "RU-EXT-58-SKY"
+  ],
+  "after": []
+}

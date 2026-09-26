@@ -3,8 +3,8 @@
   "language": "french",
   "chapter": 26,
   "title": "Dog and Cat",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ea348289053c5ffc",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:444fb2484dce8714",
   "lessons": [
     {
       "id": "FR-C22-chien-chat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d553230b98aab7c4",
+      "sourceHash": "fnv1a64:9ce2a02ff88f59f3",
       "notice": null,
       "blocks": [
         {
@@ -52,17 +52,6 @@
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart: chat",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "chat (\"cat\") continues cattus, the same Late Latin word — most likely ultimately Afro-Asiatic (compare Nubian kadis) — that spread along Roman trade routes as domestic cats themselves spread out of Egypt. This is the identical word behind Spanish's gato and Italian's gatto — French, Spanish, and Italian all independently inherited the exact same Late Latin replacement for Classical fēlēs."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -102,7 +91,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -115,6 +104,91 @@
             {
               "kind": "speech",
               "text": "Is chien a regular or irregular descendant of Latin canis? (Regular — the same ca- becomes cha- shift as champ and chanter.) Does French show the same perro-style mystery Spanish does for \"dog\"? (No — French kept the expected Latin word.) What word does chat continue, and where did that word most likely originate? (Cattus, most likely Afro-Asiatic, traveling with the cat out of Egypt.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C22-chien-chat-more",
+      "sequence": 795,
+      "title": "(chien, chat, continued) — chat",
+      "headword": "(chien, chat, continued)",
+      "romanization": "(chien, chat, continued)",
+      "gloss": "chat",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bb2448a33d7feb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say chien, chat again, and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: chat",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chat (\"cat\") continues cattus, the same Late Latin word — most likely ultimately Afro-Asiatic (compare Nubian kadis) — that spread along Roman trade routes as domestic cats themselves spread out of Egypt. This is the identical word behind Spanish's gato and Italian's gatto — French, Spanish, and Italian all independently inherited the exact same Late Latin replacement for Classical fēlēs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what this lesson added to chien, chat, in one sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what this lesson added to **chien, chat**, in one sentence]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did this lesson add to chien, chat? Say it once more, without looking."
             }
           ]
         }

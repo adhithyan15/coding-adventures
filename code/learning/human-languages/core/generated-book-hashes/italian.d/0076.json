@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:0905420415db73d4",
+  "lessonIds": [
+    "IT-C76-forte",
+    "IT-C76-debole",
+    "IT-C76-ricco",
+    "IT-C76-povero",
+    "IT-C76-giallo"
+  ],
+  "tex": "italian/book/chapters/ch76-strong-weak-rich-poor-yellow.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C51-prato",
+  "pathSegment": "PT-PATH-51-MESA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-51-MESA",
+      "order": 1
+    }
+  ]
+}

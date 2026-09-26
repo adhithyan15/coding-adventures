@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:6c307742058d0d4d",
+  "lessonIds": [
+    "IT-C39-pancia",
+    "IT-C39-viso",
+    "IT-C39-sangue",
+    "IT-C39-pelle",
+    "IT-C39-unghia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch39.txt",
+  "json": "italian/narration/ch39.json",
+  "textHash": "fnv1a64:488a854091b65763",
+  "jsonHash": "fnv1a64:328a645a8a23ab17",
+  "findings": []
+}

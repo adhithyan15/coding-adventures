@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C43-rabbia",
+    "language": "italian",
+    "chapter": 43,
+    "sequence": 1720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ffb0ed79ef63b06"
+  },
+  "findings": []
+}

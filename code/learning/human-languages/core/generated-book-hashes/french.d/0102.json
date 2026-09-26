@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:5ef502a29d8c0938",
+  "lessonIds": [
+    "FR-C102-police",
+    "FR-C102-theatre",
+    "FR-C102-bibliotheque",
+    "FR-C102-boulangerie",
+    "FR-C102-mairie"
+  ],
+  "tex": "french/book/chapters/ch102-police-theatre-library-bakery-town-hall.tex"
+}

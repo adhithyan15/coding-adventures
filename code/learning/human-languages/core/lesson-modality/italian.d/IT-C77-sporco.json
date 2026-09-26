@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C77-sporco",
+    "language": "italian",
+    "chapter": 77,
+    "sequence": 3460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8953d3f43cb1a63"
+  },
+  "findings": []
+}

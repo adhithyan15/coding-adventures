@@ -45,7 +45,7 @@ reviews_of: [LA-C94-vetus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for new, old, light, fast, slow.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C94-NOVUS-03, LA-LEX-C94-NOVUS-01, LA-LEX-C94-NOVUS-02] -->

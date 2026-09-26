@@ -1,0 +1,11 @@
+{
+  "id": "FR-C93-lourd",
+  "pathSegment": "FR-PATH-93-ADJ45",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-93-ADJ45",
+      "order": 2
+    }
+  ]
+}

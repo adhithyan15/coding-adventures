@@ -1,0 +1,11 @@
+{
+  "id": "FR-C87-mouton",
+  "pathSegment": "FR-PATH-87-ANIMAUX39",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-87-ANIMAUX39",
+      "order": 0
+    }
+  ]
+}

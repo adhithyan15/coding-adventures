@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C84-vent",
+    "language": "french",
+    "chapter": 84,
+    "sequence": 3580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6cb2e195d01022a"
+  },
+  "findings": []
+}

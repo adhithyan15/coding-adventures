@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:0b3f767da00f6daf",
+  "lessonIds": [
+    "RU-C55-tree",
+    "RU-C55-flower",
+    "RU-C55-leaf",
+    "RU-C55-grass",
+    "RU-C55-village"
+  ],
+  "tex": "russian/book/chapters/ch55-tree-flower-leaf-grass-village.tex"
+}

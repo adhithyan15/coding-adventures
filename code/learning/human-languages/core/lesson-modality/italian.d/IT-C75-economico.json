@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C75-economico",
+    "language": "italian",
+    "chapter": 75,
+    "sequence": 3330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6e608e63fcacf49"
+  },
+  "findings": []
+}

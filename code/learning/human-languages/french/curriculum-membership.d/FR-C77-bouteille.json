@@ -1,0 +1,11 @@
+{
+  "id": "FR-C77-bouteille",
+  "pathSegment": "FR-PATH-77-TABLE29",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-77-TABLE29",
+      "order": 3
+    }
+  ]
+}

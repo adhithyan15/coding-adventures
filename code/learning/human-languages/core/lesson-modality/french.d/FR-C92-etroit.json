@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C92-etroit",
+    "language": "french",
+    "chapter": 92,
+    "sequence": 4020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:289a3e6fd7815141"
+  },
+  "findings": []
+}

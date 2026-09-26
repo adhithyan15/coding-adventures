@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Forty, Fifty, Ninety, a Thousand, a Country",
+  "label": "ch:ru-forty-fifty-ninety-a-thousand-a-country",
+  "canDo": "I can count forty, fifty, ninety and a thousand, and name a country.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C76-country",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can count forty, fifty, ninety and a thousand, and name a country.",
+    "assesses": [
+      "RU-LEX-C76-NUM2-03",
+      "RU-LEX-C76-NUM2-04",
+      "RU-LEX-C76-NUM2-05"
+    ]
+  }
+}

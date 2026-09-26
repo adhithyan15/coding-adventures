@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-51-TABLE",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "RU-EXT-51-TABLE"
+  ],
+  "after": []
+}

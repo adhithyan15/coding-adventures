@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C59-rain",
+    "language": "russian",
+    "chapter": 59,
+    "sequence": 2920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07a883e73a3fb53b"
+  },
+  "findings": []
+}

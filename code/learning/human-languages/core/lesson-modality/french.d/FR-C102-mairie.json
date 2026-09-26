@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C102-mairie",
+    "language": "french",
+    "chapter": 102,
+    "sequence": 4520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a70a46c39aa7f36"
+  },
+  "findings": []
+}

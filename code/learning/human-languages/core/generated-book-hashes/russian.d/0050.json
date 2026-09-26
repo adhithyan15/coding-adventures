@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:47f37d2cc9e57c77",
+  "lessonIds": [
+    "RU-C50-wall",
+    "RU-C50-roof",
+    "RU-C50-garden",
+    "RU-C50-bathroom",
+    "RU-C50-clock"
+  ],
+  "tex": "russian/book/chapters/ch50-wall-roof-garden-bathroom-clock.tex"
+}

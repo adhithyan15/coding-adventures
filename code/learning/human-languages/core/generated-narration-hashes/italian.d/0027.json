@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 27,
-  "sourceHash": "fnv1a64:41251cd629daaf58",
+  "sourceHash": "fnv1a64:b91ec2975bc3b2ab",
   "lessonIds": [
     "IT-C27-sesto",
     "IT-C27-settimo",
@@ -14,6 +14,6 @@
   "text": "italian/narration/ch27.txt",
   "json": "italian/narration/ch27.json",
   "textHash": "fnv1a64:a2657bde77d8ce2c",
-  "jsonHash": "fnv1a64:2f448515d76206c1",
+  "jsonHash": "fnv1a64:cde9df11f98c38c4",
   "findings": []
 }

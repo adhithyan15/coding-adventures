@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C77-shop",
+    "language": "russian",
+    "chapter": 77,
+    "sequence": 3840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71cce7f292470561"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 51,
+  "title": "Cup, Plate, Spoon, Knife, Fork",
+  "label": "ch:ru-cup-plate-spoon-knife-fork",
+  "canDo": "I can name a cup, a plate, a spoon, a knife and a fork.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "RU-C51-fork",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 51: i can name a cup, a plate, a spoon, a knife and a fork.",
+    "assesses": [
+      "RU-LEX-C51-TABLE-03",
+      "RU-LEX-C51-TABLE-04",
+      "RU-LEX-C51-TABLE-05"
+    ]
+  }
+}

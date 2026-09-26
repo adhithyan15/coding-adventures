@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C51-peau",
+    "language": "french",
+    "chapter": 51,
+    "sequence": 1910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03c09bc2fd1b085f"
+  },
+  "findings": []
+}

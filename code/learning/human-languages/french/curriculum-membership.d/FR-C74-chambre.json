@@ -1,0 +1,11 @@
+{
+  "id": "FR-C74-chambre",
+  "pathSegment": "FR-PATH-74-MAISON26",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-74-MAISON26",
+      "order": 4
+    }
+  ]
+}

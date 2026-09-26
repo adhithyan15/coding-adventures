@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "Bird, Wolf, Lion, Bear, Snake",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:617a4bd67d1fbf70",
+  "sourceHash": "fnv1a64:db2aec3e7b654eb2",
   "lessons": [
     {
       "id": "LA-C91-avis",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf4382313bf897e0",
+      "sourceHash": "fnv1a64:4ee922696562bb0e",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bird, wolf, lion, bear, snake."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18291878236f8a38",
+      "sourceHash": "fnv1a64:5f37a40469380bea",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bird, wolf, lion, bear, snake."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:869438c42f8f8062",
+      "sourceHash": "fnv1a64:f6c04ae4ce439868",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bird, wolf, lion, bear, snake."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d62af5685b96ffce",
+      "sourceHash": "fnv1a64:b9f571dfa383ecd6",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bird, wolf, lion, bear, snake."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7ca50b99f478d53",
+      "sourceHash": "fnv1a64:66a83119388755fb",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bird, wolf, lion, bear, snake."
+              "text": "One more word for this chapter."
             }
           ]
         },

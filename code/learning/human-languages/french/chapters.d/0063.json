@@ -1,0 +1,19 @@
+{
+  "chapter": 63,
+  "title": "Clean, Cut, Forget, Look for, Lose",
+  "label": "ch:fr-clean-cut-forget-look-for-lose",
+  "canDo": "I can say to clean, to cut, to forget, to look for, to lose.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C63-perdre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 63: i can say to clean, to cut, to forget, to look for, to lose.",
+    "assesses": [
+      "FR-LEX-C63-VERBES15-03",
+      "FR-LEX-C63-VERBES15-04",
+      "FR-LEX-C63-VERBES15-05"
+    ]
+  }
+}

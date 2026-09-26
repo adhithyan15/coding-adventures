@@ -45,7 +45,7 @@ reviews_of: [LA-C84-speculum]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for ball, wheel, sword, crown, ring.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C85-RES2-01, LA-LEX-C84-RES1-04, LA-LEX-C84-RES1-05] -->

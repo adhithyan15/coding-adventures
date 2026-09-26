@@ -1,0 +1,11 @@
+{
+  "id": "FR-C92-gentil",
+  "pathSegment": "FR-PATH-92-ADJ44",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-92-ADJ44",
+      "order": 3
+    }
+  ]
+}

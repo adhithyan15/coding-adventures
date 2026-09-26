@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:4a08ad2e2aca95af",
+  "lessonIds": [
+    "RU-C49-table",
+    "RU-C49-chair",
+    "RU-C49-bed",
+    "RU-C49-lamp",
+    "RU-C49-key"
+  ],
+  "tex": "russian/book/chapters/ch49-table-chair-bed-lamp-key.tex"
+}

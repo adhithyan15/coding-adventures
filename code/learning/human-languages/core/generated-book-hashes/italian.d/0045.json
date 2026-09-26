@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:f8bf5420b365bbd2",
+  "lessonIds": [
+    "IT-C45-moglie",
+    "IT-C45-zia",
+    "IT-C45-cugino",
+    "IT-C45-cugina",
+    "IT-C45-bambino"
+  ],
+  "tex": "italian/book/chapters/ch45-wife-aunt-cousins-a-little-boy.tex"
+}

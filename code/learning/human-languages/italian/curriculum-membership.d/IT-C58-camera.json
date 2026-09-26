@@ -1,0 +1,11 @@
+{
+  "id": "IT-C58-camera",
+  "pathSegment": "IT-PATH-58-CASA3",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-58-CASA3",
+      "order": 0
+    }
+  ]
+}

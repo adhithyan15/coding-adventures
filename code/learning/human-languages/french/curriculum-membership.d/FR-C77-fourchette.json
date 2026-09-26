@@ -1,0 +1,11 @@
+{
+  "id": "FR-C77-fourchette",
+  "pathSegment": "FR-PATH-77-TABLE29",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-77-TABLE29",
+      "order": 2
+    }
+  ]
+}

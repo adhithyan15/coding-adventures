@@ -1,0 +1,11 @@
+{
+  "id": "PT-C55-estudar",
+  "pathSegment": "PT-PATH-55-VERBOS5",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-55-VERBOS5",
+      "order": 3
+    }
+  ]
+}

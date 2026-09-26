@@ -1,0 +1,11 @@
+{
+  "id": "FR-C83-soleil",
+  "pathSegment": "FR-PATH-83-NATURE35",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-83-NATURE35",
+      "order": 0
+    }
+  ]
+}

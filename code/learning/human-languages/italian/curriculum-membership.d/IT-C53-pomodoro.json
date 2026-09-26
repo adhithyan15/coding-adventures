@@ -1,0 +1,11 @@
+{
+  "id": "IT-C53-pomodoro",
+  "pathSegment": "IT-PATH-53-VERDURA",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-53-VERDURA",
+      "order": 1
+    }
+  ]
+}

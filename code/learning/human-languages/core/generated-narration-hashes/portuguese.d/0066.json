@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:71a94f48fb13ad76",
+  "lessonIds": [
+    "PT-C66-rapido",
+    "PT-C66-lento",
+    "PT-C66-facil",
+    "PT-C66-dificil",
+    "PT-C66-caro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch66.txt",
+  "json": "portuguese/narration/ch66.json",
+  "textHash": "fnv1a64:d9220d24ea1cb25d",
+  "jsonHash": "fnv1a64:be7052e345e7074f",
+  "findings": []
+}

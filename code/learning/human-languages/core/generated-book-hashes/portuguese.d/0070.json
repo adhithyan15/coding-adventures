@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:814f855cc80476f0",
+  "lessonIds": [
+    "PT-C70-semana",
+    "PT-C70-mes",
+    "PT-C70-manha",
+    "PT-C70-minuto",
+    "PT-C70-sempre"
+  ],
+  "tex": "portuguese/book/chapters/ch70-week-month-morning-minute-always.tex"
+}

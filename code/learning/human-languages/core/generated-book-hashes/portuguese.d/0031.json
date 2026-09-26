@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:70a0a393d05bf188",
+  "lessonIds": [
+    "PT-C31-lingua",
+    "PT-C31-nariz",
+    "PT-C31-pescoco",
+    "PT-C31-ombro",
+    "PT-C31-joelho"
+  ],
+  "tex": "portuguese/book/chapters/ch31-tongue-nose-neck-shoulder-knee.tex"
+}

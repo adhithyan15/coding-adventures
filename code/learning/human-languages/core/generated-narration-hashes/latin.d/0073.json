@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 73,
-  "sourceHash": "fnv1a64:a2e3bc3fcde33f99",
+  "sourceHash": "fnv1a64:c78367f09b7ee6af",
   "lessonIds": [
     "LA-C73-puella",
     "LA-C73-senex",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch73.txt",
   "json": "latin/narration/ch73.json",
-  "textHash": "fnv1a64:03308438af1e8e52",
-  "jsonHash": "fnv1a64:249c52bbe1e6ce35",
+  "textHash": "fnv1a64:3ba55e6a3973fa44",
+  "jsonHash": "fnv1a64:d0c3a94d77617fd1",
   "findings": []
 }

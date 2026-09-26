@@ -1,0 +1,19 @@
+{
+  "chapter": 51,
+  "title": "Meat, Fish, Butter, Salt, Chicken",
+  "label": "ch:it-meat-fish-butter-salt-chicken",
+  "canDo": "I can name meat, fish, butter, salt, chicken.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "IT-C51-pollo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 51: i can name meat, fish, butter, salt, chicken.",
+    "assesses": [
+      "IT-LEX-C51-CIBO1-03",
+      "IT-LEX-C51-CIBO1-04",
+      "IT-LEX-C51-CIBO1-05"
+    ]
+  }
+}

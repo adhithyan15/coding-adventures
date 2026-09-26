@@ -1,0 +1,11 @@
+{
+  "id": "FR-C72-pates",
+  "pathSegment": "FR-PATH-72-CUISINE24",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-72-CUISINE24",
+      "order": 1
+    }
+  ]
+}

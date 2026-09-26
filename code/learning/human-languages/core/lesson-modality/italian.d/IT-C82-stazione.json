@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C82-stazione",
+    "language": "italian",
+    "chapter": 82,
+    "sequence": 3680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:478dc1a04f7af06a"
+  },
+  "findings": []
+}

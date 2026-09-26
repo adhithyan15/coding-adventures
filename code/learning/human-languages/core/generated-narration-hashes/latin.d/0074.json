@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 74,
-  "sourceHash": "fnv1a64:3b33c77e629fba55",
+  "sourceHash": "fnv1a64:3c7ebf768b3a0ce8",
   "lessonIds": [
     "LA-C74-civis",
     "LA-C74-coquus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch74.txt",
   "json": "latin/narration/ch74.json",
-  "textHash": "fnv1a64:441117294f13d6bd",
-  "jsonHash": "fnv1a64:cb5b791487bdc4cf",
+  "textHash": "fnv1a64:edbaad9ed0012f1b",
+  "jsonHash": "fnv1a64:8484b271ad45ba9e",
   "findings": []
 }

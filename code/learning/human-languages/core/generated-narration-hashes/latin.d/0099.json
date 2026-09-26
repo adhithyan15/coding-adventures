@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 99,
-  "sourceHash": "fnv1a64:36f0c108a8a9338d",
+  "sourceHash": "fnv1a64:a40d1a51eab19b60",
   "lessonIds": [
     "LA-C99-cognosco",
     "LA-C99-curo",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch99.txt",
   "json": "latin/narration/ch99.json",
-  "textHash": "fnv1a64:de07d87e812602db",
-  "jsonHash": "fnv1a64:52f5c589bcb6070c",
+  "textHash": "fnv1a64:95a02a06089ac486",
+  "jsonHash": "fnv1a64:c90925e1488f28d9",
   "findings": []
 }

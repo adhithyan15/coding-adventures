@@ -1,0 +1,11 @@
+{
+  "id": "IT-C72-nuovo",
+  "pathSegment": "IT-PATH-72-AGG1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-72-AGG1",
+      "order": 2
+    }
+  ]
+}

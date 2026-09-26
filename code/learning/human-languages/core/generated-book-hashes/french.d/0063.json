@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:b429edb7a90bf6fb",
+  "lessonIds": [
+    "FR-C63-nettoyer",
+    "FR-C63-couper",
+    "FR-C63-oublier",
+    "FR-C63-chercher",
+    "FR-C63-perdre"
+  ],
+  "tex": "french/book/chapters/ch63-clean-cut-forget-look-for-lose.tex"
+}

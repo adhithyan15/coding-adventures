@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:ee6148708d1805d9",
+  "lessonIds": [
+    "RU-C46-breakfast",
+    "RU-C46-lunch",
+    "RU-C46-dinner",
+    "RU-C46-porridge",
+    "RU-C46-pie"
+  ],
+  "tex": "russian/book/chapters/ch46-breakfast-lunch-dinner.tex"
+}

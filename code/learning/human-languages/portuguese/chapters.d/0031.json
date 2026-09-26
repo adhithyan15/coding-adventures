@@ -1,0 +1,19 @@
+{
+  "chapter": 31,
+  "title": "Tongue, Nose, Neck, Shoulder, Knee",
+  "label": "ch:pt-tongue-nose-neck-shoulder-knee",
+  "canDo": "I can name the tongue, the nose, the neck, a shoulder and a knee.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C31-joelho",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 31: i can name the tongue, the nose, the neck, a shoulder and a knee.",
+    "assesses": [
+      "PT-LEX-C31-CORPO2-03",
+      "PT-LEX-C31-CORPO2-04",
+      "PT-LEX-C31-CORPO2-05"
+    ]
+  }
+}

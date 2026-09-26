@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C84-biblioteca",
+    "language": "italian",
+    "chapter": 84,
+    "sequence": 3820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62ef20e74ea5c23b"
+  },
+  "findings": []
+}

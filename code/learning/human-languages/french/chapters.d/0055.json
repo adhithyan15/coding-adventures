@@ -1,0 +1,19 @@
+{
+  "chapter": 55,
+  "title": "Joy, Fear, Anger, Sadness, Happy",
+  "label": "ch:fr-joy-fear-anger-sadness-happy",
+  "canDo": "I can name joy, fear, anger, sadness, happy.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C55-heureux",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 55: i can name joy, fear, anger, sadness, happy.",
+    "assesses": [
+      "FR-LEX-C55-SENTIR7-03",
+      "FR-LEX-C55-SENTIR7-04",
+      "FR-LEX-C55-SENTIR7-05"
+    ]
+  }
+}

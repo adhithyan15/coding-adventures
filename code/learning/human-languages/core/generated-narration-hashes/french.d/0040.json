@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 40,
-  "sourceHash": "fnv1a64:db852cdf8793493d",
+  "sourceHash": "fnv1a64:daafe21d736424f5",
   "lessonIds": [
     "FR-C36-svo",
     "FR-C36-et",
@@ -15,6 +15,6 @@
   "text": "french/narration/ch40.txt",
   "json": "french/narration/ch40.json",
   "textHash": "fnv1a64:76bdacff837eb127",
-  "jsonHash": "fnv1a64:fdeb879b79804fb2",
+  "jsonHash": "fnv1a64:63f32abacfdb53ea",
   "findings": []
 }

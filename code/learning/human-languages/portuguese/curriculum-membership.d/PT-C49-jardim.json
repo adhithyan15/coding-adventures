@@ -1,0 +1,11 @@
+{
+  "id": "PT-C49-jardim",
+  "pathSegment": "PT-PATH-49-CASA2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-49-CASA2",
+      "order": 4
+    }
+  ]
+}

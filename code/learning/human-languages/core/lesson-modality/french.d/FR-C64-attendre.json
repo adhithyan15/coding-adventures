@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C64-attendre",
+    "language": "french",
+    "chapter": 64,
+    "sequence": 2580,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3d126528a3c3874f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C62-payer",
+  "pathSegment": "FR-PATH-62-VERBES14",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-62-VERBES14",
+      "order": 2
+    }
+  ]
+}

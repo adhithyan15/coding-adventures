@@ -1,0 +1,11 @@
+{
+  "id": "RU-C50-garden",
+  "pathSegment": "RU-PATH-50-HOME3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-50-HOME3",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C31-lip",
+  "pathSegment": "RU-PATH-31-BODY3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-31-BODY3",
+      "order": 2
+    }
+  ]
+}

@@ -45,7 +45,7 @@ reviews_of: [LA-C102-extra]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for today, yesterday, year, month, dawn.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C103-ANNUS-01, LA-LEX-C102-LOCUS-04, LA-LEX-C102-LOCUS-05] -->

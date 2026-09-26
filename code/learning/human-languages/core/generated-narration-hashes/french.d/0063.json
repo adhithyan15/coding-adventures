@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:a1dfbb02289352e9",
+  "lessonIds": [
+    "FR-C63-nettoyer",
+    "FR-C63-couper",
+    "FR-C63-oublier",
+    "FR-C63-chercher",
+    "FR-C63-perdre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch63.txt",
+  "json": "french/narration/ch63.json",
+  "textHash": "fnv1a64:3e5aa45e3c387e13",
+  "jsonHash": "fnv1a64:2833c305227e4f75",
+  "findings": []
+}

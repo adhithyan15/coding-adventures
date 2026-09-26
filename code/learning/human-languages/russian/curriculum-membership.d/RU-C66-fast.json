@@ -1,0 +1,11 @@
+{
+  "id": "RU-C66-fast",
+  "pathSegment": "RU-PATH-66-TEMP",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-66-TEMP",
+      "order": 3
+    }
+  ]
+}

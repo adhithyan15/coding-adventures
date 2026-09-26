@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C45-potatoes",
+    "language": "russian",
+    "chapter": 45,
+    "sequence": 2200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:902e30ae76cfb346"
+  },
+  "findings": []
+}

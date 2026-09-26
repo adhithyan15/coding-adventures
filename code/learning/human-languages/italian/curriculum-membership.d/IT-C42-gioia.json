@@ -1,0 +1,11 @@
+{
+  "id": "IT-C42-gioia",
+  "pathSegment": "IT-PATH-42-STARE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-42-STARE",
+      "order": 4
+    }
+  ]
+}

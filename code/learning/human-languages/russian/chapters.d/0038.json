@@ -1,0 +1,19 @@
+{
+  "chapter": 38,
+  "title": "Work, Sing, Dance, Laugh, Cry",
+  "label": "ch:ru-work-sing-dance-laugh-cry",
+  "canDo": "I can say to work, to sing, to dance, to laugh and to cry.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C38-plakat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 38: i can say to work, to sing, to dance, to laugh and to cry.",
+    "assesses": [
+      "RU-LEX-C38-VERB1-03",
+      "RU-LEX-C38-VERB1-04",
+      "RU-LEX-C38-VERB1-05"
+    ]
+  }
+}

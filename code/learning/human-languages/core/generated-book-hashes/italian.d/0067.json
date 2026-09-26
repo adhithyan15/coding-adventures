@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:187b99dd83d6130b",
+  "lessonIds": [
+    "IT-C67-stella",
+    "IT-C67-nuvola",
+    "IT-C67-pioggia",
+    "IT-C67-vento",
+    "IT-C67-fuoco"
+  ],
+  "tex": "italian/book/chapters/ch67-star-cloud-rain-wind-fire.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:8041ee3b3d2b5e5c",
+  "lessonIds": [
+    "FR-C54-hopital",
+    "FR-C54-maladie",
+    "FR-C54-soif",
+    "FR-C54-fatigue",
+    "FR-C54-malade"
+  ],
+  "tex": "french/book/chapters/ch54-hospital-illness-thirst-tiredness-ill.tex"
+}

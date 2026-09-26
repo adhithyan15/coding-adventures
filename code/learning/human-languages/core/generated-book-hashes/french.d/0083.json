@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:0477d5d9cf47232d",
+  "lessonIds": [
+    "FR-C83-soleil",
+    "FR-C83-etoile",
+    "FR-C83-nuage",
+    "FR-C83-pluie",
+    "FR-C83-neige"
+  ],
+  "tex": "french/book/chapters/ch83-sun-star-cloud-rain-snow.tex"
+}

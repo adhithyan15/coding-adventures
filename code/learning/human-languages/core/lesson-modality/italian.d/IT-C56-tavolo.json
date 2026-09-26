@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C56-tavolo",
+    "language": "italian",
+    "chapter": 56,
+    "sequence": 2380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe9b48c2a16d1ebc"
+  },
+  "findings": []
+}

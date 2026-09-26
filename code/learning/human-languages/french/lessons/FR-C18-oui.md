@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [FR-LEX-OUI-02, FR-ETYMON-OUI-03, FR-CULTURE-OUI-04, FR-PRAGMATICS-SI-05]
+  knowledge: [FR-LEX-OUI-02, FR-ETYMON-OUI-03, FR-CULTURE-OUI-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [FR-CULTURE-OUI-OIL-OC-01]
 practises:
-  knowledge: [FR-LEX-OUI-02, FR-ETYMON-OUI-03, FR-CULTURE-OUI-04, FR-PRAGMATICS-SI-05]
+  knowledge: [FR-LEX-OUI-02, FR-ETYMON-OUI-03, FR-CULTURE-OUI-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -64,20 +64,8 @@ how people said *yes*:
 
 One little answer-word, drawn as a border.
 
-## Grammar Lens: The other “yes,” si
-<!-- hl-knowledge: introduces=[FR-PRAGMATICS-SI-05]; assesses=[] -->
-
-French keeps a **second** yes — **si** — for one special job: contradicting a
-**negative**. When someone says something *isn't* so and you insist it *is*, you
-answer **si**, not *oui*:
-
-> *Tu ne viens pas ?* ("You're not coming?") — ***Si !*** ("Yes I am!")
-
-(That *si* is the Latin *sīc* the Spanish *sí* also comes from — French kept it
-only for this contradicting move.)
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-OUI-02, FR-ETYMON-OUI-03, FR-CULTURE-OUI-04, FR-PRAGMATICS-SI-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-OUI-02, FR-ETYMON-OUI-03, FR-CULTURE-OUI-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "oui" — *wee*]
@@ -85,8 +73,7 @@ only for this contradicting move.)
 - [YOU SAY: the contradiction — "Tu ne viens pas ? — Si !"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-OUI-02, FR-ETYMON-OUI-03, FR-CULTURE-OUI-04, FR-PRAGMATICS-SI-05] -->
-<!-- hl-activity: {"id":"FR-C18-oui-negative","kind":"text","assesses":["FR-PRAGMATICS-SI-05"],"prompt":"French has two words for yes. Which one contradicts a negative?","answer":"si","accepted":["si!"],"feedback":{"correct":"Right: si contradicts a negative; oui answers an ordinary positive question.","incorrect":"Use si when you insist that a negative statement is wrong."},"response_seconds":8} -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-OUI-02, FR-ETYMON-OUI-03, FR-CULTURE-OUI-04] -->
 
 [PAUSE 3s] How do you say yes in French? (**oui**.) What Latin phrase is it worn
 down from? (**hoc ille**, "this is it," via *oïl*.) What were the *langue d'oïl*

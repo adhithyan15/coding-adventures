@@ -1,0 +1,11 @@
+{
+  "id": "IT-C54-zuppa",
+  "pathSegment": "IT-PATH-54-PASTI",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-54-PASTI",
+      "order": 1
+    }
+  ]
+}

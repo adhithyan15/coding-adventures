@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C40-tosse",
+    "language": "italian",
+    "chapter": 40,
+    "sequence": 1600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62f38412ce49be81"
+  },
+  "findings": []
+}

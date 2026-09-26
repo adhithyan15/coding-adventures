@@ -1,0 +1,11 @@
+{
+  "id": "IT-C67-nuvola",
+  "pathSegment": "IT-PATH-67-CIELO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-67-CIELO",
+      "order": 1
+    }
+  ]
+}

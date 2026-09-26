@@ -1,0 +1,11 @@
+{
+  "id": "FR-C68-oignon",
+  "pathSegment": "FR-PATH-68-CUISINE20",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-68-CUISINE20",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:522676eda07a87f4",
+  "lessonIds": [
+    "IT-C42-sete",
+    "IT-C42-stanchezza",
+    "IT-C42-stanco",
+    "IT-C42-malato",
+    "IT-C42-gioia"
+  ],
+  "tex": "italian/book/chapters/ch42-thirst-tiredness-tired-ill-joy.tex"
+}

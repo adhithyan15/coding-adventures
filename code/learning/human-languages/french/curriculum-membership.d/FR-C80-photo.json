@@ -1,0 +1,11 @@
+{
+  "id": "FR-C80-photo",
+  "pathSegment": "FR-PATH-80-CHOSES32",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-80-CHOSES32",
+      "order": 4
+    }
+  ]
+}

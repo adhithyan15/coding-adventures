@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:50b750e48246c9a7",
+  "lessonIds": [
+    "RU-C37-neighbour",
+    "RU-C37-guest",
+    "RU-C37-teacher",
+    "RU-C37-pupil",
+    "RU-C37-work"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch37.txt",
+  "json": "russian/narration/ch37.json",
+  "textHash": "fnv1a64:3fc0ec926316f2ae",
+  "jsonHash": "fnv1a64:f7345f7365e454db",
+  "findings": []
+}

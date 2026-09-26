@@ -1,0 +1,11 @@
+{
+  "id": "IT-C64-bosco",
+  "pathSegment": "IT-PATH-64-NATURA1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-64-NATURA1",
+      "order": 4
+    }
+  ]
+}

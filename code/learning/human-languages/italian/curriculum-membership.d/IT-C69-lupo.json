@@ -1,0 +1,11 @@
+{
+  "id": "IT-C69-lupo",
+  "pathSegment": "IT-PATH-69-ANIMALI2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-69-ANIMALI2",
+      "order": 2
+    }
+  ]
+}

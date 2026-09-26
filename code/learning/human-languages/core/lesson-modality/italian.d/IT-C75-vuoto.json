@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C75-vuoto",
+    "language": "italian",
+    "chapter": 75,
+    "sequence": 3370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b57169cfe9bb83b8"
+  },
+  "findings": []
+}

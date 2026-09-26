@@ -1,0 +1,19 @@
+{
+  "chapter": 61,
+  "title": "Bird, Mouse, Wolf, Bear, Fox",
+  "label": "ch:ru-bird-mouse-wolf-bear-fox",
+  "canDo": "I can name a bird, a mouse, a wolf, a bear and a fox.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C61-fox",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 61: i can name a bird, a mouse, a wolf, a bear and a fox.",
+    "assesses": [
+      "RU-LEX-C61-ANIMALS2-03",
+      "RU-LEX-C61-ANIMALS2-04",
+      "RU-LEX-C61-ANIMALS2-05"
+    ]
+  }
+}

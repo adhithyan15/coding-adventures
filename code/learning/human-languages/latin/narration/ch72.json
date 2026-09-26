@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "Aunt, Neighbour, Guest, Man, Woman",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:084a56a3f0636080",
+  "sourceHash": "fnv1a64:b18fc532335624b3",
   "lessons": [
     {
       "id": "LA-C72-amita",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:700d03a350dbd4f8",
+      "sourceHash": "fnv1a64:a3e74bec91cd74b4",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for aunt, neighbour, guest, man, woman."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3e23d080b4bf32f",
+      "sourceHash": "fnv1a64:3f33a7feabb5c297",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for aunt, neighbour, guest, man, woman."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4686fb1b4c07e98a",
+      "sourceHash": "fnv1a64:2cfeae2b81de1802",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for aunt, neighbour, guest, man, woman."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:475f8a5fa1e71f94",
+      "sourceHash": "fnv1a64:7d0006a84c05c01c",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for aunt, neighbour, guest, man, woman."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9abb3a93e8864694",
+      "sourceHash": "fnv1a64:b5905512721baa44",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for aunt, neighbour, guest, man, woman."
+              "text": "One more word for this chapter."
             }
           ]
         },

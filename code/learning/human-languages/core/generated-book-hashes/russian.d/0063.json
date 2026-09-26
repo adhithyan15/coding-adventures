@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:ab0868d738afb0ad",
+  "lessonIds": [
+    "RU-C63-white",
+    "RU-C63-black",
+    "RU-C63-red",
+    "RU-C63-blue",
+    "RU-C63-green"
+  ],
+  "tex": "russian/book/chapters/ch63-white-black-red-blue-green.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C74-sometimes",
+  "pathSegment": "RU-PATH-74-WHEN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-74-WHEN",
+      "order": 1
+    }
+  ]
+}

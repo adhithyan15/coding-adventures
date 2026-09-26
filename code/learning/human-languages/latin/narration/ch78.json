@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Live, Enter, Return, Fear, Rejoice",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7aba1a315cf57603",
+  "sourceHash": "fnv1a64:5c0683a9dd0094d7",
   "lessons": [
     {
       "id": "LA-C78-vivo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43977f612e0bef83",
+      "sourceHash": "fnv1a64:83512097025d9fc7",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for live, enter, return, fear, rejoice."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7da6fa516c2db11",
+      "sourceHash": "fnv1a64:de45e86c79b2f769",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for live, enter, return, fear, rejoice."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f7bb2efdf3e00de",
+      "sourceHash": "fnv1a64:f60987104e0119c2",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for live, enter, return, fear, rejoice."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c87c73768aaa2ae7",
+      "sourceHash": "fnv1a64:3cf875d4c1be4f63",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for live, enter, return, fear, rejoice."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a3f71f98c3af178",
+      "sourceHash": "fnv1a64:9b754c241c00db3c",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for live, enter, return, fear, rejoice."
+              "text": "One more word for this chapter."
             }
           ]
         },

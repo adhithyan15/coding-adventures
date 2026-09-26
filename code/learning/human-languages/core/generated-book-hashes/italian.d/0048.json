@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:ec4c9cb04214a6e0",
+  "lessonIds": [
+    "IT-C48-cucinare",
+    "IT-C48-vendere",
+    "IT-C48-nuotare",
+    "IT-C48-chiamare",
+    "IT-C48-dormire"
+  ],
+  "tex": "italian/book/chapters/ch48-cook-sell-swim-call-sleep.tex"
+}

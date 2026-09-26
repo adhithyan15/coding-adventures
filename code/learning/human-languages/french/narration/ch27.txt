@@ -1,8 +1,8 @@
 French, chapter 27: Green and Yellow.
-1 lesson. All 1 can be done entirely by ear.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
+Lesson 1 of 2.
 vert, jaune — the expected inheritance, and a hidden PIE-level cousin.
 
 Warm-up.
@@ -11,9 +11,6 @@ French's green word is exactly what you'd expect. Its yellow word hides somethin
 
 The word, taken apart: vert.
 vert ("green") from Latin viridis — and this is genuinely the standard source of "green" across nearly every Romance language: Spanish verde, Italian verde, Portuguese verde, Catalan verd. No surprise here — a clean, shared inheritance.
-
-The word, taken apart: jaune.
-jaune ("yellow") from Latin galbinus, which literally meant "yellow-green" — an extended form of galbus, from Proto-Indo- European ghel-, "to shine" (with derivatives covering green, yellow, and gold alike — the same root gives Greek khlōros, "greenish- yellow"). Here's the genuinely surprising part: this same PIE root, ghel-, is also usually cited as the source of German's gelb and English's yellow — by a completely separate, Germanic path (Proto- Germanic gelwaz). Honesty check, though: the galbus becomes ghel- link itself is less secure than it looks — some modern Latin scholarship treats galbus's origin as unknown rather than confirming the connection. So jaune and gelb are probably cousins at the Proto-Indo-European level, despite one reaching French through Latin and the other reaching German directly through Germanic — just don't treat that link as airtight.
 
 Guided Practice.
 [pause 1 second]
@@ -27,3 +24,23 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Is vert a typical or unusual Romance word for "green"? (Typical — the standard source across nearly all Romance languages.) What did Latin galbinus, the source of jaune, literally mean? ("Yellow-green.") What German word is usually called jaune's deep PIE cousin, and how solid is that link? (Gelb — both usually traced to PIE ghel-, "to shine," though modern Latin scholarship treats galbus's origin as genuinely unknown, so the connection is probable, not certain.)
+
+
+Lesson 2 of 2.
+(vert, jaune, continued) — jaune.
+
+Warm-up.
+[pause 2 seconds]
+Before going on: say vert, jaune again, and what it means.
+
+The word, taken apart: jaune.
+jaune ("yellow") from Latin galbinus, which literally meant "yellow-green" — an extended form of galbus, from Proto-Indo- European ghel-, "to shine" (with derivatives covering green, yellow, and gold alike — the same root gives Greek khlōros, "greenish- yellow"). Here's the genuinely surprising part: this same PIE root, ghel-, is also usually cited as the source of German's gelb and English's yellow — by a completely separate, Germanic path (Proto- Germanic gelwaz). Honesty check, though: the galbus becomes ghel- link itself is less secure than it looks — some modern Latin scholarship treats galbus's origin as unknown rather than confirming the connection. So jaune and gelb are probably cousins at the Proto-Indo-European level, despite one reaching French through Latin and the other reaching German directly through Germanic — just don't treat that link as airtight.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: what this lesson added to vert, jaune, in one sentence]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did this lesson add to vert, jaune? Say it once more, without looking.

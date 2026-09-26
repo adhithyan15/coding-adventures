@@ -1,0 +1,11 @@
+{
+  "id": "IT-C65-lago",
+  "pathSegment": "IT-PATH-65-NATURA2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-65-NATURA2",
+      "order": 1
+    }
+  ]
+}

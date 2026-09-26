@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "Phone, Umbrella, Money, Present, Glasses",
+  "label": "ch:fr-phone-umbrella-money-present-glasses",
+  "canDo": "I can name a phone, an umbrella, money, a present, glasses.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "FR-C79-lunettes",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can name a phone, an umbrella, money, a present, glasses.",
+    "assesses": [
+      "FR-LEX-C79-CHOSES31-03",
+      "FR-LEX-C79-CHOSES31-04",
+      "FR-LEX-C79-CHOSES31-05"
+    ]
+  }
+}

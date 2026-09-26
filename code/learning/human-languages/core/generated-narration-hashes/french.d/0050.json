@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:e23ef261c061b157",
+  "lessonIds": [
+    "FR-C50-cou",
+    "FR-C50-epaule",
+    "FR-C50-genou",
+    "FR-C50-visage",
+    "FR-C50-sang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch50.txt",
+  "json": "french/narration/ch50.json",
+  "textHash": "fnv1a64:2269ee2d3c174bb2",
+  "jsonHash": "fnv1a64:ba8cb0537614ddf4",
+  "findings": []
+}

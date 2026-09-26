@@ -1,0 +1,11 @@
+{
+  "id": "RU-C80-park",
+  "pathSegment": "RU-PATH-80-PLACES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-80-PLACES",
+      "order": 3
+    }
+  ]
+}

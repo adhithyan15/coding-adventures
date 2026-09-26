@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:5b4e6d791d32130d",
+  "lessonIds": [
+    "PT-C38-tio",
+    "PT-C38-tia",
+    "PT-C38-primo",
+    "PT-C38-neto",
+    "PT-C38-neta"
+  ],
+  "tex": "portuguese/book/chapters/ch38-uncle-aunt-cousin-grandchildren.tex"
+}

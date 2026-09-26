@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "Arm, Finger, Tooth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f4b8c9b24134c965",
+  "sourceHash": "fnv1a64:e121547cbcd2b6e8",
   "lessons": [
     {
       "id": "LA-C63-bracchium",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e718c89d5e961b83",
+      "sourceHash": "fnv1a64:3c8e1b6c1f36d9fb",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for arm, finger, tooth."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffaa627dbcbec319",
+      "sourceHash": "fnv1a64:09b95bc9c5bc7a41",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for arm, finger, tooth."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cae08a777763a18c",
+      "sourceHash": "fnv1a64:77870697fb1fbbf8",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for arm, finger, tooth."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96e560da9578fd28",
+      "sourceHash": "fnv1a64:623d8a0ceed014e8",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for arm, finger, tooth."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:595ad4f642b622cb",
+      "sourceHash": "fnv1a64:2dfc654719df9b13",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for arm, finger, tooth."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:74bfafeaa07aedda",
+  "lessonIds": [
+    "IT-C37-braccio",
+    "IT-C37-gamba",
+    "IT-C37-piede",
+    "IT-C37-dito",
+    "IT-C37-dente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch37.txt",
+  "json": "italian/narration/ch37.json",
+  "textHash": "fnv1a64:51df568ad09bb244",
+  "jsonHash": "fnv1a64:c01c1db7207e2eb3",
+  "findings": []
+}

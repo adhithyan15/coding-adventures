@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 60,
+  "output": "russian/book/chapters/ch60-dog-cat-horse-cow-pig.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

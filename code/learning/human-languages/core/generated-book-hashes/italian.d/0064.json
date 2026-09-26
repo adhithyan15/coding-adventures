@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:c5ff99997b152201",
+  "lessonIds": [
+    "IT-C64-albero",
+    "IT-C64-fiore",
+    "IT-C64-foglia",
+    "IT-C64-montagna",
+    "IT-C64-bosco"
+  ],
+  "tex": "italian/book/chapters/ch64-tree-flower-leaf-mountain-wood.tex"
+}

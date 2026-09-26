@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "Bridge, Park, Church, Museum, Restaurant",
+  "label": "ch:it-bridge-park-church-museum-restaurant",
+  "canDo": "I can name a bridge, a park, a church, a museum, a restaurant.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "IT-C83-ristorante",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can name a bridge, a park, a church, a museum, a restaurant.",
+    "assesses": [
+      "IT-LEX-C83-CITTA3-03",
+      "IT-LEX-C83-CITTA3-04",
+      "IT-LEX-C83-CITTA3-05"
+    ]
+  }
+}

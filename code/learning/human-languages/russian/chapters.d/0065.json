@@ -1,0 +1,19 @@
+{
+  "chapter": 65,
+  "title": "Big, Small, Old, Long, Short",
+  "label": "ch:ru-big-small-old-long-short",
+  "canDo": "I can say big, small, old, long and short.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C65-short",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: i can say big, small, old, long and short.",
+    "assesses": [
+      "RU-LEX-C65-SIZE-03",
+      "RU-LEX-C65-SIZE-04",
+      "RU-LEX-C65-SIZE-05"
+    ]
+  }
+}

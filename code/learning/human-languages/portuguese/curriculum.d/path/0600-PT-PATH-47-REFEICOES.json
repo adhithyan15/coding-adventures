@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-47-REFEICOES",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "PT-EXT-47-REFEICOES"
+  ],
+  "after": []
+}

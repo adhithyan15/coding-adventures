@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Two Ways to Play, and Two Verbs That Bend",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:6fe0173bfa2c62f2",
+  "sourceHash": "fnv1a64:dde43f8f914430c4",
   "lessons": [
     {
       "id": "IT-C21-giocare",
@@ -215,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9168be3eddacdee",
+      "sourceHash": "fnv1a64:94a7fb5d9daf07f6",
       "notice": null,
       "blocks": [
         {
@@ -391,7 +391,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:694d7aca0b73cb5c",
+      "sourceHash": "fnv1a64:0a23ea9581f759a4",
       "notice": null,
       "blocks": [
         {

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-84-CITTA4",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "IT-EXT-84-CITTA4"
+  ],
+  "after": []
+}

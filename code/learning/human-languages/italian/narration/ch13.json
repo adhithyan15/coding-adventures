@@ -3,8 +3,8 @@
   "language": "italian",
   "chapter": 13,
   "title": "Colours",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:26d7949cc934cf86",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:7563ec9fbe04595d",
   "lessons": [
     {
       "id": "IT-C13-nero-bianco",
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aed74ea6ccec69b0",
+      "sourceHash": "fnv1a64:42727b5c2aa23012",
       "notice": null,
       "blocks": [
         {
@@ -251,29 +251,6 @@
         },
         {
           "index": 4,
-          "type": "notice",
-          "title": "What you've built: the colour paths",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "Italian",
-                "source"
-              ],
-              "columns": 2,
-              "rowCount": 5,
-              "utterances": [
-                "Italian: nero. source: Latin niger.",
-                "Italian: bianco. source: Germanic blank.",
-                "Italian: rosso. source: Latin russus (ancient PIE root).",
-                "Italian: blu. source: Germanic blāo.",
-                "Italian: azzurro. source: Arabic lāzaward."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -322,7 +299,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -335,6 +312,121 @@
             {
               "kind": "speech",
               "text": "Is rosso related to English red by borrowing or descent? (Descent — PIE h₁rewdʰ-.) Which two Italian colours are Germanic loans? (Bianco and blu.) Where does azzurro come from? (Arabic lāzaward, \"lapis lazuli\" — via Persian; the l- was lost as if it were an article.) What are Italy's teams called? (Gli Azzurri.) Next chapter: attaching these colours to the nouns you know."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C13-colori-origini",
+      "sequence": 485,
+      "title": "The colour paths — five colours, three roads",
+      "headword": "(the colour paths)",
+      "romanization": "(the colour paths)",
+      "gloss": "where the five colours came from — two roads from Latin, two from Germanic, one from Arabic",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a94f509b532329e4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say rosso and blu. One came down from Latin; the other walked in from the north. Which is which?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built: the colour paths",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "Italian",
+                "source"
+              ],
+              "columns": 2,
+              "rowCount": 5,
+              "utterances": [
+                "Italian: nero. source: Latin niger.",
+                "Italian: bianco. source: Germanic blank.",
+                "Italian: rosso. source: Latin russus (ancient PIE root).",
+                "Italian: blu. source: Germanic blāo.",
+                "Italian: azzurro. source: Arabic lāzaward."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two Latin colours — \"nero, rosso\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two Latin colours — \"nero, rosso\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two Germanic colours — \"bianco, blu\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two Germanic colours — \"bianco, blu\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one from Arabic — \"azzurro\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one from Arabic — \"azzurro\"]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many roads do Italian's five colours come by? (Three: Latin for nero and rosso, Germanic for bianco and blu, Arabic for azzurro.)"
             }
           ]
         }

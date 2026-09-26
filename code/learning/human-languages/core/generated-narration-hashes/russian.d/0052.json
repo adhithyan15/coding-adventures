@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:bef6534b44c45098",
+  "lessonIds": [
+    "RU-C52-book",
+    "RU-C52-pen",
+    "RU-C52-paper",
+    "RU-C52-notebook",
+    "RU-C52-pencil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch52.txt",
+  "json": "russian/narration/ch52.json",
+  "textHash": "fnv1a64:053b6281e79a7832",
+  "jsonHash": "fnv1a64:4212f36edb0825b1",
+  "findings": []
+}

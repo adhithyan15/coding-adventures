@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C72-creme",
+    "language": "french",
+    "chapter": 72,
+    "sequence": 2980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd0ec445309d9a09"
+  },
+  "findings": []
+}

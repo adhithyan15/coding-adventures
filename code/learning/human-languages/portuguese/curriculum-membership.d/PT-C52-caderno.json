@@ -1,0 +1,11 @@
+{
+  "id": "PT-C52-caderno",
+  "pathSegment": "PT-PATH-52-COISAS1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-52-COISAS1",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C81-montagne",
+  "pathSegment": "FR-PATH-81-NATURE33",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-81-NATURE33",
+      "order": 3
+    }
+  ]
+}

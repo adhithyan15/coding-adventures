@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C65-envoyer",
+    "language": "french",
+    "chapter": 65,
+    "sequence": 2630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:142dfa587e331f6a"
+  },
+  "findings": []
+}

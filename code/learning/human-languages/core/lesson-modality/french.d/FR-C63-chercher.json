@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C63-chercher",
+    "language": "french",
+    "chapter": 63,
+    "sequence": 2540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:996ecb490bf0ee47"
+  },
+  "findings": []
+}

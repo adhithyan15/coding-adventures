@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:379cfd442fa6ae63",
+  "lessonIds": [
+    "IT-C53-patata",
+    "IT-C53-pomodoro",
+    "IT-C53-cipolla",
+    "IT-C53-carota",
+    "IT-C53-limone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch53.txt",
+  "json": "italian/narration/ch53.json",
+  "textHash": "fnv1a64:ae13f972001796a1",
+  "jsonHash": "fnv1a64:1ccb9e7efe2c6281",
+  "findings": []
+}

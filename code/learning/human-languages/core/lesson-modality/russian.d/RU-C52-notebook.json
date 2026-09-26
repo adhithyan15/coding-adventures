@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C52-notebook",
+    "language": "russian",
+    "chapter": 52,
+    "sequence": 2580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88f8ff67b9f473eb"
+  },
+  "findings": []
+}

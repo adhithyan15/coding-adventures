@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 91,
-  "sourceHash": "fnv1a64:617a4bd67d1fbf70",
+  "sourceHash": "fnv1a64:db2aec3e7b654eb2",
   "lessonIds": [
     "LA-C91-avis",
     "LA-C91-lupus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch91.txt",
   "json": "latin/narration/ch91.json",
-  "textHash": "fnv1a64:4dea2414df5a76ee",
-  "jsonHash": "fnv1a64:326ff703f34d3ebe",
+  "textHash": "fnv1a64:e2fed234840b98f4",
+  "jsonHash": "fnv1a64:fe734f49644172f4",
   "findings": []
 }

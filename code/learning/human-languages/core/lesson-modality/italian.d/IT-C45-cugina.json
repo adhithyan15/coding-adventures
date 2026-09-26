@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C45-cugina",
+    "language": "italian",
+    "chapter": 45,
+    "sequence": 1840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d976c896d3315f3"
+  },
+  "findings": []
+}

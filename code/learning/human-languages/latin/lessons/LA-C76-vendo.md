@@ -45,7 +45,7 @@ reviews_of: [LA-C76-coquo]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for wash, cook, sell, swim, call.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C76-VERBA2-03, LA-LEX-C76-VERBA2-01, LA-LEX-C76-VERBA2-02] -->

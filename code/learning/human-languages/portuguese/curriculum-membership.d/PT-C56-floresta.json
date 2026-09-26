@@ -1,0 +1,11 @@
+{
+  "id": "PT-C56-floresta",
+  "pathSegment": "PT-PATH-56-NATUREZA1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-56-NATUREZA1",
+      "order": 4
+    }
+  ]
+}

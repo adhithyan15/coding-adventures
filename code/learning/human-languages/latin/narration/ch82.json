@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "Table, Chair, Bed, Window",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0851dd13bb6d307f",
+  "sourceHash": "fnv1a64:4e2614ec6c9740af",
   "lessons": [
     {
       "id": "LA-C82-mensa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a0789e6697332b6",
+      "sourceHash": "fnv1a64:dfcc2937c4a9eaea",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for table, chair, bed, window."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72c8f92f814ca216",
+      "sourceHash": "fnv1a64:c172d760351b3e1a",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for table, chair, bed, window."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e229dc04b91ce9f4",
+      "sourceHash": "fnv1a64:60eea62f58707776",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for table, chair, bed, window."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66cc768c11339d10",
+      "sourceHash": "fnv1a64:a64f059e54a05110",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for table, chair, bed, window."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cbdd7d91db411a2",
+      "sourceHash": "fnv1a64:80b4d18269c690d2",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for table, chair, bed, window."
+              "text": "One more word for this chapter."
             }
           ]
         },

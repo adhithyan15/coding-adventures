@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:4064efe288fec99d",
+  "lessonIds": [
+    "FR-C104-pantalon",
+    "FR-C104-chaussures",
+    "FR-C104-chapeau",
+    "FR-C104-manteau",
+    "FR-C104-jupe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch104.txt",
+  "json": "french/narration/ch104.json",
+  "textHash": "fnv1a64:7385a1637e2fd76b",
+  "jsonHash": "fnv1a64:8b079b33be68114b",
+  "findings": []
+}

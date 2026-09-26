@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:a8c9d2f162ae39f1",
+  "lessonIds": [
+    "FR-C86-ours",
+    "FR-C86-renard",
+    "FR-C86-serpent",
+    "FR-C86-poule",
+    "FR-C86-canard"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch86.txt",
+  "json": "french/narration/ch86.json",
+  "textHash": "fnv1a64:119e68521f8621d0",
+  "jsonHash": "fnv1a64:8c6c3844b1c64c7b",
+  "findings": []
+}

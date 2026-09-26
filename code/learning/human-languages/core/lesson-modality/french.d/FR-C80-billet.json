@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C80-billet",
+    "language": "french",
+    "chapter": 80,
+    "sequence": 3400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:979cfe0c9ba00166"
+  },
+  "findings": []
+}

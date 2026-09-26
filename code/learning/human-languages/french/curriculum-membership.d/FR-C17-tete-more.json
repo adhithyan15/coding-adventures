@@ -1,0 +1,11 @@
+{
+  "id": "FR-C17-tete-more",
+  "pathSegment": "FR-PATH-018",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-018-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

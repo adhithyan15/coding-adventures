@@ -1,0 +1,19 @@
+{
+  "chapter": 33,
+  "title": "Skin, Nail, Chin, Throat, Stomach",
+  "label": "ch:pt-skin-nail-chin-throat-stomach",
+  "canDo": "I can name skin, a nail, the chin, the throat and the stomach.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C33-estomago",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 33: i can name skin, a nail, the chin, the throat and the stomach.",
+    "assesses": [
+      "PT-LEX-C33-CORPO4-03",
+      "PT-LEX-C33-CORPO4-04",
+      "PT-LEX-C33-CORPO4-05"
+    ]
+  }
+}

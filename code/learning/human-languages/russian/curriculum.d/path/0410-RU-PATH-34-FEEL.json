@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-34-FEEL",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "RU-EXT-34-FEEL"
+  ],
+  "after": []
+}

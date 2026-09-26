@@ -1,0 +1,19 @@
+{
+  "chapter": 36,
+  "title": "Children, a Child, Aunt, Grandchildren",
+  "label": "ch:ru-children-a-child-aunt-grandchildren",
+  "canDo": "I can name children, a child, an aunt, a grandson and a granddaughter.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "RU-C36-granddaughter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 36: i can name children, a child, an aunt, a grandson and a granddaughter.",
+    "assesses": [
+      "RU-LEX-C36-FAMILY2-03",
+      "RU-LEX-C36-FAMILY2-04",
+      "RU-LEX-C36-FAMILY2-05"
+    ]
+  }
+}

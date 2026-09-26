@@ -1,0 +1,19 @@
+{
+  "chapter": 53,
+  "title": "Potato, Tomato, Onion, Carrot, Lemon",
+  "label": "ch:it-potato-tomato-onion-carrot-lemon",
+  "canDo": "I can name a potato, a tomato, an onion, a carrot, a lemon.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "IT-C53-limone",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 53: i can name a potato, a tomato, an onion, a carrot, a lemon.",
+    "assesses": [
+      "IT-LEX-C53-VERDURA-03",
+      "IT-LEX-C53-VERDURA-04",
+      "IT-LEX-C53-VERDURA-05"
+    ]
+  }
+}

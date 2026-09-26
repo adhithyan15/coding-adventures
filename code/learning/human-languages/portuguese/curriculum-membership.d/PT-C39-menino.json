@@ -1,0 +1,11 @@
+{
+  "id": "PT-C39-menino",
+  "pathSegment": "PT-PATH-39-PESSOAS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-39-PESSOAS",
+      "order": 3
+    }
+  ]
+}

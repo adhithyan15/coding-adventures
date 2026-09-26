@@ -1,0 +1,19 @@
+{
+  "chapter": 37,
+  "title": "Arm, Leg, Foot, Finger, Tooth",
+  "label": "ch:it-arm-leg-foot-finger-tooth",
+  "canDo": "I can name an arm, a leg, a foot, a finger, a tooth.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C37-dente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 37: i can name an arm, a leg, a foot, a finger, a tooth.",
+    "assesses": [
+      "IT-LEX-C37-CORPO1-03",
+      "IT-LEX-C37-CORPO1-04",
+      "IT-LEX-C37-CORPO1-05"
+    ]
+  }
+}

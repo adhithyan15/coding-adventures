@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:f75dd1cba2b3a9a3",
+  "lessonIds": [
+    "IT-C44-figlio",
+    "IT-C44-figlia",
+    "IT-C44-nonno",
+    "IT-C44-nonna",
+    "IT-C44-marito"
+  ],
+  "tex": "italian/book/chapters/ch44-son-daughter-grandparents-husband.tex"
+}

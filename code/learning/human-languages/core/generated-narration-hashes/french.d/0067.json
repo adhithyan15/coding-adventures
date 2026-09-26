@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:b26a20e05f9bbd22",
+  "lessonIds": [
+    "FR-C67-trouver",
+    "FR-C67-poisson",
+    "FR-C67-poulet",
+    "FR-C67-fruit",
+    "FR-C67-pomme"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch67.txt",
+  "json": "french/narration/ch67.json",
+  "textHash": "fnv1a64:d24868e7d5310635",
+  "jsonHash": "fnv1a64:572e860c39c19d0f",
+  "findings": []
+}

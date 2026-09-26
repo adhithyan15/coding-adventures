@@ -1,0 +1,19 @@
+{
+  "chapter": 34,
+  "title": "Joy, Fear, Anger, Sadness, Tiredness",
+  "label": "ch:ru-joy-fear-anger-sadness-tiredness",
+  "canDo": "I can name joy, fear, anger, sadness and tiredness.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C34-tiredness",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 34: i can name joy, fear, anger, sadness and tiredness.",
+    "assesses": [
+      "RU-LEX-C34-FEEL-03",
+      "RU-LEX-C34-FEEL-04",
+      "RU-LEX-C34-FEEL-05"
+    ]
+  }
+}

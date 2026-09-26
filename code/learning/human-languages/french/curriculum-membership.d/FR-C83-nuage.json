@@ -1,0 +1,11 @@
+{
+  "id": "FR-C83-nuage",
+  "pathSegment": "FR-PATH-83-NATURE35",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-83-NATURE35",
+      "order": 2
+    }
+  ]
+}

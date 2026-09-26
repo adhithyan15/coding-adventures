@@ -1,0 +1,11 @@
+{
+  "id": "PT-C70-minuto",
+  "pathSegment": "PT-PATH-70-QUANDO1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-70-QUANDO1",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C78-papier",
+    "language": "french",
+    "chapter": 78,
+    "sequence": 3290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3b12f1f3a232adc"
+  },
+  "findings": []
+}

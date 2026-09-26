@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C101-poste",
+    "language": "french",
+    "chapter": 101,
+    "sequence": 4470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:131ed6d834039c7c"
+  },
+  "findings": []
+}

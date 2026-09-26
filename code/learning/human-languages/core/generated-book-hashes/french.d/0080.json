@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:2fb6fbff0d16c856",
+  "lessonIds": [
+    "FR-C80-boite",
+    "FR-C80-valise",
+    "FR-C80-billet",
+    "FR-C80-carte",
+    "FR-C80-photo"
+  ],
+  "tex": "french/book/chapters/ch80-box-suitcase-ticket-map-photo.tex"
+}

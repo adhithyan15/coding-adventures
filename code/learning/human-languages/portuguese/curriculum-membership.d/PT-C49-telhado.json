@@ -1,0 +1,11 @@
+{
+  "id": "PT-C49-telhado",
+  "pathSegment": "PT-PATH-49-CASA2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-49-CASA2",
+      "order": 3
+    }
+  ]
+}

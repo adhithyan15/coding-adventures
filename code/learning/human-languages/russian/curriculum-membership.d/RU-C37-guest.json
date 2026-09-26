@@ -1,0 +1,11 @@
+{
+  "id": "RU-C37-guest",
+  "pathSegment": "RU-PATH-37-PEOPLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-37-PEOPLE",
+      "order": 1
+    }
+  ]
+}

@@ -45,7 +45,7 @@ reviews_of: [LA-C108-vestis]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for bridge, farmhouse, clothes, tunic, shoe.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C108-VESTIS-04, LA-LEX-C108-VESTIS-02, LA-LEX-C108-VESTIS-03] -->
