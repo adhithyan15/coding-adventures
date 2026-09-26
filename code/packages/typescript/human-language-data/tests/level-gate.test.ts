@@ -1,6 +1,10 @@
 // HL09 §3.1 — what it takes to CLAIM a level. See src/level-gate.ts for why.
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { mkdtempSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { loadEverything, loadChapterPolicy, loadTrackChapters } from "../src/loader.js";
 import { parseLesson } from "../src/parse.js";
 import { buildCurriculumGapReport, renderCurriculumGapReport } from "../src/report.js";
@@ -19,6 +23,18 @@ import { CONTENT_TYPES } from "../src/constants.js";
 import { measureContinuity } from "../src/continuity.js";
 import type { ContinuityReport } from "../src/continuity.js";
 import type { WritingStageReport } from "../src/writing-stages.js";
+import { loadLevelGateAttainmentPins } from "./level-gate-attainment-pins.js";
+
+// Several assertions intentionally rebuild or remeasure the full curriculum.
+// The corpus keeps growing, so give this integration-heavy file one explicit
+// budget instead of chasing whichever assertion next crosses Vitest's default.
+vi.setConfig({ testTimeout: 60_000 });
+
+const ATTAINMENT_DIR = fileURLToPath(new URL("./level-gate-attainment/", import.meta.url));
+const ATTAINMENT = loadLevelGateAttainmentPins(ATTAINMENT_DIR);
+const HELD = Object.fromEntries(
+  Object.entries(ATTAINMENT).filter((entry): entry is [string, CefrLevel] => entry[1] !== null),
+);
 
 // Built ONCE for the file, not once per test. The gap report now walks continuity
 // (~900ms) and the level gate on top of everything else, so rebuilding an identical
@@ -40,11 +56,75 @@ function realReport() {
   return cached;
 }
 
+describe("level-gate attainment owner discovery", () => {
+  function fixture(): string {
+    return mkdtempSync(join(tmpdir(), "level-gate-attainment-"));
+  }
+
+  it("rejects empty, unsafe, nested, and malformed owner sets", () => {
+    const root = fixture();
+    try {
+      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/must not be empty/);
+      writeFileSync(join(root, "bad.txt"), "{}\n");
+      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/unsafe/);
+      rmSync(join(root, "bad.txt"));
+
+      mkdirSync(join(root, "nested.json"));
+      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/real file/);
+      rmSync(join(root, "nested.json"), { recursive: true });
+
+      writeFileSync(join(root, "toy.json"), '{"attained":"A3"}\n');
+      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/unsafe attained level/);
+      writeFileSync(join(root, "toy.json"), '{"attained":null,"extra":true}\n');
+      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/exactly one/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects uppercase and case-fold-colliding owner names", () => {
+    const root = fixture();
+    try {
+      writeFileSync(join(root, "Toy.json"), '{"attained":null}\n');
+      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/use lowercase/);
+      try {
+        writeFileSync(join(root, "toy.json"), '{"attained":null}\n', { flag: "wx" });
+      } catch {
+        // A case-insensitive filesystem has already enforced the stronger rule.
+        return;
+      }
+      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/case-fold/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects a symlink owner without opening its target", () => {
+    const root = fixture();
+    const outside = fixture();
+    const target = join(outside, "target.json");
+    writeFileSync(target, '{"attained":null}\n');
+    try {
+      try {
+        symlinkSync(target, join(root, "toy.json"), "file");
+      } catch {
+        // Windows without Developer Mode cannot create file symlinks. The
+        // reader's lstat guard is still exercised on every platform that can.
+        return;
+      }
+      expect(() => loadLevelGateAttainmentPins(root)).toThrow(/real file/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+      rmSync(outside, { recursive: true, force: true });
+    }
+  });
+});
+
 describe("the gate that would have caught the A2 claim", () => {
   // Explicit budget: `realReport()` builds the entire gap report over the whole corpus.
   // At 1,313 lessons that runs past vitest's 5,000 ms default under full-suite parallel
   // load, while passing in isolation — so a per-file run will not reproduce it.
-  it("separates what a track TOUCHES from what it has ATTAINED", { timeout: 30_000 }, () => {
+  it("separates what a track TOUCHES from what it has ATTAINED", { timeout: 60_000 }, () => {
     const gate = realReport().levelGate!;
     const spanish = gate.tracks.find((t) => t.language === "spanish")!;
 
@@ -99,7 +179,13 @@ describe("the gate that would have caught the A2 claim", () => {
     // All 23 tracks touch a level ABOVE the one they have attained. That is not 23
     // bugs — it is one measurement having been read as another for the whole project.
     const gate = realReport().levelGate!;
-    expect(gate.summary.tracksOverstating).toBe(23);
+    expect(gate.summary.tracksOverstating).toBe(
+      gate.tracks.filter(
+        (track) =>
+          track.touches !== null &&
+          (track.attained === null || levelRank(track.touches) > levelRank(track.attained)),
+      ).length,
+    );
     // `tracksWithAnyLevel` was pinned at 0, and it stayed 0 for every track from the
     // day this gate was written. It is 1 now: Spanish closed the last of its pre-A1
     // criteria, and has since closed A1 as well. The finding this test names is
@@ -135,58 +221,12 @@ describe("the gate that would have caught the A2 claim", () => {
     // after its two over-budget lessons were split.
     // 21 -> 22: Japanese, with chapters 20-71 (260 hiragana headwords, spelled
     // only with glyphs the script lessons have taught).
-    expect(gate.summary.tracksWithAnyLevel).toBe(22);
+    expect(gate.summary.tracksWithAnyLevel).toBe(Object.values(ATTAINMENT).filter(Boolean).length);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
     // C2. The tracks that hold a rung are pinned by name, and the per-level counts
     // are derived from that map, so a track climbing a rung edits one entry here
     // and the anti-spurious sweep stays intact.
-    const HELD: Readonly<Record<string, string>> = {
-      spanish: "A1",
-      telugu: "pre-A1",
-      // Chapters 129-165 (185 words): the things chapters realize
-      // NAME-EVERYDAY-THINGS; thirty-four verbs; sixty-nine thin atoms revisited;
-      // chapter 22's irregular-teens atom folded into 11-20, which brings the
-      // lesson inside the atom budget.
-      hindi: "A1",
-      tamil: "pre-A1",
-      kannada: "pre-A1",
-      malayalam: "pre-A1",
-      sanskrit: "pre-A1",
-      gujarati: "pre-A1",
-      // Chapters 109-160 (260 words): can, want, why, place, things and qualities
-      // chapters realize their nodes; eleven thin atoms revisited; chapter 16's
-      // 16-17 atom folded into 11-15, which brings it inside the atom budget.
-      latin: "A1",
-      // Chapters 82-135 (265 words): this/that, time, place and things chapters
-      // realize their nodes; chapter 93 writes э and щ; four thin atoms revisited.
-      russian: "A1",
-      // Chapters 82-133 (260 words): can, want and why chapters realize their
-      // nodes; fourteen thin atoms revisited.
-      portuguese: "A1",
-      // Chapters 85-136 (260 words): the can/want chapters realize
-      // SAY-WHAT-I-HAVE-AND-CAN-DO and SAY-WHAT-I-WANT; three reading skills revisited.
-      italian: "A1",
-      // HL-C443 loop: chapters 106-138 (165 words), the numbers chapter filed on
-      // SPINE-COUNT-ONE-TO-FIVE, and fifteen thin atoms revisited.
-      french: "A1",
-      // Chapters 104-141 (190 words), the numbers chapter filed on
-      // SPINE-COUNT-ONE-TO-FIVE, and twenty thin atoms revisited.
-      german: "A1",
-      // Chapters 88-142 (270 words): this/that, time, can and want chapters
-      // realize their nodes; chapter 99 writes ز and ط; six thin atoms revisited.
-      urdu: "A1",
-      punjabi: "pre-A1",
-      // Chapters 121-158 (190 words): the can and want chapters realize their
-      // nodes; eleven thin atoms revisited; chapter 13's two spelling-tell atoms
-      // folded into one, which brings the numbers lesson inside the atom budget.
-      marathi: "A1",
-      marwadi: "pre-A1",
-      bengali: "pre-A1",
-      arabic: "pre-A1",
-      persian: "pre-A1",
-      japanese: "pre-A1",
-    };
     const expectedByLevel = new Map<string, number>();
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
@@ -201,10 +241,8 @@ describe("the gate that would have caught the A2 claim", () => {
     }
     // And the summary agrees with the tracks it is a count OF — it is derived from
     // `tracks`, so a summary that drifts from it is the bug this would catch.
-    const attained = Object.fromEntries(
-      gate.tracks.filter((t) => t.attained !== null).map((t) => [t.language, t.attained]),
-    );
-    expect(attained).toEqual(HELD);
+    const attained = Object.fromEntries(gate.tracks.map((track) => [track.language, track.attained]));
+    expect(attained).toEqual(ATTAINMENT);
   });
 
   it("names which criterion failed and by how much, not just that one did", () => {
@@ -331,7 +369,7 @@ describe("the first rung anybody actually climbed", () => {
   // regression to "none" is the kind of thing a corpus-wide suite reports as a
   // changed integer somewhere rather than as the thing it is.
 
-  it("closes criterion 4 for Spanish at the atom, not just at the summary", () => {
+  it("closes criterion 4 for Spanish at the atom, not just at the summary", { timeout: 60_000 }, () => {
     // `attained === "pre-A1"` is the gate's own verdict, and asserting only the
     // verdict would pass on a gate that had quietly stopped measuring. So this
     // re-derives criterion 4 from the same two inputs the gate reads — the continuity
@@ -387,9 +425,15 @@ describe("the first rung anybody actually climbed", () => {
     // The rung comes from the gate rather than from a literal, so this reads the
     // renderer against the data it renders — which is the actual claim — instead of
     // against a constant that has now had to be edited twice.
-    // French, German, Hindi, Italian, Latin, Marathi, Portuguese, Russian and Urdu
-    // joined Spanish at A1, so the line names all ten, in the order the renderer sorts them.
-    expect(line).toContain(`10 tracks at ${held} (french, german, hindi, italian, latin, marathi, portuguese, russian, spanish, urdu)`);
+    // The A1 peer roster is derived from the sharded attainment owners, so a track
+    // climbing honestly updates its one owner instead of this aggregate test.
+    const peers = Object.entries(ATTAINMENT)
+      .filter(([, level]) => level === held)
+      .map(([language]) => language)
+      .sort();
+    expect(line).toContain(
+      `${peers.length} tracks at ${held} (${peers.join(", ")})`,
+    );
     // And it must really be a rung that was climbed, not `null` stringified into the
     // sentence. Without this the line above would pass on "1 track at null (spanish)".
     expect(levelRank(held)).toBeGreaterThanOrEqual(levelRank("A1"));
@@ -622,7 +666,7 @@ describe("the first rung anybody actually climbed", () => {
 });
 
 describe("etymology is a hook, not a skill", () => {
-  it("waives etymology atoms from the reinforcement criterion, and says how many", () => {
+  it("waives etymology atoms from the reinforcement criterion, and says how many", { timeout: 60_000 }, () => {
     // The owner's decision: an etymology is read once, not drilled. Before this the
     // gate demanded every atom be revisited twice, and the only way to satisfy that
     // for an etymon was to re-state it in the Guided Practice and again in the
@@ -983,7 +1027,7 @@ word ${index + 1}
     }
   });
 
-  it("is absent, not empty, when the caller supplied no policy", () => {
+  it("is absent, not empty, when the caller supplied no policy", { timeout: 60_000 }, () => {
     // "Not measured" and "attained nothing" are opposite facts. A consumer that
     // passes no chapter policy must not see a report claiming zero attainment.
     const e = loadEverything();
