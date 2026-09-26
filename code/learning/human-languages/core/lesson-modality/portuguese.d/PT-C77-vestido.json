@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C77-vestido",
+    "language": "portuguese",
+    "chapter": 77,
+    "sequence": 3500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be59fc6e2f822b39"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C55-formaggio",
+  "pathSegment": "IT-PATH-55-DISPENSA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-55-DISPENSA",
+      "order": 3
+    }
+  ]
+}

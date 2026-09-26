@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:5441481bb52d5e1a",
+  "lessonIds": [
+    "FR-C82-mer",
+    "FR-C82-pierre",
+    "FR-C82-sable",
+    "FR-C82-plage",
+    "FR-C82-ile"
+  ],
+  "tex": "french/book/chapters/ch82-sea-stone-sand-beach-island.tex"
+}

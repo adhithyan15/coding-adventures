@@ -8,7 +8,7 @@ type: word
 headword: ouvrir
 gloss: to open — an -ir verb that takes -er endings, from a Latin verb reshaped to look like its own opposite, and the source of English overt and overture
 concept_tag: VERB-OPEN
-prerequisites: [FR-C27-se-lever, FR-C17-main]
+prerequisites: [FR-C27-se-lever, FR-C17-main, FR-C17-main-more]
 sounds: [r-uvular, nasal-ain]
 roots: [aperire-latin]
 etymology_hook: "ouvrir ← popular Latin operīre, a reshaping of Classical aperīre 'to open' — probably pulled into that shape by its own opposite cooperīre 'to cover' (→ couvrir) → aperture, aperitif ('the opener' of a meal), and through Old French ovrir the English words overt and overture"

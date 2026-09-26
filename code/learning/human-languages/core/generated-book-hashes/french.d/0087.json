@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:37d4382eb78843e7",
+  "lessonIds": [
+    "FR-C87-mouton",
+    "FR-C87-chevre",
+    "FR-C87-lion",
+    "FR-C87-singe",
+    "FR-C87-abeille"
+  ],
+  "tex": "french/book/chapters/ch87-sheep-goat-lion-monkey-bee.tex"
+}

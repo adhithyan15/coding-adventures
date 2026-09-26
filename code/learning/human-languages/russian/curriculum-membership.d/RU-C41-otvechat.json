@@ -1,0 +1,11 @@
+{
+  "id": "RU-C41-otvechat",
+  "pathSegment": "RU-PATH-41-VERB4",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-41-VERB4",
+      "order": 2
+    }
+  ]
+}

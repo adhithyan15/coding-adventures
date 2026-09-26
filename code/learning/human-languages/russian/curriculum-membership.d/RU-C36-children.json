@@ -1,0 +1,11 @@
+{
+  "id": "RU-C36-children",
+  "pathSegment": "RU-PATH-36-FAMILY2",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-36-FAMILY2",
+      "order": 0
+    }
+  ]
+}

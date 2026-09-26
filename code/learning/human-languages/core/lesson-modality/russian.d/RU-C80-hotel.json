@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C80-hotel",
+    "language": "russian",
+    "chapter": 80,
+    "sequence": 3970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa55f8796e07ae80"
+  },
+  "findings": []
+}

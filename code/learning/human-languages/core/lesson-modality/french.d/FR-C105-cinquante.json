@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C105-cinquante",
+    "language": "french",
+    "chapter": 105,
+    "sequence": 4660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7385a621e948f139"
+  },
+  "findings": []
+}

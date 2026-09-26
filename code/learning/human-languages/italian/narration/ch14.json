@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Having and Telling Your Age",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cf4b53b18112d826",
+  "sourceHash": "fnv1a64:2af0c2ddce50d60c",
   "lessons": [
     {
       "id": "IT-C14-avere",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f74f675bfcecc02d",
+      "sourceHash": "fnv1a64:70c82cbe6302708b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -203,7 +203,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7e49892d5756d46",
+      "sourceHash": "fnv1a64:ecc207d26bf16723",
       "notice": null,
       "blocks": [
         {
@@ -283,34 +283,6 @@
         },
         {
           "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens: who has and who is",
-          "segments": [
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 6,
-              "utterances": [
-                "language: Italian, ho venti anni — have.",
-                "language: French, j'ai vingt ans — have.",
-                "language: Spanish, tengo veinte años — have.",
-                "language: Portuguese, tenho vinte anos — have.",
-                "language: German, ich bin zwanzig Jahre alt — be.",
-                "language: English, I am twenty — be."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Romance has its years; Germanic is its years."
-            }
-          ]
-        },
-        {
-          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -359,7 +331,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -371,7 +343,125 @@
             },
             {
               "kind": "speech",
-              "text": "Which verb does Italian use for age? (Avere, never essere.) What does ho venti anni literally say? (\"I have twenty years.\") Where does anno come from? (Latin annus becomes annual/anniversary.) What separates hanno from anno? (Only the silent h — they sound identical.) Which two languages say \"I am\" instead? (German and English.)"
+              "text": "Which verb does Italian use for age? (Avere, never essere.) What does ho venti anni literally say? (\"I have twenty years.\") Where does anno come from? (Latin annus becomes annual/anniversary.) What separates hanno from anno? (Only the silent h — they sound identical.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-C14-avere-o-essere",
+      "sequence": 505,
+      "title": "Have or be — age in six languages",
+      "headword": "(have or be)",
+      "romanization": "(have or be)",
+      "gloss": "age across six languages — the Romance ones have their years, the Germanic ones are them",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:c1e6f7fd775ba433",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say how old you are in Italian: Ho … anni. Which verb did you use?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: who has and who is",
+          "segments": [
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 6,
+              "utterances": [
+                "language: Italian, ho venti anni — have.",
+                "language: French, j'ai vingt ans — have.",
+                "language: Spanish, tengo veinte años — have.",
+                "language: Portuguese, tenho vinte anos — have.",
+                "language: German, ich bin zwanzig Jahre alt — be.",
+                "language: English, I am twenty — be."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Romance has its years; Germanic is its years."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Ho venti anni\" — and notice the have",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Ho venti anni\" — and notice the **have**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English \"I am twenty\" beside it — and notice the be",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English \"I am twenty\" beside it — and notice the **be**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two languages in the table say \"I am\" instead? (German and English.)"
             }
           ]
         }

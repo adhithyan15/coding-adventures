@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:e458dd6bb72457c9",
+  "lessonIds": [
+    "RU-C56-mountain",
+    "RU-C56-forest",
+    "RU-C56-river",
+    "RU-C56-lake",
+    "RU-C56-sea"
+  ],
+  "tex": "russian/book/chapters/ch56-mountain-forest-river-lake-sea.tex"
+}

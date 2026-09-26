@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C78-restaurant",
+    "language": "russian",
+    "chapter": 78,
+    "sequence": 3910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57e58c6bbcd4fc00"
+  },
+  "findings": []
+}

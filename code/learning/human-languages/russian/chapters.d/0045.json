@@ -1,0 +1,19 @@
+{
+  "chapter": 45,
+  "title": "Potatoes, Tomato, Onion, Cucumber, Carrot",
+  "label": "ch:ru-potatoes-tomato-onion-cucumber-carrot",
+  "canDo": "I can name potatoes, a tomato, an onion, a cucumber and a carrot.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "RU-C45-carrot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 45: i can name potatoes, a tomato, an onion, a cucumber and a carrot.",
+    "assesses": [
+      "RU-LEX-C45-VEG-03",
+      "RU-LEX-C45-VEG-04",
+      "RU-LEX-C45-VEG-05"
+    ]
+  }
+}

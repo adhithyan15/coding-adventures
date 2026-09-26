@@ -1,0 +1,11 @@
+{
+  "id": "FR-C87-abeille",
+  "pathSegment": "FR-PATH-87-ANIMAUX39",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-87-ANIMAUX39",
+      "order": 4
+    }
+  ]
+}

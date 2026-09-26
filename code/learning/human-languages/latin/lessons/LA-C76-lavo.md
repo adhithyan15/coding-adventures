@@ -45,7 +45,7 @@ reviews_of: [LA-C75-fleo]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for wash, cook, sell, swim, call.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C76-VERBA2-01, LA-LEX-C75-VERBA1-04, LA-LEX-C75-VERBA1-05] -->

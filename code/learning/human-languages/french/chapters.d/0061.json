@@ -1,0 +1,19 @@
+{
+  "chapter": 61,
+  "title": "Teach, Drink, Eat, Give, Live",
+  "label": "ch:fr-teach-drink-eat-give-live",
+  "canDo": "I can say to teach, to drink, to eat, to give, to live.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C61-vivre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 61: i can say to teach, to drink, to eat, to give, to live.",
+    "assesses": [
+      "FR-LEX-C61-VERBES13-03",
+      "FR-LEX-C61-VERBES13-04",
+      "FR-LEX-C61-VERBES13-05"
+    ]
+  }
+}

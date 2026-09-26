@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 84,
-  "sourceHash": "fnv1a64:d3b18b1b14205173",
+  "sourceHash": "fnv1a64:4b58b7a3fadb49f6",
   "lessonIds": [
     "LA-C84-arca",
     "LA-C84-charta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch84.txt",
   "json": "latin/narration/ch84.json",
-  "textHash": "fnv1a64:615481c25eab4f82",
-  "jsonHash": "fnv1a64:1608b926e5be8a26",
+  "textHash": "fnv1a64:cc30905a817f577a",
+  "jsonHash": "fnv1a64:81195565e74df0c9",
   "findings": []
 }

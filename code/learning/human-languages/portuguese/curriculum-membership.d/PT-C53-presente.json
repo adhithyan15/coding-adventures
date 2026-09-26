@@ -1,0 +1,11 @@
+{
+  "id": "PT-C53-presente",
+  "pathSegment": "PT-PATH-53-COISAS2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-53-COISAS2",
+      "order": 3
+    }
+  ]
+}

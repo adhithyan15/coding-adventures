@@ -1,0 +1,19 @@
+{
+  "chapter": 47,
+  "title": "Sugar, Honey, Rice, Mushrooms and a Glass",
+  "label": "ch:ru-sugar-honey-rice-mushrooms-and-a-glass",
+  "canDo": "I can name sugar, honey, rice, a mushroom and a glass.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "RU-C47-glass",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 47: i can name sugar, honey, rice, a mushroom and a glass.",
+    "assesses": [
+      "RU-LEX-C47-PANTRY-03",
+      "RU-LEX-C47-PANTRY-04",
+      "RU-LEX-C47-PANTRY-05"
+    ]
+  }
+}

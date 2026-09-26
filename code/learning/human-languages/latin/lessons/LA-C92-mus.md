@@ -45,7 +45,7 @@ reviews_of: [LA-C91-serpens]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for mouse, hen, donkey, elephant, deer.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C92-ANIMALIA3-01, LA-LEX-C91-ANIMALIA2-04, LA-LEX-C91-ANIMALIA2-05] -->

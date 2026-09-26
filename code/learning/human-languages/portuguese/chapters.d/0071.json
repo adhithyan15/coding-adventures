@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Never, Now, Afterwards, Early, Slowly",
+  "label": "ch:pt-never-now-afterwards-early-slowly",
+  "canDo": "I can say never, now, afterwards, early and slowly.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "PT-C71-devagar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: i can say never, now, afterwards, early and slowly.",
+    "assesses": [
+      "PT-LEX-C71-QUANDO2-03",
+      "PT-LEX-C71-QUANDO2-04",
+      "PT-LEX-C71-QUANDO2-05"
+    ]
+  }
+}

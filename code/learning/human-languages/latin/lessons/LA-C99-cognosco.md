@@ -45,7 +45,7 @@ reviews_of: [LA-C98-nimis]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for get to know, care for, tell, praise, move.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C99-VERBA5-01, LA-LEX-C98-DIVES-04, LA-LEX-C98-DIVES-05] -->

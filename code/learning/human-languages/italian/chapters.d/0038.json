@@ -1,0 +1,19 @@
+{
+  "chapter": 38,
+  "title": "Tongue, Neck, Shoulder, Back, Hair",
+  "label": "ch:it-tongue-neck-shoulder-back-hair",
+  "canDo": "I can name the tongue, the neck, a shoulder, the back, hair (on the head).",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C38-capelli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 38: i can name the tongue, the neck, a shoulder, the back, hair (on the head).",
+    "assesses": [
+      "IT-LEX-C38-CORPO2-03",
+      "IT-LEX-C38-CORPO2-04",
+      "IT-LEX-C38-CORPO2-05"
+    ]
+  }
+}

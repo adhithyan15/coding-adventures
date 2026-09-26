@@ -1,6 +1,6 @@
 # UI48 — Host environment: runtime viewport, input modality, and variant selection
 
-**Status:** In progress — ENV1 implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 designed (§7.2)
+**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2)
 **Layer:** UI / standard Mosaic app ABI
 **Depends on:** UI29 (primitive kernel), UI30 (multi-layout pipelines), UI38
 (native application runtime), `mosaic-app-runtime`, `mosaic-app-capi`

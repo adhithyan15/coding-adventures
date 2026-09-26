@@ -1,0 +1,11 @@
+{
+  "id": "RU-C78-museum",
+  "pathSegment": "RU-PATH-78-TOWN2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-78-TOWN2",
+      "order": 2
+    }
+  ]
+}

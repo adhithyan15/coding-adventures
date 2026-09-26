@@ -1,0 +1,19 @@
+{
+  "chapter": 56,
+  "title": "Sad, Pleased, Daughter, Grandfather, Grandmother",
+  "label": "ch:fr-sad-pleased-daughter-grandfather-grandmother",
+  "canDo": "I can name sad, pleased, a daughter, a grandfather, a grandmother.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C56-grand-mere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 56: i can name sad, pleased, a daughter, a grandfather, a grandmother.",
+    "assesses": [
+      "FR-LEX-C56-SENTIR8-03",
+      "FR-LEX-C56-SENTIR8-04",
+      "FR-LEX-C56-SENTIR8-05"
+    ]
+  }
+}

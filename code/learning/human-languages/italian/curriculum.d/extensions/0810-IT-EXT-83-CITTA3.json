@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-83-CITTA3",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a bridge, a park, a church, a museum, a restaurant.",
+  "prerequisites": []
+}

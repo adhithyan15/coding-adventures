@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:954e2952358e76f1",
+  "lessonIds": [
+    "PT-C55-entrar",
+    "PT-C55-sair",
+    "PT-C55-voltar",
+    "PT-C55-estudar",
+    "PT-C55-viajar",
+    "PT-R55-first-pass-the-body-family-and-doing",
+    "PT-R55-second-pass-food-the-house-and-things"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch55.txt",
+  "json": "portuguese/narration/ch55.json",
+  "textHash": "fnv1a64:0514a2943788cd4d",
+  "jsonHash": "fnv1a64:766c9da900f1bce1",
+  "findings": []
+}

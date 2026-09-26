@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C70-capra",
+    "language": "italian",
+    "chapter": 70,
+    "sequence": 3120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d114a0f9e5c52880"
+  },
+  "findings": []
+}

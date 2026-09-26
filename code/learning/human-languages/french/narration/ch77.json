@@ -1,0 +1,1024 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 77,
+  "title": "Spoon, Knife, Fork, Bottle, Cup",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:da2ba887749c57b0",
+  "lessons": [
+    {
+      "id": "FR-C77-cuillere",
+      "sequence": 3210,
+      "title": "la cuillère — a spoon",
+      "headword": "la cuillère",
+      "romanization": "la cuillère",
+      "gloss": "a spoon",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9676c0088a607fce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for a glass, then the French for a plate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la cuillère",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cuillère — \"a spoon\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cuillère",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cuillère*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cuillère, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cuillère*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say la cuillère",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *la cuillère*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for a glass, then the French for a plate, then say la cuillère again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for a glass, then the French for a plate, then say *la cuillère* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la cuillère mean? (\"A spoon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C77-couteau",
+      "sequence": 3220,
+      "title": "le couteau — a knife",
+      "headword": "le couteau",
+      "romanization": "le couteau",
+      "gloss": "a knife",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:345d4a9eb4b9bdb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for a plate, then the French for a spoon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: le couteau",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le couteau — \"a knife\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le couteau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le couteau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "le couteau, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *le couteau*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say le couteau",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *le couteau*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for a plate, then the French for a spoon, then say le couteau again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for a plate, then the French for a spoon, then say *le couteau* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does le couteau mean? (\"A knife\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C77-fourchette",
+      "sequence": 3230,
+      "title": "la fourchette — a fork",
+      "headword": "la fourchette",
+      "romanization": "la fourchette",
+      "gloss": "a fork",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7bb3fe59ebf0e48f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for a spoon, then the French for a knife."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la fourchette",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la fourchette — \"a fork\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la fourchette",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la fourchette*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la fourchette, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la fourchette*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say la fourchette",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *la fourchette*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for a spoon, then the French for a knife, then say la fourchette again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for a spoon, then the French for a knife, then say *la fourchette* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la fourchette mean? (\"A fork\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C77-bouteille",
+      "sequence": 3240,
+      "title": "la bouteille — a bottle",
+      "headword": "la bouteille",
+      "romanization": "la bouteille",
+      "gloss": "a bottle",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c7e35ec24240bc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for a knife, then the French for a fork."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la bouteille",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la bouteille — \"a bottle\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la bouteille",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la bouteille*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la bouteille, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la bouteille*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say la bouteille",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *la bouteille*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for a knife, then the French for a fork, then say la bouteille again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for a knife, then the French for a fork, then say *la bouteille* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la bouteille mean? (\"A bottle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C77-tasse",
+      "sequence": 3250,
+      "title": "la tasse — a cup",
+      "headword": "la tasse",
+      "romanization": "la tasse",
+      "gloss": "a cup",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77719765eaf564dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the French for a fork, then the French for a bottle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: la tasse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la tasse — \"a cup\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la tasse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la tasse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la tasse, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la tasse*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say la tasse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *la tasse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the French for a fork, then the French for a bottle, then say la tasse again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the French for a fork, then the French for a bottle, then say *la tasse* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does la tasse mean? (\"A cup\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R77-first-pass-the-body-family-doing-and-food",
+      "sequence": 3260,
+      "title": "The body, family, doing and food — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 49-62",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a91804ebb6bab8d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a bottle and a cup."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an arm, a leg, a foot, a finger, a tooth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an arm, a leg, a foot, a finger, a tooth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the neck, a shoulder, a knee, the face, blood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the neck, a shoulder, a knee, the face, blood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "skin, a nail, the chin, the throat, a cheek",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: skin, a nail, the chin, the throat, a cheek]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the chest, the stomach, an ankle, an elbow, a wrist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the chest, the stomach, an ankle, an elbow, a wrist]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pain, a fever, a cough, a medicine, a doctor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pain, a fever, a cough, a medicine, a doctor]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hospital, an illness, thirst, tiredness, ill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hospital, an illness, thirst, tiredness, ill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joy, fear, anger, sadness, happy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: joy, fear, anger, sadness, happy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sad, pleased, a daughter; a girl, a grandfather, a grandmother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sad, pleased, a daughter; a girl, a grandfather, a grandmother]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a husband, a woman; a wife, an uncle, an aunt, a cousin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a husband, a woman; a wife, an uncle, an aunt, a cousin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a neighbour, a guest, a baby, a grandson, a granddaughter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a neighbour, a guest, a baby, a grandson, a granddaughter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a nephew, a niece, a pupil, a teacher, to laugh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a nephew, a niece, a pupil, a teacher, to laugh]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cry, to wash, to cook, to play, to learn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cry, to wash, to cook, to play, to learn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to teach, to drink, to eat, to give, to live",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to teach, to drink, to eat, to give, to live]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to come back, to study, to pay, to use, to show",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to come back, to study, to pay, to use, to show]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An arm? (le bras.) A leg? (la jambe.) A foot? (le pied.) A finger? (le doigt.) A tooth? (la dent.) The neck? (le cou.) A shoulder? (l'épaule.) A knee? (le genou.) The face? (le visage.) Blood? (le sang.) Skin? (la peau.) A nail? (l'ongle.) The chin? (le menton.) The throat? (la gorge.) A cheek? (la joue.) The chest? (la poitrine.) The stomach? (l'estomac.) An ankle? (la cheville.) An elbow? (le coude.) A wrist? (le poignet.) Pain? (la douleur.) A fever? (la fièvre.) A cough? (la toux.) A medicine? (le médicament.) A doctor? (le médecin.) A hospital? (l'hôpital.) An illness? (la maladie.) Thirst? (la soif.) Tiredness? (la fatigue.) Ill? (malade.) Joy? (la joie.) Fear? (la peur.) Anger? (la colère.) Sadness? (la tristesse.) Happy? (heureux.) Sad? (triste.) Pleased? (content.) A daughter; a girl? (la fille.) A grandfather? (le grand-père.) A grandmother? (la grand-mère.) A husband? (le mari.) A woman; a wife? (la femme.) An uncle? (l'oncle.) An aunt? (la tante.) A cousin? (la cousine.) A neighbour? (le voisin.) A guest? (l'invité.) A baby? (le bébé.) A grandson? (le petit-fils.) A granddaughter? (la petite-fille.) A nephew? (le neveu.) A niece? (la nièce.) A pupil? (l'élève.) A teacher? (le professeur.) To laugh? (rire.) To cry? (pleurer.) To wash? (laver.) To cook? (cuisiner.) To play? (jouer.) To learn? (apprendre.) To teach? (enseigner.) To drink? (boire.) To eat? (manger.) To give? (donner.) To live? (vivre.) To come back? (revenir.) To study? (étudier.) To pay? (payer.) To use? (utiliser.) To show? (montrer.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-R77-second-pass-the-house-the-table-and-things",
+      "sequence": 3270,
+      "title": "The house, the table and things — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 63-77",
+      "script": "latin",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:f5c012a9bbde037d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to clean and to cut."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to clean, to cut, to forget, to look for, to lose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to clean, to cut, to forget, to look for, to lose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to look at, to listen to, to wait for, to buy, to know",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to look at, to listen to, to wait for, to buy, to know]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to leave, to carry; to wear, to send, to receive, to feel; to smell",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to leave, to carry; to wear, to send, to receive, to feel; to smell]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to draw, to paint, to count, to win; to earn, to hide",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to draw, to paint, to count, to win; to earn, to hide]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to find, fish, chicken, a fruit, an apple",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to find, fish, chicken, a fruit, an apple]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a banana, an orange, a potato, a tomato, an onion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a banana, an orange, a potato, a tomato, an onion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a carrot, a cake, a soup, honey, oil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a carrot, a cake, a soup, honey, oil]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lunch, dinner, breakfast, rice, a pear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: lunch, dinner, breakfast, rice, a pear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lemon, grapes, jam, a yoghurt, ham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lemon, grapes, jam, a yoghurt, ham]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a salad; lettuce, pasta, cream, pepper, a walnut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a salad; lettuce, pasta, cream, pepper, a walnut]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a kitchen; cooking, a window, a chair, a key, a wall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a kitchen; cooking, a window, a chair, a key, a wall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a roof, a garden, a lamp, a bathroom, a bedroom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a roof, a garden, a lamp, a bathroom, a bedroom]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the floor, the stairs, a mirror, a living room, a sofa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the floor, the stairs, a mirror, a living room, a sofa]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cupboard, a ceiling, a corridor, a glass, a plate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cupboard, a ceiling, a corridor, a glass, a plate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a spoon, a knife, a fork, a bottle, a cup",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a spoon, a knife, a fork, a bottle, a cup]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To clean? (nettoyer.) To cut? (couper.) To forget? (oublier.) To look for? (chercher.) To lose? (perdre.) To look at? (regarder.) To listen to? (écouter.) To wait for? (attendre.) To buy? (acheter.) To know? (savoir.) To leave? (laisser.) To carry; to wear? (porter.) To send? (envoyer.) To receive? (recevoir.) To feel; to smell? (sentir.) To draw? (dessiner.) To paint? (peindre.) To count? (compter.) To win; to earn? (gagner.) To hide? (cacher.) To find? (trouver.) Fish? (le poisson.) Chicken? (le poulet.) A fruit? (le fruit.) An apple? (la pomme.) A banana? (la banane.) An orange? (l'orange.) A potato? (la pomme de terre.) A tomato? (la tomate.) An onion? (l'oignon.) A carrot? (la carotte.) A cake? (le gâteau.) A soup? (la soupe.) Honey? (le miel.) Oil? (l'huile.) Lunch? (le déjeuner.) Dinner? (le dîner.) Breakfast? (le petit-déjeuner.) Rice? (le riz.) A pear? (la poire.) A lemon? (le citron.) Grapes? (le raisin.) Jam? (la confiture.) A yoghurt? (le yaourt.) Ham? (le jambon.) A salad; lettuce? (la salade.) Pasta? (les pâtes.) Cream? (la crème.) Pepper? (le poivre.) A walnut? (la noix.) A kitchen; cooking? (la cuisine.) A window? (la fenêtre.) A chair? (la chaise.) A key? (la clé.) A wall? (le mur.) A roof? (le toit.) A garden? (le jardin.) A lamp? (la lampe.) A bathroom? (la salle de bain.) A bedroom? (la chambre.) The floor? (le sol.) The stairs? (l'escalier.) A mirror? (le miroir.) A living room? (le salon.) A sofa? (le canapé.) A cupboard? (le placard.) A ceiling? (le plafond.) A corridor? (le couloir.) A glass? (le verre.) A plate? (l'assiette.) A spoon? (la cuillère.) A knife? (le couteau.) A fork? (la fourchette.) A bottle? (la bouteille.) A cup? (la tasse.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

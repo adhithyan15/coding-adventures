@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C88-elephant",
+    "language": "french",
+    "chapter": 88,
+    "sequence": 3790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5028b0423cd971a6"
+  },
+  "findings": []
+}

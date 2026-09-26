@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:81560ebc5050a956",
+  "lessonIds": [
+    "RU-C80-hotel",
+    "RU-C80-pharmacy",
+    "RU-C80-church",
+    "RU-C80-park",
+    "RU-C80-taxi",
+    "RU-R80-first-pass-nature-animals-and-describing-words",
+    "RU-R80-second-pass-time-place-numbers-and-the-town"
+  ],
+  "tex": "russian/book/chapters/ch80-hotel-pharmacy-church-park-taxi.tex"
+}

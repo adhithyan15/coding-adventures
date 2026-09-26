@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 108,
-  "sourceHash": "fnv1a64:4f511ab5c3c94797",
+  "sourceHash": "fnv1a64:8a6d3d92a2a1c85e",
   "lessonIds": [
     "LA-C108-pons",
     "LA-C108-villa",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch108.txt",
   "json": "latin/narration/ch108.json",
-  "textHash": "fnv1a64:3afcf302e6dfbde4",
-  "jsonHash": "fnv1a64:83d514258a991f70",
+  "textHash": "fnv1a64:2d73db7536bfe1cc",
+  "jsonHash": "fnv1a64:283a6b74c638f860",
   "findings": []
 }

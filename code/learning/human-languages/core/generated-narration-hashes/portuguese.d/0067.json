@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:f63e7134b64784a3",
+  "lessonIds": [
+    "PT-C67-barato",
+    "PT-C67-alto",
+    "PT-C67-baixo",
+    "PT-C67-cheio",
+    "PT-C67-vazio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch67.txt",
+  "json": "portuguese/narration/ch67.json",
+  "textHash": "fnv1a64:fa0162c410b17f1d",
+  "jsonHash": "fnv1a64:42ca3a2cd0916cd8",
+  "findings": []
+}

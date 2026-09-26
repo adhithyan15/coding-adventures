@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:c72f8c33e9fcf6d3",
+  "lessonIds": [
+    "IT-C63-orologio",
+    "IT-C63-occhiali",
+    "IT-C63-scatola",
+    "IT-C63-valigia",
+    "IT-C63-biglietto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch63.txt",
+  "json": "italian/narration/ch63.json",
+  "textHash": "fnv1a64:0dd61198fdd43bd9",
+  "jsonHash": "fnv1a64:9fabf0ddcffed65a",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C39-sangue",
+  "pathSegment": "IT-PATH-39-CORPO3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-39-CORPO3",
+      "order": 2
+    }
+  ]
+}

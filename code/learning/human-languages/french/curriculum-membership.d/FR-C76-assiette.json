@@ -1,0 +1,11 @@
+{
+  "id": "FR-C76-assiette",
+  "pathSegment": "FR-PATH-76-MAISON28",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-76-MAISON28",
+      "order": 4
+    }
+  ]
+}

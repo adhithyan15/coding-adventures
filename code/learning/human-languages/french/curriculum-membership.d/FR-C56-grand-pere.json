@@ -1,0 +1,11 @@
+{
+  "id": "FR-C56-grand-pere",
+  "pathSegment": "FR-PATH-56-SENTIR8",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-56-SENTIR8",
+      "order": 3
+    }
+  ]
+}

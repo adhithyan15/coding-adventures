@@ -1,0 +1,19 @@
+{
+  "chapter": 66,
+  "title": "Fast, Slow, Easy, Hard, Dear",
+  "label": "ch:pt-fast-slow-easy-hard-dear",
+  "canDo": "I can say fast, slow, easy, difficult and expensive.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PT-C66-caro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: i can say fast, slow, easy, difficult and expensive.",
+    "assesses": [
+      "PT-LEX-C66-ADJ3-03",
+      "PT-LEX-C66-ADJ3-04",
+      "PT-LEX-C66-ADJ3-05"
+    ]
+  }
+}

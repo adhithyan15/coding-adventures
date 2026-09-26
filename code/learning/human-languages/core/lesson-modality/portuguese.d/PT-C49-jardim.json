@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C49-jardim",
+    "language": "portuguese",
+    "chapter": 49,
+    "sequence": 2100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d50c08c47a636136"
+  },
+  "findings": []
+}

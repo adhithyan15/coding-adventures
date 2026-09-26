@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "Come back, Study, Pay, Use, Show",
+  "label": "ch:fr-come-back-study-pay-use-show",
+  "canDo": "I can say to come back, to study, to pay, to use, to show.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C62-montrer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: i can say to come back, to study, to pay, to use, to show.",
+    "assesses": [
+      "FR-LEX-C62-VERBES14-03",
+      "FR-LEX-C62-VERBES14-04",
+      "FR-LEX-C62-VERBES14-05"
+    ]
+  }
+}

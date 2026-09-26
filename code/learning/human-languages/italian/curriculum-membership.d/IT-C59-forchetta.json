@@ -1,0 +1,11 @@
+{
+  "id": "IT-C59-forchetta",
+  "pathSegment": "IT-PATH-59-TAVOLA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-59-TAVOLA",
+      "order": 4
+    }
+  ]
+}

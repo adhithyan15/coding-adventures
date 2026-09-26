@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-71-QUANDO2",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "PT-EXT-71-QUANDO2"
+  ],
+  "after": []
+}

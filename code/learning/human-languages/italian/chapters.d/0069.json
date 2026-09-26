@@ -1,0 +1,19 @@
+{
+  "chapter": 69,
+  "title": "Bird, Mouse, Wolf, Bear, Fox",
+  "label": "ch:it-bird-mouse-wolf-bear-fox",
+  "canDo": "I can name a bird, a mouse, a wolf, a bear, a fox.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "IT-C69-volpe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 69: i can name a bird, a mouse, a wolf, a bear, a fox.",
+    "assesses": [
+      "IT-LEX-C69-ANIMALI2-03",
+      "IT-LEX-C69-ANIMALI2-04",
+      "IT-LEX-C69-ANIMALI2-05"
+    ]
+  }
+}

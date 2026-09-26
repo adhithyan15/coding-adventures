@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:452917f221b4ac16",
+  "lessonIds": [
+    "IT-C51-carne",
+    "IT-C51-pesce",
+    "IT-C51-burro",
+    "IT-C51-sale",
+    "IT-C51-pollo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch51.txt",
+  "json": "italian/narration/ch51.json",
+  "textHash": "fnv1a64:d6116e962c38d8e3",
+  "jsonHash": "fnv1a64:9fbe2305d529bac4",
+  "findings": []
+}

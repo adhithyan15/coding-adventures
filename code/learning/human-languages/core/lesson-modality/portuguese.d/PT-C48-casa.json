@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C48-casa",
+    "language": "portuguese",
+    "chapter": 48,
+    "sequence": 2010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:975e688c78908ed7"
+  },
+  "findings": []
+}

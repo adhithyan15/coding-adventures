@@ -1,0 +1,19 @@
+{
+  "chapter": 41,
+  "title": "Listen, Learn, Answer, Wait, Give",
+  "label": "ch:ru-listen-learn-answer-wait-give",
+  "canDo": "I can say to listen, to learn, to answer, to wait and to give.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C41-davat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 41: i can say to listen, to learn, to answer, to wait and to give.",
+    "assesses": [
+      "RU-LEX-C41-VERB4-03",
+      "RU-LEX-C41-VERB4-04",
+      "RU-LEX-C41-VERB4-05"
+    ]
+  }
+}

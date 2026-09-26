@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:1bcaac1f00de601c",
+  "lessonIds": [
+    "PT-C51-copo",
+    "PT-C51-prato",
+    "PT-C51-colher",
+    "PT-C51-faca",
+    "PT-C51-garfo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch51.txt",
+  "json": "portuguese/narration/ch51.json",
+  "textHash": "fnv1a64:18415d5dca8a7ab1",
+  "jsonHash": "fnv1a64:1845a875b6df0e26",
+  "findings": []
+}

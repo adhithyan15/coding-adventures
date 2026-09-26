@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:067775e01f38210f",
+  "lessonIds": [
+    "PT-C48-casa",
+    "PT-C48-cozinha",
+    "PT-C48-janela",
+    "PT-C48-mesa",
+    "PT-C48-cadeira"
+  ],
+  "tex": "portuguese/book/chapters/ch48-house-kitchen-window-table-chair.tex"
+}

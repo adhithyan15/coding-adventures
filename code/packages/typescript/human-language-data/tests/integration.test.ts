@@ -322,7 +322,11 @@ describe("real curriculum", () => {
       // script work buys.
       // 27 -> 28: HL-C443, the small я. The word for I is written small inside a
       // sentence, and only the capital Я had a lesson of its own.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]);
+      // 28 -> 81: the pre-A1 vocabulary tranche, fifty-two chapters of five
+      // words (260 headwords, twenty-three verbs), every one written in letters
+      // the track already reads -- no э, щ or ъ yet -- and chapter 81, which
+      // writes ё from ребёнок, the one letter those words read but no lesson wrote.
+    ).toEqual(Array.from({ length: 81 }, (_, index) => index + 1));
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

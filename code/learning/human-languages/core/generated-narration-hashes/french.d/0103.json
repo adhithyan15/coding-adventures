@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:90467366641d0d1e",
+  "lessonIds": [
+    "FR-C103-quartier",
+    "FR-C103-aeroport",
+    "FR-C103-vetements",
+    "FR-C103-chemise",
+    "FR-C103-robe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch103.txt",
+  "json": "french/narration/ch103.json",
+  "textHash": "fnv1a64:176a21727239175b",
+  "jsonHash": "fnv1a64:5a48491a8e5c3144",
+  "findings": []
+}

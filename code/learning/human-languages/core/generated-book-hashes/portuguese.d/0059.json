@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:1e3dc01a6248cc6d",
+  "lessonIds": [
+    "PT-C59-chuva",
+    "PT-C59-vento",
+    "PT-C59-colina",
+    "PT-C59-deserto",
+    "PT-C59-fogo"
+  ],
+  "tex": "portuguese/book/chapters/ch59-rain-wind-hill-desert-fire.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C61-vivre",
+  "pathSegment": "FR-PATH-61-VERBES13",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-61-VERBES13",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C48-nuotare",
+  "pathSegment": "IT-PATH-48-VERBI2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-48-VERBI2",
+      "order": 2
+    }
+  ]
+}

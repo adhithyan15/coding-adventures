@@ -45,7 +45,7 @@ reviews_of: [LA-C96-pulcher]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for beautiful, round, empty, bright, dark.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C96-PULCHER-02, LA-LEX-C95-CALIDUS-05, LA-LEX-C96-PULCHER-01] -->

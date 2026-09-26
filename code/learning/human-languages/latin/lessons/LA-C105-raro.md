@@ -45,7 +45,7 @@ reviews_of: [LA-C104-mox]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for rarely, already, then, much, little.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C105-QUANTUM-01, LA-LEX-C104-SEMPER-04, LA-LEX-C104-SEMPER-05] -->

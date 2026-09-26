@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:22617af0c3d30947",
+  "lessonIds": [
+    "PT-C75-igreja",
+    "PT-C75-museu",
+    "PT-C75-restaurante",
+    "PT-C75-hotel",
+    "PT-C75-farmacia"
+  ],
+  "tex": "portuguese/book/chapters/ch75-church-museum-restaurant-hotel-pharmacy.tex"
+}

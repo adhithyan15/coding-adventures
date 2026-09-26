@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:7d0947a00590f44e",
+  "lessonIds": [
+    "RU-C59-rain",
+    "RU-C59-snow",
+    "RU-C59-wind",
+    "RU-C59-weather",
+    "RU-C59-world"
+  ],
+  "tex": "russian/book/chapters/ch59-rain-snow-wind-weather-world.tex"
+}

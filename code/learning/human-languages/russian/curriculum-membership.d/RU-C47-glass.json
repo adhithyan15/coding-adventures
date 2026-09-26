@@ -1,0 +1,11 @@
+{
+  "id": "RU-C47-glass",
+  "pathSegment": "RU-PATH-47-PANTRY",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-47-PANTRY",
+      "order": 4
+    }
+  ]
+}

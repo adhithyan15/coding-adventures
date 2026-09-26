@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-100-VILLE52",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a car, a bridge, a park, a church, a museum.",
+  "prerequisites": []
+}

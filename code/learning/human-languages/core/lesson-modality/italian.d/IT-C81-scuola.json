@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C81-scuola",
+    "language": "italian",
+    "chapter": 81,
+    "sequence": 3660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9436e4181d05706d"
+  },
+  "findings": []
+}

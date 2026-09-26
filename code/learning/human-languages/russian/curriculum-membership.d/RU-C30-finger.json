@@ -1,0 +1,11 @@
+{
+  "id": "RU-C30-finger",
+  "pathSegment": "RU-PATH-30-BODY2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-30-BODY2",
+      "order": 1
+    }
+  ]
+}

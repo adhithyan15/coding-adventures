@@ -45,7 +45,7 @@ reviews_of: [LA-C99-cognosco]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for get to know, care for, tell, praise, move.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C99-VERBA5-02, LA-LEX-C98-DIVES-05, LA-LEX-C99-VERBA5-01] -->

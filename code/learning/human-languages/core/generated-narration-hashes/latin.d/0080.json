@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 80,
-  "sourceHash": "fnv1a64:26efb170dc9d9da0",
+  "sourceHash": "fnv1a64:6c7ef4d7cdc5148e",
   "lessonIds": [
     "LA-C80-caseus",
     "LA-C80-oleum",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch80.txt",
   "json": "latin/narration/ch80.json",
-  "textHash": "fnv1a64:209540327095c609",
-  "jsonHash": "fnv1a64:1a15c2d267c641bb",
+  "textHash": "fnv1a64:4aae42f534d4fc55",
+  "jsonHash": "fnv1a64:ad36914be173a2e5",
   "findings": []
 }

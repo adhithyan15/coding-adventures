@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:c77469ea02e0e670",
+  "lessonIds": [
+    "FR-C90-difficile",
+    "FR-C90-cher",
+    "FR-C90-haut",
+    "FR-C90-plein",
+    "FR-C90-vide"
+  ],
+  "tex": "french/book/chapters/ch90-difficult-dear-high-full-empty.tex"
+}

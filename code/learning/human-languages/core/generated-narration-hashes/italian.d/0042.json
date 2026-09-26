@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:a266bfd7ed60722a",
+  "lessonIds": [
+    "IT-C42-sete",
+    "IT-C42-stanchezza",
+    "IT-C42-stanco",
+    "IT-C42-malato",
+    "IT-C42-gioia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch42.txt",
+  "json": "italian/narration/ch42.json",
+  "textHash": "fnv1a64:4ee9d5656cfa0c8f",
+  "jsonHash": "fnv1a64:ca47d6e7f8c993bb",
+  "findings": []
+}

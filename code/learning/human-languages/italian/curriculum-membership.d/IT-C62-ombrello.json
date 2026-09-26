@@ -1,0 +1,11 @@
+{
+  "id": "IT-C62-ombrello",
+  "pathSegment": "IT-PATH-62-COSE2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-62-COSE2",
+      "order": 2
+    }
+  ]
+}

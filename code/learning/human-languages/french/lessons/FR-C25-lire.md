@@ -8,7 +8,7 @@ type: word
 headword: lire
 gloss: to read — from a Latin verb that first meant "to gather," which is why reading, electing, collecting and being elegant all turn out to be the same act
 concept_tag: VERB-READ
-prerequisites: [FR-C25-penser, FR-C22-chien-chat]
+prerequisites: [FR-C25-penser, FR-C22-chien-chat, FR-C22-chien-chat-more]
 sounds: [r-uvular, silent-final]
 roots: [legere-latin]
 etymology_hook: "lire ← Latin legere, first 'to gather, to pick out' and only later 'to read' → legible, legend ('things to be read'), lecture ('a reading'), lesson, collect, select, elect, neglect, elegant, intellect, diligent"

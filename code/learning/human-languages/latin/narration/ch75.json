@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Work, Sing, Dance, Laugh, Weep",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e04e496f733c3f46",
+  "sourceHash": "fnv1a64:374345d19724b135",
   "lessons": [
     {
       "id": "LA-C75-laboro",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63e2e6097fe88b47",
+      "sourceHash": "fnv1a64:a903f81ee3728d73",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for work, sing, dance, laugh, weep."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f965863bfbed180d",
+      "sourceHash": "fnv1a64:95969faaa72f6db9",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for work, sing, dance, laugh, weep."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52eda3045f2cb673",
+      "sourceHash": "fnv1a64:6ecd89d649bde4a7",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for work, sing, dance, laugh, weep."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf484fed07b0842d",
+      "sourceHash": "fnv1a64:466d3f4f6bb44f7d",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for work, sing, dance, laugh, weep."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9dc86fb56d8b323c",
+      "sourceHash": "fnv1a64:25665d3fdfc13a8c",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for work, sing, dance, laugh, weep."
+              "text": "One more word for this chapter."
             }
           ]
         },

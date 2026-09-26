@@ -1,0 +1,11 @@
+{
+  "id": "FR-C58-invite",
+  "pathSegment": "FR-PATH-58-FAMILLE10",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-58-FAMILLE10",
+      "order": 1
+    }
+  ]
+}

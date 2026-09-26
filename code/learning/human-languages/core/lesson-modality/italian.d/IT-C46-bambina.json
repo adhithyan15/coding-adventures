@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C46-bambina",
+    "language": "italian",
+    "chapter": 46,
+    "sequence": 1860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92d4670f0e8be111"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:49ab8b38c08c5a88",
+  "lessonIds": [
+    "IT-C70-serpente",
+    "IT-C70-gallina",
+    "IT-C70-anatra",
+    "IT-C70-pecora",
+    "IT-C70-capra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch70.txt",
+  "json": "italian/narration/ch70.json",
+  "textHash": "fnv1a64:d3d821ffd5dd6b93",
+  "jsonHash": "fnv1a64:0d6c22b8925747f5",
+  "findings": []
+}

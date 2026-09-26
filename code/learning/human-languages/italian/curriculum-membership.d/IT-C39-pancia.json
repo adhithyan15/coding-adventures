@@ -1,0 +1,11 @@
+{
+  "id": "IT-C39-pancia",
+  "pathSegment": "IT-PATH-39-CORPO3",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-39-CORPO3",
+      "order": 0
+    }
+  ]
+}

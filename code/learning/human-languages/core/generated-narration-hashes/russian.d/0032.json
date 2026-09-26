@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:892bbeb45f328dd8",
+  "lessonIds": [
+    "RU-C32-pain",
+    "RU-C32-illness",
+    "RU-C32-medicine",
+    "RU-C32-doctor",
+    "RU-C32-hospital"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch32.txt",
+  "json": "russian/narration/ch32.json",
+  "textHash": "fnv1a64:20805546b252b246",
+  "jsonHash": "fnv1a64:dccf280c1faa4cfa",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-71-ANIMALI4",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a lion, a monkey, a bee, an ant, an elephant.",
+  "prerequisites": []
+}

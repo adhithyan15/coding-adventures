@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:63d7b0f1815a3129",
+  "lessonIds": [
+    "RU-C67-easy",
+    "RU-C67-hard",
+    "RU-C67-expensive",
+    "RU-C67-cheap",
+    "RU-C67-badly"
+  ],
+  "tex": "russian/book/chapters/ch67-easy-hard-dear-cheap-badly.tex"
+}

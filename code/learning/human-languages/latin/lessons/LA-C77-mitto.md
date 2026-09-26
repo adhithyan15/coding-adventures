@@ -45,7 +45,7 @@ reviews_of: [LA-C76-voco]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for send, stay, fall, put, find.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C77-VERBA3-01, LA-LEX-C76-VERBA2-04, LA-LEX-C76-VERBA2-05] -->

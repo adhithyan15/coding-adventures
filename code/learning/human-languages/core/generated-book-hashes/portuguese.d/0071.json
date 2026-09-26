@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:bead47e500c0dedd",
+  "lessonIds": [
+    "PT-C71-nunca",
+    "PT-C71-agora",
+    "PT-C71-depois",
+    "PT-C71-cedo",
+    "PT-C71-devagar"
+  ],
+  "tex": "portuguese/book/chapters/ch71-never-now-afterwards-early-slowly.tex"
+}

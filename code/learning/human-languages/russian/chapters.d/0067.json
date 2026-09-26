@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Easy, Hard, Dear, Cheap, Badly",
+  "label": "ch:ru-easy-hard-dear-cheap-badly",
+  "canDo": "I can say easy, hard, expensive and cheap, and badly.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C67-badly",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can say easy, hard, expensive and cheap, and badly.",
+    "assesses": [
+      "RU-LEX-C67-WORTH-03",
+      "RU-LEX-C67-WORTH-04",
+      "RU-LEX-C67-WORTH-05"
+    ]
+  }
+}

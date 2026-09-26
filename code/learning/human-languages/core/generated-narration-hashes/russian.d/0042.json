@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:b9a25d845f3088f4",
+  "lessonIds": [
+    "RU-C42-otkryvat",
+    "RU-C42-zakryvat",
+    "RU-C42-pit",
+    "RU-C42-question",
+    "RU-C42-answer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch42.txt",
+  "json": "russian/narration/ch42.json",
+  "textHash": "fnv1a64:4c1bbece19aa81b1",
+  "jsonHash": "fnv1a64:fbdb0ade51658f92",
+  "findings": []
+}

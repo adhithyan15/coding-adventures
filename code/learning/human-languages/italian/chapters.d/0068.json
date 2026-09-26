@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Dog, Cat, Horse, Cow, Pig",
+  "label": "ch:it-dog-cat-horse-cow-pig",
+  "canDo": "I can name a dog, a cat, a horse, a cow, a pig.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "IT-C68-maiale",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can name a dog, a cat, a horse, a cow, a pig.",
+    "assesses": [
+      "IT-LEX-C68-ANIMALI1-03",
+      "IT-LEX-C68-ANIMALI1-04",
+      "IT-LEX-C68-ANIMALI1-05"
+    ]
+  }
+}

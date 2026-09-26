@@ -1,0 +1,11 @@
+{
+  "id": "IT-C58-tazza",
+  "pathSegment": "IT-PATH-58-CASA3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-58-CASA3",
+      "order": 4
+    }
+  ]
+}

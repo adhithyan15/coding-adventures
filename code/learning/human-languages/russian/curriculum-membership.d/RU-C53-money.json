@@ -1,0 +1,11 @@
+{
+  "id": "RU-C53-money",
+  "pathSegment": "RU-PATH-53-THINGS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-53-THINGS",
+      "order": 3
+    }
+  ]
+}

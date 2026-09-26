@@ -1,0 +1,19 @@
+{
+  "chapter": 69,
+  "title": "Carrot, Cake, Soup, Honey, Oil",
+  "label": "ch:fr-carrot-cake-soup-honey-oil",
+  "canDo": "I can name a carrot, a cake, a soup, honey, oil.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FR-C69-huile",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 69: i can name a carrot, a cake, a soup, honey, oil.",
+    "assesses": [
+      "FR-LEX-C69-CUISINE21-03",
+      "FR-LEX-C69-CUISINE21-04",
+      "FR-LEX-C69-CUISINE21-05"
+    ]
+  }
+}

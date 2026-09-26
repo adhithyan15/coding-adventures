@@ -1,0 +1,11 @@
+{
+  "id": "RU-C40-sidet",
+  "pathSegment": "RU-PATH-40-VERB3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-40-VERB3",
+      "order": 1
+    }
+  ]
+}

@@ -45,7 +45,7 @@ reviews_of: [LA-C86-mons]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for river, lake, stream, spring, coast.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C87-AQUA-01, LA-LEX-C86-ARBOR-04, LA-LEX-C86-ARBOR-05] -->

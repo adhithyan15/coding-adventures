@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:c8afb67cf46fd751",
+  "lessonIds": [
+    "PT-C30-braco",
+    "PT-C30-perna",
+    "PT-C30-pe",
+    "PT-C30-dedo",
+    "PT-C30-dente"
+  ],
+  "tex": "portuguese/book/chapters/ch30-arm-leg-foot-finger.tex"
+}

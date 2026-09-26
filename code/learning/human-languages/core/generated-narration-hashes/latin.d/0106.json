@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 106,
-  "sourceHash": "fnv1a64:91da995d15f1ec92",
+  "sourceHash": "fnv1a64:208d2822e57b43e3",
   "lessonIds": [
     "LA-C106-triginta",
     "LA-C106-quadraginta",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch106.txt",
   "json": "latin/narration/ch106.json",
-  "textHash": "fnv1a64:01acd08e0012b4b2",
-  "jsonHash": "fnv1a64:03790e8b99267983",
+  "textHash": "fnv1a64:ed8b89b3f70ae0ed",
+  "jsonHash": "fnv1a64:9f4dc2e4a5da1a67",
   "findings": []
 }

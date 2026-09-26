@@ -1,0 +1,11 @@
+{
+  "id": "PT-C36-tristeza",
+  "pathSegment": "PT-PATH-36-SENTIR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-36-SENTIR",
+      "order": 2
+    }
+  ]
+}

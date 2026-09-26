@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 89,
-  "sourceHash": "fnv1a64:f19b544219cf1407",
+  "sourceHash": "fnv1a64:07173e367a0860af",
   "lessonIds": [
     "LA-C89-nubes",
     "LA-C89-pluvia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch89.txt",
   "json": "latin/narration/ch89.json",
-  "textHash": "fnv1a64:e0ffc97637bf3e96",
-  "jsonHash": "fnv1a64:3bb71b008ca8f708",
+  "textHash": "fnv1a64:69d8aa3c78ea9c72",
+  "jsonHash": "fnv1a64:fac6c29979cdee8b",
   "findings": []
 }

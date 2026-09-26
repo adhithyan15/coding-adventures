@@ -1,0 +1,11 @@
+{
+  "id": "RU-C54-word",
+  "pathSegment": "RU-PATH-54-WORDS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-54-WORDS",
+      "order": 1
+    }
+  ]
+}

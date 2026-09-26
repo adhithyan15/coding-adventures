@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-39-VERB2",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "RU-EXT-39-VERB2"
+  ],
+  "after": []
+}

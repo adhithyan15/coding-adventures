@@ -45,7 +45,7 @@ reviews_of: [LA-C66-pectus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for chest, leg, cheek, nail, healthy.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C66-CORPUS4-02, LA-LEX-C65-CORPUS3-05, LA-LEX-C66-CORPUS4-01] -->

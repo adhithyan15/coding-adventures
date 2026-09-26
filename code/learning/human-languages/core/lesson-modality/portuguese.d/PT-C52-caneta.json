@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C52-caneta",
+    "language": "portuguese",
+    "chapter": 52,
+    "sequence": 2210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8da8b4f61b7ef97"
+  },
+  "findings": []
+}

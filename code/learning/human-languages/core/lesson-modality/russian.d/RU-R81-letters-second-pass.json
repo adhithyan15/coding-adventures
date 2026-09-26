@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R81-letters-second-pass",
+    "language": "russian",
+    "chapter": 81,
+    "sequence": 4060,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a457ff896e240c47"
+  },
+  "findings": []
+}

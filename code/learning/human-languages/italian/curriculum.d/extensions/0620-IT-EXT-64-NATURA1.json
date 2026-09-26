@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-64-NATURA1",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a tree, a flower, a leaf, a mountain, a wood.",
+  "prerequisites": []
+}

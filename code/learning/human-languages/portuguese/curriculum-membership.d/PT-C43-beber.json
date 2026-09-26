@@ -1,0 +1,11 @@
+{
+  "id": "PT-C43-beber",
+  "pathSegment": "PT-PATH-43-VERBOS4",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-43-VERBOS4",
+      "order": 1
+    }
+  ]
+}

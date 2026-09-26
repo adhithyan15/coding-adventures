@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Get to Know, Care For, Tell, Praise, Move",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:36f0c108a8a9338d",
+  "sourceHash": "fnv1a64:a40d1a51eab19b60",
   "lessons": [
     {
       "id": "LA-C99-cognosco",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b24befecd1717548",
+      "sourceHash": "fnv1a64:d436a45714a92958",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for get to know, care for, tell, praise, move."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2d90d784ed7ffcc",
+      "sourceHash": "fnv1a64:30e107aa3e2332d4",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for get to know, care for, tell, praise, move."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c04923b30755a43c",
+      "sourceHash": "fnv1a64:46f0a3df0b58a698",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for get to know, care for, tell, praise, move."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7868353e51ed630",
+      "sourceHash": "fnv1a64:ccc2a8488c46327e",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for get to know, care for, tell, praise, move."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd9cb0720ab3aabf",
+      "sourceHash": "fnv1a64:58a88e1c33b0bdd1",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for get to know, care for, tell, praise, move."
+              "text": "One more word for this chapter."
             }
           ]
         },

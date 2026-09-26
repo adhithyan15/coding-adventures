@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:a777acc2ea146214",
+  "lessonIds": [
+    "IT-C50-chiudere",
+    "IT-C50-bere",
+    "IT-C50-vivere",
+    "IT-C50-entrare",
+    "IT-C50-uscire"
+  ],
+  "tex": "italian/book/chapters/ch50-close-drink-live-go-in-go-out.tex"
+}

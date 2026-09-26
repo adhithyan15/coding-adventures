@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-73-AGG2",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "IT-EXT-73-AGG2"
+  ],
+  "after": []
+}

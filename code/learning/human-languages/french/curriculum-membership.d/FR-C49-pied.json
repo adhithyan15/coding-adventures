@@ -1,0 +1,11 @@
+{
+  "id": "FR-C49-pied",
+  "pathSegment": "FR-PATH-49-CORPS1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-49-CORPS1",
+      "order": 2
+    }
+  ]
+}

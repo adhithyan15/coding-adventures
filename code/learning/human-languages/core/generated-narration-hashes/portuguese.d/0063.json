@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:276bddf9b8784de8",
+  "lessonIds": [
+    "PT-C63-leao",
+    "PT-C63-macaco",
+    "PT-C63-abelha",
+    "PT-C63-formiga",
+    "PT-C63-elefante"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch63.txt",
+  "json": "portuguese/narration/ch63.json",
+  "textHash": "fnv1a64:4bc7b064dd5a1d39",
+  "jsonHash": "fnv1a64:a5990b33554300c8",
+  "findings": []
+}

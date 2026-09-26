@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:f52eb2cad5fed361",
+  "lessonIds": [
+    "IT-C57-muro",
+    "IT-C57-tetto",
+    "IT-C57-giardino",
+    "IT-C57-lampada",
+    "IT-C57-bagno"
+  ],
+  "tex": "italian/book/chapters/ch57-wall-roof-garden-lamp-bathroom.tex"
+}

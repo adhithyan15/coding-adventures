@@ -212,7 +212,7 @@ describe("the real corpus", () => {
       ML: 14,
       MR: 42,
       MW: 33,
-      RU: 19,
+      RU: 20, // +1: chapter 81 writes ё from ребёнок
       SA: 39,
       TA: 30,
       TE: 9,

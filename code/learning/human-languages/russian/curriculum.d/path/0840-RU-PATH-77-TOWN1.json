@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-77-TOWN1",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "RU-EXT-77-TOWN1"
+  ],
+  "after": []
+}

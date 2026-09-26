@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03, FR-LEX-CHAT-04, FR-ETYMON-CHAT-05]
+  knowledge: [FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03, FR-LEX-CHAT-04, FR-ETYMON-CHAT-05]
+  knowledge: [FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -56,18 +56,8 @@ even though the precise phonetic trigger is still debated). Put together,
 predictably — a genuinely different story from Spanish, where the expected
 descendant (*can*) got pushed aside by the still-unexplained *perro*.
 
-## The word, taken apart: chat
-<!-- hl-knowledge: introduces=[FR-LEX-CHAT-04, FR-ETYMON-CHAT-05]; assesses=[] -->
-
-**chat** ("**cat**") continues **cattus**, the same Late Latin word — most
-likely ultimately **Afro-Asiatic** (compare Nubian *kadis*) — that spread
-along Roman trade routes as domestic cats themselves spread out of **Egypt**.
-This is the identical word behind Spanish's *gato* and Italian's *gatto* —
-French, Spanish, and Italian all independently inherited the exact same Late
-Latin replacement for Classical *fēlēs*.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03, FR-LEX-CHAT-04, FR-ETYMON-CHAT-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "chien" — dog, the regular descendant of canis]
@@ -77,7 +67,7 @@ Latin replacement for Classical *fēlēs*.
   Rome]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03, FR-LEX-CHAT-04, FR-ETYMON-CHAT-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-CHIEN-02, FR-ETYMON-CHIEN-03] -->
 
 [PAUSE 3s] Is *chien* a regular or irregular descendant of Latin *canis*?
 (**Regular** — the same *ca- → cha-* shift as *champ* and *chanter*.) Does

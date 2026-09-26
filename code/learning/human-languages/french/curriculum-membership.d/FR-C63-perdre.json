@@ -1,0 +1,11 @@
+{
+  "id": "FR-C63-perdre",
+  "pathSegment": "FR-PATH-63-VERBES15",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-63-VERBES15",
+      "order": 4
+    }
+  ]
+}

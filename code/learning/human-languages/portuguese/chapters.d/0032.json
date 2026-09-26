@@ -1,0 +1,19 @@
+{
+  "chapter": 32,
+  "title": "Back, Hair, Belly, Face, Blood",
+  "label": "ch:pt-back-hair-belly-face-blood",
+  "canDo": "I can name the back, hair, the belly, the face and blood.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C32-sangue",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 32: i can name the back, hair, the belly, the face and blood.",
+    "assesses": [
+      "PT-LEX-C32-CORPO3-03",
+      "PT-LEX-C32-CORPO3-04",
+      "PT-LEX-C32-CORPO3-05"
+    ]
+  }
+}

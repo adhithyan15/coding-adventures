@@ -45,7 +45,7 @@ reviews_of: [LA-C82-fenestra]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for table, chair, bed, window.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C82-DOMUS1-05, LA-LEX-C82-DOMUS1-03, LA-LEX-C82-DOMUS1-04] -->

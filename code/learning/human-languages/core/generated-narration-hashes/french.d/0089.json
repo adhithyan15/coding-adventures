@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:7272cc146bef8499",
+  "lessonIds": [
+    "FR-C89-tortue",
+    "FR-C89-nouveau",
+    "FR-C89-vieux",
+    "FR-C89-rapide",
+    "FR-C89-facile"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch89.txt",
+  "json": "french/narration/ch89.json",
+  "textHash": "fnv1a64:f55eaddff60d5369",
+  "jsonHash": "fnv1a64:c90b68738fb1ede7",
+  "findings": []
+}

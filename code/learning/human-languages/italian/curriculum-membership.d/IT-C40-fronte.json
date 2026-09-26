@@ -1,0 +1,11 @@
+{
+  "id": "IT-C40-fronte",
+  "pathSegment": "IT-PATH-40-CORPO4",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-40-CORPO4",
+      "order": 1
+    }
+  ]
+}

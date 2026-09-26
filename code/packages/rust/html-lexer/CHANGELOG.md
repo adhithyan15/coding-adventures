@@ -5,6 +5,12 @@ documented in this file.
 
 ## Unreleased
 
+### Fixed
+- A tag with many attributes lexes in linear time (the duplicate check in
+  `state-machine-tokenizer` is a set lookup now). `tests/attribute_dedup_test.rs`
+  pins first-duplicate-wins, the `duplicate-attribute` error, a clean slate
+  per tag, and 30,000 attributes.
+
 ### Added
 - Script end tags that reach EOF after whitespace, attributes, quoted attribute
   data, or a trailing solidus now report `eof-in-tag` while preserving their

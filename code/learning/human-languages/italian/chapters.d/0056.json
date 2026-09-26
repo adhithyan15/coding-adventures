@@ -1,0 +1,19 @@
+{
+  "chapter": 56,
+  "title": "Kitchen, Window, Table, Chair, Key",
+  "label": "ch:it-kitchen-window-table-chair-key",
+  "canDo": "I can name a kitchen, a window, a table, a chair, a key.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "IT-C56-chiave",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 56: i can name a kitchen, a window, a table, a chair, a key.",
+    "assesses": [
+      "IT-LEX-C56-CASA1-03",
+      "IT-LEX-C56-CASA1-04",
+      "IT-LEX-C56-CASA1-05"
+    ]
+  }
+}

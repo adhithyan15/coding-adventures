@@ -1,0 +1,11 @@
+{
+  "id": "PT-C62-galinha",
+  "pathSegment": "PT-PATH-62-ANIMAIS3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-62-ANIMAIS3",
+      "order": 1
+    }
+  ]
+}

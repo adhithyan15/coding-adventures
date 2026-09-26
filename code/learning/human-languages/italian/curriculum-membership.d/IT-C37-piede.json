@@ -1,0 +1,11 @@
+{
+  "id": "IT-C37-piede",
+  "pathSegment": "IT-PATH-37-CORPO1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-37-CORPO1",
+      "order": 2
+    }
+  ]
+}

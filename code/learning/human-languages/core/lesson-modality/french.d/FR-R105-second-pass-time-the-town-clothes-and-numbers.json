@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R105-second-pass-time-the-town-clothes-and-numbers",
+    "language": "french",
+    "chapter": 105,
+    "sequence": 4690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf9c48452b164a25"
+  },
+  "findings": []
+}

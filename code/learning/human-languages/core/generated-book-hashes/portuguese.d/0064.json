@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:e79c78b5a66fedb9",
+  "lessonIds": [
+    "PT-C64-grande",
+    "PT-C64-pequeno",
+    "PT-C64-novo",
+    "PT-C64-velho",
+    "PT-C64-mau"
+  ],
+  "tex": "portuguese/book/chapters/ch64-big-small-new-old-bad.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C50-uscire",
+  "pathSegment": "IT-PATH-50-VERBI4",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-50-VERBI4",
+      "order": 4
+    }
+  ]
+}

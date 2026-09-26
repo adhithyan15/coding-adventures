@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:c410dd739e20b478",
+  "lessonIds": [
+    "FR-C49-bras",
+    "FR-C49-jambe",
+    "FR-C49-pied",
+    "FR-C49-doigt",
+    "FR-C49-dent"
+  ],
+  "tex": "french/book/chapters/ch49-arm-leg-foot-finger-tooth.tex"
+}

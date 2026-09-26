@@ -45,7 +45,7 @@ reviews_of: [LA-C94-lentus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for hot, cold, dry, wet, sweet.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C95-CALIDUS-01, LA-LEX-C94-NOVUS-04, LA-LEX-C94-NOVUS-05] -->

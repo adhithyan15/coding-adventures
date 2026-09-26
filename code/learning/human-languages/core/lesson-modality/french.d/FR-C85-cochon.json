@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C85-cochon",
+    "language": "french",
+    "chapter": 85,
+    "sequence": 3640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee97b169aaa14045"
+  },
+  "findings": []
+}

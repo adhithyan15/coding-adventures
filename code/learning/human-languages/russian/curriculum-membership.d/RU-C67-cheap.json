@@ -1,0 +1,11 @@
+{
+  "id": "RU-C67-cheap",
+  "pathSegment": "RU-PATH-67-WORTH",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-67-WORTH",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C88-tigre",
+    "language": "french",
+    "chapter": 88,
+    "sequence": 3820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de9c3706c30c5f23"
+  },
+  "findings": []
+}

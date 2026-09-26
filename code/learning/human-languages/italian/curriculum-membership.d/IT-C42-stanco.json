@@ -1,0 +1,11 @@
+{
+  "id": "IT-C42-stanco",
+  "pathSegment": "IT-PATH-42-STARE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-42-STARE",
+      "order": 2
+    }
+  ]
+}

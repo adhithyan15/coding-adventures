@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Week, Month, Year, Morning, Minute",
+  "label": "ch:it-week-month-year-morning-minute",
+  "canDo": "I can name a week, a month, a year, the morning, a minute.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "IT-C78-minuto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can name a week, a month, a year, the morning, a minute.",
+    "assesses": [
+      "IT-LEX-C78-TEMPO-03",
+      "IT-LEX-C78-TEMPO-04",
+      "IT-LEX-C78-TEMPO-05"
+    ]
+  }
+}

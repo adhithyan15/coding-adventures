@@ -1,0 +1,11 @@
+{
+  "id": "IT-C83-museo",
+  "pathSegment": "IT-PATH-83-CITTA3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-83-CITTA3",
+      "order": 3
+    }
+  ]
+}

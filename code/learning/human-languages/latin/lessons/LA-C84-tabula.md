@@ -45,7 +45,7 @@ reviews_of: [LA-C84-stilus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for chest, paper, pen, tablet, mirror.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C84-RES1-04, LA-LEX-C84-RES1-02, LA-LEX-C84-RES1-03] -->

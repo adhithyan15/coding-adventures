@@ -45,7 +45,7 @@ reviews_of: [LA-C80-holus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for cheese, oil, grapes, olives.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C80-CIBUS2-05, LA-LEX-C80-CIBUS2-03, LA-LEX-C80-CIBUS2-04] -->

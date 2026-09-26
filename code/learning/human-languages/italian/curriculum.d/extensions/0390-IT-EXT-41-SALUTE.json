@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-41-SALUTE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name medicine, a doctor, a hospital, an illness, hunger.",
+  "prerequisites": []
+}

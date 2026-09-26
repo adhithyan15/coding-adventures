@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C72-salade",
+    "language": "french",
+    "chapter": 72,
+    "sequence": 2960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:53d4a7c4dfca9069"
+  },
+  "findings": []
+}

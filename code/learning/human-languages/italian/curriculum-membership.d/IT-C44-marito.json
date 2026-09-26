@@ -1,0 +1,11 @@
+{
+  "id": "IT-C44-marito",
+  "pathSegment": "IT-PATH-44-FAMIGLIA1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-44-FAMIGLIA1",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:2597188fc2db6c2f",
+  "lessonIds": [
+    "RU-C36-children",
+    "RU-C36-child",
+    "RU-C36-aunt",
+    "RU-C36-grandson",
+    "RU-C36-granddaughter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch36.txt",
+  "json": "russian/narration/ch36.json",
+  "textHash": "fnv1a64:9e59c56f068e7c70",
+  "jsonHash": "fnv1a64:cbe05e9754e85139",
+  "findings": []
+}

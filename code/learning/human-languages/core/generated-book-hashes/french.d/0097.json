@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:6e48d9bf37547294",
+  "lessonIds": [
+    "FR-C97-dessus",
+    "FR-C97-dessous",
+    "FR-C97-dedans",
+    "FR-C97-dehors",
+    "FR-C97-hui"
+  ],
+  "tex": "french/book/chapters/ch97-on-top-underneath-inside-outside-today.tex"
+}

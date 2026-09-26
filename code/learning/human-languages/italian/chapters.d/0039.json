@@ -1,0 +1,19 @@
+{
+  "chapter": 39,
+  "title": "Belly, Face, Blood, Skin, Nail",
+  "label": "ch:it-belly-face-blood-skin-nail",
+  "canDo": "I can name the belly, the face, blood, skin, a nail (finger or toe).",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C39-unghia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 39: i can name the belly, the face, blood, skin, a nail (finger or toe).",
+    "assesses": [
+      "IT-LEX-C39-CORPO3-03",
+      "IT-LEX-C39-CORPO3-04",
+      "IT-LEX-C39-CORPO3-05"
+    ]
+  }
+}

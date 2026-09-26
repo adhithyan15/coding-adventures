@@ -1,0 +1,11 @@
+{
+  "id": "PT-C68-amarelo",
+  "pathSegment": "PT-PATH-68-ADJ5",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-68-ADJ5",
+      "order": 4
+    }
+  ]
+}

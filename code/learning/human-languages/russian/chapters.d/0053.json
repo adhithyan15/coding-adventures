@@ -1,0 +1,19 @@
+{
+  "chapter": 53,
+  "title": "Bag, Phone, Umbrella, Money, Gift",
+  "label": "ch:ru-bag-phone-umbrella-money-gift",
+  "canDo": "I can name a bag, a phone, an umbrella, money and a gift.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "RU-C53-gift",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 53: i can name a bag, a phone, an umbrella, money and a gift.",
+    "assesses": [
+      "RU-LEX-C53-THINGS-03",
+      "RU-LEX-C53-THINGS-04",
+      "RU-LEX-C53-THINGS-05"
+    ]
+  }
+}

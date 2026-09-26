@@ -1,0 +1,11 @@
+{
+  "id": "PT-C32-rosto",
+  "pathSegment": "PT-PATH-32-CORPO3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-32-CORPO3",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:53819ae92e41932e",
+  "lessonIds": [
+    "FR-C51-peau",
+    "FR-C51-ongle",
+    "FR-C51-menton",
+    "FR-C51-gorge",
+    "FR-C51-joue"
+  ],
+  "tex": "french/book/chapters/ch51-skin-nail-chin-throat-cheek.tex"
+}

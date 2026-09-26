@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Easy, Hard, Dear, Brave, Wise",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9d80fc4cfa8bff46",
+  "sourceHash": "fnv1a64:001f9f601651db46",
   "lessons": [
     {
       "id": "LA-C97-facilis",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3203c81c1700dce",
+      "sourceHash": "fnv1a64:e945d47c459f67b4",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for easy, hard, dear, brave, wise."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8bd97b10b046b499",
+      "sourceHash": "fnv1a64:d0405b1a9335d4f7",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for easy, hard, dear, brave, wise."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83f162db1225420b",
+      "sourceHash": "fnv1a64:086ccd603100286b",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for easy, hard, dear, brave, wise."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a57fe97c5a33514d",
+      "sourceHash": "fnv1a64:874c06aa44e7098f",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for easy, hard, dear, brave, wise."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab60c2a2f71b5c38",
+      "sourceHash": "fnv1a64:4706def9e2a5a3ce",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for easy, hard, dear, brave, wise."
+              "text": "One more word for this chapter."
             }
           ]
         },

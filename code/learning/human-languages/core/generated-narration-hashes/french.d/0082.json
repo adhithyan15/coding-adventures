@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:d8d7a765aec5bf75",
+  "lessonIds": [
+    "FR-C82-mer",
+    "FR-C82-pierre",
+    "FR-C82-sable",
+    "FR-C82-plage",
+    "FR-C82-ile"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch82.txt",
+  "json": "french/narration/ch82.json",
+  "textHash": "fnv1a64:700459d9061767f9",
+  "jsonHash": "fnv1a64:0dc4c5420973f153",
+  "findings": []
+}

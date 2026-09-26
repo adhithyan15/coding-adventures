@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:1be143b42fd578de",
+  "lessonIds": [
+    "RU-C39-myt",
+    "RU-C39-gotovit",
+    "RU-C39-pokupat",
+    "RU-C39-prodavat",
+    "RU-C39-plavat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch39.txt",
+  "json": "russian/narration/ch39.json",
+  "textHash": "fnv1a64:936bf3bce8aa2bf5",
+  "jsonHash": "fnv1a64:9cab1c74286e778a",
+  "findings": []
+}

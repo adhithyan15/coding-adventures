@@ -1,0 +1,11 @@
+{
+  "id": "PT-C44-carne",
+  "pathSegment": "PT-PATH-44-COMIDA1",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-44-COMIDA1",
+      "order": 0
+    }
+  ]
+}

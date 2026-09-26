@@ -45,7 +45,7 @@ reviews_of: [LA-C78-intro]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for live, enter, return, fear, rejoice.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C78-VERBA4-03, LA-LEX-C78-VERBA4-01, LA-LEX-C78-VERBA4-02] -->

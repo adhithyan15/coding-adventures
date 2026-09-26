@@ -1,0 +1,11 @@
+{
+  "id": "FR-C92-jeune",
+  "pathSegment": "FR-PATH-92-ADJ44",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-92-ADJ44",
+      "order": 2
+    }
+  ]
+}

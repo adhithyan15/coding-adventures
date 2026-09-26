@@ -1,9 +1,10 @@
 {
   "language": "french",
   "chapter": 22,
-  "sourceHash": "fnv1a64:76649dc78028cb55",
+  "sourceHash": "fnv1a64:9400f77d8d279383",
   "lessonIds": [
     "FR-C18-oui",
+    "FR-C18-oui-more",
     "FR-C18-non"
   ],
   "tex": "french/book/chapters/ch22-yes-and-no.tex"

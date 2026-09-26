@@ -1,0 +1,11 @@
+{
+  "id": "FR-C50-visage",
+  "pathSegment": "FR-PATH-50-CORPS2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-50-CORPS2",
+      "order": 3
+    }
+  ]
+}

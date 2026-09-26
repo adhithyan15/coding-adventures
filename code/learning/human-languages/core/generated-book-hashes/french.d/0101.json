@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:4ef62a7cefa5458c",
+  "lessonIds": [
+    "FR-C101-restaurant",
+    "FR-C101-hotel",
+    "FR-C101-pharmacie",
+    "FR-C101-village",
+    "FR-C101-poste"
+  ],
+  "tex": "french/book/chapters/ch101-restaurant-hotel-pharmacy-village-post-office.tex"
+}

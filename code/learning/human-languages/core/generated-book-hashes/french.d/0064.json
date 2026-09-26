@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:d888f9c373d3d6cd",
+  "lessonIds": [
+    "FR-C64-regarder",
+    "FR-C64-ecouter",
+    "FR-C64-attendre",
+    "FR-C64-acheter",
+    "FR-C64-savoir"
+  ],
+  "tex": "french/book/chapters/ch64-look-at-listen-to-wait-for-buy-know.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C36-feliz",
+  "pathSegment": "PT-PATH-36-SENTIR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-36-SENTIR",
+      "order": 3
+    }
+  ]
+}
