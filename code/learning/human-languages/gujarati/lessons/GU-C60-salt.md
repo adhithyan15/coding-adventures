@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C60-salt
 spine_node: SPINE-COURTESY-THANK
-sequence: 3050
+sequence: 3063
 chapter: 60
 type: word
 headword: "મીઠું"

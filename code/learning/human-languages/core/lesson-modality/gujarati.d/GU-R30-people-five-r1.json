@@ -3,7 +3,7 @@
     "id": "GU-R30-people-five-r1",
     "language": "gujarati",
     "chapter": 34,
-    "sequence": 1770,
+    "sequence": 1783,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:538e4a0331a65588",
+    "sourceHash": "fnv1a64:dd5d423d7f2ec022",
     "detachableSegments": [
       "Writing — from sound, every model covered"
     ]

@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 63,
-  "sourceHash": "fnv1a64:db452d8b92526484",
+  "sourceHash": "fnv1a64:ae0093d077de4d59",
   "lessonIds": [
     "GU-C63-roof",
     "GU-C63-wall",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch63.txt",
   "json": "gujarati/narration/ch63.json",
   "textHash": "fnv1a64:411f828a5ec8865a",
-  "jsonHash": "fnv1a64:f546a586379a70df",
+  "jsonHash": "fnv1a64:59e77fd859d1ccba",
   "findings": []
 }

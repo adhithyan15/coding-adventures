@@ -3,7 +3,7 @@
     "id": "GU-C64-stone",
     "language": "gujarati",
     "chapter": 64,
-    "sequence": 3280,
+    "sequence": 3293,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d5cb21090b9d8dc9"
+    "sourceHash": "fnv1a64:9a8fd1ed60b9550d"
   },
   "findings": []
 }

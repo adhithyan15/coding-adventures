@@ -4,11 +4,11 @@
   "chapter": 18,
   "title": "Eye, Ear, Mouth, and Nose",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9e2f256d341090d5",
+  "sourceHash": "fnv1a64:8706604a2c346c59",
   "lessons": [
     {
       "id": "GU-C12-aankh",
-      "sequence": 600,
+      "sequence": 613,
       "title": "આંખ (āṅkh) — an eye, and a nasal that is not what it looks like",
       "headword": "આંખ",
       "romanization": "āṅkh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0416d1db0b11ea40",
+      "sourceHash": "fnv1a64:fe35a707991e4af0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -150,7 +150,7 @@
     },
     {
       "id": "GU-C12-kaan",
-      "sequence": 610,
+      "sequence": 623,
       "title": "કાન (kān) — an ear whose own root is unsettled",
       "headword": "કાન",
       "romanization": "kān",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1acad2dc22951f62",
+      "sourceHash": "fnv1a64:bb58cfdce00dc004",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -302,7 +302,7 @@
     },
     {
       "id": "GU-C12-modhu",
-      "sequence": 620,
+      "sequence": 633,
       "title": "મોઢું (moḍhũ) — the tell you have been hearing all along",
       "headword": "મોઢું",
       "romanization": "moḍhũ",
@@ -313,7 +313,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b60605faa65e64b1",
+      "sourceHash": "fnv1a64:48249b7092164f9d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -454,7 +454,7 @@
     },
     {
       "id": "GU-C12-naak",
-      "sequence": 630,
+      "sequence": 643,
       "title": "નાક (nāk) — the whole face, run back",
       "headword": "નાક",
       "romanization": "nāk",
@@ -465,7 +465,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e5b5295c5afbe452",
+      "sourceHash": "fnv1a64:3220c5b4bc4ba1a4",
       "notice": {
         "modality": "sight",
         "needs": [

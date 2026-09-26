@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C78-thursday
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3990
+sequence: 4003
 chapter: 78
 type: word
 headword: "ગુરુવાર"

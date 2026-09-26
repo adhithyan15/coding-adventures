@@ -3,7 +3,7 @@
     "id": "GU-C69-sparrow",
     "language": "gujarati",
     "chapter": 69,
-    "sequence": 3540,
+    "sequence": 3553,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7e889779e6b69e05"
+    "sourceHash": "fnv1a64:f9578dc6da05e815"
   },
   "findings": []
 }

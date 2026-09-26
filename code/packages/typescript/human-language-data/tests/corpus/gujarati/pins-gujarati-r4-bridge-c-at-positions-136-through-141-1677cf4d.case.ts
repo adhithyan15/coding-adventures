@@ -11,70 +11,58 @@ import {
   languageWritingStages,
 } from "../assert-language-corpus.js";
 
-it("pins Gujarati R4 bridge D at positions 129 through 133", () => {
+it("pins Gujarati R4 bridge C at positions 136 through 141", () => {
   const lessons = loadTrackLessons("gujarati");
   const ordered = [...lessons].sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
+  // HL-C443 moved every position here by 13: the opening runways now open
+  // with thirteen anchor words (chapter 1 gains one, chapters 3-7 twelve), each
+  // read before the letters it holds. Distances from atoms introduced after
+  // chapter 7 are unchanged; distances from chapter 3-7 script atoms grew with
+  // the words inserted between them and the bridge, and every window asserted
+  // below still closes.
   const bridgeIds = [
-    "GU-R18-how-are-you-r4",
-    "GU-R18-majaa-r4",
-    "GU-R18-no-problem-r4",
-    "GU-R18-wellbeing-r4",
-    "GU-R18-farewell-r4",
+    "GU-R17-you-r4",
+    "GU-R17-shun-r4",
+    "GU-R17-whats-your-name-r4",
+    "GU-R17-introduction-r4",
+    "GU-R17-hun-r4",
+    "GU-R17-kem-r4",
   ];
-  expect(ordered.slice(129, 134).map((lesson) => lesson.realization.lessonId)).toEqual(bridgeIds);
+  expect(ordered.slice(136, 142).map((lesson) => lesson.realization.lessonId)).toEqual(bridgeIds);
   expect(
-    ordered.slice(129, 134).every((lesson) =>
+    ordered.slice(136, 142).every((lesson) =>
       ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).length === 0,
     ),
   ).toBe(true);
 
   const exactR4 = [
-    "GU-CONCEPT-C03-TAMEKEMCHHO-01",
-    "GU-CONCEPT-C03-MAJAA-01",
-    "GU-CONCEPT-C03-VANDHONAHI-01",
-    "GU-CONCEPT-C03-PRACTICE-01",
-    "GU-CONCEPT-C04-MALISHUN-01",
+    "GU-CONCEPT-C02-TUTAME-01",
+    "GU-CONCEPT-C02-SHUN-01",
+    "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01",
+    "GU-CONCEPT-C02-PRACTICE-01",
+    "GU-CONCEPT-C03-HUN-01",
+    "GU-CONCEPT-C03-KEM-01",
   ];
   expect(
     exactR4.map((atom, offset) => {
       const introducedAt = ordered.findIndex((lesson) =>
         ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).includes(atom),
       );
-      return 129 + offset - introducedAt;
+      return 136 + offset - introducedAt;
     }),
-  ).toEqual([61, 61, 61, 61, 61]);
+  ).toEqual([62, 62, 62, 61, 61, 61]);
 
-  const farewellR3 = [
-    "GU-CONCEPT-C04-KAALE-01",
-    "GU-CONCEPT-C04-PACHHA-01",
-    "GU-CONCEPT-C04-PACHHAMALISHUN-01",
-    "GU-CONCEPT-C04-PRACTICE-01",
-  ];
-  expect(
-    farewellR3.map((atom) => {
-      const introducedAt = ordered.findIndex((lesson) =>
-        ((lesson.frontmatter["introduces.knowledge"] ?? []) as string[]).includes(atom),
-      );
-      return 133 - introducedAt;
-    }),
-  ).toEqual([60, 59, 58, 57]);
-
-  const continuity = measureContinuity(ordered.slice(0, 134));
+  const continuity = measureContinuity(ordered.slice(0, 142));
   expect(
     continuity.reinforcement.filter(
       (defect) => exactR4.includes(defect.atom) && defect.missed.includes("R4"),
     ),
   ).toEqual([]);
-  expect(
-    continuity.reinforcement.filter(
-      (defect) => farewellR3.includes(defect.atom) && defect.missed.includes("R3"),
-    ),
-  ).toEqual([]);
 
-  const beforeBridge = measureContinuity(ordered.slice(0, 129));
-  const priorTrackEnd = 128;
+  const beforeBridge = measureContinuity(ordered.slice(0, 136));
+  const priorTrackEnd = 135;
   const firstEligibleDistance = new Map(
     REINFORCEMENT_WINDOWS.map((window) => [window.name, window.from]),
   );
@@ -83,6 +71,6 @@ it("pins Gujarati R4 bridge D at positions 129 through 133", () => {
       (window) => defect.introducedAt + firstEligibleDistance.get(window)! <= priorTrackEnd,
     ),
   ).length;
-  expect(beforeBridge.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(245);
-  expect(priorWindowMissesAfterBridge).toBe(239);
+  expect(beforeBridge.reinforcement.flatMap((defect) => defect.missed)).toHaveLength(254);
+  expect(priorWindowMissesAfterBridge).toBe(251);
 });

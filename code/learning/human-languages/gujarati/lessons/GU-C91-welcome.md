@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C91-welcome
 spine_node: SPINE-COURTESY-THANK
-sequence: 4610
+sequence: 4623
 chapter: 91
 type: word
 headword: "સ્વાગત"

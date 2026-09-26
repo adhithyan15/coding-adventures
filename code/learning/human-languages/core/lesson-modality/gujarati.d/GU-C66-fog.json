@@ -3,7 +3,7 @@
     "id": "GU-C66-fog",
     "language": "gujarati",
     "chapter": 66,
-    "sequence": 3380,
+    "sequence": 3393,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:06564d0bba1c0ea9"
+    "sourceHash": "fnv1a64:41548d1444925a5d"
   },
   "findings": []
 }

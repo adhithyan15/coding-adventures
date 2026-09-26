@@ -3,7 +3,7 @@
     "id": "GU-C38-chothu",
     "language": "gujarati",
     "chapter": 42,
-    "sequence": 2160,
+    "sequence": 2173,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:07d5793a256e82cd"
+    "sourceHash": "fnv1a64:0281d79d13d96f71"
   },
   "findings": []
 }

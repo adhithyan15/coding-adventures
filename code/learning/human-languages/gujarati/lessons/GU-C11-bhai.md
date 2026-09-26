@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C11-bhai
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 580
+sequence: 593
 chapter: 17
 type: word
 headword: ભાઈ

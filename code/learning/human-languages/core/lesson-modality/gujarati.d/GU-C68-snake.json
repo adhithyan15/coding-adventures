@@ -3,7 +3,7 @@
     "id": "GU-C68-snake",
     "language": "gujarati",
     "chapter": 68,
-    "sequence": 3480,
+    "sequence": 3493,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d90e2c812195e2cd"
+    "sourceHash": "fnv1a64:f24d0b36da18c4dd"
   },
   "findings": []
 }

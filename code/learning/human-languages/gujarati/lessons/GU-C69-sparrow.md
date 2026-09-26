@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C69-sparrow
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3540
+sequence: 3553
 chapter: 69
 type: word
 headword: "ચકલી"

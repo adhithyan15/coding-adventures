@@ -3,7 +3,7 @@
     "id": "GU-C77-always",
     "language": "gujarati",
     "chapter": 77,
-    "sequence": 3910,
+    "sequence": 3923,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e6995edd768dcc04"
+    "sourceHash": "fnv1a64:d2b74861b11a0dbe"
   },
   "findings": []
 }

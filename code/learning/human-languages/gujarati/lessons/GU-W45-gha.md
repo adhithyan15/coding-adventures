@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W45-gha
 spine_node: SPINE-MEET-GREET
-sequence: 2300
+sequence: 2313
 delivery: script
 chapter: 45
 type: writing

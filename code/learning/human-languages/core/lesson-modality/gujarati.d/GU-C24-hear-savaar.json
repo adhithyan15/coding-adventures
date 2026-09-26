@@ -3,7 +3,7 @@
     "id": "GU-C24-hear-savaar",
     "language": "gujarati",
     "chapter": 28,
-    "sequence": 1160,
+    "sequence": 1173,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:34ca10584610a8eb"
+    "sourceHash": "fnv1a64:ff5234ff9b3209bf"
   },
   "findings": []
 }

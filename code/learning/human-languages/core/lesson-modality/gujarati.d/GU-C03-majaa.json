@@ -3,7 +3,7 @@
     "id": "GU-C03-majaa",
     "language": "gujarati",
     "chapter": 9,
-    "sequence": 210,
+    "sequence": 223,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a8f1b5a7a965ad6e",
+    "sourceHash": "fnv1a64:5be1512679d2a1c0",
     "detachableSegments": [
       "The letters in this word",
       "Script retrieval"

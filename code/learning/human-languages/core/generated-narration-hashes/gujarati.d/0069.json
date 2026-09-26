@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 69,
-  "sourceHash": "fnv1a64:fe04c6645fec2ba4",
+  "sourceHash": "fnv1a64:df1d97dce92b776d",
   "lessonIds": [
     "GU-C69-star",
     "GU-C69-parrot",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch69.txt",
   "json": "gujarati/narration/ch69.json",
   "textHash": "fnv1a64:f071ed0e147ecdc7",
-  "jsonHash": "fnv1a64:20e5538cb0a425b7",
+  "jsonHash": "fnv1a64:64157459007b4274",
   "findings": []
 }

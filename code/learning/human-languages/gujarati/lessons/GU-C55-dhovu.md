@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C55-dhovu
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2800
+sequence: 2813
 chapter: 55
 type: word
 headword: "ધોવું"

@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 31,
-  "sourceHash": "fnv1a64:09fc23244d22f583",
+  "sourceHash": "fnv1a64:030954ae3449b666",
   "lessonIds": [
     "GU-C27-hear-bhaat",
     "GU-C27-hear-daal",
@@ -17,6 +17,6 @@
   "text": "gujarati/narration/ch31.txt",
   "json": "gujarati/narration/ch31.json",
   "textHash": "fnv1a64:c6b219c9365cd476",
-  "jsonHash": "fnv1a64:984956ddf508c648",
+  "jsonHash": "fnv1a64:7198e42cba0a9ab1",
   "findings": []
 }

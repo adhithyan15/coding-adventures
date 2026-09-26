@@ -3,7 +3,7 @@
     "id": "GU-C30-hear-maanas",
     "language": "gujarati",
     "chapter": 34,
-    "sequence": 1720,
+    "sequence": 1733,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:91f8370d9e721d56"
+    "sourceHash": "fnv1a64:e1ed58ec0671f62a"
   },
   "findings": []
 }

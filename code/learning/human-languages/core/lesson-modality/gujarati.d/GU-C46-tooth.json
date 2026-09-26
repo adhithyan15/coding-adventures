@@ -3,7 +3,7 @@
     "id": "GU-C46-tooth",
     "language": "gujarati",
     "chapter": 46,
-    "sequence": 2370,
+    "sequence": 2383,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:09f25f42832d4d6c"
+    "sourceHash": "fnv1a64:993b06a1064862ca"
   },
   "findings": []
 }

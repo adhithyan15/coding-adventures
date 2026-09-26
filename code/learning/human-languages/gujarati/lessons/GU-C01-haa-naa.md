@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C01-haa-naa
 spine_node: SPINE-RESPOND-BASIC
-sequence: 40
+sequence: 41
 chapter: 2
 type: word
 headword: હા / ના

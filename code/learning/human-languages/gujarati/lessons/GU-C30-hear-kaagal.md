@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C30-hear-kaagal
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1740
+sequence: 1753
 chapter: 34
 type: word
 headword: કાગળ

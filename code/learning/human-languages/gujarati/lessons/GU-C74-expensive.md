@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C74-expensive
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3760
+sequence: 3773
 chapter: 74
 type: word
 headword: "મોંઘું"

@@ -3,7 +3,7 @@
     "id": "GU-C73-light",
     "language": "gujarati",
     "chapter": 73,
-    "sequence": 3710,
+    "sequence": 3723,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:30b150a249604e60"
+    "sourceHash": "fnv1a64:dba62a69d81d8b92"
   },
   "findings": []
 }

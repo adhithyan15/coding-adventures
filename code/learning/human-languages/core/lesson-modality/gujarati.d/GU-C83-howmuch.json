@@ -3,7 +3,7 @@
     "id": "GU-C83-howmuch",
     "language": "gujarati",
     "chapter": 83,
-    "sequence": 4240,
+    "sequence": 4253,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4e4408bbb02eaafa"
+    "sourceHash": "fnv1a64:63e1c289bb557f96"
   },
   "findings": []
 }

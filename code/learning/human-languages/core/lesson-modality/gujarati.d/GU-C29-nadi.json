@@ -3,7 +3,7 @@
     "id": "GU-C29-nadi",
     "language": "gujarati",
     "chapter": 33,
-    "sequence": 1680,
+    "sequence": 1693,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c5dfa92d86fb47fb",
+    "sourceHash": "fnv1a64:7617b02464747e2f",
     "detachableSegments": [
       "Writing — guided copy, model in view"
     ]

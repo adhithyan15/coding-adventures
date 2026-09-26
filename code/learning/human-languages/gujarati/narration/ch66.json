@@ -4,11 +4,11 @@
   "chapter": 66,
   "title": "Wind, Cloud and Heat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:76dd5733e9961f94",
+  "sourceHash": "fnv1a64:16e15673fb8b900f",
   "lessons": [
     {
       "id": "GU-C66-wind",
-      "sequence": 3340,
+      "sequence": 3353,
       "title": "પવન (pavan) — wind",
       "headword": "પવન",
       "romanization": "pavan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e491237141e386c",
+      "sourceHash": "fnv1a64:90e63e2fa9f06fe8",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C66-cloud",
-      "sequence": 3350,
+      "sequence": 3363,
       "title": "વાદળ (vādaḷ) — a cloud",
       "headword": "વાદળ",
       "romanization": "vādaḷ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72c743da84d9efe1",
+      "sourceHash": "fnv1a64:f00c7142050165c3",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C66-heat",
-      "sequence": 3360,
+      "sequence": 3373,
       "title": "ગરમી (garmī) — heat, hot weather",
       "headword": "ગરમી",
       "romanization": "garmī",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26cd579f130240cf",
+      "sourceHash": "fnv1a64:c33d1dd7347042bf",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C66-ice",
-      "sequence": 3370,
+      "sequence": 3383,
       "title": "બરફ (baraph) — ice, snow",
       "headword": "બરફ",
       "romanization": "baraph",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6982b989c5585f17",
+      "sourceHash": "fnv1a64:da579b4bead93ce5",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C66-fog",
-      "sequence": 3380,
+      "sequence": 3393,
       "title": "ધુમ્મસ (dhummas) — fog, mist",
       "headword": "ધુમ્મસ",
       "romanization": "dhummas",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06564d0bba1c0ea9",
+      "sourceHash": "fnv1a64:41548d1444925a5d",
       "notice": null,
       "blocks": [
         {

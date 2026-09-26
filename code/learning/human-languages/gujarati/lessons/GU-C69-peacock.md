@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C69-peacock
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3530
+sequence: 3543
 chapter: 69
 type: word
 headword: "મોર"

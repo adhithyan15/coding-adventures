@@ -3,7 +3,7 @@
     "id": "GU-C25-time-written",
     "language": "gujarati",
     "chapter": 29,
-    "sequence": 1360,
+    "sequence": 1373,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1e6cd2a1ea7f6173",
+    "sourceHash": "fnv1a64:571a18981a2ad93f",
     "detachableSegments": [
       "Writing — delayed copy, every model covered"
     ]

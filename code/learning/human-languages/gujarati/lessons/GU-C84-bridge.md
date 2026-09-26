@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C84-bridge
 spine_node: SPINE-MEET-GREET
-sequence: 4300
+sequence: 4313
 chapter: 84
 type: word
 headword: "પુલ"

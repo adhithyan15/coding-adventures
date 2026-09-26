@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C80-hour
 spine_node: SPINE-TAKE-LEAVE
-sequence: 4060
+sequence: 4073
 chapter: 80
 type: word
 headword: "કલાક"

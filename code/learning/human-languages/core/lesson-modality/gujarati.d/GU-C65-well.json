@@ -3,7 +3,7 @@
     "id": "GU-C65-well",
     "language": "gujarati",
     "chapter": 65,
-    "sequence": 3310,
+    "sequence": 3323,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:45ac605bd0eba81c"
+    "sourceHash": "fnv1a64:c7ae8f6dd20f3a26"
   },
   "findings": []
 }

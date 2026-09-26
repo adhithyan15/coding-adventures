@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C75-outside
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3840
+sequence: 3853
 chapter: 75
 type: word
 headword: "બહાર"

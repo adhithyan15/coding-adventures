@@ -3,7 +3,7 @@
     "id": "GU-C09-madad-karvi",
     "language": "gujarati",
     "chapter": 15,
-    "sequence": 500,
+    "sequence": 513,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8bd812d51a92376d",
+    "sourceHash": "fnv1a64:f119fb3ce6e0c4fd",
     "detachableSegments": [
       "The letters in this word"
     ]

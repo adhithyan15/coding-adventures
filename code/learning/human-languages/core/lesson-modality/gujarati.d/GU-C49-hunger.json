@@ -3,7 +3,7 @@
     "id": "GU-C49-hunger",
     "language": "gujarati",
     "chapter": 49,
-    "sequence": 2520,
+    "sequence": 2533,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:44b17eede128d46f"
+    "sourceHash": "fnv1a64:7d2b2fcc77ea19df"
   },
   "findings": []
 }

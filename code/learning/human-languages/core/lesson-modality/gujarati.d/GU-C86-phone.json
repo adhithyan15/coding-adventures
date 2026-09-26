@@ -3,7 +3,7 @@
     "id": "GU-C86-phone",
     "language": "gujarati",
     "chapter": 86,
-    "sequence": 4390,
+    "sequence": 4403,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f3c916d9f9db0544"
+    "sourceHash": "fnv1a64:e71a5b81b15cf567"
   },
   "findings": []
 }

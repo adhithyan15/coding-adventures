@@ -3,7 +3,7 @@
     "id": "GU-C55-dhovu",
     "language": "gujarati",
     "chapter": 55,
-    "sequence": 2800,
+    "sequence": 2813,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5373bc9dcb7fc8fe"
+    "sourceHash": "fnv1a64:c683d67217340b4a"
   },
   "findings": []
 }

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C27-hear-daal
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1470
+sequence: 1483
 chapter: 31
 type: word
 headword: દાળ

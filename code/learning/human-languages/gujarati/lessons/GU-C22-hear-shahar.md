@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C22-hear-shahar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1020
+sequence: 1033
 chapter: 26
 type: word
 headword: શહેર

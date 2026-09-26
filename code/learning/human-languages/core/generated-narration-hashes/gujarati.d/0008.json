@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 8,
-  "sourceHash": "fnv1a64:42dd63a3df3973c1",
+  "sourceHash": "fnv1a64:1c95c323c20aced4",
   "lessonIds": [
     "GU-C02-naam",
     "GU-C02-maarun",
@@ -19,6 +19,6 @@
   "text": "gujarati/narration/ch08.txt",
   "json": "gujarati/narration/ch08.json",
   "textHash": "fnv1a64:78bac3fdd600ecc9",
-  "jsonHash": "fnv1a64:0762a1db31d45726",
+  "jsonHash": "fnv1a64:bc26ea57b08c7fd9",
   "findings": []
 }

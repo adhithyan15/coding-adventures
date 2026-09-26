@@ -3,7 +3,7 @@
     "id": "GU-C61-cup",
     "language": "gujarati",
     "chapter": 61,
-    "sequence": 3120,
+    "sequence": 3133,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:921f33543cdeb178"
+    "sourceHash": "fnv1a64:171e48b675613364"
   },
   "findings": []
 }

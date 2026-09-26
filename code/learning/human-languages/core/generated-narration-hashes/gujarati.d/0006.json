@@ -1,8 +1,10 @@
 {
   "language": "gujarati",
   "chapter": 6,
-  "sourceHash": "fnv1a64:9c162448109bb39e",
+  "sourceHash": "fnv1a64:9791fec0538cf9a1",
   "lessonIds": [
+    "GU-C06-ukhaanun",
+    "GU-C06-eklun",
     "GU-W06-ga",
     "GU-W06-independent-e",
     "GU-W06-kha",
@@ -13,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "gujarati/narration/ch06.txt",
   "json": "gujarati/narration/ch06.json",
-  "textHash": "fnv1a64:5d9e4c9a423331ad",
-  "jsonHash": "fnv1a64:c5cbf4e28e4605ed",
+  "textHash": "fnv1a64:a5ed6720f544b5f3",
+  "jsonHash": "fnv1a64:cf164b558d223e6b",
   "findings": []
 }

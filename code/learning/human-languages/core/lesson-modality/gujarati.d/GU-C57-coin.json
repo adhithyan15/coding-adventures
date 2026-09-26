@@ -3,7 +3,7 @@
     "id": "GU-C57-coin",
     "language": "gujarati",
     "chapter": 57,
-    "sequence": 2930,
+    "sequence": 2943,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e530216c7817bfe0"
+    "sourceHash": "fnv1a64:c83081223ba59f56"
   },
   "findings": []
 }

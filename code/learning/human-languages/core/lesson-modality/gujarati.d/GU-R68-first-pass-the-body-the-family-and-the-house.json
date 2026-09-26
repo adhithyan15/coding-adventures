@@ -3,7 +3,7 @@
     "id": "GU-R68-first-pass-the-body-the-family-and-the-house",
     "language": "gujarati",
     "chapter": 68,
-    "sequence": 3490,
+    "sequence": 3503,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0330ca0835d7ead8"
+    "sourceHash": "fnv1a64:e8b400907822e189"
   },
   "findings": []
 }

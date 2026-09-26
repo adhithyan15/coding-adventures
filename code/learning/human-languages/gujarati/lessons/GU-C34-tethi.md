@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C34-tethi
 spine_node: SPINE-SAY-WHY
-sequence: 1970
+sequence: 1983
 chapter: 38
 type: word
 headword: તેથી

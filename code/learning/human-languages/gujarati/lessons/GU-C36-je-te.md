@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C36-je-te
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 2070
+sequence: 2083
 chapter: 40
 type: phrase
 headword: જે … તે …

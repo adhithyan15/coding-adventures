@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C44-lines
 spine_node: SPINE-READ-SIGNS-AND-NOTICES
-sequence: 2280
+sequence: 2293
 chapter: 44
 type: reading
 headword: "(reading)"

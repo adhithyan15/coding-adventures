@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C66-ice
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 3370
+sequence: 3383
 chapter: 66
 type: word
 headword: "બરફ"

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C76-again
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3900
+sequence: 3913
 chapter: 76
 type: word
 headword: "ફરી"

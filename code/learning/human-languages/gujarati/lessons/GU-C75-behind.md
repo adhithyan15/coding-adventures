@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C75-behind
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3820
+sequence: 3833
 chapter: 75
 type: word
 headword: "પાછળ"

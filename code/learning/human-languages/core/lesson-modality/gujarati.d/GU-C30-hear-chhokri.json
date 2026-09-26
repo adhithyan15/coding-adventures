@@ -3,7 +3,7 @@
     "id": "GU-C30-hear-chhokri",
     "language": "gujarati",
     "chapter": 34,
-    "sequence": 1710,
+    "sequence": 1723,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:80485c3923f751f9"
+    "sourceHash": "fnv1a64:e1d657b8fe38f737"
   },
   "findings": []
 }

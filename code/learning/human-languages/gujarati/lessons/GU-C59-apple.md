@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C59-apple
 spine_node: SPINE-COURTESY-THANK
-sequence: 3010
+sequence: 3023
 chapter: 59
 type: word
 headword: "સફરજન"

@@ -3,7 +3,7 @@
     "id": "GU-C63-garden",
     "language": "gujarati",
     "chapter": 63,
-    "sequence": 3220,
+    "sequence": 3233,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:43b07d7b84ff873a"
+    "sourceHash": "fnv1a64:78cd31086abc114a"
   },
   "findings": []
 }

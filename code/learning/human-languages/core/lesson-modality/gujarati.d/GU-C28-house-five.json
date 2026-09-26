@@ -3,7 +3,7 @@
     "id": "GU-C28-house-five",
     "language": "gujarati",
     "chapter": 32,
-    "sequence": 1590,
+    "sequence": 1603,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c6b86c219b7ae889"
+    "sourceHash": "fnv1a64:6f71e2d330317d96"
   },
   "findings": []
 }

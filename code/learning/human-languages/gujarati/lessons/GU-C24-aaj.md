@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C24-aaj
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1250
+sequence: 1263
 chapter: 28
 type: practice
 headword: આજ

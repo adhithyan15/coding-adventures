@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W01-na
 spine_node: SPINE-MEET-GREET
-sequence: 5
+sequence: 6
 delivery: script
 chapter: 1
 type: writing

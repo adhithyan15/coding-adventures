@@ -3,7 +3,7 @@
     "id": "GU-C39-chha",
     "language": "gujarati",
     "chapter": 43,
-    "sequence": 2190,
+    "sequence": 2203,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1108aba3466315d1"
+    "sourceHash": "fnv1a64:f5e5ce185a58d07a"
   },
   "findings": []
 }

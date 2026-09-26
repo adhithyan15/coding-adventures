@@ -4,11 +4,11 @@
   "chapter": 36,
   "title": "And, Or, But",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:058ef5c5b5a1e316",
+  "sourceHash": "fnv1a64:dd56af457dcec833",
   "lessons": [
     {
       "id": "GU-C32-ane",
-      "sequence": 1830,
+      "sequence": 1843,
       "title": "અને (ane) — and",
       "headword": "અને",
       "romanization": "ane",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1aa7fddc46e0a39b",
+      "sourceHash": "fnv1a64:96872a162d565739",
       "notice": null,
       "blocks": [
         {
@@ -132,7 +132,7 @@
     },
     {
       "id": "GU-C32-ane-clauses",
-      "sequence": 1840,
+      "sequence": 1853,
       "title": "અને (ane), joining two sentences",
       "headword": "અને (બે વાક્ય)",
       "romanization": "ane (be vākya)",
@@ -143,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4056ac244876241c",
+      "sourceHash": "fnv1a64:519c5d991645ca4c",
       "notice": null,
       "blocks": [
         {
@@ -264,7 +264,7 @@
     },
     {
       "id": "GU-C32-ane-write",
-      "sequence": 1850,
+      "sequence": 1863,
       "title": "અને (ane) reaches the page",
       "headword": "અને",
       "romanization": "ane",
@@ -277,7 +277,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:434c74bf65862bb7",
+      "sourceHash": "fnv1a64:c215c8bc43c33b3d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -371,7 +371,7 @@
     },
     {
       "id": "GU-C32-athava",
-      "sequence": 1860,
+      "sequence": 1873,
       "title": "અથવા (athavā) — or",
       "headword": "અથવા",
       "romanization": "athavā",
@@ -382,7 +382,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf5ffb5768db136e",
+      "sourceHash": "fnv1a64:4826588492604e7e",
       "notice": null,
       "blocks": [
         {
@@ -495,7 +495,7 @@
     },
     {
       "id": "GU-C32-pan",
-      "sequence": 1870,
+      "sequence": 1883,
       "title": "પણ (paṇ) — but, and also",
       "headword": "પણ",
       "romanization": "paṇ",
@@ -506,7 +506,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f6c935e2d811fb5",
+      "sourceHash": "fnv1a64:5cae20c10902be73",
       "notice": null,
       "blocks": [
         {

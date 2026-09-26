@@ -3,7 +3,7 @@
     "id": "GU-C70-blue",
     "language": "gujarati",
     "chapter": 70,
-    "sequence": 3590,
+    "sequence": 3603,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6198c075952c459f"
+    "sourceHash": "fnv1a64:26f72b6ebfe8f89e"
   },
   "findings": []
 }

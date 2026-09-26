@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R04-first-four-r1
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 75
+sequence: 81
 delivery: script
 chapter: 4
 type: writing

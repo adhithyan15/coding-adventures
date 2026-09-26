@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C24-hear-aaj
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1240
+sequence: 1253
 chapter: 28
 type: word
 headword: આજ

@@ -3,7 +3,7 @@
     "id": "GU-C38-panchmu",
     "language": "gujarati",
     "chapter": 42,
-    "sequence": 2130,
+    "sequence": 2143,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:f408770e18283614"
+    "sourceHash": "fnv1a64:dc8188673c02d6ae"
   },
   "findings": []
 }

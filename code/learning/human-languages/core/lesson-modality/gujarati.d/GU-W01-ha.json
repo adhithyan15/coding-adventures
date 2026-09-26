@@ -3,7 +3,7 @@
     "id": "GU-W01-ha",
     "language": "gujarati",
     "chapter": 1,
-    "sequence": 2,
+    "sequence": 3,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -18,7 +18,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:7763b880fb3d0e3f",
+    "sourceHash": "fnv1a64:cf23be1f98563136",
     "detachableSegments": [
       "Script",
       "Writing — notice and trace one consonant"

@@ -3,7 +3,7 @@
     "id": "GU-C55-pivu",
     "language": "gujarati",
     "chapter": 55,
-    "sequence": 2830,
+    "sequence": 2843,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6384af5293918a8f"
+    "sourceHash": "fnv1a64:60f895ed005e454d"
   },
   "findings": []
 }

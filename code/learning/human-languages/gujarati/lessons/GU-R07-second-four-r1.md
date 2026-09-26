@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-R07-second-four-r1
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 90
+sequence: 103
 delivery: script
 chapter: 7
 type: writing
 headword: ૂ — ટ — ઈ — ઢ
 romanization: attached long uu — retroflex tta — independent long ii — retroflex ddha
 gloss: retrieve the final four Gujarati forms shown in this book
-prerequisites: [GU-W07-ddha]
+prerequisites: [GU-W07-ddha, GU-C07-dhol]
 sounds: []
 roots: []
 etymology_hook: "The final four forms return immediately, and the book's shown script inventory is now fully taught."
 duration:
   max_seconds: 225
 requires:
-  knowledge: [GU-SCRIPT-UU-MATRA-01, GU-SCRIPT-TTA-01, GU-SCRIPT-INDEPENDENT-II-01, GU-SCRIPT-DDHA-01]
+  knowledge: [GU-SCRIPT-UU-MATRA-01, GU-SCRIPT-TTA-01, GU-SCRIPT-INDEPENDENT-II-01, GU-SCRIPT-DDHA-01, GU-LEX-ANCHOR-DHOL]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-UU-MATRA-01, GU-SCRIPT-TTA-01, GU-SCRIPT-INDEPENDENT-II-01, GU-SCRIPT-DDHA-01]
+  knowledge: [GU-SCRIPT-UU-MATRA-01, GU-SCRIPT-TTA-01, GU-SCRIPT-INDEPENDENT-II-01, GU-SCRIPT-DDHA-01, GU-LEX-ANCHOR-DHOL]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -35,7 +35,7 @@ reviews_of: [GU-W07-uu-matra, GU-W07-tta, GU-W07-independent-ii, GU-W07-ddha]
 # ૂ — ટ — ઈ — ઢ: the final four return
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-UU-MATRA-01, GU-SCRIPT-TTA-01, GU-SCRIPT-INDEPENDENT-II-01, GU-SCRIPT-DDHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-UU-MATRA-01, GU-SCRIPT-TTA-01, GU-SCRIPT-INDEPENDENT-II-01, GU-SCRIPT-DDHA-01, GU-LEX-ANCHOR-DHOL] -->
 
 Keep the four cards visible. Point as you say attached long *ū*, retroflex
 *tta*, independent long *ī*, and retroflex aspirated *ddha*.

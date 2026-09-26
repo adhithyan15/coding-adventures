@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C47-shoulder
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2410
+sequence: 2423
 chapter: 47
 type: word
 headword: "ખભો"

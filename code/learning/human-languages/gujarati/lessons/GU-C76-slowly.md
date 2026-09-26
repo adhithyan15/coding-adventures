@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C76-slowly
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3880
+sequence: 3893
 chapter: 76
 type: word
 headword: "ધીમે"

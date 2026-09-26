@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C89-shikhavvu
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 4550
+sequence: 4563
 chapter: 89
 type: word
 headword: "શીખવવું"

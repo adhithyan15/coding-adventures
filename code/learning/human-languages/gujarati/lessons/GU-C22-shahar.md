@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C22-shahar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1030
+sequence: 1043
 delivery: script
 modality: pen
 modality_reason: The guided-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.

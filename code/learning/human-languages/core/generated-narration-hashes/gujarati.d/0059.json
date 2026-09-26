@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 59,
-  "sourceHash": "fnv1a64:1809d7cda6b74835",
+  "sourceHash": "fnv1a64:75e9199f475a2f81",
   "lessonIds": [
     "GU-C59-fruit",
     "GU-C59-banana",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch59.txt",
   "json": "gujarati/narration/ch59.json",
   "textHash": "fnv1a64:def037f5a995f4ec",
-  "jsonHash": "fnv1a64:f2ad01f4fd9f3efb",
+  "jsonHash": "fnv1a64:9e45127f5c0c79d4",
   "findings": []
 }

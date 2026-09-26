@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C78-friday
 spine_node: SPINE-TAKE-LEAVE
-sequence: 4000
+sequence: 4013
 chapter: 78
 type: word
 headword: "શુક્રવાર"

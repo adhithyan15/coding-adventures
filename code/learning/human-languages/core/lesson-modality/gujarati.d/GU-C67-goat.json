@@ -3,7 +3,7 @@
     "id": "GU-C67-goat",
     "language": "gujarati",
     "chapter": 67,
-    "sequence": 3410,
+    "sequence": 3423,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4b54f20f178c1183"
+    "sourceHash": "fnv1a64:d55b384b8600b415"
   },
   "findings": []
 }

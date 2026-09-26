@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C51-grandfather
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2610
+sequence: 2623
 chapter: 51
 type: word
 headword: "દાદા"

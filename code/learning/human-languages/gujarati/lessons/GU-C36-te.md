@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C36-te
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 2030
+sequence: 2043
 chapter: 40
 type: word
 headword: તે

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C86-ticket
 spine_node: SPINE-MEET-GREET
-sequence: 4370
+sequence: 4383
 chapter: 86
 type: word
 headword: "ટિકિટ"

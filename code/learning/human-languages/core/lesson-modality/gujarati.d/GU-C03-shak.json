@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C03-shak",
+    "language": "gujarati",
+    "chapter": 3,
+    "sequence": 64,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ede219108cee797f"
+  },
+  "findings": []
+}

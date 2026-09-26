@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C39-das
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 2240
+sequence: 2253
 chapter: 43
 type: word
 headword: દસ

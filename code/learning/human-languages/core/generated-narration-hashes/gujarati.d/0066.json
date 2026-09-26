@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 66,
-  "sourceHash": "fnv1a64:76dd5733e9961f94",
+  "sourceHash": "fnv1a64:16e15673fb8b900f",
   "lessonIds": [
     "GU-C66-wind",
     "GU-C66-cloud",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch66.txt",
   "json": "gujarati/narration/ch66.json",
   "textHash": "fnv1a64:9efcb9445143bc7e",
-  "jsonHash": "fnv1a64:0a8e76691fa3b519",
+  "jsonHash": "fnv1a64:04c5eac74de802ef",
   "findings": []
 }

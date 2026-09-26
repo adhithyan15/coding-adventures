@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C29-hear-sooraj
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1620
+sequence: 1633
 chapter: 33
 type: word
 headword: સૂરજ

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C54-ramvu
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2780
+sequence: 2793
 chapter: 54
 type: word
 headword: "રમવું"

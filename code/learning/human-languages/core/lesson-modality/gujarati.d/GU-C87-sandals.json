@@ -3,7 +3,7 @@
     "id": "GU-C87-sandals",
     "language": "gujarati",
     "chapter": 87,
-    "sequence": 4430,
+    "sequence": 4443,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8d6aedc831aadae3"
+    "sourceHash": "fnv1a64:a9abbb70a7a025b1"
   },
   "findings": []
 }

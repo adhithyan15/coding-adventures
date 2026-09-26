@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R16-anand-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 740
+sequence: 753
 chapter: 20
 type: practice
 headword: તમને મળીને આનંદ થયો

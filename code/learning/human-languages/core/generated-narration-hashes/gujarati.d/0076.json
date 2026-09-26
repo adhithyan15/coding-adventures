@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 76,
-  "sourceHash": "fnv1a64:59b8bcd33ead93ff",
+  "sourceHash": "fnv1a64:c172c60271535141",
   "lessonIds": [
     "GU-C76-alot",
     "GU-C76-all",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch76.txt",
   "json": "gujarati/narration/ch76.json",
   "textHash": "fnv1a64:4a6886865fa30d8e",
-  "jsonHash": "fnv1a64:9cd1cfa61db925d5",
+  "jsonHash": "fnv1a64:7226dd0e9a2fb705",
   "findings": []
 }

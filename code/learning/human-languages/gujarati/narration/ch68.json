@@ -4,11 +4,11 @@
   "chapter": 68,
   "title": "Tiger, Lion and Elephant",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f2dfa58b0165f2d5",
+  "sourceHash": "fnv1a64:7c82090e33a130ea",
   "lessons": [
     {
       "id": "GU-C68-tiger",
-      "sequence": 3440,
+      "sequence": 3453,
       "title": "વાઘ (vāgh) — a tiger",
       "headword": "વાઘ",
       "romanization": "vāgh",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15a459f3a748091d",
+      "sourceHash": "fnv1a64:eea1918fdb562cad",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C68-lion",
-      "sequence": 3450,
+      "sequence": 3463,
       "title": "સિંહ (siṃh) — a lion",
       "headword": "સિંહ",
       "romanization": "siṃh",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cc2178ef1dc9bea",
+      "sourceHash": "fnv1a64:6398c3eed4f51594",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C68-elephant",
-      "sequence": 3460,
+      "sequence": 3473,
       "title": "હાથી (hāthī) — an elephant",
       "headword": "હાથી",
       "romanization": "hāthī",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00d4b2927198e65b",
+      "sourceHash": "fnv1a64:dd09dc8c58b4542b",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C68-monkey",
-      "sequence": 3470,
+      "sequence": 3483,
       "title": "વાંદરો (vā̃dro) — a monkey",
       "headword": "વાંદરો",
       "romanization": "vā̃dro",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f75cfbadda05b520",
+      "sourceHash": "fnv1a64:ebdb7e4c9d4dd246",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C68-snake",
-      "sequence": 3480,
+      "sequence": 3493,
       "title": "સાપ (sāp) — a snake",
       "headword": "સાપ",
       "romanization": "sāp",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d90e2c812195e2cd",
+      "sourceHash": "fnv1a64:f24d0b36da18c4dd",
       "notice": null,
       "blocks": [
         {
@@ -623,7 +623,7 @@
     },
     {
       "id": "GU-R68-first-pass-the-body-the-family-and-the-house",
-      "sequence": 3490,
+      "sequence": 3503,
       "title": "The body, the family and the house — a first pass",
       "headword": "(dialogue)",
       "romanization": "",
@@ -634,7 +634,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0330ca0835d7ead8",
+      "sourceHash": "fnv1a64:e8b400907822e189",
       "notice": null,
       "blocks": [
         {
@@ -787,7 +787,7 @@
     },
     {
       "id": "GU-R68-second-pass-food-the-land-and-animals",
-      "sequence": 3500,
+      "sequence": 3513,
       "title": "Food, the land and animals — a second pass",
       "headword": "(dialogue)",
       "romanization": "",
@@ -798,7 +798,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:024dcf92185dd87d",
+      "sourceHash": "fnv1a64:627bb971aaca9561",
       "notice": null,
       "blocks": [
         {

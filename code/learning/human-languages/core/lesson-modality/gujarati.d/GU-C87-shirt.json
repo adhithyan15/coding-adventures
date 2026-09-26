@@ -3,7 +3,7 @@
     "id": "GU-C87-shirt",
     "language": "gujarati",
     "chapter": 87,
-    "sequence": 4420,
+    "sequence": 4433,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2a3eaf71467db026"
+    "sourceHash": "fnv1a64:b986539e335c9f32"
   },
   "findings": []
 }

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W01-virama
 spine_node: SPINE-MEET-GREET
-sequence: 10
+sequence: 11
 delivery: script
 chapter: 1
 type: writing

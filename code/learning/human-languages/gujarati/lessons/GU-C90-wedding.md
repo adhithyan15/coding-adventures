@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C90-wedding
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 4560
+sequence: 4573
 chapter: 90
 type: word
 headword: "લગ્ન"

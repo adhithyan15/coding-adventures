@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C77-sometimes
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3920
+sequence: 3933
 chapter: 77
 type: word
 headword: "ક્યારેક"

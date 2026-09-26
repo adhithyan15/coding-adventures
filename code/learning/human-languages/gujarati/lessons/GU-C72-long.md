@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C72-long
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3680
+sequence: 3693
 chapter: 72
 type: word
 headword: "લાંબું"

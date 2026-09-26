@@ -3,7 +3,7 @@
     "id": "GU-C56-naachvu",
     "language": "gujarati",
     "chapter": 56,
-    "sequence": 2850,
+    "sequence": 2863,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:650fb10706735007"
+    "sourceHash": "fnv1a64:371e6e7069bfd061"
   },
   "findings": []
 }

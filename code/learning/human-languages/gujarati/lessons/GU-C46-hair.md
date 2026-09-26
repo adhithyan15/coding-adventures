@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C46-hair
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2380
+sequence: 2393
 chapter: 46
 type: word
 headword: "વાળ"

@@ -4,11 +4,11 @@
   "chapter": 57,
   "title": "Buying and Selling",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ce3b446ee8f3b36b",
+  "sourceHash": "fnv1a64:59534f9c4ca83f7d",
   "lessons": [
     {
       "id": "GU-C57-kharidvu",
-      "sequence": 2890,
+      "sequence": 2903,
       "title": "ખરીદવું (kharīdvũ) — to buy",
       "headword": "ખરીદવું",
       "romanization": "kharīdvũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19e1a8626a655b54",
+      "sourceHash": "fnv1a64:1491537197c83cc1",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C57-vechvu",
-      "sequence": 2900,
+      "sequence": 2913,
       "title": "વેચવું (vecvũ) — to sell",
       "headword": "વેચવું",
       "romanization": "vecvũ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1bb4ba3ab2654d4b",
+      "sourceHash": "fnv1a64:c60b1390830bb31b",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C57-price",
-      "sequence": 2910,
+      "sequence": 2923,
       "title": "કિંમત (kimmat) — a price",
       "headword": "કિંમત",
       "romanization": "kimmat",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:619181750ffa6a2e",
+      "sourceHash": "fnv1a64:f439eac9f240d608",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C57-rupees",
-      "sequence": 2920,
+      "sequence": 2933,
       "title": "રૂપિયા (rūpiyā) — rupees",
       "headword": "રૂપિયા",
       "romanization": "rūpiyā",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:869aff553e25a53b",
+      "sourceHash": "fnv1a64:27ad763eb1509d8b",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C57-coin",
-      "sequence": 2930,
+      "sequence": 2943,
       "title": "સિક્કો (sikko) — a coin",
       "headword": "સિક્કો",
       "romanization": "sikko",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e530216c7817bfe0",
+      "sourceHash": "fnv1a64:c83081223ba59f56",
       "notice": null,
       "blocks": [
         {

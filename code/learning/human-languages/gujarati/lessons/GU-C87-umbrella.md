@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C87-umbrella
 spine_node: SPINE-COURTESY-THANK
-sequence: 4450
+sequence: 4463
 chapter: 87
 type: word
 headword: "છત્રી"

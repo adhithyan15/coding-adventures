@@ -1,9 +1,10 @@
 {
   "language": "gujarati",
   "chapter": 1,
-  "sourceHash": "fnv1a64:5794b5b0ccdd9bc3",
+  "sourceHash": "fnv1a64:9cd2578f1979fbdf",
   "lessonIds": [
     "GU-C01-namaste",
+    "GU-C01-aahaar",
     "GU-W01-ha",
     "GU-W01-aa-matra",
     "GU-W01-aa",

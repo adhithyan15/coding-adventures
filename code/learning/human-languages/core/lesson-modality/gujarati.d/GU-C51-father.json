@@ -3,7 +3,7 @@
     "id": "GU-C51-father",
     "language": "gujarati",
     "chapter": 51,
-    "sequence": 2590,
+    "sequence": 2603,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d7f8260d3831b772"
+    "sourceHash": "fnv1a64:d20725e971e8af69"
   },
   "findings": []
 }

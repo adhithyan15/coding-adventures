@@ -3,7 +3,7 @@
     "id": "GU-C49-rest",
     "language": "gujarati",
     "chapter": 49,
-    "sequence": 2510,
+    "sequence": 2523,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d71fbdd775ebf599"
+    "sourceHash": "fnv1a64:e120274cd020034b"
   },
   "findings": []
 }

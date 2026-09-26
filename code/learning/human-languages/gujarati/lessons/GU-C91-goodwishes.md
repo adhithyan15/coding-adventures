@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C91-goodwishes
 spine_node: SPINE-COURTESY-THANK
-sequence: 4630
+sequence: 4643
 chapter: 91
 type: word
 headword: "શુભેચ્છા"

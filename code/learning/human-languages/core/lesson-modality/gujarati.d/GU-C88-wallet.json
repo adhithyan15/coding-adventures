@@ -3,7 +3,7 @@
     "id": "GU-C88-wallet",
     "language": "gujarati",
     "chapter": 88,
-    "sequence": 4480,
+    "sequence": 4493,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:75f7baab59a755eb"
+    "sourceHash": "fnv1a64:5bb66b65975c917b"
   },
   "findings": []
 }

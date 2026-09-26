@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C44-pehli-vanchan
 spine_node: SPINE-READ-SIGNS-AND-NOTICES
-sequence: 2290
+sequence: 2303
 chapter: 44
 type: reading
 headword: "(reading)"

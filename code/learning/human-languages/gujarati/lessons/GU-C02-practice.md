@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C02-practice
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 170
+sequence: 183
 chapter: 8
 type: practice
 headword: (dialogue)

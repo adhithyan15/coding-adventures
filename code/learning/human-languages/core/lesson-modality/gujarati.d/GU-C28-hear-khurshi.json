@@ -3,7 +3,7 @@
     "id": "GU-C28-hear-khurshi",
     "language": "gujarati",
     "chapter": 32,
-    "sequence": 1560,
+    "sequence": 1573,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:db7d47dc08e80bb2"
+    "sourceHash": "fnv1a64:f61a04946f7f8d4e"
   },
   "findings": []
 }

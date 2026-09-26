@@ -3,7 +3,7 @@
     "id": "GU-C32-athava",
     "language": "gujarati",
     "chapter": 36,
-    "sequence": 1860,
+    "sequence": 1873,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:cf5ffb5768db136e"
+    "sourceHash": "fnv1a64:4826588492604e7e"
   },
   "findings": []
 }

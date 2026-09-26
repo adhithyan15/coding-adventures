@@ -3,7 +3,7 @@
     "id": "GU-C22-route-three",
     "language": "gujarati",
     "chapter": 26,
-    "sequence": 1080,
+    "sequence": 1093,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:6dedd6cad544291c",
+    "sourceHash": "fnv1a64:581fb2255a9164f0",
     "delivery": "script",
     "authored": "pen",
     "authoredReason": "The non-compensatory payoff includes required dictation, so the complete lesson needs a pen even though its oral core is drivable."

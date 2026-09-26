@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C74-near
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3770
+sequence: 3783
 chapter: 74
 type: word
 headword: "નજીક"

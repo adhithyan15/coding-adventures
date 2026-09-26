@@ -3,7 +3,7 @@
     "id": "GU-C65-sea",
     "language": "gujarati",
     "chapter": 65,
-    "sequence": 3290,
+    "sequence": 3303,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:bfc9f528575be3b4"
+    "sourceHash": "fnv1a64:f8ad896477545597"
   },
   "findings": []
 }

@@ -3,7 +3,7 @@
     "id": "GU-C53-daughter",
     "language": "gujarati",
     "chapter": 53,
-    "sequence": 2710,
+    "sequence": 2723,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:096c75693b1dc823"
+    "sourceHash": "fnv1a64:e69d12985137a0e1"
   },
   "findings": []
 }

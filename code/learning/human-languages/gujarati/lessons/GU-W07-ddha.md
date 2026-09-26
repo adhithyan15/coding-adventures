@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W07-ddha
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 89
+sequence: 102
 delivery: script
 chapter: 7
 type: writing
 headword: ઢ
 romanization: "ḍha"
 gloss: "the aspirated retroflex consonant ddha"
-prerequisites: [GU-W07-independent-ii]
+prerequisites: [GU-W07-independent-ii, GU-C07-dhol]
 sounds: []
 roots: []
 etymology_hook: "The mouth word needs this curled-back, breathy ḍh; it is the final untaught form in the present book."
 duration:
   max_seconds: 230
 requires:
-  knowledge: [GU-SCRIPT-DHA-01, GU-SCRIPT-INDEPENDENT-II-01]
+  knowledge: [GU-SCRIPT-DHA-01, GU-SCRIPT-INDEPENDENT-II-01, GU-LEX-ANCHOR-DHOL]
 introduces:
   knowledge: [GU-SCRIPT-DDHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-DHA-01, GU-SCRIPT-DDHA-01]
+  knowledge: [GU-SCRIPT-DHA-01, GU-SCRIPT-DDHA-01, GU-LEX-ANCHOR-DHOL]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W07-independent-ii, GU-W02-dha]
 # ઢ — retroflex ddha
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-DHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-DHA-01, GU-LEX-ANCHOR-DHOL] -->
 
 Write dental **ધ** once and say *dha* with the tongue at the teeth. Curl the
 tongue back and keep the breathy release for retroflex *ddha*.

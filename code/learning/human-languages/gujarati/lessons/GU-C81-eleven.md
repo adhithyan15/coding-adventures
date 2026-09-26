@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C81-eleven
 spine_node: SPINE-RESPOND-BASIC
-sequence: 4110
+sequence: 4123
 chapter: 81
 type: word
 headword: "અગિયાર"

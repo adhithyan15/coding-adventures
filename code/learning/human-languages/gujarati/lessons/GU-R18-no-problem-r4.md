@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R18-no-problem-r4
 spine_node: SPINE-COURTESY-THANK
-sequence: 840
+sequence: 853
 chapter: 22
 type: practice
 headword: વાંધો નહીં।

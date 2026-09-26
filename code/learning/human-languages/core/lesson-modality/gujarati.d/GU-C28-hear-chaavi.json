@@ -3,7 +3,7 @@
     "id": "GU-C28-hear-chaavi",
     "language": "gujarati",
     "chapter": 32,
-    "sequence": 1570,
+    "sequence": 1583,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ef6b61d30568d40a"
+    "sourceHash": "fnv1a64:948c47b73d73ffb8"
   },
   "findings": []
 }

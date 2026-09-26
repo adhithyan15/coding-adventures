@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C62-lock
 spine_node: SPINE-MEET-GREET
-sequence: 3180
+sequence: 3193
 chapter: 62
 type: word
 headword: "તાળું"

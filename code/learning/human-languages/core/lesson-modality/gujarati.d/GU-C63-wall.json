@@ -3,7 +3,7 @@
     "id": "GU-C63-wall",
     "language": "gujarati",
     "chapter": 63,
-    "sequence": 3200,
+    "sequence": 3213,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:78f3b242e0a374a0"
+    "sourceHash": "fnv1a64:34cf636447451430"
   },
   "findings": []
 }

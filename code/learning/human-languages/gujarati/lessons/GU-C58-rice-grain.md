@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C58-rice-grain
 spine_node: SPINE-COURTESY-THANK
-sequence: 2940
+sequence: 2953
 chapter: 58
 type: word
 headword: "ચોખા"

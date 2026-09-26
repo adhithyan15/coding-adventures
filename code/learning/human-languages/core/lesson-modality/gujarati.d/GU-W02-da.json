@@ -3,7 +3,7 @@
     "id": "GU-W02-da",
     "language": "gujarati",
     "chapter": 2,
-    "sequence": 13,
+    "sequence": 14,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:575c54d459855a38",
+    "sourceHash": "fnv1a64:f4eece07e0beb053",
     "detachableSegments": [
       "Script — meet the shape",
       "Writing — notice and trace",

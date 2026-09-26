@@ -3,7 +3,7 @@
     "id": "GU-C47-finger",
     "language": "gujarati",
     "chapter": 47,
-    "sequence": 2390,
+    "sequence": 2403,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f83f3001bb565dd8"
+    "sourceHash": "fnv1a64:33c3e4ac2a33493d"
   },
   "findings": []
 }

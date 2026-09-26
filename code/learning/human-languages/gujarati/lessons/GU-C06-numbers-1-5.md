@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C06-numbers-1-5
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 360
+sequence: 373
 chapter: 12
 type: word
 headword: એક બે ત્રણ ચાર પાંચ

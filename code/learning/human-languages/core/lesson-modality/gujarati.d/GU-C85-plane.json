@@ -3,7 +3,7 @@
     "id": "GU-C85-plane",
     "language": "gujarati",
     "chapter": 85,
-    "sequence": 4340,
+    "sequence": 4353,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:31df14d8e42478ea"
+    "sourceHash": "fnv1a64:484933487af9047a"
   },
   "findings": []
 }

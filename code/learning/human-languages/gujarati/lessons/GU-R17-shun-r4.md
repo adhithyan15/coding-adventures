@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R17-shun-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 770
+sequence: 783
 chapter: 21
 type: practice
 headword: શું

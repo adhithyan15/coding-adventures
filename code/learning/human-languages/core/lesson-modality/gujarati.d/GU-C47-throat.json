@@ -3,7 +3,7 @@
     "id": "GU-C47-throat",
     "language": "gujarati",
     "chapter": 47,
-    "sequence": 2400,
+    "sequence": 2413,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:352317c84713cb33"
+    "sourceHash": "fnv1a64:129cb7e3bfaff123"
   },
   "findings": []
 }

@@ -3,7 +3,7 @@
     "id": "GU-C30-hear-chhokro",
     "language": "gujarati",
     "chapter": 34,
-    "sequence": 1700,
+    "sequence": 1713,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:33917d79fd394f12"
+    "sourceHash": "fnv1a64:ac5fe791cd2a6bee"
   },
   "findings": []
 }

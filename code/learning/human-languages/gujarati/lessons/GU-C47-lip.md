@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C47-lip
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2420
+sequence: 2433
 chapter: 47
 type: word
 headword: "હોઠ"

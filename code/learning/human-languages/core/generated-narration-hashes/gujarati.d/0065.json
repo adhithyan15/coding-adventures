@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 65,
-  "sourceHash": "fnv1a64:17ee4bbc8c5492fc",
+  "sourceHash": "fnv1a64:fa167b49923dd24d",
   "lessonIds": [
     "GU-C65-sea",
     "GU-C65-lake",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch65.txt",
   "json": "gujarati/narration/ch65.json",
   "textHash": "fnv1a64:d6be72d9a46fbec8",
-  "jsonHash": "fnv1a64:3f0b0fc15353fd58",
+  "jsonHash": "fnv1a64:296b4a469995861a",
   "findings": []
 }

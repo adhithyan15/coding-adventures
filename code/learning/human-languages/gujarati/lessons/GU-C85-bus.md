@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C85-bus
 spine_node: SPINE-MEET-GREET
-sequence: 4310
+sequence: 4323
 chapter: 85
 type: word
 headword: "બસ"

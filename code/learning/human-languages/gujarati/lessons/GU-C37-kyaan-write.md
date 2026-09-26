@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C37-kyaan-write
 spine_node: SPINE-ASK-LOCATION
-sequence: 2100
+sequence: 2113
 delivery: script
 chapter: 41
 type: writing

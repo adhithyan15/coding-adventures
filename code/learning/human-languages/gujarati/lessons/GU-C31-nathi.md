@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C31-nathi
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1780
+sequence: 1793
 chapter: 35
 type: word
 headword: નથી

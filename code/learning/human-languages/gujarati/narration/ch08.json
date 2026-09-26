@@ -4,11 +4,11 @@
   "chapter": 8,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:42dd63a3df3973c1",
+  "sourceHash": "fnv1a64:1c95c323c20aced4",
   "lessons": [
     {
       "id": "GU-C02-naam",
-      "sequence": 91,
+      "sequence": 104,
       "title": "નામ (nām) — \"name,\" a word older than Europe",
       "headword": "નામ",
       "romanization": "nām",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d41a4f7ca9e7962c",
+      "sourceHash": "fnv1a64:00f63cbe810c78c7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -122,7 +122,7 @@
     },
     {
       "id": "GU-C02-maarun",
-      "sequence": 100,
+      "sequence": 113,
       "title": "મારું (mārũ) — \"my,\" and gender again",
       "headword": "મારું",
       "romanization": "mārũ",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:74848d4ef998a410",
+      "sourceHash": "fnv1a64:09de91219b62dc5c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -272,7 +272,7 @@
     },
     {
       "id": "GU-C02-chhe",
-      "sequence": 110,
+      "sequence": 123,
       "title": "છે (chhe) — \"is,\" a copula all Gujarati's own",
       "headword": "છે",
       "romanization": "chhe",
@@ -283,7 +283,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:70297cdd06d56906",
+      "sourceHash": "fnv1a64:62dc8a5f198045f4",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -406,7 +406,7 @@
     },
     {
       "id": "GU-C02-maarun-naam-chhe",
-      "sequence": 120,
+      "sequence": 133,
       "title": "મારું નામ … છે (mārũ nām … chhe) — \"my name is…\"",
       "headword": "મારું નામ … છે",
       "romanization": "mārũ nām … chhe",
@@ -417,7 +417,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7f3497ab46e51a3",
+      "sourceHash": "fnv1a64:117bb1a359167baf",
       "notice": null,
       "blocks": [
         {
@@ -511,7 +511,7 @@
     },
     {
       "id": "GU-C02-anand",
-      "sequence": 130,
+      "sequence": 143,
       "title": "તમને મળીને આનંદ થયો (tamne maḷīne ānand thayo) — \"pleased to meet you\"",
       "headword": "તમને મળીને આનંદ થયો",
       "romanization": "tamne maḷīne ānand thayo",
@@ -522,7 +522,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:043a1409bbb084fb",
+      "sourceHash": "fnv1a64:72a1c43b3764cd59",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -634,7 +634,7 @@
     },
     {
       "id": "GU-C02-tu-tame",
-      "sequence": 140,
+      "sequence": 153,
       "title": "તું / તમે (tũ / tame) — \"you,\" familiar and respectful",
       "headword": "તું / તમે",
       "romanization": "tũ / tame",
@@ -645,7 +645,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0ccf9fe758d7f6f0",
+      "sourceHash": "fnv1a64:77d8affe1c822a64",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -786,7 +786,7 @@
     },
     {
       "id": "GU-C02-shun",
-      "sequence": 150,
+      "sequence": 163,
       "title": "શું (shũ) — \"what\"",
       "headword": "શું",
       "romanization": "shũ",
@@ -797,7 +797,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3960ed92a6f9431c",
+      "sourceHash": "fnv1a64:90efa518536acbe6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -938,7 +938,7 @@
     },
     {
       "id": "GU-C02-tamarun-naam-shun-chhe",
-      "sequence": 160,
+      "sequence": 173,
       "title": "તમારું નામ શું છે? (tamārũ nām shũ chhe?) — \"what's your name?\"",
       "headword": "તમારું નામ શું છે?",
       "romanization": "tamārũ nām shũ chhe?",
@@ -949,7 +949,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c83b02212c009d5a",
+      "sourceHash": "fnv1a64:0c361823529f151e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1089,7 +1089,7 @@
     },
     {
       "id": "GU-R04-doorway-nine-r2",
-      "sequence": 165,
+      "sequence": 178,
       "title": "The nine-form doorway returns",
       "headword": "જ ો ં ી ુ છ ક ણ શ",
       "romanization": "ja — o sign — nasal mark — long-ii sign — u sign — chha — ka — retroflex nna — sha",
@@ -1101,7 +1101,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:24e96bac2110a0d5",
+      "sourceHash": "fnv1a64:d32391fa352bc537",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1221,7 +1221,7 @@
     },
     {
       "id": "GU-C02-practice",
-      "sequence": 170,
+      "sequence": 183,
       "title": "Chapter 4 — The introduction exchange",
       "headword": "(dialogue)",
       "romanization": "",
@@ -1232,7 +1232,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a3d0967ebea7d74",
+      "sourceHash": "fnv1a64:2582e7981b590056",
       "notice": null,
       "blocks": [
         {

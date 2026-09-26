@@ -3,7 +3,7 @@
     "id": "GU-C24-hear-divas",
     "language": "gujarati",
     "chapter": 28,
-    "sequence": 1220,
+    "sequence": 1233,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a046fa2f1701c186"
+    "sourceHash": "fnv1a64:87cad7c6258bdbb6"
   },
   "findings": []
 }

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C23-hear-dukaan
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1110
+sequence: 1123
 chapter: 27
 type: word
 headword: દુકાન

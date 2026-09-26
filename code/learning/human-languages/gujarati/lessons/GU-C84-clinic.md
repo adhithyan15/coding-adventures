@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C84-clinic
 spine_node: SPINE-MEET-GREET
-sequence: 4260
+sequence: 4273
 chapter: 84
 type: word
 headword: "દવાખાનું"

@@ -3,7 +3,7 @@
     "id": "GU-C62-lock",
     "language": "gujarati",
     "chapter": 62,
-    "sequence": 3180,
+    "sequence": 3193,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0e9dbe8b3f42dc0d"
+    "sourceHash": "fnv1a64:0091159dd89d84a1"
   },
   "findings": []
 }

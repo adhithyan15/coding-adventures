@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C66-fog
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 3380
+sequence: 3393
 chapter: 66
 type: word
 headword: "ધુમ્મસ"

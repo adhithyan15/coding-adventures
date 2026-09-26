@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 61,
-  "sourceHash": "fnv1a64:17d69eabf3d1b846",
+  "sourceHash": "fnv1a64:ce31614de8ea7679",
   "lessonIds": [
     "GU-C61-plate",
     "GU-C61-bowl",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch61.txt",
   "json": "gujarati/narration/ch61.json",
   "textHash": "fnv1a64:346f6afbb30ce1f0",
-  "jsonHash": "fnv1a64:5608e94d937ada14",
+  "jsonHash": "fnv1a64:67c4489f8cbf5561",
   "findings": []
 }

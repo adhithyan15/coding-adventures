@@ -3,7 +3,7 @@
     "id": "GU-C90-merchant",
     "language": "gujarati",
     "chapter": 90,
-    "sequence": 4600,
+    "sequence": 4613,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ab4677cb14ba4aad"
+    "sourceHash": "fnv1a64:e6d4dc522ec02fdd"
   },
   "findings": []
 }

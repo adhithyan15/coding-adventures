@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C71-white
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3610
+sequence: 3623
 chapter: 71
 type: word
 headword: "સફેદ"

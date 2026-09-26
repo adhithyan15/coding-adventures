@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 90,
-  "sourceHash": "fnv1a64:bbce5b764a54556e",
+  "sourceHash": "fnv1a64:85ead557f2e97ecc",
   "lessonIds": [
     "GU-C90-wedding",
     "GU-C90-birthday",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch90.txt",
   "json": "gujarati/narration/ch90.json",
   "textHash": "fnv1a64:75e5648803c4759c",
-  "jsonHash": "fnv1a64:2d73ddbfe2fe072e",
+  "jsonHash": "fnv1a64:f66592a74187af13",
   "findings": []
 }

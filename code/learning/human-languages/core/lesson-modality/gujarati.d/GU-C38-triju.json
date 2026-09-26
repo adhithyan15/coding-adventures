@@ -3,7 +3,7 @@
     "id": "GU-C38-triju",
     "language": "gujarati",
     "chapter": 42,
-    "sequence": 2140,
+    "sequence": 2153,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8e437eb71f079af7"
+    "sourceHash": "fnv1a64:e52aeb4e8f8e5407"
   },
   "findings": []
 }

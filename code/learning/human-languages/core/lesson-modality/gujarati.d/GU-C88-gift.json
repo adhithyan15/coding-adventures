@@ -3,7 +3,7 @@
     "id": "GU-C88-gift",
     "language": "gujarati",
     "chapter": 88,
-    "sequence": 4500,
+    "sequence": 4513,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:08399d72e41049b3"
+    "sourceHash": "fnv1a64:a550f93807646b37"
   },
   "findings": []
 }

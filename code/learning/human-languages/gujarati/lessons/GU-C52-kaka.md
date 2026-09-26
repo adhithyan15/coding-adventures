@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C52-kaka
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2640
+sequence: 2653
 chapter: 52
 type: word
 headword: "કાકા"

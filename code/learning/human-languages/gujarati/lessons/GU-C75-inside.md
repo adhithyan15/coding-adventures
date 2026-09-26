@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C75-inside
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3830
+sequence: 3843
 chapter: 75
 type: word
 headword: "અંદર"

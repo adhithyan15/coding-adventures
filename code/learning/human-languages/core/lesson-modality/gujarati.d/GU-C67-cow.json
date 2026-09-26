@@ -3,7 +3,7 @@
     "id": "GU-C67-cow",
     "language": "gujarati",
     "chapter": 67,
-    "sequence": 3390,
+    "sequence": 3403,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:becf4204e3e2a1fd"
+    "sourceHash": "fnv1a64:f235b9eb7ff5242c"
   },
   "findings": []
 }

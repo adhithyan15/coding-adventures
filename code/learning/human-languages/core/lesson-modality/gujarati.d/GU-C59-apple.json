@@ -3,7 +3,7 @@
     "id": "GU-C59-apple",
     "language": "gujarati",
     "chapter": 59,
-    "sequence": 3010,
+    "sequence": 3023,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b9fd2dd684211eff"
+    "sourceHash": "fnv1a64:e0f261e41e5f9481"
   },
   "findings": []
 }

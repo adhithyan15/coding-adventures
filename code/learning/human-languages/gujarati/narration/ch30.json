@@ -4,11 +4,11 @@
   "chapter": 30,
   "title": "Fifth Return: The Core Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:59018154ec6e9cfa",
+  "sourceHash": "fnv1a64:b13e91622b36d3ae",
   "lessons": [
     {
       "id": "GU-R26-numbers-r4",
-      "sequence": 1380,
+      "sequence": 1393,
       "title": "ek be traṇ chār pā̃ch returns at R4",
       "headword": "એક બે ત્રણ ચાર પાંચ",
       "romanization": "ek be traṇ chār pā̃ch",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:e543444fc84d79c8",
+      "sourceHash": "fnv1a64:abe32d6e3f88c9b8",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -137,7 +137,7 @@
     },
     {
       "id": "GU-R26-hovun-javun-r4",
-      "sequence": 1390,
+      "sequence": 1403,
       "title": "hovũ — javũ returns at R4",
       "headword": "હોવું — જવું",
       "romanization": "hovũ — javũ",
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:57eeea891778b098",
+      "sourceHash": "fnv1a64:51811289a232c451",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -262,7 +262,7 @@
     },
     {
       "id": "GU-R26-aavvun-khaavun-r4",
-      "sequence": 1400,
+      "sequence": 1413,
       "title": "āvvũ — khāvũ returns at R4",
       "headword": "આવવું — ખાવું",
       "romanization": "āvvũ — khāvũ",
@@ -273,7 +273,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:0a48d2f1b984bde5",
+      "sourceHash": "fnv1a64:e3e4c6ca304145b5",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -385,7 +385,7 @@
     },
     {
       "id": "GU-R26-jovun-jaanvun-r4",
-      "sequence": 1410,
+      "sequence": 1423,
       "title": "jovũ — jāṇvũ returns at R4",
       "headword": "જોવું — જાણવું",
       "romanization": "jovũ — jāṇvũ",
@@ -396,7 +396,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:1101e7ed80642578",
+      "sourceHash": "fnv1a64:ab8e3a72e18adb1e",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -508,7 +508,7 @@
     },
     {
       "id": "GU-R26-vicharvun-samajvun-r4",
-      "sequence": 1420,
+      "sequence": 1433,
       "title": "vichārvũ — samajvũ returns at R4",
       "headword": "વિચારવું — સમજવું",
       "romanization": "vichārvũ — samajvũ",
@@ -519,7 +519,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:3e03f4fd096bd476",
+      "sourceHash": "fnv1a64:750ee153a97048e6",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -631,7 +631,7 @@
     },
     {
       "id": "GU-R26-vanchvun-lakhvun-r4",
-      "sequence": 1430,
+      "sequence": 1443,
       "title": "vā̃chvũ — lakhvũ returns at R4",
       "headword": "વાંચવું — લખવું",
       "romanization": "vā̃chvũ — lakhvũ",
@@ -642,7 +642,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:b75bbf54c110787d",
+      "sourceHash": "fnv1a64:8b87a1d3de6285a7",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -754,7 +754,7 @@
     },
     {
       "id": "GU-R26-levun-puchhvun-r4",
-      "sequence": 1440,
+      "sequence": 1453,
       "title": "levũ — pūchhvũ returns at R4",
       "headword": "લેવું — પૂછવું",
       "romanization": "levũ — pūchhvũ",
@@ -765,7 +765,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:ae5edf2112b5bfad",
+      "sourceHash": "fnv1a64:03a1ef18a3a8867d",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -875,7 +875,7 @@
     },
     {
       "id": "GU-R26-time-written-r2",
-      "sequence": 1445,
+      "sequence": 1458,
       "title": "Two windows close at once",
       "headword": "સવાર — બપોર — સાંજ — દિવસ — મહિનો — અત્યારે",
       "romanization": "savār — bapor — sānj — divas — mahino — atyāre",
@@ -886,7 +886,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:e41054bd83a81556",
+      "sourceHash": "fnv1a64:b2e71f0f595f4f00",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -1015,7 +1015,7 @@
     },
     {
       "id": "GU-R26-madad-gamvun-paani-r4",
-      "sequence": 1450,
+      "sequence": 1463,
       "title": "madad karvī — gamvũ — pāṇī returns at R4",
       "headword": "મદદ કરવી — ગમવું — પાણી",
       "romanization": "madad karvī — gamvũ — pāṇī",
@@ -1026,7 +1026,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:89a642eaf7ee37d7",
+      "sourceHash": "fnv1a64:c85612d470f0bb4d",
       "notice": {
         "modality": "pen",
         "needs": [],

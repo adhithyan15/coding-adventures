@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R17-hun-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 800
+sequence: 813
 chapter: 21
 type: practice
 headword: હું

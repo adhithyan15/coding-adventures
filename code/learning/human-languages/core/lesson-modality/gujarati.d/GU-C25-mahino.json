@@ -3,7 +3,7 @@
     "id": "GU-C25-mahino",
     "language": "gujarati",
     "chapter": 29,
-    "sequence": 1340,
+    "sequence": 1353,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0b471dd68e374c86",
+    "sourceHash": "fnv1a64:300aa028e4ec14ca",
     "detachableSegments": [
       "Writing — delayed copy, model covered"
     ]

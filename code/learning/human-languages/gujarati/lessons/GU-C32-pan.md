@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C32-pan
 spine_node: SPINE-DESCRIBE-QUALITIES
-sequence: 1870
+sequence: 1883
 chapter: 36
 type: word
 headword: પણ

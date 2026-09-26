@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C65-well
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3310
+sequence: 3323
 chapter: 65
 type: word
 headword: "કૂવો"

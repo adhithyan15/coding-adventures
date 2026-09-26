@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C67-buffalo
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3400
+sequence: 3413
 chapter: 67
 type: word
 headword: "ભેંસ"

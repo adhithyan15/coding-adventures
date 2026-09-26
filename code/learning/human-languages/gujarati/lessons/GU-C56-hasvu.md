@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C56-hasvu
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2860
+sequence: 2873
 chapter: 56
 type: word
 headword: "હસવું"

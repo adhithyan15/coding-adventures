@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C38-panchmu
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 2130
+sequence: 2143
 chapter: 42
 type: word
 headword: પાંચમું

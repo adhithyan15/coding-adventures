@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W45-ai-sign
 spine_node: SPINE-MEET-GREET
-sequence: 2310
+sequence: 2323
 delivery: script
 chapter: 45
 type: writing

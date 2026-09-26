@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 38,
-  "sourceHash": "fnv1a64:2c01623c7aa407c3",
+  "sourceHash": "fnv1a64:361623d0e28b523d",
   "lessonIds": [
     "GU-C34-kemke",
     "GU-C34-kem-kemke",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch38.txt",
   "json": "gujarati/narration/ch38.json",
   "textHash": "fnv1a64:f2e7500f9f627545",
-  "jsonHash": "fnv1a64:48bde9250a095064",
+  "jsonHash": "fnv1a64:1fc5dd95636160d0",
   "findings": []
 }
