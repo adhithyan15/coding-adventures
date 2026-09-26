@@ -1,0 +1,11 @@
+{
+  "id": "IT-C112-avvocato",
+  "pathSegment": "IT-PATH-112-LAVORO112",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-112-LAVORO112",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-117-TEMPOLIBERO117",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "IT-EXT-117-TEMPOLIBERO117"
+  ],
+  "after": []
+}

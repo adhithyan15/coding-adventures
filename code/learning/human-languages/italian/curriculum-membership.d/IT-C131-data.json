@@ -1,0 +1,11 @@
+{
+  "id": "IT-C131-data",
+  "pathSegment": "IT-PATH-131-TEMPO131",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-131-TEMPO131",
+      "order": 1
+    }
+  ]
+}

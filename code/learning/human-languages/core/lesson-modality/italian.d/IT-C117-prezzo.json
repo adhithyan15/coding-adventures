@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C117-prezzo",
+    "language": "italian",
+    "chapter": 117,
+    "sequence": 5700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1221e8ac31f0ac4"
+  },
+  "findings": []
+}

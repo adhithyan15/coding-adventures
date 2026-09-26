@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "Car park, Lift, North, South, West",
+  "label": "ch:it-car-park-lift-north-south-west",
+  "canDo": "I can say a car park, a lift, the north, the south and the west.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "IT-C90-ovest",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 90: i can say a car park, a lift, the north, the south and the west.",
+    "assesses": [
+      "IT-LEX-C90-LUOGHI90-03",
+      "IT-LEX-C90-LUOGHI90-04",
+      "IT-LEX-C90-LUOGHI90-05"
+    ]
+  }
+}

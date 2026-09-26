@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-101-OGGETTI101",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a necklace, a candle, a calendar, a letter and a message.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C128-fresco",
+  "pathSegment": "IT-PATH-128-QUALITA128",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-128-QUALITA128",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C103-guanti",
+  "pathSegment": "IT-PATH-103-VESTITI103",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-103-VESTITI103",
+      "order": 2
+    }
+  ]
+}

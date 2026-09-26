@@ -1,0 +1,11 @@
+{
+  "id": "IT-C107-ciliegia",
+  "pathSegment": "IT-PATH-107-CIBO107",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-107-CIBO107",
+      "order": 1
+    }
+  ]
+}

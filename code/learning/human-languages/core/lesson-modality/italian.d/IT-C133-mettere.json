@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C133-mettere",
+    "language": "italian",
+    "chapter": 133,
+    "sequence": 6620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d681c424e8ab0c7"
+  },
+  "findings": []
+}

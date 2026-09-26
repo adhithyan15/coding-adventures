@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:4e58f2a615a4b327",
+  "lessonIds": [
+    "IT-C119-onda",
+    "IT-C119-deserto",
+    "IT-C119-vulcano",
+    "IT-C119-grotta",
+    "IT-C119-cascata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch119.txt",
+  "json": "italian/narration/ch119.json",
+  "textHash": "fnv1a64:91c7eb4e2d50324f",
+  "jsonHash": "fnv1a64:31474752474cac91",
+  "findings": []
+}

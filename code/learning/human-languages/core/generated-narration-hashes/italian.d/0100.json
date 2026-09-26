@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:2fed069a25984f68",
+  "lessonIds": [
+    "IT-C100-forbici",
+    "IT-C100-sveglia",
+    "IT-C100-telefonino",
+    "IT-C100-macchina-fotografica",
+    "IT-C100-anello"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch100.txt",
+  "json": "italian/narration/ch100.json",
+  "textHash": "fnv1a64:0cc4f5a0c6499f1c",
+  "jsonHash": "fnv1a64:e0298e907090c46c",
+  "findings": []
+}

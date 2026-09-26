@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C136-cercare",
+    "language": "italian",
+    "chapter": 136,
+    "sequence": 6790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5801de94fb636a61"
+  },
+  "findings": []
+}

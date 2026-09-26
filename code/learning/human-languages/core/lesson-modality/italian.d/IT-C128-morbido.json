@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C128-morbido",
+    "language": "italian",
+    "chapter": 128,
+    "sequence": 6390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c94765ac62e7b8a"
+  },
+  "findings": []
+}

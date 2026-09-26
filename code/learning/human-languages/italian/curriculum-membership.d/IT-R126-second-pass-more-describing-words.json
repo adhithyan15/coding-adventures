@@ -1,0 +1,11 @@
+{
+  "id": "IT-R126-second-pass-more-describing-words",
+  "pathSegment": "IT-PATH-126-QUALITA126",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "IT-EXT-126-QUALITA126",
+      "order": 6
+    }
+  ]
+}

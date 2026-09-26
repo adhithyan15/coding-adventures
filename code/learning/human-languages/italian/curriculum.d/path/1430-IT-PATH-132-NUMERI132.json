@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-132-NUMERI132",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "before": [],
+  "inline": [
+    "IT-EXT-132-NUMERI132"
+  ],
+  "after": []
+}

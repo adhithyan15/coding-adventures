@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "Comb, Rubbish, Broom, Washing machine, Armchair",
+  "label": "ch:it-comb-rubbish-broom-washing-machine-armchair",
+  "canDo": "I can say a comb, rubbish, a broom, a washing machine and an armchair.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C97-poltrona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can say a comb, rubbish, a broom, a washing machine and an armchair.",
+    "assesses": [
+      "IT-LEX-C97-CASA97-03",
+      "IT-LEX-C97-CASA97-04",
+      "IT-LEX-C97-CASA97-05"
+    ]
+  }
+}

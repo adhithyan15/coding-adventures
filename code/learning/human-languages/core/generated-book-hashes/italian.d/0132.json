@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:8d96f789dc3a606b",
+  "lessonIds": [
+    "IT-C132-zero",
+    "IT-C132-sessanta",
+    "IT-C132-settanta",
+    "IT-C132-ottanta",
+    "IT-C132-novanta"
+  ],
+  "tex": "italian/book/chapters/ch132-zero-sixty-seventy-eighty-ninety.tex"
+}

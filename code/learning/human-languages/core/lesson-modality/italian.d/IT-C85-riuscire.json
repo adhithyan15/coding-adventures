@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C85-riuscire",
+    "language": "italian",
+    "chapter": 85,
+    "sequence": 3920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98707fa43bf5030e"
+  },
+  "findings": []
+}

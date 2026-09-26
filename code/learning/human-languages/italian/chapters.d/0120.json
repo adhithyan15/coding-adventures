@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Donkey, Rabbit, Tiger, Butterfly, Frog",
+  "label": "ch:it-donkey-rabbit-tiger-butterfly-frog",
+  "canDo": "I can say a donkey, a rabbit, a tiger, a butterfly and a frog.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C120-rana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say a donkey, a rabbit, a tiger, a butterfly and a frog.",
+    "assesses": [
+      "IT-LEX-C120-ANIMALI120-03",
+      "IT-LEX-C120-ANIMALI120-04",
+      "IT-LEX-C120-ANIMALI120-05"
+    ]
+  }
+}

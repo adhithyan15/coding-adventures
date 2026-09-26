@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:55c2d2d3d6b3f09a",
+  "lessonIds": [
+    "IT-C122-gomito",
+    "IT-C122-caviglia",
+    "IT-C122-polso",
+    "IT-C122-guancia",
+    "IT-C122-labbra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch122.txt",
+  "json": "italian/narration/ch122.json",
+  "textHash": "fnv1a64:fd6a6e188c7e99ee",
+  "jsonHash": "fnv1a64:95c2ffc79db9724c",
+  "findings": []
+}

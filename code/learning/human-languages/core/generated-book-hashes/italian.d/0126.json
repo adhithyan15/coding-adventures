@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:3d176e14a0ce78c8",
+  "lessonIds": [
+    "IT-C126-noioso",
+    "IT-C126-divertente",
+    "IT-C126-simpatico",
+    "IT-C126-cattivo",
+    "IT-C126-gentile",
+    "IT-R126-first-pass-the-body-and-describing-words",
+    "IT-R126-second-pass-more-describing-words"
+  ],
+  "tex": "italian/book/chapters/ch126-boring-fun-nice-bad-kind.tex"
+}

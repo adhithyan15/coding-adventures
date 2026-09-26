@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:3f0ba1bf0902a123",
+  "lessonIds": [
+    "IT-C86-volere",
+    "IT-C86-vorrei",
+    "IT-C86-preferire",
+    "IT-C86-sperare",
+    "IT-C86-desiderare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch86.txt",
+  "json": "italian/narration/ch86.json",
+  "textHash": "fnv1a64:1b3dc40fad30e34e",
+  "jsonHash": "fnv1a64:b8ec011e4a7b1068",
+  "findings": []
+}

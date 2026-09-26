@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Scissors, Alarm clock, Mobile phone, Camera, Ring",
+  "label": "ch:it-scissors-alarm-clock-mobile-phone-camera-ring",
+  "canDo": "I can say scissors, an alarm clock, a mobile phone, a camera and a ring.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C100-anello",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can say scissors, an alarm clock, a mobile phone, a camera and a ring.",
+    "assesses": [
+      "IT-LEX-C100-OGGETTI100-03",
+      "IT-LEX-C100-OGGETTI100-04",
+      "IT-LEX-C100-OGGETTI100-05"
+    ]
+  }
+}

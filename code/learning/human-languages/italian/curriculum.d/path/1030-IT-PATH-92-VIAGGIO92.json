@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-92-VIAGGIO92",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "IT-EXT-92-VIAGGIO92"
+  ],
+  "after": []
+}

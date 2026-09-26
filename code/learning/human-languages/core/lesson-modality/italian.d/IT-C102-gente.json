@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C102-gente",
+    "language": "italian",
+    "chapter": 102,
+    "sequence": 4820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf2507adf6728a5e"
+  },
+  "findings": []
+}

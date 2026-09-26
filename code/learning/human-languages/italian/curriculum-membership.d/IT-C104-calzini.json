@@ -1,0 +1,11 @@
+{
+  "id": "IT-C104-calzini",
+  "pathSegment": "IT-PATH-104-VESTITI104",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-104-VESTITI104",
+      "order": 3
+    }
+  ]
+}

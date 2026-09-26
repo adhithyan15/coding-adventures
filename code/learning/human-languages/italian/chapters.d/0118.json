@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Fog, Storm, Ice, Hill, Rock",
+  "label": "ch:it-fog-storm-ice-hill-rock",
+  "canDo": "I can say fog, a storm, ice, a hill and a rock.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C118-roccia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say fog, a storm, ice, a hill and a rock.",
+    "assesses": [
+      "IT-LEX-C118-NATURA118-03",
+      "IT-LEX-C118-NATURA118-04",
+      "IT-LEX-C118-NATURA118-05"
+    ]
+  }
+}

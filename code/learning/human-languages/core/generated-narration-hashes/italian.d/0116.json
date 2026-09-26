@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:cf222151f113ae48",
+  "lessonIds": [
+    "IT-C116-musica",
+    "IT-C116-film",
+    "IT-C116-canzone",
+    "IT-C116-disegno",
+    "IT-C116-vita",
+    "IT-R116-first-pass-work-school-and-free-time",
+    "IT-R116-second-pass-nature-and-animals"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch116.txt",
+  "json": "italian/narration/ch116.json",
+  "textHash": "fnv1a64:9262db224bbcefb0",
+  "jsonHash": "fnv1a64:b1a861d25114bc8c",
+  "findings": []
+}

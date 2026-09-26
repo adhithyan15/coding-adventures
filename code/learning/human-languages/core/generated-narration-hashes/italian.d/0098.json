@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:a318194aaa99de77",
+  "lessonIds": [
+    "IT-C98-armadio",
+    "IT-C98-divano",
+    "IT-C98-pentola",
+    "IT-C98-padella",
+    "IT-C98-vaso"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch98.txt",
+  "json": "italian/narration/ch98.json",
+  "textHash": "fnv1a64:97ddf21db8f38463",
+  "jsonHash": "fnv1a64:e21003712a0b8a16",
+  "findings": []
+}

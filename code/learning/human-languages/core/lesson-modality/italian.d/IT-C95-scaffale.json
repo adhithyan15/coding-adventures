@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C95-scaffale",
+    "language": "italian",
+    "chapter": 95,
+    "sequence": 4420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e39cc58f412fd487"
+  },
+  "findings": []
+}

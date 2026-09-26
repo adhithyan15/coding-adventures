@@ -1,0 +1,11 @@
+{
+  "id": "IT-C109-bistecca",
+  "pathSegment": "IT-PATH-109-CIBO109",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-109-CIBO109",
+      "order": 3
+    }
+  ]
+}

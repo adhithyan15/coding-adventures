@@ -27,7 +27,10 @@ it("pins Italian lesson-content budgets", () =>
     // 151 -> 395: the pre-A1 vocabulary tranche, chapters 37-84. 240 word
     // lessons (twenty-five verbs) and four reviews; each word lesson introduces
     // one lexical atom and no idiom, sense or culture claim. Re-measured.
-    lessons: 395,
+    // 395 -> 665: the A1 vocabulary tranche, chapters 85-136. 260 word lessons
+    // (twenty-seven verbs) in five runs of ten or eleven chapters, each closing on
+    // two reviews. No idiom, sense or culture claim.
+    lessons: 665,
     idioms: 4,
     senses: 9,
     cultureClaims: 11,

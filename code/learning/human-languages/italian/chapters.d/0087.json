@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Airport, Stop, Village, Cinema, Theatre",
+  "label": "ch:it-airport-stop-village-cinema-theatre",
+  "canDo": "I can say an airport, a stop, a village, a cinema and a theatre.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "IT-C87-teatro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can say an airport, a stop, a village, a cinema and a theatre.",
+    "assesses": [
+      "IT-LEX-C87-LUOGHI87-03",
+      "IT-LEX-C87-LUOGHI87-04",
+      "IT-LEX-C87-LUOGHI87-05"
+    ]
+  }
+}

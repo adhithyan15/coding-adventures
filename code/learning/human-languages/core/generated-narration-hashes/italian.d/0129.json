@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:a9977c4f4e6e4fad",
+  "lessonIds": [
+    "IT-C129-duro",
+    "IT-C129-rotondo",
+    "IT-C129-largo",
+    "IT-C129-stretto",
+    "IT-C129-arrabbiato"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch129.txt",
+  "json": "italian/narration/ch129.json",
+  "textHash": "fnv1a64:e66331451524220a",
+  "jsonHash": "fnv1a64:16c73c9a59104d24",
+  "findings": []
+}

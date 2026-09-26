@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C117-desiderio",
+    "language": "italian",
+    "chapter": 117,
+    "sequence": 5740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23e9120cb26ef7a3"
+  },
+  "findings": []
+}

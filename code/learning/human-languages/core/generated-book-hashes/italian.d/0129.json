@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:bb325509bb48a0cc",
+  "lessonIds": [
+    "IT-C129-duro",
+    "IT-C129-rotondo",
+    "IT-C129-largo",
+    "IT-C129-stretto",
+    "IT-C129-arrabbiato"
+  ],
+  "tex": "italian/book/chapters/ch129-hard-round-wide-narrow-angry.tex"
+}

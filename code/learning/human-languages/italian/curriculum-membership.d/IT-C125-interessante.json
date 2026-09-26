@@ -1,0 +1,11 @@
+{
+  "id": "IT-C125-interessante",
+  "pathSegment": "IT-PATH-125-QUALITA125",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-125-QUALITA125",
+      "order": 4
+    }
+  ]
+}
