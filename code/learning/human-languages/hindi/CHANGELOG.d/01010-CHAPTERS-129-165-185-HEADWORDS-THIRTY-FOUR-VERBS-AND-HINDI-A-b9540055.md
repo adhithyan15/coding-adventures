@@ -45,6 +45,12 @@ twice where the atom had no revisit at all:
 - counting with its history
 - **बोलता था** and **आओगे**
 
+**The contents page numbers.** Hindi is the first book whose lessons run past
+page 999, starting at chapter 151. `book.cls` gives contents page numbers a
+three-digit box, so each four-digit entry ran 4.93pt too wide: 78 overfull lines
+in the typesetting scan. The preamble now widens that box (`\@pnumwidth`
+2.4em) and the right margin beside it (`\@tocrmarg` 3.4em).
+
       hindi headwords at or below A1   420  ->  600+ (A1 target met)
       hindi verbs at or below A1        16  ->  40+
       hindi lessons                    634  ->  827
