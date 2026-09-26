@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "To pay, To rent, To pack, To repair, To start",
+  "label": "ch:ge-to-pay-to-rent-to-pack-to-repair-to-start",
+  "canDo": "I can say to pay, to rent, to pack, to repair and to start.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "GE-R141-second-pass-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: i can say to pay, to rent, to pack, to repair and to start.",
+    "assesses": [
+      "GE-LEX-C141-VERB141-03",
+      "GE-LEX-C141-VERB141-04",
+      "GE-LEX-C141-VERB141-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C126-brieftraeger",
+    "language": "german",
+    "chapter": 126,
+    "sequence": 5200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f106b2d50cf1cd0"
+  },
+  "findings": []
+}

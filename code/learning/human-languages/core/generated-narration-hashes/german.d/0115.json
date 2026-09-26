@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:1fd6102909a336a9",
+  "lessonIds": [
+    "GE-C115-kamm",
+    "GE-C115-muelleimer",
+    "GE-C115-besen",
+    "GE-C115-waschmaschine",
+    "GE-C115-sessel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch115.txt",
+  "json": "german/narration/ch115.json",
+  "textHash": "fnv1a64:e7c471859424ca57",
+  "jsonHash": "fnv1a64:186e218d4ecd9641",
+  "findings": []
+}

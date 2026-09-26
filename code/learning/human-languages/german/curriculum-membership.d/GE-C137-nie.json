@@ -1,0 +1,11 @@
+{
+  "id": "GE-C137-nie",
+  "pathSegment": "GE-PATH-137-ZEIT137",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-137-ZEIT137",
+      "order": 3
+    }
+  ]
+}

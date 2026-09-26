@@ -1,0 +1,11 @@
+{
+  "id": "GE-C126-kellner",
+  "pathSegment": "GE-PATH-126-BERUF126",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-126-BERUF126",
+      "order": 1
+    }
+  ]
+}

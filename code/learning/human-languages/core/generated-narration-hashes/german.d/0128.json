@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:389390844832ffa3",
+  "lessonIds": [
+    "GE-C128-hausaufgabe",
+    "GE-C128-idee",
+    "GE-C128-satz",
+    "GE-C128-seite",
+    "GE-C128-zeichnung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch128.txt",
+  "json": "german/narration/ch128.json",
+  "textHash": "fnv1a64:cb81ffed0d5d1311",
+  "jsonHash": "fnv1a64:6ac3112621938b6e",
+  "findings": []
+}

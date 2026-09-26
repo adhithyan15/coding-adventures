@@ -1,0 +1,11 @@
+{
+  "id": "GE-R132-first-pass-describing-people-and-things",
+  "pathSegment": "GE-PATH-132-EIGEN132",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-132-EIGEN132",
+      "order": 5
+    }
+  ]
+}

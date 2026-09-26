@@ -35,7 +35,10 @@ it("pins German lesson-content budgets", () =>
     // introduced more than three atoms, then chapters 56-103 (240 word lessons,
     // five per chapter) and their four review lessons. None of them introduces
     // an idiom, a sense or a culture claim, so those counts stand.
-    lessons: 606,
+    // 606 -> 804: the A1 vocabulary tranche, chapters 104-141. 190 word lessons
+    // (nineteen verbs) in four runs of nine or ten chapters, each closing on two
+    // reviews. No idiom, sense or culture claim.
+    lessons: 804,
     idioms: 1,
     senses: 5,
     cultureClaims: 32,

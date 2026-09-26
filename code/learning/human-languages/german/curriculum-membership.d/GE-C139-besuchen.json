@@ -1,0 +1,11 @@
+{
+  "id": "GE-C139-besuchen",
+  "pathSegment": "GE-PATH-139-VERB139",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-139-VERB139",
+      "order": 1
+    }
+  ]
+}

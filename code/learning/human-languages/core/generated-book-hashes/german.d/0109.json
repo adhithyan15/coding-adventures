@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:9c0b8ba56c5dc8c9",
+  "lessonIds": [
+    "GE-C109-oben",
+    "GE-C109-unten",
+    "GE-C109-vorne",
+    "GE-C109-hinten",
+    "GE-C109-gegenueber"
+  ],
+  "tex": "german/book/chapters/ch109-up-down-at-the-front-at-the-back-opposite.tex"
+}

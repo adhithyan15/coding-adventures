@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Postman, Waiter, Customer, Till, Boss",
+  "label": "ch:ge-postman-waiter-customer-till-boss",
+  "canDo": "I can say a postman, a waiter, a customer, a till and a boss.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C126-chef",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can say a postman, a waiter, a customer, a till and a boss.",
+    "assesses": [
+      "GE-LEX-C126-BERUF126-03",
+      "GE-LEX-C126-BERUF126-04",
+      "GE-LEX-C126-BERUF126-05"
+    ]
+  }
+}

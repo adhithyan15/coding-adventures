@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:9851ff8e942bb526",
+  "lessonIds": [
+    "GE-C118-kerze",
+    "GE-C118-kalender",
+    "GE-C118-pullover",
+    "GE-C118-krawatte",
+    "GE-C118-handschuhe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch118.txt",
+  "json": "german/narration/ch118.json",
+  "textHash": "fnv1a64:645d2b1c08d500a5",
+  "jsonHash": "fnv1a64:62b000ce65ceda31",
+  "findings": []
+}

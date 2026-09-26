@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:3bdb298bfcab425d",
+  "lessonIds": [
+    "GE-C135-gefaehrlich",
+    "GE-C135-nass",
+    "GE-C135-trocken",
+    "GE-C135-kuehl",
+    "GE-C135-weich"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch135.txt",
+  "json": "german/narration/ch135.json",
+  "textHash": "fnv1a64:54aaad06888cb261",
+  "jsonHash": "fnv1a64:cfd676538deb94ce",
+  "findings": []
+}

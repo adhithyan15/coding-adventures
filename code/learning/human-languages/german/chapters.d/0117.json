@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Purse, Ring, Chain, Present, Photo",
+  "label": "ch:ge-purse-ring-chain-present-photo",
+  "canDo": "I can say a purse, a ring, a chain, a present and a photo.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C117-foto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say a purse, a ring, a chain, a present and a photo.",
+    "assesses": [
+      "GE-LEX-C117-DINGE117-03",
+      "GE-LEX-C117-DINGE117-04",
+      "GE-LEX-C117-DINGE117-05"
+    ]
+  }
+}

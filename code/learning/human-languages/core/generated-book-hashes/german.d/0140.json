@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:71cc285fc52a9c56",
+  "lessonIds": [
+    "GE-C140-liegen",
+    "GE-C140-sich-anziehen",
+    "GE-C140-erzaehlen",
+    "GE-C140-fuehlen",
+    "GE-C140-fallen"
+  ],
+  "tex": "german/book/chapters/ch140-to-lie-to-get-dressed-to-tell-to-feel-to-fall.tex"
+}

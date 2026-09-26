@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-106-ORT106",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "GE-EXT-106-ORT106"
+  ],
+  "after": []
+}

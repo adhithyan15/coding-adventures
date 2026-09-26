@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-120-KLEIDUNG120",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say socks, a blouse, beef, vegetables and a mushroom.",
+  "prerequisites": []
+}

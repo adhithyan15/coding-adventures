@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:db5329796a08bae8",
+  "lessonIds": [
+    "GE-C122-knoblauch",
+    "GE-C122-mehl",
+    "GE-C122-schokolade",
+    "GE-C122-keks",
+    "GE-C122-broetchen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch122.txt",
+  "json": "german/narration/ch122.json",
+  "textHash": "fnv1a64:d85f22e92bec5848",
+  "jsonHash": "fnv1a64:3d6f87f74c2e8e79",
+  "findings": []
+}

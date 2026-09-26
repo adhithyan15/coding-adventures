@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:f77c631d57f10156",
+  "lessonIds": [
+    "GE-C112-teppich",
+    "GE-C112-fernseher",
+    "GE-C112-computer",
+    "GE-C112-kuehlschrank",
+    "GE-C112-herd"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch112.txt",
+  "json": "german/narration/ch112.json",
+  "textHash": "fnv1a64:d41b88091c5a2849",
+  "jsonHash": "fnv1a64:ca0c0e8a4878e0bd",
+  "findings": []
+}

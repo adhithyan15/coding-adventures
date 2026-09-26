@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C129-konzert",
+    "language": "german",
+    "chapter": 129,
+    "sequence": 5380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c12426bf6c4fbd5c"
+  },
+  "findings": []
+}

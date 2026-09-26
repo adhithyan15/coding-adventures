@@ -1,0 +1,11 @@
+{
+  "id": "GE-C134-schwierig",
+  "pathSegment": "GE-PATH-134-EIGEN134",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-134-EIGEN134",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C139-legen",
+  "pathSegment": "GE-PATH-139-VERB139",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-139-VERB139",
+      "order": 3
+    }
+  ]
+}

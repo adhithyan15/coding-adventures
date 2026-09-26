@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:0a00fcbfaa8198f3",
+  "lessonIds": [
+    "GE-C116-wecker",
+    "GE-C116-handy",
+    "GE-C116-kamera",
+    "GE-C116-brille",
+    "GE-C116-regenschirm"
+  ],
+  "tex": "german/book/chapters/ch116-alarm-clock-mobile-phone-camera-glasses-umbrella.tex"
+}

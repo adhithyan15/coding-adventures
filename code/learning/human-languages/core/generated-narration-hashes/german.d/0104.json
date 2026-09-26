@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:6ab1c25e04aeaba6",
+  "lessonIds": [
+    "GE-C104-flughafen",
+    "GE-C104-platz",
+    "GE-C104-museum",
+    "GE-C104-hotel",
+    "GE-C104-post"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch104.txt",
+  "json": "german/narration/ch104.json",
+  "textHash": "fnv1a64:39c6c2125b95ba9a",
+  "jsonHash": "fnv1a64:76cf8a772806163a",
+  "findings": []
+}

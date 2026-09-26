@@ -1,6 +1,6 @@
 {
   "id": "GE-PATH-015",
-  "spine_node": "SPINE-TIME-OF-DAY",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
   "before": [],
   "inline": [
     "GE-EXT-015-LANGUAGE-SPECIFIC"

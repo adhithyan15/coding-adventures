@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C115-sessel",
+    "language": "german",
+    "chapter": 115,
+    "sequence": 4640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1718081c617b52fa"
+  },
+  "findings": []
+}

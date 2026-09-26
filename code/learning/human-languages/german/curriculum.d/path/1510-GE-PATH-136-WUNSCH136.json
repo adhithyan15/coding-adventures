@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-136-WUNSCH136",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "before": [],
+  "inline": [
+    "GE-EXT-136-WUNSCH136"
+  ],
+  "after": []
+}

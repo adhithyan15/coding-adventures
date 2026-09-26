@@ -1,0 +1,11 @@
+{
+  "id": "GE-C129-konzert",
+  "pathSegment": "GE-PATH-129-FREIZEIT129",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-129-FREIZEIT129",
+      "order": 3
+    }
+  ]
+}

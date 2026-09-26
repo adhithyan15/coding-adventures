@@ -1,0 +1,11 @@
+{
+  "id": "GE-C113-badewanne",
+  "pathSegment": "GE-PATH-113-HAUS113",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-113-HAUS113",
+      "order": 1
+    }
+  ]
+}
