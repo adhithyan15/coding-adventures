@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:ae1245ecf8360e51",
+  "lessonIds": [
+    "FR-C74-toit",
+    "FR-C74-jardin",
+    "FR-C74-lampe",
+    "FR-C74-bain",
+    "FR-C74-chambre"
+  ],
+  "tex": "french/book/chapters/ch74-roof-garden-lamp-bathroom-bedroom.tex"
+}

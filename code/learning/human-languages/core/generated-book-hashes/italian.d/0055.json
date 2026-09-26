@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:3c8dc4d3759702c4",
+  "lessonIds": [
+    "IT-C55-colazione",
+    "IT-C55-pera",
+    "IT-C55-riso",
+    "IT-C55-formaggio",
+    "IT-C55-uovo"
+  ],
+  "tex": "italian/book/chapters/ch55-breakfast-pear-rice-cheese-egg.tex"
+}

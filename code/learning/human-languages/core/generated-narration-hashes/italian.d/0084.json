@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:a8229c1453dfca62",
+  "lessonIds": [
+    "IT-C84-albergo",
+    "IT-C84-farmacia",
+    "IT-C84-posta",
+    "IT-C84-polizia",
+    "IT-C84-biblioteca",
+    "IT-R84-first-pass-things-nature-and-animals",
+    "IT-R84-second-pass-describing-time-place-and-the-town"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch84.txt",
+  "json": "italian/narration/ch84.json",
+  "textHash": "fnv1a64:944bfee2c6638617",
+  "jsonHash": "fnv1a64:ade2663841769914",
+  "findings": []
+}

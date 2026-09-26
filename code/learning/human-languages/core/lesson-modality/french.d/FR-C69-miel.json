@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C69-miel",
+    "language": "french",
+    "chapter": 69,
+    "sequence": 2840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f246418b77bf230"
+  },
+  "findings": []
+}

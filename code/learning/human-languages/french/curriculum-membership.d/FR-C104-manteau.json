@@ -1,0 +1,11 @@
+{
+  "id": "FR-C104-manteau",
+  "pathSegment": "FR-PATH-104-HABITS56",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-104-HABITS56",
+      "order": 3
+    }
+  ]
+}

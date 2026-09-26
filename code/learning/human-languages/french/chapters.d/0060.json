@@ -1,0 +1,19 @@
+{
+  "chapter": 60,
+  "title": "Cry, Wash, Cook, Play, Learn",
+  "label": "ch:fr-cry-wash-cook-play-learn",
+  "canDo": "I can say to cry, to wash, to cook, to play, to learn.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C60-apprendre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 60: i can say to cry, to wash, to cook, to play, to learn.",
+    "assesses": [
+      "FR-LEX-C60-VERBES12-03",
+      "FR-LEX-C60-VERBES12-04",
+      "FR-LEX-C60-VERBES12-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:548574f992c5867d",
+  "lessonIds": [
+    "FR-C62-revenir",
+    "FR-C62-etudier",
+    "FR-C62-payer",
+    "FR-C62-utiliser",
+    "FR-C62-montrer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch62.txt",
+  "json": "french/narration/ch62.json",
+  "textHash": "fnv1a64:80607c5691dafd1e",
+  "jsonHash": "fnv1a64:50fe378092168175",
+  "findings": []
+}

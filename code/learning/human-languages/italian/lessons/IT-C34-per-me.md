@@ -8,7 +8,7 @@ type: word
 headword: per me, a te
 gloss: "the stressed pronouns — the shapes you must use after a preposition, and nowhere else"
 concept_tag: PRONOUN-ME
-prerequisites: [IT-C34-signore-signora, IT-C33-qui-li, IT-C30-ce, IT-C15-passato-remoto]
+prerequisites: [IT-C34-signore-signora, IT-C33-qui-li, IT-C30-ce, IT-C15-passato-remoto, IT-C15-passato-europa]
 sounds: [open-e, r-tap]
 roots: []
 etymology_hook: "Italian keeps two sets of pronouns and no preposition in this book has ever had one after it; per, from the joining chapter, is what gives them somewhere to stand"

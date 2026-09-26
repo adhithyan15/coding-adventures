@@ -1,0 +1,11 @@
+{
+  "id": "IT-C54-torta",
+  "pathSegment": "IT-PATH-54-PASTI",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-54-PASTI",
+      "order": 0
+    }
+  ]
+}

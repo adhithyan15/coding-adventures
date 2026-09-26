@@ -1,0 +1,19 @@
+{
+  "chapter": 45,
+  "title": "Fruit, Apple, Banana, Orange, Grape",
+  "label": "ch:pt-fruit-apple-banana-orange-grape",
+  "canDo": "I can name fruit, an apple, a banana, an orange and a grape.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "PT-C45-uva",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 45: i can name fruit, an apple, a banana, an orange and a grape.",
+    "assesses": [
+      "PT-LEX-C45-FRUTA-03",
+      "PT-LEX-C45-FRUTA-04",
+      "PT-LEX-C45-FRUTA-05"
+    ]
+  }
+}

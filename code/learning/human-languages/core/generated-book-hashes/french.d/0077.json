@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:33856d6bfa353cde",
+  "lessonIds": [
+    "FR-C77-cuillere",
+    "FR-C77-couteau",
+    "FR-C77-fourchette",
+    "FR-C77-bouteille",
+    "FR-C77-tasse",
+    "FR-R77-first-pass-the-body-family-doing-and-food",
+    "FR-R77-second-pass-the-house-the-table-and-things"
+  ],
+  "tex": "french/book/chapters/ch77-spoon-knife-fork-bottle-cup.tex"
+}

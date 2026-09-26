@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:dae9a8622f107946",
+  "lessonIds": [
+    "IT-C84-albergo",
+    "IT-C84-farmacia",
+    "IT-C84-posta",
+    "IT-C84-polizia",
+    "IT-C84-biblioteca",
+    "IT-R84-first-pass-things-nature-and-animals",
+    "IT-R84-second-pass-describing-time-place-and-the-town"
+  ],
+  "tex": "italian/book/chapters/ch84-hotel-pharmacy-post-office-police-library.tex"
+}

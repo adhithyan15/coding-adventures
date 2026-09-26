@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C79-adesso",
+    "language": "italian",
+    "chapter": 79,
+    "sequence": 3550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d702ee814e9ba25d"
+  },
+  "findings": []
+}

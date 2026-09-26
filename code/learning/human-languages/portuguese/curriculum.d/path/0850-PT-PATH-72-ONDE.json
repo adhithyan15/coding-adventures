@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-72-ONDE",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "PT-EXT-72-ONDE"
+  ],
+  "after": []
+}

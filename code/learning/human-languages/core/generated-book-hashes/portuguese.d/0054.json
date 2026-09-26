@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:64de7e599f766f3f",
+  "lessonIds": [
+    "PT-C54-oculos",
+    "PT-C54-caixa",
+    "PT-C54-mala",
+    "PT-C54-bilhete",
+    "PT-C54-mapa"
+  ],
+  "tex": "portuguese/book/chapters/ch54-glasses-box-suitcase-ticket-map.tex"
+}

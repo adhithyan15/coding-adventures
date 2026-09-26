@@ -1,0 +1,11 @@
+{
+  "id": "FR-C51-ongle",
+  "pathSegment": "FR-PATH-51-CORPS3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-51-CORPS3",
+      "order": 1
+    }
+  ]
+}

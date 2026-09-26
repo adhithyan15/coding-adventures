@@ -1,0 +1,11 @@
+{
+  "id": "FR-C90-haut",
+  "pathSegment": "FR-PATH-90-ADJ42",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-90-ADJ42",
+      "order": 2
+    }
+  ]
+}

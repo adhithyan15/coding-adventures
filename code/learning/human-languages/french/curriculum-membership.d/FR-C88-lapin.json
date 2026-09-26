@@ -1,0 +1,11 @@
+{
+  "id": "FR-C88-lapin",
+  "pathSegment": "FR-PATH-88-ANIMAUX40",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-88-ANIMAUX40",
+      "order": 2
+    }
+  ]
+}

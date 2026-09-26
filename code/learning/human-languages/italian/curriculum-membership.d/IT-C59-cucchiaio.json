@@ -1,0 +1,11 @@
+{
+  "id": "IT-C59-cucchiaio",
+  "pathSegment": "IT-PATH-59-TAVOLA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-59-TAVOLA",
+      "order": 2
+    }
+  ]
+}

@@ -116,7 +116,13 @@ describe("the gate that would have caught the A2 claim", () => {
     // 7 -> 8: Gujarati, with chapters 46-91 (230 headwords, nineteen verbs).
     // 8 -> 9: Latin, with chapters 63-108 (230 headwords, thirty-three verbs).
     // 9 -> 10: Russian, with chapters 29-80 (260 headwords, twenty-three verbs).
-    expect(gate.summary.tracksWithAnyLevel).toBe(10);
+    // 10 -> 11: Portuguese, with chapters 30-81 (260 headwords, thirty-five
+    // verbs), which also give SPINE-RESPOND-BASIC its first Portuguese segments.
+    // 11 -> 12: Italian, with chapters 37-84 (240 headwords, twenty-five verbs)
+    // after its three over-budget lessons were split.
+    // 12 -> 13: French, with chapters 49-105 (285 headwords, thirty-seven verbs)
+    // after its six over-budget lessons were split.
+    expect(gate.summary.tracksWithAnyLevel).toBe(13);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
     // C2. The tracks that hold a rung are pinned by name, and the per-level counts
@@ -133,6 +139,9 @@ describe("the gate that would have caught the A2 claim", () => {
       gujarati: "pre-A1",
       latin: "pre-A1",
       russian: "pre-A1",
+      portuguese: "pre-A1",
+      italian: "pre-A1",
+      french: "pre-A1",
     };
     const expectedByLevel = new Map<string, number>();
     for (const level of Object.values(HELD)) {
@@ -333,7 +342,9 @@ describe("the first rung anybody actually climbed", () => {
     expect(levelRank(held)).toBeGreaterThanOrEqual(levelRank("A1"));
     // And the plural agrees with the count, which nothing could have caught while the
     // populated branch of this line had never once run.
-    expect(line).not.toContain("1 tracks");
+    // Guarded by a no-digit lookbehind: "11 tracks" is correct English and
+    // contains the substring "1 tracks", which a plain toContain would flag.
+    expect(line).not.toMatch(/(?<!\d)1 tracks/);
   });
 
   it("prints EVERY blocker of every track, because §3.1 is a conjunction", () => {

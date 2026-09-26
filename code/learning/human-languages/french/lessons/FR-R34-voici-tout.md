@@ -8,7 +8,7 @@ type: practice
 headword: il y a · c'est · voici · ce · ici
 gloss: "five ways to point, run over everything the book owns"
 concept_tag: FR-REVIEW-POINTING
-prerequisites: [FR-C34-ce-cette]
+prerequisites: [FR-C34-ce-cette, FR-C22-chien-chat-more]
 sounds: []
 roots: []
 duration:

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:526e3fa3dabb4bda",
+  "lessonIds": [
+    "IT-C40-mento",
+    "IT-C40-fronte",
+    "IT-C40-dolore",
+    "IT-C40-febbre",
+    "IT-C40-tosse"
+  ],
+  "tex": "italian/book/chapters/ch40-chin-forehead-pain-fever-cough.tex"
+}

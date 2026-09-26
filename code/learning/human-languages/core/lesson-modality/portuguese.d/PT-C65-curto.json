@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C65-curto",
+    "language": "portuguese",
+    "chapter": 65,
+    "sequence": 2910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d2cceaf9e6c2c28"
+  },
+  "findings": []
+}

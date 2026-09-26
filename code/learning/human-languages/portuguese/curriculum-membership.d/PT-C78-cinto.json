@@ -1,0 +1,11 @@
+{
+  "id": "PT-C78-cinto",
+  "pathSegment": "PT-PATH-78-ROUPA2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-78-ROUPA2",
+      "order": 4
+    }
+  ]
+}

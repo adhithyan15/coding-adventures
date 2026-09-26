@@ -1,0 +1,11 @@
+{
+  "id": "FR-C63-oublier",
+  "pathSegment": "FR-PATH-63-VERBES15",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-63-VERBES15",
+      "order": 2
+    }
+  ]
+}

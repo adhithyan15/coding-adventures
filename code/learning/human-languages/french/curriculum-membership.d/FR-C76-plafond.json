@@ -1,0 +1,11 @@
+{
+  "id": "FR-C76-plafond",
+  "pathSegment": "FR-PATH-76-MAISON28",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-76-MAISON28",
+      "order": 1
+    }
+  ]
+}

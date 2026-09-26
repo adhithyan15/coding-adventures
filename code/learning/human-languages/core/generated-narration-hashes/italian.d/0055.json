@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:0d3832267458174c",
+  "lessonIds": [
+    "IT-C55-colazione",
+    "IT-C55-pera",
+    "IT-C55-riso",
+    "IT-C55-formaggio",
+    "IT-C55-uovo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch55.txt",
+  "json": "italian/narration/ch55.json",
+  "textHash": "fnv1a64:5ebd64df9ba349b1",
+  "jsonHash": "fnv1a64:a09108e28d24bc36",
+  "findings": []
+}

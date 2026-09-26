@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C77-cuillere",
+    "language": "french",
+    "chapter": 77,
+    "sequence": 3210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9676c0088a607fce"
+  },
+  "findings": []
+}

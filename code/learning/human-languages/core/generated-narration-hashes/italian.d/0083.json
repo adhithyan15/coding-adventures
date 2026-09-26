@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:6ab546b508f09c07",
+  "lessonIds": [
+    "IT-C83-ponte",
+    "IT-C83-parco",
+    "IT-C83-chiesa",
+    "IT-C83-museo",
+    "IT-C83-ristorante"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch83.txt",
+  "json": "italian/narration/ch83.json",
+  "textHash": "fnv1a64:73ab7ecbec5a5737",
+  "jsonHash": "fnv1a64:c835b2949485e38c",
+  "findings": []
+}

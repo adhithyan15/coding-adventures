@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:cb5592aee5db2a69",
+  "lessonIds": [
+    "FR-C55-joie",
+    "FR-C55-peur",
+    "FR-C55-colere",
+    "FR-C55-tristesse",
+    "FR-C55-heureux"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch55.txt",
+  "json": "french/narration/ch55.json",
+  "textHash": "fnv1a64:e32e0cba6c2f7662",
+  "jsonHash": "fnv1a64:a1fda7e206ede384",
+  "findings": []
+}

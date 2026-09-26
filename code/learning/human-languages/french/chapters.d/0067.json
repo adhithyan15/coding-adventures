@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Find, Fish, Chicken, Fruit, Apple",
+  "label": "ch:fr-find-fish-chicken-fruit-apple",
+  "canDo": "I can name to find, fish, chicken, a fruit, an apple.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C67-pomme",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can name to find, fish, chicken, a fruit, an apple.",
+    "assesses": [
+      "FR-LEX-C67-VERBES19-03",
+      "FR-LEX-C67-VERBES19-04",
+      "FR-LEX-C67-VERBES19-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "Sea, Stone, Sand, Beach, Island",
+  "label": "ch:fr-sea-stone-sand-beach-island",
+  "canDo": "I can name the sea, a stone, sand, a beach, an island.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C82-ile",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can name the sea, a stone, sand, a beach, an island.",
+    "assesses": [
+      "FR-LEX-C82-NATURE34-03",
+      "FR-LEX-C82-NATURE34-04",
+      "FR-LEX-C82-NATURE34-05"
+    ]
+  }
+}

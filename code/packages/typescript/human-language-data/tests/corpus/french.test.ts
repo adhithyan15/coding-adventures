@@ -182,7 +182,13 @@ it("pins French lesson-content budgets", () =>
     // ledger below pins French's eight exactly, and a review lesson must not
     // extend it.
     //
-    lessons: 283,
+    // 283 -> 289: six over-budget lessons (tete, main, oui, le temps,
+    // chien-chat, vert-jaune) each gave their surplus atoms to a new lesson
+    // placed right after them, so no French lesson introduces more than three.
+    // 289 -> 578: the pre-A1 vocabulary tranche, chapters 49-105. 285 word
+    // lessons (thirty-seven verbs) and four reviews; each word lesson introduces
+    // one lexical atom and no idiom, sense or culture claim. Re-measured.
+    lessons: 578,
     idioms: 3,
     senses: 7,
     cultureClaims: 27,
@@ -216,7 +222,7 @@ it("pins French-owned objective activities without extending a global ledger", (
     .map((activity) => activity.id)
     .sort();
   expect(ids).toEqual([
-    "FR-C18-oui-negative",
+    "FR-C18-oui-more-negative",
     "FR-C45-details-age",
     "FR-C45-instructions-listen",
     "FR-C45-premiere-lecture-city",

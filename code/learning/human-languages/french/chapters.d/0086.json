@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "Bear, Fox, Snake, Hen, Duck",
+  "label": "ch:fr-bear-fox-snake-hen-duck",
+  "canDo": "I can name a bear, a fox, a snake, a hen, a duck.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C86-canard",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can name a bear, a fox, a snake, a hen, a duck.",
+    "assesses": [
+      "FR-LEX-C86-ANIMAUX38-03",
+      "FR-LEX-C86-ANIMAUX38-04",
+      "FR-LEX-C86-ANIMAUX38-05"
+    ]
+  }
+}

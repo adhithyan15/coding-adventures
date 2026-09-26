@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:9a3041aafc208457",
+  "lessonIds": [
+    "PT-C51-copo",
+    "PT-C51-prato",
+    "PT-C51-colher",
+    "PT-C51-faca",
+    "PT-C51-garfo"
+  ],
+  "tex": "portuguese/book/chapters/ch51-glass-plate-spoon-knife-fork.tex"
+}

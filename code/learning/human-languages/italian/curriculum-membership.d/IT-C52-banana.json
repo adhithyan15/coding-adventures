@@ -1,0 +1,11 @@
+{
+  "id": "IT-C52-banana",
+  "pathSegment": "IT-PATH-52-FRUTTA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-52-FRUTTA",
+      "order": 2
+    }
+  ]
+}

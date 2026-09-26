@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:10746ea9b2d9a9c2",
+  "lessonIds": [
+    "IT-C77-verde",
+    "IT-C77-grigio",
+    "IT-C77-pulito",
+    "IT-C77-sporco",
+    "IT-C77-contento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch77.txt",
+  "json": "italian/narration/ch77.json",
+  "textHash": "fnv1a64:856601a9db559fe5",
+  "jsonHash": "fnv1a64:28441d566774296a",
+  "findings": []
+}

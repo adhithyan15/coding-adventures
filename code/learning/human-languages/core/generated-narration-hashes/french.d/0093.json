@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:0111646bfc2be845",
+  "lessonIds": [
+    "FR-C93-mince",
+    "FR-C93-gros",
+    "FR-C93-lourd",
+    "FR-C93-leger",
+    "FR-C93-sucre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch93.txt",
+  "json": "french/narration/ch93.json",
+  "textHash": "fnv1a64:34fed03af0289f8f",
+  "jsonHash": "fnv1a64:4ae47430088fbe13",
+  "findings": []
+}

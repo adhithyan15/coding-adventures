@@ -8,7 +8,7 @@ type: word
 headword: non
 gloss: no / not
 concept_tag: RESPONSE-NO
-prerequisites: [FR-C18-oui]
+prerequisites: [FR-C18-oui, FR-C18-oui-more]
 sounds: [nasal-vowel-on]
 roots: [non]
 etymology_hook: "non is Latin nōn — Spanish dropped the n to make no, French kept it as a nasal vowel: the vowel itself carries the n"

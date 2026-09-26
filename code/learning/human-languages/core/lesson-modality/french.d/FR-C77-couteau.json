@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C77-couteau",
+    "language": "french",
+    "chapter": 77,
+    "sequence": 3220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:345d4a9eb4b9bdb4"
+  },
+  "findings": []
+}

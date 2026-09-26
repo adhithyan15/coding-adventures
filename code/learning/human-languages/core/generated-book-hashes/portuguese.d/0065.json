@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:26507292ecbf6219",
+  "lessonIds": [
+    "PT-C65-bonito",
+    "PT-C65-feio",
+    "PT-C65-longo",
+    "PT-C65-curto",
+    "PT-C65-quente"
+  ],
+  "tex": "portuguese/book/chapters/ch65-pretty-ugly-long-short-hot.tex"
+}

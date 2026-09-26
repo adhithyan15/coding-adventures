@@ -1,0 +1,11 @@
+{
+  "id": "FR-C84-vague",
+  "pathSegment": "FR-PATH-84-NATURE36",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-84-NATURE36",
+      "order": 4
+    }
+  ]
+}

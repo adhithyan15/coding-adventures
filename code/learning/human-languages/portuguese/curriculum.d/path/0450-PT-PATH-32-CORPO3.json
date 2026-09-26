@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-32-CORPO3",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "PT-EXT-32-CORPO3"
+  ],
+  "after": []
+}

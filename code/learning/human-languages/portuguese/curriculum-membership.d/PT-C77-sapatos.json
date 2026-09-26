@@ -1,0 +1,11 @@
+{
+  "id": "PT-C77-sapatos",
+  "pathSegment": "PT-PATH-77-ROUPA1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-77-ROUPA1",
+      "order": 4
+    }
+  ]
+}

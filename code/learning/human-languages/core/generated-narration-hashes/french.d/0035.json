@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 35,
-  "sourceHash": "fnv1a64:8461320dbb6910dd",
+  "sourceHash": "fnv1a64:d02fad1a6c9bfaa3",
   "lessonIds": [
     "FR-C31-oeil",
     "FR-C31-nez",
@@ -14,6 +14,6 @@
   "text": "french/narration/ch35.txt",
   "json": "french/narration/ch35.json",
   "textHash": "fnv1a64:6fd9d33b05172600",
-  "jsonHash": "fnv1a64:b6e379a250dce0c2",
+  "jsonHash": "fnv1a64:bccbc528711a655e",
   "findings": []
 }

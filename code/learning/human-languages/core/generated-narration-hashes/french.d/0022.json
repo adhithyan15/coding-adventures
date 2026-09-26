@@ -1,16 +1,17 @@
 {
   "language": "french",
   "chapter": 22,
-  "sourceHash": "fnv1a64:b17685bc6f95432e",
+  "sourceHash": "fnv1a64:22e8d453cf615a5b",
   "lessonIds": [
     "FR-C18-oui",
+    "FR-C18-oui-more",
     "FR-C18-non"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
   "text": "french/narration/ch22.txt",
   "json": "french/narration/ch22.json",
-  "textHash": "fnv1a64:5e6f7e7f6384bbff",
-  "jsonHash": "fnv1a64:4a2a302e5550800c",
+  "textHash": "fnv1a64:42cd54e44d3120f5",
+  "jsonHash": "fnv1a64:c75c2f3d7c8205e9",
   "findings": []
 }

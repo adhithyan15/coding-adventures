@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:a836aa90686eec00",
+  "lessonIds": [
+    "FR-C102-police",
+    "FR-C102-theatre",
+    "FR-C102-bibliotheque",
+    "FR-C102-boulangerie",
+    "FR-C102-mairie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch102.txt",
+  "json": "french/narration/ch102.json",
+  "textHash": "fnv1a64:1aec6d641aaf9b8d",
+  "jsonHash": "fnv1a64:c7b1874d7789d774",
+  "findings": []
+}

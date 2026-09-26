@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:f00467c37890316b",
+  "lessonIds": [
+    "PT-C56-arvore",
+    "PT-C56-flor",
+    "PT-C56-folha",
+    "PT-C56-montanha",
+    "PT-C56-floresta"
+  ],
+  "tex": "portuguese/book/chapters/ch56-tree-flower-leaf-mountain-forest.tex"
+}

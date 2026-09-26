@@ -1,0 +1,11 @@
+{
+  "id": "PT-C81-procurar",
+  "pathSegment": "PT-PATH-81-VERBOS7",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-81-VERBOS7",
+      "order": 2
+    }
+  ]
+}

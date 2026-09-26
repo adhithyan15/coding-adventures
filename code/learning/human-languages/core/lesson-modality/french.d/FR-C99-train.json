@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C99-train",
+    "language": "french",
+    "chapter": 99,
+    "sequence": 4360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:077b8d99e5423861"
+  },
+  "findings": []
+}

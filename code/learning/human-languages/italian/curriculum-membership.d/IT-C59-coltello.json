@@ -1,0 +1,11 @@
+{
+  "id": "IT-C59-coltello",
+  "pathSegment": "IT-PATH-59-TAVOLA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-59-TAVOLA",
+      "order": 3
+    }
+  ]
+}

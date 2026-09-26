@@ -1,0 +1,11 @@
+{
+  "id": "PT-C65-feio",
+  "pathSegment": "PT-PATH-65-ADJ2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-65-ADJ2",
+      "order": 1
+    }
+  ]
+}

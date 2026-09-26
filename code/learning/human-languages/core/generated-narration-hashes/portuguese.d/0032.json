@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:5248e0cfed259a48",
+  "lessonIds": [
+    "PT-C32-costas",
+    "PT-C32-cabelo",
+    "PT-C32-barriga",
+    "PT-C32-rosto",
+    "PT-C32-sangue"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch32.txt",
+  "json": "portuguese/narration/ch32.json",
+  "textHash": "fnv1a64:bd8933ab57b9ec76",
+  "jsonHash": "fnv1a64:3d1bb742f929ff33",
+  "findings": []
+}

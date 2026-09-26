@@ -2,6 +2,8 @@
   "id": "FR-PATH-019",
   "spine_node": "SPINE-RESPOND-BASIC",
   "before": [],
-  "inline": [],
+  "inline": [
+    "FR-EXT-019-LANGUAGE-SPECIFIC"
+  ],
   "after": []
 }

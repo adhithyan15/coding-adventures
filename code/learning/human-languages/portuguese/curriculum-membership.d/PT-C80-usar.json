@@ -1,0 +1,11 @@
+{
+  "id": "PT-C80-usar",
+  "pathSegment": "PT-PATH-80-VERBOS6",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-80-VERBOS6",
+      "order": 1
+    }
+  ]
+}

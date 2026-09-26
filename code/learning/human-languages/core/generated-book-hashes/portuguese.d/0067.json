@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:b1cfcf71d93bbd87",
+  "lessonIds": [
+    "PT-C67-barato",
+    "PT-C67-alto",
+    "PT-C67-baixo",
+    "PT-C67-cheio",
+    "PT-C67-vazio"
+  ],
+  "tex": "portuguese/book/chapters/ch67-cheap-tall-low-full-empty.tex"
+}

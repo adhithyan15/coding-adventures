@@ -1,0 +1,11 @@
+{
+  "id": "IT-C84-biblioteca",
+  "pathSegment": "IT-PATH-84-CITTA4",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-84-CITTA4",
+      "order": 4
+    }
+  ]
+}

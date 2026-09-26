@@ -1,0 +1,19 @@
+{
+  "chapter": 61,
+  "title": "Bottle, Pen, Paper, Notebook, Pencil",
+  "label": "ch:it-bottle-pen-paper-notebook-pencil",
+  "canDo": "I can name a bottle, a pen, paper, a notebook, a pencil.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "IT-C61-matita",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 61: i can name a bottle, a pen, paper, a notebook, a pencil.",
+    "assesses": [
+      "IT-LEX-C61-COSE1-03",
+      "IT-LEX-C61-COSE1-04",
+      "IT-LEX-C61-COSE1-05"
+    ]
+  }
+}

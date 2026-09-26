@@ -1,0 +1,11 @@
+{
+  "id": "FR-C69-carotte",
+  "pathSegment": "FR-PATH-69-CUISINE21",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-69-CUISINE21",
+      "order": 0
+    }
+  ]
+}

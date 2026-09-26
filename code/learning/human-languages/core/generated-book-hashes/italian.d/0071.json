@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:18a4cac546ca2502",
+  "lessonIds": [
+    "IT-C71-leone",
+    "IT-C71-scimmia",
+    "IT-C71-ape",
+    "IT-C71-formica",
+    "IT-C71-elefante"
+  ],
+  "tex": "italian/book/chapters/ch71-lion-monkey-bee-ant-elephant.tex"
+}

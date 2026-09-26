@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C39-unghia",
+    "language": "italian",
+    "chapter": 39,
+    "sequence": 1550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f383a5f45218ce7"
+  },
+  "findings": []
+}

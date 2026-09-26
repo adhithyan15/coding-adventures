@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-45-FRUTA",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name fruit, an apple, a banana, an orange and a grape.",
+  "prerequisites": []
+}

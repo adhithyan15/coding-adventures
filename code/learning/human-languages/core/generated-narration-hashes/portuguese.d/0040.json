@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:f4e21eb8929c8843",
+  "lessonIds": [
+    "PT-C40-cantar",
+    "PT-C40-dancar",
+    "PT-C40-rir",
+    "PT-C40-chorar",
+    "PT-C40-lavar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch40.txt",
+  "json": "portuguese/narration/ch40.json",
+  "textHash": "fnv1a64:3fa2fa16063ec31b",
+  "jsonHash": "fnv1a64:66b00679a258a499",
+  "findings": []
+}

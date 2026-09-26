@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C68-orange",
+    "language": "french",
+    "chapter": 68,
+    "sequence": 2770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3583f4047fab317b"
+  },
+  "findings": []
+}

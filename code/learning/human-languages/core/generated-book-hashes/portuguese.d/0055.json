@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:2e2a7c0f917e1f3a",
+  "lessonIds": [
+    "PT-C55-entrar",
+    "PT-C55-sair",
+    "PT-C55-voltar",
+    "PT-C55-estudar",
+    "PT-C55-viajar",
+    "PT-R55-first-pass-the-body-family-and-doing",
+    "PT-R55-second-pass-food-the-house-and-things"
+  ],
+  "tex": "portuguese/book/chapters/ch55-enter-go-out-come-back-study-travel.tex"
+}

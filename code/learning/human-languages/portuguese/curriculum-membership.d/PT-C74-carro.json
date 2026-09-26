@@ -1,0 +1,11 @@
+{
+  "id": "PT-C74-carro",
+  "pathSegment": "PT-PATH-74-CIDADE2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-74-CIDADE2",
+      "order": 2
+    }
+  ]
+}

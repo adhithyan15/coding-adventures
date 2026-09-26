@@ -1,0 +1,11 @@
+{
+  "id": "IT-C48-dormire",
+  "pathSegment": "IT-PATH-48-VERBI2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-48-VERBI2",
+      "order": 4
+    }
+  ]
+}

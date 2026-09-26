@@ -1,0 +1,19 @@
+{
+  "chapter": 44,
+  "title": "Meat, Fish, Butter, Salt, Chicken",
+  "label": "ch:pt-meat-fish-butter-salt-chicken",
+  "canDo": "I can name meat, fish, butter, salt and chicken.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "PT-C44-frango",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 44: i can name meat, fish, butter, salt and chicken.",
+    "assesses": [
+      "PT-LEX-C44-COMIDA1-03",
+      "PT-LEX-C44-COMIDA1-04",
+      "PT-LEX-C44-COMIDA1-05"
+    ]
+  }
+}

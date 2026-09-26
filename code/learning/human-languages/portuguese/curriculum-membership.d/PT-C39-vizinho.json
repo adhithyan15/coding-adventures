@@ -1,0 +1,11 @@
+{
+  "id": "PT-C39-vizinho",
+  "pathSegment": "PT-PATH-39-PESSOAS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-39-PESSOAS",
+      "order": 1
+    }
+  ]
+}

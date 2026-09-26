@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:c9e34267aff4c902",
+  "lessonIds": [
+    "FR-C55-joie",
+    "FR-C55-peur",
+    "FR-C55-colere",
+    "FR-C55-tristesse",
+    "FR-C55-heureux"
+  ],
+  "tex": "french/book/chapters/ch55-joy-fear-anger-sadness-happy.tex"
+}

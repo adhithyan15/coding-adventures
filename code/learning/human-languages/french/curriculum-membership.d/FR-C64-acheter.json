@@ -1,0 +1,11 @@
+{
+  "id": "FR-C64-acheter",
+  "pathSegment": "FR-PATH-64-VERBES16",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-64-VERBES16",
+      "order": 3
+    }
+  ]
+}

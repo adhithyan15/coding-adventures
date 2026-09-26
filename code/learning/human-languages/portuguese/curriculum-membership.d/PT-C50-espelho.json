@@ -1,0 +1,11 @@
+{
+  "id": "PT-C50-espelho",
+  "pathSegment": "PT-PATH-50-CASA3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-50-CASA3",
+      "order": 4
+    }
+  ]
+}

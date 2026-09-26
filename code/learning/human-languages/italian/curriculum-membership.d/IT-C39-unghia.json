@@ -1,0 +1,11 @@
+{
+  "id": "IT-C39-unghia",
+  "pathSegment": "IT-PATH-39-CORPO3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-39-CORPO3",
+      "order": 4
+    }
+  ]
+}

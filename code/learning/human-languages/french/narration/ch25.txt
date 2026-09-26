@@ -1,8 +1,8 @@
 French, chapter 25: Weather.
-1 lesson. All 1 can be done entirely by ear.
+2 lessons. All 2 can be done entirely by ear.
 
 
-Lesson 1 of 1.
+Lesson 1 of 2.
 le temps, il pleut — the same Latin word, a different fate for "rain".
 
 Warm-up.
@@ -16,9 +16,6 @@ Grammar Lens: il fait chaud / il fait froid.
 Il fait chaud. — "It's hot." — literally "it makes hot." Il fait froid. — "It's cold." — literally "it makes cold."
 Same hacer-style periphrasis as Spanish, just with French's own faire ("to make/do").
 
-The word, taken apart: il pleut.
-Il pleut. — "It's raining." — from pleuvoir from Latin pluere, "to rain" — the same Latin verb behind Spanish's llueve. But here's the honest difference: Spanish underwent the pl- becomes ll- shift (pluere becomes llover), while French kept the pl- cluster fully intact — pleuvoir still visibly starts with pl-, just like the Latin original. So the same Latin verb took two different sound-change paths in its two daughters: one eroded the cluster, one preserved it.
-
 Guided Practice.
 [pause 1 second]
 [your turn — say: "le temps" — time, or weather, depending on context]
@@ -31,3 +28,23 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What two things does le temps mean, and where does this polysemy come from? ("Time" and "weather" — from Latin tempus, already double-sensed before French/Spanish split apart.) Does French's il pleut show the same pl- becomes ll- shift as Spanish's llueve? (No — French kept the pl- cluster intact; only Spanish underwent that shift.)
+
+
+Lesson 2 of 2.
+(le temps, il pleut, continued) — il pleut.
+
+Warm-up.
+[pause 2 seconds]
+Before going on: say le temps, il pleut again, and what it means.
+
+The word, taken apart: il pleut.
+Il pleut. — "It's raining." — from pleuvoir from Latin pluere, "to rain" — the same Latin verb behind Spanish's llueve. But here's the honest difference: Spanish underwent the pl- becomes ll- shift (pluere becomes llover), while French kept the pl- cluster fully intact — pleuvoir still visibly starts with pl-, just like the Latin original. So the same Latin verb took two different sound-change paths in its two daughters: one eroded the cluster, one preserved it.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: what this lesson added to le temps, il pleut, in one sentence]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What did this lesson add to le temps, il pleut? Say it once more, without looking.

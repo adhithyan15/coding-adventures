@@ -1,0 +1,11 @@
+{
+  "id": "PT-C64-mau",
+  "pathSegment": "PT-PATH-64-ADJ1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-64-ADJ1",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C36-triste",
+  "pathSegment": "PT-PATH-36-SENTIR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-36-SENTIR",
+      "order": 4
+    }
+  ]
+}

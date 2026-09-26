@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-57-NATUREZA2",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "PT-EXT-57-NATUREZA2"
+  ],
+  "after": []
+}

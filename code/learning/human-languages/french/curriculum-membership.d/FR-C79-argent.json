@@ -1,0 +1,11 @@
+{
+  "id": "FR-C79-argent",
+  "pathSegment": "FR-PATH-79-CHOSES31",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-79-CHOSES31",
+      "order": 2
+    }
+  ]
+}

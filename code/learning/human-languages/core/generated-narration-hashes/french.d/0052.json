@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:abdab1c4caf78ba9",
+  "lessonIds": [
+    "FR-C52-poitrine",
+    "FR-C52-estomac",
+    "FR-C52-cheville",
+    "FR-C52-coude",
+    "FR-C52-poignet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch52.txt",
+  "json": "french/narration/ch52.json",
+  "textHash": "fnv1a64:a029cb1367c324fd",
+  "jsonHash": "fnv1a64:5ff3d1c18b146c23",
+  "findings": []
+}

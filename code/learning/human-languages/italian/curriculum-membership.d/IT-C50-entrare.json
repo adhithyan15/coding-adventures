@@ -1,0 +1,11 @@
+{
+  "id": "IT-C50-entrare",
+  "pathSegment": "IT-PATH-50-VERBI4",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-50-VERBI4",
+      "order": 3
+    }
+  ]
+}

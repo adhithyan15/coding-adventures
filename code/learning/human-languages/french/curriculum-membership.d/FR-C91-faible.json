@@ -1,0 +1,11 @@
+{
+  "id": "FR-C91-faible",
+  "pathSegment": "FR-PATH-91-ADJ43",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-91-ADJ43",
+      "order": 1
+    }
+  ]
+}

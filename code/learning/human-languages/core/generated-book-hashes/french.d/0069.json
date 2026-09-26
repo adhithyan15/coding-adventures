@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:8d407b40a0d9c335",
+  "lessonIds": [
+    "FR-C69-carotte",
+    "FR-C69-gateau",
+    "FR-C69-soupe",
+    "FR-C69-miel",
+    "FR-C69-huile"
+  ],
+  "tex": "french/book/chapters/ch69-carrot-cake-soup-honey-oil.tex"
+}

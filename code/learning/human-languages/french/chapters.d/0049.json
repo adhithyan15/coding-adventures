@@ -1,0 +1,19 @@
+{
+  "chapter": 49,
+  "title": "Arm, Leg, Foot, Finger, Tooth",
+  "label": "ch:fr-arm-leg-foot-finger-tooth",
+  "canDo": "I can name an arm, a leg, a foot, a finger, a tooth.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C49-dent",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 49: i can name an arm, a leg, a foot, a finger, a tooth.",
+    "assesses": [
+      "FR-LEX-C49-CORPS1-03",
+      "FR-LEX-C49-CORPS1-04",
+      "FR-LEX-C49-CORPS1-05"
+    ]
+  }
+}

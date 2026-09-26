@@ -1,0 +1,11 @@
+{
+  "id": "IT-C56-tavolo",
+  "pathSegment": "IT-PATH-56-CASA1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-56-CASA1",
+      "order": 2
+    }
+  ]
+}

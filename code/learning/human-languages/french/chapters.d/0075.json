@@ -1,0 +1,19 @@
+{
+  "chapter": 75,
+  "title": "Floor, Stairs, Mirror, Living room, Sofa",
+  "label": "ch:fr-floor-stairs-mirror-living-room-sofa",
+  "canDo": "I can name the floor, the stairs, a mirror, a living room, a sofa.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FR-C75-canape",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 75: i can name the floor, the stairs, a mirror, a living room, a sofa.",
+    "assesses": [
+      "FR-LEX-C75-MAISON27-03",
+      "FR-LEX-C75-MAISON27-04",
+      "FR-LEX-C75-MAISON27-05"
+    ]
+  }
+}

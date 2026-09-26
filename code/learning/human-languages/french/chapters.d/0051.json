@@ -1,0 +1,19 @@
+{
+  "chapter": 51,
+  "title": "Skin, Nail, Chin, Throat, Cheek",
+  "label": "ch:fr-skin-nail-chin-throat-cheek",
+  "canDo": "I can name skin, a nail (finger or toe), the chin, the throat, a cheek.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C51-joue",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 51: i can name skin, a nail (finger or toe), the chin, the throat, a cheek.",
+    "assesses": [
+      "FR-LEX-C51-CORPS3-03",
+      "FR-LEX-C51-CORPS3-04",
+      "FR-LEX-C51-CORPS3-05"
+    ]
+  }
+}

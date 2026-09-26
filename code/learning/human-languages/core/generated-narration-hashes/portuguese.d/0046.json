@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:de9a373e427f92fb",
+  "lessonIds": [
+    "PT-C46-batata",
+    "PT-C46-tomate",
+    "PT-C46-cebola",
+    "PT-C46-cenoura",
+    "PT-C46-feijao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch46.txt",
+  "json": "portuguese/narration/ch46.json",
+  "textHash": "fnv1a64:f14c8eafca333c5a",
+  "jsonHash": "fnv1a64:cb4a1ac8aad9c366",
+  "findings": []
+}

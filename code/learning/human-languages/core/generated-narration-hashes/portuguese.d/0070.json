@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:9b8a84224f714c8f",
+  "lessonIds": [
+    "PT-C70-semana",
+    "PT-C70-mes",
+    "PT-C70-manha",
+    "PT-C70-minuto",
+    "PT-C70-sempre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch70.txt",
+  "json": "portuguese/narration/ch70.json",
+  "textHash": "fnv1a64:2524f81a2ede91f9",
+  "jsonHash": "fnv1a64:230b17ba36c6af93",
+  "findings": []
+}

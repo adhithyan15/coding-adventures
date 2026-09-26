@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:40b5d8f1c02a4d26",
+  "lessonIds": [
+    "PT-C78-chapeu",
+    "PT-C78-casaco",
+    "PT-C78-saia",
+    "PT-C78-meias",
+    "PT-C78-cinto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch78.txt",
+  "json": "portuguese/narration/ch78.json",
+  "textHash": "fnv1a64:614e1b2ab6eefa8f",
+  "jsonHash": "fnv1a64:3c0e5d56de45423f",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:7259a1d3e5ca07be",
+  "lessonIds": [
+    "FR-C66-dessiner",
+    "FR-C66-peindre",
+    "FR-C66-compter",
+    "FR-C66-gagner",
+    "FR-C66-cacher"
+  ],
+  "tex": "french/book/chapters/ch66-draw-paint-count-win-hide.tex"
+}

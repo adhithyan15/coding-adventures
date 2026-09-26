@@ -1,0 +1,11 @@
+{
+  "id": "FR-C70-diner",
+  "pathSegment": "FR-PATH-70-CUISINE22",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-70-CUISINE22",
+      "order": 1
+    }
+  ]
+}

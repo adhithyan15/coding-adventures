@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C82-autobus",
+    "language": "italian",
+    "chapter": 82,
+    "sequence": 3690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b461d8a65a86109f"
+  },
+  "findings": []
+}

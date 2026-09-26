@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:ca323b7eb3c4ae5b",
+  "lessonIds": [
+    "IT-C68-cane",
+    "IT-C68-gatto",
+    "IT-C68-cavallo",
+    "IT-C68-mucca",
+    "IT-C68-maiale"
+  ],
+  "tex": "italian/book/chapters/ch68-dog-cat-horse-cow-pig.tex"
+}

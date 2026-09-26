@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C67-pomme",
+    "language": "french",
+    "chapter": 67,
+    "sequence": 2750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52bf83e85d61eb10"
+  },
+  "findings": []
+}

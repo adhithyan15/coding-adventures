@@ -1,0 +1,11 @@
+{
+  "id": "IT-C77-pulito",
+  "pathSegment": "IT-PATH-77-AGG6",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-77-AGG6",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C75-restaurante",
+  "pathSegment": "PT-PATH-75-CIDADE3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-75-CIDADE3",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C59-colina",
+    "language": "portuguese",
+    "chapter": 59,
+    "sequence": 2600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f427317658d16929"
+  },
+  "findings": []
+}

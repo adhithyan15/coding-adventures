@@ -1,0 +1,11 @@
+{
+  "id": "IT-C78-minuto",
+  "pathSegment": "IT-PATH-78-TEMPO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-78-TEMPO",
+      "order": 4
+    }
+  ]
+}

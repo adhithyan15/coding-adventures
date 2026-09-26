@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C18-oui-more",
+    "language": "french",
+    "chapter": 22,
+    "sequence": 745,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2199f335057a3236"
+  },
+  "findings": []
+}

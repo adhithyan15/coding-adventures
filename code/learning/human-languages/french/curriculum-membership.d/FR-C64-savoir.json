@@ -1,0 +1,11 @@
+{
+  "id": "FR-C64-savoir",
+  "pathSegment": "FR-PATH-64-VERBES16",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-64-VERBES16",
+      "order": 4
+    }
+  ]
+}

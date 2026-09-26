@@ -8,7 +8,7 @@ type: word
 headword: ottenere
 gloss: to get, to obtain — a holding-verb, and a b that flattened into a t
 concept_tag: VERB-GET
-prerequisites: [IT-C21-giocare, IT-C20-incontrare, IT-C19-prendere, IT-C14-eta]
+prerequisites: [IT-C21-giocare, IT-C20-incontrare, IT-C19-prendere, IT-C14-eta, IT-C14-avere-o-essere]
 sounds: [double-tt, open-e]
 roots: [tenere-latin]
 etymology_hook: "ottenere ← Latin obtinēre (ob- 'toward, up against' + tenēre 'to hold') → English obtain, tenacious, tenant, tenure, tenet, tenor, contain, retain, detain, maintain; the -bt- flattens to -tt- exactly as the -ct- of octō gave otto and the -pt- of scriptum gave scritto"

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C60-apprendre",
+  "pathSegment": "FR-PATH-60-VERBES12",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-60-VERBES12",
+      "order": 4
+    }
+  ]
+}

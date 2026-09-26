@@ -8,7 +8,7 @@ type: grammar
 headword: le plural en -s
 gloss: "the plural you write and never say — which is why the article in front of it does all the work"
 concept_tag: FR-PLURAL-S
-prerequisites: [FR-C38-consonne-finale, FR-C01-le-la, FR-C35-des]
+prerequisites: [FR-C38-consonne-finale, FR-C01-le-la, FR-C35-des, FR-C22-chien-chat-more]
 sounds: [silent-final, liaison-z]
 roots: []
 etymology_hook: "French writes its plural and does not say it, so les and des are not decoration -- they are the only place a listener can hear that more than one thing is meant"

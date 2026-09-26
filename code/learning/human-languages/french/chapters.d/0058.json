@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "Neighbour, Guest, Baby, Grandson, Granddaughter",
+  "label": "ch:fr-neighbour-guest-baby-grandson-granddaughter",
+  "canDo": "I can name a neighbour, a guest, a baby, a grandson, a granddaughter.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "FR-C58-petite-fille",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 58: i can name a neighbour, a guest, a baby, a grandson, a granddaughter.",
+    "assesses": [
+      "FR-LEX-C58-FAMILLE10-03",
+      "FR-LEX-C58-FAMILLE10-04",
+      "FR-LEX-C58-FAMILLE10-05"
+    ]
+  }
+}

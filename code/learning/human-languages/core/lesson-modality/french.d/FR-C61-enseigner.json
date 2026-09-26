@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C61-enseigner",
+    "language": "french",
+    "chapter": 61,
+    "sequence": 2410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82a95669575ba2de"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C55-colazione",
+    "language": "italian",
+    "chapter": 55,
+    "sequence": 2310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:929a7a9a3d54ec7a"
+  },
+  "findings": []
+}

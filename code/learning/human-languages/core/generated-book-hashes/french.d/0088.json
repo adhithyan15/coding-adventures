@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:df4544a04cc607c6",
+  "lessonIds": [
+    "FR-C88-fourmi",
+    "FR-C88-elephant",
+    "FR-C88-lapin",
+    "FR-C88-grenouille",
+    "FR-C88-tigre"
+  ],
+  "tex": "french/book/chapters/ch88-ant-elephant-rabbit-frog-tiger.tex"
+}

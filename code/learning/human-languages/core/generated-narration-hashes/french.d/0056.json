@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:c9b167489b9ca63b",
+  "lessonIds": [
+    "FR-C56-triste",
+    "FR-C56-content",
+    "FR-C56-fille",
+    "FR-C56-grand-pere",
+    "FR-C56-grand-mere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch56.txt",
+  "json": "french/narration/ch56.json",
+  "textHash": "fnv1a64:465877fd85789004",
+  "jsonHash": "fnv1a64:11da538756acf7ed",
+  "findings": []
+}

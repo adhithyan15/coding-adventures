@@ -8,7 +8,7 @@ type: word
 headword: dormir
 gloss: to sleep — Latin dormīre, unchanged in French, and the source of dormitory and dormant, though not of the dormouse
 concept_tag: VERB-SLEEP
-prerequisites: [FR-C26-entendre, FR-C22-chien-chat]
+prerequisites: [FR-C26-entendre, FR-C22-chien-chat, FR-C22-chien-chat-more]
 sounds: [r-uvular, silent-final]
 roots: [dormire-latin]
 etymology_hook: "dormir ← Latin dormīre 'to sleep', inherited unchanged → dormitory, dormant, dormer window (← Old French dormeor, 'a sleeping room') — but NOT dormouse, whose resemblance is folk etymology resting on an Anglo-Norman word nobody has found"
