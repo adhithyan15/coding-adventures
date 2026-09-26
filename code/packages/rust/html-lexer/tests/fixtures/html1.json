@@ -1650,7 +1650,7 @@
       ],
       "diagnostics": [
         "end-tag-with-attributes",
-        "eof-in-end-tag-name-state"
+        "eof-in-tag"
       ]
     },
     {

@@ -5,6 +5,14 @@ documented in this file.
 
 ## Unreleased
 
+- `tests/raw_text_end_tags.rs` pins that hidden-`<img>` payloads around
+  raw-text end tags (`</</style>`, quoted `>` in end-tag attributes) produce
+  no element.
+- **Script-data end tags.** With `html-lexer` deciding appropriate end tags
+  at whitespace or `/`, 31 listed corpus cases (`tests16.dat`,
+  `domjs-unsafe.dat:145/146`, `scriptdata01.dat:411`)
+  pass and leave `tests/fixtures/expected-failures.txt`.
+
 - **BR03 step 4: fragment parsing (§13.4).** `parse_fragment(source,
   &FragmentContext, options)` parses as the children of a context element,
   HTML or foreign (`FragmentContext::html("td")`): the tokenizer starts in the

@@ -126,7 +126,7 @@
       "description": "EOF inside end-tag attributes drops the partial token",
       "diagnostics": [
         "end-tag-with-attributes",
-        "eof-in-end-tag-name-state"
+        "eof-in-tag"
       ],
       "id": "end-tag-with-attributes",
       "input": "</section class=x",

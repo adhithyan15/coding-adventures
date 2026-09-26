@@ -269,7 +269,7 @@
       "description": "EOF in end-tag attributes drops the partial end tag",
       "diagnostics": [
         "end-tag-with-attributes",
-        "eof-in-end-tag-name-state"
+        "eof-in-tag"
       ],
       "id": "eof-in-end-tag-attributes",
       "input": "</section class=x",

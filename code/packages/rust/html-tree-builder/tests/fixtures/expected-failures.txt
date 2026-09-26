@@ -3,43 +3,12 @@
 # This is BR03's progress bar. tests/corpus.rs fails if an unlisted case
 # fails or a listed case passes, so every change that fixes a case removes its
 # line in the same commit. Lines should only ever disappear.
-domjs-unsafe.dat:145
-domjs-unsafe.dat:146
-scriptdata01.dat:411
 scripted/adoption01.dat:1
 scripted/ark.dat:1
 scripted/webkit01.dat:1
 scripted/webkit01.dat:2
 scripted_foster01.dat:1
 scripted_foster01.dat:2
-tests16.dat:11
-tests16.dat:110
-tests16.dat:117
-tests16.dat:128
-tests16.dat:145
-tests16.dat:146
-tests16.dat:156
-tests16.dat:157
-tests16.dat:18
-tests16.dat:29
-tests16.dat:46
-tests16.dat:47
-tests16.dat:59
-tests16.dat:60
-tests16.dat:778
-tests16.dat:785
-tests16.dat:796
-tests16.dat:813
-tests16.dat:814
-tests16.dat:826
-tests16.dat:827
-tests16.dat:877
-tests16.dat:884
-tests16.dat:895
-tests16.dat:912
-tests16.dat:913
-tests16.dat:923
-tests16.dat:924
 webkit02.dat:45
 webkit02.dat:46
 webkit02.dat:47
