@@ -2786,6 +2786,17 @@ fn build_package_inner(
                 host_effects: &manifest.host_effects,
                 initial_window_size: manifest.app.initial_window_size.as_ref(),
                 layouts: &manifest.app.layouts,
+                identity: AppIdentity {
+                    display_name: manifest
+                        .app
+                        .display_name
+                        .clone()
+                        .unwrap_or_else(|| first_component.clone()),
+                    bundle_identifier: manifest.app.bundle_identifier.clone().unwrap_or_else(
+                        || mosaic_ios_project::default_bundle_identifier(&manifest.package.name),
+                    ),
+                    version: manifest.package.version.clone(),
+                },
             })?;
             artifacts.extend(shell_artifacts);
         }
@@ -3650,6 +3661,16 @@ struct ProjectShellOptions<'a> {
     initial_window_size: Option<&'a WindowSize>,
     /// `[[app.layouts]]` (UI48 §7.2).
     layouts: &'a [mosaic_package_manifest::layouts::LayoutRule],
+    /// The installed app's name, identity and version, for mobile projects
+    /// (UI32 "App identity", UI89).
+    identity: AppIdentity,
+}
+
+/// What an installed app is called and who it is (UI32, UI89).
+struct AppIdentity {
+    display_name: String,
+    bundle_identifier: String,
+    version: String,
 }
 
 fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, BuildError> {
@@ -3669,6 +3690,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
         host_effects,
         initial_window_size,
         layouts,
+        identity,
     } = options;
     // Re-read the triple. This duplicates `compile_one_component`'s
     // file-loading logic; we accept the redundancy because the shell
@@ -4029,6 +4051,26 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 mosaic_app_bindings::compose_platform_effects().as_bytes(),
             )?;
             written.push(platform_nested);
+
+            // The same app for Android (UI89 §3.4): a second Gradle project
+            // in android/, sharing the shell, the components and the host.
+            let mut shared: Vec<(String, String)> = vec![
+                ("MosaicAppShell.kt".to_string(), sources.shell.clone()),
+                (
+                    "MosaicRuntimeHost.kt".to_string(),
+                    mosaic_app_bindings::compose_jna_binding_for_application(package_name),
+                ),
+            ];
+            for exported_component in components {
+                let file = format!("{exported_component}.kt");
+                shared.push((file.clone(), read_to_string(&backend_dir.join(&file))?));
+            }
+            written.extend(write_compose_android_project(
+                backend_dir,
+                &shared,
+                require_runtime,
+                &identity,
+            )?);
         }
         Backend::Qt => {
             let require_runtime = project_shell_requires_runtime(profile, runtime_library);
@@ -5382,6 +5424,166 @@ fn build_compose_build_gradle_kts(
                 escape_kotlin_string(coordinate)
             ))
             .collect::<String>(),
+    )
+}
+
+/// Android's `applicationId` / `namespace`: dot-separated Java identifiers.
+/// A manifest bundle identifier may hold `-` and parts that start with a
+/// digit, which Android refuses; map them rather than fail.
+fn android_application_id(bundle_identifier: &str) -> String {
+    bundle_identifier
+        .split('.')
+        .map(|part| {
+            let mapped: String = part
+                .chars()
+                .map(|character| if character.is_ascii_alphanumeric() { character } else { '_' })
+                .collect();
+            if mapped.starts_with(|character: char| character.is_ascii_digit()) {
+                format!("a{mapped}")
+            } else {
+                mapped
+            }
+        })
+        .collect::<Vec<_>>()
+        .join(".")
+}
+
+fn escape_xml_attribute(value: &str) -> String {
+    value
+        .replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+        .replace('"', "&quot;")
+        .replace('\'', "&apos;")
+}
+
+/// Write `compose/android/`, the Android Gradle project (UI89 §3.4). The
+/// shared Kotlin (`shared`: the app shell, the runtime host, the components)
+/// is copied in beside Android's own `MosaicPlatform.kt` and activity, so the
+/// Android build never sees the desktop `Main.kt` or AWT effects.
+fn write_compose_android_project(
+    backend_dir: &Path,
+    shared: &[(String, String)],
+    require_runtime: bool,
+    identity: &AppIdentity,
+) -> Result<Vec<PathBuf>, BuildError> {
+    let android = backend_dir.join("android");
+    let application_id = android_application_id(&identity.bundle_identifier);
+    let version_name = identity
+        .version
+        .chars()
+        .filter(|character| character.is_ascii_alphanumeric() || matches!(character, '.' | '-' | '+'))
+        .collect::<String>();
+    let mut files: Vec<(String, String)> = vec![
+        (
+            "settings.gradle.kts".to_string(),
+            format!(
+                "// AUTO-GENERATED by mosaic-compile (UI89 §3.4). Edits will be overwritten on next emit.\n\
+pluginManagement {{\n    repositories {{\n        google()\n        mavenCentral()\n        gradlePluginPortal()\n    }}\n}}\n\
+dependencyResolutionManagement {{\n    repositories {{\n        google()\n        mavenCentral()\n    }}\n}}\n\
+rootProject.name = \"{}\"\n",
+                escape_kotlin_string(&format!("{application_id}.android"))
+            ),
+        ),
+        (
+            "gradle.properties".to_string(),
+            "android.useAndroidX=true\norg.gradle.jvmargs=-Xmx3g\n".to_string(),
+        ),
+        (
+            "build.gradle.kts".to_string(),
+            format!(
+                "// AUTO-GENERATED by mosaic-compile (UI89 §3.4). Edits will be overwritten on next emit.\n\
+plugins {{\n    id(\"com.android.application\") version \"9.2.1\"\n    id(\"org.jetbrains.kotlin.plugin.compose\") version \"2.3.21\"\n}}\n\n\
+android {{\n    namespace = \"{application_id}\"\n    compileSdk = 36\n\n\
+    defaultConfig {{\n        applicationId = \"{application_id}\"\n        minSdk = 26\n        targetSdk = 36\n        versionCode = 1\n        versionName = \"{version_name}\"\n    }}\n\n\
+    buildFeatures {{\n        compose = true\n    }}\n}}\n\n\
+dependencies {{\n    val composeBom = platform(\"androidx.compose:compose-bom:2026.06.01\")\n    implementation(composeBom)\n\
+    implementation(\"androidx.activity:activity-compose:1.13.0\")\n\
+    implementation(\"androidx.compose.foundation:foundation\")\n\
+    implementation(\"androidx.compose.material:material\")\n\
+    implementation(\"androidx.compose.material3:material3\")\n\
+    implementation(\"androidx.compose.material3:material3-adaptive-navigation-suite\")\n\
+    implementation(\"androidx.compose.ui:ui\")\n\
+    // JNA's Android build: the same binding as desktop loads libmosaic_app.so\n\
+    // from jniLibs/<abi>/ (code/scripts/build-mosaic-android-libs.sh).\n\
+    implementation(\"net.java.dev.jna:jna:5.19.1@aar\")\n\
+    implementation(\"org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0\")\n}}\n"
+            ),
+        ),
+        (
+            "src/main/AndroidManifest.xml".to_string(),
+            format!(
+                "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!-- AUTO-GENERATED by mosaic-compile (UI89 §3.4). -->\n\
+<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\">\n\
+    <application\n        android:label=\"{label}\"\n        android:theme=\"@android:style/Theme.Material.NoActionBar\">\n\
+        <activity\n            android:name=\"mosaic.android.MosaicActivity\"\n            android:exported=\"true\"\n\
+            android:configChanges=\"orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|uiMode\"\n\
+            android:windowSoftInputMode=\"adjustResize|stateHidden\">\n\
+            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n\
+                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>\n\
+        </activity>\n    </application>\n</manifest>\n",
+                label = escape_xml_attribute(&identity.display_name),
+            ),
+        ),
+        (
+            "src/main/kotlin/MosaicPlatform.kt".to_string(),
+            mosaic_emit_compose::pipeline::ANDROID_PLATFORM_KT.to_string(),
+        ),
+        (
+            "src/main/kotlin/mosaic/android/MosaicActivity.kt".to_string(),
+            build_compose_android_activity(require_runtime),
+        ),
+    ];
+    for (file, source) in shared {
+        files.push((format!("src/main/kotlin/{file}"), source.clone()));
+    }
+    let mut written = Vec::with_capacity(files.len());
+    for (relative, body) in files {
+        let path = android.join(&relative);
+        if let Some(parent) = path.parent() {
+            create_dir_all(parent)?;
+        }
+        write_file(&path, body.as_bytes())?;
+        written.push(path);
+    }
+    Ok(written)
+}
+
+/// The Android entry point: point the host's state at the app's own storage,
+/// then show the same shell desktop shows.
+fn build_compose_android_activity(require_runtime: bool) -> String {
+    // Padded for the status and navigation bars and the keyboard: the app
+    // draws edge to edge, the system chrome does not cover it.
+    let content = if require_runtime {
+        "        setContent { Box(Modifier.fillMaxSize().safeDrawingPadding()) { MosaicStartup(::loadMosaicHost) } }\n"
+    } else {
+        "        val mosaicHost = MosaicRuntimeHost.load()\n        setContent { Box(Modifier.fillMaxSize().safeDrawingPadding()) { MosaicApp(mosaicHost) } }\n"
+    };
+    let imports = if require_runtime {
+        "import MosaicComposeHost\nimport MosaicRuntimeHost\nimport MosaicStartup\n"
+    } else {
+        "import MosaicApp\nimport MosaicRuntimeHost\n"
+    };
+    let loader = if require_runtime {
+        "\nprivate fun loadMosaicHost(): MosaicComposeHost =\n    requireNotNull(MosaicRuntimeHost.load()) { \"native-complete requires the Mosaic Rust application runtime\" }\n"
+    } else {
+        ""
+    };
+    format!(
+        "// AUTO-GENERATED by mosaic-compile (UI89 §3.4). Edits will be overwritten on next emit.\n\
+// Android needs its activity in a named package; the shared app code is in the\n\
+// root package, which Kotlin imports by simple name.\n\
+package mosaic.android\n\n\
+{imports}import android.os.Bundle\nimport androidx.activity.ComponentActivity\nimport androidx.activity.compose.setContent\nimport androidx.activity.enableEdgeToEdge\n\
+import androidx.compose.foundation.layout.Box\nimport androidx.compose.foundation.layout.fillMaxSize\nimport androidx.compose.foundation.layout.safeDrawingPadding\nimport androidx.compose.ui.Modifier\n\n\
+class MosaicActivity : ComponentActivity() {{\n\
+    override fun onCreate(savedInstanceState: Bundle?) {{\n\
+        enableEdgeToEdge()\n\
+        super.onCreate(savedInstanceState)\n\
+        // State lives in the app's own storage, not a home directory.\n\
+        MosaicRuntimeHost.stateDirectory = filesDir\n\
+{content}\
+    }}\n}}\n{loader}"
     )
 }
 
@@ -10795,6 +10997,64 @@ layout NativeEvents {
         build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).expect("SwiftUI shell");
         let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
         assert!(app.contains(".preferredColorScheme(.dark)"), "{app}");
+    }
+
+    // UI89 §3.4: the Android project beside the desktop Compose project.
+
+    #[test]
+    fn android_application_ids_are_java_identifiers() {
+        assert_eq!(android_application_id("dev.codingadventures.trestle"), "dev.codingadventures.trestle");
+        assert_eq!(android_application_id("com.example.my-app2"), "com.example.my_app2");
+        assert_eq!(android_application_id("com.2cool.app"), "com.a2cool.app");
+    }
+
+    #[test]
+    fn a_compose_project_includes_an_android_project() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[app]\ndisplay-name = \"Cards & <Co>\"\nbundle-identifier = \"com.example.card-studio\"\n");
+        fs::write(&manifest, text).unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::Compose)).expect("Compose shell");
+        let android = out.path().join("compose/android");
+        for file in [
+            "settings.gradle.kts",
+            "build.gradle.kts",
+            "gradle.properties",
+            "src/main/AndroidManifest.xml",
+            "src/main/kotlin/MosaicAppShell.kt",
+            "src/main/kotlin/MosaicRuntimeHost.kt",
+            "src/main/kotlin/MosaicPlatform.kt",
+            "src/main/kotlin/Card.kt",
+            "src/main/kotlin/mosaic/android/MosaicActivity.kt",
+        ] {
+            assert!(android.join(file).is_file(), "{file} missing");
+        }
+        // Never the desktop-only halves.
+        for file in ["src/main/kotlin/Main.kt", "src/main/kotlin/MosaicPlatformEffects.kt"] {
+            assert!(!android.join(file).exists(), "{file} must stay desktop-only");
+        }
+        let gradle = fs::read_to_string(android.join("build.gradle.kts")).unwrap();
+        assert!(gradle.contains("applicationId = \"com.example.card_studio\""), "{gradle}");
+        assert!(gradle.contains("net.java.dev.jna:jna:5.19.1@aar"), "{gradle}");
+        let manifest = fs::read_to_string(android.join("src/main/AndroidManifest.xml")).unwrap();
+        assert!(manifest.contains("android:label=\"Cards &amp; &lt;Co&gt;\""), "{manifest}");
+        assert!(manifest.contains("android:name=\"mosaic.android.MosaicActivity\""), "{manifest}");
+        let platform = fs::read_to_string(android.join("src/main/kotlin/MosaicPlatform.kt")).unwrap();
+        assert!(platform.contains("toAndroidDragEvent") && !platform.contains("java.awt"), "{platform}");
+        let activity =
+            fs::read_to_string(android.join("src/main/kotlin/mosaic/android/MosaicActivity.kt")).unwrap();
+        assert!(activity.contains("MosaicRuntimeHost.stateDirectory = filesDir"), "{activity}");
+        assert!(activity.contains("MosaicApp(mosaicHost)"), "sample shell: {activity}");
+    }
+
+    #[test]
+    fn a_strict_android_activity_requires_the_runtime() {
+        let activity = build_compose_android_activity(true);
+        assert!(activity.contains("MosaicStartup(::loadMosaicHost)"), "{activity}");
+        assert!(activity.contains("requireNotNull(MosaicRuntimeHost.load())"), "{activity}");
+        assert!(activity.contains("safeDrawingPadding()"), "{activity}");
     }
 
     /// UI89 §2.1: an .xcframework runtime is linked into the SwiftUI package,

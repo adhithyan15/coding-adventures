@@ -34,6 +34,22 @@ SPEC.loader.exec_module(MODULE)
 
 
 class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
+    def test_android_app_builds_with_every_abi(self) -> None:
+        """UI89 §3.4: the generated Android project assembles, and every ABI's
+        engine in the APK exports the Mosaic C ABI."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build the generated Android app (UI89")
+        block = workflow[start:workflow.index("\n      - name:", start + 1)]
+        self.assertIn("needs_mosaic_compose_runtime == 'true'", block)
+        self.assertIn("cargo install cargo-ndk --locked --version", block)
+        self.assertIn("bash code/scripts/build-mosaic-android-libs.sh task-mosaic-app", block)
+        self.assertIn("assembleDebug", block)
+        self.assertIn("for abi in arm64-v8a armeabi-v7a x86_64 x86; do", block)
+        self.assertIn("grep -q ' mosaic_app_create$'", block)
+        setup = workflow.index("- name: Set up Gradle for the Android lane")
+        self.assertIn("gradle-version: '9.4.1'", workflow[setup:start])
+
     def test_force_plan_requires_acceptance(self) -> None:
         self.assertTrue(
             MODULE.requires_mosaic_compose_runtime({"affected_packages": None})

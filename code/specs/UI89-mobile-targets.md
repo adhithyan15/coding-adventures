@@ -174,6 +174,37 @@ the moved code (PR A). Then:
   x86_64 emulator, installs, launches `MosaicActivity`, and requires the
   process to be alive ten seconds later — the iOS gate's shape.
 
+### 3.5 Android, as built
+
+Differences from §3.4, found while building Trestle for an Android 36
+emulator:
+
+- **Copies, not source sets.** The Android project gets its own copies of the
+  shared files (`MosaicAppShell.kt`, `MosaicRuntimeHost.kt`, the components)
+  in `compose/android/src/main/kotlin`, beside its `MosaicPlatform.kt`. AGP's
+  source sets take directories, not file lists, and the desktop directory
+  holds `Main.kt` and the AWT effects; copying says exactly what Android
+  compiles, and the files are generated anyway.
+- **The activity is in a package.** The shared Kotlin is in the root
+  package, but Android resolves a dot-less activity name against the app's
+  package, so `MosaicActivity` is `mosaic.android.MosaicActivity` and imports
+  the shared declarations by simple name.
+- **Pins that work together:** Android Gradle Plugin 9.2.1 (9.4 needs Gradle
+  9.6), the Compose BOM 2026.06.01 (Compose 1.11, matching desktop's Compose
+  Multiplatform 1.11; the 1.12 libraries need `compileSdk` 37),
+  activity-compose 1.13.0, JNA 5.19.1 `aar`, `compileSdk`/`targetSdk` 36,
+  `minSdk` 26. CI pins Gradle 9.4.1 for this lane.
+- **Edge to edge.** The activity enables edge-to-edge and pads the content
+  with the safe-drawing insets, and the manifest resizes for the keyboard, so
+  the system bars and keyboard never cover the app.
+- **One known gap:** Android's `DragAndDropTransferData` has no completion
+  callback on the drag source, so a drag's `onCompleted` does not run there;
+  the drop target's handlers do.
+- **The gate, first half.** CI builds the APK with all four ABIs and checks
+  every ABI's engine exports `mosaic_app_create`. Launching on an emulator in
+  CI is its own step next; it has been done by hand (Trestle, Android 36,
+  arm64 emulator).
+
 ## 4. CI
 
 | lane | builds | drives |

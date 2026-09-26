@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+### Added — an Android app for every Compose package (UI89 §3.4)
+
+A Compose build with `--emit-project` also writes `compose/android/`: an
+Android Gradle project (AGP 9.2.1, Compose BOM 2026.06.01, SDK 36, minSdk 26)
+with the shared shell, runtime host and components copied in, Android's
+`MosaicPlatform.kt`, and `mosaic.android.MosaicActivity`, which points the
+host's state at `filesDir` and draws edge to edge within the safe insets. The
+application id and label come from `[app]` (a bundle identifier is mapped to
+Java identifiers). `code/scripts/build-mosaic-android-libs.sh` builds the
+engine for each ABI into `jniLibs/<abi>/libmosaic_app.so`. Verified: Trestle
+builds and runs on an Android 36 emulator.
+
+### Changed — the Compose app splits along its platform seams (UI89 §3.4)
+
+Groundwork for Android, desktop behaviour unchanged:
+- `Main.kt` is now only the desktop half (the window and, for a strict app,
+  `loadMosaicHost`, where package effect handlers are installed);
+  `MosaicAppShell.kt` holds what every Compose platform shares (`MosaicApp`,
+  `MosaicStartup`, which now takes its host loader from the caller, the host
+  interface, the prop helpers). `MosaicComposeHostBridge` is `internal`.
+- `MosaicPlatform.kt`, the desktop half of drag and drop, ships beside the
+  components and in the Gradle source set.
+
 ### Added — an installable iOS / iPadOS app target (UI89 §2.2)
 
 - A SwiftUI build whose `--runtime-library` is an `.xcframework` also writes
