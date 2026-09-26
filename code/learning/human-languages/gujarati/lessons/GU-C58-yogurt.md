@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C58-yogurt
 spine_node: SPINE-COURTESY-THANK
-sequence: 2970
+sequence: 2983
 chapter: 58
 type: word
 headword: "દહીં"

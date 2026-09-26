@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C29-hear-chandra
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1630
+sequence: 1643
 chapter: 33
 type: word
 headword: ચંદ્ર

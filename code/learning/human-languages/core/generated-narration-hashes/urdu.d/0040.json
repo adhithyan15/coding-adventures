@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:1e79ddb783e44aa2",
+  "lessonIds": [
+    "UR-C40-chehra",
+    "UR-C40-khun",
+    "UR-C40-tang",
+    "UR-C40-ghutna",
+    "UR-C40-bukhar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch40.txt",
+  "json": "urdu/narration/ch40.json",
+  "textHash": "fnv1a64:ea966da7a9037c27",
+  "jsonHash": "fnv1a64:134e9cadc4120b20",
+  "findings": []
+}

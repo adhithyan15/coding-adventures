@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "Hot, Cold, Slowly, Fast, Expensive",
+  "label": "ch:mr-hot-cold-slowly-fast-expensive",
+  "canDo": "I can say hot, cold, slowly, fast and expensive.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C104-mahag",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can say hot, cold, slowly, fast and expensive.",
+    "assesses": [
+      "MR-LEX-C104-ADJ104-03",
+      "MR-LEX-C104-ADJ104-04",
+      "MR-LEX-C104-ADJ104-05"
+    ]
+  }
+}

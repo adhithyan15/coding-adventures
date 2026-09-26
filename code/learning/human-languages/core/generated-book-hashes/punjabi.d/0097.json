@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:d4616ccb5c4d8933",
+  "lessonIds": [
+    "PA-C97-hazar",
+    "PA-C97-dunia",
+    "PA-C97-rang",
+    "PA-C97-git",
+    "PA-C97-safar"
+  ],
+  "tex": "punjabi/book/chapters/ch97-thousand-world-colour-song-journey.tex"
+}

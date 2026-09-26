@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:3c568ed0384e10e0",
+  "lessonIds": [
+    "PA-C67-nashta",
+    "PA-C67-anda",
+    "PA-C67-ghar",
+    "PA-C67-khirki",
+    "PA-C67-kursi"
+  ],
+  "tex": "punjabi/book/chapters/ch67-breakfast-egg-house-window-chair.tex"
+}

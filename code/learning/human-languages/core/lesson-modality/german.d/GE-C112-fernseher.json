@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C112-fernseher",
+    "language": "german",
+    "chapter": 112,
+    "sequence": 4410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd92625cd497170f"
+  },
+  "findings": []
+}

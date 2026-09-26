@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C109-varsa",
+    "language": "marathi",
+    "chapter": 109,
+    "sequence": 4880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c22b84e77ab4fe4"
+  },
+  "findings": []
+}

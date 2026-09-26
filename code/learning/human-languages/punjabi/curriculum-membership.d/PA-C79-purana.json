@@ -1,0 +1,11 @@
+{
+  "id": "PA-C79-purana",
+  "pathSegment": "PA-PATH-79-ANIMALS79",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-79-ANIMALS79",
+      "order": 4
+    }
+  ]
+}

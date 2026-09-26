@@ -1,0 +1,11 @@
+{
+  "id": "AR-C58-rakada",
+  "pathSegment": "AR-PATH-58-VERBS58",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-58-VERBS58",
+      "order": 2
+    }
+  ]
+}

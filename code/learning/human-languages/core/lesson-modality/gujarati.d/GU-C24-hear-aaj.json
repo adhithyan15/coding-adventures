@@ -3,7 +3,7 @@
     "id": "GU-C24-hear-aaj",
     "language": "gujarati",
     "chapter": 28,
-    "sequence": 1240,
+    "sequence": 1253,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:35cafe3fcbe79189"
+    "sourceHash": "fnv1a64:b827f9516edc55f9"
   },
   "findings": []
 }

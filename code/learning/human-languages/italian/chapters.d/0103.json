@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "Jumper, Tie, Gloves, Scarf, Boots",
+  "label": "ch:it-jumper-tie-gloves-scarf-boots",
+  "canDo": "I can say a jumper, a tie, gloves, a scarf and boots.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C103-stivali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say a jumper, a tie, gloves, a scarf and boots.",
+    "assesses": [
+      "IT-LEX-C103-VESTITI103-03",
+      "IT-LEX-C103-VESTITI103-04",
+      "IT-LEX-C103-VESTITI103-05"
+    ]
+  }
+}

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5b82cd2eda58c56a",
+  "sourceHash": "fnv1a64:c91a0fd1c72e8550",
   "lessons": [
     {
       "id": "UR-C04-kaise-kaisi",
@@ -472,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00ca41f9592de65b",
+      "sourceHash": "fnv1a64:7f74c42f97939b60",
       "notice": null,
       "blocks": [
         {
@@ -509,25 +509,6 @@
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: the verb closes the frame",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Urdu puts the copula at the end:"
-            },
-            {
-              "kind": "speech",
-              "text": "maiṅ + [state] + hūṅ — I + [state] + am."
-            },
-            {
-              "kind": "speech",
-              "text": "Learn only this first-person frame. You do not need the full copula chart to answer one wellbeing question. Notice the useful contrast: respectful āp... haiṅ, but first-person maiṅ... hūṅ."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -561,7 +542,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -576,7 +557,119 @@
             {
               "kind": "activity",
               "scored": true,
-              "id": "UR-C04-main-hun-frame",
+              "id": "UR-C04-main-hun-i",
+              "prompt": "Type the Urdu word for 'I'.",
+              "assesses": [
+                "UR-LEX-MAIN"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "میں",
+                "main",
+                "maiṅ"
+              ],
+              "feedback": {
+                "correct": "Right: میں maiṅ opens the answer.",
+                "incorrect": "Use میں — maiṅ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C04-main-hun-more",
+      "sequence": 133,
+      "title": "(میں... ہوں, continued) — the verb closes the frame",
+      "headword": "(میں ... ہوں, continued)",
+      "romanization": "(maiṅ ... hūṅ, continued)",
+      "gloss": "the verb closes the frame",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:052465312e9933f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say میں... ہوں again, and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: the verb closes the frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Urdu puts the copula at the end:"
+            },
+            {
+              "kind": "speech",
+              "text": "maiṅ + [state] + hūṅ — I + [state] + am."
+            },
+            {
+              "kind": "speech",
+              "text": "Learn only this first-person frame. You do not need the full copula chart to answer one wellbeing question. Notice the useful contrast: respectful āp... haiṅ, but first-person maiṅ... hūṅ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what this lesson added to میں... ہوں, in one sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what this lesson added to **میں ... ہوں**, in one sentence]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did this lesson add to میں... ہوں? Say it once more, without looking."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C04-main-hun-more-frame",
               "prompt": "Type the Urdu frame 'I am...', leaving three dots for the state word.",
               "assesses": [
                 "UR-GRAMMAR-MAIN-HUN-FRAME"
@@ -749,7 +842,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1b03f4bdfc4f7cb",
+      "sourceHash": "fnv1a64:e39b76147af75278",
       "notice": null,
       "blocks": [
         {
@@ -888,7 +981,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a9ccdb9c6b73756",
+      "sourceHash": "fnv1a64:10920f7dc3693e39",
       "notice": null,
       "blocks": [
         {

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C91-okay
 spine_node: SPINE-COURTESY-THANK
-sequence: 4650
+sequence: 4663
 chapter: 91
 type: word
 headword: "ઠીક"

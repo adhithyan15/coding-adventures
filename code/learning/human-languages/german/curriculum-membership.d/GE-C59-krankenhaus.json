@@ -1,0 +1,11 @@
+{
+  "id": "GE-C59-krankenhaus",
+  "pathSegment": "GE-PATH-59-GESUNDHEIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-59-GESUNDHEIT",
+      "order": 3
+    }
+  ]
+}

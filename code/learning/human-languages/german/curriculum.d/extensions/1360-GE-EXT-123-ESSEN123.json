@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-123-ESSEN123",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say butter, a sauce, vinegar, a dessert and a meal.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C137-visiter",
+    "language": "french",
+    "chapter": 137,
+    "sequence": 6360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0fedfb21708e004e"
+  },
+  "findings": []
+}

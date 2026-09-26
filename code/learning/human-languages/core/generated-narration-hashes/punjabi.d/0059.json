@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:7e321aa3e9c32873",
+  "lessonIds": [
+    "PA-C59-dhona",
+    "PA-C59-hassna",
+    "PA-C59-rona",
+    "PA-C59-gauna",
+    "PA-C59-nachchna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch59.txt",
+  "json": "punjabi/narration/ch59.json",
+  "textHash": "fnv1a64:f9c596096f8bfa09",
+  "jsonHash": "fnv1a64:134ca424d6538142",
+  "findings": []
+}

@@ -3,7 +3,7 @@
     "id": "GU-C69-star",
     "language": "gujarati",
     "chapter": 69,
-    "sequence": 3510,
+    "sequence": 3523,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ed070b290b0a22ba"
+    "sourceHash": "fnv1a64:76564337a84f247c"
   },
   "findings": []
 }

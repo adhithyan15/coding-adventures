@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:93b8780aba26f555",
+  "lessonIds": [
+    "GE-C134-langweilig",
+    "GE-C134-schwierig",
+    "GE-C134-fertig",
+    "GE-C134-bereit",
+    "GE-C134-sicher"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch134.txt",
+  "json": "german/narration/ch134.json",
+  "textHash": "fnv1a64:30289950e3abc626",
+  "jsonHash": "fnv1a64:d626a2e3719e1c34",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:d8e9754711170192",
+  "lessonIds": [
+    "UR-C43-ammi",
+    "UR-C43-beta",
+    "UR-C43-beti",
+    "UR-C43-dada",
+    "UR-C43-dadi"
+  ],
+  "tex": "urdu/book/chapters/ch43-mum-son-daughter-grandfather-grandmother.tex"
+}

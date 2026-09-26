@@ -9,20 +9,20 @@ type: writing
 headword: ई
 romanization: "ii"
 gloss: the standing long i — the letter that starts a word where the sign you have drawn since chapter one rides one
-prerequisites: [MR-W40-i-independent, MR-W01-ii-matra]
+prerequisites: [MR-W40-i-independent, MR-W01-ii-matra, MR-C65-iishvar]
 sounds: []
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-I-INDEPENDENT-01, MR-SCRIPT-II-MATRA-01]
+  knowledge: [MR-SCRIPT-I-INDEPENDENT-01, MR-SCRIPT-II-MATRA-01, MR-LEX-ANCHOR-IISHVAR]
 introduces:
   knowledge: [MR-SCRIPT-II-INDEPENDENT-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-II-INDEPENDENT-01, MR-SCRIPT-I-INDEPENDENT-01, MR-SCRIPT-II-MATRA-01]
+  knowledge: [MR-SCRIPT-II-INDEPENDENT-01, MR-SCRIPT-I-INDEPENDENT-01, MR-SCRIPT-II-MATRA-01, MR-LEX-ANCHOR-IISHVAR]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W40-i-independent, MR-W01-ii-matra]
 # ई — the long one, standing on its own
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-I-INDEPENDENT-01, MR-SCRIPT-II-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-I-INDEPENDENT-01, MR-SCRIPT-II-MATRA-01, MR-LEX-ANCHOR-IISHVAR] -->
 
 [PAUSE 2s] Draw the short standing **i**. Then draw the long **ii** sign, the
 one that hangs on a consonant and has been in your hand since the first chapter.

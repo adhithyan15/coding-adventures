@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:aa42e682bb83c3a2",
+  "lessonIds": [
+    "MW-C72-badro",
+    "MW-C72-sap",
+    "MW-C72-mor",
+    "MW-C72-baro",
+    "MW-C72-chhoto"
+  ],
+  "tex": "marwadi/book/chapters/ch72-monkey-snake-peacock-big-small.tex"
+}

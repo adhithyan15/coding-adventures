@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C89-question
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 4520
+sequence: 4533
 chapter: 89
 type: word
 headword: "પ્રશ્ન"

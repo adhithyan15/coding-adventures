@@ -1,0 +1,19 @@
+{
+  "chapter": 45,
+  "title": "Boy, Girl, Man, Neighbour, Guest",
+  "label": "ch:ur-boy-girl-man-neighbour-guest",
+  "canDo": "I can say a boy, a girl, a man, a neighbour and a guest.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "UR-C45-mehman",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 45: i can say a boy, a girl, a man, a neighbour and a guest.",
+    "assesses": [
+      "UR-LEX-C45-FAMILY45-03",
+      "UR-LEX-C45-FAMILY45-04",
+      "UR-LEX-C45-FAMILY45-05"
+    ]
+  }
+}

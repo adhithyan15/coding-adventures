@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C68-monkey
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3470
+sequence: 3483
 chapter: 68
 type: word
 headword: "વાંદરો"

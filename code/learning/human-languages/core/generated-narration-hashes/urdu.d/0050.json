@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:31d4d207b8b6cf89",
+  "lessonIds": [
+    "UR-C50-gana",
+    "UR-C50-nachna",
+    "UR-C50-milna",
+    "UR-C50-rahna",
+    "UR-C50-sikhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch50.txt",
+  "json": "urdu/narration/ch50.json",
+  "textHash": "fnv1a64:0b8f09de6f8520f4",
+  "jsonHash": "fnv1a64:23f1428f7c34b56d",
+  "findings": []
+}

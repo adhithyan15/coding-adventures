@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C02-puli",
+    "language": "malayalam",
+    "chapter": 2,
+    "sequence": 141,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:56782bf0ab127be9"
+  },
+  "findings": []
+}

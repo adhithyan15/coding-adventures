@@ -3,7 +3,7 @@
     "id": "GU-R17-whats-your-name-r4",
     "language": "gujarati",
     "chapter": 21,
-    "sequence": 780,
+    "sequence": 793,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:adb50056e7c92811",
+    "sourceHash": "fnv1a64:6f09cbd5ab49f861",
     "detachableSegments": [
       "Writing — from sound"
     ]

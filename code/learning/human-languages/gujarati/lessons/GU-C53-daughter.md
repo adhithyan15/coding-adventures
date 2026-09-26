@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C53-daughter
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2710
+sequence: 2723
 chapter: 53
 type: word
 headword: "દીકરી"

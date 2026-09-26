@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C30-hear-pustak
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1730
+sequence: 1743
 chapter: 34
 type: word
 headword: પુસ્તક

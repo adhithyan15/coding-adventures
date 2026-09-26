@@ -3,7 +3,7 @@
     "id": "GU-C02-anand",
     "language": "gujarati",
     "chapter": 8,
-    "sequence": 130,
+    "sequence": 143,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:043a1409bbb084fb",
+    "sourceHash": "fnv1a64:72a1c43b3764cd59",
     "detachableSegments": [
       "The letters in this word"
     ]

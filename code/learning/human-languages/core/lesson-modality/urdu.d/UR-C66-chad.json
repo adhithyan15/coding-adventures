@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C66-chad",
+    "language": "urdu",
+    "chapter": 66,
+    "sequence": 3360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55f8e9cef808ffdc"
+  },
+  "findings": []
+}

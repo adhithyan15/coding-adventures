@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:ffd738d1611cc2bf",
+  "lessonIds": [
+    "MR-C95-shabda",
+    "MR-C95-khel",
+    "MR-C95-patra",
+    "MR-C95-chitra",
+    "MR-C95-jhad"
+  ],
+  "tex": "marathi/book/chapters/ch95-word-game-letter-picture-tree.tex"
+}

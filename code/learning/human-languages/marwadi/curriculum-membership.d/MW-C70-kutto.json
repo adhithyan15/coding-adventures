@@ -1,0 +1,11 @@
+{
+  "id": "MW-C70-kutto",
+  "pathSegment": "MW-PATH-70-NATURE70",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-70-NATURE70",
+      "order": 1
+    }
+  ]
+}

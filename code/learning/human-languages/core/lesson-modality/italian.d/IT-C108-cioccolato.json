@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C108-cioccolato",
+    "language": "italian",
+    "chapter": 108,
+    "sequence": 5150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c4de7deed5f58b3"
+  },
+  "findings": []
+}

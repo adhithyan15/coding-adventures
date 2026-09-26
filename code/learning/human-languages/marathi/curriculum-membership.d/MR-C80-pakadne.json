@@ -1,0 +1,11 @@
+{
+  "id": "MR-C80-pakadne",
+  "pathSegment": "MR-PATH-80-VERBS80",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-80-VERBS80",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C78-qarib",
+    "language": "urdu",
+    "chapter": 78,
+    "sequence": 3970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e870a485ed1d4c9b"
+  },
+  "findings": []
+}

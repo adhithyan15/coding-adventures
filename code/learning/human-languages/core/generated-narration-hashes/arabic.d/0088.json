@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:50c6a16b2e29ac02",
+  "lessonIds": [
+    "AR-C88-bada",
+    "AR-C88-waqt",
+    "AR-C88-baid",
+    "AR-C88-qarib",
+    "AR-C88-dakhil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch88.txt",
+  "json": "arabic/narration/ch88.json",
+  "textHash": "fnv1a64:37a8288264c84c04",
+  "jsonHash": "fnv1a64:04e8e0075fc24923",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C48-bosa",
+    "language": "bengali",
+    "chapter": 48,
+    "sequence": 2560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bcb1c3c2b54f7acb"
+  },
+  "findings": []
+}

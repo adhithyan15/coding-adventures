@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W06-kha
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 83
+sequence: 93
 delivery: script
 chapter: 6
 type: writing
 headword: ખ
 romanization: "kha"
 gloss: "the aspirated consonant kha"
-prerequisites: [GU-W06-independent-e]
+prerequisites: [GU-W06-independent-e, GU-C06-ukhaanun]
 sounds: []
 roots: []
 etymology_hook: "The eating verb begins with a breathy kh; its letter arrives alone before the word."
 duration:
   max_seconds: 225
 requires:
-  knowledge: [GU-SCRIPT-KA-01, GU-SCRIPT-INDEPENDENT-E-01]
+  knowledge: [GU-SCRIPT-KA-01, GU-SCRIPT-INDEPENDENT-E-01, GU-LEX-ANCHOR-UKHAANUN]
 introduces:
   knowledge: [GU-SCRIPT-KHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-KA-01, GU-SCRIPT-KHA-01]
+  knowledge: [GU-SCRIPT-KA-01, GU-SCRIPT-KHA-01, GU-LEX-ANCHOR-UKHAANUN]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W06-independent-e, GU-W03-ka]
 # ખ — the consonant kha
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-KA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-KA-01, GU-LEX-ANCHOR-UKHAANUN] -->
 
 Write unaspirated **ક** once. Say *ka*. Add a clear puff of air aloud for
 *kha*, then put the old shape away.

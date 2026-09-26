@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:17d95120f311e08d",
+  "lessonIds": [
+    "MW-C80-hamesa",
+    "MW-C80-kadi",
+    "MW-C80-jaldi",
+    "MW-C80-der",
+    "MW-C80-paila"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch80.txt",
+  "json": "marwadi/narration/ch80.json",
+  "textHash": "fnv1a64:7dc229eeae0cf58f",
+  "jsonHash": "fnv1a64:cfb85fde270efa93",
+  "findings": []
+}

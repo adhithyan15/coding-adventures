@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "To begin, To visit, To put, To believe, To drive",
+  "label": "ch:it-to-begin-to-visit-to-put-to-believe-to-drive",
+  "canDo": "I can say to begin, to visit, to put, to believe and to drive.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C133-guidare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say to begin, to visit, to put, to believe and to drive.",
+    "assesses": [
+      "IT-LEX-C133-VERBI133-03",
+      "IT-LEX-C133-VERBI133-04",
+      "IT-LEX-C133-VERBI133-05"
+    ]
+  }
+}

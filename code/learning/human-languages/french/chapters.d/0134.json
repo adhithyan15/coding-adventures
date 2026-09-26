@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Grass, Ear, Lip, Number (on a door, Address",
+  "label": "ch:fr-grass-ear-lip-number-on-a-door-address",
+  "canDo": "I can name grass, an ear, a lip, a number (on a door, an address.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C134-adresse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can name grass, an ear, a lip, a number (on a door, an address.",
+    "assesses": [
+      "FR-LEX-C134-NATURE86-03",
+      "FR-LEX-C134-NATURE86-04",
+      "FR-LEX-C134-NATURE86-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C41-okane",
+  "pathSegment": "JA-PATH-41-SCHOOL41",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-41-SCHOOL41",
+      "order": 3
+    }
+  ]
+}

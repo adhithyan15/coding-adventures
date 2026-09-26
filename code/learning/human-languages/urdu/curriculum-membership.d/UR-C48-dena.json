@@ -1,0 +1,11 @@
+{
+  "id": "UR-C48-dena",
+  "pathSegment": "UR-PATH-48-VERBS48",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-48-VERBS48",
+      "order": 3
+    }
+  ]
+}

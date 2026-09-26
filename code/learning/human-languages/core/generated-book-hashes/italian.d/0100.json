@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:d24959755998ee9d",
+  "lessonIds": [
+    "IT-C100-forbici",
+    "IT-C100-sveglia",
+    "IT-C100-telefonino",
+    "IT-C100-macchina-fotografica",
+    "IT-C100-anello"
+  ],
+  "tex": "italian/book/chapters/ch100-scissors-alarm-clock-mobile-phone-camera-ring.tex"
+}

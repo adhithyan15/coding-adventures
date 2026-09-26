@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C81-dur",
+    "language": "marwadi",
+    "chapter": 81,
+    "sequence": 5370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1777259b323b002"
+  },
+  "findings": []
+}

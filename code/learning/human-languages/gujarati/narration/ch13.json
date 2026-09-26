@@ -4,11 +4,11 @@
   "chapter": 13,
   "title": "Six Verbs at the Core",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:47068ac31fa483f4",
+  "sourceHash": "fnv1a64:6718e33cd680b7a1",
   "lessons": [
     {
       "id": "GU-C07-hovun",
-      "sequence": 380,
+      "sequence": 393,
       "title": "હોવું (hovũ) — \"to be,\" and the neuter that names every Gujarati verb",
       "headword": "હોવું",
       "romanization": "hovũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bab0b48b3d722f04",
+      "sourceHash": "fnv1a64:307b18917a987bf4",
       "notice": null,
       "blocks": [
         {
@@ -160,7 +160,7 @@
     },
     {
       "id": "GU-C07-javun",
-      "sequence": 390,
+      "sequence": 403,
       "title": "જવું (javũ) — \"to go,\" and a y that turned into a j",
       "headword": "જવું",
       "romanization": "javũ",
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5b071827becb25f",
+      "sourceHash": "fnv1a64:0e13173d20a76b44",
       "notice": null,
       "blocks": [
         {
@@ -349,7 +349,7 @@
     },
     {
       "id": "GU-C07-aavvun",
-      "sequence": 400,
+      "sequence": 413,
       "title": "આવવું (āvvũ) — \"to come,\" which began as \"to reach\"",
       "headword": "આવવું",
       "romanization": "āvvũ",
@@ -360,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84f5f4388cfbe1b3",
+      "sourceHash": "fnv1a64:383f1cb135f4d643",
       "notice": null,
       "blocks": [
         {
@@ -522,7 +522,7 @@
     },
     {
       "id": "GU-C07-khaavun",
-      "sequence": 410,
+      "sequence": 423,
       "title": "ખાવું (khāvũ) — \"to eat,\" and a family that stops before English",
       "headword": "ખાવું",
       "romanization": "khāvũ",
@@ -533,7 +533,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a6fcfcc17e88294",
+      "sourceHash": "fnv1a64:7a0c51a2e392a39e",
       "notice": null,
       "blocks": [
         {
@@ -668,7 +668,7 @@
     },
     {
       "id": "GU-C07-jovun",
-      "sequence": 420,
+      "sequence": 433,
       "title": "જોવું (jovũ) — \"to see,\" one mark away from \"to go\"",
       "headword": "જોવું",
       "romanization": "jovũ",
@@ -679,7 +679,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d36b2a83bc67ff0",
+      "sourceHash": "fnv1a64:a61bf1f6ec6e6234",
       "notice": null,
       "blocks": [
         {
@@ -833,7 +833,7 @@
     },
     {
       "id": "GU-C07-jaanvun",
-      "sequence": 430,
+      "sequence": 443,
       "title": "જાણવું (jāṇvũ) — \"to know,\" a word English has been carrying all along",
       "headword": "જાણવું",
       "romanization": "jāṇvũ",
@@ -844,7 +844,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38cc62d9ee1819e0",
+      "sourceHash": "fnv1a64:0f0487c65d6d4cfa",
       "notice": null,
       "blocks": [
         {

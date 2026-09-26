@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "Cupboard, Floor, Stairs, Mirror, Light",
+  "label": "ch:ur-cupboard-floor-stairs-mirror-light",
+  "canDo": "I can say a cupboard, the floor, stairs, a ladder, a mirror and a light, a lamp.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "UR-C59-batti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: i can say a cupboard, the floor, stairs, a ladder, a mirror and a light, a lamp.",
+    "assesses": [
+      "UR-LEX-C59-HOME59-03",
+      "UR-LEX-C59-HOME59-04",
+      "UR-LEX-C59-HOME59-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:c1a7337940457979",
+  "lessonIds": [
+    "BN-C42-hat",
+    "BN-C42-chul",
+    "BN-C42-dat",
+    "BN-C42-gola",
+    "BN-C42-pet"
+  ],
+  "tex": "bengali/book/chapters/ch42-hand-hair-tooth-throat-stomach.tex"
+}

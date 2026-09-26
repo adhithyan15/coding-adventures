@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C37-kyaare
 spine_node: SPINE-ASK-LOCATION
-sequence: 2110
+sequence: 2123
 chapter: 41
 type: word
 headword: ક્યારે

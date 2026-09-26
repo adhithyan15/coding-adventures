@@ -1,0 +1,11 @@
+{
+  "id": "FA-C77-hezar",
+  "pathSegment": "FA-PATH-77-NUMBERS77",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-77-NUMBERS77",
+      "order": 1
+    }
+  ]
+}

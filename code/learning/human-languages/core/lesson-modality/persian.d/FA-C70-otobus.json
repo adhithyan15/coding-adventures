@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C70-otobus",
+    "language": "persian",
+    "chapter": 70,
+    "sequence": 3410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4aa83aa93caceb6d"
+  },
+  "findings": []
+}

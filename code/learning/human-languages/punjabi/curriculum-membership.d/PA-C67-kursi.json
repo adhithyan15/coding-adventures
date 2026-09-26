@@ -1,0 +1,11 @@
+{
+  "id": "PA-C67-kursi",
+  "pathSegment": "PA-PATH-67-FOOD67",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-67-FOOD67",
+      "order": 4
+    }
+  ]
+}

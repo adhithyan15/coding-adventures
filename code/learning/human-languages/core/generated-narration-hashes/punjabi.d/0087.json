@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:493e1a2295bd1805",
+  "lessonIds": [
+    "PA-C87-hun",
+    "PA-C87-hamesha",
+    "PA-C87-der",
+    "PA-C87-pahilam",
+    "PA-C87-dur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch87.txt",
+  "json": "punjabi/narration/ch87.json",
+  "textHash": "fnv1a64:60ea8d397296d42f",
+  "jsonHash": "fnv1a64:87f5e4bd36cb389e",
+  "findings": []
+}

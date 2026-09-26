@@ -1,0 +1,11 @@
+{
+  "id": "FR-R127-first-pass-clothes-and-things-you-carry",
+  "pathSegment": "FR-PATH-127-ECOLE79",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-127-ECOLE79",
+      "order": 5
+    }
+  ]
+}

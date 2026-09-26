@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:e7254222302b3e64",
+  "lessonIds": [
+    "MR-C98-surya",
+    "MR-C98-chandra",
+    "MR-C98-samudra",
+    "MR-C98-ag",
+    "MR-C98-barpha"
+  ],
+  "tex": "marathi/book/chapters/ch98-sun-moon-sea-fire-snow.tex"
+}

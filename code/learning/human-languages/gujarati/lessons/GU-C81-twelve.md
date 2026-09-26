@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C81-twelve
 spine_node: SPINE-RESPOND-BASIC
-sequence: 4120
+sequence: 4133
 chapter: 81
 type: word
 headword: "બાર"

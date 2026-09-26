@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C72-short
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3690
+sequence: 3703
 chapter: 72
 type: word
 headword: "ટૂંકું"

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C62-bahatha",
+  "pathSegment": "AR-PATH-62-VERBS62",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-62-VERBS62",
+      "order": 1
+    }
+  ]
+}

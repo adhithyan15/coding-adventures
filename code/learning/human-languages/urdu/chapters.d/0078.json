@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Time, Far, Near, Inside, Outside",
+  "label": "ch:ur-time-far-near-inside-outside",
+  "canDo": "I can say time, far, near, inside and outside.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "UR-C78-bahar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can say time, far, near, inside and outside.",
+    "assesses": [
+      "UR-LEX-C78-TIME78-03",
+      "UR-LEX-C78-TIME78-04",
+      "UR-LEX-C78-TIME78-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C42-abbu",
+    "language": "urdu",
+    "chapter": 42,
+    "sequence": 2170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5b0fea17384e867"
+  },
+  "findings": []
+}

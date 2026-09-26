@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C48-blood
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2460
+sequence: 2473
 chapter: 48
 type: word
 headword: "લોહી"

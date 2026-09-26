@@ -8,7 +8,7 @@ type: grammar
 headword: Wohnst du in Berlin?
 gloss: the question with no question word — the verb steps out of slot two into slot one, which is what English did before it invented "do"
 concept_tag: QUESTION-POLAR
-prerequisites: [GE-R32-nichts-davon, GE-C02-wie-heissen-sie, GE-C05-verbstamm]
+prerequisites: [GE-R32-nichts-davon, GE-C02-wie-heissen-sie, GE-C05-verbstamm, GE-C18-ja-more]
 sounds: []
 roots: []
 etymology_hook: "English once asked questions this way and stopped: Speak you German? is Shakespeare's ordinary word order, and Do you speak German? is the replacement English built when it lost the habit German kept"

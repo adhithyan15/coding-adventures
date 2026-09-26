@@ -1,0 +1,11 @@
+{
+  "id": "JA-C32-yasai",
+  "pathSegment": "JA-PATH-32-FOOD32",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-32-FOOD32",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C73-juno",
+  "pathSegment": "MW-PATH-73-ADJ73",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-73-ADJ73",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C82-blatt",
+    "language": "german",
+    "chapter": 82,
+    "sequence": 2890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac9a8b7c6392ab02"
+  },
+  "findings": []
+}

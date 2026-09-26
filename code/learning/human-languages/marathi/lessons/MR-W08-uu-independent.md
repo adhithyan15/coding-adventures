@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W08-uu-independent
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 94
+sequence: 124
 delivery: script
 chapter: 8
 type: writing
 headword: ऊ
 romanization: "ū"
 gloss: independent long uu — the last sign of the second runway
-prerequisites: [MR-W08-u-independent]
+prerequisites: [MR-W08-u-independent, MR-C08-uub]
 sounds: [independent-oo]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-U-INDEPENDENT-01, MR-SCRIPT-UU-MATRA-01]
+  knowledge: [MR-SCRIPT-U-INDEPENDENT-01, MR-SCRIPT-UU-MATRA-01, MR-LEX-ANCHOR-UUB]
 introduces:
   knowledge: [MR-SCRIPT-UU-INDEPENDENT-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-UU-INDEPENDENT-01, MR-SCRIPT-U-INDEPENDENT-01, MR-SCRIPT-UU-MATRA-01]
+  knowledge: [MR-SCRIPT-UU-INDEPENDENT-01, MR-SCRIPT-U-INDEPENDENT-01, MR-SCRIPT-UU-MATRA-01, MR-LEX-ANCHOR-UUB]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W08-u-independent, MR-W05-uu-matra]
 # ऊ — long *ū* standing on its own
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-UUB] -->
 
 One more, and this runway is finished. It is the long partner of the letter you wrote a moment ago.
 

@@ -1,11 +1,11 @@
 {
   "id": "GU-W07-independent-ii",
   "pathSegment": "GU-PATH-FINAL-SCRIPT-CLOSURE-B",
-  "pathOrder": 2,
+  "pathOrder": 5,
   "extensions": [
     {
       "id": "GU-EXT-034-FINAL-SCRIPT-CLOSURE-B",
-      "order": 2
+      "order": 5
     }
   ]
 }

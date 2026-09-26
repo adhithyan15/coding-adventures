@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:d7f6c80629086667",
+  "lessonIds": [
+    "GE-C114-decke",
+    "GE-C114-handtuch",
+    "GE-C114-seife",
+    "GE-C114-zahnbuerste",
+    "GE-C114-zahnpasta"
+  ],
+  "tex": "german/book/chapters/ch114-blanket-towel-soap-toothbrush-toothpaste.tex"
+}

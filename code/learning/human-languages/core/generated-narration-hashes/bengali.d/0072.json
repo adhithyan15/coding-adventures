@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:8aecc76029eae354",
+  "lessonIds": [
+    "BN-C72-boro",
+    "BN-C72-chhoto",
+    "BN-C72-notun",
+    "BN-C72-purono",
+    "BN-C72-kharap"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch72.txt",
+  "json": "bengali/narration/ch72.json",
+  "textHash": "fnv1a64:c18ade338b9ddd71",
+  "jsonHash": "fnv1a64:2fc1f2d03ec5fe4f",
+  "findings": []
+}

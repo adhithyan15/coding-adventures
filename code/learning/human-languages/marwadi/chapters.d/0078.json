@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Day, Night, Morning, Month, Year",
+  "label": "ch:mw-day-night-morning-month-year",
+  "canDo": "I can say a day, night, morning, a month and a year.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "MW-C78-baras",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can say a day, night, morning, a month and a year.",
+    "assesses": [
+      "MW-LEX-C78-TIME78-03",
+      "MW-LEX-C78-TIME78-04",
+      "MW-LEX-C78-TIME78-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C73-aste",
+  "pathSegment": "BN-PATH-73-ADJ73",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-73-ADJ73",
+      "order": 2
+    }
+  ]
+}

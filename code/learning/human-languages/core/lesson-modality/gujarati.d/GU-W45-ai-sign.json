@@ -3,7 +3,7 @@
     "id": "GU-W45-ai-sign",
     "language": "gujarati",
     "chapter": 45,
-    "sequence": 2310,
+    "sequence": 2323,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:0f93695259810862",
+    "sourceHash": "fnv1a64:4679f99b8d363288",
     "detachableSegments": [
       "Script you'll notice: ૈ",
       "Writing: ૈ"

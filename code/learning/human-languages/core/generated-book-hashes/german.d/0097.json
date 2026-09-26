@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:bac33b0621385bb6",
+  "lessonIds": [
+    "GE-C97-bruecke",
+    "GE-C97-kirche",
+    "GE-C97-apotheke",
+    "GE-C97-dorf",
+    "GE-C97-polizei"
+  ],
+  "tex": "german/book/chapters/ch97-bridge-church-pharmacy-village-police.tex"
+}

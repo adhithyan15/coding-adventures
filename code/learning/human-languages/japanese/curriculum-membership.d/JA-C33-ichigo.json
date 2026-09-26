@@ -1,0 +1,11 @@
+{
+  "id": "JA-C33-ichigo",
+  "pathSegment": "JA-PATH-33-FOOD33",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-33-FOOD33",
+      "order": 2
+    }
+  ]
+}

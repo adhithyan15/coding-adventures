@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C24-hear-savaar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1160
+sequence: 1173
 chapter: 28
 type: word
 headword: સવાર

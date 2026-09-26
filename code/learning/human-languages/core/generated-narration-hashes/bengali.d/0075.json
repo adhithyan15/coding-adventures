@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:3afb7f88afd481ff",
+  "lessonIds": [
+    "BN-C75-dhoni",
+    "BN-C75-gorib",
+    "BN-C75-nongra",
+    "BN-C75-teto",
+    "BN-C75-tok"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch75.txt",
+  "json": "bengali/narration/ch75.json",
+  "textHash": "fnv1a64:afcc03f4858a684a",
+  "jsonHash": "fnv1a64:ac8ceb38045cd548",
+  "findings": []
+}

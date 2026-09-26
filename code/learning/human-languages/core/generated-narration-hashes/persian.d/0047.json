@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:fe9140ad5b52cb00",
+  "lessonIds": [
+    "FA-C47-ghofl",
+    "FA-C47-boshghab",
+    "FA-C47-chaghu",
+    "FA-C47-changal",
+    "FA-C47-ghashogh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch47.txt",
+  "json": "persian/narration/ch47.json",
+  "textHash": "fnv1a64:3a16e8dbd9c86d76",
+  "jsonHash": "fnv1a64:2a885c90ce6341a8",
+  "findings": []
+}

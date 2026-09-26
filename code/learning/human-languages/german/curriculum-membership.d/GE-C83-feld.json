@@ -1,0 +1,11 @@
+{
+  "id": "GE-C83-feld",
+  "pathSegment": "GE-PATH-83-NATUR2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-83-NATUR2",
+      "order": 3
+    }
+  ]
+}

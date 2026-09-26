@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Fat, Thin, Light, Heavy, True",
+  "label": "ch:bn-fat-thin-light-heavy-true",
+  "canDo": "I can say fat, thick, thin, light, heavy and true.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C76-sotti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can say fat, thick, thin, light, heavy and true.",
+    "assesses": [
+      "BN-LEX-C76-ADJ76-03",
+      "BN-LEX-C76-ADJ76-04",
+      "BN-LEX-C76-ADJ76-05"
+    ]
+  }
+}

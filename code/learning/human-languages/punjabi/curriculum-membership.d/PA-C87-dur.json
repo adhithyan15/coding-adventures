@@ -1,0 +1,11 @@
+{
+  "id": "PA-C87-dur",
+  "pathSegment": "PA-PATH-87-TIME87",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-87-TIME87",
+      "order": 4
+    }
+  ]
+}

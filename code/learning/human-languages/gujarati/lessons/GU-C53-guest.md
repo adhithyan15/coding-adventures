@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C53-guest
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2730
+sequence: 2743
 chapter: 53
 type: word
 headword: "મહેમાન"

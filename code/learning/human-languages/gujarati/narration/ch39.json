@@ -4,11 +4,11 @@
   "chapter": 39,
   "title": "If, and When",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6ba47c9af5b024e7",
+  "sourceHash": "fnv1a64:d76925d3905d4402",
   "lessons": [
     {
       "id": "GU-C35-jo",
-      "sequence": 1980,
+      "sequence": 1993,
       "title": "જો (jo) — if",
       "headword": "જો",
       "romanization": "jo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af98d67c646d4a95",
+      "sourceHash": "fnv1a64:d7af6d438e4c68b9",
       "notice": null,
       "blocks": [
         {
@@ -128,7 +128,7 @@
     },
     {
       "id": "GU-C35-jo-to",
-      "sequence": 1990,
+      "sequence": 2003,
       "title": "જો … તો … (jo … to …) — if … then …",
       "headword": "જો … તો …",
       "romanization": "jo … to …",
@@ -139,7 +139,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4088471f5da82cec",
+      "sourceHash": "fnv1a64:ed10b527bc64b664",
       "notice": null,
       "blocks": [
         {
@@ -252,7 +252,7 @@
     },
     {
       "id": "GU-C35-jo-write",
-      "sequence": 2000,
+      "sequence": 2013,
       "title": "જો (jo) reaches the page",
       "headword": "જો",
       "romanization": "jo",
@@ -265,7 +265,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d80261ed3fdef024",
+      "sourceHash": "fnv1a64:0bb2f09b0c63b7d4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -346,7 +346,7 @@
     },
     {
       "id": "GU-C35-jyaare",
-      "sequence": 2010,
+      "sequence": 2023,
       "title": "જ્યારે (jyāre) — when",
       "headword": "જ્યારે",
       "romanization": "jyāre",
@@ -357,7 +357,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d0d3c87bce1118e",
+      "sourceHash": "fnv1a64:185eee35e3baa164",
       "notice": null,
       "blocks": [
         {
@@ -466,7 +466,7 @@
     },
     {
       "id": "GU-C35-condition-checkpoint",
-      "sequence": 2020,
+      "sequence": 2033,
       "title": "Conditions and times, all together",
       "headword": "જો … તો … — જ્યારે …",
       "romanization": "jo … to … — jyāre …",
@@ -477,7 +477,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93e4a7c6d99fb4dd",
+      "sourceHash": "fnv1a64:29b257d51fa2da8d",
       "notice": null,
       "blocks": [
         {

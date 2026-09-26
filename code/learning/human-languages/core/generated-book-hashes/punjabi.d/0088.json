@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:1a0c0b0585c826ab",
+  "lessonIds": [
+    "PA-C88-nere",
+    "PA-C88-andar",
+    "PA-C88-bahar",
+    "PA-C88-utte",
+    "PA-C88-hetham"
+  ],
+  "tex": "punjabi/book/chapters/ch88-near-inside-outside-on-below.tex"
+}

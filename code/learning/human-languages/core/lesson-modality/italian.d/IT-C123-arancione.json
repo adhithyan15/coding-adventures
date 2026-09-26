@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C123-arancione",
+    "language": "italian",
+    "chapter": 123,
+    "sequence": 6030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98990a8b3f812357"
+  },
+  "findings": []
+}

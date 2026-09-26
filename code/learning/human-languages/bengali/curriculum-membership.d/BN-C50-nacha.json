@@ -1,0 +1,11 @@
+{
+  "id": "BN-C50-nacha",
+  "pathSegment": "BN-PATH-50-VERBS50",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-50-VERBS50",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:07b3b2c2d9cabf61",
+  "lessonIds": [
+    "IT-C101-collana",
+    "IT-C101-candela",
+    "IT-C101-calendario",
+    "IT-C101-lettera",
+    "IT-C101-messaggio"
+  ],
+  "tex": "italian/book/chapters/ch101-necklace-candle-calendar-letter-message.tex"
+}

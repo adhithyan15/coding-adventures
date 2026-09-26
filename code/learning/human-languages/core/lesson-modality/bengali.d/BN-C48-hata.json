@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C48-hata",
+    "language": "bengali",
+    "chapter": 48,
+    "sequence": 2570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48c6156cf2dcc9c3"
+  },
+  "findings": []
+}

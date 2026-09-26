@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:9e91bf6db5a97f43",
+  "lessonIds": [
+    "UR-C55-alu",
+    "UR-C55-tamatar",
+    "UR-C55-gajar",
+    "UR-C55-chini",
+    "UR-C55-namak"
+  ],
+  "tex": "urdu/book/chapters/ch55-potato-tomato-carrot-sugar-salt.tex"
+}

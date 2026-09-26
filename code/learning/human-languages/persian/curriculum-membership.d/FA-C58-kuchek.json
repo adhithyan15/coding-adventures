@@ -1,0 +1,11 @@
+{
+  "id": "FA-C58-kuchek",
+  "pathSegment": "FA-PATH-58-ANIMALS58",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-58-ANIMALS58",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C56-tifl",
+    "language": "arabic",
+    "chapter": 56,
+    "sequence": 1740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2be99f106f01726e"
+  },
+  "findings": []
+}

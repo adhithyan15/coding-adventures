@@ -1,0 +1,19 @@
+{
+  "chapter": 81,
+  "title": "Temple, Hotel, Police, Boat, Bicycle",
+  "label": "ch:ur-temple-hotel-police-boat-bicycle",
+  "canDo": "I can say a temple, a hotel, the police, a boat and a bicycle.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "UR-C81-saikil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: i can say a temple, a hotel, the police, a boat and a bicycle.",
+    "assesses": [
+      "UR-LEX-C81-TOWN81-03",
+      "UR-LEX-C81-TOWN81-04",
+      "UR-LEX-C81-TOWN81-05"
+    ]
+  }
+}

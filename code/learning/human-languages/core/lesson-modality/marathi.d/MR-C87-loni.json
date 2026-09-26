@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C87-loni",
+    "language": "marathi",
+    "chapter": 87,
+    "sequence": 3740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64e5fcb3671be13e"
+  },
+  "findings": []
+}

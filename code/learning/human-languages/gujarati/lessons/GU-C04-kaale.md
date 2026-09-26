@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C04-kaale
 spine_node: SPINE-TAKE-LEAVE
-sequence: 250
+sequence: 263
 chapter: 10
 type: phrase
 headword: કાલે મળીશું

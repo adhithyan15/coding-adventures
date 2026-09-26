@@ -1,0 +1,11 @@
+{
+  "id": "GE-C127-tafel",
+  "pathSegment": "GE-PATH-127-SCHULE127",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-127-SCHULE127",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:c4735f96c5ad558a",
+  "lessonIds": [
+    "BN-C64-kolom",
+    "BN-C64-kagoj",
+    "BN-C64-skul",
+    "BN-C64-taka",
+    "BN-C64-proshno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch64.txt",
+  "json": "bengali/narration/ch64.json",
+  "textHash": "fnv1a64:915fb5bc2437826a",
+  "jsonHash": "fnv1a64:9611dfbb70406d6e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C115-kapde",
+    "language": "marathi",
+    "chapter": 115,
+    "sequence": 5190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a852d698060a32ee"
+  },
+  "findings": []
+}

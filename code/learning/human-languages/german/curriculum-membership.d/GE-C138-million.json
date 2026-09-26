@@ -1,0 +1,11 @@
+{
+  "id": "GE-C138-million",
+  "pathSegment": "GE-PATH-138-ZAHL138",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-138-ZAHL138",
+      "order": 4
+    }
+  ]
+}

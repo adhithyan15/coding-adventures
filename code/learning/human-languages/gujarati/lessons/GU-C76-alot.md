@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C76-alot
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3860
+sequence: 3873
 chapter: 76
 type: word
 headword: "ઘણું"

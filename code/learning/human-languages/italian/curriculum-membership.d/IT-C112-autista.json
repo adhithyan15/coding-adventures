@@ -1,0 +1,11 @@
+{
+  "id": "IT-C112-autista",
+  "pathSegment": "IT-PATH-112-LAVORO112",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-112-LAVORO112",
+      "order": 1
+    }
+  ]
+}

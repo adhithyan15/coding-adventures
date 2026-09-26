@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:c590804dd23c9296",
+  "lessonIds": [
+    "AR-C82-jadid",
+    "AR-C82-qadim",
+    "AR-C82-jayyid",
+    "AR-C82-tawil",
+    "AR-C82-qasir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch82.txt",
+  "json": "arabic/narration/ch82.json",
+  "textHash": "fnv1a64:fd9c00d3194cedfa",
+  "jsonHash": "fnv1a64:6b698950705498d9",
+  "findings": []
+}

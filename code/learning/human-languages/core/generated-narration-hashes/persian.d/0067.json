@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:8c38c57cacb720b0",
+  "lessonIds": [
+    "FA-C67-sobh",
+    "FA-C67-shab",
+    "FA-C67-ruz",
+    "FA-C67-dur",
+    "FA-C67-nazdik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch67.txt",
+  "json": "persian/narration/ch67.json",
+  "textHash": "fnv1a64:1f5ab5a3bfcd0882",
+  "jsonHash": "fnv1a64:5f49f50cb0cf663b",
+  "findings": []
+}

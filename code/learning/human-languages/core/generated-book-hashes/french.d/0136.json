@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:788508e59d1dc91c",
+  "lessonIds": [
+    "FR-C136-zero",
+    "FR-C136-soixante",
+    "FR-C136-soixante-dix",
+    "FR-C136-quatre-vingt-dix",
+    "FR-C136-mille"
+  ],
+  "tex": "french/book/chapters/ch136-zero-sixty-seventy-ninety-thousand.tex"
+}

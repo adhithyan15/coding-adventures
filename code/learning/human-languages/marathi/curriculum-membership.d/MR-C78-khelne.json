@@ -1,0 +1,11 @@
+{
+  "id": "MR-C78-khelne",
+  "pathSegment": "MR-PATH-78-VERBS78",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-78-VERBS78",
+      "order": 1
+    }
+  ]
+}

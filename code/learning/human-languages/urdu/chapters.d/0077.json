@@ -1,0 +1,19 @@
+{
+  "chapter": 77,
+  "title": "Always, Sometimes, Quickly, Delay, Before",
+  "label": "ch:ur-always-sometimes-quickly-delay-before",
+  "canDo": "I can say always, sometimes, ever, quickly, a delay and before, first.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "UR-C77-pehle",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 77: i can say always, sometimes, ever, quickly, a delay and before, first.",
+    "assesses": [
+      "UR-LEX-C77-TIME77-03",
+      "UR-LEX-C77-TIME77-04",
+      "UR-LEX-C77-TIME77-05"
+    ]
+  }
+}

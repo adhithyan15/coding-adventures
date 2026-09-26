@@ -1,0 +1,11 @@
+{
+  "id": "MR-C89-tebal",
+  "pathSegment": "MR-PATH-89-FOOD89",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-89-FOOD89",
+      "order": 4
+    }
+  ]
+}

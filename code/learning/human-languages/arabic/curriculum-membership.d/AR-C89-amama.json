@@ -1,0 +1,11 @@
+{
+  "id": "AR-C89-amama",
+  "pathSegment": "AR-PATH-89-PLACE89",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-89-PLACE89",
+      "order": 3
+    }
+  ]
+}

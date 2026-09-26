@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:b2bd91d98675a0cc",
+  "lessonIds": [
+    "FA-C56-mush",
+    "FA-C56-bebar",
+    "FA-C56-fil",
+    "FA-C56-meymun",
+    "FA-C56-mar"
+  ],
+  "tex": "persian/book/chapters/ch56-mouse-tiger-elephant-monkey-snake.tex"
+}

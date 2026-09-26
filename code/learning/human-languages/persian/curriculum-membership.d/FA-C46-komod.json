@@ -1,0 +1,11 @@
+{
+  "id": "FA-C46-komod",
+  "pathSegment": "FA-PATH-46-HOME46",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-46-HOME46",
+      "order": 2
+    }
+  ]
+}

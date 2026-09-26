@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C92-bazar",
+    "language": "punjabi",
+    "chapter": 92,
+    "sequence": 4890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e57413234e57368b"
+  },
+  "findings": []
+}

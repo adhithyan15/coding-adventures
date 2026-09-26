@@ -9,17 +9,17 @@ type: writing
 headword: "హ"
 gloss: the single character హ — recognised inside words you already say
 romanization: "ha"
-prerequisites: [TE-S111-letter-sa]
+prerequisites: [TE-S111-letter-sa, TE-C05-hamsa]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-111]
+  knowledge: [TE-SCRIPT-RECOG-111, TE-LEX-ANCHOR-HAMSA]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-125]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-125, TE-SCRIPT-RECOG-111, TE-SCRIPT-RECOG-146, TE-SCRIPT-RECOG-142]
+  knowledge: [TE-SCRIPT-RECOG-125, TE-SCRIPT-RECOG-111, TE-SCRIPT-RECOG-146, TE-SCRIPT-RECOG-142, TE-LEX-ANCHOR-HAMSA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [TE-S111-letter-sa, TE-S146-digit-7, TE-S142-digit-3]
 # హ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-111, TE-SCRIPT-RECOG-146] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-111, TE-SCRIPT-RECOG-146, TE-LEX-ANCHOR-HAMSA] -->
 
 [PAUSE 1s] Before the new one: స — what does it do? And one from further back: ౭?
 

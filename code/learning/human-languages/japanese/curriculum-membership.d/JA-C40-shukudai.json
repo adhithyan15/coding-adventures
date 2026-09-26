@@ -1,0 +1,11 @@
+{
+  "id": "JA-C40-shukudai",
+  "pathSegment": "JA-PATH-40-HOME40",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-40-HOME40",
+      "order": 2
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     "id": "GU-C47-tongue",
     "language": "gujarati",
     "chapter": 47,
-    "sequence": 2430,
+    "sequence": 2443,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:73606db471f50a9e"
+    "sourceHash": "fnv1a64:0da864303e63547c"
   },
   "findings": []
 }

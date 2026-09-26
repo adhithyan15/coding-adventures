@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:f2095700eac8f5e4",
+  "lessonIds": [
+    "IT-C128-pericoloso",
+    "IT-C128-bagnato",
+    "IT-C128-asciutto",
+    "IT-C128-fresco",
+    "IT-C128-morbido"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch128.txt",
+  "json": "italian/narration/ch128.json",
+  "textHash": "fnv1a64:1644836b55441773",
+  "jsonHash": "fnv1a64:42674702fb860712",
+  "findings": []
+}

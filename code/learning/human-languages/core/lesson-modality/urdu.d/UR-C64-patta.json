@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C64-patta",
+    "language": "urdu",
+    "chapter": 64,
+    "sequence": 3250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bdeb8b94917c5fa8"
+  },
+  "findings": []
+}

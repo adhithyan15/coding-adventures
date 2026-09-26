@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C02-tamarun-naam-shun-chhe
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 160
+sequence: 173
 chapter: 8
 type: phrase
 headword: તમારું નામ શું છે?

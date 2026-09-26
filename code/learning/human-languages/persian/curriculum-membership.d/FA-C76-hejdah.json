@@ -1,0 +1,11 @@
+{
+  "id": "FA-C76-hejdah",
+  "pathSegment": "FA-PATH-76-NUMBERS76",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-76-NUMBERS76",
+      "order": 1
+    }
+  ]
+}

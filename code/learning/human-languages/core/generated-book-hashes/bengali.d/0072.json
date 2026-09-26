@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:b4ec7a2a616c888e",
+  "lessonIds": [
+    "BN-C72-boro",
+    "BN-C72-chhoto",
+    "BN-C72-notun",
+    "BN-C72-purono",
+    "BN-C72-kharap"
+  ],
+  "tex": "bengali/book/chapters/ch72-big-small-new-old-bad.tex"
+}

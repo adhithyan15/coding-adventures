@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:03a903d18f9a7478",
+  "lessonIds": [
+    "JA-C25-tomodachi",
+    "JA-C25-otona",
+    "JA-C25-otoko",
+    "JA-C25-onna",
+    "JA-C25-sensei"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch25.txt",
+  "json": "japanese/narration/ch25.json",
+  "textHash": "fnv1a64:e340fd3e617543af",
+  "jsonHash": "fnv1a64:8e3c3d83ccaad43e",
+  "findings": []
+}

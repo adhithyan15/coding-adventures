@@ -1,0 +1,11 @@
+{
+  "id": "MW-C76-pilo",
+  "pathSegment": "MW-PATH-76-ADJ76",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-76-ADJ76",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C57-turna",
+  "pathSegment": "PA-PATH-57-VERBS57",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-57-VERBS57",
+      "order": 1
+    }
+  ]
+}

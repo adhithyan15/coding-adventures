@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-100-ANIMALS100",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a horse, a cow, a goat, a sheep and a bird.",
+  "prerequisites": []
+}

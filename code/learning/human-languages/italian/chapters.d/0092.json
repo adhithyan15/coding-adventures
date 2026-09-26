@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Opposite, Underground, Taxi, Ferry, Journey",
+  "label": "ch:it-opposite-underground-taxi-ferry-journey",
+  "canDo": "I can say opposite, the underground, a taxi, a ferry and a journey.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "IT-C92-viaggio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can say opposite, the underground, a taxi, a ferry and a journey.",
+    "assesses": [
+      "IT-LEX-C92-VIAGGIO92-03",
+      "IT-LEX-C92-VIAGGIO92-04",
+      "IT-LEX-C92-VIAGGIO92-05"
+    ]
+  }
+}

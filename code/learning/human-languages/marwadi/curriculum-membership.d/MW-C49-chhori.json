@@ -1,0 +1,11 @@
+{
+  "id": "MW-C49-chhori",
+  "pathSegment": "MW-PATH-49-FAMILY49",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-49-FAMILY49",
+      "order": 3
+    }
+  ]
+}

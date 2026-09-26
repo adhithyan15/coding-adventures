@@ -4,11 +4,11 @@
   "chapter": 69,
   "title": "Things That Shine, Fly and Swim",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fe04c6645fec2ba4",
+  "sourceHash": "fnv1a64:df1d97dce92b776d",
   "lessons": [
     {
       "id": "GU-C69-star",
-      "sequence": 3510,
+      "sequence": 3523,
       "title": "તારો (tāro) — a star",
       "headword": "તારો",
       "romanization": "tāro",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed070b290b0a22ba",
+      "sourceHash": "fnv1a64:76564337a84f247c",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C69-parrot",
-      "sequence": 3520,
+      "sequence": 3533,
       "title": "પોપટ (popaṭ) — a parrot",
       "headword": "પોપટ",
       "romanization": "popaṭ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54118c47f204901c",
+      "sourceHash": "fnv1a64:6bf0e6ab69378fcc",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C69-peacock",
-      "sequence": 3530,
+      "sequence": 3543,
       "title": "મોર (mor) — a peacock",
       "headword": "મોર",
       "romanization": "mor",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f992250ae49990b6",
+      "sourceHash": "fnv1a64:cb1dd00d8734915c",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C69-sparrow",
-      "sequence": 3540,
+      "sequence": 3553,
       "title": "ચકલી (caklī) — a sparrow",
       "headword": "ચકલી",
       "romanization": "caklī",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e889779e6b69e05",
+      "sourceHash": "fnv1a64:f9578dc6da05e815",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C69-fish",
-      "sequence": 3550,
+      "sequence": 3563,
       "title": "માછલી (māchlī) — a fish",
       "headword": "માછલી",
       "romanization": "māchlī",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b96118e17afab572",
+      "sourceHash": "fnv1a64:93d982d00d13e514",
       "notice": null,
       "blocks": [
         {

@@ -3,7 +3,7 @@
     "id": "GU-C65-soil",
     "language": "gujarati",
     "chapter": 65,
-    "sequence": 3330,
+    "sequence": 3343,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a0a99ba6d66516e5"
+    "sourceHash": "fnv1a64:226fa653b6d26d43"
   },
   "findings": []
 }

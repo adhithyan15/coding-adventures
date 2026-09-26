@@ -1,0 +1,11 @@
+{
+  "id": "GE-C79-glas",
+  "pathSegment": "GE-PATH-79-GESCHIRR",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-79-GESCHIRR",
+      "order": 2
+    }
+  ]
+}

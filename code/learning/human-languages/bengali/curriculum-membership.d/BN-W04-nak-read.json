@@ -1,11 +1,11 @@
 {
   "id": "BN-W04-nak-read",
   "pathSegment": "BN-PATH-001",
-  "pathOrder": 54,
+  "pathOrder": 59,
   "extensions": [
     {
       "id": "BN-EXT-022-SCRIPT-MARKS-AND-FLAPS",
-      "order": 12
+      "order": 14
     }
   ]
 }

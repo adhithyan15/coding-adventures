@@ -1,0 +1,11 @@
+{
+  "id": "IT-C85-bisogno",
+  "pathSegment": "IT-PATH-85-POTERE85",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-85-POTERE85",
+      "order": 3
+    }
+  ]
+}

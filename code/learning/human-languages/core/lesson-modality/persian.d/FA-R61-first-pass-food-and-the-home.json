@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-R61-first-pass-food-and-the-home",
+    "language": "persian",
+    "chapter": 61,
+    "sequence": 2960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d529bab5e54ad056"
+  },
+  "findings": []
+}

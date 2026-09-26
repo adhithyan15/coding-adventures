@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:e258874b7f864b0f",
+  "lessonIds": [
+    "FR-C112-douche",
+    "FR-C112-baignoire",
+    "FR-C112-armoire",
+    "FR-C112-etagere",
+    "FR-C112-rideau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch112.txt",
+  "json": "french/narration/ch112.json",
+  "textHash": "fnv1a64:555728b0370b9f6c",
+  "jsonHash": "fnv1a64:1a68b28ddb8f9a82",
+  "findings": []
+}

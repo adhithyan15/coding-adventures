@@ -1,0 +1,11 @@
+{
+  "id": "GE-C111-fahrkarte",
+  "pathSegment": "GE-PATH-111-FAHRT111",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-111-FAHRT111",
+      "order": 1
+    }
+  ]
+}

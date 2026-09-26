@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:5f15d6ff0b1d78f5",
+  "lessonIds": [
+    "UR-C75-sham",
+    "UR-C75-hafta",
+    "UR-C75-mahina",
+    "UR-C75-sal",
+    "UR-C75-ghanta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch75.txt",
+  "json": "urdu/narration/ch75.json",
+  "textHash": "fnv1a64:3d0ded1fb85a3fb1",
+  "jsonHash": "fnv1a64:c12589b336ab2585",
+  "findings": []
+}

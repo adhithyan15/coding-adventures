@@ -1,0 +1,11 @@
+{
+  "id": "FA-C48-daftar",
+  "pathSegment": "FA-PATH-48-HOME48",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-48-HOME48",
+      "order": 4
+    }
+  ]
+}

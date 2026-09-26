@@ -1,0 +1,11 @@
+{
+  "id": "MW-C54-hasno",
+  "pathSegment": "MW-PATH-54-VERBS54",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-54-VERBS54",
+      "order": 1
+    }
+  ]
+}

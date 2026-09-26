@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C116-sadra",
+    "language": "marathi",
+    "chapter": 116,
+    "sequence": 5200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0dd8d9ac4140c544"
+  },
+  "findings": []
+}

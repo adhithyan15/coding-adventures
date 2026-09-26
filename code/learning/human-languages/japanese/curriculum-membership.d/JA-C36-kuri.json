@@ -1,0 +1,11 @@
+{
+  "id": "JA-C36-kuri",
+  "pathSegment": "JA-PATH-36-FOOD36",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-36-FOOD36",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C45-admi",
+    "language": "urdu",
+    "chapter": 45,
+    "sequence": 2300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4682c0523563d712"
+  },
+  "findings": []
+}

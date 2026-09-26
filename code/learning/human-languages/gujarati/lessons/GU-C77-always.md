@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C77-always
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3910
+sequence: 3923
 chapter: 77
 type: word
 headword: "હંમેશા"

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Plain Thanks, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7832024c6b7ac24d",
+  "sourceHash": "fnv1a64:cf6a3b25d035f43d",
   "lessons": [
     {
       "id": "JA-W03-a",
@@ -1175,7 +1175,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d8f0b0bb450a2f2b",
+      "sourceHash": "fnv1a64:8de0acefebdd85b8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1201,6 +1201,16 @@
             {
               "kind": "speech",
               "text": "Back to hiragana. Five signs are coming, and one small mark that unlocks a whole second row of sounds."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And one word from before: say wani and what it means."
             }
           ]
         },

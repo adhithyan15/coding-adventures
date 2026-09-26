@@ -1,0 +1,11 @@
+{
+  "id": "MR-C70-gala",
+  "pathSegment": "MR-PATH-70-BODY70",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-70-BODY70",
+      "order": 4
+    }
+  ]
+}

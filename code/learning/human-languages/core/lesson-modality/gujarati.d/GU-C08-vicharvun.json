@@ -3,7 +3,7 @@
     "id": "GU-C08-vicharvun",
     "language": "gujarati",
     "chapter": 14,
-    "sequence": 440,
+    "sequence": 453,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:132c9aea92a3cdac",
+    "sourceHash": "fnv1a64:88add4db85c0f89c",
     "detachableSegments": [
       "The letters in this word"
     ]

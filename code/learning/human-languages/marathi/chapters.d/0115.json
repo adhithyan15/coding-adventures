@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Boat, Bicycle, Market, Village, Clothes",
+  "label": "ch:mr-boat-bicycle-market-village-clothes",
+  "canDo": "I can say a boat, a bicycle, a market, a village and clothes.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "MR-C115-kapde",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: i can say a boat, a bicycle, a market, a village and clothes.",
+    "assesses": [
+      "MR-LEX-C115-TOWN115-03",
+      "MR-LEX-C115-TOWN115-04",
+      "MR-LEX-C115-TOWN115-05"
+    ]
+  }
+}

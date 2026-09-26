@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "Snake, Peacock, Bear, Camel, Butterfly",
+  "label": "ch:mr-snake-peacock-bear-camel-butterfly",
+  "canDo": "I can say a snake, a peacock, a bear, a camel and a butterfly.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C102-phulpakhru",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can say a snake, a peacock, a bear, a camel and a butterfly.",
+    "assesses": [
+      "MR-LEX-C102-ANIMALS102-03",
+      "MR-LEX-C102-ANIMALS102-04",
+      "MR-LEX-C102-ANIMALS102-05"
+    ]
+  }
+}

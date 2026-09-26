@@ -9,17 +9,17 @@ type: writing
 headword: "ಈ"
 gloss: the single character ಈ — the standing form of a long vowel you have read since chapter one
 romanization: "ī"
-prerequisites: [KA-S129-letter-tha]
+prerequisites: [KA-S129-letter-tha, KA-C26-iiju]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-129]
+  knowledge: [KA-SCRIPT-RECOG-129, KA-LEX-ANCHOR-IIJU]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-130]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-129, KA-SCRIPT-RECOG-130]
+  knowledge: [KA-SCRIPT-RECOG-129, KA-SCRIPT-RECOG-130, KA-LEX-ANCHOR-IIJU]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [KA-S129-letter-tha]
 # ಈ — one character, standing where you have only seen it riding
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-129] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-129, KA-LEX-ANCHOR-IIJU] -->
 
 [PAUSE 1s] Before the new one: ಥ — which plain letter is it built on?
 

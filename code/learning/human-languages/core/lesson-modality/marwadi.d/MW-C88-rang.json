@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C88-rang",
+    "language": "marwadi",
+    "chapter": 88,
+    "sequence": 5720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c437d16cfe37bb8"
+  },
+  "findings": []
+}

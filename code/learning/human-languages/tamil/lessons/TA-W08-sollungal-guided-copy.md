@@ -9,17 +9,17 @@ type: writing
 headword: "சொல்லுங்கள்"
 gloss: copy familiar solluṅgaḷ with the short-o model visible
 romanization: "solluṅgaḷ"
-prerequisites: [TA-W08-short-o-observe]
+prerequisites: [TA-W08-short-o-observe, TA-C08-sontham]
 sounds: [tamil-vowel-sign-o]
 roots: []
 duration:
   max_seconds: 120
 requires:
-  knowledge: [TA-LEX-SOLLUNGAL-01, TA-SCRIPT-SHORT-O-01]
+  knowledge: [TA-LEX-SOLLUNGAL-01, TA-SCRIPT-SHORT-O-01, TA-LEX-ANCHOR-SONTHAM]
 introduces:
   knowledge: [TA-SCRIPT-WRITE-SOLLUNGAL-02]
 practises:
-  knowledge: [TA-LEX-SOLLUNGAL-01, TA-SCRIPT-SHORT-O-01, TA-SCRIPT-WRITE-SOLLUNGAL-02]
+  knowledge: [TA-LEX-SOLLUNGAL-01, TA-SCRIPT-SHORT-O-01, TA-SCRIPT-WRITE-SOLLUNGAL-02, TA-LEX-ANCHOR-SONTHAM]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [TA-W08-short-o-observe, TA-C08-sollungal]
 # சொல்லுங்கள் — one visible copy
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-SHORT-O-01, TA-LEX-SOLLUNGAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-SHORT-O-01, TA-LEX-SOLLUNGAL-01, TA-LEX-ANCHOR-SONTHAM] -->
 
 Point to **சொ** at the start of **சொல்லுங்கள்**. Read *so*, then say the whole
 request: *solluṅgaḷ*, **please tell me**.

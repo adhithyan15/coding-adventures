@@ -1,0 +1,11 @@
+{
+  "id": "MR-C104-garam",
+  "pathSegment": "MR-PATH-104-ADJ104",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-104-ADJ104",
+      "order": 0
+    }
+  ]
+}

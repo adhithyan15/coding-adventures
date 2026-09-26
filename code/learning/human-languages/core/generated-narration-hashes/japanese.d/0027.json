@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 27,
+  "sourceHash": "fnv1a64:86fe1533bb491001",
+  "lessonIds": [
+    "JA-C27-yomu",
+    "JA-C27-kaku",
+    "JA-C27-hanasu",
+    "JA-C27-matsu",
+    "JA-C27-au"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch27.txt",
+  "json": "japanese/narration/ch27.json",
+  "textHash": "fnv1a64:8c7981bf46ac8845",
+  "jsonHash": "fnv1a64:825c5fd8eb4c5eda",
+  "findings": []
+}

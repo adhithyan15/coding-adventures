@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:fbfa7c2da9407a31",
+  "lessonIds": [
+    "UR-C85-unnis",
+    "UR-C85-tis",
+    "UR-C85-chalis",
+    "UR-C85-pachas",
+    "UR-C85-sath"
+  ],
+  "tex": "urdu/book/chapters/ch85-nineteen-thirty-forty-fifty-sixty.tex"
+}

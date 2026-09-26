@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:5d69e655bcdf41da",
+  "lessonIds": [
+    "AR-C51-shar",
+    "AR-C51-qadam",
+    "AR-C51-isba",
+    "AR-C51-katif",
+    "AR-C51-raqaba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch51.txt",
+  "json": "arabic/narration/ch51.json",
+  "textHash": "fnv1a64:f88843eff01fa87d",
+  "jsonHash": "fnv1a64:ccbf232f5e6d3e39",
+  "findings": []
+}

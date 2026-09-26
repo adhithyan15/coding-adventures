@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:2b6bcd8b1f0ac42c",
+  "lessonIds": [
+    "IT-C117-prezzo",
+    "IT-C117-calcio",
+    "IT-C117-concerto",
+    "IT-C117-festa",
+    "IT-C117-desiderio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch117.txt",
+  "json": "italian/narration/ch117.json",
+  "textHash": "fnv1a64:c37c035f7ae0487d",
+  "jsonHash": "fnv1a64:48fafff334af7feb",
+  "findings": []
+}

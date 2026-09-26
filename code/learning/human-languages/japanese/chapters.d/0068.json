@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Hill, Valley, Countryside, Harbour, Setting sun",
+  "label": "ch:ja-hill-valley-countryside-harbour-setting-sun",
+  "canDo": "I can say a hill, a valley, the countryside, a harbour and the setting sun.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "JA-C68-yuuhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can say a hill, a valley, the countryside, a harbour and the setting sun.",
+    "assesses": [
+      "JA-LEX-C68-THINGS68-03",
+      "JA-LEX-C68-THINGS68-04",
+      "JA-LEX-C68-THINGS68-05"
+    ]
+  }
+}

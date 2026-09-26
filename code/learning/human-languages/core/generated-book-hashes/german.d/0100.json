@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:cc84899eff44c588",
+  "lessonIds": [
+    "GE-C100-guertel",
+    "GE-C100-jacke",
+    "GE-C100-grenze",
+    "GE-C100-welt",
+    "GE-C100-sprache"
+  ],
+  "tex": "german/book/chapters/ch100-belt-jacket-border-world-language.tex"
+}

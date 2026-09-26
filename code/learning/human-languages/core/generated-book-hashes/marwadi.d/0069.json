@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:4b21d9fe810c77ba",
+  "lessonIds": [
+    "MW-C69-taro",
+    "MW-C69-suraj",
+    "MW-C69-chad",
+    "MW-C69-samandar",
+    "MW-C69-ag"
+  ],
+  "tex": "marwadi/book/chapters/ch69-star-sun-moon-sea-fire.tex"
+}

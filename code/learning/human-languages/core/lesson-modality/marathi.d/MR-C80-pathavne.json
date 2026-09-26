@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C80-pathavne",
+    "language": "marathi",
+    "chapter": 80,
+    "sequence": 3370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8efea4a71d7dca80"
+  },
+  "findings": []
+}

@@ -3,7 +3,7 @@
     "id": "GU-C71-pink",
     "language": "gujarati",
     "chapter": 71,
-    "sequence": 3630,
+    "sequence": 3643,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f589f4d28a0a305d"
+    "sourceHash": "fnv1a64:0e4257bb66b2ad03"
   },
   "findings": []
 }

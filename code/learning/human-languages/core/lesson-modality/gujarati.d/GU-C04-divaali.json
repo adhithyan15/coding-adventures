@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C04-divaali",
+    "language": "gujarati",
+    "chapter": 4,
+    "sequence": 76,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c8c0540bfa3078aa"
+  },
+  "findings": []
+}

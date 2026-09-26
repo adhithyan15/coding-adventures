@@ -1,0 +1,11 @@
+{
+  "id": "FR-C138-conduire",
+  "pathSegment": "FR-PATH-138-VERBES90",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-138-VERBES90",
+      "order": 3
+    }
+  ]
+}

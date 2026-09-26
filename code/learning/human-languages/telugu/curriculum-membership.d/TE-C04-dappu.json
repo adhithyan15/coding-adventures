@@ -1,0 +1,11 @@
+{
+  "id": "TE-C04-dappu",
+  "pathSegment": "TE-PATH-100",
+  "pathOrder": 15,
+  "extensions": [
+    {
+      "id": "TE-EXT-100-SCRIPT-RECOGNITION",
+      "order": 15
+    }
+  ]
+}

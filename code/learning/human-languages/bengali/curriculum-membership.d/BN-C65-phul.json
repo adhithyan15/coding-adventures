@@ -1,0 +1,11 @@
+{
+  "id": "BN-C65-phul",
+  "pathSegment": "BN-PATH-65-SCHOOL65",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-65-SCHOOL65",
+      "order": 3
+    }
+  ]
+}

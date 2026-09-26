@@ -1,0 +1,11 @@
+{
+  "id": "GE-C65-lachen",
+  "pathSegment": "GE-PATH-65-VERBEN2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-65-VERBEN2",
+      "order": 3
+    }
+  ]
+}

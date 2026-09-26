@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "Taxi, Ticket, Suitcase, Lift, To fly",
+  "label": "ch:ge-taxi-ticket-suitcase-lift-to-fly",
+  "canDo": "I can say a taxi, a ticket, a suitcase, a lift and to fly.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "GE-C111-fliegen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can say a taxi, a ticket, a suitcase, a lift and to fly.",
+    "assesses": [
+      "GE-LEX-C111-FAHRT111-03",
+      "GE-LEX-C111-FAHRT111-04",
+      "GE-LEX-C111-FAHRT111-05"
+    ]
+  }
+}

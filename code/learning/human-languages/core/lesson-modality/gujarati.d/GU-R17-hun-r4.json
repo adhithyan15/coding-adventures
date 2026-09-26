@@ -3,7 +3,7 @@
     "id": "GU-R17-hun-r4",
     "language": "gujarati",
     "chapter": 21,
-    "sequence": 800,
+    "sequence": 813,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3e5946b38a707313",
+    "sourceHash": "fnv1a64:7e647f80763f18e7",
     "detachableSegments": [
       "Writing — from sound"
     ]

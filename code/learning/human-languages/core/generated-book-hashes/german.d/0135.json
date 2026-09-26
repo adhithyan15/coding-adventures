@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:eef012283aa05964",
+  "lessonIds": [
+    "GE-C135-gefaehrlich",
+    "GE-C135-nass",
+    "GE-C135-trocken",
+    "GE-C135-kuehl",
+    "GE-C135-weich"
+  ],
+  "tex": "german/book/chapters/ch135-dangerous-wet-dry-cool-soft.tex"
+}

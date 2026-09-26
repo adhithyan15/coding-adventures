@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "Ill, Pain, Thirst, Hunger, Happy",
+  "label": "ch:mr-ill-pain-thirst-hunger-happy",
+  "canDo": "I can say ill, sick, pain, thirst, hunger and happy.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C73-anandi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can say ill, sick, pain, thirst, hunger and happy.",
+    "assesses": [
+      "MR-LEX-C73-HEALTH73-03",
+      "MR-LEX-C73-HEALTH73-04",
+      "MR-LEX-C73-HEALTH73-05"
+    ]
+  }
+}

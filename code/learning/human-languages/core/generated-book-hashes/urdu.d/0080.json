@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:522de6c6c95ae5ce",
+  "lessonIds": [
+    "UR-C80-isteshan",
+    "UR-C80-gari",
+    "UR-C80-bas",
+    "UR-C80-pul",
+    "UR-C80-masjid"
+  ],
+  "tex": "urdu/book/chapters/ch80-station-car-bus-bridge-mosque.tex"
+}

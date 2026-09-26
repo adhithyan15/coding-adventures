@@ -3,7 +3,7 @@
     "id": "GU-C05-hun-gujarati-bolun-chhun",
     "language": "gujarati",
     "chapter": 11,
-    "sequence": 300,
+    "sequence": 313,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f4520a9106a02ed3",
+    "sourceHash": "fnv1a64:84918ea1eb5fdc3f",
     "detachableSegments": [
       "The letters in this word"
     ]

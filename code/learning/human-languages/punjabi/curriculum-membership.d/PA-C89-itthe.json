@@ -1,0 +1,11 @@
+{
+  "id": "PA-C89-itthe",
+  "pathSegment": "PA-PATH-89-PLACE89",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-89-PLACE89",
+      "order": 2
+    }
+  ]
+}

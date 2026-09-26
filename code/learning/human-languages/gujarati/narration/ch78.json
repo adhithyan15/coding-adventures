@@ -4,11 +4,11 @@
   "chapter": 78,
   "title": "Monday to Friday",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f814d0feb01e59cc",
+  "sourceHash": "fnv1a64:528bdf79a524c46a",
   "lessons": [
     {
       "id": "GU-C78-monday",
-      "sequence": 3960,
+      "sequence": 3973,
       "title": "સોમવાર (somvār) — Monday",
       "headword": "સોમવાર",
       "romanization": "somvār",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6aae251489304d5",
+      "sourceHash": "fnv1a64:c94e80a3b8d8dc89",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C78-tuesday",
-      "sequence": 3970,
+      "sequence": 3983,
       "title": "મંગળવાર (maṅgaḷvār) — Tuesday",
       "headword": "મંગળવાર",
       "romanization": "maṅgaḷvār",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:629bc9848427317e",
+      "sourceHash": "fnv1a64:623713a9364c6d3c",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C78-wednesday",
-      "sequence": 3980,
+      "sequence": 3993,
       "title": "બુધવાર (budhvār) — Wednesday",
       "headword": "બુધવાર",
       "romanization": "budhvār",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df1858e50494bb55",
+      "sourceHash": "fnv1a64:0984b21c4e643e25",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C78-thursday",
-      "sequence": 3990,
+      "sequence": 4003,
       "title": "ગુરુવાર (guruvār) — Thursday",
       "headword": "ગુરુવાર",
       "romanization": "guruvār",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b6d6521b195c20d",
+      "sourceHash": "fnv1a64:bf19cfbc830853b1",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C78-friday",
-      "sequence": 4000,
+      "sequence": 4013,
       "title": "શુક્રવાર (śukravār) — Friday",
       "headword": "શુક્રવાર",
       "romanization": "śukravār",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0399a9af147e9b7a",
+      "sourceHash": "fnv1a64:3dacab0dba1f2faa",
       "notice": null,
       "blocks": [
         {

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C70-blue
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3590
+sequence: 3603
 chapter: 70
 type: word
 headword: "વાદળી"

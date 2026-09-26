@@ -9,20 +9,20 @@ type: writing
 headword: ओ
 romanization: "o"
 gloss: the standing o — the second letter whose sign you have been drawing since the first chapter
-prerequisites: [MR-W65-ii-independent, MR-W01-o-matra]
+prerequisites: [MR-W65-ii-independent, MR-W01-o-matra, MR-C65-iishvar, MR-C65-ola]
 sounds: []
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-II-INDEPENDENT-01, MR-SCRIPT-O-MATRA-01]
+  knowledge: [MR-SCRIPT-II-INDEPENDENT-01, MR-SCRIPT-O-MATRA-01, MR-LEX-ANCHOR-IISHVAR, MR-LEX-ANCHOR-OLA]
 introduces:
   knowledge: [MR-SCRIPT-O-INDEPENDENT-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-O-INDEPENDENT-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-II-INDEPENDENT-01]
+  knowledge: [MR-SCRIPT-O-INDEPENDENT-01, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-II-INDEPENDENT-01, MR-LEX-ANCHOR-IISHVAR, MR-LEX-ANCHOR-OLA]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W01-o-matra, MR-W65-ii-independent]
 # ओ — the same trade, a second time
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-O-MATRA-01, MR-SCRIPT-II-INDEPENDENT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-O-MATRA-01, MR-SCRIPT-II-INDEPENDENT-01, MR-LEX-ANCHOR-IISHVAR, MR-LEX-ANCHOR-OLA] -->
 
 [PAUSE 2s] Draw the **o** sign that hangs on a consonant. Then say what the
 lesson before this one did with a sign of the same age.

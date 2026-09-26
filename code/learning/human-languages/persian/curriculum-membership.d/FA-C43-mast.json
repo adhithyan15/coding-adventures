@@ -1,0 +1,11 @@
+{
+  "id": "FA-C43-mast",
+  "pathSegment": "FA-PATH-43-FOOD43",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-43-FOOD43",
+      "order": 1
+    }
+  ]
+}

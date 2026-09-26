@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C85-pnt",
+    "language": "bengali",
+    "chapter": 85,
+    "sequence": 4400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7dbdda59140483e8"
+  },
+  "findings": []
+}

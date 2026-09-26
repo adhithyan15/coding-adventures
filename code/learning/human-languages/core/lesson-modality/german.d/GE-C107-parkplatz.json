@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C107-parkplatz",
+    "language": "german",
+    "chapter": 107,
+    "sequence": 4190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:372e9d1c12351ce5"
+  },
+  "findings": []
+}

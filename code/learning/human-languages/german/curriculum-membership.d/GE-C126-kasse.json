@@ -1,0 +1,11 @@
+{
+  "id": "GE-C126-kasse",
+  "pathSegment": "GE-PATH-126-BERUF126",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-126-BERUF126",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:12b4a442ea7da263",
+  "lessonIds": [
+    "UR-C62-basta",
+    "UR-C62-paisa",
+    "UR-C62-naqsha",
+    "UR-C62-sabaq",
+    "UR-C62-saval",
+    "UR-R62-first-pass-the-body-family-verbs-and-food",
+    "UR-R62-second-pass-home-school-and-nature"
+  ],
+  "tex": "urdu/book/chapters/ch62-school-bag-money-map-lesson-question.tex"
+}

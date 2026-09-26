@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:e6e79a4773e25b46",
+  "lessonIds": [
+    "GE-C91-stark",
+    "GE-C91-schwach",
+    "GE-C91-reich",
+    "GE-C91-haesslich",
+    "GE-C91-suess"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch91.txt",
+  "json": "german/narration/ch91.json",
+  "textHash": "fnv1a64:94c850b3d6303921",
+  "jsonHash": "fnv1a64:1f3eec7f8c236b17",
+  "findings": []
+}

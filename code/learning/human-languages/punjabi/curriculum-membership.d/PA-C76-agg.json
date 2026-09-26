@@ -1,0 +1,11 @@
+{
+  "id": "PA-C76-agg",
+  "pathSegment": "PA-PATH-76-NATURE76",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-76-NATURE76",
+      "order": 1
+    }
+  ]
+}

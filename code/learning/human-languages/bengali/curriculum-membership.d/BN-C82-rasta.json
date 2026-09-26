@@ -1,0 +1,11 @@
+{
+  "id": "BN-C82-rasta",
+  "pathSegment": "BN-PATH-82-PLACE82",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-82-PLACE82",
+      "order": 2
+    }
+  ]
+}

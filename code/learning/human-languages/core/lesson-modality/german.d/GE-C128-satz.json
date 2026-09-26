@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C128-satz",
+    "language": "german",
+    "chapter": 128,
+    "sequence": 5320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50cf727b254f2e6f"
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Hear Thanks, Then Meet Six Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3a876d43d73fc045",
+  "sourceHash": "fnv1a64:286ee3a9d72147ca",
   "lessons": [
     {
       "id": "MR-C01-dhanyavad",
@@ -112,8 +112,428 @@
       ]
     },
     {
-      "id": "MR-W02-visarga",
+      "id": "MR-C02-dukh",
       "sequence": 21,
+      "title": "दुःख (duḥkh) — sorrow, grief",
+      "headword": "दुःख",
+      "romanization": "duḥkh",
+      "gloss": "sorrow, grief",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:92d21d4583d61261",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुःख",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुःख — duḥkh — \"sorrow, grief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: duḥkh. Look at its shape as you say it: the lessons that follow take pieces of it, ः, ु and ख, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duḥkh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duḥkh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duḥkh, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duḥkh*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"sorrow, grief\"? (दुःख, duḥkh.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-aabhaal",
+      "sequence": 22,
+      "title": "आभाळ (ābhāḷ) — the sky",
+      "headword": "आभाळ",
+      "romanization": "ābhāḷ",
+      "gloss": "the sky",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:bdb8f0f933e3520b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आभाळ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आभाळ — ābhāḷ — \"the sky\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ābhāḷ. Look at its shape as you say it: the lessons that follow take pieces of it, आ, भ (bha) and ळ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābhāḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābhāḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābhāḷ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābhāḷ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"the sky\"? (आभाळ, ābhāḷ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-sant",
+      "sequence": 23,
+      "title": "संत (sant) — a saint",
+      "headword": "संत",
+      "romanization": "sant",
+      "gloss": "a saint",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d22ec2738e53cd44",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संत — sant — \"a saint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: sant. Look at its shape as you say it: the lessons that follow take pieces of it, ं (ṃ) and त, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sant*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sant, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sant*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a saint\"? (संत, sant.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C02-bet",
+      "sequence": 24,
+      "title": "बेत (bet) — a plan",
+      "headword": "बेत",
+      "romanization": "bet",
+      "gloss": "a plan",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9e41c328c2eabb46",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बेत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बेत — bet — \"a plan\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: bet. Look at its shape as you say it: the lessons that follow take pieces of it, ब and े, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bet*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bet, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bet*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a plan\"? (बेत, bet.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W02-visarga",
+      "sequence": 25,
       "title": "ः (ḥ) — a small breath after a vowel",
       "headword": "ः",
       "romanization": "ḥ",
@@ -126,7 +546,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e777283b00e6a382",
+      "sourceHash": "fnv1a64:cdbae5d14b42159e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -224,7 +644,7 @@
     },
     {
       "id": "MR-W02-aa-independent",
-      "sequence": 22,
+      "sequence": 26,
       "title": "आ (ā) — long aa standing alone",
       "headword": "आ",
       "romanization": "ā",
@@ -237,7 +657,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:327a418d60ee68c4",
+      "sourceHash": "fnv1a64:cb61592c9578187a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -329,7 +749,7 @@
     },
     {
       "id": "MR-W02-bha",
-      "sequence": 23,
+      "sequence": 27,
       "title": "भ — bha, with a puff of breath",
       "headword": "भ",
       "romanization": "bha",
@@ -342,7 +762,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9f8ddb9820b62b1b",
+      "sourceHash": "fnv1a64:2613b0285af6afe3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -434,7 +854,7 @@
     },
     {
       "id": "MR-W02-e-matra",
-      "sequence": 24,
+      "sequence": 28,
       "title": "े — e above the headline",
       "headword": "े",
       "romanization": "e",
@@ -447,7 +867,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:930499ba362ce7cf",
+      "sourceHash": "fnv1a64:bd17fe534ffc6fb6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -542,7 +962,7 @@
     },
     {
       "id": "MR-W02-anusvara",
-      "sequence": 25,
+      "sequence": 29,
       "title": "ं (ṃ) — one nasal dot",
       "headword": "ं",
       "romanization": "ṃ",
@@ -555,7 +975,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:38cb3ee572f66c7d",
+      "sourceHash": "fnv1a64:8dfde8d40cfce639",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -647,7 +1067,7 @@
     },
     {
       "id": "MR-W02-ta",
-      "sequence": 26,
+      "sequence": 30,
       "title": "त — dental ta",
       "headword": "त",
       "romanization": "ta",
@@ -661,7 +1081,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:cc814b2147906897",
+      "sourceHash": "fnv1a64:eebe02888a414f20",
       "notice": {
         "modality": "pen",
         "needs": [

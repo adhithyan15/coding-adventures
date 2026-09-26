@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C63-garden
 spine_node: SPINE-MEET-GREET
-sequence: 3220
+sequence: 3233
 chapter: 63
 type: word
 headword: "બગીચો"

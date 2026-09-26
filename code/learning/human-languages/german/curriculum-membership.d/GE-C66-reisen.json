@@ -1,0 +1,11 @@
+{
+  "id": "GE-C66-reisen",
+  "pathSegment": "GE-PATH-66-VERBEN3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-66-VERBEN3",
+      "order": 1
+    }
+  ]
+}

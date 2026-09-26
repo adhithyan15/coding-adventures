@@ -1,0 +1,11 @@
+{
+  "id": "AR-C70-sarir",
+  "pathSegment": "AR-PATH-70-HOME70",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-70-HOME70",
+      "order": 3
+    }
+  ]
+}

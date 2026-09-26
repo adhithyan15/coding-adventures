@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C59-tomato
 spine_node: SPINE-COURTESY-THANK
-sequence: 3030
+sequence: 3043
 chapter: 59
 type: word
 headword: "ટામેટું"

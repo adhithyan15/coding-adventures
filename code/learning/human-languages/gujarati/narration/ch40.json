@@ -4,11 +4,11 @@
   "chapter": 40,
   "title": "He, She, We, and the One Who",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:813425a9ca2b8d44",
+  "sourceHash": "fnv1a64:1758ff6831d44b1e",
   "lessons": [
     {
       "id": "GU-C36-te",
-      "sequence": 2030,
+      "sequence": 2043,
       "title": "તે (te) — he, she, it",
       "headword": "તે",
       "romanization": "te",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7d818d691205e26",
+      "sourceHash": "fnv1a64:34b9050ede26cb5c",
       "notice": null,
       "blocks": [
         {
@@ -132,7 +132,7 @@
     },
     {
       "id": "GU-C36-ame-aapne",
-      "sequence": 2040,
+      "sequence": 2053,
       "title": "અમે / આપણે (ame / āpaṇe) — the two we",
       "headword": "અમે / આપણે",
       "romanization": "ame / āpaṇe",
@@ -143,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8852faa6b0122190",
+      "sourceHash": "fnv1a64:7c23200b6fc2daa0",
       "notice": null,
       "blocks": [
         {
@@ -260,7 +260,7 @@
     },
     {
       "id": "GU-C36-te-write",
-      "sequence": 2050,
+      "sequence": 2063,
       "title": "તે (te) reaches the page",
       "headword": "તે",
       "romanization": "te",
@@ -273,7 +273,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dc0352c151c5f581",
+      "sourceHash": "fnv1a64:c08bcdfcc5ae725f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -350,7 +350,7 @@
     },
     {
       "id": "GU-C36-je",
-      "sequence": 2060,
+      "sequence": 2073,
       "title": "જે (je) — the one who",
       "headword": "જે",
       "romanization": "je",
@@ -361,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01824cc9321cb35d",
+      "sourceHash": "fnv1a64:05c7aa40edcfbd4d",
       "notice": null,
       "blocks": [
         {
@@ -474,7 +474,7 @@
     },
     {
       "id": "GU-C36-je-te",
-      "sequence": 2070,
+      "sequence": 2083,
       "title": "જે … તે … (je … te …) — the one who … that one …",
       "headword": "જે … તે …",
       "romanization": "je … te …",
@@ -485,7 +485,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:526f46378042b7a4",
+      "sourceHash": "fnv1a64:36fc16eaa5d5a91e",
       "notice": {
         "modality": "sight",
         "needs": [

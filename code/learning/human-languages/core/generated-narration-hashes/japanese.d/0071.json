@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:a04d6cd328903998",
+  "lessonIds": [
+    "JA-C71-tsuno",
+    "JA-C71-ana",
+    "JA-C71-ine",
+    "JA-C71-oi",
+    "JA-C71-mei",
+    "JA-R71-first-pass-describing-words-and-time",
+    "JA-R71-second-pass-places-clothes-and-more"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch71.txt",
+  "json": "japanese/narration/ch71.json",
+  "textHash": "fnv1a64:ab1a588c718735b4",
+  "jsonHash": "fnv1a64:4a2d15bb9dc94187",
+  "findings": []
+}

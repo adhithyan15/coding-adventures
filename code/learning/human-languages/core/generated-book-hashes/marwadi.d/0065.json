@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:0e90eaf4a954dc51",
+  "lessonIds": [
+    "MW-C65-kivar",
+    "MW-C65-rasoi",
+    "MW-C65-kamro",
+    "MW-C65-kitab",
+    "MW-C65-kalam"
+  ],
+  "tex": "marwadi/book/chapters/ch65-door-kitchen-room-book-pen.tex"
+}

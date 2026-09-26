@@ -3,7 +3,7 @@
     "id": "GU-C04-malishun",
     "language": "gujarati",
     "chapter": 10,
-    "sequence": 240,
+    "sequence": 253,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b471bf7c2e824f9f",
+    "sourceHash": "fnv1a64:0144b312a2b8e94f",
     "detachableSegments": [
       "The letters in this word"
     ]

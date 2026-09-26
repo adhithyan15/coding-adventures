@@ -1,0 +1,19 @@
+{
+  "chapter": 61,
+  "title": "To count, To catch, To cut, To stop, To tell",
+  "label": "ch:pa-to-count-to-catch-to-cut-to-stop-to-tell",
+  "canDo": "I can say to count, to catch, to hold, to cut, to stop and to tell.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C61-dassna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 61: i can say to count, to catch, to hold, to cut, to stop and to tell.",
+    "assesses": [
+      "PA-LEX-C61-VERBS61-03",
+      "PA-LEX-C61-VERBS61-04",
+      "PA-LEX-C61-VERBS61-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Horse, Cow, Goat, Sheep, Bird",
+  "label": "ch:mr-horse-cow-goat-sheep-bird",
+  "canDo": "I can say a horse, a cow, a goat, a sheep and a bird.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C100-paksi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can say a horse, a cow, a goat, a sheep and a bird.",
+    "assesses": [
+      "MR-LEX-C100-ANIMALS100-03",
+      "MR-LEX-C100-ANIMALS100-04",
+      "MR-LEX-C100-ANIMALS100-05"
+    ]
+  }
+}

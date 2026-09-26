@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-56-KOERPER1",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a leg, a tooth, the neck, a shoulder and a knee.",
+  "prerequisites": []
+}

@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 80,
-  "sourceHash": "fnv1a64:bfadd8b774059bd6",
+  "sourceHash": "fnv1a64:8ad7456a7d40362c",
   "lessonIds": [
     "GU-C80-hour",
     "GU-C80-minute",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch80.txt",
   "json": "gujarati/narration/ch80.json",
   "textHash": "fnv1a64:464c5cde3b166d74",
-  "jsonHash": "fnv1a64:e7da91ee7567411f",
+  "jsonHash": "fnv1a64:3451ade63a79329f",
   "findings": []
 }

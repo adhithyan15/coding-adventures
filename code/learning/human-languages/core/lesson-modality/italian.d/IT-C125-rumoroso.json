@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C125-rumoroso",
+    "language": "italian",
+    "chapter": 125,
+    "sequence": 6100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16986df51ebcb0e1"
+  },
+  "findings": []
+}

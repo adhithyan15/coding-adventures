@@ -1,0 +1,19 @@
+{
+  "chapter": 81,
+  "title": "To stop, To look for, To lose, To put on, To leave",
+  "label": "ch:mr-to-stop-to-look-for-to-lose-to-put-on-to-leave",
+  "canDo": "I can say to stop, to wait, to look for, to lose, to put on and to leave, to let go.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C81-sodne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: i can say to stop, to wait, to look for, to lose, to put on and to leave, to let go.",
+    "assesses": [
+      "MR-LEX-C81-VERBS81-03",
+      "MR-LEX-C81-VERBS81-04",
+      "MR-LEX-C81-VERBS81-05"
+    ]
+  }
+}

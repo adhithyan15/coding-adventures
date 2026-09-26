@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-68-FOOD68",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say oranges, lemons, eggs, onions and breakfast.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:56d603b1adaecebb",
+  "lessonIds": [
+    "UR-C74-hara",
+    "UR-C74-pila",
+    "UR-C74-bhura",
+    "UR-C74-din",
+    "UR-C74-rat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch74.txt",
+  "json": "urdu/narration/ch74.json",
+  "textHash": "fnv1a64:52baa06f568022e2",
+  "jsonHash": "fnv1a64:73a3f303728e590c",
+  "findings": []
+}

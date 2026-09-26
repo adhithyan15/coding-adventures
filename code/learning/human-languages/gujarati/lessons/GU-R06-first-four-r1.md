@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-R06-first-four-r1
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 85
+sequence: 95
 delivery: script
 chapter: 6
 type: writing
 headword: ગ — એ — ખ — ઉ
 romanization: ga — independent e — kha — independent u
 gloss: retrieve the first four final-closure forms
-prerequisites: [GU-W06-independent-u]
+prerequisites: [GU-W06-independent-u, GU-C06-eklun]
 sounds: []
 roots: []
 etymology_hook: "Four forms return immediately, with consonants and independent vowels named by role."
 duration:
   max_seconds: 220
 requires:
-  knowledge: [GU-SCRIPT-GA-01, GU-SCRIPT-INDEPENDENT-E-01, GU-SCRIPT-KHA-01, GU-SCRIPT-INDEPENDENT-U-01]
+  knowledge: [GU-SCRIPT-GA-01, GU-SCRIPT-INDEPENDENT-E-01, GU-SCRIPT-KHA-01, GU-SCRIPT-INDEPENDENT-U-01, GU-LEX-ANCHOR-EKLUN]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-GA-01, GU-SCRIPT-INDEPENDENT-E-01, GU-SCRIPT-KHA-01, GU-SCRIPT-INDEPENDENT-U-01]
+  knowledge: [GU-SCRIPT-GA-01, GU-SCRIPT-INDEPENDENT-E-01, GU-SCRIPT-KHA-01, GU-SCRIPT-INDEPENDENT-U-01, GU-LEX-ANCHOR-EKLUN]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -35,7 +35,7 @@ reviews_of: [GU-W06-ga, GU-W06-independent-e, GU-W06-kha, GU-W06-independent-u]
 # ગ — એ — ખ — ઉ: four forms return
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-GA-01, GU-SCRIPT-INDEPENDENT-E-01, GU-SCRIPT-KHA-01, GU-SCRIPT-INDEPENDENT-U-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-GA-01, GU-SCRIPT-INDEPENDENT-E-01, GU-SCRIPT-KHA-01, GU-SCRIPT-INDEPENDENT-U-01, GU-LEX-ANCHOR-EKLUN] -->
 
 Keep the four cards visible. Point as you say *ga*, independent *e*, aspirated
 *kha*, and independent short *u*.

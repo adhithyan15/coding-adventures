@@ -1,0 +1,11 @@
+{
+  "id": "FA-C69-chap",
+  "pathSegment": "FA-PATH-69-PLACE69",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-69-PLACE69",
+      "order": 3
+    }
+  ]
+}

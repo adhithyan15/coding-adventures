@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:2f60db29da5d7441",
+  "lessonIds": [
+    "FR-C111-tapis",
+    "FR-C111-television",
+    "FR-C111-ordinateur",
+    "FR-C111-refrigerateur",
+    "FR-C111-radio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch111.txt",
+  "json": "french/narration/ch111.json",
+  "textHash": "fnv1a64:f88ffea0f36cd1b9",
+  "jsonHash": "fnv1a64:9d7e27eea72307b7",
+  "findings": []
+}

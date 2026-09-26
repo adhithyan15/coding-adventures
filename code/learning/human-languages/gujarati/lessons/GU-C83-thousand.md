@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C83-thousand
 spine_node: SPINE-RESPOND-BASIC
-sequence: 4230
+sequence: 4243
 chapter: 83
 type: word
 headword: "હજાર"

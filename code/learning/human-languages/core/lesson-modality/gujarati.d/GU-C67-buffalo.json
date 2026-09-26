@@ -3,7 +3,7 @@
     "id": "GU-C67-buffalo",
     "language": "gujarati",
     "chapter": 67,
-    "sequence": 3400,
+    "sequence": 3413,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1789c56e5d505223"
+    "sourceHash": "fnv1a64:79bc46741a8f20c7"
   },
   "findings": []
 }

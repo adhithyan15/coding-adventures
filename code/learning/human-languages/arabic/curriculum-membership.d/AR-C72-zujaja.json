@@ -1,0 +1,11 @@
+{
+  "id": "AR-C72-zujaja",
+  "pathSegment": "AR-PATH-72-HOME72",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-72-HOME72",
+      "order": 1
+    }
+  ]
+}

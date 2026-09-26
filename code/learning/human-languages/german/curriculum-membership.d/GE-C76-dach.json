@@ -1,0 +1,11 @@
+{
+  "id": "GE-C76-dach",
+  "pathSegment": "GE-PATH-76-HAUS1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-76-HAUS1",
+      "order": 4
+    }
+  ]
+}

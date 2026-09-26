@@ -3,7 +3,7 @@
     "id": "GU-C72-heavy",
     "language": "gujarati",
     "chapter": 72,
-    "sequence": 3700,
+    "sequence": 3713,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:861b2b37c7a5de66"
+    "sourceHash": "fnv1a64:74a0bc6ab7fd7a96"
   },
   "findings": []
 }

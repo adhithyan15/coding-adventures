@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:41c01c4999b41898",
+  "lessonIds": [
+    "GE-C84-stern",
+    "GE-C84-wolke",
+    "GE-C84-regen",
+    "GE-C84-teich",
+    "GE-C84-feuer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch84.txt",
+  "json": "german/narration/ch84.json",
+  "textHash": "fnv1a64:42fd92ec25ddf65c",
+  "jsonHash": "fnv1a64:fca1cce0cca7351e",
+  "findings": []
+}

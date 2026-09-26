@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C52-bhukkh",
+    "language": "punjabi",
+    "chapter": 52,
+    "sequence": 2870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1ef816bbc1a1e53"
+  },
+  "findings": []
+}

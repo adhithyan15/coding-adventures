@@ -1,0 +1,11 @@
+{
+  "id": "GE-C77-bett",
+  "pathSegment": "GE-PATH-77-HAUS2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-77-HAUS2",
+      "order": 4
+    }
+  ]
+}

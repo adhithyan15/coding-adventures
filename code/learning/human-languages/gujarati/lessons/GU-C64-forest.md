@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C64-forest
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3270
+sequence: 3283
 chapter: 64
 type: word
 headword: "જંગલ"

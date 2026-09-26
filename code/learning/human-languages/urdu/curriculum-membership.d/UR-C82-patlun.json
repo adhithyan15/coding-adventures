@@ -1,0 +1,11 @@
+{
+  "id": "UR-C82-patlun",
+  "pathSegment": "UR-PATH-82-CLOTHES82",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-82-CLOTHES82",
+      "order": 2
+    }
+  ]
+}

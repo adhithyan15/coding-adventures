@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C99-akash",
+    "language": "marathi",
+    "chapter": 99,
+    "sequence": 4350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19d3dd6cca5d1472"
+  },
+  "findings": []
+}

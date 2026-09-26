@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C32-pedarbozorg",
+    "language": "persian",
+    "chapter": 32,
+    "sequence": 1460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22347e77e9fba2f8"
+  },
+  "findings": []
+}

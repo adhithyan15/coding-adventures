@@ -1,0 +1,19 @@
+{
+  "chapter": 64,
+  "title": "Powder, Sesame, Sea urchin, Sardine, Flavour",
+  "label": "ch:ja-powder-sesame-sea-urchin-sardine-flavour",
+  "canDo": "I can say powder, flour, sesame, a sea urchin, a sardine and a flavour, a taste.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "JA-C64-aji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 64: i can say powder, flour, sesame, a sea urchin, a sardine and a flavour, a taste.",
+    "assesses": [
+      "JA-LEX-C64-WORLD64-03",
+      "JA-LEX-C64-WORLD64-04",
+      "JA-LEX-C64-WORLD64-05"
+    ]
+  }
+}

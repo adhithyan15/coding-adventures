@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:17d456af25d3f0b9",
+  "lessonIds": [
+    "AR-C69-asir",
+    "AR-C69-dajaj",
+    "AR-C69-manzil",
+    "AR-C69-ghurfa",
+    "AR-C69-nafidha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch69.txt",
+  "json": "arabic/narration/ch69.json",
+  "textHash": "fnv1a64:0a1cf4b0a5d9c95a",
+  "jsonHash": "fnv1a64:ea8bd5e42f7c8b76",
+  "findings": []
+}

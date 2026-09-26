@@ -1,0 +1,11 @@
+{
+  "id": "FA-C51-barg",
+  "pathSegment": "FA-PATH-51-SCHOOL51",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-51-SCHOOL51",
+      "order": 4
+    }
+  ]
+}

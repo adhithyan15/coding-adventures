@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:145af99c05984f36",
+  "lessonIds": [
+    "FA-C45-khane",
+    "FA-C45-otagh",
+    "FA-C45-panjere",
+    "FA-C45-sandali",
+    "FA-C45-miz"
+  ],
+  "tex": "persian/book/chapters/ch45-house-room-window-chair-table.tex"
+}

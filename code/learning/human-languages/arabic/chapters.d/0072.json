@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "Fork, Bottle, Door, Kitchen, Garden",
+  "label": "ch:ar-fork-bottle-door-kitchen-garden",
+  "canDo": "I can say a fork, a bottle, a door, a kitchen and a garden.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "AR-C72-hadiqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can say a fork, a bottle, a door, a kitchen and a garden.",
+    "assesses": [
+      "AR-LEX-C72-HOME72-03",
+      "AR-LEX-C72-HOME72-04",
+      "AR-LEX-C72-HOME72-05"
+    ]
+  }
+}

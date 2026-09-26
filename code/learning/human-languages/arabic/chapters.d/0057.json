@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "Teacher, To drink, To hear, To sit, To sleep",
+  "label": "ch:ar-teacher-to-drink-to-hear-to-sit-to-sleep",
+  "canDo": "I can say a teacher, to drink, to hear, to sit and to sleep.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "AR-C57-nama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: i can say a teacher, to drink, to hear, to sit and to sleep.",
+    "assesses": [
+      "AR-LEX-C57-FAMILY57-03",
+      "AR-LEX-C57-FAMILY57-04",
+      "AR-LEX-C57-FAMILY57-05"
+    ]
+  }
+}

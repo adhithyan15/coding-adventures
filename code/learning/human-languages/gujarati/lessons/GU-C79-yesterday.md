@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C79-yesterday
 spine_node: SPINE-TAKE-LEAVE
-sequence: 4040
+sequence: 4053
 chapter: 79
 type: word
 headword: "ગઈકાલ"

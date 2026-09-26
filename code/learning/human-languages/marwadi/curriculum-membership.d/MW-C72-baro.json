@@ -1,0 +1,11 @@
+{
+  "id": "MW-C72-baro",
+  "pathSegment": "MW-PATH-72-ANIMALS72",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-72-ANIMALS72",
+      "order": 3
+    }
+  ]
+}

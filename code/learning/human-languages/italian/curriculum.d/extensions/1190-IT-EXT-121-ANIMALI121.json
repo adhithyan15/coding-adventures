@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-121-ANIMALI121",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a tortoise, a squirrel, an owl, a whale and a dolphin.",
+  "prerequisites": []
+}

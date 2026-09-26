@@ -1,0 +1,19 @@
+{
+  "chapter": 63,
+  "title": "Dream, Festival, West, East, South",
+  "label": "ch:ja-dream-festival-west-east-south",
+  "canDo": "I can say a dream, a festival, west, east and south.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "JA-C63-minami",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 63: i can say a dream, a festival, west, east and south.",
+    "assesses": [
+      "JA-LEX-C63-WORLD63-03",
+      "JA-LEX-C63-WORLD63-04",
+      "JA-LEX-C63-WORLD63-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:1b18364df3f4098e",
+  "lessonIds": [
+    "PA-C95-satt",
+    "PA-C95-atth",
+    "PA-C95-naum",
+    "PA-C95-das",
+    "PA-C95-giaram"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch95.txt",
+  "json": "punjabi/narration/ch95.json",
+  "textHash": "fnv1a64:9769f85d97333a17",
+  "jsonHash": "fnv1a64:b71aa5b5c266ef59",
+  "findings": []
+}

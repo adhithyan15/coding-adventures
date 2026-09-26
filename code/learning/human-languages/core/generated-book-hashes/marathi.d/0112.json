@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:59ebe5d77a953132",
+  "lessonIds": [
+    "MR-C112-dur",
+    "MR-C112-at",
+    "MR-C112-baher",
+    "MR-C112-mage",
+    "MR-C112-pudhe"
+  ],
+  "tex": "marathi/book/chapters/ch112-far-inside-outside-behind-ahead.tex"
+}

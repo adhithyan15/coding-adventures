@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C128-musique",
+    "language": "french",
+    "chapter": 128,
+    "sequence": 5900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c73b612804e8087"
+  },
+  "findings": []
+}

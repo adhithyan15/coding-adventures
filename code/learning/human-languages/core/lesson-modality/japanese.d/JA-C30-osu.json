@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C30-osu",
+    "language": "japanese",
+    "chapter": 30,
+    "sequence": 2110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e712dcc88360913a"
+  },
+  "findings": []
+}

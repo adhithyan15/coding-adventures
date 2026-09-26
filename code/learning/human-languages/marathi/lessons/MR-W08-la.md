@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W08-la
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 90
+sequence: 120
 delivery: script
 chapter: 8
 type: writing
 headword: ल
 romanization: "la"
 gloss: dental la — the plain l, partner to the retroflex lla you already write
-prerequisites: [MR-W07-pa]
+prerequisites: [MR-W07-pa, MR-C08-ulat]
 sounds: [dental-l]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-PA-01, MR-SCRIPT-NNA-01]
+  knowledge: [MR-SCRIPT-PA-01, MR-SCRIPT-NNA-01, MR-LEX-ANCHOR-ULAT]
 introduces:
   knowledge: [MR-SCRIPT-LA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-LA-01, MR-SCRIPT-PA-01, MR-SCRIPT-NNA-01]
+  knowledge: [MR-SCRIPT-LA-01, MR-SCRIPT-PA-01, MR-SCRIPT-NNA-01, MR-LEX-ANCHOR-ULAT]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W07-pa, MR-W03-lla]
 # ल — the plain *l*, beside the curled one you know
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-ULAT] -->
 
 You learned the harder *l* first. Here is the ordinary one.
 

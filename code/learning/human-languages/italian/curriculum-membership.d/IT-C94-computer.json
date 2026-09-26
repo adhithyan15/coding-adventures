@@ -1,0 +1,11 @@
+{
+  "id": "IT-C94-computer",
+  "pathSegment": "IT-PATH-94-CASA94",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-94-CASA94",
+      "order": 2
+    }
+  ]
+}

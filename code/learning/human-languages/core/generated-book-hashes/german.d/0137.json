@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:a4b8524b4e6970ac",
+  "lessonIds": [
+    "GE-C137-wochenende",
+    "GE-C137-datum",
+    "GE-C137-jahrhundert",
+    "GE-C137-nie",
+    "GE-C137-oft"
+  ],
+  "tex": "german/book/chapters/ch137-weekend-date-century-never-often.tex"
+}

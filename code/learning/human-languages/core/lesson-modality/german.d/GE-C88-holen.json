@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C88-holen",
+    "language": "german",
+    "chapter": 88,
+    "sequence": 3190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:532d87d915fc6860"
+  },
+  "findings": []
+}

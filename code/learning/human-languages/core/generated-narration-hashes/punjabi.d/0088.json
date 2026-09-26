@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:fb710c38a5880ac0",
+  "lessonIds": [
+    "PA-C88-nere",
+    "PA-C88-andar",
+    "PA-C88-bahar",
+    "PA-C88-utte",
+    "PA-C88-hetham"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch88.txt",
+  "json": "punjabi/narration/ch88.json",
+  "textHash": "fnv1a64:3a788a8f13411054",
+  "jsonHash": "fnv1a64:16abfa9262c8b964",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:5e7fb546cb17d9a5",
+  "lessonIds": [
+    "FA-C51-name",
+    "FA-C51-ruzname",
+    "FA-C51-derakht",
+    "FA-C51-gol",
+    "FA-C51-barg"
+  ],
+  "tex": "persian/book/chapters/ch51-letter-newspaper-tree-flower-leaf.tex"
+}

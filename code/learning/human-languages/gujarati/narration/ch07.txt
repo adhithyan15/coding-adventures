@@ -1,8 +1,89 @@
 Gujarati, chapter 7: The Last Four Shown Forms.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 8.
+ધૂળ (dhūḷ) — dust.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before the new word: say the last thing you learned, once, out loud.
+[pause 2 seconds]
+Three words from earlier chapters: say chīp, athāṇũ and ukhāṇũ, and what each means.
+
+You'll want to know: ધૂળ.
+ધૂળ — dhūḷ — "dust".
+Say it: dhūḷ. Look at its shape as you say it: the lessons that follow take pieces of it, ૂ, and write each one on its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: dhūḷ]
+[pause 8 seconds for the answer]
+[your turn — say: dhūḷ, and what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "dust"? (ધૂળ, dhūḷ.)
+
+
+Lesson 2 of 8.
+ઈંટ (ĩṭ) — a brick.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before the new word: say the last thing you learned, once, out loud.
+[pause 2 seconds]
+Three words from earlier chapters: say kaṇ, divāḷī and eklũ, and what each means.
+
+You'll want to know: ઈંટ.
+ઈંટ — ĩṭ — "a brick".
+Say it: ĩṭ. Look at its shape as you say it: the lessons that follow take pieces of it, ઈ (ī) and ટ (ṭa), and write each one on its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ĩṭ]
+[pause 8 seconds for the answer]
+[your turn — say: ĩṭ, and what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "a brick"? (ઈંટ, ĩṭ.)
+
+
+Lesson 3 of 8.
+ઢોલ (ḍhol) — a drum.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before the new word: say the last thing you learned, once, out loud.
+[pause 2 seconds]
+Say śak and what it means.
+
+You'll want to know: ઢોલ.
+ઢોલ — ḍhol — "a drum".
+Say it: ḍhol. Look at its shape as you say it: the lessons that follow take pieces of it, ઢ (ḍha), and write each one on its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: ḍhol]
+[pause 8 seconds for the answer]
+[your turn — say: ḍhol, and what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "a drum"? (ઢોલ, ḍhol.)
+
+
+Lesson 4 of 8.
 ૂ — the long-ū sign.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -30,7 +111,7 @@ Point to long ū in મુ મૂ, then write only its dependent sign.
 Source: Unicode Gujarati chart; placement and example follow data/scripts/gujarati.json.
 
 
-Lesson 2 of 5.
+Lesson 5 of 8.
 ટ (ṭa) — retroflex tta.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -58,7 +139,7 @@ Read ત ટ (ṭa) aloud and keep dental ta apart from retroflex tta.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 3 of 5.
+Lesson 6 of 8.
 ઈ — independent long ī.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -86,7 +167,7 @@ Point to the whole vowel in ઈ (ī) ી, then point to the attached sign.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 4 of 5.
+Lesson 7 of 8.
 ઢ (ḍha) — retroflex ddha.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -114,7 +195,7 @@ Read ધ ઢ (ḍha) aloud and keep dental dha apart from retroflex ddha.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 5 of 5.
+Lesson 8 of 8.
 ૂ (ū) — ટ (ṭa) — ઈ (ī) — ઢ (ḍha) (attached long uu — retroflex tta — independent long ii — retroflex ddha): the final four return.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.

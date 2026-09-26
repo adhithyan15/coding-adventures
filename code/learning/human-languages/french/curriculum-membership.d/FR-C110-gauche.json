@@ -1,0 +1,11 @@
+{
+  "id": "FR-C110-gauche",
+  "pathSegment": "FR-PATH-110-LIEU62",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-110-LIEU62",
+      "order": 1
+    }
+  ]
+}

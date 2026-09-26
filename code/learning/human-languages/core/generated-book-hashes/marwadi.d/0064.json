@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:d0ba2e498987f0c5",
+  "lessonIds": [
+    "MW-C64-pyalo",
+    "MW-C64-thali",
+    "MW-C64-chamcho",
+    "MW-C64-chhuri",
+    "MW-C64-botal"
+  ],
+  "tex": "marwadi/book/chapters/ch64-cup-plate-spoon-knife-bottle.tex"
+}

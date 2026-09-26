@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C63-diyo",
+    "language": "marwadi",
+    "chapter": 63,
+    "sequence": 4470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:61ac53135927db0c"
+  },
+  "findings": []
+}

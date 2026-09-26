@@ -3,7 +3,7 @@
     "id": "GU-C25-atyaare",
     "language": "gujarati",
     "chapter": 29,
-    "sequence": 1350,
+    "sequence": 1363,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:12d6d9043296441d",
+    "sourceHash": "fnv1a64:9852165dffb4e8ef",
     "detachableSegments": [
       "Writing — guided copy, model in view"
     ]

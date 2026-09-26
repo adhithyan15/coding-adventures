@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C81-bhitore",
+    "language": "bengali",
+    "chapter": 81,
+    "sequence": 4210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5bc10fd672710ad5"
+  },
+  "findings": []
+}

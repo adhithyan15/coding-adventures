@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C57-chikai",
+    "language": "japanese",
+    "chapter": 57,
+    "sequence": 3500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87b1e1e6245090a4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C48-shona",
+  "pathSegment": "BN-PATH-48-FAMILY48",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-48-FAMILY48",
+      "order": 2
+    }
+  ]
+}

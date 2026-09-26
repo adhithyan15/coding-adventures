@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C46-tooth
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2370
+sequence: 2383
 chapter: 46
 type: word
 headword: "દાંત"

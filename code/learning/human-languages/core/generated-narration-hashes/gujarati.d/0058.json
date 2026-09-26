@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 58,
-  "sourceHash": "fnv1a64:9e5be452c9c700f6",
+  "sourceHash": "fnv1a64:97ac856109723a3a",
   "lessonIds": [
     "GU-C58-rice-grain",
     "GU-C58-flour",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch58.txt",
   "json": "gujarati/narration/ch58.json",
   "textHash": "fnv1a64:1891c54200c4ccc9",
-  "jsonHash": "fnv1a64:d72001ce196f0f13",
+  "jsonHash": "fnv1a64:5e6addef43d05fde",
   "findings": []
 }

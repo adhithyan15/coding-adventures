@@ -1,0 +1,11 @@
+{
+  "id": "AR-C80-thuban",
+  "pathSegment": "AR-PATH-80-ANIMALS80",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-80-ANIMALS80",
+      "order": 3
+    }
+  ]
+}

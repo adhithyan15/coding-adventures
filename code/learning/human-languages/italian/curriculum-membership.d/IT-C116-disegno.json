@@ -1,0 +1,11 @@
+{
+  "id": "IT-C116-disegno",
+  "pathSegment": "IT-PATH-116-TEMPOLIBERO116",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-116-TEMPOLIBERO116",
+      "order": 3
+    }
+  ]
+}

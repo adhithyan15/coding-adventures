@@ -1,0 +1,11 @@
+{
+  "id": "IT-C108-panino",
+  "pathSegment": "IT-PATH-108-CIBO108",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-108-CIBO108",
+      "order": 2
+    }
+  ]
+}

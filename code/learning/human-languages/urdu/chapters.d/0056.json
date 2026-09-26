@@ -1,0 +1,19 @@
+{
+  "chapter": 56,
+  "title": "Chilli, Butter, Cheese, Honey, Grapes",
+  "label": "ch:ur-chilli-butter-cheese-honey-grapes",
+  "canDo": "I can say chilli, pepper, butter, cheese, honey and grapes.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "UR-C56-angur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 56: i can say chilli, pepper, butter, cheese, honey and grapes.",
+    "assesses": [
+      "UR-LEX-C56-FOOD56-03",
+      "UR-LEX-C56-FOOD56-04",
+      "UR-LEX-C56-FOOD56-05"
+    ]
+  }
+}

@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W08-sha
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 91
+sequence: 121
 delivery: script
 chapter: 8
 type: writing
 headword: श
 romanization: "śa"
 gloss: palatal sha — the sh of shahar
-prerequisites: [MR-W08-la]
+prerequisites: [MR-W08-la, MR-C08-shesh]
 sounds: [palatal-sha]
 roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [MR-SCRIPT-LA-01, MR-SCRIPT-PA-01]
+  knowledge: [MR-SCRIPT-LA-01, MR-SCRIPT-PA-01, MR-LEX-ANCHOR-SHESH]
 introduces:
   knowledge: [MR-SCRIPT-SHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-SHA-01, MR-SCRIPT-LA-01, MR-SCRIPT-PA-01]
+  knowledge: [MR-SCRIPT-SHA-01, MR-SCRIPT-LA-01, MR-SCRIPT-PA-01, MR-LEX-ANCHOR-SHESH]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W08-la, MR-W01-sa]
 # श — the *sh* at the roof of the mouth
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-SHESH] -->
 
 You write the plain *s*. Slide the tongue back along the roof of your mouth and it becomes something else.
 

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C82-jeb",
+    "language": "urdu",
+    "chapter": 82,
+    "sequence": 4190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfff38869ff917f6"
+  },
+  "findings": []
+}

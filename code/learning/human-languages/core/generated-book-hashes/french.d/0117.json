@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:2e144e58159f23a0",
+  "lessonIds": [
+    "FR-C117-bottes",
+    "FR-C117-casquette",
+    "FR-C117-maillot",
+    "FR-C117-taille",
+    "FR-C117-portefeuille"
+  ],
+  "tex": "french/book/chapters/ch117-boots-cap-swimsuit-size-wallet.tex"
+}

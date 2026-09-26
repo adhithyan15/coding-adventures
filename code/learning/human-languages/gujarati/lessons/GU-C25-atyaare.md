@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C25-atyaare
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1350
+sequence: 1363
 chapter: 29
 type: practice
 headword: અત્યારે

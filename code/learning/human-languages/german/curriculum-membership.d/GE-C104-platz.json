@@ -1,0 +1,11 @@
+{
+  "id": "GE-C104-platz",
+  "pathSegment": "GE-PATH-104-ORT104",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-104-ORT104",
+      "order": 1
+    }
+  ]
+}

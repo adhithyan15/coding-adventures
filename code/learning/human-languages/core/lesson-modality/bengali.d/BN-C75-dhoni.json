@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C75-dhoni",
+    "language": "bengali",
+    "chapter": 75,
+    "sequence": 3900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2170e0f209e4cff2"
+  },
+  "findings": []
+}

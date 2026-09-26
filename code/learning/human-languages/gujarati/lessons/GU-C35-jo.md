@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C35-jo
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1980
+sequence: 1993
 chapter: 39
 type: word
 headword: જો

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C107-lal",
+    "language": "marathi",
+    "chapter": 107,
+    "sequence": 4780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28952cef840aaa29"
+  },
+  "findings": []
+}

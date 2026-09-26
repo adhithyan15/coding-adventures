@@ -3,7 +3,7 @@
     "id": "GU-C54-besvu",
     "language": "gujarati",
     "chapter": 54,
-    "sequence": 2740,
+    "sequence": 2753,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:61146408f88a788c"
+    "sourceHash": "fnv1a64:462e27f56e96a438"
   },
   "findings": []
 }

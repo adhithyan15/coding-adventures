@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C88-qarib",
+    "language": "arabic",
+    "chapter": 88,
+    "sequence": 3390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:124c45107b984ab0"
+  },
+  "findings": []
+}

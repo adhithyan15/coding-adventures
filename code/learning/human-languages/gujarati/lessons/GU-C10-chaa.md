@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C10-chaa
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 530
+sequence: 543
 chapter: 16
 type: word
 headword: ચા

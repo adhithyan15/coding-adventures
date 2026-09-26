@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:06468c81b78ad4bf",
+  "lessonIds": [
+    "MW-C62-khirki",
+    "MW-C62-kursi",
+    "MW-C62-mej",
+    "MW-C62-bhit",
+    "MW-C62-chhat"
+  ],
+  "tex": "marwadi/book/chapters/ch62-window-chair-table-wall-roof.tex"
+}

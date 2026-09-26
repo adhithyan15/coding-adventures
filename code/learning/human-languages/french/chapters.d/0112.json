@@ -1,0 +1,19 @@
+{
+  "chapter": 112,
+  "title": "Shower, Bathtub, Wardrobe, Shelf, Curtain",
+  "label": "ch:fr-shower-bathtub-wardrobe-shelf-curtain",
+  "canDo": "I can name a shower, a bathtub, a wardrobe, a shelf, a curtain.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C112-rideau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 112: i can name a shower, a bathtub, a wardrobe, a shelf, a curtain.",
+    "assesses": [
+      "FR-LEX-C112-MAISON64-03",
+      "FR-LEX-C112-MAISON64-04",
+      "FR-LEX-C112-MAISON64-05"
+    ]
+  }
+}

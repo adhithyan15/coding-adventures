@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C24-hear-mahino
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1230
+sequence: 1243
 chapter: 28
 type: word
 headword: મહિનો

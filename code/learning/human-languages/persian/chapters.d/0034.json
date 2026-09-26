@@ -1,0 +1,19 @@
+{
+  "chapter": 34,
+  "title": "Neighbour, Guest, University student, Gentleman, Lady",
+  "label": "ch:fa-neighbour-guest-university-student-gentleman-lady",
+  "canDo": "I can say a neighbour, a guest, a university student, a gentleman and a lady.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "FA-C34-khanom",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 34: i can say a neighbour, a guest, a university student, a gentleman and a lady.",
+    "assesses": [
+      "FA-LEX-C34-FAMILY34-03",
+      "FA-LEX-C34-FAMILY34-04",
+      "FA-LEX-C34-FAMILY34-05"
+    ]
+  }
+}

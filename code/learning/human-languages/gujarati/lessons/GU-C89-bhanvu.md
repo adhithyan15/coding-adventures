@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C89-bhanvu
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 4540
+sequence: 4553
 chapter: 89
 type: word
 headword: "ભણવું"

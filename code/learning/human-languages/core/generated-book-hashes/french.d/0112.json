@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:fbdbfd80066d1bbe",
+  "lessonIds": [
+    "FR-C112-douche",
+    "FR-C112-baignoire",
+    "FR-C112-armoire",
+    "FR-C112-etagere",
+    "FR-C112-rideau"
+  ],
+  "tex": "french/book/chapters/ch112-shower-bathtub-wardrobe-shelf-curtain.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:bb6119dedda3c23a",
+  "lessonIds": [
+    "FA-C55-asb",
+    "FA-C55-gav",
+    "FA-C55-boz",
+    "FA-C55-gusfand",
+    "FA-C55-parande"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch55.txt",
+  "json": "persian/narration/ch55.json",
+  "textHash": "fnv1a64:24c71382490fc382",
+  "jsonHash": "fnv1a64:11d355617ba28945",
+  "findings": []
+}

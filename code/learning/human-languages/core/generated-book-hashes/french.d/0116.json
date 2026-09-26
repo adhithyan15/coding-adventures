@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:632772df5c9fb222",
+  "lessonIds": [
+    "FR-C116-veste",
+    "FR-C116-cravate",
+    "FR-C116-ceinture",
+    "FR-C116-gants",
+    "FR-C116-echarpe",
+    "FR-R116-first-pass-getting-around-and-the-town",
+    "FR-R116-second-pass-the-house"
+  ],
+  "tex": "french/book/chapters/ch116-jacket-tie-belt-gloves-scarf.tex"
+}

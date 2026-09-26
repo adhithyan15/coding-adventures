@@ -3,7 +3,7 @@
     "id": "GU-R24-map-ten-r3",
     "language": "gujarati",
     "chapter": 28,
-    "sequence": 1290,
+    "sequence": 1303,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:dd2e5ece7f5bd010",
+    "sourceHash": "fnv1a64:4222204a19230fef",
     "detachableSegments": [
       "Writing — from meaning, with every model covered"
     ]

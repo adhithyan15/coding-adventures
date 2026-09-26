@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C65-lake
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3300
+sequence: 3313
 chapter: 65
 type: word
 headword: "તળાવ"

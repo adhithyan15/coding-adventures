@@ -1,0 +1,11 @@
+{
+  "id": "GE-C84-teich",
+  "pathSegment": "GE-PATH-84-NATUR3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-84-NATUR3",
+      "order": 3
+    }
+  ]
+}

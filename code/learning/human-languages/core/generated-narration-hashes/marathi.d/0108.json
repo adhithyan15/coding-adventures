@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:d408bde98a372db0",
+  "lessonIds": [
+    "MR-C108-kala",
+    "MR-C108-pandhra",
+    "MR-C108-tapkiri",
+    "MR-C108-gulabi",
+    "MR-C108-tarun"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch108.txt",
+  "json": "marathi/narration/ch108.json",
+  "textHash": "fnv1a64:6761cb07d607f1c1",
+  "jsonHash": "fnv1a64:0efa5d2df7985b59",
+  "findings": []
+}

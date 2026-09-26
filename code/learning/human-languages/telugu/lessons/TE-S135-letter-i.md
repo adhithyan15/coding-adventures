@@ -9,17 +9,17 @@ type: writing
 headword: "ఇ"
 gloss: the single character ఇ — recognised inside words you already say
 romanization: "i"
-prerequisites: [TE-S112-letter-ca]
+prerequisites: [TE-S112-letter-ca, TE-C09-itika]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-112]
+  knowledge: [TE-SCRIPT-RECOG-112, TE-LEX-ANCHOR-ITIKA]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-135]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-135, TE-SCRIPT-RECOG-112, TE-SCRIPT-RECOG-149, TE-SCRIPT-RECOG-145]
+  knowledge: [TE-SCRIPT-RECOG-135, TE-SCRIPT-RECOG-112, TE-SCRIPT-RECOG-149, TE-SCRIPT-RECOG-145, TE-LEX-ANCHOR-ITIKA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [TE-S112-letter-ca, TE-S149-digit-0, TE-S145-digit-6]
 # ఇ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-112, TE-SCRIPT-RECOG-149] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-112, TE-SCRIPT-RECOG-149, TE-LEX-ANCHOR-ITIKA] -->
 
 [PAUSE 1s] Before the new one: చ — what does it do? And one from further back: ౦?
 

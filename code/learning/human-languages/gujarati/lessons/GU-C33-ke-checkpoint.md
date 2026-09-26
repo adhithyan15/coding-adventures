@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C33-ke-checkpoint
 spine_node: SPINE-SAY-WHAT-I-LIKE
-sequence: 1920
+sequence: 1933
 chapter: 37
 type: practice
 headword: કે — વિચારું છું કે — જાણું છું કે

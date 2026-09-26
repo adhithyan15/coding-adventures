@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C70-tawila",
+    "language": "arabic",
+    "chapter": 70,
+    "sequence": 2450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83ab537d2c8bd279"
+  },
+  "findings": []
+}

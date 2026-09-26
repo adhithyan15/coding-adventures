@@ -1,0 +1,11 @@
+{
+  "id": "FA-C52-jangal",
+  "pathSegment": "FA-PATH-52-NATURE52",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-52-NATURE52",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:5ab883b8d825bafe",
+  "lessonIds": [
+    "FR-C132-bruyant",
+    "FR-C132-dernier",
+    "FR-C132-prochain",
+    "FR-C132-celebre",
+    "FR-C132-drole"
+  ],
+  "tex": "french/book/chapters/ch132-noisy-last-next-famous-funny.tex"
+}

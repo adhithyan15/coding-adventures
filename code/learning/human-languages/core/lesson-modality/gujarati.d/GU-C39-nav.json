@@ -3,7 +3,7 @@
     "id": "GU-C39-nav",
     "language": "gujarati",
     "chapter": 43,
-    "sequence": 2230,
+    "sequence": 2243,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:318df9135b698247"
+    "sourceHash": "fnv1a64:9010927fd0f12d25"
   },
   "findings": []
 }

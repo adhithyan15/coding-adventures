@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Bicycle, Underground, Taxi, Car park, Lift",
+  "label": "ch:fr-bicycle-underground-taxi-car-park-lift",
+  "canDo": "I can name a bicycle, the underground, a taxi, a car park, a lift.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FR-C106-ascenseur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can name a bicycle, the underground, a taxi, a car park, a lift.",
+    "assesses": [
+      "FR-LEX-C106-TRAJET58-03",
+      "FR-LEX-C106-TRAJET58-04",
+      "FR-LEX-C106-TRAJET58-05"
+    ]
+  }
+}

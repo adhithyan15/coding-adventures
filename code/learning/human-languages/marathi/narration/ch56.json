@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "Ten, Eleven, Twelve, and the au Sign",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:235c8e2d6260720e",
+  "sourceHash": "fnv1a64:defe36cce9a0bee2",
   "lessons": [
     {
       "id": "MR-C56-daha",
@@ -410,6 +410,111 @@
       ]
     },
     {
+      "id": "MR-C56-mauj",
+      "sequence": 2279,
+      "title": "मौज (mauj) — fun, enjoyment",
+      "headword": "मौज",
+      "romanization": "mauj",
+      "gloss": "fun, enjoyment",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:1d2af6fcefe332e2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मौज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मौज — mauj — \"fun, enjoyment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: mauj. Look at its shape as you say it: the next lesson takes one piece of it, ौ (-au), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mauj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mauj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mauj, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mauj*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"fun, enjoyment\"? (मौज, mauj.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "MR-W56-au-matra",
       "sequence": 2280,
       "title": "ौ (-au) — the au vowel sign",
@@ -424,7 +529,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a706d7c28ea3bbee",
+      "sourceHash": "fnv1a64:734d2a28ad8d029a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -520,7 +625,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2593895021c1cfa",
+      "sourceHash": "fnv1a64:02348a039fd21998",
       "notice": null,
       "blocks": [
         {

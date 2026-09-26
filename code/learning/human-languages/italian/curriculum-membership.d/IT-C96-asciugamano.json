@@ -1,0 +1,11 @@
+{
+  "id": "IT-C96-asciugamano",
+  "pathSegment": "IT-PATH-96-CASA96",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-96-CASA96",
+      "order": 1
+    }
+  ]
+}

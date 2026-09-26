@@ -1,0 +1,11 @@
+{
+  "id": "IT-C125-rumoroso",
+  "pathSegment": "IT-PATH-125-QUALITA125",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-125-QUALITA125",
+      "order": 0
+    }
+  ]
+}

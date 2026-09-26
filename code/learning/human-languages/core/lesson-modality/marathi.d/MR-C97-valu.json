@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C97-valu",
+    "language": "marathi",
+    "chapter": 97,
+    "sequence": 4250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e971fdad87580495"
+  },
+  "findings": []
+}

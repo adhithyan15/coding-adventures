@@ -3,7 +3,7 @@
     "id": "GU-R18-no-problem-r4",
     "language": "gujarati",
     "chapter": 22,
-    "sequence": 840,
+    "sequence": 853,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:124c303b77e4f6ce",
+    "sourceHash": "fnv1a64:9916de40edc29992",
     "detachableSegments": [
       "Writing — from sound"
     ]

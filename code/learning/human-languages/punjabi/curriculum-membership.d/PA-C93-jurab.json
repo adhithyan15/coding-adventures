@@ -1,0 +1,11 @@
+{
+  "id": "PA-C93-jurab",
+  "pathSegment": "PA-PATH-93-CLOTHES93",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-93-CLOTHES93",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C81-dajaja",
+    "language": "arabic",
+    "chapter": 81,
+    "sequence": 3030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:faa1e09d28125824"
+  },
+  "findings": []
+}

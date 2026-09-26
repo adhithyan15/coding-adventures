@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-134-EIGEN134",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say boring, difficult, finished, ready and safe.",
+  "prerequisites": []
+}

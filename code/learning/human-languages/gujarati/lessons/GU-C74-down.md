@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C74-down
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3800
+sequence: 3813
 chapter: 74
 type: word
 headword: "નીચે"

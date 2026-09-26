@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:e1f76f276c14bb0a",
+  "lessonIds": [
+    "JA-C49-takai",
+    "JA-C49-hikui",
+    "JA-C49-yasui",
+    "JA-C49-hayai",
+    "JA-C49-yasashii"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch49.txt",
+  "json": "japanese/narration/ch49.json",
+  "textHash": "fnv1a64:1d8d3ee5c35f5c0a",
+  "jsonHash": "fnv1a64:ead2706937f9a02a",
+  "findings": []
+}

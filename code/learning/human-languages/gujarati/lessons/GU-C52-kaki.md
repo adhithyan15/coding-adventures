@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C52-kaki
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2650
+sequence: 2663
 chapter: 52
 type: word
 headword: "કાકી"

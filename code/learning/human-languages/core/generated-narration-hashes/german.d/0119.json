@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:e5510e9edb8946a9",
+  "lessonIds": [
+    "GE-C119-schal",
+    "GE-C119-stiefel",
+    "GE-C119-rock",
+    "GE-C119-mantel",
+    "GE-C119-schuhe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch119.txt",
+  "json": "german/narration/ch119.json",
+  "textHash": "fnv1a64:6055cca1b71119f7",
+  "jsonHash": "fnv1a64:9da785ef43aae4eb",
+  "findings": []
+}

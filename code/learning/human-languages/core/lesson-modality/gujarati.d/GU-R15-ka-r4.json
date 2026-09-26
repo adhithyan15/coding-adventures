@@ -3,7 +3,7 @@
     "id": "GU-R15-ka-r4",
     "language": "gujarati",
     "chapter": 19,
-    "sequence": 660,
+    "sequence": 673,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:eddc0b6cc8272a6c",
+    "sourceHash": "fnv1a64:0614ae3709299a90",
     "detachableSegments": [
       "Writing — from sound"
     ],

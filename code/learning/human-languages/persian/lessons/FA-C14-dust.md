@@ -9,7 +9,7 @@ headword: دوست
 romanization: dust
 gloss: friend — the standalone noun, and the closing word of this whole tranche
 concept_tag: FA-SOCIAL-FRIEND
-prerequisites: [FA-C14-zan]
+prerequisites: [FA-C14-zan, FA-C05-khodahafez-more]
 sounds: [rtl, long-u]
 roots: [pie-gews]
 etymology_hook: dust, "friend," is the same word the compound verb "to love" already ran on — from *ǵews-, "to taste, to choose," the root English kept as choose and Latin turned into gustus — now given its own lesson as the noun it always was.

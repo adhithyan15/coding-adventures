@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C72-boro",
+    "language": "bengali",
+    "chapter": 72,
+    "sequence": 3750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e1ef6e3ccdb86955"
+  },
+  "findings": []
+}

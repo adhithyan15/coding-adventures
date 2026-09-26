@@ -188,7 +188,11 @@ it("pins French lesson-content budgets", () =>
     // 289 -> 578: the pre-A1 vocabulary tranche, chapters 49-105. 285 word
     // lessons (thirty-seven verbs) and four reviews; each word lesson introduces
     // one lexical atom and no idiom, sense or culture claim. Re-measured.
-    lessons: 578,
+    // 578 -> 749: the A1 vocabulary tranche, chapters 106-138. 165 word lessons
+    // (ten verbs) in three runs of eleven chapters, each run closing on two
+    // reviews so no review passes the 300-second ceiling. No idiom, sense or
+    // culture claim.
+    lessons: 749,
     idioms: 3,
     senses: 7,
     cultureClaims: 27,

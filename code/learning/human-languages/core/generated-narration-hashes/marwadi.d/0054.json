@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:ce5fc68ba0e4e226",
+  "lessonIds": [
+    "MW-C54-kholno",
+    "MW-C54-hasno",
+    "MW-C54-rovno",
+    "MW-C54-gavno",
+    "MW-C54-nachno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch54.txt",
+  "json": "marwadi/narration/ch54.json",
+  "textHash": "fnv1a64:877075a202413acd",
+  "jsonHash": "fnv1a64:801438462936ab60",
+  "findings": []
+}

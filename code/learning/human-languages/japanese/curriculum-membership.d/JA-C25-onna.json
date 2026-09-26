@@ -1,0 +1,11 @@
+{
+  "id": "JA-C25-onna",
+  "pathSegment": "JA-PATH-25-FAMILY25",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-25-FAMILY25",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C58-kouen",
+  "pathSegment": "JA-PATH-58-PLACE58",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-58-PLACE58",
+      "order": 1
+    }
+  ]
+}

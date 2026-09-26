@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C70-bura",
+    "language": "urdu",
+    "chapter": 70,
+    "sequence": 3580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24dcf9570c8548c5"
+  },
+  "findings": []
+}

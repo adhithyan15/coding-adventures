@@ -3,7 +3,7 @@
     "id": "GU-C24-aaj",
     "language": "gujarati",
     "chapter": 28,
-    "sequence": 1250,
+    "sequence": 1263,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b87f265a062ef44d",
+    "sourceHash": "fnv1a64:39ccf91427444913",
     "detachableSegments": [
       "Writing — guided copy, model in view"
     ]

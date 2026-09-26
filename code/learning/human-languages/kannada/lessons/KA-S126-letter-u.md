@@ -9,17 +9,17 @@ type: writing
 headword: "ಉ"
 gloss: the single character ಉ — the standing half of a vowel sign you already read
 romanization: "u"
-prerequisites: [KA-S124-letter-pa]
+prerequisites: [KA-S124-letter-pa, KA-C16-uttara]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-124]
+  knowledge: [KA-SCRIPT-RECOG-124, KA-LEX-ANCHOR-UTTARA]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-126]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-124, KA-SCRIPT-RECOG-126]
+  knowledge: [KA-SCRIPT-RECOG-124, KA-SCRIPT-RECOG-126, KA-LEX-ANCHOR-UTTARA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [KA-S124-letter-pa]
 # ಉ — one character, the standing half of a sign you already read
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-124] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-124, KA-LEX-ANCHOR-UTTARA] -->
 
 [PAUSE 1s] Before the new one: ಪ — what sound does it carry?
 

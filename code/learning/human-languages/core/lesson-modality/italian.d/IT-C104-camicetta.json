@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C104-camicetta",
+    "language": "italian",
+    "chapter": 104,
+    "sequence": 4940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5288b5d7903ec90d"
+  },
+  "findings": []
+}

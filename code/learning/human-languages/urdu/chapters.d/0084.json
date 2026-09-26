@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "Fourteen, Fifteen, Sixteen, Seventeen, Eighteen",
+  "label": "ch:ur-fourteen-fifteen-sixteen-seventeen-eighteen",
+  "canDo": "I can say fourteen, fifteen, sixteen, seventeen and eighteen.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C84-atharah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: i can say fourteen, fifteen, sixteen, seventeen and eighteen.",
+    "assesses": [
+      "UR-LEX-C84-NUMBERS84-03",
+      "UR-LEX-C84-NUMBERS84-04",
+      "UR-LEX-C84-NUMBERS84-05"
+    ]
+  }
+}

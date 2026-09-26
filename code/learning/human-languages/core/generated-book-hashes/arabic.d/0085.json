@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:b2f4d95fb0c3b3ec",
+  "lessonIds": [
+    "AR-C85-khafif",
+    "AR-C85-thaqil",
+    "AR-C85-sahih",
+    "AR-C85-khata",
+    "AR-C85-muhimm"
+  ],
+  "tex": "arabic/book/chapters/ch85-light-heavy-correct-mistake-important.tex"
+}

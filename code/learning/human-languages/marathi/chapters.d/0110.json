@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Minute, Today, Now, Always, Sometimes",
+  "label": "ch:mr-minute-today-now-always-sometimes",
+  "canDo": "I can say a minute, today, now, always and sometimes.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "MR-C110-kadhikadhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say a minute, today, now, always and sometimes.",
+    "assesses": [
+      "MR-LEX-C110-TIME110-03",
+      "MR-LEX-C110-TIME110-04",
+      "MR-LEX-C110-TIME110-05"
+    ]
+  }
+}

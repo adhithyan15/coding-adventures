@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-32-HEALTH32",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say upset, sad, a doctor, a grandfather, a grandmother and an uncle.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:3acc80aa4603f9f6",
+  "lessonIds": [
+    "AR-C76-ghaba",
+    "AR-C76-nahr",
+    "AR-C76-hajar",
+    "AR-C76-raml",
+    "AR-C76-haql"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch76.txt",
+  "json": "arabic/narration/ch76.json",
+  "textHash": "fnv1a64:5eba3595af8fb3dc",
+  "jsonHash": "fnv1a64:4e029430960abf20",
+  "findings": []
+}

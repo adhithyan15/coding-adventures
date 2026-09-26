@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:72cb46bb75a40cb8",
+  "lessonIds": [
+    "JA-C56-ato",
+    "JA-C56-mae",
+    "JA-C56-ue",
+    "JA-C56-naka",
+    "JA-C56-hidari"
+  ],
+  "tex": "japanese/book/chapters/ch56-after-before-above-inside-left.tex"
+}

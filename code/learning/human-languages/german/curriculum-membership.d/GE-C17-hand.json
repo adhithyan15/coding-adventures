@@ -1,11 +1,11 @@
 {
   "id": "GE-C17-hand",
   "pathSegment": "GE-PATH-022",
-  "pathOrder": 2,
+  "pathOrder": 4,
   "extensions": [
     {
       "id": "GE-EXT-022-LANGUAGE-SPECIFIC",
-      "order": 1
+      "order": 2
     }
   ]
 }

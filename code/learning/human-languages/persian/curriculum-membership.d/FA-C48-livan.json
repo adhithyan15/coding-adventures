@@ -1,0 +1,11 @@
+{
+  "id": "FA-C48-livan",
+  "pathSegment": "FA-PATH-48-HOME48",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-48-HOME48",
+      "order": 3
+    }
+  ]
+}

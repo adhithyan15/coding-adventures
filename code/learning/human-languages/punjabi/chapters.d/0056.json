@@ -1,0 +1,19 @@
+{
+  "chapter": 56,
+  "title": "Guest, To drink, To hear, To sit, To sleep",
+  "label": "ch:pa-guest-to-drink-to-hear-to-sit-to-sleep",
+  "canDo": "I can say a guest, to drink, to hear, to listen, to sit and to sleep.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-C56-sauna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 56: i can say a guest, to drink, to hear, to listen, to sit and to sleep.",
+    "assesses": [
+      "PA-LEX-C56-FAMILY56-03",
+      "PA-LEX-C56-FAMILY56-04",
+      "PA-LEX-C56-FAMILY56-05"
+    ]
+  }
+}

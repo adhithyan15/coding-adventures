@@ -3,7 +3,7 @@
     "id": "GU-R18-farewell-r4",
     "language": "gujarati",
     "chapter": 22,
-    "sequence": 860,
+    "sequence": 873,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:78c5922013b5cbdc",
+    "sourceHash": "fnv1a64:1a3e833501730aac",
     "detachableSegments": [
       "Writing — from sound"
     ]

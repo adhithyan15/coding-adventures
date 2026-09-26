@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:1e75754a11928a85",
+  "lessonIds": [
+    "MW-C47-tav",
+    "MW-C47-bimar",
+    "MW-C47-darad",
+    "MW-C47-davai",
+    "MW-C47-bhukh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch47.txt",
+  "json": "marwadi/narration/ch47.json",
+  "textHash": "fnv1a64:b5284b049a52c82f",
+  "jsonHash": "fnv1a64:95070a90c336a2ee",
+  "findings": []
+}

@@ -3,7 +3,7 @@
     "id": "GU-C80-holiday",
     "language": "gujarati",
     "chapter": 80,
-    "sequence": 4080,
+    "sequence": 4093,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f37ab41e60fb8492"
+    "sourceHash": "fnv1a64:817386d14e8fec42"
   },
   "findings": []
 }

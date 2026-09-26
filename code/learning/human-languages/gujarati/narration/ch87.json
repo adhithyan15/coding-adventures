@@ -4,11 +4,11 @@
   "chapter": 87,
   "title": "What We Wear",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:10ead19f6b5cfc69",
+  "sourceHash": "fnv1a64:efbae4cbd11ad8f0",
   "lessons": [
     {
       "id": "GU-C87-dhoti",
-      "sequence": 4410,
+      "sequence": 4423,
       "title": "ધોતી (dhotī) — a dhoti",
       "headword": "ધોતી",
       "romanization": "dhotī",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:874150de6ca96ac5",
+      "sourceHash": "fnv1a64:a6c182b42ceaf0ef",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C87-shirt",
-      "sequence": 4420,
+      "sequence": 4433,
       "title": "ખમીસ (khamīs) — a shirt",
       "headword": "ખમીસ",
       "romanization": "khamīs",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a3eaf71467db026",
+      "sourceHash": "fnv1a64:b986539e335c9f32",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C87-sandals",
-      "sequence": 4430,
+      "sequence": 4443,
       "title": "ચંપલ (campal) — sandals, slippers",
       "headword": "ચંપલ",
       "romanization": "campal",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d6aedc831aadae3",
+      "sourceHash": "fnv1a64:a9abbb70a7a025b1",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C87-cap",
-      "sequence": 4440,
+      "sequence": 4453,
       "title": "ટોપી (ṭopī) — a cap, a hat",
       "headword": "ટોપી",
       "romanization": "ṭopī",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12b6379346bb2e1c",
+      "sourceHash": "fnv1a64:3bde03d4bb8cfa4c",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C87-umbrella",
-      "sequence": 4450,
+      "sequence": 4463,
       "title": "છત્રી (chatrī) — an umbrella",
       "headword": "છત્રી",
       "romanization": "chatrī",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de4554161bcadad1",
+      "sourceHash": "fnv1a64:bb52cc95ba0a0823",
       "notice": null,
       "blocks": [
         {

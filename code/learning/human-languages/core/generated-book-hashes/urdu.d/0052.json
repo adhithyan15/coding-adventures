@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:73eb83995a45d7b1",
+  "lessonIds": [
+    "UR-C52-pakarna",
+    "UR-C52-katna",
+    "UR-C52-rokna",
+    "UR-C52-batana",
+    "UR-C52-khona"
+  ],
+  "tex": "urdu/book/chapters/ch52-to-catch-to-cut-to-stop-to-tell-to-lose.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C46-hitsuji",
+    "language": "japanese",
+    "chapter": 46,
+    "sequence": 2960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38ae253a352c888f"
+  },
+  "findings": []
+}

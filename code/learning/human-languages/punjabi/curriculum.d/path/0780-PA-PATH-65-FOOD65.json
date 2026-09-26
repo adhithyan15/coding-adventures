@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-65-FOOD65",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "PA-EXT-65-FOOD65"
+  ],
+  "after": []
+}

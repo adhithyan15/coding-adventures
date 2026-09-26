@@ -1,0 +1,11 @@
+{
+  "id": "KA-C31-krushi",
+  "pathSegment": "KA-PATH-100",
+  "pathOrder": 38,
+  "extensions": [
+    {
+      "id": "KA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 38
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C54-dadi",
+    "language": "punjabi",
+    "chapter": 54,
+    "sequence": 2950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6e3bed148835c49"
+  },
+  "findings": []
+}

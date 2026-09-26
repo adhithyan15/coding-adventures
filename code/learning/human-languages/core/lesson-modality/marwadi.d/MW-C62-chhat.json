@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C62-chhat",
+    "language": "marwadi",
+    "chapter": 62,
+    "sequence": 4440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e56de4830f873f75"
+  },
+  "findings": []
+}

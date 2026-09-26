@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:e5d9f04d0e5bcc0c",
+  "lessonIds": [
+    "BN-C56-dal",
+    "BN-C56-phol",
+    "BN-C56-apel",
+    "BN-C56-kola",
+    "BN-C56-alu"
+  ],
+  "tex": "bengali/book/chapters/ch56-lentils-fruit-apple-banana-potato.tex"
+}

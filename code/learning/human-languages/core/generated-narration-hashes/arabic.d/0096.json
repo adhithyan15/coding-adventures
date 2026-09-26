@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:768c91e714900bed",
+  "lessonIds": [
+    "AR-C96-hizam",
+    "AR-C96-sitta",
+    "AR-C96-saba",
+    "AR-C96-thamaniya",
+    "AR-C96-tisa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch96.txt",
+  "json": "arabic/narration/ch96.json",
+  "textHash": "fnv1a64:072768b627dbccbf",
+  "jsonHash": "fnv1a64:fa24543abc7b69d2",
+  "findings": []
+}

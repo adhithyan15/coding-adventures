@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:d6d1b6fb91af99f5",
+  "lessonIds": [
+    "IT-C130-amaro",
+    "IT-C130-salato",
+    "IT-C130-leggero",
+    "IT-C130-pesante",
+    "IT-C130-magro"
+  ],
+  "tex": "italian/book/chapters/ch130-bitter-salty-light-heavy-thin.tex"
+}

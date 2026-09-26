@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:7a51e5d410cc00ca",
+  "lessonIds": [
+    "FA-C35-khordan",
+    "FA-C35-nushidan",
+    "FA-C35-didan",
+    "FA-C35-shenidan",
+    "FA-C35-neshastan"
+  ],
+  "tex": "persian/book/chapters/ch35-to-eat-to-drink-to-see-to-hear-to-sit.tex"
+}

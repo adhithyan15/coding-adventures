@@ -1,0 +1,11 @@
+{
+  "id": "JA-C34-toufu",
+  "pathSegment": "JA-PATH-34-FOOD34",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-34-FOOD34",
+      "order": 3
+    }
+  ]
+}

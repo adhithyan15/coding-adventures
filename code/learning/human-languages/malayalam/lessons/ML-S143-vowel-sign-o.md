@@ -9,17 +9,17 @@ type: writing
 headword: "ൊ"
 gloss: the single character ◌ൊ — recognised inside words you already say
 romanization: "o"
-prerequisites: [ML-S122-letter-ya]
+prerequisites: [ML-S122-letter-ya, ML-C05-kodi]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-122]
+  knowledge: [ML-SCRIPT-RECOG-122, ML-LEX-ANCHOR-KODI]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-143]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-122, ML-SCRIPT-RECOG-143]
+  knowledge: [ML-SCRIPT-RECOG-122, ML-SCRIPT-RECOG-143, ML-LEX-ANCHOR-KODI]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-S122-letter-ya]
 # ◌ൊ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-122] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-122, ML-LEX-ANCHOR-KODI] -->
 
 [PAUSE 1s] Before the new one: യ — what does it do?
 

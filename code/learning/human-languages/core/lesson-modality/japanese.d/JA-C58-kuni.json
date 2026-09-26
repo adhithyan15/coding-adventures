@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C58-kuni",
+    "language": "japanese",
+    "chapter": 58,
+    "sequence": 3570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee5c3b65527da5e4"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "Fat, Thin, Light, Heavy, Important",
+  "label": "ch:ur-fat-thin-light-heavy-important",
+  "canDo": "I can say fat, thick, thin, light, heavy and important, necessary.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C73-zaruri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can say fat, thick, thin, light, heavy and important, necessary.",
+    "assesses": [
+      "UR-LEX-C73-ADJ73-03",
+      "UR-LEX-C73-ADJ73-04",
+      "UR-LEX-C73-ADJ73-05"
+    ]
+  }
+}

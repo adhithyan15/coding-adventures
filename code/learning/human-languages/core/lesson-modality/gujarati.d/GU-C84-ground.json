@@ -3,7 +3,7 @@
     "id": "GU-C84-ground",
     "language": "gujarati",
     "chapter": 84,
-    "sequence": 4290,
+    "sequence": 4303,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2cd8a392f2c51aab"
+    "sourceHash": "fnv1a64:3d1db4ae2784d12e"
   },
   "findings": []
 }

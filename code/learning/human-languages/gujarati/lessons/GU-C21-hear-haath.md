@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C21-hear-haath
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 950
+sequence: 963
 chapter: 25
 type: word
 headword: હાથ

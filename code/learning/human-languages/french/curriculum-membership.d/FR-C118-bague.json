@@ -1,0 +1,11 @@
+{
+  "id": "FR-C118-bague",
+  "pathSegment": "FR-PATH-118-OBJETS70",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-118-OBJETS70",
+      "order": 1
+    }
+  ]
+}

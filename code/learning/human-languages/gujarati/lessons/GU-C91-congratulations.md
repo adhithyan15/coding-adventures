@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C91-congratulations
 spine_node: SPINE-COURTESY-THANK
-sequence: 4620
+sequence: 4633
 chapter: 91
 type: word
 headword: "અભિનંદન"

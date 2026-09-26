@@ -1,0 +1,11 @@
+{
+  "id": "AR-C98-rihla",
+  "pathSegment": "AR-PATH-98-WORLD98",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-98-WORLD98",
+      "order": 2
+    }
+  ]
+}

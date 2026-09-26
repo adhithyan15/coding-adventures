@@ -9,17 +9,17 @@ type: writing
 headword: "ഊ"
 gloss: the single character ഊ — recognised inside words you already say
 romanization: "ū"
-prerequisites: [ML-S129-letter-bha]
+prerequisites: [ML-S129-letter-bha, ML-C31-oonjaal]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-129]
+  knowledge: [ML-SCRIPT-RECOG-129, ML-LEX-ANCHOR-OONJAAL]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-125]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-129, ML-SCRIPT-RECOG-125]
+  knowledge: [ML-SCRIPT-RECOG-129, ML-SCRIPT-RECOG-125, ML-LEX-ANCHOR-OONJAAL]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-S129-letter-bha]
 # ഊ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-129] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-129, ML-LEX-ANCHOR-OONJAAL] -->
 
 [PAUSE 1s] Before the new one: ഭ — what does it do?
 

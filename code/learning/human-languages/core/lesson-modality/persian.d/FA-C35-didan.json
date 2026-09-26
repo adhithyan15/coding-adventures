@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C35-didan",
+    "language": "persian",
+    "chapter": 35,
+    "sequence": 1610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8592190fca7df5c1"
+  },
+  "findings": []
+}

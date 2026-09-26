@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C116-film",
+    "language": "italian",
+    "chapter": 116,
+    "sequence": 5560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ca35dbe9ae3c484"
+  },
+  "findings": []
+}

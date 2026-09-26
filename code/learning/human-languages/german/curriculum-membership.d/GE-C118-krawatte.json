@@ -1,0 +1,11 @@
+{
+  "id": "GE-C118-krawatte",
+  "pathSegment": "GE-PATH-118-DINGE118",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-118-DINGE118",
+      "order": 3
+    }
+  ]
+}

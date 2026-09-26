@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:ed47d46a50edf47c",
+  "lessonIds": [
+    "GE-C117-geldboerse",
+    "GE-C117-ring",
+    "GE-C117-kette",
+    "GE-C117-geschenk",
+    "GE-C117-foto"
+  ],
+  "tex": "german/book/chapters/ch117-purse-ring-chain-present-photo.tex"
+}

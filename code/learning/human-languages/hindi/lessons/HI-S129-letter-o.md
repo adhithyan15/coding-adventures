@@ -12,17 +12,17 @@ type: writing
 headword: "ओ"
 gloss: the independent vowel ओ — the body of आ with one arc laid over the top
 romanization: "o"
-prerequisites: [HI-S128-letter-uu, HI-S04-letter-aa]
+prerequisites: [HI-S128-letter-uu, HI-S04-letter-aa, HI-C22-uun, HI-C22-os]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [HI-SCRIPT-RECOG-128, HI-SCRIPT-RECOG-04]
+  knowledge: [HI-SCRIPT-RECOG-128, HI-SCRIPT-RECOG-04, HI-LEX-ANCHOR-UUN, HI-LEX-ANCHOR-OS]
 introduces:
   knowledge: [HI-SCRIPT-RECOG-129]
 practises:
-  knowledge: [HI-SCRIPT-RECOG-128, HI-SCRIPT-RECOG-04, HI-SCRIPT-RECOG-129]
+  knowledge: [HI-SCRIPT-RECOG-128, HI-SCRIPT-RECOG-04, HI-SCRIPT-RECOG-129, HI-LEX-ANCHOR-UUN, HI-LEX-ANCHOR-OS]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [HI-S128-letter-uu, HI-S04-letter-aa]
 # ओ — a letter you can already draw most of
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-04, HI-SCRIPT-RECOG-128] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-04, HI-SCRIPT-RECOG-128, HI-LEX-ANCHOR-UUN, HI-LEX-ANCHOR-OS] -->
 
 [PAUSE 1s] Before the new one: **आ** — what does it do? Picture its shape, and
 keep the picture.

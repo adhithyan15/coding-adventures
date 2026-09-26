@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C63-courtyard
 spine_node: SPINE-MEET-GREET
-sequence: 3210
+sequence: 3223
 chapter: 63
 type: word
 headword: "આંગણું"

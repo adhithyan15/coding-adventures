@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:9a4c61e3e2347023",
+  "lessonIds": [
+    "AR-C87-ams",
+    "AR-C87-ghadan",
+    "AR-C87-alan",
+    "AR-C87-ahyanan",
+    "AR-C87-qabla"
+  ],
+  "tex": "arabic/book/chapters/ch87-yesterday-tomorrow-now-sometimes-before.tex"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-112-LAVORO112",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a baker, a driver, a lawyer, an engineer and a firefighter.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Game, Letter, Tree, Leaf, Hill",
+  "label": "ch:mw-game-letter-tree-leaf-hill",
+  "canDo": "I can say a game, a letter, a tree, a leaf and a hill, a mountain.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-C67-dugar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can say a game, a letter, a tree, a leaf and a hill, a mountain.",
+    "assesses": [
+      "MW-LEX-C67-SCHOOL67-03",
+      "MW-LEX-C67-SCHOOL67-04",
+      "MW-LEX-C67-SCHOOL67-05"
+    ]
+  }
+}

@@ -125,5 +125,16 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // moment something follows it they become countable and start out missed. The
   // prediction there -- "the next lesson added after it will pay part of it
   // back" -- is what the 22 closed R4 windows are.
-  expect(report.summary.missedByWindow).toEqual({ R1: 55, R2: 135, R3: 215, R4: 90 });
+  // {55, 135, 215, 90} -> {55, 359, 379, 260}. Chapters 49-98 add 250 words,
+  // each practised by the next two lessons and by one of four reviews, so their
+  // R1 windows close and the level gate's two-revisit criterion holds. What they
+  // do not yet have is a lesson 5-250 sessions later putting them back in front
+  // of the reader: the growth is R2-R4 windows that now EXIST and start out
+  // missed, exactly as the terminal-lesson note above describes. The Chapter 3
+  // atoms this test is about are unaffected (the reinforcement filter above).
+  // {55, 359, 379, 260} -> {55, 360, 380, 259}. HL-C443's ਮੌਸਮ (mausam)
+  // before the chapter-20 ੌ lesson: its own R2, R3 and R4 windows start out
+  // missed (+1 each), and the one extra lesson carries ਪ and ਕ into their R4
+  // for the first time (-2 R4).
+  expect(report.summary.missedByWindow).toEqual({ R1: 55, R2: 360, R3: 380, R4: 259 });
 });

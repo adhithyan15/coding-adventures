@@ -1,11 +1,11 @@
 {
   "id": "ML-S120-sign-anusvara",
   "pathSegment": "ML-PATH-100",
-  "pathOrder": 37,
+  "pathOrder": 45,
   "extensions": [
     {
       "id": "ML-EXT-100-SCRIPT-RECOGNITION",
-      "order": 37
+      "order": 45
     }
   ]
 }

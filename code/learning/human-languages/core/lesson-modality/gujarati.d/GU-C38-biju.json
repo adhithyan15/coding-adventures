@@ -3,7 +3,7 @@
     "id": "GU-C38-biju",
     "language": "gujarati",
     "chapter": 42,
-    "sequence": 2150,
+    "sequence": 2163,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:cc4edd88021f6395"
+    "sourceHash": "fnv1a64:a94a6a788e9dd04f"
   },
   "findings": []
 }

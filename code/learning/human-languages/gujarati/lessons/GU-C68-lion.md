@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C68-lion
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3450
+sequence: 3463
 chapter: 68
 type: word
 headword: "સિંહ"

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C38-hashi",
+  "pathSegment": "JA-PATH-38-HOME38",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-38-HOME38",
+      "order": 3
+    }
+  ]
+}

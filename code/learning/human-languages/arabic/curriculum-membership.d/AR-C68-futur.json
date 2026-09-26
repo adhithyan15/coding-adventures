@@ -1,0 +1,11 @@
+{
+  "id": "AR-C68-futur",
+  "pathSegment": "AR-PATH-68-FOOD68",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-68-FOOD68",
+      "order": 4
+    }
+  ]
+}

@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W05-ba
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 79
+sequence: 87
 delivery: script
 chapter: 5
 type: writing
 headword: બ
 romanization: "ba"
 gloss: "the consonant ba"
-prerequisites: [GU-W05-cha]
+prerequisites: [GU-W05-cha, GU-C05-bagalo]
 sounds: []
 roots: []
 etymology_hook: "The final form in this pair of chapters adds one rounded body before all eight are retrieved."
 duration:
   max_seconds: 230
 requires:
-  knowledge: [GU-SCRIPT-CHA-01]
+  knowledge: [GU-SCRIPT-CHA-01, GU-LEX-ANCHOR-BAGALO]
 introduces:
   knowledge: [GU-SCRIPT-BA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-CHA-01, GU-SCRIPT-BA-01]
+  knowledge: [GU-SCRIPT-CHA-01, GU-SCRIPT-BA-01, GU-LEX-ANCHOR-BAGALO]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W05-cha]
 # બ — the consonant ba
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-CHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-CHA-01, GU-LEX-ANCHOR-BAGALO] -->
 
 Write *cha* once from memory. Check its small middle loop, then put that model
 away.

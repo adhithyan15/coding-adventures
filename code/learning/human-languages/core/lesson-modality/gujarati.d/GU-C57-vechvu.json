@@ -3,7 +3,7 @@
     "id": "GU-C57-vechvu",
     "language": "gujarati",
     "chapter": 57,
-    "sequence": 2900,
+    "sequence": 2913,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1bb4ba3ab2654d4b"
+    "sourceHash": "fnv1a64:c60b1390830bb31b"
   },
   "findings": []
 }

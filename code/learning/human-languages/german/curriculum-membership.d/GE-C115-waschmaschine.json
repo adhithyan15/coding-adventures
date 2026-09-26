@@ -1,0 +1,11 @@
+{
+  "id": "GE-C115-waschmaschine",
+  "pathSegment": "GE-PATH-115-HAUS115",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-115-HAUS115",
+      "order": 3
+    }
+  ]
+}

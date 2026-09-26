@@ -1,0 +1,11 @@
+{
+  "id": "JA-C51-aoi",
+  "pathSegment": "JA-PATH-51-ADJ51",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-51-ADJ51",
+      "order": 3
+    }
+  ]
+}

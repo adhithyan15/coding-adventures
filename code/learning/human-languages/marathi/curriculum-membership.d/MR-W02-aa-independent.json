@@ -1,11 +1,11 @@
 {
   "id": "MR-W02-aa-independent",
   "pathSegment": "MR-PATH-002",
-  "pathOrder": 2,
+  "pathOrder": 6,
   "extensions": [
     {
       "id": "MR-EXT-021-SCRIPT-DOORWAY",
-      "order": 1
+      "order": 5
     }
   ]
 }

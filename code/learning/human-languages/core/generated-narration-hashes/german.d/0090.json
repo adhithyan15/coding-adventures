@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:d6e2f1dcfef16f29",
+  "lessonIds": [
+    "GE-C90-schwer",
+    "GE-C90-billig",
+    "GE-C90-hoch",
+    "GE-C90-niedrig",
+    "GE-C90-leer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch90.txt",
+  "json": "german/narration/ch90.json",
+  "textHash": "fnv1a64:84b2f0bc3530703c",
+  "jsonHash": "fnv1a64:663f6bf4d8ed8e9a",
+  "findings": []
+}

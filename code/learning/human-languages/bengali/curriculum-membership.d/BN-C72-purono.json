@@ -1,0 +1,11 @@
+{
+  "id": "BN-C72-purono",
+  "pathSegment": "BN-PATH-72-ADJ72",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-72-ADJ72",
+      "order": 3
+    }
+  ]
+}

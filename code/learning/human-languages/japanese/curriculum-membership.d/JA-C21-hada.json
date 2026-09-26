@@ -1,0 +1,11 @@
+{
+  "id": "JA-C21-hada",
+  "pathSegment": "JA-PATH-21-BODY21",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-21-BODY21",
+      "order": 4
+    }
+  ]
+}

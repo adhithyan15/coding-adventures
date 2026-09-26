@@ -3,7 +3,7 @@
     "id": "GU-C46-hair",
     "language": "gujarati",
     "chapter": 46,
-    "sequence": 2380,
+    "sequence": 2393,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6078fc25331b99d5"
+    "sourceHash": "fnv1a64:bde572d688d75e49"
   },
   "findings": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C58-dena",
+    "language": "punjabi",
+    "chapter": 58,
+    "sequence": 3150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58877abf6e99209a"
+  },
+  "findings": []
+}

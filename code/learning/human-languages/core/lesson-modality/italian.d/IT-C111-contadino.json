@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C111-contadino",
+    "language": "italian",
+    "chapter": 111,
+    "sequence": 5340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0bb2a43b48296a7"
+  },
+  "findings": []
+}

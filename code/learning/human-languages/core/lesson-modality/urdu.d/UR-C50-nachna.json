@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C50-nachna",
+    "language": "urdu",
+    "chapter": 50,
+    "sequence": 2540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66f64910117bb426"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C56-hidari",
+  "pathSegment": "JA-PATH-56-TIME56",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-56-TIME56",
+      "order": 4
+    }
+  ]
+}

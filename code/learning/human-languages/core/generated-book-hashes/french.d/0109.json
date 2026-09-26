@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:1c86a89a5d05e3c8",
+  "lessonIds": [
+    "FR-C109-frontiere",
+    "FR-C109-nord",
+    "FR-C109-sud",
+    "FR-C109-ouest",
+    "FR-C109-boite-aux-lettres"
+  ],
+  "tex": "french/book/chapters/ch109-border-north-south-west-letterbox.tex"
+}

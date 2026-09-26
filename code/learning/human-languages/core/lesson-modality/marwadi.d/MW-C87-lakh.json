@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C87-lakh",
+    "language": "marwadi",
+    "chapter": 87,
+    "sequence": 5700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:871e2c47f8438cb7"
+  },
+  "findings": []
+}

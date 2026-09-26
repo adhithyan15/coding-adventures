@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-47-HEALTH47",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a fever, ill, sick, pain, medicine and hunger.",
+  "prerequisites": []
+}

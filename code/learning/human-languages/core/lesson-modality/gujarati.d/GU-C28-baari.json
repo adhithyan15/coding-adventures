@@ -3,7 +3,7 @@
     "id": "GU-C28-baari",
     "language": "gujarati",
     "chapter": 32,
-    "sequence": 1600,
+    "sequence": 1613,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:01265d832e2be4e9",
+    "sourceHash": "fnv1a64:258e6805957fa89d",
     "detachableSegments": [
       "Writing — guided copy, model in view"
     ]

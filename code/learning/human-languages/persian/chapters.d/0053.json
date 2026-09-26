@@ -1,0 +1,19 @@
+{
+  "chapter": 53,
+  "title": "Sand, Cloud, Sea, Fire, Snow",
+  "label": "ch:fa-sand-cloud-sea-fire-snow",
+  "canDo": "I can say sand, a cloud, the sea, fire and snow.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C53-barf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 53: i can say sand, a cloud, the sea, fire and snow.",
+    "assesses": [
+      "FA-LEX-C53-NATURE53-03",
+      "FA-LEX-C53-NATURE53-04",
+      "FA-LEX-C53-NATURE53-05"
+    ]
+  }
+}

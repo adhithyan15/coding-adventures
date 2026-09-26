@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 70,
+  "output": "bengali/book/chapters/ch70-lion-elephant-monkey-snake-crow.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

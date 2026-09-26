@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:5d157ffefc60b29c",
+  "lessonIds": [
+    "UR-C61-botal",
+    "UR-C61-kitab",
+    "UR-C61-qalam",
+    "UR-C61-akhbar",
+    "UR-C61-iskul"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch61.txt",
+  "json": "urdu/narration/ch61.json",
+  "textHash": "fnv1a64:e7ae84c193b53118",
+  "jsonHash": "fnv1a64:9aa080cdf7dbb322",
+  "findings": []
+}

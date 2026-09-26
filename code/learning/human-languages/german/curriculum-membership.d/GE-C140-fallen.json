@@ -1,0 +1,11 @@
+{
+  "id": "GE-C140-fallen",
+  "pathSegment": "GE-PATH-140-VERB140",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-140-VERB140",
+      "order": 4
+    }
+  ]
+}

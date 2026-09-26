@@ -1,0 +1,11 @@
+{
+  "id": "GE-C81-tasche",
+  "pathSegment": "GE-PATH-81-SCHULE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-81-SCHULE",
+      "order": 3
+    }
+  ]
+}

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C46-leg
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2350
+sequence: 2363
 chapter: 46
 type: word
 headword: "પગ"

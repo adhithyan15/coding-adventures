@@ -3,7 +3,7 @@
     "id": "GU-C37-ketla",
     "language": "gujarati",
     "chapter": 41,
-    "sequence": 2120,
+    "sequence": 2133,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:63c1d9c88bb0e4cd"
+    "sourceHash": "fnv1a64:a94014558479903d"
   },
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C03-shoma-to-more",
+  "pathSegment": "FA-PATH-004",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-002-REGISTER",
+      "order": 1
+    }
+  ]
+}

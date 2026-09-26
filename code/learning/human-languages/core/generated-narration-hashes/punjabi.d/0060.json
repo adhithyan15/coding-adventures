@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:b26023536cfd6451",
+  "lessonIds": [
+    "PA-C60-sikkhna",
+    "PA-C60-bhullna",
+    "PA-C60-chahuna",
+    "PA-C60-liauna",
+    "PA-C60-bhejna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch60.txt",
+  "json": "punjabi/narration/ch60.json",
+  "textHash": "fnv1a64:2478281944ccd646",
+  "jsonHash": "fnv1a64:ae9861aae0518dc4",
+  "findings": []
+}

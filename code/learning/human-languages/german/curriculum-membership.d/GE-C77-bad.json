@@ -1,0 +1,11 @@
+{
+  "id": "GE-C77-bad",
+  "pathSegment": "GE-PATH-77-HAUS2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-77-HAUS2",
+      "order": 2
+    }
+  ]
+}

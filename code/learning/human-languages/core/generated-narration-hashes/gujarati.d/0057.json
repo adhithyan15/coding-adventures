@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 57,
-  "sourceHash": "fnv1a64:ce3b446ee8f3b36b",
+  "sourceHash": "fnv1a64:59534f9c4ca83f7d",
   "lessonIds": [
     "GU-C57-kharidvu",
     "GU-C57-vechvu",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch57.txt",
   "json": "gujarati/narration/ch57.json",
   "textHash": "fnv1a64:bdadd415ab5136b2",
-  "jsonHash": "fnv1a64:b6d6044105e51338",
+  "jsonHash": "fnv1a64:f981a5bd74703b45",
   "findings": []
 }

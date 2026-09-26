@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:603cac1a3082a57b",
+  "lessonIds": [
+    "MW-C77-lal",
+    "MW-C77-nilo",
+    "MW-C77-kalo",
+    "MW-C77-bhuro",
+    "MW-C77-mitho"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch77.txt",
+  "json": "marwadi/narration/ch77.json",
+  "textHash": "fnv1a64:7f2d553539ac6d3d",
+  "jsonHash": "fnv1a64:9a6a7ed56adf6efe",
+  "findings": []
+}

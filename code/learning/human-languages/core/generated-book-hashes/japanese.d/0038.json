@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:2007cf360b8a028c",
+  "lessonIds": [
+    "JA-C38-yuka",
+    "JA-C38-kagami",
+    "JA-C38-futon",
+    "JA-C38-hashi",
+    "JA-C38-daidokoro"
+  ],
+  "tex": "japanese/book/chapters/ch38-floor-mirror-futon-chopsticks-kitchen.tex"
+}

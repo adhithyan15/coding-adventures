@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C69-anja",
+    "language": "persian",
+    "chapter": 69,
+    "sequence": 3340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a46e8699dc51dbc7"
+  },
+  "findings": []
+}

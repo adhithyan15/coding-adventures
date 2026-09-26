@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C98-fahrrad",
+    "language": "german",
+    "chapter": 98,
+    "sequence": 3670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9208e895052c688d"
+  },
+  "findings": []
+}

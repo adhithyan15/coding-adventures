@@ -1,0 +1,11 @@
+{
+  "id": "FR-C134-herbe",
+  "pathSegment": "FR-PATH-134-NATURE86",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-134-NATURE86",
+      "order": 0
+    }
+  ]
+}

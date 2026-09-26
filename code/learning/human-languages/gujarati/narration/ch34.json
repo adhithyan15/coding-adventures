@@ -4,11 +4,11 @@
   "chapter": 34,
   "title": "People, Paper, and a Book",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:3f9a479d6a206495",
+  "sourceHash": "fnv1a64:947ba303e8592ef5",
   "lessons": [
     {
       "id": "GU-C30-hear-chhokro",
-      "sequence": 1700,
+      "sequence": 1713,
       "title": "છોકરો (chhokro) — hear boy",
       "headword": "છોકરો",
       "romanization": "chhokro",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33917d79fd394f12",
+      "sourceHash": "fnv1a64:ac5fe791cd2a6bee",
       "notice": null,
       "blocks": [
         {
@@ -116,7 +116,7 @@
     },
     {
       "id": "GU-C30-hear-chhokri",
-      "sequence": 1710,
+      "sequence": 1723,
       "title": "છોકરી (chhokrī) — hear girl",
       "headword": "છોકરી",
       "romanization": "chhokrī",
@@ -127,7 +127,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80485c3923f751f9",
+      "sourceHash": "fnv1a64:e1d657b8fe38f737",
       "notice": null,
       "blocks": [
         {
@@ -223,7 +223,7 @@
     },
     {
       "id": "GU-C30-hear-maanas",
-      "sequence": 1720,
+      "sequence": 1733,
       "title": "માણસ (māṇas) — hear person",
       "headword": "માણસ",
       "romanization": "māṇas",
@@ -234,7 +234,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91f8370d9e721d56",
+      "sourceHash": "fnv1a64:e1ed58ec0671f62a",
       "notice": null,
       "blocks": [
         {
@@ -330,7 +330,7 @@
     },
     {
       "id": "GU-C30-hear-pustak",
-      "sequence": 1730,
+      "sequence": 1743,
       "title": "પુસ્તક (pustak) — hear book",
       "headword": "પુસ્તક",
       "romanization": "pustak",
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d80654f77c3b0cf",
+      "sourceHash": "fnv1a64:cf0ab3c6f155d3c5",
       "notice": null,
       "blocks": [
         {
@@ -438,7 +438,7 @@
     },
     {
       "id": "GU-C30-hear-kaagal",
-      "sequence": 1740,
+      "sequence": 1753,
       "title": "કાગળ (kāgaḷ) — hear paper",
       "headword": "કાગળ",
       "romanization": "kāgaḷ",
@@ -449,7 +449,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36f29a844e77dfc4",
+      "sourceHash": "fnv1a64:185c0ca7544995c8",
       "notice": null,
       "blocks": [
         {
@@ -546,7 +546,7 @@
     },
     {
       "id": "GU-C30-people-five",
-      "sequence": 1750,
+      "sequence": 1763,
       "title": "Five people and things, by ear",
       "headword": "છોકરો — છોકરી — માણસ — પુસ્તક — કાગળ",
       "romanization": "chhokro — chhokrī — māṇas — pustak — kāgaḷ",
@@ -557,7 +557,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac4f64ad554e3d64",
+      "sourceHash": "fnv1a64:b5d92c7143e5f846",
       "notice": null,
       "blocks": [
         {
@@ -686,7 +686,7 @@
     },
     {
       "id": "GU-C30-kaagal",
-      "sequence": 1760,
+      "sequence": 1773,
       "title": "Kāgaḷ reaches the page",
       "headword": "કાગળ",
       "romanization": "kāgaḷ",
@@ -697,7 +697,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:6de09b4841b2197c",
+      "sourceHash": "fnv1a64:2b956dbad45947f0",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -857,7 +857,7 @@
     },
     {
       "id": "GU-R30-people-five-r1",
-      "sequence": 1770,
+      "sequence": 1783,
       "title": "The people return at R1, and the first map at R4",
       "headword": "છોકરો — છોકરી — માણસ — પુસ્તક — કાગળ",
       "romanization": "chhokro — chhokrī — māṇas — pustak — kāgaḷ",
@@ -868,7 +868,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:538e4a0331a65588",
+      "sourceHash": "fnv1a64:dd5d423d7f2ec022",
       "notice": {
         "modality": "pen",
         "needs": [],

@@ -3,7 +3,7 @@
     "id": "GU-C25-saanj",
     "language": "gujarati",
     "chapter": 29,
-    "sequence": 1320,
+    "sequence": 1333,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:bf825a9fe7068cbb",
+    "sourceHash": "fnv1a64:5bae5321fc7acd6f",
     "detachableSegments": [
       "Writing — guided copy, model in view"
     ]

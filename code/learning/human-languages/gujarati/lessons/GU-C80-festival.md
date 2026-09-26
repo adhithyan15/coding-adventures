@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C80-festival
 spine_node: SPINE-TAKE-LEAVE
-sequence: 4090
+sequence: 4103
 chapter: 80
 type: word
 headword: "તહેવાર"

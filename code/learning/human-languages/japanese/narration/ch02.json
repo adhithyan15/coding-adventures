@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "A Daytime Greeting, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4738d9e25fd92f72",
+  "sourceHash": "fnv1a64:5d898462db98090c",
   "lessons": [
     {
       "id": "JA-W01-ko",
@@ -612,6 +612,128 @@
       ]
     },
     {
+      "id": "JA-C02-wani",
+      "sequence": 109,
+      "title": "わに (wani) — a crocodile",
+      "headword": "わに",
+      "romanization": "wani",
+      "gloss": "a crocodile",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:a0db9463e8f0b06f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: わに",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "わに — wani — \"a crocodile\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: wani. Look at its shape as you say it: the lessons that follow take pieces of it, わ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wani",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wani*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wani, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wani*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a crocodile\"? (わに, wani.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C02-wani-type",
+              "prompt": "Type the Japanese for 'a crocodile', in rōmaji.",
+              "assesses": [
+                "JA-LEX-ANCHOR-WANI"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "wani"
+              ],
+              "feedback": {
+                "correct": "Right: wani is 'a crocodile'.",
+                "incorrect": "'A crocodile' is wani."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "JA-W01-wa",
       "sequence": 110,
       "title": "わ — the sign for wa, and the trap beside it",
@@ -625,7 +747,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:804f900a0f4a5619",
+      "sourceHash": "fnv1a64:5f74ffd6ed1fecba",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -811,7 +933,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1ec9c3e62e816050",
+      "sourceHash": "fnv1a64:074c85b4b9bf61a1",
       "notice": {
         "modality": "pen",
         "needs": [

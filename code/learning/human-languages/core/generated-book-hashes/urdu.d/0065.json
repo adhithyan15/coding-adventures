@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:9fd40fd64dac0e34",
+  "lessonIds": [
+    "UR-C65-patthar",
+    "UR-C65-ret",
+    "UR-C65-khet",
+    "UR-C65-sitara",
+    "UR-C65-badal"
+  ],
+  "tex": "urdu/book/chapters/ch65-stone-sand-field-star-cloud.tex"
+}

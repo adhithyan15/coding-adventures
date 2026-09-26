@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C48-dena",
+    "language": "urdu",
+    "chapter": 48,
+    "sequence": 2460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57d72f06fe5d7dc5"
+  },
+  "findings": []
+}

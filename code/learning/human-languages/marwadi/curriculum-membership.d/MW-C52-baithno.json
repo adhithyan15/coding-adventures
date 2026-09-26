@@ -1,0 +1,11 @@
+{
+  "id": "MW-C52-baithno",
+  "pathSegment": "MW-PATH-52-VERBS52",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-52-VERBS52",
+      "order": 0
+    }
+  ]
+}

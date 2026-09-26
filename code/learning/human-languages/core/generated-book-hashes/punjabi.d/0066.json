@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:a6527aa51fbcec2c",
+  "lessonIds": [
+    "PA-C66-panir",
+    "PA-C66-shahid",
+    "PA-C66-angur",
+    "PA-C66-santra",
+    "PA-C66-nimbu"
+  ],
+  "tex": "punjabi/book/chapters/ch66-cheese-honey-grapes-orange-lemon.tex"
+}

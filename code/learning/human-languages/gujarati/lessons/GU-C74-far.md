@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C74-far
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3780
+sequence: 3793
 chapter: 74
 type: word
 headword: "દૂર"

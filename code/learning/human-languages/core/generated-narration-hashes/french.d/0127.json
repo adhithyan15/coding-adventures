@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:833e4bdc640d109f",
+  "lessonIds": [
+    "FR-C127-gomme",
+    "FR-C127-devoirs",
+    "FR-C127-reponse",
+    "FR-C127-idee",
+    "FR-C127-probleme",
+    "FR-R127-first-pass-clothes-and-things-you-carry",
+    "FR-R127-second-pass-food-and-work"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch127.txt",
+  "json": "french/narration/ch127.json",
+  "textHash": "fnv1a64:62f21039167e4050",
+  "jsonHash": "fnv1a64:b0a12e802e20622b",
+  "findings": []
+}

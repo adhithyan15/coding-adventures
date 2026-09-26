@@ -1,0 +1,11 @@
+{
+  "id": "MR-C114-bas",
+  "pathSegment": "MR-PATH-114-TOWN114",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MR-EXT-114-TOWN114",
+      "order": 0
+    }
+  ]
+}

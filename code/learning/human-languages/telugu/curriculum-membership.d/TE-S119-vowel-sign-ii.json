@@ -1,11 +1,11 @@
 {
   "id": "TE-S119-vowel-sign-ii",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 37,
+  "pathOrder": 40,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 37
+      "order": 40
     }
   ]
 }

@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-104-ORT104",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an airport, a square, a museum, a hotel and the post office.",
+  "prerequisites": []
+}

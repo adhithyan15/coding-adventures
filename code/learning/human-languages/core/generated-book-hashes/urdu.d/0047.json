@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:8f4b6a2d1ef8c593",
+  "lessonIds": [
+    "UR-C47-baithna",
+    "UR-C47-sona",
+    "UR-C47-uthna",
+    "UR-C47-chalna",
+    "UR-C47-daurna"
+  ],
+  "tex": "urdu/book/chapters/ch47-to-sit-to-sleep-to-get-up-to-walk-to-run.tex"
+}

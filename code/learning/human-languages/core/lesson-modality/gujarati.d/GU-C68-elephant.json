@@ -3,7 +3,7 @@
     "id": "GU-C68-elephant",
     "language": "gujarati",
     "chapter": 68,
-    "sequence": 3460,
+    "sequence": 3473,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:00d4b2927198e65b"
+    "sourceHash": "fnv1a64:dd09dc8c58b4542b"
   },
   "findings": []
 }

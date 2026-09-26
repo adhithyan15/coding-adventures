@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-65-NATURE65",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "UR-EXT-65-NATURE65"
+  ],
+  "after": []
+}

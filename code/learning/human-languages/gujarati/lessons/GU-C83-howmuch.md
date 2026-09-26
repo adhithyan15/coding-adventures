@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C83-howmuch
 spine_node: SPINE-RESPOND-BASIC
-sequence: 4240
+sequence: 4253
 chapter: 83
 type: word
 headword: "કેટલું"

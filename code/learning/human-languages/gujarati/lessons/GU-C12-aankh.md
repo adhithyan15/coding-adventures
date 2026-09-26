@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C12-aankh
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 600
+sequence: 613
 chapter: 18
 type: word
 headword: આંખ

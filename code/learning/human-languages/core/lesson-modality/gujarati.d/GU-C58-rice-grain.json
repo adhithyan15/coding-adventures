@@ -3,7 +3,7 @@
     "id": "GU-C58-rice-grain",
     "language": "gujarati",
     "chapter": 58,
-    "sequence": 2940,
+    "sequence": 2953,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2cf36e339ce90dec"
+    "sourceHash": "fnv1a64:7181618ecb157f5c"
   },
   "findings": []
 }

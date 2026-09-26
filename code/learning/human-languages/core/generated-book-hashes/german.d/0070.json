@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:3b27441568c71021",
+  "lessonIds": [
+    "GE-C70-banane",
+    "GE-C70-kartoffel",
+    "GE-C70-tomate",
+    "GE-C70-zwiebel",
+    "GE-C70-moehre"
+  ],
+  "tex": "german/book/chapters/ch70-banana-potato-tomato-onion-carrot.tex"
+}

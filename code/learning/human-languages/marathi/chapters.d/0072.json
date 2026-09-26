@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "Blood, Knee, Head, Fever, Clinic",
+  "label": "ch:mr-blood-knee-head-fever-clinic",
+  "canDo": "I can say blood, a knee, the head, a fever and a clinic.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C72-davakhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can say blood, a knee, the head, a fever and a clinic.",
+    "assesses": [
+      "MR-LEX-C72-BODY72-03",
+      "MR-LEX-C72-BODY72-04",
+      "MR-LEX-C72-BODY72-05"
+    ]
+  }
+}

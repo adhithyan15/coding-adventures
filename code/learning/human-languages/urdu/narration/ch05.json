@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a8b3f30d7d94263b",
+  "sourceHash": "fnv1a64:16c16f38baa57c17",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -416,22 +416,13 @@
       "romanization": "khudā hāfiz",
       "gloss": "goodbye — a standard Urdu farewell",
       "script": "urdu-nastaliq",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4603d1c6c8c35415",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script Bridge — shared history, local spacing"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script Bridge — shared history, local spacing until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:4288d07312a318f5",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -467,28 +458,6 @@
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens — a whole social move",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The protective sense is “God [be] guardian,” but everyday speakers use the formula as goodbye and nothing more. No new verb or agreement ending is needed. It is a reliable polite close for the short interaction learned so far."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "script",
-          "title": "Script Bridge — shared history, local spacing",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Urdu خدا حافظ (khudā hāfiz) and Persian خداحافظ share the same historical pieces. Urdu conventionally keeps the visible space; Persian normally joins them. Mixed practice may compare the two only now that each local phrase is independently readable."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -522,7 +491,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -553,6 +522,130 @@
               "feedback": {
                 "correct": "Right: خدا حافظ khudā hāfiz ends the interaction.",
                 "incorrect": "Use خدا حافظ — khudā hāfiz."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C05-khuda-hafiz-more",
+      "sequence": 193,
+      "title": "(خدا حافظ, continued) ((khudā hāfiz, continued)) — Grammar Lens — a whole social move",
+      "headword": "(خدا حافظ, continued)",
+      "romanization": "(khudā hāfiz, continued)",
+      "gloss": "Grammar Lens — a whole social move",
+      "script": "urdu-nastaliq",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:09aad8e22ce9cdd8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script Bridge — shared history, local spacing"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script Bridge — shared history, local spacing until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say خدا حافظ (khudā hāfiz) again, and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens — a whole social move",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The protective sense is “God [be] guardian,” but everyday speakers use the formula as goodbye and nothing more. No new verb or agreement ending is needed. It is a reliable polite close for the short interaction learned so far."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script Bridge — shared history, local spacing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Urdu خدا حافظ (khudā hāfiz) and Persian خداحافظ share the same historical pieces. Urdu conventionally keeps the visible space; Persian normally joins them. Mixed practice may compare the two only now that each local phrase is independently readable."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what this lesson added to خدا حافظ (khudā hāfiz), in one sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what this lesson added to **خدا حافظ**, in one sentence]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did this lesson add to خدا حافظ (khudā hāfiz)? Say it once more, without looking."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "UR-C05-khuda-hafiz-more-spacing",
+              "prompt": "Type the Urdu goodbye with its conventional space between the two words.",
+              "assesses": [
+                "UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "خدا حافظ",
+                "khuda hafiz",
+                "khudā hāfiz"
+              ],
+              "feedback": {
+                "correct": "Right: Urdu keeps the visible space in خدا حافظ.",
+                "incorrect": "Urdu writes خدا حافظ with a space; Persian joins it as خداحافظ."
               }
             }
           ]
@@ -765,7 +858,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e74fbbfd20adfe6",
+      "sourceHash": "fnv1a64:1b355637d88bff41",
       "notice": null,
       "blocks": [
         {

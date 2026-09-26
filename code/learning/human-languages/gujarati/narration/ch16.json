@@ -4,11 +4,11 @@
   "chapter": 16,
   "title": "Water, Tea, Milk, and Bread",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0bf4dec709f5fb76",
+  "sourceHash": "fnv1a64:c65092dc3844611c",
   "lessons": [
     {
       "id": "GU-C10-paani",
-      "sequence": 520,
+      "sequence": 533,
       "title": "પાણી (pāṇī) — the first thing you'll actually ask for",
       "headword": "પાણી",
       "romanization": "pāṇī",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dcb80b88c565ad38",
+      "sourceHash": "fnv1a64:7fdacaf4dd205768",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -174,7 +174,7 @@
     },
     {
       "id": "GU-C10-chaa",
-      "sequence": 530,
+      "sequence": 543,
       "title": "ચા (chā) — the tea that went overland",
       "headword": "ચા",
       "romanization": "chā",
@@ -185,7 +185,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:71fde25518569c9b",
+      "sourceHash": "fnv1a64:1d348f0531f5f9e5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -324,7 +324,7 @@
     },
     {
       "id": "GU-C10-dudh",
-      "sequence": 540,
+      "sequence": 553,
       "title": "દૂધ (dūdh) — a verb frozen into a noun",
       "headword": "દૂધ",
       "romanization": "dūdh",
@@ -335,7 +335,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:48f0b3817066a42a",
+      "sourceHash": "fnv1a64:6594702a01197676",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -474,7 +474,7 @@
     },
     {
       "id": "GU-C10-rotli",
-      "sequence": 550,
+      "sequence": 563,
       "title": "રોટલી (roṭlī) — a request pattern, run four times",
       "headword": "રોટલી",
       "romanization": "roṭlī",
@@ -485,7 +485,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ca8663bc9d0687af",
+      "sourceHash": "fnv1a64:e2bfa70bf251865d",
       "notice": {
         "modality": "sight",
         "needs": [

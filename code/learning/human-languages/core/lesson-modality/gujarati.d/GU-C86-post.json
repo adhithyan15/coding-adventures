@@ -3,7 +3,7 @@
     "id": "GU-C86-post",
     "language": "gujarati",
     "chapter": 86,
-    "sequence": 4400,
+    "sequence": 4413,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:077ec82daebc63c5"
+    "sourceHash": "fnv1a64:c5c3dc0a93ba2c29"
   },
   "findings": []
 }

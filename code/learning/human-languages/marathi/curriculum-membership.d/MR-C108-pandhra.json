@@ -1,0 +1,11 @@
+{
+  "id": "MR-C108-pandhra",
+  "pathSegment": "MR-PATH-108-ADJ108",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-108-ADJ108",
+      "order": 1
+    }
+  ]
+}

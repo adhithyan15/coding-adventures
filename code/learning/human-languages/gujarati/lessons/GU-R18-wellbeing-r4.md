@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R18-wellbeing-r4
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 850
+sequence: 863
 chapter: 22
 type: practice
 headword: તમે કેમ છો? હું મજામાં છું। વાંધો નહીં।

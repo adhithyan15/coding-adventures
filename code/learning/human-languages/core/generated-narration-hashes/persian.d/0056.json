@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:7bbe1b9be2be8446",
+  "lessonIds": [
+    "FA-C56-mush",
+    "FA-C56-bebar",
+    "FA-C56-fil",
+    "FA-C56-meymun",
+    "FA-C56-mar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch56.txt",
+  "json": "persian/narration/ch56.json",
+  "textHash": "fnv1a64:3c2c314cb795705a",
+  "jsonHash": "fnv1a64:6b79365eac12e30e",
+  "findings": []
+}

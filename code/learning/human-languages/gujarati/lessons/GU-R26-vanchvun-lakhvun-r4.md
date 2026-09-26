@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R26-vanchvun-lakhvun-r4
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1430
+sequence: 1443
 chapter: 30
 type: practice
 headword: વાંચવું — લખવું

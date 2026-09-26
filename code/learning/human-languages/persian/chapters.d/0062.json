@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "Sweet, Fat, Light, Heavy, Right",
+  "label": "ch:fa-sweet-fat-light-heavy-right",
+  "canDo": "I can say sweet, fat, light, heavy and right, correct.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C62-dorost",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: i can say sweet, fat, light, heavy and right, correct.",
+    "assesses": [
+      "FA-LEX-C62-ADJ62-03",
+      "FA-LEX-C62-ADJ62-04",
+      "FA-LEX-C62-ADJ62-05"
+    ]
+  }
+}

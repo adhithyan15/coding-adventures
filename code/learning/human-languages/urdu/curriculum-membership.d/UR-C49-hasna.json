@@ -1,0 +1,11 @@
+{
+  "id": "UR-C49-hasna",
+  "pathSegment": "UR-PATH-49-VERBS49",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-49-VERBS49",
+      "order": 3
+    }
+  ]
+}

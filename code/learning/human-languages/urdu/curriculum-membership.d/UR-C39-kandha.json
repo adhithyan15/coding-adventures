@@ -1,0 +1,11 @@
+{
+  "id": "UR-C39-kandha",
+  "pathSegment": "UR-PATH-39-BODY39",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-39-BODY39",
+      "order": 1
+    }
+  ]
+}

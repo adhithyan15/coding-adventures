@@ -3,7 +3,7 @@
     "id": "GU-C89-shikhavvu",
     "language": "gujarati",
     "chapter": 89,
-    "sequence": 4550,
+    "sequence": 4563,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a193d33f423189df"
+    "sourceHash": "fnv1a64:a83086cf0f9995b9"
   },
   "findings": []
 }

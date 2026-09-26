@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C133-beruehmt",
+    "language": "german",
+    "chapter": 133,
+    "sequence": 5630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d6ac7579a6dd524"
+  },
+  "findings": []
+}

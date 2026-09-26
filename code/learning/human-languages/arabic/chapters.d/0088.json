@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "After, Time, Far, Near, Inside",
+  "label": "ch:ar-after-time-far-near-inside",
+  "canDo": "I can say after, time, far, near and inside.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "AR-C88-dakhil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can say after, time, far, near and inside.",
+    "assesses": [
+      "AR-LEX-C88-TIME88-03",
+      "AR-LEX-C88-TIME88-04",
+      "AR-LEX-C88-TIME88-05"
+    ]
+  }
+}

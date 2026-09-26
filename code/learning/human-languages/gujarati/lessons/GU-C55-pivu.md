@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C55-pivu
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2830
+sequence: 2843
 chapter: 55
 type: word
 headword: "પીવું"

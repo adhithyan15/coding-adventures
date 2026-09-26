@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:f087c9f39678244d",
+  "lessonIds": [
+    "MR-C118-chalis",
+    "MR-C118-pannas",
+    "MR-C118-sath",
+    "MR-C118-sattar",
+    "MR-C118-navvad"
+  ],
+  "tex": "marathi/book/chapters/ch118-forty-fifty-sixty-seventy-ninety.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C72-notun",
+  "pathSegment": "BN-PATH-72-ADJ72",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-72-ADJ72",
+      "order": 2
+    }
+  ]
+}

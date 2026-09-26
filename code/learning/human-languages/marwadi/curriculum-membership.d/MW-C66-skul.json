@@ -1,0 +1,11 @@
+{
+  "id": "MW-C66-skul",
+  "pathSegment": "MW-PATH-66-SCHOOL66",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-66-SCHOOL66",
+      "order": 1
+    }
+  ]
+}

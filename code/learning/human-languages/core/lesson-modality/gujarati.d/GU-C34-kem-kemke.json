@@ -3,7 +3,7 @@
     "id": "GU-C34-kem-kemke",
     "language": "gujarati",
     "chapter": 38,
-    "sequence": 1940,
+    "sequence": 1953,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8f370c899bcc5b98"
+    "sourceHash": "fnv1a64:f725e7889e112408"
   },
   "findings": []
 }

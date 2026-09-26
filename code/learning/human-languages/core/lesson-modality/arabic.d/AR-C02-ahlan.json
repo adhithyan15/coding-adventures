@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C02-ahlan",
+    "language": "arabic",
+    "chapter": 2,
+    "sequence": 254,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:882b2bf22ae05e21"
+  },
+  "findings": []
+}

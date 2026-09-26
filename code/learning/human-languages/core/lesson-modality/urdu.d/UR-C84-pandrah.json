@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C84-pandrah",
+    "language": "urdu",
+    "chapter": 84,
+    "sequence": 4260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b34f672f2f5a6c2"
+  },
+  "findings": []
+}

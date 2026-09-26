@@ -1,0 +1,11 @@
+{
+  "id": "AR-C01-iid",
+  "pathSegment": "AR-PATH-003",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-003-SCRIPT",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:abbbc1747a062359",
+  "lessonIds": [
+    "MW-C79-ghanto",
+    "MW-C79-minat",
+    "MW-C79-aj",
+    "MW-C79-kal",
+    "MW-C79-abar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch79.txt",
+  "json": "marwadi/narration/ch79.json",
+  "textHash": "fnv1a64:25035726cb463425",
+  "jsonHash": "fnv1a64:9de0d34ff2200d66",
+  "findings": []
+}

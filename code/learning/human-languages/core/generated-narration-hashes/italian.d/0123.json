@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:023b2856b285c0fe",
+  "lessonIds": [
+    "IT-C123-rosa",
+    "IT-C123-viola",
+    "IT-C123-marrone",
+    "IT-C123-arancione",
+    "IT-C123-carino"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch123.txt",
+  "json": "italian/narration/ch123.json",
+  "textHash": "fnv1a64:3eadef2377da2508",
+  "jsonHash": "fnv1a64:97db84475a80f372",
+  "findings": []
+}

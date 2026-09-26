@@ -1,0 +1,11 @@
+{
+  "id": "AR-C77-shams",
+  "pathSegment": "AR-PATH-77-NATURE77",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-77-NATURE77",
+      "order": 2
+    }
+  ]
+}

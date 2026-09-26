@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C50-ayn",
+    "language": "arabic",
+    "chapter": 50,
+    "sequence": 1440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be2f83e8c2da5199"
+  },
+  "findings": []
+}

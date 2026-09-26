@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C06-number-histories
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 370
+sequence: 383
 chapter: 12
 type: etymology
 headword: બે · ત્રણ

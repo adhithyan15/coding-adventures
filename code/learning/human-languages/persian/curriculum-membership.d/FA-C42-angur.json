@@ -1,0 +1,11 @@
+{
+  "id": "FA-C42-angur",
+  "pathSegment": "FA-PATH-42-FOOD42",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-42-FOOD42",
+      "order": 3
+    }
+  ]
+}

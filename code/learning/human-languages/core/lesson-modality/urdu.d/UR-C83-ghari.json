@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C83-ghari",
+    "language": "urdu",
+    "chapter": 83,
+    "sequence": 4210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82a5f9856d2dc9dc"
+  },
+  "findings": []
+}

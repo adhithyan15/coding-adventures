@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:f64ec74f7d991063",
+  "lessonIds": [
+    "GE-C84-stern",
+    "GE-C84-wolke",
+    "GE-C84-regen",
+    "GE-C84-teich",
+    "GE-C84-feuer"
+  ],
+  "tex": "german/book/chapters/ch84-star-cloud-rain-pond-fire.tex"
+}

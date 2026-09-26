@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Now, Always, Delay, Before, Far",
+  "label": "ch:pa-now-always-delay-before-far",
+  "canDo": "I can say now, always, a delay, before, first and far.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "PA-C87-dur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can say now, always, a delay, before, first and far.",
+    "assesses": [
+      "PA-LEX-C87-TIME87-03",
+      "PA-LEX-C87-TIME87-04",
+      "PA-LEX-C87-TIME87-05"
+    ]
+  }
+}

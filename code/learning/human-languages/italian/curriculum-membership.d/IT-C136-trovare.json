@@ -1,0 +1,11 @@
+{
+  "id": "IT-C136-trovare",
+  "pathSegment": "IT-PATH-136-VERBI136",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-136-VERBI136",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:bb9f5d15b2f3d56d",
+  "lessonIds": [
+    "GE-C80-loeffel",
+    "GE-C80-flasche",
+    "GE-C80-heft",
+    "GE-C80-stift",
+    "GE-C80-papier"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch80.txt",
+  "json": "german/narration/ch80.json",
+  "textHash": "fnv1a64:48e01375befbc3a1",
+  "jsonHash": "fnv1a64:9c2f3e1307903935",
+  "findings": []
+}

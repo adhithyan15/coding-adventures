@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-55-FAMILY55",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "PA-EXT-55-FAMILY55"
+  ],
+  "after": []
+}

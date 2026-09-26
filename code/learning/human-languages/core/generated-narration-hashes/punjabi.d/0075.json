@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:de859d8a638e4daa",
+  "lessonIds": [
+    "PA-C75-ret",
+    "PA-C75-khet",
+    "PA-C75-baddal",
+    "PA-C75-suraj",
+    "PA-C75-chann"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch75.txt",
+  "json": "punjabi/narration/ch75.json",
+  "textHash": "fnv1a64:c44ac708b18ef2c5",
+  "jsonHash": "fnv1a64:0bde7d853972e564",
+  "findings": []
+}

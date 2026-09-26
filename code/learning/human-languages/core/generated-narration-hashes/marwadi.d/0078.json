@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:1927576a8811d993",
+  "lessonIds": [
+    "MW-C78-din",
+    "MW-C78-rat",
+    "MW-C78-savero",
+    "MW-C78-mahino",
+    "MW-C78-baras"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch78.txt",
+  "json": "marwadi/narration/ch78.json",
+  "textHash": "fnv1a64:462f5ecdbaa21e8f",
+  "jsonHash": "fnv1a64:4cc4f899e51777f2",
+  "findings": []
+}

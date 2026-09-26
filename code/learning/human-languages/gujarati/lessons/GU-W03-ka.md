@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W03-ka
 spine_node: SPINE-MEET-GREET
-sequence: 67
+sequence: 71
 delivery: script
 chapter: 3
 type: writing
 headword: ક
 romanization: "ka"
 gloss: "the consonant ka"
-prerequisites: [GU-W03-chha]
+prerequisites: [GU-W03-chha, GU-C03-kan]
 sounds: []
 roots: []
 etymology_hook: "Gujarati keeps the related Devanagari sound system while dropping the continuous headline."
 duration:
   max_seconds: 220
 requires:
-  knowledge: [GU-SCRIPT-CHHA-01]
+  knowledge: [GU-SCRIPT-CHHA-01, GU-LEX-ANCHOR-KAN]
 introduces:
   knowledge: [GU-SCRIPT-KA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-CHHA-01, GU-SCRIPT-KA-01]
+  knowledge: [GU-SCRIPT-CHHA-01, GU-SCRIPT-KA-01, GU-LEX-ANCHOR-KAN]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W03-chha]
 # ક — the consonant ka
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-CHHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-CHHA-01, GU-LEX-ANCHOR-KAN] -->
 
 Write chha once from memory. Check the two upper lobes before looking back.
 

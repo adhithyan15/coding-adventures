@@ -1,0 +1,11 @@
+{
+  "id": "MR-C96-dongar",
+  "pathSegment": "MR-PATH-96-NATURE96",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-96-NATURE96",
+      "order": 2
+    }
+  ]
+}

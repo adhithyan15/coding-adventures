@@ -1,0 +1,11 @@
+{
+  "id": "AR-C52-rukba",
+  "pathSegment": "AR-PATH-52-BODY52",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-52-BODY52",
+      "order": 2
+    }
+  ]
+}

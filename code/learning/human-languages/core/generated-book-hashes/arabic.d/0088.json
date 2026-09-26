@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:3b3915af23bee665",
+  "lessonIds": [
+    "AR-C88-bada",
+    "AR-C88-waqt",
+    "AR-C88-baid",
+    "AR-C88-qarib",
+    "AR-C88-dakhil"
+  ],
+  "tex": "arabic/book/chapters/ch88-after-time-far-near-inside.tex"
+}

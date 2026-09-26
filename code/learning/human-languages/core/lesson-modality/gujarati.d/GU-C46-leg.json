@@ -3,7 +3,7 @@
     "id": "GU-C46-leg",
     "language": "gujarati",
     "chapter": 46,
-    "sequence": 2350,
+    "sequence": 2363,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ceaa7f5499501f2e"
+    "sourceHash": "fnv1a64:62523c126238ba68"
   },
   "findings": []
 }

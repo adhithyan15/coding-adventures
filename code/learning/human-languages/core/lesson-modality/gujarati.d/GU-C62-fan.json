@@ -3,7 +3,7 @@
     "id": "GU-C62-fan",
     "language": "gujarati",
     "chapter": 62,
-    "sequence": 3170,
+    "sequence": 3183,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:300e397440703422"
+    "sourceHash": "fnv1a64:b3a615ea7b75e140"
   },
   "findings": []
 }

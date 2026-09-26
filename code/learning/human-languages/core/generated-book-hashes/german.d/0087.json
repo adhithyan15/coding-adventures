@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:2afcd85cf075c797",
+  "lessonIds": [
+    "GE-C87-ente",
+    "GE-C87-schaf",
+    "GE-C87-ziege",
+    "GE-C87-loewe",
+    "GE-C87-affe"
+  ],
+  "tex": "german/book/chapters/ch87-duck-sheep-goat-lion-monkey.tex"
+}

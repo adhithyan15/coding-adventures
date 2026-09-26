@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C81-thirteen
 spine_node: SPINE-RESPOND-BASIC
-sequence: 4130
+sequence: 4143
 chapter: 81
 type: word
 headword: "તેર"

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C97-safar",
+    "language": "punjabi",
+    "chapter": 97,
+    "sequence": 5150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ea21e1c2819a0ee"
+  },
+  "findings": []
+}

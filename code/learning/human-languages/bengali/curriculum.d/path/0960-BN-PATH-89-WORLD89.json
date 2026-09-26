@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-89-WORLD89",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "BN-EXT-89-WORLD89"
+  ],
+  "after": []
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W02-vocalic-r
 spine_node: SPINE-COURTESY-THANK
-sequence: 18
+sequence: 19
 delivery: script
 chapter: 2
 type: writing

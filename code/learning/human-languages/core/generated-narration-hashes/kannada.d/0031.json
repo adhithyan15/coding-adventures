@@ -1,16 +1,17 @@
 {
   "language": "kannada",
   "chapter": 31,
-  "sourceHash": "fnv1a64:af46dcc8877406ba",
+  "sourceHash": "fnv1a64:3da7799b19b57669",
   "lessonIds": [
     "KA-C31-shubha-madhyahna",
+    "KA-C31-krushi",
     "KA-S131-vowel-sign-vocalic-r"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "kannada/narration/ch31.txt",
   "json": "kannada/narration/ch31.json",
-  "textHash": "fnv1a64:782d181dfaf21e2e",
-  "jsonHash": "fnv1a64:12956facdfd496d8",
+  "textHash": "fnv1a64:3ea65b6646a609c5",
+  "jsonHash": "fnv1a64:5e8a52fd5d598f3e",
   "findings": []
 }

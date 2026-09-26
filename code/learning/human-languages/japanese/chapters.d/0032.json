@@ -1,0 +1,19 @@
+{
+  "chapter": 32,
+  "title": "Fish, Meat, Egg, Vegetables, Fruit",
+  "label": "ch:ja-fish-meat-egg-vegetables-fruit",
+  "canDo": "I can say a fish, meat, an egg, vegetables and fruit.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "JA-C32-kudamono",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 32: i can say a fish, meat, an egg, vegetables and fruit.",
+    "assesses": [
+      "JA-LEX-C32-FOOD32-03",
+      "JA-LEX-C32-FOOD32-04",
+      "JA-LEX-C32-FOOD32-05"
+    ]
+  }
+}

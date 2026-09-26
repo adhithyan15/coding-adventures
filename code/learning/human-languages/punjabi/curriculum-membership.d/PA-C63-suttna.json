@@ -1,0 +1,11 @@
+{
+  "id": "PA-C63-suttna",
+  "pathSegment": "PA-PATH-63-VERBS63",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-63-VERBS63",
+      "order": 1
+    }
+  ]
+}

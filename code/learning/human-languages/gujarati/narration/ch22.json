@@ -4,11 +4,11 @@
   "chapter": 22,
   "title": "Fourth Return: Wellbeing and Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d0d0fc5407485e99",
+  "sourceHash": "fnv1a64:90f6f2ff05409b06",
   "lessons": [
     {
       "id": "GU-R18-how-are-you-r4",
-      "sequence": 820,
+      "sequence": 833,
       "title": "The respectful wellbeing question returns at R4",
       "headword": "તમે કેમ છો?",
       "romanization": "tame kem chho?",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:e7a7f1839b69fdb0",
+      "sourceHash": "fnv1a64:0cfe262ef63bff60",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -134,7 +134,7 @@
     },
     {
       "id": "GU-R18-majaa-r4",
-      "sequence": 830,
+      "sequence": 843,
       "title": "The wellbeing answer returns at R4",
       "headword": "હું મજામાં છું।",
       "romanization": "hũ majāmā chhũ.",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:456c32b6271daada",
+      "sourceHash": "fnv1a64:9fd540f6ac677c28",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -259,7 +259,7 @@
     },
     {
       "id": "GU-R18-no-problem-r4",
-      "sequence": 840,
+      "sequence": 853,
       "title": "No problem returns at R4",
       "headword": "વાંધો નહીં।",
       "romanization": "vāndho nahĩ.",
@@ -270,7 +270,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:124c303b77e4f6ce",
+      "sourceHash": "fnv1a64:9916de40edc29992",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -383,7 +383,7 @@
     },
     {
       "id": "GU-R18-wellbeing-r4",
-      "sequence": 850,
+      "sequence": 863,
       "title": "The wellbeing exchange returns at R4",
       "headword": "તમે કેમ છો? હું મજામાં છું। વાંધો નહીં।",
       "romanization": "tame kem chho? hũ majāmā chhũ. vāndho nahĩ.",
@@ -394,7 +394,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:c4bc5e9c9d88afdd",
+      "sourceHash": "fnv1a64:f2b8e821cd7b3d03",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -513,7 +513,7 @@
     },
     {
       "id": "GU-R18-farewell-r4",
-      "sequence": 860,
+      "sequence": 873,
       "title": "We will meet returns at R4",
       "headword": "પાછા મળીશું। કાલે મળીશું।",
       "romanization": "pāchhā maḷīshũ. kāle maḷīshũ.",
@@ -524,7 +524,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:78c5922013b5cbdc",
+      "sourceHash": "fnv1a64:1a3e833501730aac",
       "notice": {
         "modality": "pen",
         "needs": [],

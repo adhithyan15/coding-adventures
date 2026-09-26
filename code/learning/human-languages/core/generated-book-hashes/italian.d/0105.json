@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:23ac5ac720a6c683",
+  "lessonIds": [
+    "IT-C105-cappello",
+    "IT-C105-giacca",
+    "IT-C105-camicia",
+    "IT-C105-pantaloni",
+    "IT-C105-vestito"
+  ],
+  "tex": "italian/book/chapters/ch105-hat-jacket-shirt-trousers-dress.tex"
+}

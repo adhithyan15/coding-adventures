@@ -12,18 +12,18 @@ headword: ग्यारह बारह तेरह चौदह पंद्
 gloss: 11-20 — genuinely irregular, must be memorized individually; but उन्नीस (19) most likely preserves Sanskrit's OWN subtractive naming, the same logic as Latin's ūndēvīgintī
 romanization: "gyārah — bīs"
 concept_tag: HI-NUMBERS-11-20
-prerequisites: [HI-C21-six-nine-ten-history]
+prerequisites: [HI-C21-six-nine-ten-history, HI-C22-os]
 sounds: [conjunct-gya, vowel-sign-ii]
 roots: [sanskrit-ekadasha-vimshati, sanskrit-una-subtractive]
 etymology_hook: "ग्यारह-अठारह (11-18) are each opaque, individually-eroded Sanskrit descendants that must be memorized, unlike Spanish's transparent teens — but उन्नीस (unnīs, 19) most likely continues Sanskrit's OWN subtractive ūnaviṃśati ('one less than twenty,' the later, eka-less form of the fuller Vedic ekonaviṃśati), the SAME logic as Latin's ūndēvīgintī — two unrelated language families independently naming 19 as 'twenty minus one'"
 duration:
   max_seconds: 297
 requires:
-  knowledge: [HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-01, HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-02, HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-03]
+  knowledge: [HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-01, HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-02, HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-03, HI-LEX-ANCHOR-OS]
 introduces:
   knowledge: [HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-02, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04]
 practises:
-  knowledge: [HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-02, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04]
+  knowledge: [HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-02, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04, HI-LEX-ANCHOR-OS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [HI-C21-six-nine-ten-history, HI-C21-numbers-6-10]
 # ग्यारह, बीस — genuinely irregular, and one honest exception
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-ANCHOR-OS] -->
 
 [PAUSE 2s] Be honest about this one: Hindi's teens don't follow a clean,
 predictable pattern the way Spanish's or Latin's do. But hiding inside that

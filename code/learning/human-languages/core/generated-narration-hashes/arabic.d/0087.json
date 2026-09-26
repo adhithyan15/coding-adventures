@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:c5478f7afdbb664d",
+  "lessonIds": [
+    "AR-C87-ams",
+    "AR-C87-ghadan",
+    "AR-C87-alan",
+    "AR-C87-ahyanan",
+    "AR-C87-qabla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch87.txt",
+  "json": "arabic/narration/ch87.json",
+  "textHash": "fnv1a64:c3ba92367c8aa7fa",
+  "jsonHash": "fnv1a64:52f045047eaa4c1d",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:4914e32f9ef0f7d8",
+  "lessonIds": [
+    "FA-C32-narahat",
+    "FA-C32-pezeshk",
+    "FA-C32-pedarbozorg",
+    "FA-C32-madarbozorg",
+    "FA-C32-dayi"
+  ],
+  "tex": "persian/book/chapters/ch32-upset-doctor-grandfather-grandmother-uncle.tex"
+}

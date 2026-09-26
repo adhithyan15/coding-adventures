@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:0014df30d618c6ef",
+  "lessonIds": [
+    "PA-C49-hatth",
+    "PA-C49-pair",
+    "PA-C49-val",
+    "PA-C49-dand",
+    "PA-C49-gala"
+  ],
+  "tex": "punjabi/book/chapters/ch49-hand-foot-hair-tooth-throat.tex"
+}

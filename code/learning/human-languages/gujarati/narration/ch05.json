@@ -4,11 +4,241 @@
   "chapter": 5,
   "title": "Four More Forms Before Your Name",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a5e13a24c2084049",
+  "sourceHash": "fnv1a64:6595e4fc8787d562",
   "lessons": [
     {
+      "id": "GU-C05-chappal",
+      "sequence": 82,
+      "title": "ચપ્પલ (cappal) — sandals",
+      "headword": "ચપ્પલ",
+      "romanization": "cappal",
+      "gloss": "sandals",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:da1e2408eaffb5b6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ભ once from memory. Say yes and no (hā, nā), then athāṇũ and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ચપ્પલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ચપ્પલ — cappal — \"sandals\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: cappal. Look at its shape as you say it: the lessons that follow take pieces of it, ચ (cha) and લ (la), and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cappal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cappal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cappal, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cappal*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"sandals\"? (ચપ્પલ, cappal.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C05-bagalo",
+      "sequence": 83,
+      "title": "બગલો (bagalo) — a heron",
+      "headword": "બગલો",
+      "romanization": "bagalo",
+      "gloss": "a heron",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:8348cac0bc16a12a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say divāḷī and what it names, then say goodbye (āvjo)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: બગલો",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "બગલો — bagalo — \"a heron\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: bagalo. Look at its shape as you say it: the lessons that follow take pieces of it, બ and, a little later, ગ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bagalo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bagalo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bagalo, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bagalo*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a heron\"? (બગલો, bagalo.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GU-W05-la",
-      "sequence": 76,
+      "sequence": 84,
       "title": "લ — the consonant la",
       "headword": "લ",
       "romanization": "la",
@@ -21,7 +251,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3d4fa08bdba4a0ef",
+      "sourceHash": "fnv1a64:9140110ca42e3147",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -131,7 +361,7 @@
     },
     {
       "id": "GU-W05-pa",
-      "sequence": 77,
+      "sequence": 85,
       "title": "પ — the consonant pa",
       "headword": "પ",
       "romanization": "pa",
@@ -144,7 +374,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:39c7d3827a3d17d6",
+      "sourceHash": "fnv1a64:2f14c27eaf13ad49",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -254,7 +484,7 @@
     },
     {
       "id": "GU-W05-cha",
-      "sequence": 78,
+      "sequence": 86,
       "title": "ચ — the consonant cha",
       "headword": "ચ",
       "romanization": "cha",
@@ -267,7 +497,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:312af78e22bdf739",
+      "sourceHash": "fnv1a64:d284220894187829",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -377,7 +607,7 @@
     },
     {
       "id": "GU-W05-ba",
-      "sequence": 79,
+      "sequence": 87,
       "title": "બ — the consonant ba",
       "headword": "બ",
       "romanization": "ba",
@@ -390,7 +620,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ffa967f6f23583f1",
+      "sourceHash": "fnv1a64:e7f6fda29741bf62",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -500,7 +730,7 @@
     },
     {
       "id": "GU-R05-second-four-r1",
-      "sequence": 80,
+      "sequence": 88,
       "title": "લ — પ — ચ — બ (la — pa — cha — ba): four more forms return",
       "headword": "લ — પ — ચ — બ",
       "romanization": "la — pa — cha — ba",
@@ -513,7 +743,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b56c4bbebe4e3c2a",
+      "sourceHash": "fnv1a64:481254512771af2c",
       "notice": {
         "modality": "pen",
         "needs": [

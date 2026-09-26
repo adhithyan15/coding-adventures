@@ -1,0 +1,11 @@
+{
+  "id": "JA-C43-tanbo",
+  "pathSegment": "JA-PATH-43-NATURE43",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-43-NATURE43",
+      "order": 1
+    }
+  ]
+}

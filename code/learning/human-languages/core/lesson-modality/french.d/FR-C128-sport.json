@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C128-sport",
+    "language": "french",
+    "chapter": 128,
+    "sequence": 5910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dfb17dcc918d61dd"
+  },
+  "findings": []
+}

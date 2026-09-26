@@ -3,7 +3,7 @@
     "id": "GU-C55-aapvu",
     "language": "gujarati",
     "chapter": 55,
-    "sequence": 2810,
+    "sequence": 2823,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2ad2ea027d8d0492"
+    "sourceHash": "fnv1a64:b6cbb0b52e2158f4"
   },
   "findings": []
 }

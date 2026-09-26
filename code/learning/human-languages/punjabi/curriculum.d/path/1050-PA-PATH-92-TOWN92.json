@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-92-TOWN92",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "PA-EXT-92-TOWN92"
+  ],
+  "after": []
+}

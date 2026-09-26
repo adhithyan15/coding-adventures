@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:87dd5ea05d9e7f15",
+  "lessonIds": [
+    "BN-C66-pahar",
+    "BN-C66-bon",
+    "BN-C66-nodi",
+    "BN-C66-pukur",
+    "BN-C66-pathor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch66.txt",
+  "json": "bengali/narration/ch66.json",
+  "textHash": "fnv1a64:b817ebb4b4c278e3",
+  "jsonHash": "fnv1a64:d01cb02bb5b51e7a",
+  "findings": []
+}

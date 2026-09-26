@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C72-mitha",
+    "language": "urdu",
+    "chapter": 72,
+    "sequence": 3690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77fd5e4a9aabcc49"
+  },
+  "findings": []
+}

@@ -1,11 +1,11 @@
 {
   "id": "TE-S137-letter-kha",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 39,
+  "pathOrder": 42,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 39
+      "order": 42
     }
   ]
 }

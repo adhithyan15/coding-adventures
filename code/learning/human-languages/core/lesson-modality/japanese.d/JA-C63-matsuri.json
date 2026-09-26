@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C63-matsuri",
+    "language": "japanese",
+    "chapter": 63,
+    "sequence": 3810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:398f37ca8e0a7573"
+  },
+  "findings": []
+}

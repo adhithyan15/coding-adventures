@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Horn, Hole, Rice plant, Nephew, Niece",
+  "label": "ch:ja-horn-hole-rice-plant-nephew-niece",
+  "canDo": "I can say a horn, a hole, a rice plant, a nephew and a niece.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "JA-R71-second-pass-places-clothes-and-more",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: i can say a horn, a hole, a rice plant, a nephew and a niece.",
+    "assesses": [
+      "JA-LEX-C71-THINGS71-03",
+      "JA-LEX-C71-THINGS71-04",
+      "JA-LEX-C71-THINGS71-05"
+    ]
+  }
+}

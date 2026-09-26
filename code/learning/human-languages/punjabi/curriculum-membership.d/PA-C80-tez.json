@@ -1,0 +1,11 @@
+{
+  "id": "PA-C80-tez",
+  "pathSegment": "PA-PATH-80-ADJ80",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-80-ADJ80",
+      "order": 4
+    }
+  ]
+}

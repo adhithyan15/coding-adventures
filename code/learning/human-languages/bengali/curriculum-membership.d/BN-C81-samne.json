@@ -1,0 +1,11 @@
+{
+  "id": "BN-C81-samne",
+  "pathSegment": "BN-PATH-81-PLACE81",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-81-PLACE81",
+      "order": 4
+    }
+  ]
+}

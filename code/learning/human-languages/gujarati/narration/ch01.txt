@@ -1,8 +1,8 @@
 Gujarati, chapter 1: Namaste, Piece by Piece.
-11 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+12 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 11.
+Lesson 1 of 12.
 Namaste — first hear the greeting.
 
 Warm-up.
@@ -30,7 +30,32 @@ Wrap-up Recall.
 What can you say when you meet someone? (Namaste.) What is its literal memory hook? (A bow to you.) Do you need to read its Gujarati spelling yet? (No — the script ramp starts next, one piece at a time.)
 
 
-Lesson 2 of 11.
+Lesson 2 of 12.
+આહાર (āhār) — food, a meal.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before the new word: say the last thing you learned, once, out loud.
+
+You'll want to know: આહાર.
+આહાર — āhār — "food, a meal".
+Say it: āhār. Look at its shape as you say it: the lessons that follow take pieces of it, હ, ા (-ā) and આ, and write each one on its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: āhār]
+[pause 8 seconds for the answer]
+[your turn — say: āhār, and what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "food, a meal"? (આહાર, āhār.)
+
+
+Lesson 3 of 12.
 હ — the consonant ha.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -57,7 +82,7 @@ Source: Unicode Gujarati chart.
 Trace the visible Gujarati consonant once, then name its built-in vowel.
 
 
-Lesson 3 of 11.
+Lesson 4 of 12.
 ા (-ā) — the vowel sign that replaces the inherent a.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -87,7 +112,7 @@ Source: Unicode Gujarati chart.
 Trace the visible long-aa sign once, point from હ (ha) to the separate ા (-ā), and say the resulting syllable.
 
 
-Lesson 4 of 11.
+Lesson 5 of 12.
 આ (ā) — the SAME vowel standing alone.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -119,7 +144,7 @@ Which of the two starts a word? (આ, the independent vowel.) Which one attaches
 Source: Unicode Gujarati chart.
 
 
-Lesson 5 of 11.
+Lesson 6 of 12.
 ન — the consonant na.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -145,7 +170,7 @@ What does the bare consonant sound like on its own? (Na, with the inherent vowel
 Source: Unicode Gujarati chart.
 
 
-Lesson 6 of 11.
+Lesson 7 of 12.
 મ — the consonant ma.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -172,7 +197,7 @@ What vowel is inside મ (ma) when nothing is attached? (a.) And what would મ 
 Source: Unicode Gujarati chart.
 
 
-Lesson 7 of 11.
+Lesson 8 of 12.
 સ — the consonant sa.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -199,7 +224,7 @@ Say the four consonants you now hold, each with its inherent vowel. (ha, na, ma,
 Source: Unicode Gujarati chart.
 
 
-Lesson 8 of 11.
+Lesson 9 of 12.
 ત — the consonant ta.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -225,7 +250,7 @@ Where does the tongue go for ત? (Against the back of the upper teeth — denta
 Source: Unicode Gujarati chart.
 
 
-Lesson 9 of 11.
+Lesson 10 of 12.
 ે (-e) — a mātrā that sits ABOVE the letter, not beside it.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -253,7 +278,7 @@ Where does this mātrā sit? (Above the consonant.) Does it add a beat? (No — 
 Source: Unicode Gujarati chart.
 
 
-Lesson 10 of 11.
+Lesson 11 of 12.
 ્ ((virama)) — the mark that DELETES the inherent vowel, and glues two consonants together.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -283,7 +308,7 @@ What does the virama do? (Removes the inherent vowel.) And what usually happens 
 Source: Unicode Gujarati chart.
 
 
-Lesson 11 of 11.
+Lesson 12 of 12.
 નમસ્તે (namaste) — five pieces, all of them already yours.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.

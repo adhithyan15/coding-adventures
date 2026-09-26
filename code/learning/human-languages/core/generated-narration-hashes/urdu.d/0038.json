@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:378bbe39d52ee6d4",
+  "lessonIds": [
+    "UR-C38-hath",
+    "UR-C38-sar",
+    "UR-C38-bal",
+    "UR-C38-dant",
+    "UR-C38-gala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch38.txt",
+  "json": "urdu/narration/ch38.json",
+  "textHash": "fnv1a64:59888ddee442de54",
+  "jsonHash": "fnv1a64:7593827dacbfaf0f",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C57-utthna",
+    "language": "punjabi",
+    "chapter": 57,
+    "sequence": 3090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04bd9798923388f4"
+  },
+  "findings": []
+}

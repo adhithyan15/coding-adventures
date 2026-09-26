@@ -1,0 +1,11 @@
+{
+  "id": "UR-C79-niche",
+  "pathSegment": "UR-PATH-79-PLACE79",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-79-PLACE79",
+      "order": 1
+    }
+  ]
+}

@@ -8,7 +8,7 @@ type: practice
 headword: Frag mich!
 gloss: six question words, one polar question and one command, run over everything the book owns
 concept_tag: GE-REVIEW-FRAGE
-prerequisites: [GE-C33-warum]
+prerequisites: [GE-C33-warum, GE-C22-hund-katze-more]
 sounds: []
 roots: []
 duration:

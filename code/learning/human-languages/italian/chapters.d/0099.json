@@ -1,0 +1,19 @@
+{
+  "chapter": 99,
+  "title": "Bucket, Rope, Nail, Hammer, Glue",
+  "label": "ch:it-bucket-rope-nail-hammer-glue",
+  "canDo": "I can say a bucket, a rope, a nail, a hammer and glue.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C99-colla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: i can say a bucket, a rope, a nail, a hammer and glue.",
+    "assesses": [
+      "IT-LEX-C99-ATTREZZI99-03",
+      "IT-LEX-C99-ATTREZZI99-04",
+      "IT-LEX-C99-ATTREZZI99-05"
+    ]
+  }
+}

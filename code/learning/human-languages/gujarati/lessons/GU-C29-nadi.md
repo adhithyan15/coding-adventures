@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C29-nadi
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1680
+sequence: 1693
 chapter: 33
 type: practice
 headword: નદી

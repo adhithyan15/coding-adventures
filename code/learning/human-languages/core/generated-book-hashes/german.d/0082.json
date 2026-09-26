@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:9c6e1375218f3adb",
+  "lessonIds": [
+    "GE-C82-telefon",
+    "GE-C82-baum",
+    "GE-C82-blume",
+    "GE-C82-blatt",
+    "GE-C82-berg"
+  ],
+  "tex": "german/book/chapters/ch82-telephone-tree-flower-leaf-mountain.tex"
+}

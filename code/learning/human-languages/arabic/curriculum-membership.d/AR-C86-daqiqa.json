@@ -1,0 +1,11 @@
+{
+  "id": "AR-C86-daqiqa",
+  "pathSegment": "AR-PATH-86-ADJ86",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-86-ADJ86",
+      "order": 4
+    }
+  ]
+}

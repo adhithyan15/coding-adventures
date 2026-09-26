@@ -1,0 +1,11 @@
+{
+  "id": "UR-C74-bhura",
+  "pathSegment": "UR-PATH-74-ADJ74",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-74-ADJ74",
+      "order": 2
+    }
+  ]
+}

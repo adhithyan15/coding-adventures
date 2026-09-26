@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:cc32cf48855ddc73",
+  "lessonIds": [
+    "AR-C77-najm",
+    "AR-C77-sahaba",
+    "AR-C77-shams",
+    "AR-C77-qamar",
+    "AR-C77-bahr"
+  ],
+  "tex": "arabic/book/chapters/ch77-star-cloud-sun-moon-sea.tex"
+}

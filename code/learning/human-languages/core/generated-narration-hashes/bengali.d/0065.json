@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:703c689b65ab0338",
+  "lessonIds": [
+    "BN-C65-shobdo",
+    "BN-C65-chhobi",
+    "BN-C65-gachh",
+    "BN-C65-phul",
+    "BN-C65-pata",
+    "BN-R65-first-pass-the-body-family-and-verbs",
+    "BN-R65-second-pass-food-and-the-home"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch65.txt",
+  "json": "bengali/narration/ch65.json",
+  "textHash": "fnv1a64:4ed957b3906d4132",
+  "jsonHash": "fnv1a64:82d34bf4d21c361d",
+  "findings": []
+}

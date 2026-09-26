@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C10-dudh
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 540
+sequence: 553
 chapter: 16
 type: word
 headword: દૂધ

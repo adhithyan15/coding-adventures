@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C60-thepla
 spine_node: SPINE-COURTESY-THANK
-sequence: 3060
+sequence: 3073
 chapter: 60
 type: word
 headword: "થેપલાં"

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C103-guanti",
+    "language": "italian",
+    "chapter": 103,
+    "sequence": 4870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0617685d43c71251"
+  },
+  "findings": []
+}

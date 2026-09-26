@@ -1,0 +1,11 @@
+{
+  "id": "AR-C57-jalasa",
+  "pathSegment": "AR-PATH-57-FAMILY57",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-57-FAMILY57",
+      "order": 3
+    }
+  ]
+}

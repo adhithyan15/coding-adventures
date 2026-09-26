@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:14f0a3621cf242be",
+  "lessonIds": [
+    "MW-C82-athai",
+    "MW-C82-bathai",
+    "MW-C82-sarak",
+    "MW-C82-gali",
+    "MW-C82-tesan"
+  ],
+  "tex": "marwadi/book/chapters/ch82-here-there-road-lane-station.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-68-THINGS68",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "JA-EXT-68-THINGS68"
+  ],
+  "after": []
+}

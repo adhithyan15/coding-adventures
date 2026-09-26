@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Pink, Purple, Brown (chestnut), Brown (of hair, Pretty",
+  "label": "ch:fr-pink-purple-brown-chestnut-brown-of-hair-pretty",
+  "canDo": "I can name pink, purple, brown (chestnut), brown (of hair, pretty.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C130-joli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can name pink, purple, brown (chestnut), brown (of hair, pretty.",
+    "assesses": [
+      "FR-LEX-C130-COULEURS82-03",
+      "FR-LEX-C130-COULEURS82-04",
+      "FR-LEX-C130-COULEURS82-05"
+    ]
+  }
+}

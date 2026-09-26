@@ -4,11 +4,11 @@
   "chapter": 44,
   "title": "Reading — Six Words, Six Lines, and a Whole Meeting",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:fddb5ae70fb416d6",
+  "sourceHash": "fnv1a64:817037d4868e3955",
   "lessons": [
     {
       "id": "GU-C44-words",
-      "sequence": 2270,
+      "sequence": 2283,
       "title": "(reading) (ghar · bajār · śāḷā · dukān · pāṇī · pustak) (tame kem chho? hũ majāmā̃ chhũ.) (mārũ nām mīrā chhe. tame kem chho?) — six words off a signboard",
       "headword": "(reading)",
       "romanization": "ghar · bajār · śāḷā · dukān · pāṇī · pustak",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1041dca0fe0456bf",
+      "sourceHash": "fnv1a64:c4d566f572861585",
       "notice": null,
       "blocks": [
         {
@@ -194,7 +194,7 @@
     },
     {
       "id": "GU-C44-lines",
-      "sequence": 2280,
+      "sequence": 2293,
       "title": "(reading) (ghar · bajār · śāḷā · dukān · pāṇī · pustak) (tame kem chho? hũ majāmā̃ chhũ.) (mārũ nām mīrā chhe. tame kem chho?) — six lines, no voice attached",
       "headword": "(reading)",
       "romanization": "mārũ nām mīrā chhe. tame kem chho?",
@@ -205,7 +205,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3385d611b8917cf5",
+      "sourceHash": "fnv1a64:70570505cf9a3691",
       "notice": null,
       "blocks": [
         {
@@ -381,7 +381,7 @@
     },
     {
       "id": "GU-C44-pehli-vanchan",
-      "sequence": 2290,
+      "sequence": 2303,
       "title": "(reading) (ghar · bajār · śāḷā · dukān · pāṇī · pustak) (tame kem chho? hũ majāmā̃ chhũ.) (mārũ nām mīrā chhe. tame kem chho?) — a whole meeting",
       "headword": "(reading)",
       "romanization": "tame kem chho? hũ majāmā̃ chhũ.",
@@ -392,7 +392,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ed80b1f5cde924d",
+      "sourceHash": "fnv1a64:0561fd8298893eda",
       "notice": null,
       "blocks": [
         {

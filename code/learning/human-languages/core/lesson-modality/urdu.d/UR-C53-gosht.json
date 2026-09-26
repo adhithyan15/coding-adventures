@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C53-gosht",
+    "language": "urdu",
+    "chapter": 53,
+    "sequence": 2710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:308b48f9c88173d5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C69-bara",
+    "language": "urdu",
+    "chapter": 69,
+    "sequence": 3540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07afd83730a86d2c"
+  },
+  "findings": []
+}

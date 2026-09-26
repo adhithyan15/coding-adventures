@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:a1099e14a9f95f04",
+  "lessonIds": [
+    "FR-C107-supermarche",
+    "FR-C107-cinema",
+    "FR-C107-stade",
+    "FR-C107-piscine",
+    "FR-C107-epicerie"
+  ],
+  "tex": "french/book/chapters/ch107-supermarket-cinema-stadium-swimming-pool-grocer-s-shop.tex"
+}

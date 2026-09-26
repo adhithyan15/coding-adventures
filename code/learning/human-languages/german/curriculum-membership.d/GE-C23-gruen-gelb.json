@@ -1,11 +1,11 @@
 {
   "id": "GE-C23-gruen-gelb",
   "pathSegment": "GE-PATH-026",
-  "pathOrder": 1,
+  "pathOrder": 2,
   "extensions": [
     {
       "id": "GE-EXT-026-LANGUAGE-SPECIFIC",
-      "order": 1
+      "order": 2
     }
   ]
 }

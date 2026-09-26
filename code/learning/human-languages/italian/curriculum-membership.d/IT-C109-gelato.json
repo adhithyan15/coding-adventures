@@ -1,0 +1,11 @@
+{
+  "id": "IT-C109-gelato",
+  "pathSegment": "IT-PATH-109-CIBO109",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-109-CIBO109",
+      "order": 2
+    }
+  ]
+}

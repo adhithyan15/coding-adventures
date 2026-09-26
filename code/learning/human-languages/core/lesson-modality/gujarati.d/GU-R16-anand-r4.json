@@ -3,7 +3,7 @@
     "id": "GU-R16-anand-r4",
     "language": "gujarati",
     "chapter": 20,
-    "sequence": 740,
+    "sequence": 753,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9f4fa5a43c7c2060",
+    "sourceHash": "fnv1a64:57ad6b72fa86ca10",
     "detachableSegments": [
       "Writing — from sound"
     ]

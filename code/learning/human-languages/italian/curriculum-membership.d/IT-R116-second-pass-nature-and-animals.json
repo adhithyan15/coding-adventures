@@ -1,0 +1,11 @@
+{
+  "id": "IT-R116-second-pass-nature-and-animals",
+  "pathSegment": "IT-PATH-116-TEMPOLIBERO116",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "IT-EXT-116-TEMPOLIBERO116",
+      "order": 6
+    }
+  ]
+}

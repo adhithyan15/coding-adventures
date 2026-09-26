@@ -1,0 +1,11 @@
+{
+  "id": "FR-C108-feu-rouge",
+  "pathSegment": "FR-PATH-108-VILLE60",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-108-VILLE60",
+      "order": 4
+    }
+  ]
+}

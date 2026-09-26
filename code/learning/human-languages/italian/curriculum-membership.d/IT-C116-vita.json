@@ -1,0 +1,11 @@
+{
+  "id": "IT-C116-vita",
+  "pathSegment": "IT-PATH-116-TEMPOLIBERO116",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-116-TEMPOLIBERO116",
+      "order": 4
+    }
+  ]
+}

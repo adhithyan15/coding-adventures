@@ -3,7 +3,7 @@
     "id": "GU-C65-sand",
     "language": "gujarati",
     "chapter": 65,
-    "sequence": 3320,
+    "sequence": 3333,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7b52fe4bae6836d8"
+    "sourceHash": "fnv1a64:3fff29e498e457c8"
   },
   "findings": []
 }

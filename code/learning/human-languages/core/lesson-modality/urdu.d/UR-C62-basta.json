@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C62-basta",
+    "language": "urdu",
+    "chapter": 62,
+    "sequence": 3130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07079ddf5a281041"
+  },
+  "findings": []
+}

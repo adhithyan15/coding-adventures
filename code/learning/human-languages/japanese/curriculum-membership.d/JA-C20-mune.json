@@ -1,0 +1,11 @@
+{
+  "id": "JA-C20-mune",
+  "pathSegment": "JA-PATH-20-BODY20",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-20-BODY20",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:cf3084b93e608129",
+  "lessonIds": [
+    "GE-C102-null",
+    "GE-C102-wort",
+    "GE-C102-antwort",
+    "GE-C102-arbeit",
+    "GE-C102-musik"
+  ],
+  "tex": "german/book/chapters/ch102-zero-word-answer-work-music.tex"
+}

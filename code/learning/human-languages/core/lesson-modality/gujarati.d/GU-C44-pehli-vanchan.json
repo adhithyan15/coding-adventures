@@ -3,7 +3,7 @@
     "id": "GU-C44-pehli-vanchan",
     "language": "gujarati",
     "chapter": 44,
-    "sequence": 2290,
+    "sequence": 2303,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1ed80b1f5cde924d"
+    "sourceHash": "fnv1a64:0561fd8298893eda"
   },
   "findings": []
 }

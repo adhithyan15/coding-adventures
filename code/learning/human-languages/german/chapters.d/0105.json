@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "Restaurant, Bakery, Cinema, Theatre, Town hall",
+  "label": "ch:ge-restaurant-bakery-cinema-theatre-town-hall",
+  "canDo": "I can say a restaurant, a bakery, a cinema, a theatre and a town hall.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "GE-C105-rathaus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: i can say a restaurant, a bakery, a cinema, a theatre and a town hall.",
+    "assesses": [
+      "GE-LEX-C105-ORT105-03",
+      "GE-LEX-C105-ORT105-04",
+      "GE-LEX-C105-ORT105-05"
+    ]
+  }
+}

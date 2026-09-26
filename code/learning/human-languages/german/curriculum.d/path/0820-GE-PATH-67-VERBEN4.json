@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-67-VERBEN4",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "GE-EXT-67-VERBEN4"
+  ],
+  "after": []
+}

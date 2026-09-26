@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:ae1c2efa8e7c5de6",
+  "lessonIds": [
+    "FR-C111-tapis",
+    "FR-C111-television",
+    "FR-C111-ordinateur",
+    "FR-C111-refrigerateur",
+    "FR-C111-radio"
+  ],
+  "tex": "french/book/chapters/ch111-rug-television-computer-fridge-radio.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:8b71c6d8a16c93b1",
+  "lessonIds": [
+    "MW-C86-tis",
+    "MW-C86-chalis",
+    "MW-C86-pachas",
+    "MW-C86-sath",
+    "MW-C86-sittar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch86.txt",
+  "json": "marwadi/narration/ch86.json",
+  "textHash": "fnv1a64:750ba90782853663",
+  "jsonHash": "fnv1a64:ccdbbb20e44d2141",
+  "findings": []
+}

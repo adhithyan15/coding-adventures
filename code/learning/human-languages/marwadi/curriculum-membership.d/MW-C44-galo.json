@@ -1,0 +1,11 @@
+{
+  "id": "MW-C44-galo",
+  "pathSegment": "MW-PATH-44-BODY44",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-44-BODY44",
+      "order": 4
+    }
+  ]
+}

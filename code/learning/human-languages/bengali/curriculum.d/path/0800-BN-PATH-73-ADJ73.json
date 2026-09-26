@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-73-ADJ73",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "BN-EXT-73-ADJ73"
+  ],
+  "after": []
+}

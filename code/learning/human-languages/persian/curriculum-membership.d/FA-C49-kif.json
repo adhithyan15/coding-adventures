@@ -1,0 +1,11 @@
+{
+  "id": "FA-C49-kif",
+  "pathSegment": "FA-PATH-49-SCHOOL49",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-49-SCHOOL49",
+      "order": 3
+    }
+  ]
+}

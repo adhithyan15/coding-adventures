@@ -1,0 +1,19 @@
+{
+  "chapter": 75,
+  "title": "Word, Picture, Tree, Flower, Mountain",
+  "label": "ch:ar-word-picture-tree-flower-mountain",
+  "canDo": "I can say a word, a picture, a tree, a flower and a mountain.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "AR-C75-jabal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 75: i can say a word, a picture, a tree, a flower and a mountain.",
+    "assesses": [
+      "AR-LEX-C75-SCHOOL75-03",
+      "AR-LEX-C75-SCHOOL75-04",
+      "AR-LEX-C75-SCHOOL75-05"
+    ]
+  }
+}

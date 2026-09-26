@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C38-chothu
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 2160
+sequence: 2173
 chapter: 42
 type: word
 headword: ચોથું

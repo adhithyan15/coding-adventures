@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C64-leaf
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3250
+sequence: 3263
 chapter: 64
 type: word
 headword: "પાન"

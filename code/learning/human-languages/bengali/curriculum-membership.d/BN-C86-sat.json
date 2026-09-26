@@ -1,0 +1,11 @@
+{
+  "id": "BN-C86-sat",
+  "pathSegment": "BN-PATH-86-CLOTHES86",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-86-CLOTHES86",
+      "order": 2
+    }
+  ]
+}

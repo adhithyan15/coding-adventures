@@ -3,7 +3,7 @@
     "id": "GU-C35-jo",
     "language": "gujarati",
     "chapter": 39,
-    "sequence": 1980,
+    "sequence": 1993,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:af98d67c646d4a95"
+    "sourceHash": "fnv1a64:d7af6d438e4c68b9"
   },
   "findings": []
 }

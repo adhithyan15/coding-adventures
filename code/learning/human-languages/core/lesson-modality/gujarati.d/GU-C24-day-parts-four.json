@@ -3,7 +3,7 @@
     "id": "GU-C24-day-parts-four",
     "language": "gujarati",
     "chapter": 28,
-    "sequence": 1200,
+    "sequence": 1213,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c50c55ccf97b60a2"
+    "sourceHash": "fnv1a64:786bd3fd1d0c0612"
   },
   "findings": []
 }

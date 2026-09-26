@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-135-EIGEN135",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say dangerous, wet, dry, cool and soft.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:8438ed3e019ed482",
+  "lessonIds": [
+    "GE-C127-beruf",
+    "GE-C127-klasse",
+    "GE-C127-pruefung",
+    "GE-C127-tafel",
+    "GE-C127-radiergummi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch127.txt",
+  "json": "german/narration/ch127.json",
+  "textHash": "fnv1a64:f08996dd2ec8f358",
+  "jsonHash": "fnv1a64:cc9221e2ebe218a8",
+  "findings": []
+}

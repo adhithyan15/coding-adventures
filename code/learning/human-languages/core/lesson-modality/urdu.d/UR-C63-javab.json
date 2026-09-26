@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C63-javab",
+    "language": "urdu",
+    "chapter": 63,
+    "sequence": 3200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc10b6d59c5af58c"
+  },
+  "findings": []
+}

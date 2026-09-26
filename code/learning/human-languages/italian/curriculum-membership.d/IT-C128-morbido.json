@@ -1,0 +1,11 @@
+{
+  "id": "IT-C128-morbido",
+  "pathSegment": "IT-PATH-128-QUALITA128",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-128-QUALITA128",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:029c22684c7aa2ed",
+  "lessonIds": [
+    "FA-C29-khun",
+    "FA-C29-zanu",
+    "FA-C29-posht",
+    "FA-C29-shekam",
+    "FA-C29-lab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch29.txt",
+  "json": "persian/narration/ch29.json",
+  "textHash": "fnv1a64:2d2b28664de98bde",
+  "jsonHash": "fnv1a64:89e7d2f0625e0c19",
+  "findings": []
+}

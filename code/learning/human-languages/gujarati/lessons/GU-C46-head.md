@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C46-head
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2340
+sequence: 2353
 chapter: 46
 type: word
 headword: "માથું"

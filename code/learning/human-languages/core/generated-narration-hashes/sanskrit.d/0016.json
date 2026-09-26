@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 16,
-  "sourceHash": "fnv1a64:733252ef55db6671",
+  "sourceHash": "fnv1a64:484260fdacf45f46",
   "lessonIds": [
     "SA-C16-house",
     "SA-C16-village",
@@ -18,6 +18,6 @@
   "text": "sanskrit/narration/ch16.txt",
   "json": "sanskrit/narration/ch16.json",
   "textHash": "fnv1a64:57b6c794bea83cc2",
-  "jsonHash": "fnv1a64:d155b08532f521f5",
+  "jsonHash": "fnv1a64:689de4d4bb593e60",
   "findings": []
 }

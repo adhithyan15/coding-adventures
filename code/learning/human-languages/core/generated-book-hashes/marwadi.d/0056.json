@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:51f9a0dff5b45e46",
+  "lessonIds": [
+    "MW-C56-ginno",
+    "MW-C56-pakarno",
+    "MW-C56-katno",
+    "MW-C56-rokno",
+    "MW-C56-batano"
+  ],
+  "tex": "marwadi/book/chapters/ch56-to-count-to-catch-to-cut-to-stop-to-tell.tex"
+}

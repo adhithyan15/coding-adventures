@@ -1,8 +1,83 @@
 Marathi, chapter 5: Marks Above, Below, and Beside the Letter.
-7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+10 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 7.
+Lesson 1 of 10.
+अमृत (amṛt) — nectar.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before the new word: say the last thing you learned, once, out loud.
+
+You'll want to know: अमृत.
+अमृत — amṛt — "nectar".
+Say it: amṛt. Look at its shape as you say it: the lessons that follow take pieces of it, अ and ृ, and write each one on its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: amṛt]
+[pause 8 seconds for the answer]
+[your turn — say: amṛt, and what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "nectar"? (अमृत, amṛt.)
+
+
+Lesson 2 of 10.
+किरण (kiraṇ) — a ray of light.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before the new word: say the last thing you learned, once, out loud.
+
+You'll want to know: किरण.
+किरण — kiraṇ — "a ray of light".
+Say it: kiraṇ. Look at its shape as you say it: the lessons that follow take pieces of it, ि and ण, and write each one on its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: kiraṇ]
+[pause 8 seconds for the answer]
+[your turn — say: kiraṇ, and what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "a ray of light"? (किरण, kiraṇ.)
+
+
+Lesson 3 of 10.
+तूप (tūp) — ghee.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before the new word: say the last thing you learned, once, out loud.
+
+You'll want to know: तूप.
+तूप — tūp — "ghee".
+Say it: tūp. Look at its shape as you say it: the lessons that follow take pieces of it, ू and प, and write each one on its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: tūp]
+[pause 8 seconds for the answer]
+[your turn — say: tūp, and what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "ghee"? (तूप, tūp.)
+
+
+Lesson 4 of 10.
 ि — short i, written before, read after.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -26,7 +101,7 @@ Source: Unicode Devanagari chart, U+093F.
 Trace the short-i mark and say where it is written relative to its letter.
 
 
-Lesson 2 of 7.
+Lesson 5 of 10.
 ु — short u, a small hook below.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -50,7 +125,7 @@ Source: Unicode Devanagari chart, U+0941.
 Copy the short-u hook under ta, then name the mark that is written to the left of its letter.
 
 
-Lesson 3 of 7.
+Lesson 6 of 10.
 ू — long ū, the deeper hook below.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -74,7 +149,7 @@ Source: Unicode Devanagari chart, U+0942.
 Write long uu after a delay, then say what separates it from short u.
 
 
-Lesson 4 of 7.
+Lesson 7 of 10.
 ृ (ṛ) — the vocalic r mark, said ru.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -98,7 +173,7 @@ Source: Unicode Devanagari chart, U+0943.
 Copy the vocalic-r curl on ka, then say which direction it opens compared with short u.
 
 
-Lesson 5 of 7.
+Lesson 8 of 10.
 ँ (ã) — the moon holding a dot.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -123,7 +198,7 @@ Source: Unicode Devanagari chart, U+0901.
 Trace the moon-and-dot, then name the mark that is a dot with no crescent.
 
 
-Lesson 6 of 7.
+Lesson 9 of 10.
 अ — the vowel your consonants have been hiding.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
@@ -147,7 +222,7 @@ Source: Saurmandal, Devanagari a stroke order.
 Write independent short a after a delay, then turn it into long aa.
 
 
-Lesson 7 of 7.
+Lesson 10 of 10.
 Six marks, named without the page — cold retrieval of the six marks, by name and by placement.
 
 Warm-up.

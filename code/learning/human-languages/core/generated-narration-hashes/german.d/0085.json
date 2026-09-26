@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:805af5af942f7936",
+  "lessonIds": [
+    "GE-C85-eis",
+    "GE-C85-huegel",
+    "GE-C85-wueste",
+    "GE-C85-pferd",
+    "GE-C85-kuh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch85.txt",
+  "json": "german/narration/ch85.json",
+  "textHash": "fnv1a64:43b0bea8527269ba",
+  "jsonHash": "fnv1a64:74b45b0bf9eaacec",
+  "findings": []
+}

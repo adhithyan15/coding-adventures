@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C129-arrabbiato",
+    "language": "italian",
+    "chapter": 129,
+    "sequence": 6440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2311ff9155ec50f5"
+  },
+  "findings": []
+}

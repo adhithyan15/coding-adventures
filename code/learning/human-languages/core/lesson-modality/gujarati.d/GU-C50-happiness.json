@@ -3,7 +3,7 @@
     "id": "GU-C50-happiness",
     "language": "gujarati",
     "chapter": 50,
-    "sequence": 2540,
+    "sequence": 2553,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3a17c3a94359a9d8"
+    "sourceHash": "fnv1a64:19493cbb1ffe7068"
   },
   "findings": []
 }

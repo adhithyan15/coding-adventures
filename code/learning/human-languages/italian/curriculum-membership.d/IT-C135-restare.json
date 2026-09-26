@@ -1,0 +1,11 @@
+{
+  "id": "IT-C135-restare",
+  "pathSegment": "IT-PATH-135-VERBI135",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-135-VERBI135",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C38-ferestadan",
+    "language": "persian",
+    "chapter": 38,
+    "sequence": 1770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37a949100b2d88d3"
+  },
+  "findings": []
+}

@@ -3,7 +3,7 @@
     "id": "GU-C56-shikhvu",
     "language": "gujarati",
     "chapter": 56,
-    "sequence": 2880,
+    "sequence": 2893,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6bc7adb89cf392e4"
+    "sourceHash": "fnv1a64:617a2832c9e4a6e0"
   },
   "findings": []
 }

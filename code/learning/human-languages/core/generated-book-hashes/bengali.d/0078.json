@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:2f508780ce1e0f98",
+  "lessonIds": [
+    "BN-C78-rat",
+    "BN-C78-sondhya",
+    "BN-C78-sokal",
+    "BN-C78-soptaho",
+    "BN-C78-mash"
+  ],
+  "tex": "bengali/book/chapters/ch78-night-evening-morning-week-month.tex"
+}

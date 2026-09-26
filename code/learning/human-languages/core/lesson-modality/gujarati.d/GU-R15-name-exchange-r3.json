@@ -3,7 +3,7 @@
     "id": "GU-R15-name-exchange-r3",
     "language": "gujarati",
     "chapter": 19,
-    "sequence": 690,
+    "sequence": 703,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:99a0244bce608269",
+    "sourceHash": "fnv1a64:fd6cfda134d4666e",
     "detachableSegments": [
       "Writing — from sound"
     ]

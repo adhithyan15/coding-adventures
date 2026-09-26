@@ -1,0 +1,11 @@
+{
+  "id": "IT-C87-cinema",
+  "pathSegment": "IT-PATH-87-LUOGHI87",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-87-LUOGHI87",
+      "order": 3
+    }
+  ]
+}

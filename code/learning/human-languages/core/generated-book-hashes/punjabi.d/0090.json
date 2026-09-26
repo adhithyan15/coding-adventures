@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:cd3218410507d3d7",
+  "lessonIds": [
+    "PA-C90-sarak",
+    "PA-C90-gali",
+    "PA-C90-baink",
+    "PA-C90-sateshan",
+    "PA-C90-gaddi"
+  ],
+  "tex": "punjabi/book/chapters/ch90-road-lane-bank-station-car.tex"
+}

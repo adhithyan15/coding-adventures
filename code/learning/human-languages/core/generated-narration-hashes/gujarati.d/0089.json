@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 89,
-  "sourceHash": "fnv1a64:de6bf9b5bc3d928b",
+  "sourceHash": "fnv1a64:8dbf2d2507e62c72",
   "lessonIds": [
     "GU-C89-student",
     "GU-C89-question",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch89.txt",
   "json": "gujarati/narration/ch89.json",
   "textHash": "fnv1a64:6e2078678c290c4c",
-  "jsonHash": "fnv1a64:a4a1145643839e63",
+  "jsonHash": "fnv1a64:ff45c9c68c9ab3df",
   "findings": []
 }

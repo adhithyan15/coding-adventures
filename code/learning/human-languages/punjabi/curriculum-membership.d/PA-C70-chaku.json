@@ -1,0 +1,11 @@
+{
+  "id": "PA-C70-chaku",
+  "pathSegment": "PA-PATH-70-HOME70",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-70-HOME70",
+      "order": 1
+    }
+  ]
+}

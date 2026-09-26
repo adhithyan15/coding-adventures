@@ -1,9 +1,10 @@
 {
   "language": "kannada",
   "chapter": 18,
-  "sourceHash": "fnv1a64:862f93c1fbff065e",
+  "sourceHash": "fnv1a64:c73d7b29a64ae99d",
   "lessonIds": [
     "KA-C18-gante",
+    "KA-C18-uurugoolu",
     "KA-S127-letter-uu",
     "KA-S149-digit-zero"
   ],
@@ -11,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch18.txt",
   "json": "kannada/narration/ch18.json",
-  "textHash": "fnv1a64:33bab0c356cbdd7f",
-  "jsonHash": "fnv1a64:1674874101c058ea",
+  "textHash": "fnv1a64:c44b962084909c6f",
+  "jsonHash": "fnv1a64:ebd1deba9b9cbc68",
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C68-malen",
+  "pathSegment": "GE-PATH-68-VERBEN5",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-68-VERBEN5",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:ae2137cc9cdc0d24",
+  "lessonIds": [
+    "FA-C63-mohem",
+    "FA-C63-ziba",
+    "FA-C63-sabz",
+    "FA-C63-zard",
+    "FA-C63-ghermez"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch63.txt",
+  "json": "persian/narration/ch63.json",
+  "textHash": "fnv1a64:ee1433652513a36b",
+  "jsonHash": "fnv1a64:273fdb2736127da8",
+  "findings": []
+}

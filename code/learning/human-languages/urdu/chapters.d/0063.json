@@ -1,0 +1,19 @@
+{
+  "chapter": 63,
+  "title": "Answer, Word, Game, Tree, Flower",
+  "label": "ch:ur-answer-word-game-tree-flower",
+  "canDo": "I can say an answer, a word, a game, a tree and a flower.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "UR-C63-phul",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 63: i can say an answer, a word, a game, a tree and a flower.",
+    "assesses": [
+      "UR-LEX-C63-SCHOOL63-03",
+      "UR-LEX-C63-SCHOOL63-04",
+      "UR-LEX-C63-SCHOOL63-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:c910df5333e78e98",
+  "lessonIds": [
+    "JA-C55-fun",
+    "JA-C55-natsu",
+    "JA-C55-fuyu",
+    "JA-C55-itsumo",
+    "JA-C55-mada"
+  ],
+  "tex": "japanese/book/chapters/ch55-minute-summer-winter-always-still.tex"
+}

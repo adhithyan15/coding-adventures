@@ -1,0 +1,11 @@
+{
+  "id": "PA-C81-mahinga",
+  "pathSegment": "PA-PATH-81-ADJ81",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-81-ADJ81",
+      "order": 1
+    }
+  ]
+}

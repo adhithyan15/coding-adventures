@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C77-badami",
+    "language": "bengali",
+    "chapter": 77,
+    "sequence": 4020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a9ae2e4040b8b17"
+  },
+  "findings": []
+}

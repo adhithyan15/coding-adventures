@@ -3,7 +3,7 @@
     "id": "GU-C29-hear-sooraj",
     "language": "gujarati",
     "chapter": 33,
-    "sequence": 1620,
+    "sequence": 1633,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2cea643f5b0c3e8e"
+    "sourceHash": "fnv1a64:f0e4adf18494e872"
   },
   "findings": []
 }

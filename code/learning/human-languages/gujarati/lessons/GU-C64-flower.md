@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C64-flower
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3240
+sequence: 3253
 chapter: 64
 type: word
 headword: "ફૂલ"

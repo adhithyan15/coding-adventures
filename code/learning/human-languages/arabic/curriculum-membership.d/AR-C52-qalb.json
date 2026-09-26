@@ -1,0 +1,11 @@
+{
+  "id": "AR-C52-qalb",
+  "pathSegment": "AR-PATH-52-BODY52",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-52-BODY52",
+      "order": 4
+    }
+  ]
+}

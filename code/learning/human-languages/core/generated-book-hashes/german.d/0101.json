@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:b7822234fdd86188",
+  "lessonIds": [
+    "GE-C101-dreissig",
+    "GE-C101-vierzig",
+    "GE-C101-fuenfzig",
+    "GE-C101-hundert",
+    "GE-C101-tausend"
+  ],
+  "tex": "german/book/chapters/ch101-thirty-forty-fifty-hundred-thousand.tex"
+}

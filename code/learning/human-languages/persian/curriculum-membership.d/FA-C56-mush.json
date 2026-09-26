@@ -1,0 +1,11 @@
+{
+  "id": "FA-C56-mush",
+  "pathSegment": "FA-PATH-56-ANIMALS56",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-56-ANIMALS56",
+      "order": 0
+    }
+  ]
+}

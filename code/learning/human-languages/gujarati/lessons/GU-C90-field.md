@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C90-field
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 4590
+sequence: 4603
 chapter: 90
 type: word
 headword: "ખેતર"

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C23-tanoshii",
+  "pathSegment": "JA-PATH-23-HEALTH23",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-23-HEALTH23",
+      "order": 3
+    }
+  ]
+}

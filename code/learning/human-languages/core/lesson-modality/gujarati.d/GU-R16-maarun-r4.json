@@ -3,7 +3,7 @@
     "id": "GU-R16-maarun-r4",
     "language": "gujarati",
     "chapter": 20,
-    "sequence": 710,
+    "sequence": 723,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ade5b3fe0a1c9779",
+    "sourceHash": "fnv1a64:d4d62462b8d7ee67",
     "detachableSegments": [
       "Writing — from sound"
     ]

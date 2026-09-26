@@ -1,0 +1,11 @@
+{
+  "id": "BN-C60-deyal",
+  "pathSegment": "BN-PATH-60-HOME60",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-60-HOME60",
+      "order": 2
+    }
+  ]
+}

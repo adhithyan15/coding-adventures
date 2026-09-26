@@ -1,0 +1,11 @@
+{
+  "id": "JA-C64-uni",
+  "pathSegment": "JA-PATH-64-WORLD64",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-64-WORLD64",
+      "order": 2
+    }
+  ]
+}

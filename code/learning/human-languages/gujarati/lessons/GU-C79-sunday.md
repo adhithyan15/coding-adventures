@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C79-sunday
 spine_node: SPINE-TAKE-LEAVE
-sequence: 4020
+sequence: 4033
 chapter: 79
 type: word
 headword: "રવિવાર"

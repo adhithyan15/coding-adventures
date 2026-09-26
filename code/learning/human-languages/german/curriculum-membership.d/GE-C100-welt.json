@@ -1,0 +1,11 @@
+{
+  "id": "GE-C100-welt",
+  "pathSegment": "GE-PATH-100-WELT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-100-WELT",
+      "order": 3
+    }
+  ]
+}

@@ -1,11 +1,11 @@
 {
   "id": "GU-W03-ii-matra",
   "pathSegment": "GU-PATH-DOORWAY-SCRIPT",
-  "pathOrder": 3,
+  "pathOrder": 6,
   "extensions": [
     {
       "id": "GU-EXT-018-DOORWAY-SCRIPT",
-      "order": 3
+      "order": 6
     }
   ]
 }

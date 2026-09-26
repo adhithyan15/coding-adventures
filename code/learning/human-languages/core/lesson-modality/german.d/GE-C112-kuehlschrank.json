@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C112-kuehlschrank",
+    "language": "german",
+    "chapter": 112,
+    "sequence": 4430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58e8a7572e07086d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Jacket, Tie, Belt, Gloves, Scarf",
+  "label": "ch:fr-jacket-tie-belt-gloves-scarf",
+  "canDo": "I can name a jacket, a tie, a belt, gloves, a scarf.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-R116-second-pass-the-house",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can name a jacket, a tie, a belt, gloves, a scarf.",
+    "assesses": [
+      "FR-LEX-C116-HABITS68-03",
+      "FR-LEX-C116-HABITS68-04",
+      "FR-LEX-C116-HABITS68-05"
+    ]
+  }
+}

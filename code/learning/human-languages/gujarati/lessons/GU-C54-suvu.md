@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C54-suvu
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2770
+sequence: 2783
 chapter: 54
 type: word
 headword: "સૂવું"

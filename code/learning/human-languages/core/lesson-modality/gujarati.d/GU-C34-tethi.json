@@ -3,7 +3,7 @@
     "id": "GU-C34-tethi",
     "language": "gujarati",
     "chapter": 38,
-    "sequence": 1970,
+    "sequence": 1983,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:19695a51260027ba"
+    "sourceHash": "fnv1a64:4f1accaa93d3c044"
   },
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "Grape, Jam, Cheese, Salt, Sugar",
+  "label": "ch:ge-grape-jam-cheese-salt-sugar",
+  "canDo": "I can say a grape, jam, cheese, salt and sugar.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GE-C73-zucker",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can say a grape, jam, cheese, salt and sugar.",
+    "assesses": [
+      "GE-LEX-C73-ESSEN5-03",
+      "GE-LEX-C73-ESSEN5-04",
+      "GE-LEX-C73-ESSEN5-05"
+    ]
+  }
+}

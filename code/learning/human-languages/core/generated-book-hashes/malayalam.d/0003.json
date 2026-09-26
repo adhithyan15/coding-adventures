@@ -1,9 +1,10 @@
 {
   "language": "malayalam",
   "chapter": 3,
-  "sourceHash": "fnv1a64:b59d6b57219fc806",
+  "sourceHash": "fnv1a64:1d71d4ce2329d714",
   "lessonIds": [
     "ML-C03-engane",
+    "ML-C03-ola",
     "ML-S126-letter-oo",
     "ML-C03-sukhamaano",
     "ML-S139-vowel-sign-e",

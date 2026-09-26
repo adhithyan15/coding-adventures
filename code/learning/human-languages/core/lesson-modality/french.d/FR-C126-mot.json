@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C126-mot",
+    "language": "french",
+    "chapter": 126,
+    "sequence": 5780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eafd9d27224c1b2f"
+  },
+  "findings": []
+}

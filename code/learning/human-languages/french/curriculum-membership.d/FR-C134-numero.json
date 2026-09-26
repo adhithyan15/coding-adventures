@@ -1,0 +1,11 @@
+{
+  "id": "FR-C134-numero",
+  "pathSegment": "FR-PATH-134-NATURE86",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-134-NATURE86",
+      "order": 3
+    }
+  ]
+}

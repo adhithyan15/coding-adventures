@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C53-atash",
+    "language": "persian",
+    "chapter": 53,
+    "sequence": 2540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b63845cdadbad141"
+  },
+  "findings": []
+}

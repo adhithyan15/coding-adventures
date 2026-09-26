@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:e29b0668a98b7bda",
+  "lessonIds": [
+    "AR-C82-jadid",
+    "AR-C82-qadim",
+    "AR-C82-jayyid",
+    "AR-C82-tawil",
+    "AR-C82-qasir"
+  ],
+  "tex": "arabic/book/chapters/ch82-new-old-good-long-short.tex"
+}

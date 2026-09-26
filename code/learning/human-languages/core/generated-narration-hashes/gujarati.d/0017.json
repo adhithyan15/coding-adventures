@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 17,
-  "sourceHash": "fnv1a64:921b1f391a4662e7",
+  "sourceHash": "fnv1a64:22c1aea718439217",
   "lessonIds": [
     "GU-C11-mitra",
     "GU-C11-kutumb",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch17.txt",
   "json": "gujarati/narration/ch17.json",
   "textHash": "fnv1a64:7e6b29260e9cf80f",
-  "jsonHash": "fnv1a64:1ac1f7b6afd63c4e",
+  "jsonHash": "fnv1a64:bc098516e64feeec",
   "findings": []
 }

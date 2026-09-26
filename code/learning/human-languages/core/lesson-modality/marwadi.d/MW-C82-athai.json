@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C82-athai",
+    "language": "marwadi",
+    "chapter": 82,
+    "sequence": 5420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a288be858ba44e2"
+  },
+  "findings": []
+}

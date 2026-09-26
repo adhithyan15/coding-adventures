@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:dad33cb9a42e7f4a",
+  "lessonIds": [
+    "UR-C83-anguthi",
+    "UR-C83-ghari",
+    "UR-C83-gyarah",
+    "UR-C83-barah",
+    "UR-C83-terah"
+  ],
+  "tex": "urdu/book/chapters/ch83-ring-watch-eleven-twelve-thirteen.tex"
+}

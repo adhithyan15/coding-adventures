@@ -1,0 +1,11 @@
+{
+  "id": "MR-C98-barpha",
+  "pathSegment": "MR-PATH-98-NATURE98",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-98-NATURE98",
+      "order": 4
+    }
+  ]
+}

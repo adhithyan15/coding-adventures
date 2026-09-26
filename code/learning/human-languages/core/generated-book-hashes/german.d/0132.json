@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:9d26ee7a0743f1ea",
+  "lessonIds": [
+    "GE-C132-fleissig",
+    "GE-C132-faul",
+    "GE-C132-wach",
+    "GE-C132-nett",
+    "GE-C132-freundlich",
+    "GE-R132-first-pass-describing-people-and-things",
+    "GE-R132-second-pass-more-describing-words"
+  ],
+  "tex": "german/book/chapters/ch132-hard-working-lazy-awake-nice-friendly.tex"
+}

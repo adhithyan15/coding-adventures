@@ -1,0 +1,11 @@
+{
+  "id": "FR-C129-prix",
+  "pathSegment": "FR-PATH-129-LOISIRS81",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-129-LOISIRS81",
+      "order": 4
+    }
+  ]
+}

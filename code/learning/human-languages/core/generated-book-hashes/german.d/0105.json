@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:f868fdb0119b0da0",
+  "lessonIds": [
+    "GE-C105-restaurant",
+    "GE-C105-baeckerei",
+    "GE-C105-kino",
+    "GE-C105-theater",
+    "GE-C105-rathaus"
+  ],
+  "tex": "german/book/chapters/ch105-restaurant-bakery-cinema-theatre-town-hall.tex"
+}

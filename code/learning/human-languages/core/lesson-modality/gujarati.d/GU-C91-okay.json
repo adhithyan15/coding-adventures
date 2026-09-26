@@ -3,7 +3,7 @@
     "id": "GU-C91-okay",
     "language": "gujarati",
     "chapter": 91,
-    "sequence": 4650,
+    "sequence": 4663,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:aa69cbc2b7e168bd"
+    "sourceHash": "fnv1a64:00b7fed36cbf94d7"
   },
   "findings": []
 }

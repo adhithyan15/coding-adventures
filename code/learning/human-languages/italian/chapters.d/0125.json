@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Noisy, Last, Famous, Important, Interesting",
+  "label": "ch:it-noisy-last-famous-important-interesting",
+  "canDo": "I can say noisy, last, famous, important and interesting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C125-interessante",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say noisy, last, famous, important and interesting.",
+    "assesses": [
+      "IT-LEX-C125-QUALITA125-03",
+      "IT-LEX-C125-QUALITA125-04",
+      "IT-LEX-C125-QUALITA125-05"
+    ]
+  }
+}

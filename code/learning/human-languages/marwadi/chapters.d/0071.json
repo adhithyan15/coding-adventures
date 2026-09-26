@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Goat, Sheep, Sparrow, Lion, Elephant",
+  "label": "ch:mw-goat-sheep-sparrow-lion-elephant",
+  "canDo": "I can say a goat, a sheep, a sparrow, a small bird, a lion, a tiger and an elephant.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C71-hathi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: i can say a goat, a sheep, a sparrow, a small bird, a lion, a tiger and an elephant.",
+    "assesses": [
+      "MW-LEX-C71-ANIMALS71-03",
+      "MW-LEX-C71-ANIMALS71-04",
+      "MW-LEX-C71-ANIMALS71-05"
+    ]
+  }
+}

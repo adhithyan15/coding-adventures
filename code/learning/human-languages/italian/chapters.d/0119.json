@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Wave, Desert, Volcano, Cave, Waterfall",
+  "label": "ch:it-wave-desert-volcano-cave-waterfall",
+  "canDo": "I can say a wave, a desert, a volcano, a cave and a waterfall.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C119-cascata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can say a wave, a desert, a volcano, a cave and a waterfall.",
+    "assesses": [
+      "IT-LEX-C119-NATURA119-03",
+      "IT-LEX-C119-NATURA119-04",
+      "IT-LEX-C119-NATURA119-05"
+    ]
+  }
+}

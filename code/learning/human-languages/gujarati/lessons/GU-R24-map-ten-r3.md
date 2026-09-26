@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R24-map-ten-r3
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1290
+sequence: 1303
 chapter: 28
 type: practice
 headword: શહેર — શાળા — રસ્તો — ગામ — દુકાન

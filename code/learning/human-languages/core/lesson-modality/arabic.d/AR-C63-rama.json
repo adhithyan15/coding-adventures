@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C63-rama",
+    "language": "arabic",
+    "chapter": 63,
+    "sequence": 2090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8489a7e24a14c843"
+  },
+  "findings": []
+}

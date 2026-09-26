@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Zero, Sixty, Seventy, Ninety, Thousand",
+  "label": "ch:fr-zero-sixty-seventy-ninety-thousand",
+  "canDo": "I can name zero, sixty, seventy, ninety, a thousand.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "FR-C136-mille",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: i can name zero, sixty, seventy, ninety, a thousand.",
+    "assesses": [
+      "FR-LEX-C136-NOMBRES88-03",
+      "FR-LEX-C136-NOMBRES88-04",
+      "FR-LEX-C136-NOMBRES88-05"
+    ]
+  }
+}

@@ -3,7 +3,7 @@
     "id": "GU-R39-one-to-ten",
     "language": "gujarati",
     "chapter": 43,
-    "sequence": 2260,
+    "sequence": 2273,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:076cd079ffd6556e"
+    "sourceHash": "fnv1a64:654d829be44f70fa"
   },
   "findings": []
 }

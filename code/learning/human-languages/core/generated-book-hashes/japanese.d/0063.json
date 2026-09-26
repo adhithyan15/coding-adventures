@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:607caa082c533c4f",
+  "lessonIds": [
+    "JA-C63-yume",
+    "JA-C63-matsuri",
+    "JA-C63-nishi",
+    "JA-C63-higashi",
+    "JA-C63-minami"
+  ],
+  "tex": "japanese/book/chapters/ch63-dream-festival-west-east-south.tex"
+}

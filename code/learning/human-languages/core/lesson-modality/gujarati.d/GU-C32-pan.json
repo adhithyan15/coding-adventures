@@ -3,7 +3,7 @@
     "id": "GU-C32-pan",
     "language": "gujarati",
     "chapter": 36,
-    "sequence": 1870,
+    "sequence": 1883,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2f6c935e2d811fb5"
+    "sourceHash": "fnv1a64:5cae20c10902be73"
   },
   "findings": []
 }

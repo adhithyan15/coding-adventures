@@ -1,0 +1,11 @@
+{
+  "id": "BN-C66-pathor",
+  "pathSegment": "BN-PATH-66-NATURE66",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-66-NATURE66",
+      "order": 4
+    }
+  ]
+}

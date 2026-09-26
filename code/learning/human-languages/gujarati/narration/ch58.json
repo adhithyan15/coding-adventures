@@ -4,11 +4,11 @@
   "chapter": 58,
   "title": "In the Pantry",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9e5be452c9c700f6",
+  "sourceHash": "fnv1a64:97ac856109723a3a",
   "lessons": [
     {
       "id": "GU-C58-rice-grain",
-      "sequence": 2940,
+      "sequence": 2953,
       "title": "ચોખા (cokhā) — rice (uncooked)",
       "headword": "ચોખા",
       "romanization": "cokhā",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cf36e339ce90dec",
+      "sourceHash": "fnv1a64:7181618ecb157f5c",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C58-flour",
-      "sequence": 2950,
+      "sequence": 2963,
       "title": "લોટ (loṭ) — flour",
       "headword": "લોટ",
       "romanization": "loṭ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ff9bfb11e969421",
+      "sourceHash": "fnv1a64:5102bfc2fd045093",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C58-ghee",
-      "sequence": 2960,
+      "sequence": 2973,
       "title": "ઘી (ghī) — ghee, clarified butter",
       "headword": "ઘી",
       "romanization": "ghī",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:162e779ab84d91cd",
+      "sourceHash": "fnv1a64:cc5b1a53d564aa61",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C58-yogurt",
-      "sequence": 2970,
+      "sequence": 2983,
       "title": "દહીં (dahī̃) — yogurt, curd",
       "headword": "દહીં",
       "romanization": "dahī̃",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d911764672911e7",
+      "sourceHash": "fnv1a64:cfbb7b796161773d",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C58-buttermilk",
-      "sequence": 2980,
+      "sequence": 2993,
       "title": "છાશ (chāś) — buttermilk",
       "headword": "છાશ",
       "romanization": "chāś",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb535b4494063094",
+      "sourceHash": "fnv1a64:c13c06ed8b6286f0",
       "notice": null,
       "blocks": [
         {

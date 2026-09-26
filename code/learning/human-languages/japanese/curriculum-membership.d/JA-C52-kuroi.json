@@ -1,0 +1,11 @@
+{
+  "id": "JA-C52-kuroi",
+  "pathSegment": "JA-PATH-52-ADJ52",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-52-ADJ52",
+      "order": 1
+    }
+  ]
+}

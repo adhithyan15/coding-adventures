@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:8c2c155ec123e13a",
+  "lessonIds": [
+    "MW-C70-abho",
+    "MW-C70-kutto",
+    "MW-C70-billi",
+    "MW-C70-gay",
+    "MW-C70-bhais"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch70.txt",
+  "json": "marwadi/narration/ch70.json",
+  "textHash": "fnv1a64:1058a2f02bc1599d",
+  "jsonHash": "fnv1a64:34deb175a45a32ac",
+  "findings": []
+}

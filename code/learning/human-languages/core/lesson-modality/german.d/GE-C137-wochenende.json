@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C137-wochenende",
+    "language": "german",
+    "chapter": 137,
+    "sequence": 5800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96b1100f5bcf3eef"
+  },
+  "findings": []
+}

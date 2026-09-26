@@ -1,0 +1,11 @@
+{
+  "id": "IT-C91-tra",
+  "pathSegment": "IT-PATH-91-LUOGHI91",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-91-LUOGHI91",
+      "order": 4
+    }
+  ]
+}

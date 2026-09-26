@@ -1,0 +1,19 @@
+{
+  "chapter": 55,
+  "title": "Wife, Child, Boy, Girl, Man",
+  "label": "ch:pa-wife-child-boy-girl-man",
+  "canDo": "I can say a wife, a child, a boy, a girl and a man.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-C55-admi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 55: i can say a wife, a child, a boy, a girl and a man.",
+    "assesses": [
+      "PA-LEX-C55-FAMILY55-03",
+      "PA-LEX-C55-FAMILY55-04",
+      "PA-LEX-C55-FAMILY55-05"
+    ]
+  }
+}

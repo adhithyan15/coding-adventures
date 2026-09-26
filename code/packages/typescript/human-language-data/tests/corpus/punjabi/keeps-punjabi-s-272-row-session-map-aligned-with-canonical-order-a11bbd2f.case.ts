@@ -20,6 +20,10 @@ it("keeps Punjabi's 272-row session map aligned with canonical order", () => {
   // 272 -> 278 rows: HL-C437 appends chapter 48, six `review` lessons, at the END
   // of the sequence. Appending rather than inserting is why this is a six-row
   // addition and not a renumbering: every existing session keeps its number.
+  // 278 -> 532 rows: chapters 49-98 (250 word lessons and four reviews) are
+  // appended the same way, after chapter 48.
+  // 532 -> 533 rows: HL-C443 inserts ਮੌਸਮ (mausam) before the chapter-20 ੌ
+  // lesson. This one IS an insertion, so every later session moves up by one.
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
@@ -34,8 +38,8 @@ it("keeps Punjabi's 272-row session map aligned with canonical order", () => {
       lessonId: match[3]!.trim(),
     }),
   );
-  expect(rows).toHaveLength(278);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 278 }, (_, index) => index + 1));
+  expect(rows).toHaveLength(533);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 533 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );

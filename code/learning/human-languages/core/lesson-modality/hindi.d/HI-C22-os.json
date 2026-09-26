@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C22-os",
+    "language": "hindi",
+    "chapter": 22,
+    "sequence": 706,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:55ae0d39dcd32ea5"
+  },
+  "findings": []
+}

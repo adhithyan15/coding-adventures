@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:af37feee8b35fbd2",
+  "lessonIds": [
+    "BN-C80-deri",
+    "BN-C80-age",
+    "BN-C80-pore",
+    "BN-C80-somoy",
+    "BN-C80-dupur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch80.txt",
+  "json": "bengali/narration/ch80.json",
+  "textHash": "fnv1a64:865f72d5751e64fc",
+  "jsonHash": "fnv1a64:727475eee67caff3",
+  "findings": []
+}

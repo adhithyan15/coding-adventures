@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "To go up, To go down, To stay, To rent, To repair",
+  "label": "ch:it-to-go-up-to-go-down-to-stay-to-rent-to-repair",
+  "canDo": "I can say to go up, to go down, to stay, to rent and to repair.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C135-riparare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say to go up, to go down, to stay, to rent and to repair.",
+    "assesses": [
+      "IT-LEX-C135-VERBI135-03",
+      "IT-LEX-C135-VERBI135-04",
+      "IT-LEX-C135-VERBI135-05"
+    ]
+  }
+}

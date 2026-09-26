@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:0028235d59dad308",
+  "lessonIds": [
+    "BN-C66-pahar",
+    "BN-C66-bon",
+    "BN-C66-nodi",
+    "BN-C66-pukur",
+    "BN-C66-pathor"
+  ],
+  "tex": "bengali/book/chapters/ch66-mountain-forest-river-pond-stone.tex"
+}

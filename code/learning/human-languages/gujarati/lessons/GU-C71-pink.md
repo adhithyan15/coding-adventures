@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C71-pink
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3630
+sequence: 3643
 chapter: 71
 type: word
 headword: "ગુલાબી"

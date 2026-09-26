@@ -3,7 +3,7 @@
     "id": "MR-R06-two-rows-recall",
     "language": "marathi",
     "chapter": 6,
-    "sequence": 77,
+    "sequence": 87,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3c195b029e9d975d"
+    "sourceHash": "fnv1a64:814a5939be8e1ac5"
   },
   "findings": []
 }

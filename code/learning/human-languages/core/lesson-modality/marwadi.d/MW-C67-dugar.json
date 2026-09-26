@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C67-dugar",
+    "language": "marwadi",
+    "chapter": 67,
+    "sequence": 4710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92244041b5591a7c"
+  },
+  "findings": []
+}

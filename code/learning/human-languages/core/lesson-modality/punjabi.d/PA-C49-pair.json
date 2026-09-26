@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C49-pair",
+    "language": "punjabi",
+    "chapter": 49,
+    "sequence": 2700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8766a7ace9e4420"
+  },
+  "findings": []
+}

@@ -3,7 +3,7 @@
     "id": "GU-C86-journey",
     "language": "gujarati",
     "chapter": 86,
-    "sequence": 4360,
+    "sequence": 4373,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a423d25875e8b53e"
+    "sourceHash": "fnv1a64:bb4bc9f1e429544e"
   },
   "findings": []
 }

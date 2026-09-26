@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C44-abmive",
+    "language": "persian",
+    "chapter": 44,
+    "sequence": 2050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:030de97be66d3d90"
+  },
+  "findings": []
+}

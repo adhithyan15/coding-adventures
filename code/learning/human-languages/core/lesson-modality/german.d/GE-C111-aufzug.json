@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C111-aufzug",
+    "language": "german",
+    "chapter": 111,
+    "sequence": 4380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ccfa57e0e9b059c1"
+  },
+  "findings": []
+}

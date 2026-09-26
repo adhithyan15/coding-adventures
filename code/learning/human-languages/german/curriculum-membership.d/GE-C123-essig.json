@@ -1,0 +1,11 @@
+{
+  "id": "GE-C123-essig",
+  "pathSegment": "GE-PATH-123-ESSEN123",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-123-ESSEN123",
+      "order": 2
+    }
+  ]
+}

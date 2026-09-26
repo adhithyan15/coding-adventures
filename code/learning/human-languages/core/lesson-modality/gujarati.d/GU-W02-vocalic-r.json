@@ -3,7 +3,7 @@
     "id": "GU-W02-vocalic-r",
     "language": "gujarati",
     "chapter": 2,
-    "sequence": 18,
+    "sequence": 19,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:1e46bb4a565896a0",
+    "sourceHash": "fnv1a64:d6628fcd97d44d07",
     "detachableSegments": [
       "Script — meet the shape",
       "Writing — notice and trace",

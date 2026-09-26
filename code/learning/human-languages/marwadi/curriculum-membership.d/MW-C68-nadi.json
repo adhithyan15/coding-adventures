@@ -1,0 +1,11 @@
+{
+  "id": "MW-C68-nadi",
+  "pathSegment": "MW-PATH-68-NATURE68",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-68-NATURE68",
+      "order": 1
+    }
+  ]
+}

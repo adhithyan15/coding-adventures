@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C03-majaa
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 210
+sequence: 223
 chapter: 9
 type: word
 headword: મજા

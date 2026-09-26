@@ -1,0 +1,11 @@
+{
+  "id": "AR-C92-funduq",
+  "pathSegment": "AR-PATH-92-TOWN92",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-92-TOWN92",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C07-dhol",
+    "language": "gujarati",
+    "chapter": 7,
+    "sequence": 98,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7fd26992da6f83f2"
+  },
+  "findings": []
+}

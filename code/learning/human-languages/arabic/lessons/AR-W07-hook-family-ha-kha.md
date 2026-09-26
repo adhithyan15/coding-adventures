@@ -8,20 +8,20 @@ type: writing
 headword: "ح، خ، ج"
 gloss: a second dots-family on a new skeleton — the hook-and-tail body ḥāʾ, khāʾ, jīm
 romanization: "ḥāʾ, khāʾ, jīm"
-prerequisites: [AR-W06-hamza]
+prerequisites: [AR-W06-hamza, AR-C03-haajj]
 sounds: [arabic-ha-deep, arabic-kha, arabic-jim]
 roots: [phoenician-heth, phoenician-giml]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03]
+  knowledge: [AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03, AR-LEX-ANCHOR-HAAJJ]
 introduces:
   knowledge: [AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02]
+  knowledge: [AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02, AR-LEX-ANCHOR-HAAJJ]
 skills: [speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -33,7 +33,7 @@ reviews_of: [AR-W06-hamza, AR-W06-harakat-and-hamza, AR-W04-dots-family-nun-ta, 
 # ح، خ، ج — the dots trick, on a brand-new body
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03, AR-LEX-ANCHOR-HAAJJ] -->
 
 [PAUSE 2s] Before the new letters, point once to **ْ**, **ّ**, and **ً**. Say their
 jobs: “no vowel”, “double”, “-an”. If one feels slow, trace it once. Then leave

@@ -2,7 +2,7 @@
 schema_version: 2
 id: MR-W03-dhanyavad-write
 spine_node: SPINE-COURTESY-THANK
-sequence: 33
+sequence: 37
 delivery: script
 chapter: 3
 type: writing

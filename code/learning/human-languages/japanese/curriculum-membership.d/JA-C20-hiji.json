@@ -1,0 +1,11 @@
+{
+  "id": "JA-C20-hiji",
+  "pathSegment": "JA-PATH-20-BODY20",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-20-BODY20",
+      "order": 1
+    }
+  ]
+}

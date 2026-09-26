@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 101,
+  "output": "marathi/book/chapters/ch101-mouse-lion-tiger-elephant-monkey.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C98-vaso",
+    "language": "italian",
+    "chapter": 98,
+    "sequence": 4640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2080264186c6293"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:96c0dab9142dc6de",
+  "lessonIds": [
+    "UR-C58-khirki",
+    "UR-C58-kursi",
+    "UR-C58-divar",
+    "UR-C58-chhat",
+    "UR-C58-bistar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch58.txt",
+  "json": "urdu/narration/ch58.json",
+  "textHash": "fnv1a64:20673797948c45ce",
+  "jsonHash": "fnv1a64:9c19e1d9ba807e37",
+  "findings": []
+}

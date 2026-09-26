@@ -9,20 +9,20 @@ type: writing
 headword: "।"
 romanization: "danda"
 gloss: the upright stroke that ends a Devanagari sentence, and the full stop that has largely replaced it
-prerequisites: [MR-W64-pha, MR-W33-question-mark, MR-W34-comma]
+prerequisites: [MR-W64-pha, MR-W33-question-mark, MR-W34-comma, MR-C64-phanas]
 sounds: []
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-PHA-01, MR-SCRIPT-QUESTION-MARK, MR-SCRIPT-COMMA]
+  knowledge: [MR-SCRIPT-PHA-01, MR-SCRIPT-QUESTION-MARK, MR-SCRIPT-COMMA, MR-LEX-ANCHOR-PHANAS]
 introduces:
   knowledge: [MR-SCRIPT-DANDA]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-DANDA, MR-SCRIPT-QUESTION-MARK, MR-SCRIPT-COMMA]
+  knowledge: [MR-SCRIPT-DANDA, MR-SCRIPT-QUESTION-MARK, MR-SCRIPT-COMMA, MR-LEX-ANCHOR-PHANAS]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W33-question-mark, MR-W34-comma]
 # । — the stroke that ends an older sentence
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-QUESTION-MARK, MR-SCRIPT-COMMA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-QUESTION-MARK, MR-SCRIPT-COMMA, MR-LEX-ANCHOR-PHANAS] -->
 
 [PAUSE 2s] Name the two marks you have been writing that Marathi borrowed whole
 from the Latin alphabet — the one that asks and the one that lists.

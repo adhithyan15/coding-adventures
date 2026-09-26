@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R37-first-pass-the-body-health-and-family",
+    "language": "japanese",
+    "chapter": 37,
+    "sequence": 2510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d3569e28f487bb52"
+  },
+  "findings": []
+}

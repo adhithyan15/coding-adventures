@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:2899c6e48eb26eee",
+  "lessonIds": [
+    "UR-C50-gana",
+    "UR-C50-nachna",
+    "UR-C50-milna",
+    "UR-C50-rahna",
+    "UR-C50-sikhna"
+  ],
+  "tex": "urdu/book/chapters/ch50-to-sing-to-dance-to-meet-to-live-to-learn.tex"
+}

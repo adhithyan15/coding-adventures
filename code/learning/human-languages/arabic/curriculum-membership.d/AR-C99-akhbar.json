@@ -1,0 +1,11 @@
+{
+  "id": "AR-C99-akhbar",
+  "pathSegment": "AR-PATH-99-WORLD99",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-99-WORLD99",
+      "order": 1
+    }
+  ]
+}

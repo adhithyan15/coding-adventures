@@ -4,11 +4,11 @@
   "chapter": 73,
   "title": "Light, New, Old, Hot, Cheap",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e111b9197e560b35",
+  "sourceHash": "fnv1a64:ee05cf70e78e86c3",
   "lessons": [
     {
       "id": "GU-C73-light",
-      "sequence": 3710,
+      "sequence": 3723,
       "title": "હલકું (halkũ) — light (not heavy)",
       "headword": "હલકું",
       "romanization": "halkũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30b150a249604e60",
+      "sourceHash": "fnv1a64:dba62a69d81d8b92",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C73-new",
-      "sequence": 3720,
+      "sequence": 3733,
       "title": "નવું (navũ) — new",
       "headword": "નવું",
       "romanization": "navũ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:459aaf1ae8f896e7",
+      "sourceHash": "fnv1a64:2c7459d13a368cb7",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C73-old",
-      "sequence": 3730,
+      "sequence": 3743,
       "title": "જૂનું (jūnũ) — old (of things)",
       "headword": "જૂનું",
       "romanization": "jūnũ",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0100d76c74076a9",
+      "sourceHash": "fnv1a64:49dedcd41dc7001f",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C73-hot",
-      "sequence": 3740,
+      "sequence": 3753,
       "title": "ગરમ (garam) — hot",
       "headword": "ગરમ",
       "romanization": "garam",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f28807982c08bff",
+      "sourceHash": "fnv1a64:8305cdd547ede093",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C73-cheap",
-      "sequence": 3750,
+      "sequence": 3763,
       "title": "સસ્તું (sastũ) — cheap",
       "headword": "સસ્તું",
       "romanization": "sastũ",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49142ee24965e625",
+      "sourceHash": "fnv1a64:99ae7458430c3b17",
       "notice": null,
       "blocks": [
         {

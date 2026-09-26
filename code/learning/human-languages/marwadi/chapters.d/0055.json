@@ -1,0 +1,19 @@
+{
+  "chapter": 55,
+  "title": "To meet, To learn, To forget, To bring, To send",
+  "label": "ch:mw-to-meet-to-learn-to-forget-to-bring-to-send",
+  "canDo": "I can say to meet, to learn, to forget, to bring and to send.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C55-bhejno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 55: i can say to meet, to learn, to forget, to bring and to send.",
+    "assesses": [
+      "MW-LEX-C55-VERBS55-03",
+      "MW-LEX-C55-VERBS55-04",
+      "MW-LEX-C55-VERBS55-05"
+    ]
+  }
+}

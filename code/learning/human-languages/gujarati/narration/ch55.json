@@ -4,11 +4,11 @@
   "chapter": 55,
   "title": "Cook, Wash, Give, Bring, Drink",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0d2f09579883d219",
+  "sourceHash": "fnv1a64:ef521b65a41d4da9",
   "lessons": [
     {
       "id": "GU-C55-randhvu",
-      "sequence": 2790,
+      "sequence": 2803,
       "title": "રાંધવું (rā̃dhvũ) — to cook",
       "headword": "રાંધવું",
       "romanization": "rā̃dhvũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02eb648981e4cab6",
+      "sourceHash": "fnv1a64:e54f0b153c4ac92f",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C55-dhovu",
-      "sequence": 2800,
+      "sequence": 2813,
       "title": "ધોવું (dhovũ) — to wash",
       "headword": "ધોવું",
       "romanization": "dhovũ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5373bc9dcb7fc8fe",
+      "sourceHash": "fnv1a64:c683d67217340b4a",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C55-aapvu",
-      "sequence": 2810,
+      "sequence": 2823,
       "title": "આપવું (āpvũ) — to give",
       "headword": "આપવું",
       "romanization": "āpvũ",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ad2ea027d8d0492",
+      "sourceHash": "fnv1a64:b6cbb0b52e2158f4",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C55-laavvu",
-      "sequence": 2820,
+      "sequence": 2833,
       "title": "લાવવું (lāvvũ) — to bring",
       "headword": "લાવવું",
       "romanization": "lāvvũ",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0699241c666ee4d9",
+      "sourceHash": "fnv1a64:309397e82d8208e9",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C55-pivu",
-      "sequence": 2830,
+      "sequence": 2843,
       "title": "પીવું (pīvũ) — to drink",
       "headword": "પીવું",
       "romanization": "pīvũ",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6384af5293918a8f",
+      "sourceHash": "fnv1a64:60f895ed005e454d",
       "notice": null,
       "blocks": [
         {

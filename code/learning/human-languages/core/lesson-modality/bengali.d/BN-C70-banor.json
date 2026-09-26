@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C70-banor",
+    "language": "bengali",
+    "chapter": 70,
+    "sequence": 3670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:748ebe168bffd757"
+  },
+  "findings": []
+}

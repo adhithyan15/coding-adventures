@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Sand, Moon, Sea, Fire, Ice",
+  "label": "ch:bn-sand-moon-sea-fire-ice",
+  "canDo": "I can say sand, the moon, the sea, fire and ice.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C67-boroph",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can say sand, the moon, the sea, fire and ice.",
+    "assesses": [
+      "BN-LEX-C67-NATURE67-03",
+      "BN-LEX-C67-NATURE67-04",
+      "BN-LEX-C67-NATURE67-05"
+    ]
+  }
+}

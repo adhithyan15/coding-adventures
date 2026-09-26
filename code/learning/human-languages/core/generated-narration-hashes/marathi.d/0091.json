@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:6d830607722e814b",
+  "lessonIds": [
+    "MR-C91-jina",
+    "MR-C91-arsa",
+    "MR-C91-diva",
+    "MR-C91-pankha",
+    "MR-C91-killi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch91.txt",
+  "json": "marathi/narration/ch91.json",
+  "textHash": "fnv1a64:6de03a1ee0912e57",
+  "jsonHash": "fnv1a64:391892dfe178b302",
+  "findings": []
+}

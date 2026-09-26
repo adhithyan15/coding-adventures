@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C126-cattivo",
+    "language": "italian",
+    "chapter": 126,
+    "sequence": 6180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fea7d860e8b9ac88"
+  },
+  "findings": []
+}

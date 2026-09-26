@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C105-rikama",
+    "language": "marathi",
+    "chapter": 105,
+    "sequence": 4660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d5c3f933e37098b"
+  },
+  "findings": []
+}

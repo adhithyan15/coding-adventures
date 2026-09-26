@@ -1,11 +1,11 @@
 {
   "id": "TE-S134-vowel-sign-uu",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 29,
+  "pathOrder": 31,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 29
+      "order": 31
     }
   ]
 }

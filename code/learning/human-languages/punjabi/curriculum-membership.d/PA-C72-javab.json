@@ -1,0 +1,11 @@
+{
+  "id": "PA-C72-javab",
+  "pathSegment": "PA-PATH-72-SCHOOL72",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-72-SCHOOL72",
+      "order": 3
+    }
+  ]
+}

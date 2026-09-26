@@ -1,0 +1,11 @@
+{
+  "id": "IT-C94-televisore",
+  "pathSegment": "IT-PATH-94-CASA94",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-94-CASA94",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:5b563f2a6e2e4bee",
+  "lessonIds": [
+    "FR-C135-seconde",
+    "FR-C135-monnaie",
+    "FR-C135-date",
+    "FR-C135-siecle",
+    "FR-C135-courriel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch135.txt",
+  "json": "french/narration/ch135.json",
+  "textHash": "fnv1a64:e7501a9876225313",
+  "jsonHash": "fnv1a64:38c8cc2f075af328",
+  "findings": []
+}

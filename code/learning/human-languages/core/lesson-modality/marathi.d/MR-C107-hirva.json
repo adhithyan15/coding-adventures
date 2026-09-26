@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C107-hirva",
+    "language": "marathi",
+    "chapter": 107,
+    "sequence": 4760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8646e115732f8d1"
+  },
+  "findings": []
+}

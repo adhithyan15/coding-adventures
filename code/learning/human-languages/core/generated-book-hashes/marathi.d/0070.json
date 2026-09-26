@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:32efcf5f94815df2",
+  "lessonIds": [
+    "MR-C70-hat",
+    "MR-C70-pay",
+    "MR-C70-kes",
+    "MR-C70-dat",
+    "MR-C70-gala"
+  ],
+  "tex": "marathi/book/chapters/ch70-hand-foot-hair-tooth-throat.tex"
+}

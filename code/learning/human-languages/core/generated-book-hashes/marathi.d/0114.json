@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:60bd95f755d2a6ec",
+  "lessonIds": [
+    "MR-C114-bas",
+    "MR-C114-pul",
+    "MR-C114-mandir",
+    "MR-C114-karyalay",
+    "MR-C114-polis"
+  ],
+  "tex": "marathi/book/chapters/ch114-bus-bridge-temple-office-police.tex"
+}

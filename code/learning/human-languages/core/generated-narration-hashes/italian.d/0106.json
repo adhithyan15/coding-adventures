@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:eef490c65398008d",
+  "lessonIds": [
+    "IT-C106-manzo",
+    "IT-C106-verdure",
+    "IT-C106-fungo",
+    "IT-C106-fagioli",
+    "IT-C106-cetriolo",
+    "IT-R106-first-pass-things-clothes-and-tools",
+    "IT-R106-second-pass-food-and-drink"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch106.txt",
+  "json": "italian/narration/ch106.json",
+  "textHash": "fnv1a64:508ce5ec6e6f78c0",
+  "jsonHash": "fnv1a64:ac15ce7c1a3fba64",
+  "findings": []
+}

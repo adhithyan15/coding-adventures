@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C88-gift
 spine_node: SPINE-COURTESY-THANK
-sequence: 4500
+sequence: 4513
 chapter: 88
 type: word
 headword: "ભેટ"

@@ -9,17 +9,17 @@ type: writing
 headword: "ൂ"
 gloss: the single character ◌ൂ — recognised inside words you already say
 romanization: "ū"
-prerequisites: [ML-S116-letter-u]
+prerequisites: [ML-S116-letter-u, ML-C04-koodu]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-116]
+  knowledge: [ML-SCRIPT-RECOG-116, ML-LEX-ANCHOR-KOODU]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-141]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-116, ML-SCRIPT-RECOG-141]
+  knowledge: [ML-SCRIPT-RECOG-116, ML-SCRIPT-RECOG-141, ML-LEX-ANCHOR-KOODU]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-S116-letter-u]
 # ◌ൂ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-116] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-116, ML-LEX-ANCHOR-KOODU] -->
 
 [PAUSE 1s] Before the new one: ഉ — what does it do?
 

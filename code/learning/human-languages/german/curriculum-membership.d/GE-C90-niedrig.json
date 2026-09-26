@@ -1,0 +1,11 @@
+{
+  "id": "GE-C90-niedrig",
+  "pathSegment": "GE-PATH-90-ADJ2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-90-ADJ2",
+      "order": 3
+    }
+  ]
+}

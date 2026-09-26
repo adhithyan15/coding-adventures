@@ -9,7 +9,7 @@ headword: گرفتن
 romanization: gereftan
 gloss: to take — and the clearest English cousin in this book
 concept_tag: VERB-TAKE
-prerequisites: [FA-C07-neveshtan]
+prerequisites: [FA-C07-neveshtan, FA-C03-shoma-to-more]
 sounds: [rtl, persian-gaf, short-vowels-unwritten]
 roots: [old-persian-grab, pie-ghrebh, persian-present-stem-gir]
 etymology_hook: gereftan is the same word as English grab — from *gʰrebh₂-, “to seize” — and the family also gave grip, grasp and German greifen.

@@ -4,11 +4,241 @@
   "chapter": 6,
   "title": "Four Final Forms Before the Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9c162448109bb39e",
+  "sourceHash": "fnv1a64:9791fec0538cf9a1",
   "lessons": [
     {
+      "id": "GU-C06-ukhaanun",
+      "sequence": 89,
+      "title": "ઉખાણું (ukhāṇũ) — a riddle",
+      "headword": "ઉખાણું",
+      "romanization": "ukhāṇũ",
+      "gloss": "a riddle",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:8f55021abda479f2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say cappal and what it means, then say thank you (ābhār)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઉખાણું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઉખાણું — ukhāṇũ — \"a riddle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ukhāṇũ. Look at its shape as you say it: the lessons that follow take pieces of it, ઉ and ખ (kha), and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukhāṇũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukhāṇũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukhāṇũ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukhāṇũ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a riddle\"? (ઉખાણું, ukhāṇũ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C06-eklun",
+      "sequence": 90,
+      "title": "એકલું (eklũ) — alone",
+      "headword": "એકલું",
+      "romanization": "eklũ",
+      "gloss": "alone",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:255601b84f114b76",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say bagalo and what it means, then write the ૃ hook once from memory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: એકલું",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "એકલું — eklũ — \"alone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: eklũ. Look at its shape as you say it: the lessons that follow take pieces of it, એ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eklũ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eklũ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eklũ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eklũ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"alone\"? (એકલું, eklũ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GU-W06-ga",
-      "sequence": 81,
+      "sequence": 91,
       "title": "ગ — the consonant ga",
       "headword": "ગ",
       "romanization": "ga",
@@ -21,7 +251,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9a1bb6d95afed354",
+      "sourceHash": "fnv1a64:9ca44c2ca108720f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -131,7 +361,7 @@
     },
     {
       "id": "GU-W06-independent-e",
-      "sequence": 82,
+      "sequence": 92,
       "title": "એ — independent e",
       "headword": "એ",
       "romanization": "e",
@@ -144,7 +374,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7dcf84b27c51f958",
+      "sourceHash": "fnv1a64:e3de5661a34643af",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -254,7 +484,7 @@
     },
     {
       "id": "GU-W06-kha",
-      "sequence": 83,
+      "sequence": 93,
       "title": "ખ — the consonant kha",
       "headword": "ખ",
       "romanization": "kha",
@@ -267,7 +497,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:985fc4f1d080dea3",
+      "sourceHash": "fnv1a64:6407f4a6f5cd49c4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -377,7 +607,7 @@
     },
     {
       "id": "GU-W06-independent-u",
-      "sequence": 84,
+      "sequence": 94,
       "title": "ઉ — independent u",
       "headword": "ઉ",
       "romanization": "u",
@@ -390,7 +620,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1eababbfe1d9fa22",
+      "sourceHash": "fnv1a64:324a03561790a439",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -500,7 +730,7 @@
     },
     {
       "id": "GU-R06-first-four-r1",
-      "sequence": 85,
+      "sequence": 95,
       "title": "ગ — એ — ખ — ઉ (ga — independent e — kha — independent u): four forms return",
       "headword": "ગ — એ — ખ — ઉ",
       "romanization": "ga — independent e — kha — independent u",
@@ -513,7 +743,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:2e445c37db9733ab",
+      "sourceHash": "fnv1a64:d782d23974f8d85a",
       "notice": {
         "modality": "pen",
         "needs": [

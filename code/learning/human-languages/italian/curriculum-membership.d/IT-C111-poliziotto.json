@@ -1,0 +1,11 @@
+{
+  "id": "IT-C111-poliziotto",
+  "pathSegment": "IT-PATH-111-LAVORO111",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-111-LAVORO111",
+      "order": 2
+    }
+  ]
+}

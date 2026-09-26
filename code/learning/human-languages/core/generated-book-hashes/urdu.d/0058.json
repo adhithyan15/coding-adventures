@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:be7e860085f70569",
+  "lessonIds": [
+    "UR-C58-khirki",
+    "UR-C58-kursi",
+    "UR-C58-divar",
+    "UR-C58-chhat",
+    "UR-C58-bistar"
+  ],
+  "tex": "urdu/book/chapters/ch58-window-chair-wall-roof-bed.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R62-first-pass-the-body-family-verbs-and-food",
+    "language": "urdu",
+    "chapter": 62,
+    "sequence": 3180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d36e15d0adac12e2"
+  },
+  "findings": []
+}

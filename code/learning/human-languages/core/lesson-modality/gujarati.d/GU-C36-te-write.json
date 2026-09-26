@@ -3,7 +3,7 @@
     "id": "GU-C36-te-write",
     "language": "gujarati",
     "chapter": 40,
-    "sequence": 2050,
+    "sequence": 2063,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:dc0352c151c5f581",
+    "sourceHash": "fnv1a64:c08bcdfcc5ae725f",
     "detachableSegments": [
       "Script — the same stroke, a third time",
       "Writing — guided copy, model in view"

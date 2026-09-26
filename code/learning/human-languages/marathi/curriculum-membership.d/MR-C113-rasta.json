@@ -1,0 +1,11 @@
+{
+  "id": "MR-C113-rasta",
+  "pathSegment": "MR-PATH-113-TOWN113",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-113-TOWN113",
+      "order": 1
+    }
+  ]
+}

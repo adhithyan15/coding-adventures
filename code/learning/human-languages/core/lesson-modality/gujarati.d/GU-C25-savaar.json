@@ -3,7 +3,7 @@
     "id": "GU-C25-savaar",
     "language": "gujarati",
     "chapter": 29,
-    "sequence": 1300,
+    "sequence": 1313,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8806469075e6e7de",
+    "sourceHash": "fnv1a64:7f484f6c12cd28ca",
     "detachableSegments": [
       "Writing — guided copy, model in view"
     ]

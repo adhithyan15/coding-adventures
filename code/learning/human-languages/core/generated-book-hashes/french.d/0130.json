@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:2a06acb3bd6b5029",
+  "lessonIds": [
+    "FR-C130-rose",
+    "FR-C130-violet",
+    "FR-C130-marron",
+    "FR-C130-brun",
+    "FR-C130-joli"
+  ],
+  "tex": "french/book/chapters/ch130-pink-purple-brown-chestnut-brown-of-hair-pretty.tex"
+}

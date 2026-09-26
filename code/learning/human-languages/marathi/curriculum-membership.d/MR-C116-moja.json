@@ -1,0 +1,11 @@
+{
+  "id": "MR-C116-moja",
+  "pathSegment": "MR-PATH-116-CLOTHES116",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-116-CLOTHES116",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:e60759ed0a26b0d9",
+  "lessonIds": [
+    "GE-C117-geldboerse",
+    "GE-C117-ring",
+    "GE-C117-kette",
+    "GE-C117-geschenk",
+    "GE-C117-foto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch117.txt",
+  "json": "german/narration/ch117.json",
+  "textHash": "fnv1a64:401583afc27c88f1",
+  "jsonHash": "fnv1a64:e6d05895073331d0",
+  "findings": []
+}

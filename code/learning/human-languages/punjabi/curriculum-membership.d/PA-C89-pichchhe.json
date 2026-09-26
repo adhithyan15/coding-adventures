@@ -1,0 +1,11 @@
+{
+  "id": "PA-C89-pichchhe",
+  "pathSegment": "PA-PATH-89-PLACE89",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-89-PLACE89",
+      "order": 1
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     "id": "GU-C74-up",
     "language": "gujarati",
     "chapter": 74,
-    "sequence": 3790,
+    "sequence": 3803,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7d760befdee58146"
+    "sourceHash": "fnv1a64:d258cd60f1a487ab"
   },
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:13928078e676dda0",
+  "lessonIds": [
+    "PA-C89-sahmane",
+    "PA-C89-pichchhe",
+    "PA-C89-itthe",
+    "PA-C89-utthe",
+    "PA-C89-dukan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch89.txt",
+  "json": "punjabi/narration/ch89.json",
+  "textHash": "fnv1a64:933e216adea2b6c1",
+  "jsonHash": "fnv1a64:17788f9dda07b9b3",
+  "findings": []
+}

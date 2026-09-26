@@ -1,0 +1,11 @@
+{
+  "id": "UR-C54-kela",
+  "pathSegment": "UR-PATH-54-FOOD54",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-54-FOOD54",
+      "order": 4
+    }
+  ]
+}

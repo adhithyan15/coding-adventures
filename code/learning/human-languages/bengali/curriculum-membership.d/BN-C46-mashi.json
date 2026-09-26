@@ -1,0 +1,11 @@
+{
+  "id": "BN-C46-mashi",
+  "pathSegment": "BN-PATH-46-FAMILY46",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-46-FAMILY46",
+      "order": 4
+    }
+  ]
+}

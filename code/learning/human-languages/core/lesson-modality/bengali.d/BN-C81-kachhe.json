@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C81-kachhe",
+    "language": "bengali",
+    "chapter": 81,
+    "sequence": 4200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:deb56ac5f8560b62"
+  },
+  "findings": []
+}

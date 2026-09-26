@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C57-vechvu
 spine_node: SPINE-COURTESY-THANK
-sequence: 2900
+sequence: 2913
 chapter: 57
 type: word
 headword: "વેચવું"

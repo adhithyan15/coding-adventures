@@ -1,0 +1,11 @@
+{
+  "id": "GE-C96-flugzeug",
+  "pathSegment": "GE-PATH-96-STADT1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-96-STADT1",
+      "order": 3
+    }
+  ]
+}

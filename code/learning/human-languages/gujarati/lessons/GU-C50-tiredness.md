@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C50-tiredness
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2580
+sequence: 2593
 chapter: 50
 type: word
 headword: "થાક"

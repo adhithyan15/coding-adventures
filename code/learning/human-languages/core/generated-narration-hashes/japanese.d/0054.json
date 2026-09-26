@@ -1,0 +1,21 @@
+{
+  "language": "japanese",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:d234376c085921c0",
+  "lessonIds": [
+    "JA-C54-yuugata",
+    "JA-C54-ashita",
+    "JA-C54-ima",
+    "JA-C54-mainichi",
+    "JA-C54-toshi",
+    "JA-R54-first-pass-food-and-the-home",
+    "JA-R54-second-pass-school-nature-and-animals"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "japanese/narration/ch54.txt",
+  "json": "japanese/narration/ch54.json",
+  "textHash": "fnv1a64:d007e7a1fa950145",
+  "jsonHash": "fnv1a64:c2c73bce0850aa83",
+  "findings": []
+}

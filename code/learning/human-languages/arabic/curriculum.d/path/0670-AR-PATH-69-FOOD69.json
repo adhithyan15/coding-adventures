@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-69-FOOD69",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "AR-EXT-69-FOOD69"
+  ],
+  "after": []
+}

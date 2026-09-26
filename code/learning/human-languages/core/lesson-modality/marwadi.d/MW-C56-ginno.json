@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C56-ginno",
+    "language": "marwadi",
+    "chapter": 56,
+    "sequence": 4100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bf60c91b43a6a1c"
+  },
+  "findings": []
+}

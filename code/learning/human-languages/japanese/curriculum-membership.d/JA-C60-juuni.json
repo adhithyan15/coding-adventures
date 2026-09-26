@@ -1,0 +1,11 @@
+{
+  "id": "JA-C60-juuni",
+  "pathSegment": "JA-PATH-60-NUMBERS60",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-60-NUMBERS60",
+      "order": 1
+    }
+  ]
+}

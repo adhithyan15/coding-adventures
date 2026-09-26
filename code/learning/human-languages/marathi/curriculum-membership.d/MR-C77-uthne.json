@@ -1,0 +1,11 @@
+{
+  "id": "MR-C77-uthne",
+  "pathSegment": "MR-PATH-77-FAMILY77",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-77-FAMILY77",
+      "order": 4
+    }
+  ]
+}

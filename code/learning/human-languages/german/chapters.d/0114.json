@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Blanket, Towel, Soap, Toothbrush, Toothpaste",
+  "label": "ch:ge-blanket-towel-soap-toothbrush-toothpaste",
+  "canDo": "I can say a blanket, a towel, soap, a toothbrush and toothpaste.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C114-zahnpasta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say a blanket, a towel, soap, a toothbrush and toothpaste.",
+    "assesses": [
+      "GE-LEX-C114-HAUS114-03",
+      "GE-LEX-C114-HAUS114-04",
+      "GE-LEX-C114-HAUS114-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C109-mhatara",
+    "language": "marathi",
+    "chapter": 109,
+    "sequence": 4850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7fb557dea533d084"
+  },
+  "findings": []
+}

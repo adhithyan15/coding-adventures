@@ -4,11 +4,11 @@
   "chapter": 37,
   "title": "The Word That Carries a Thought",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cb2f64ebf28b271d",
+  "sourceHash": "fnv1a64:b5f178e63377eb59",
   "lessons": [
     {
       "id": "GU-C33-ke",
-      "sequence": 1880,
+      "sequence": 1893,
       "title": "કે (ke) — that",
       "headword": "કે",
       "romanization": "ke",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:338d813acc6ba285",
+      "sourceHash": "fnv1a64:cfc8d1b80bcf1935",
       "notice": null,
       "blocks": [
         {
@@ -132,7 +132,7 @@
     },
     {
       "id": "GU-C33-vichaarun-ke",
-      "sequence": 1890,
+      "sequence": 1903,
       "title": "વિચારું છું કે (vichārũ chhũ ke) — I think that…",
       "headword": "વિચારું છું કે",
       "romanization": "vichārũ chhũ ke",
@@ -143,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee6176bab0c2e7aa",
+      "sourceHash": "fnv1a64:8d27189fcc751701",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,7 @@
     },
     {
       "id": "GU-C33-ke-write",
-      "sequence": 1900,
+      "sequence": 1913,
       "title": "કે (ke) reaches the page",
       "headword": "કે",
       "romanization": "ke",
@@ -276,7 +276,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:de58764f4353fe75",
+      "sourceHash": "fnv1a64:0607501248e39451",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -362,7 +362,7 @@
     },
     {
       "id": "GU-C33-jaanun-ke",
-      "sequence": 1910,
+      "sequence": 1923,
       "title": "જાણું છું કે (jāṇũ chhũ ke) — I know that…",
       "headword": "જાણું છું કે",
       "romanization": "jāṇũ chhũ ke",
@@ -373,7 +373,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8477609d006f071",
+      "sourceHash": "fnv1a64:caa499b89b22d8a7",
       "notice": null,
       "blocks": [
         {
@@ -501,7 +501,7 @@
     },
     {
       "id": "GU-C33-ke-checkpoint",
-      "sequence": 1920,
+      "sequence": 1933,
       "title": "The reporting frames, all together",
       "headword": "કે — વિચારું છું કે — જાણું છું કે",
       "romanization": "ke — vichārũ chhũ ke — jāṇũ chhũ ke",
@@ -512,7 +512,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:024e912547abc1e2",
+      "sourceHash": "fnv1a64:8c3fe2036428ec66",
       "notice": null,
       "blocks": [
         {

@@ -1,16 +1,17 @@
 {
   "language": "kannada",
   "chapter": 29,
-  "sourceHash": "fnv1a64:1e030a7a527a8dfd",
+  "sourceHash": "fnv1a64:cceb4c7d6cda6792",
   "lessonIds": [
     "KA-C29-shubhodaya",
+    "KA-C29-oota",
     "KA-S125-letter-oo"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "kannada/narration/ch29.txt",
   "json": "kannada/narration/ch29.json",
-  "textHash": "fnv1a64:d14bb41095a2caec",
-  "jsonHash": "fnv1a64:411301e32614b3e3",
+  "textHash": "fnv1a64:79774a7e988a4343",
+  "jsonHash": "fnv1a64:7f10aa02f1be1702",
   "findings": []
 }

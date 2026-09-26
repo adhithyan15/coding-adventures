@@ -1,0 +1,11 @@
+{
+  "id": "GE-C116-kamera",
+  "pathSegment": "GE-PATH-116-DINGE116",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-116-DINGE116",
+      "order": 2
+    }
+  ]
+}

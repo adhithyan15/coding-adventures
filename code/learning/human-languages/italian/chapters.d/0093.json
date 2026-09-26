@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Holidays, Bicycle, Motorbike, Ship, Boat",
+  "label": "ch:it-holidays-bicycle-motorbike-ship-boat",
+  "canDo": "I can say holidays, a bicycle, a motorbike, a ship and a boat.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "IT-C93-barca",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say holidays, a bicycle, a motorbike, a ship and a boat.",
+    "assesses": [
+      "IT-LEX-C93-VIAGGIO93-03",
+      "IT-LEX-C93-VIAGGIO93-04",
+      "IT-LEX-C93-VIAGGIO93-05"
+    ]
+  }
+}

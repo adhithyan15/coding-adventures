@@ -1,0 +1,11 @@
+{
+  "id": "JA-C40-gakkou",
+  "pathSegment": "JA-PATH-40-HOME40",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-40-HOME40",
+      "order": 1
+    }
+  ]
+}

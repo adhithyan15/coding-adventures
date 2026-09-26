@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-82-CLOTHES82",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "UR-EXT-82-CLOTHES82"
+  ],
+  "after": []
+}

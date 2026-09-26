@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C68-snake
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3480
+sequence: 3493
 chapter: 68
 type: word
 headword: "સાપ"

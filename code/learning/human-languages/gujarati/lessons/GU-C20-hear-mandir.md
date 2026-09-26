@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C20-hear-mandir
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 920
+sequence: 933
 chapter: 24
 type: word
 headword: મંદિર

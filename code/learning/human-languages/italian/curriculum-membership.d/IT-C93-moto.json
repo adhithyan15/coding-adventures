@@ -1,0 +1,11 @@
+{
+  "id": "IT-C93-moto",
+  "pathSegment": "IT-PATH-93-VIAGGIO93",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-93-VIAGGIO93",
+      "order": 2
+    }
+  ]
+}

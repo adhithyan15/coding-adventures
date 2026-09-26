@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R65-second-pass-food-and-the-home",
+    "language": "bengali",
+    "chapter": 65,
+    "sequence": 3440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aaba997b549ff8d2"
+  },
+  "findings": []
+}

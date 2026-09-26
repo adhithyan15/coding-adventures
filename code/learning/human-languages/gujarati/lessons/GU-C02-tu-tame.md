@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C02-tu-tame
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 140
+sequence: 153
 chapter: 8
 type: word
 headword: તું / તમે

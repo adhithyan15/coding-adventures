@@ -1,0 +1,11 @@
+{
+  "id": "JA-C61-himo",
+  "pathSegment": "JA-PATH-61-WORLD61",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-61-WORLD61",
+      "order": 3
+    }
+  ]
+}

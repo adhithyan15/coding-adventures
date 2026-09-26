@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C88-stadio",
+    "language": "italian",
+    "chapter": 88,
+    "sequence": 4090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf12d273497d4571"
+  },
+  "findings": []
+}

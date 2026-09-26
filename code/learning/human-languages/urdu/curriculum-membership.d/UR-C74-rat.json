@@ -1,0 +1,11 @@
+{
+  "id": "UR-C74-rat",
+  "pathSegment": "UR-PATH-74-ADJ74",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-74-ADJ74",
+      "order": 4
+    }
+  ]
+}

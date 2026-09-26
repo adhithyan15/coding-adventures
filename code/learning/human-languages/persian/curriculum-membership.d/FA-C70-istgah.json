@@ -1,0 +1,11 @@
+{
+  "id": "FA-C70-istgah",
+  "pathSegment": "FA-PATH-70-TOWN70",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-70-TOWN70",
+      "order": 1
+    }
+  ]
+}

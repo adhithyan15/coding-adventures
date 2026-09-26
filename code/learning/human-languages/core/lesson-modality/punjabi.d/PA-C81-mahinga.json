@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C81-mahinga",
+    "language": "punjabi",
+    "chapter": 81,
+    "sequence": 4320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c00c0fbc917373ff"
+  },
+  "findings": []
+}

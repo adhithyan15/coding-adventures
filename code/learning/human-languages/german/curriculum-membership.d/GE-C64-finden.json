@@ -1,0 +1,11 @@
+{
+  "id": "GE-C64-finden",
+  "pathSegment": "GE-PATH-64-VERBEN1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-64-VERBEN1",
+      "order": 3
+    }
+  ]
+}

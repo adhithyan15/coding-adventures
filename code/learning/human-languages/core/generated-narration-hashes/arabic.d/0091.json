@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:88625c54751a6906",
+  "lessonIds": [
+    "AR-C91-tariq",
+    "AR-C91-bank",
+    "AR-C91-mahatta",
+    "AR-C91-sayyara",
+    "AR-C91-hafila"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch91.txt",
+  "json": "arabic/narration/ch91.json",
+  "textHash": "fnv1a64:33cc720ea350c0fa",
+  "jsonHash": "fnv1a64:a6441a5deb0c241c",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C70-istgah",
+    "language": "persian",
+    "chapter": 70,
+    "sequence": 3390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5aa59ee3d46311bf"
+  },
+  "findings": []
+}

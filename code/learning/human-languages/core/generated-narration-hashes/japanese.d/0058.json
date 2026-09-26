@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:27c6f1c8ac2be300",
+  "lessonIds": [
+    "JA-C58-chika",
+    "JA-C58-kouen",
+    "JA-C58-kuni",
+    "JA-C58-fuku",
+    "JA-C58-kutsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch58.txt",
+  "json": "japanese/narration/ch58.json",
+  "textHash": "fnv1a64:967b3e31633a5474",
+  "jsonHash": "fnv1a64:770a3f1a6cdfeede",
+  "findings": []
+}

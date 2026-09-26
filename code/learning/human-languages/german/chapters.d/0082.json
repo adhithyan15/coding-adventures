@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "Telephone, Tree, Flower, Leaf, Mountain",
+  "label": "ch:ge-telephone-tree-flower-leaf-mountain",
+  "canDo": "I can say a telephone, a tree, a flower, a leaf and a mountain.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GE-C82-berg",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can say a telephone, a tree, a flower, a leaf and a mountain.",
+    "assesses": [
+      "GE-LEX-C82-NATUR1-03",
+      "GE-LEX-C82-NATUR1-04",
+      "GE-LEX-C82-NATUR1-05"
+    ]
+  }
+}

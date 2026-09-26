@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C95-khatam",
+    "language": "arabic",
+    "chapter": 95,
+    "sequence": 3720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e04ed91db054c3f"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C125-fahrer",
+    "language": "german",
+    "chapter": 125,
+    "sequence": 5170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd25af22a4485262"
+  },
+  "findings": []
+}

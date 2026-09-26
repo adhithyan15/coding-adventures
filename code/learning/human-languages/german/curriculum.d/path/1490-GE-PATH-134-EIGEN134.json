@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-134-EIGEN134",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "GE-EXT-134-EIGEN134"
+  ],
+  "after": []
+}

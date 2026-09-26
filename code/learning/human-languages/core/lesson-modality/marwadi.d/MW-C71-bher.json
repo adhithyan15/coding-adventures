@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C71-bher",
+    "language": "marwadi",
+    "chapter": 71,
+    "sequence": 4880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23654408705a0814"
+  },
+  "findings": []
+}

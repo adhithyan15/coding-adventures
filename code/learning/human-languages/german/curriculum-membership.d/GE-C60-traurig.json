@@ -1,0 +1,11 @@
+{
+  "id": "GE-C60-traurig",
+  "pathSegment": "GE-PATH-60-GEFUEHLE1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-60-GEFUEHLE1",
+      "order": 3
+    }
+  ]
+}

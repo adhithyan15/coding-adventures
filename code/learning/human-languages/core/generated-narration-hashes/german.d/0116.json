@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:5d44e2df8a30f02a",
+  "lessonIds": [
+    "GE-C116-wecker",
+    "GE-C116-handy",
+    "GE-C116-kamera",
+    "GE-C116-brille",
+    "GE-C116-regenschirm"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch116.txt",
+  "json": "german/narration/ch116.json",
+  "textHash": "fnv1a64:96659bfc6a4951cc",
+  "jsonHash": "fnv1a64:f6e1147667a0391d",
+  "findings": []
+}

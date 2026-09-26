@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:36269813336f0410",
+  "lessonIds": [
+    "FA-C46-divar",
+    "FA-C46-takht",
+    "FA-C46-komod",
+    "FA-C46-zamin",
+    "FA-C46-ayene"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch46.txt",
+  "json": "persian/narration/ch46.json",
+  "textHash": "fnv1a64:4c5729cea1cd9363",
+  "jsonHash": "fnv1a64:87ae15db2b271357",
+  "findings": []
+}

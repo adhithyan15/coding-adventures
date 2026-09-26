@@ -1,0 +1,11 @@
+{
+  "id": "GE-C131-ruhig",
+  "pathSegment": "GE-PATH-131-EIGEN131",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-131-EIGEN131",
+      "order": 3
+    }
+  ]
+}

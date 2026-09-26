@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Bus, Bridge, Temple, Office, Police",
+  "label": "ch:mr-bus-bridge-temple-office-police",
+  "canDo": "I can say a bus, a bridge, a temple, an office and the police.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "MR-C114-polis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say a bus, a bridge, a temple, an office and the police.",
+    "assesses": [
+      "MR-LEX-C114-TOWN114-03",
+      "MR-LEX-C114-TOWN114-04",
+      "MR-LEX-C114-TOWN114-05"
+    ]
+  }
+}

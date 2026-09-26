@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-R91-second-pass-time-numbers-town-and-people
 spine_node: SPINE-COURTESY-THANK
-sequence: 4670
+sequence: 4683
 chapter: 91
 type: review
 headword: (dialogue)

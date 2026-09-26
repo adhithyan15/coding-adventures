@@ -9,17 +9,17 @@ headword: పని చేయు
 gloss: to work (lit. "work-do")
 romanization: "pani cēyu"
 concept_tag: TE-VERB-CEYU
-prerequisites: [TE-C05-maatlaadu]
+prerequisites: [TE-C05-maatlaadu, TE-C05-hamsa]
 sounds: [long-e]
 roots: [ceyu-do-dravidian, pani-work-dravidian]
 duration:
   max_seconds: 180
 requires:
-  knowledge: []
+  knowledge: [TE-LEX-ANCHOR-HAMSA]
 introduces:
   knowledge: [TE-LEX-C05-PANI-CEYU-01, TE-ETYMON-C05-PANI-CEYU-02, TE-GRAMMAR-C05-PANI-CEYU-03]
 practises:
-  knowledge: [TE-LEX-C05-PANI-CEYU-01, TE-ETYMON-C05-PANI-CEYU-02, TE-GRAMMAR-C05-PANI-CEYU-03]
+  knowledge: [TE-LEX-C05-PANI-CEYU-01, TE-ETYMON-C05-PANI-CEYU-02, TE-GRAMMAR-C05-PANI-CEYU-03, TE-LEX-ANCHOR-HAMSA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [TE-C05-maatlaadu, TE-C05-undu]
 # పని చేయు (pani cēyu) — "to work"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-ANCHOR-HAMSA] -->
 
 [PAUSE 2s] The last verb of the chapter — and, like Hindi's *karnā* and Tamil's
 *sey*, it is a "do" verb that builds a hundred others.

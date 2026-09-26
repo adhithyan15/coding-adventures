@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:29102df41a22ca64",
+  "lessonIds": [
+    "BN-C81-kachhe",
+    "BN-C81-bhitore",
+    "BN-C81-baire",
+    "BN-C81-niche",
+    "BN-C81-samne"
+  ],
+  "tex": "bengali/book/chapters/ch81-near-inside-outside-below-in-front.tex"
+}

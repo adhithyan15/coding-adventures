@@ -1,0 +1,11 @@
+{
+  "id": "BN-C56-apel",
+  "pathSegment": "BN-PATH-56-FOOD56",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-56-FOOD56",
+      "order": 2
+    }
+  ]
+}

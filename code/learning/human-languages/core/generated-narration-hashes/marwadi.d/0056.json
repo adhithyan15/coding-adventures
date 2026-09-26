@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:b9ef3781360b663c",
+  "lessonIds": [
+    "MW-C56-ginno",
+    "MW-C56-pakarno",
+    "MW-C56-katno",
+    "MW-C56-rokno",
+    "MW-C56-batano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch56.txt",
+  "json": "marwadi/narration/ch56.json",
+  "textHash": "fnv1a64:ac7f8507a1d98a87",
+  "jsonHash": "fnv1a64:6ce84c203b7d7427",
+  "findings": []
+}

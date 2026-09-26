@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C65-iishvar",
+    "language": "marathi",
+    "chapter": 65,
+    "sequence": 2639,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:57bfe386950aedab"
+  },
+  "findings": []
+}

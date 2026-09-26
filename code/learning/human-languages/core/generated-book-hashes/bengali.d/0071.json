@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:2a8cf4a761bed38f",
+  "lessonIds": [
+    "BN-C71-bhaluk",
+    "BN-C71-gadha",
+    "BN-C71-projapoti",
+    "BN-C71-pipre",
+    "BN-C71-murgi"
+  ],
+  "tex": "bengali/book/chapters/ch71-bear-donkey-butterfly-ant-hen.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C69-goru",
+    "language": "bengali",
+    "chapter": 69,
+    "sequence": 3600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d653903c072f303"
+  },
+  "findings": []
+}

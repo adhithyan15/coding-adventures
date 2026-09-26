@@ -9,17 +9,17 @@ type: writing
 headword: "ಊ"
 gloss: the single character ಊ — the long partner of the vowel you met two chapters ago
 romanization: "ū"
-prerequisites: [KA-S126-letter-u]
+prerequisites: [KA-S126-letter-u, KA-C18-uurugoolu]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-126]
+  knowledge: [KA-SCRIPT-RECOG-126, KA-LEX-ANCHOR-UURUGOOLU]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-127]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-126, KA-SCRIPT-RECOG-127]
+  knowledge: [KA-SCRIPT-RECOG-126, KA-SCRIPT-RECOG-127, KA-LEX-ANCHOR-UURUGOOLU]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [KA-S126-letter-u]
 # ಊ — one character, the long partner of one you already have
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-126] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-126, KA-LEX-ANCHOR-UURUGOOLU] -->
 
 [PAUSE 1s] Before the new one: ಉ — what sound does it carry, and does it stand
 alone or ride on a consonant?

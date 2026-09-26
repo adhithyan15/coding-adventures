@@ -1,0 +1,11 @@
+{
+  "id": "IT-C122-polso",
+  "pathSegment": "IT-PATH-122-CORPO122",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-122-CORPO122",
+      "order": 2
+    }
+  ]
+}

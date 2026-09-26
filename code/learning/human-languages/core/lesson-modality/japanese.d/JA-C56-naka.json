@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C56-naka",
+    "language": "japanese",
+    "chapter": 56,
+    "sequence": 3480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11c8ee6ba03bf6a1"
+  },
+  "findings": []
+}

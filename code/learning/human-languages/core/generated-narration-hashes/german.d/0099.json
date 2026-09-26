@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:1c55b70bb8463998",
+  "lessonIds": [
+    "GE-C99-kleid",
+    "GE-C99-hose",
+    "GE-C99-schuh",
+    "GE-C99-muetze",
+    "GE-C99-socke"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch99.txt",
+  "json": "german/narration/ch99.json",
+  "textHash": "fnv1a64:105eaa7117e0e90b",
+  "jsonHash": "fnv1a64:d816eeda539abdb6",
+  "findings": []
+}

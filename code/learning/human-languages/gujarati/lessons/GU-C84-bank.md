@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C84-bank
 spine_node: SPINE-MEET-GREET
-sequence: 4270
+sequence: 4283
 chapter: 84
 type: word
 headword: "બેંક"

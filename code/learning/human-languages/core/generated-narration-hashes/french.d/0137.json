@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:a4b66a7c9ae5f134",
+  "lessonIds": [
+    "FR-C137-commencer",
+    "FR-C137-visiter",
+    "FR-C137-repondre",
+    "FR-C137-mettre",
+    "FR-C137-croire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch137.txt",
+  "json": "french/narration/ch137.json",
+  "textHash": "fnv1a64:a350080c3d5b4d18",
+  "jsonHash": "fnv1a64:8a861d126360a8bf",
+  "findings": []
+}

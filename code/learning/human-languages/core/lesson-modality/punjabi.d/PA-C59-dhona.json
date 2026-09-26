@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C59-dhona",
+    "language": "punjabi",
+    "chapter": 59,
+    "sequence": 3190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f2da068d3d53f7b"
+  },
+  "findings": []
+}

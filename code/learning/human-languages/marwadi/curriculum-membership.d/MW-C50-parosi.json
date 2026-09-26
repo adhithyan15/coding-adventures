@@ -1,0 +1,11 @@
+{
+  "id": "MW-C50-parosi",
+  "pathSegment": "MW-PATH-50-FAMILY50",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-50-FAMILY50",
+      "order": 1
+    }
+  ]
+}

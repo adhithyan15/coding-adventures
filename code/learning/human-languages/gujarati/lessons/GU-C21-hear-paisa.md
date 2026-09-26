@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C21-hear-paisa
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 970
+sequence: 983
 chapter: 25
 type: word
 headword: પૈસા

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C45-uma",
+    "language": "japanese",
+    "chapter": 45,
+    "sequence": 2890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f132e6cc95fe850c"
+  },
+  "findings": []
+}

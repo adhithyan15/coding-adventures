@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:5034138032286a70",
+  "lessonIds": [
+    "AR-C97-ashara",
+    "AR-C97-thalathun",
+    "AR-C97-arbaun",
+    "AR-C97-khamsun",
+    "AR-C97-alf"
+  ],
+  "tex": "arabic/book/chapters/ch97-ten-thirty-forty-fifty-thousand.tex"
+}

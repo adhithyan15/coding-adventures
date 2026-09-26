@@ -1,0 +1,11 @@
+{
+  "id": "MW-C88-prem",
+  "pathSegment": "MW-PATH-88-WORLD88",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-88-WORLD88",
+      "order": 4
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     "id": "GU-C60-salt",
     "language": "gujarati",
     "chapter": 60,
-    "sequence": 3050,
+    "sequence": 3063,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a841df049daa4218"
+    "sourceHash": "fnv1a64:569cca9fba4c4092"
   },
   "findings": []
 }

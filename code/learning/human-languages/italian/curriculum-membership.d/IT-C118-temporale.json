@@ -1,0 +1,11 @@
+{
+  "id": "IT-C118-temporale",
+  "pathSegment": "IT-PATH-118-NATURA118",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-118-NATURA118",
+      "order": 1
+    }
+  ]
+}

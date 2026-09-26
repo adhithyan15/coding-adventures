@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:0824fad0a2e52ab7",
+  "lessonIds": [
+    "IT-C124-occupato",
+    "IT-C124-libero",
+    "IT-C124-aperto",
+    "IT-C124-chiuso",
+    "IT-C124-tranquillo"
+  ],
+  "tex": "italian/book/chapters/ch124-busy-free-open-closed-quiet.tex"
+}

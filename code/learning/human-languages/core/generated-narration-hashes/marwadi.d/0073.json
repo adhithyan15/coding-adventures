@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:add95301105da1b1",
+  "lessonIds": [
+    "MW-C73-nuvo",
+    "MW-C73-juno",
+    "MW-C73-achho",
+    "MW-C73-maro",
+    "MW-C73-labo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch73.txt",
+  "json": "marwadi/narration/ch73.json",
+  "textHash": "fnv1a64:9350cf6b007ea3a0",
+  "jsonHash": "fnv1a64:371f75d098e34038",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C80-jaldi",
+    "language": "marwadi",
+    "chapter": 80,
+    "sequence": 5340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:72d523e5c7234273"
+  },
+  "findings": []
+}

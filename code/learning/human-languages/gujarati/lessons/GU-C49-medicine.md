@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C49-medicine
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2500
+sequence: 2513
 chapter: 49
 type: word
 headword: "દવા"

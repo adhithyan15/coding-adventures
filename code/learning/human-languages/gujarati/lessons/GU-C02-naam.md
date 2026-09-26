@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C02-naam
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 91
+sequence: 104
 chapter: 8
 type: word
 headword: નામ

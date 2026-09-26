@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Namaste, Piece by Piece",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fcbdfbf276c506cd",
+  "sourceHash": "fnv1a64:6a09a9387e96f8a2",
   "lessons": [
     {
       "id": "GU-C01-namaste",
@@ -125,8 +125,113 @@
       ]
     },
     {
-      "id": "GU-W01-ha",
+      "id": "GU-C01-aahaar",
       "sequence": 2,
+      "title": "આહાર (āhār) — food, a meal",
+      "headword": "આહાર",
+      "romanization": "āhār",
+      "gloss": "food, a meal",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:6112d5d9ae6a99b3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: આહાર",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "આહાર — āhār — \"food, a meal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: āhār. Look at its shape as you say it: the lessons that follow take pieces of it, હ, ા (-ā) and આ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āhār, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āhār*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"food, a meal\"? (આહાર, āhār.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W01-ha",
+      "sequence": 3,
       "title": "હ — the consonant ha",
       "headword": "હ",
       "romanization": "ha",
@@ -140,7 +245,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:7763b880fb3d0e3f",
+      "sourceHash": "fnv1a64:cf23be1f98563136",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -255,7 +360,7 @@
     },
     {
       "id": "GU-W01-aa-matra",
-      "sequence": 3,
+      "sequence": 4,
       "title": "ા (-ā) — the vowel sign that replaces the inherent a",
       "headword": "ા",
       "romanization": "-ā",
@@ -268,7 +373,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4313c90cb7258834",
+      "sourceHash": "fnv1a64:2f1820394ba5c213",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -394,7 +499,7 @@
     },
     {
       "id": "GU-W01-aa",
-      "sequence": 4,
+      "sequence": 5,
       "title": "આ (ā) — the SAME vowel standing alone",
       "headword": "આ",
       "romanization": "ā",
@@ -406,7 +511,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9c82ad80094af60d",
+      "sourceHash": "fnv1a64:51c454c96ae86df8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -534,7 +639,7 @@
     },
     {
       "id": "GU-W01-na",
-      "sequence": 5,
+      "sequence": 6,
       "title": "ન — the consonant na",
       "headword": "ન",
       "romanization": "na",
@@ -546,7 +651,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a533a88f439cc521",
+      "sourceHash": "fnv1a64:f705691df33ceb4c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -650,7 +755,7 @@
     },
     {
       "id": "GU-W01-ma",
-      "sequence": 6,
+      "sequence": 7,
       "title": "મ — the consonant ma",
       "headword": "મ",
       "romanization": "ma",
@@ -662,7 +767,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:37f1e6161a5326c6",
+      "sourceHash": "fnv1a64:0066782742b8d315",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -770,7 +875,7 @@
     },
     {
       "id": "GU-W01-sa",
-      "sequence": 7,
+      "sequence": 8,
       "title": "સ — the consonant sa",
       "headword": "સ",
       "romanization": "sa",
@@ -782,7 +887,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b79850312e718662",
+      "sourceHash": "fnv1a64:50dbc3a062153493",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -890,7 +995,7 @@
     },
     {
       "id": "GU-W01-ta",
-      "sequence": 8,
+      "sequence": 9,
       "title": "ત — the consonant ta",
       "headword": "ત",
       "romanization": "ta",
@@ -902,7 +1007,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bce9c4a9c7c9b11e",
+      "sourceHash": "fnv1a64:13ae60096328f77d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1006,7 +1111,7 @@
     },
     {
       "id": "GU-W01-e-matra",
-      "sequence": 9,
+      "sequence": 10,
       "title": "ે (-e) — a mātrā that sits ABOVE the letter, not beside it",
       "headword": "ે",
       "romanization": "-e",
@@ -1018,7 +1123,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:82f9ca129d4db36b",
+      "sourceHash": "fnv1a64:9623d8f7a7d9eefb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1130,7 +1235,7 @@
     },
     {
       "id": "GU-W01-virama",
-      "sequence": 10,
+      "sequence": 11,
       "title": "્ ((virama)) — the mark that DELETES the inherent vowel, and glues two consonants together",
       "headword": "્",
       "romanization": "(virama)",
@@ -1142,7 +1247,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:21dbf6401a0f1aa2",
+      "sourceHash": "fnv1a64:d8087a25e96dee0d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1262,7 +1367,7 @@
     },
     {
       "id": "GU-W01-namaste-read",
-      "sequence": 11,
+      "sequence": 12,
       "title": "નમસ્તે (namaste) — five pieces, all of them already yours",
       "headword": "નમસ્તે",
       "romanization": "namaste",
@@ -1274,7 +1379,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:660a214aaaefebd5",
+      "sourceHash": "fnv1a64:ae0f368adea5d940",
       "notice": {
         "modality": "pen",
         "needs": [

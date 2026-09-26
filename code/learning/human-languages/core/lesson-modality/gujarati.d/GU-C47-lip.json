@@ -3,7 +3,7 @@
     "id": "GU-C47-lip",
     "language": "gujarati",
     "chapter": 47,
-    "sequence": 2420,
+    "sequence": 2433,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f42d96c5f30600f1"
+    "sourceHash": "fnv1a64:a1a7589b49d101d5"
   },
   "findings": []
 }
