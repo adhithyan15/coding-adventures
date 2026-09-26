@@ -88,6 +88,13 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added — `ANDROID_PLATFORM_KT` (UI89 §3.4)
+
+The Android half of the drag-and-drop seam, over `toAndroidDragEvent()` and
+`ClipData`. Components no longer import `DragAndDropTransferAction`, which
+only the platform files use. Android's transfer has no source completion
+callback, so a drag's `onCompleted` does not run there.
+
 ### Changed — drag and drop goes through platform functions (UI89 §3.4)
 
 Components no longer touch AWT: they call `mosaicDragText`,

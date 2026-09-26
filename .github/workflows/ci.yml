@@ -3140,6 +3140,50 @@ jobs:
           jq -e '.nativeComplete == true and (.degradations | length == 0)' "$strict_output/compose/mosaic-degradations.json"
           gradle --no-daemon --stacktrace -p "$strict_output/compose" compileKotlin
 
+      - name: Set up Gradle for the Android lane
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+        with:
+          # The Android Gradle Plugin the generated project pins (9.2.1)
+          # needs Gradle 9.4 or newer.
+          gradle-version: '9.4.1'
+
+      - name: Build the generated Android app (UI89 §3.4)
+        if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
+        shell: bash
+        timeout-minutes: 40
+        run: |
+          set -euo pipefail
+          # The Ubuntu runner image carries the Android SDK and NDK.
+          : "${ANDROID_HOME:?the runner image provides the Android SDK}"
+          ndk="$(find "$ANDROID_HOME/ndk" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
+          test -n "$ndk"
+          export ANDROID_NDK_HOME="$ndk"
+          rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+          cargo install cargo-ndk --locked --version 4.1.2
+
+          # Trestle, strict: the Compose build writes compose/android/ beside
+          # the desktop project, the engine is built for every Android ABI,
+          # and Gradle assembles the APK.
+          cargo build --manifest-path code/packages/rust/Cargo.toml -p task-mosaic-app
+          android_output="$RUNNER_TEMP/mosaic-taskapp-android"
+          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend compose --output "$android_output" --emit-project --profile native-complete --runtime-library "$(pwd)/code/packages/rust/target/debug/libtask_mosaic_app.so"
+          project="$android_output/compose/android"
+          test -f "$project/src/main/kotlin/mosaic/android/MosaicActivity.kt"
+          ! test -e "$project/src/main/kotlin/Main.kt"
+          bash code/scripts/build-mosaic-android-libs.sh task-mosaic-app "$project"
+          gradle --no-daemon --stacktrace -p "$project" assembleDebug
+
+          # Every ABI's engine is in the APK and exports the Mosaic C ABI.
+          apk="$(find "$project/build/outputs/apk/debug" -name '*.apk' | head -1)"
+          test -n "$apk"
+          nm_tool="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-nm"
+          for abi in arm64-v8a armeabi-v7a x86_64 x86; do
+            extracted="$RUNNER_TEMP/libmosaic_app-$abi.so"
+            unzip -p "$apk" "lib/$abi/libmosaic_app.so" > "$extracted"
+            "$nm_tool" -D --defined-only "$extracted" | grep -q ' mosaic_app_create$'
+          done
+
       - name: Build concrete Mosaic TaskApp WinUI shell
         if: runner.os == 'Windows' && needs.detect.outputs.needs_mosaic_xaml_windows == 'true'
         shell: pwsh
