@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:a5e4f3ffaf6b4262",
+  "lessonIds": [
+    "AR-C64-kharaja",
+    "AR-C64-amila",
+    "AR-C64-sakana",
+    "AR-C64-intazara",
+    "AR-C64-rajaa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch64.txt",
+  "json": "arabic/narration/ch64.json",
+  "textHash": "fnv1a64:a5582465ff4bcc36",
+  "jsonHash": "fnv1a64:f88d33cc73a0abbc",
+  "findings": []
+}

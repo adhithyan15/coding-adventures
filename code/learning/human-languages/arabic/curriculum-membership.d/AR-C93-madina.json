@@ -1,0 +1,11 @@
+{
+  "id": "AR-C93-madina",
+  "pathSegment": "AR-PATH-93-TOWN93",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-93-TOWN93",
+      "order": 3
+    }
+  ]
+}

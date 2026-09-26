@@ -1,0 +1,19 @@
+{
+  "chapter": 63,
+  "title": "To throw, To fly, To swim, To make, To enter",
+  "label": "ch:ar-to-throw-to-fly-to-swim-to-make-to-enter",
+  "canDo": "I can say to throw, to fly, to swim, to make and to enter.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C63-dakhala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 63: i can say to throw, to fly, to swim, to make and to enter.",
+    "assesses": [
+      "AR-LEX-C63-VERBS63-03",
+      "AR-LEX-C63-VERBS63-04",
+      "AR-LEX-C63-VERBS63-05"
+    ]
+  }
+}

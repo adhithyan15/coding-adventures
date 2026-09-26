@@ -1,0 +1,11 @@
+{
+  "id": "AR-C78-sama",
+  "pathSegment": "AR-PATH-78-NATURE78",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-78-NATURE78",
+      "order": 3
+    }
+  ]
+}

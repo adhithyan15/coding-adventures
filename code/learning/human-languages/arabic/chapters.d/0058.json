@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "To stand up, To walk, To run, To play, To buy",
+  "label": "ch:ar-to-stand-up-to-walk-to-run-to-play-to-buy",
+  "canDo": "I can say to stand up, to walk, to run, to play and to buy.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C58-ishtara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 58: i can say to stand up, to walk, to run, to play and to buy.",
+    "assesses": [
+      "AR-LEX-C58-VERBS58-03",
+      "AR-LEX-C58-VERBS58-04",
+      "AR-LEX-C58-VERBS58-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C68-laymun",
+  "pathSegment": "AR-PATH-68-FOOD68",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-68-FOOD68",
+      "order": 1
+    }
+  ]
+}

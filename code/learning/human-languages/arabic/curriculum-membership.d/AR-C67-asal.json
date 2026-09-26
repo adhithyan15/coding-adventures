@@ -1,0 +1,11 @@
+{
+  "id": "AR-C67-asal",
+  "pathSegment": "AR-PATH-67-FOOD67",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-67-FOOD67",
+      "order": 3
+    }
+  ]
+}

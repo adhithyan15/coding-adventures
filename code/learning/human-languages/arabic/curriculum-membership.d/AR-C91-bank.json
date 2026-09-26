@@ -1,0 +1,11 @@
+{
+  "id": "AR-C91-bank",
+  "pathSegment": "AR-PATH-91-TOWN91",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-91-TOWN91",
+      "order": 1
+    }
+  ]
+}

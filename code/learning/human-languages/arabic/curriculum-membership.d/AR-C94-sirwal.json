@@ -1,0 +1,11 @@
+{
+  "id": "AR-C94-sirwal",
+  "pathSegment": "AR-PATH-94-CLOTHES94",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-94-CLOTHES94",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "Empty, Rich, Poor, Clean, Dirty",
+  "label": "ch:ar-empty-rich-poor-clean-dirty",
+  "canDo": "I can say empty, rich, poor, clean and dirty.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C84-wasikh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: i can say empty, rich, poor, clean and dirty.",
+    "assesses": [
+      "AR-LEX-C84-ADJ84-03",
+      "AR-LEX-C84-ADJ84-04",
+      "AR-LEX-C84-ADJ84-05"
+    ]
+  }
+}

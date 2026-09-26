@@ -1,0 +1,11 @@
+{
+  "id": "AR-C87-ghadan",
+  "pathSegment": "AR-PATH-87-TIME87",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-87-TIME87",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R99-second-pass-time-places-the-town-clothes-and-numbers",
+    "language": "arabic",
+    "chapter": 99,
+    "sequence": 3970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a38902b24b833a7c"
+  },
+  "findings": []
+}

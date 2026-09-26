@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C53-alam",
+    "language": "arabic",
+    "chapter": 53,
+    "sequence": 1620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bba31dc1e580c9e8"
+  },
+  "findings": []
+}

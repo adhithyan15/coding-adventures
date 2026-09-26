@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:ae4847a59b7724c5",
+  "lessonIds": [
+    "AR-C93-shurta",
+    "AR-C93-suq",
+    "AR-C93-qarya",
+    "AR-C93-madina",
+    "AR-C93-matam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch93.txt",
+  "json": "arabic/narration/ch93.json",
+  "textHash": "fnv1a64:a6101648a4e23da4",
+  "jsonHash": "fnv1a64:b5aa84a2ab143072",
+  "findings": []
+}

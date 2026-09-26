@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-87-TIME87",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say yesterday, tomorrow, now, sometimes and before.",
+  "prerequisites": []
+}

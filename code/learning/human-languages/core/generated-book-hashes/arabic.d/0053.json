@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:1644943bd45f163a",
+  "lessonIds": [
+    "AR-C53-humma",
+    "AR-C53-mustashfa",
+    "AR-C53-marid",
+    "AR-C53-alam",
+    "AR-C53-dawa"
+  ],
+  "tex": "arabic/book/chapters/ch53-fever-hospital-ill-pain-medicine.tex"
+}

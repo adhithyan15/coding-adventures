@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:ce921457d98b7a5f",
+  "lessonIds": [
+    "AR-C71-mirah",
+    "AR-C71-misbah",
+    "AR-C71-miftah",
+    "AR-C71-sahn",
+    "AR-C71-sikkin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch71.txt",
+  "json": "arabic/narration/ch71.json",
+  "textHash": "fnv1a64:f588ce9c1a0e7a99",
+  "jsonHash": "fnv1a64:b6f68734e8c7fcea",
+  "findings": []
+}

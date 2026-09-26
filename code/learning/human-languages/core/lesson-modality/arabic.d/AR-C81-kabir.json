@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C81-kabir",
+    "language": "arabic",
+    "chapter": 81,
+    "sequence": 3040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cf91ea253958a42"
+  },
+  "findings": []
+}

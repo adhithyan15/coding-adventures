@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-71-HOME71",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a mirror, a lamp, a key, a plate and a knife.",
+  "prerequisites": []
+}

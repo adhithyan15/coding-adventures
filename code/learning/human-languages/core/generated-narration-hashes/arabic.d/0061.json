@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:0d3b74173272a894",
+  "lessonIds": [
+    "AR-C61-taallama",
+    "AR-C61-nasiya",
+    "AR-C61-arada",
+    "AR-C61-arsala",
+    "AR-C61-qataa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch61.txt",
+  "json": "arabic/narration/ch61.json",
+  "textHash": "fnv1a64:a9098fc627d91757",
+  "jsonHash": "fnv1a64:90270eb4a678ec77",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 81,
+  "title": "Camel, Donkey, Hen, Big, Small",
+  "label": "ch:ar-camel-donkey-hen-big-small",
+  "canDo": "I can say a camel, a donkey, a hen, big and small.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C81-saghir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: i can say a camel, a donkey, a hen, big and small.",
+    "assesses": [
+      "AR-LEX-C81-ANIMALS81-03",
+      "AR-LEX-C81-ANIMALS81-04",
+      "AR-LEX-C81-ANIMALS81-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C65-hamala",
+    "language": "arabic",
+    "chapter": 65,
+    "sequence": 2200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6c93b2637115be6"
+  },
+  "findings": []
+}

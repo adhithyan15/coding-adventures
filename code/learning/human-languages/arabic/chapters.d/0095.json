@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Pocket, Ring, Hat, Shoe, Coat",
+  "label": "ch:ar-pocket-ring-hat-shoe-coat",
+  "canDo": "I can say a pocket, a ring, a hat, a shoe and a coat.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "AR-C95-mitaf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say a pocket, a ring, a hat, a shoe and a coat.",
+    "assesses": [
+      "AR-LEX-C95-CLOTHES95-03",
+      "AR-LEX-C95-CLOTHES95-04",
+      "AR-LEX-C95-CLOTHES95-05"
+    ]
+  }
+}

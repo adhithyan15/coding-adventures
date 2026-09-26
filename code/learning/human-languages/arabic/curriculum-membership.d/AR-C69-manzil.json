@@ -1,0 +1,11 @@
+{
+  "id": "AR-C69-manzil",
+  "pathSegment": "AR-PATH-69-FOOD69",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-69-FOOD69",
+      "order": 2
+    }
+  ]
+}

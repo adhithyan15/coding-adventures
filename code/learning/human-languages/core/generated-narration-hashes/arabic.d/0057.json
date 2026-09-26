@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:53ef2a77250bfd8c",
+  "lessonIds": [
+    "AR-C57-muallim",
+    "AR-C57-shariba",
+    "AR-C57-samia",
+    "AR-C57-jalasa",
+    "AR-C57-nama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch57.txt",
+  "json": "arabic/narration/ch57.json",
+  "textHash": "fnv1a64:a722539d425a1461",
+  "jsonHash": "fnv1a64:5b04e11de8e98b14",
+  "findings": []
+}

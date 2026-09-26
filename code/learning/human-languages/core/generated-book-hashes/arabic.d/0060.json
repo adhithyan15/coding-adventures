@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:b391b8bbdffe7afe",
+  "lessonIds": [
+    "AR-C60-tabakha",
+    "AR-C60-ghasala",
+    "AR-C60-dahika",
+    "AR-C60-baka",
+    "AR-C60-raqasa"
+  ],
+  "tex": "arabic/book/chapters/ch60-to-cook-to-wash-to-laugh-to-cry-to-dance.tex"
+}

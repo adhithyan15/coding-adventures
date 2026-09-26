@@ -1,0 +1,11 @@
+{
+  "id": "AR-C93-matam",
+  "pathSegment": "AR-PATH-93-TOWN93",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-93-TOWN93",
+      "order": 4
+    }
+  ]
+}

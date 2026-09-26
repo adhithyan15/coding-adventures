@@ -1,0 +1,11 @@
+{
+  "id": "AR-C53-humma",
+  "pathSegment": "AR-PATH-53-HEALTH53",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-53-HEALTH53",
+      "order": 0
+    }
+  ]
+}

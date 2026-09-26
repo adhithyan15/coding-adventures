@@ -1,0 +1,11 @@
+{
+  "id": "AR-C58-masha",
+  "pathSegment": "AR-PATH-58-VERBS58",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-58-VERBS58",
+      "order": 1
+    }
+  ]
+}

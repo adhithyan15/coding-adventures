@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C57-muallim",
+    "language": "arabic",
+    "chapter": 57,
+    "sequence": 1790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:05975409ff331a51"
+  },
+  "findings": []
+}

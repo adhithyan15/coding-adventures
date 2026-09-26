@@ -1,0 +1,19 @@
+{
+  "chapter": 85,
+  "title": "Light, Heavy, Correct, Mistake, Important",
+  "label": "ch:ar-light-heavy-correct-mistake-important",
+  "canDo": "I can say light, heavy, correct, true, a mistake and important.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C85-muhimm",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 85: i can say light, heavy, correct, true, a mistake and important.",
+    "assesses": [
+      "AR-LEX-C85-ADJ85-03",
+      "AR-LEX-C85-ADJ85-04",
+      "AR-LEX-C85-ADJ85-05"
+    ]
+  }
+}

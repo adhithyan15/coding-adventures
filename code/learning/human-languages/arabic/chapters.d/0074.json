@@ -1,0 +1,19 @@
+{
+  "chapter": 74,
+  "title": "Bag, Money, Map, Lesson, Answer",
+  "label": "ch:ar-bag-money-map-lesson-answer",
+  "canDo": "I can say a bag, money, a map, a lesson and an answer.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "AR-R74-second-pass-food-the-home-and-school",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: i can say a bag, money, a map, a lesson and an answer.",
+    "assesses": [
+      "AR-LEX-C74-SCHOOL74-03",
+      "AR-LEX-C74-SCHOOL74-04",
+      "AR-LEX-C74-SCHOOL74-05"
+    ]
+  }
+}

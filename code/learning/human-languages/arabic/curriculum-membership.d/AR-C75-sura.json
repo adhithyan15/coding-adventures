@@ -1,0 +1,11 @@
+{
+  "id": "AR-C75-sura",
+  "pathSegment": "AR-PATH-75-SCHOOL75",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-75-SCHOOL75",
+      "order": 1
+    }
+  ]
+}

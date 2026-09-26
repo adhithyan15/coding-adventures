@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:b7f52ba86e374834",
+  "lessonIds": [
+    "AR-C86-jamil",
+    "AR-C86-bunni",
+    "AR-C86-usbu",
+    "AR-C86-shahr",
+    "AR-C86-daqiqa"
+  ],
+  "tex": "arabic/book/chapters/ch86-beautiful-brown-week-month-minute.tex"
+}

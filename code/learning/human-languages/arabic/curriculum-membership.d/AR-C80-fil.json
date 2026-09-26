@@ -1,0 +1,11 @@
+{
+  "id": "AR-C80-fil",
+  "pathSegment": "AR-PATH-80-ANIMALS80",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-80-ANIMALS80",
+      "order": 1
+    }
+  ]
+}

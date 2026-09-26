@@ -1,0 +1,19 @@
+{
+  "chapter": 80,
+  "title": "Tiger, Elephant, Monkey, Snake, Bear",
+  "label": "ch:ar-tiger-elephant-monkey-snake-bear",
+  "canDo": "I can say a tiger, an elephant, a monkey, a snake and a bear.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C80-dubb",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 80: i can say a tiger, an elephant, a monkey, a snake and a bear.",
+    "assesses": [
+      "AR-LEX-C80-ANIMALS80-03",
+      "AR-LEX-C80-ANIMALS80-04",
+      "AR-LEX-C80-ANIMALS80-05"
+    ]
+  }
+}

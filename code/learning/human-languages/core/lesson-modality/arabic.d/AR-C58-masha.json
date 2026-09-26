@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C58-masha",
+    "language": "arabic",
+    "chapter": 58,
+    "sequence": 1850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0937b18b9e31cd98"
+  },
+  "findings": []
+}

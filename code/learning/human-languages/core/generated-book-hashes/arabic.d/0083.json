@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:5d8d9cd8b121a3d4",
+  "lessonIds": [
+    "AR-C83-bati",
+    "AR-C83-sari",
+    "AR-C83-sahl",
+    "AR-C83-sab",
+    "AR-C83-rakhis"
+  ],
+  "tex": "arabic/book/chapters/ch83-slow-fast-easy-difficult-cheap.tex"
+}
