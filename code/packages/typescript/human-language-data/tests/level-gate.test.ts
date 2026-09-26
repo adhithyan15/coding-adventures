@@ -154,7 +154,9 @@ describe("the gate that would have caught the A2 claim", () => {
       russian: "pre-A1",
       portuguese: "pre-A1",
       italian: "pre-A1",
-      french: "pre-A1",
+      // HL-C443 loop: chapters 106-138 (165 words), the numbers chapter filed on
+      // SPINE-COUNT-ONE-TO-FIVE, and fifteen thin atoms revisited.
+      french: "A1",
       german: "pre-A1",
       urdu: "pre-A1",
       punjabi: "pre-A1",
@@ -358,7 +360,9 @@ describe("the first rung anybody actually climbed", () => {
     // The rung comes from the gate rather than from a literal, so this reads the
     // renderer against the data it renders — which is the actual claim — instead of
     // against a constant that has now had to be edited twice.
-    expect(line).toContain(`1 track at ${held} (spanish)`);
+    // French joined Spanish at A1, so the line now names both, in the order the
+    // renderer sorts them.
+    expect(line).toContain(`2 tracks at ${held} (french, spanish)`);
     // And it must really be a rung that was climbed, not `null` stringified into the
     // sentence. Without this the line above would pass on "1 track at null (spanish)".
     expect(levelRank(held)).toBeGreaterThanOrEqual(levelRank("A1"));

@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:924258d36af2e093",
+  "lessonIds": [
+    "FR-C138-connaitre",
+    "FR-C138-preferer",
+    "FR-C138-esperer",
+    "FR-C138-conduire",
+    "FR-C138-shabiller",
+    "FR-R138-first-pass-school-and-free-time",
+    "FR-R138-second-pass-describing-words-time-numbers-and-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch138.txt",
+  "json": "french/narration/ch138.json",
+  "textHash": "fnv1a64:2b0361170b96640f",
+  "jsonHash": "fnv1a64:fef73e9c75a3fa4c",
+  "findings": []
+}

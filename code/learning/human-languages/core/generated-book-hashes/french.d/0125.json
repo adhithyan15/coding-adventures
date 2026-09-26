@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:73bd84e664606f08",
+  "lessonIds": [
+    "FR-C125-pompier",
+    "FR-C125-facteur",
+    "FR-C125-serveur",
+    "FR-C125-client",
+    "FR-C125-caisse"
+  ],
+  "tex": "french/book/chapters/ch125-firefighter-postman-waiter-customer-till.tex"
+}

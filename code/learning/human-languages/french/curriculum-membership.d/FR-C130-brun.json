@@ -1,0 +1,11 @@
+{
+  "id": "FR-C130-brun",
+  "pathSegment": "FR-PATH-130-COULEURS82",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-130-COULEURS82",
+      "order": 3
+    }
+  ]
+}

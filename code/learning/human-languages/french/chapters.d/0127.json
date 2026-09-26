@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Rubber, Homework, Answer, Idea, Problem",
+  "label": "ch:fr-rubber-homework-answer-idea-problem",
+  "canDo": "I can name a rubber, homework, an answer, an idea, a problem.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-R127-second-pass-food-and-work",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can name a rubber, homework, an answer, an idea, a problem.",
+    "assesses": [
+      "FR-LEX-C127-ECOLE79-03",
+      "FR-LEX-C127-ECOLE79-04",
+      "FR-LEX-C127-ECOLE79-05"
+    ]
+  }
+}

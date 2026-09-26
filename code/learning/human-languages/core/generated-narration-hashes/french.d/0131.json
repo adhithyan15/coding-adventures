@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:5d58146c2ba8a65f",
+  "lessonIds": [
+    "FR-C131-occupe",
+    "FR-C131-libre",
+    "FR-C131-ouvert",
+    "FR-C131-ferme",
+    "FR-C131-calme"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch131.txt",
+  "json": "french/narration/ch131.json",
+  "textHash": "fnv1a64:8daf20a999e7494e",
+  "jsonHash": "fnv1a64:9eaba98994f76507",
+  "findings": []
+}

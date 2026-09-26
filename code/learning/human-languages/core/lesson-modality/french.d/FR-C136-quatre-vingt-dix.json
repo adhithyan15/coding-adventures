@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C136-quatre-vingt-dix",
+    "language": "french",
+    "chapter": 136,
+    "sequence": 6330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16e432a678d202b9"
+  },
+  "findings": []
+}

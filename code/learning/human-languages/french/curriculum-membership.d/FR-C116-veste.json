@@ -1,0 +1,11 @@
+{
+  "id": "FR-C116-veste",
+  "pathSegment": "FR-PATH-116-HABITS68",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-116-HABITS68",
+      "order": 0
+    }
+  ]
+}

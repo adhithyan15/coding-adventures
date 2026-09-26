@@ -1,0 +1,11 @@
+{
+  "id": "FR-C109-boite-aux-lettres",
+  "pathSegment": "FR-PATH-109-LIEU61",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-109-LIEU61",
+      "order": 4
+    }
+  ]
+}

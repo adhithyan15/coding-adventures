@@ -1,0 +1,11 @@
+{
+  "id": "FR-C106-ascenseur",
+  "pathSegment": "FR-PATH-106-TRAJET58",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-106-TRAJET58",
+      "order": 4
+    }
+  ]
+}

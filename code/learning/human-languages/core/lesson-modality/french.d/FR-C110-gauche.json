@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C110-gauche",
+    "language": "french",
+    "chapter": 110,
+    "sequence": 4910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0770ca394f1992cd"
+  },
+  "findings": []
+}

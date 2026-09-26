@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C129-prix",
+    "language": "french",
+    "chapter": 129,
+    "sequence": 5990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da27ad64b2921f41"
+  },
+  "findings": []
+}

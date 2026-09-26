@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:03885cb13fd518c6",
+  "lessonIds": [
+    "FR-C120-fraise",
+    "FR-C120-cerise",
+    "FR-C120-melon",
+    "FR-C120-ail",
+    "FR-C120-farine"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch120.txt",
+  "json": "french/narration/ch120.json",
+  "textHash": "fnv1a64:293ccf42f0f3b66b",
+  "jsonHash": "fnv1a64:b8080e0a4222b677",
+  "findings": []
+}

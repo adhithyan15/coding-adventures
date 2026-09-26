@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C123-agriculteur",
+    "language": "french",
+    "chapter": 123,
+    "sequence": 5640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0323be382b40bc7"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:21c4e6ff5685325a",
+  "lessonIds": [
+    "FR-C106-velo",
+    "FR-C106-metro",
+    "FR-C106-taxi",
+    "FR-C106-parking",
+    "FR-C106-ascenseur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch106.txt",
+  "json": "french/narration/ch106.json",
+  "textHash": "fnv1a64:4bf4a27ac0170f20",
+  "jsonHash": "fnv1a64:44ceffdc57e54e7d",
+  "findings": []
+}

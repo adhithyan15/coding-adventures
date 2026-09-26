@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C109-nord",
+    "language": "french",
+    "chapter": 109,
+    "sequence": 4860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6d34a108c00f470"
+  },
+  "findings": []
+}

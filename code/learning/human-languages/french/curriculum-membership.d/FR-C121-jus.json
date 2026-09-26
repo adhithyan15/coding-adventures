@@ -1,0 +1,11 @@
+{
+  "id": "FR-C121-jus",
+  "pathSegment": "FR-PATH-121-REPAS73",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-121-REPAS73",
+      "order": 1
+    }
+  ]
+}

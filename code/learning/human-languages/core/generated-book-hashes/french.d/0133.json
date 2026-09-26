@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:3752008b622a6a61",
+  "lessonIds": [
+    "FR-C133-sympathique",
+    "FR-C133-mechant",
+    "FR-C133-chaleur",
+    "FR-C133-orage",
+    "FR-C133-brouillard"
+  ],
+  "tex": "french/book/chapters/ch133-nice-nasty-heat-storm-fog.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C134-numero",
+    "language": "french",
+    "chapter": 134,
+    "sequence": 6230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48964218e0ab724c"
+  },
+  "findings": []
+}

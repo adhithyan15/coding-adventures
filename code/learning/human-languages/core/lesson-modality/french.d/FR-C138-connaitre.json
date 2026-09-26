@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C138-connaitre",
+    "language": "french",
+    "chapter": 138,
+    "sequence": 6400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0026dab78d4b481"
+  },
+  "findings": []
+}

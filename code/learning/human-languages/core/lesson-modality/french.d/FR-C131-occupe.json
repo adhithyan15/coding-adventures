@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C131-occupe",
+    "language": "french",
+    "chapter": 131,
+    "sequence": 6050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16b14ba1dfddf5b4"
+  },
+  "findings": []
+}

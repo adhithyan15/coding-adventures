@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R116-second-pass-the-house",
+    "language": "french",
+    "chapter": 116,
+    "sequence": 5260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:53cbaf9cb2e13caf"
+  },
+  "findings": []
+}

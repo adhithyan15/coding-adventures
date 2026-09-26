@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:3502621cbb4cd208",
+  "lessonIds": [
+    "FR-C118-bijou",
+    "FR-C118-bague",
+    "FR-C118-collier",
+    "FR-C118-parfum",
+    "FR-C118-lettre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch118.txt",
+  "json": "french/narration/ch118.json",
+  "textHash": "fnv1a64:dc54c62d1fdad1b0",
+  "jsonHash": "fnv1a64:f32c98a4db8d098f",
+  "findings": []
+}

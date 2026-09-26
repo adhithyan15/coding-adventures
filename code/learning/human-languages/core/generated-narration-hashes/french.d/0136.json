@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:4cd6a4d5f111573c",
+  "lessonIds": [
+    "FR-C136-zero",
+    "FR-C136-soixante",
+    "FR-C136-soixante-dix",
+    "FR-C136-quatre-vingt-dix",
+    "FR-C136-mille"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch136.txt",
+  "json": "french/narration/ch136.json",
+  "textHash": "fnv1a64:9c0216b3b2757447",
+  "jsonHash": "fnv1a64:d88b66e5a89fe227",
+  "findings": []
+}

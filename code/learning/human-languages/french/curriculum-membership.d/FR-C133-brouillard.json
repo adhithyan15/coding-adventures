@@ -1,0 +1,11 @@
+{
+  "id": "FR-C133-brouillard",
+  "pathSegment": "FR-PATH-133-QUALITES85",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-133-QUALITES85",
+      "order": 4
+    }
+  ]
+}

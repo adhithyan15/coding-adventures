@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C115-linge",
+    "language": "french",
+    "chapter": 115,
+    "sequence": 5160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e99c09929aba9586"
+  },
+  "findings": []
+}

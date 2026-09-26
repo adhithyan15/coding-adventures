@@ -1,11 +1,11 @@
 {
   "id": "FR-C13-vin-rouge",
   "pathSegment": "FR-PATH-015",
-  "pathOrder": 74,
+  "pathOrder": 62,
   "extensions": [
     {
       "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
-      "order": 74
+      "order": 62
     }
   ]
 }

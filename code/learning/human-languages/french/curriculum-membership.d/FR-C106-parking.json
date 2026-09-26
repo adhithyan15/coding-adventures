@@ -1,0 +1,11 @@
+{
+  "id": "FR-C106-parking",
+  "pathSegment": "FR-PATH-106-TRAJET58",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-106-TRAJET58",
+      "order": 3
+    }
+  ]
+}
