@@ -1,0 +1,11 @@
+{
+  "id": "GE-C136-wunsch",
+  "pathSegment": "GE-PATH-136-WUNSCH136",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-136-WUNSCH136",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C127-klasse",
+  "pathSegment": "GE-PATH-127-SCHULE127",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-127-SCHULE127",
+      "order": 1
+    }
+  ]
+}

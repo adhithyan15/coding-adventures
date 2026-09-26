@@ -1,0 +1,11 @@
+{
+  "id": "GE-C135-kuehl",
+  "pathSegment": "GE-PATH-135-EIGEN135",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-135-EIGEN135",
+      "order": 3
+    }
+  ]
+}

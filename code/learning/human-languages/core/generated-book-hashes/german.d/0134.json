@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:a1eccae0be52da0e",
+  "lessonIds": [
+    "GE-C134-langweilig",
+    "GE-C134-schwierig",
+    "GE-C134-fertig",
+    "GE-C134-bereit",
+    "GE-C134-sicher"
+  ],
+  "tex": "german/book/chapters/ch134-boring-difficult-finished-ready-safe.tex"
+}

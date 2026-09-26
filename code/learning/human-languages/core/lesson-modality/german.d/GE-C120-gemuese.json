@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C120-gemuese",
+    "language": "german",
+    "chapter": 120,
+    "sequence": 4880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d977b3012867a76"
+  },
+  "findings": []
+}

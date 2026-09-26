@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-114-HAUS114",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a blanket, a towel, soap, a toothbrush and toothpaste.",
+  "prerequisites": []
+}

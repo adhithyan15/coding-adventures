@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-112-HAUS112",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a rug, a television, a computer, a fridge and a cooker.",
+  "prerequisites": []
+}

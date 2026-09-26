@@ -1,0 +1,11 @@
+{
+  "id": "GE-C126-chef",
+  "pathSegment": "GE-PATH-126-BERUF126",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-126-BERUF126",
+      "order": 4
+    }
+  ]
+}

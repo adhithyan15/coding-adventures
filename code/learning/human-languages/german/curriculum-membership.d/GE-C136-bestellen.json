@@ -1,0 +1,11 @@
+{
+  "id": "GE-C136-bestellen",
+  "pathSegment": "GE-PATH-136-WUNSCH136",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-136-WUNSCH136",
+      "order": 3
+    }
+  ]
+}

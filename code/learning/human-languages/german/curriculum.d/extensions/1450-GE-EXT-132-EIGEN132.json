@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-132-EIGEN132",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say hard-working, lazy, awake, nice and friendly.",
+  "prerequisites": []
+}

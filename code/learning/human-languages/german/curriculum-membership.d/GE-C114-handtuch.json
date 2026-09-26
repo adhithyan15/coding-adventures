@@ -1,0 +1,11 @@
+{
+  "id": "GE-C114-handtuch",
+  "pathSegment": "GE-PATH-114-HAUS114",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-114-HAUS114",
+      "order": 1
+    }
+  ]
+}

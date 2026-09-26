@@ -1,0 +1,11 @@
+{
+  "id": "GE-C107-parkplatz",
+  "pathSegment": "GE-PATH-107-ORT107",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-107-ORT107",
+      "order": 4
+    }
+  ]
+}

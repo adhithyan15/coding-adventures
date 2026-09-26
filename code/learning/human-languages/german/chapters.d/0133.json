@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Angry, Funny, Serious, Famous, Interesting",
+  "label": "ch:ge-angry-funny-serious-famous-interesting",
+  "canDo": "I can say angry, funny, serious, famous and interesting.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C133-interessant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say angry, funny, serious, famous and interesting.",
+    "assesses": [
+      "GE-LEX-C133-EIGEN133-03",
+      "GE-LEX-C133-EIGEN133-04",
+      "GE-LEX-C133-EIGEN133-05"
+    ]
+  }
+}

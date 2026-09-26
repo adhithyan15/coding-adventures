@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:9205a9fe354ef654",
+  "lessonIds": [
+    "GE-C118-kerze",
+    "GE-C118-kalender",
+    "GE-C118-pullover",
+    "GE-C118-krawatte",
+    "GE-C118-handschuhe"
+  ],
+  "tex": "german/book/chapters/ch118-candle-calendar-jumper-tie-gloves.tex"
+}

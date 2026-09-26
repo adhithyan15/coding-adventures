@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:8373cbb81ab1685a",
+  "lessonIds": [
+    "GE-C129-sport",
+    "GE-C129-film",
+    "GE-C129-fussball",
+    "GE-C129-konzert",
+    "GE-C129-fest"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch129.txt",
+  "json": "german/narration/ch129.json",
+  "textHash": "fnv1a64:2dd9d1ce6c1d4fe7",
+  "jsonHash": "fnv1a64:bdfa6611dbfbb570",
+  "findings": []
+}

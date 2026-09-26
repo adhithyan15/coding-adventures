@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:ed0cd71935ed4ad6",
+  "lessonIds": [
+    "GE-C122-knoblauch",
+    "GE-C122-mehl",
+    "GE-C122-schokolade",
+    "GE-C122-keks",
+    "GE-C122-broetchen"
+  ],
+  "tex": "german/book/chapters/ch122-garlic-flour-chocolate-biscuit-bread-roll.tex"
+}

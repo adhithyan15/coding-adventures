@@ -1,0 +1,11 @@
+{
+  "id": "GE-C112-fernseher",
+  "pathSegment": "GE-PATH-112-HAUS112",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-112-HAUS112",
+      "order": 1
+    }
+  ]
+}

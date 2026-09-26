@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:d6ee7ea15aeef0aa",
+  "lessonIds": [
+    "GE-C136-wollen",
+    "GE-C136-wunsch",
+    "GE-C136-hoffen",
+    "GE-C136-bestellen",
+    "GE-C136-lieber"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch136.txt",
+  "json": "german/narration/ch136.json",
+  "textHash": "fnv1a64:2f7069d98f051bd0",
+  "jsonHash": "fnv1a64:761158759b598c7a",
+  "findings": []
+}

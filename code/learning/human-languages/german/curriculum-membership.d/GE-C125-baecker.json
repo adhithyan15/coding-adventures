@@ -1,0 +1,11 @@
+{
+  "id": "GE-C125-baecker",
+  "pathSegment": "GE-PATH-125-BERUF125",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-125-BERUF125",
+      "order": 1
+    }
+  ]
+}

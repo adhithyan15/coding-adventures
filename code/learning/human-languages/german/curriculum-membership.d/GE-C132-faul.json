@@ -1,0 +1,11 @@
+{
+  "id": "GE-C132-faul",
+  "pathSegment": "GE-PATH-132-EIGEN132",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-132-EIGEN132",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C109-hinten",
+  "pathSegment": "GE-PATH-109-RICHTUNG109",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-109-RICHTUNG109",
+      "order": 3
+    }
+  ]
+}

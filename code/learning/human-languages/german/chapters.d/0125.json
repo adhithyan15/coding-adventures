@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Farmer, Baker, Driver, Lawyer, Engineer",
+  "label": "ch:ge-farmer-baker-driver-lawyer-engineer",
+  "canDo": "I can say a farmer, a baker, a driver, a lawyer and an engineer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C125-ingenieur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say a farmer, a baker, a driver, a lawyer and an engineer.",
+    "assesses": [
+      "GE-LEX-C125-BERUF125-03",
+      "GE-LEX-C125-BERUF125-04",
+      "GE-LEX-C125-BERUF125-05"
+    ]
+  }
+}

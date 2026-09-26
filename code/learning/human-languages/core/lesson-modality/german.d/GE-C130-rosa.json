@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C130-rosa",
+    "language": "german",
+    "chapter": 130,
+    "sequence": 5400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0d33b4af4ecbb62d"
+  },
+  "findings": []
+}

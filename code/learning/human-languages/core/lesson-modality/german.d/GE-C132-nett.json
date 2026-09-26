@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C132-nett",
+    "language": "german",
+    "chapter": 132,
+    "sequence": 5530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3172c3c860abffe1"
+  },
+  "findings": []
+}

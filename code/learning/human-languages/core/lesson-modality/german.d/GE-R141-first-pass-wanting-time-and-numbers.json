@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R141-first-pass-wanting-time-and-numbers",
+    "language": "german",
+    "chapter": 141,
+    "sequence": 6050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70874a7d429ee2ba"
+  },
+  "findings": []
+}

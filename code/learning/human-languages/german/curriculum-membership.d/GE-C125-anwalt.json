@@ -1,0 +1,11 @@
+{
+  "id": "GE-C125-anwalt",
+  "pathSegment": "GE-PATH-125-BERUF125",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-125-BERUF125",
+      "order": 3
+    }
+  ]
+}

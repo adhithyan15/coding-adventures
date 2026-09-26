@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C115-muelleimer",
+    "language": "german",
+    "chapter": 115,
+    "sequence": 4610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc49bbe57f2ffc36"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C135-nass",
+  "pathSegment": "GE-PATH-135-EIGEN135",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-135-EIGEN135",
+      "order": 1
+    }
+  ]
+}

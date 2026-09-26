@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Homework, Idea, Sentence, Page, Drawing",
+  "label": "ch:ge-homework-idea-sentence-page-drawing",
+  "canDo": "I can say homework, an idea, a sentence, a page and a drawing.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C128-zeichnung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can say homework, an idea, a sentence, a page and a drawing.",
+    "assesses": [
+      "GE-LEX-C128-SCHULE128-03",
+      "GE-LEX-C128-SCHULE128-04",
+      "GE-LEX-C128-SCHULE128-05"
+    ]
+  }
+}

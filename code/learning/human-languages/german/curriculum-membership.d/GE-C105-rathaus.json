@@ -1,0 +1,11 @@
+{
+  "id": "GE-C105-rathaus",
+  "pathSegment": "GE-PATH-105-ORT105",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-105-ORT105",
+      "order": 4
+    }
+  ]
+}

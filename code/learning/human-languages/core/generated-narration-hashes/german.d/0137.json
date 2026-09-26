@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:5d9e85971517a365",
+  "lessonIds": [
+    "GE-C137-wochenende",
+    "GE-C137-datum",
+    "GE-C137-jahrhundert",
+    "GE-C137-nie",
+    "GE-C137-oft"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch137.txt",
+  "json": "german/narration/ch137.json",
+  "textHash": "fnv1a64:cfd46510e932081b",
+  "jsonHash": "fnv1a64:28a2881e8d1d5059",
+  "findings": []
+}

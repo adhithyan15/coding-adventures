@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:013a1b0cf2d98f34",
+  "lessonIds": [
+    "GE-C120-socken",
+    "GE-C120-bluse",
+    "GE-C120-rindfleisch",
+    "GE-C120-gemuese",
+    "GE-C120-pilz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch120.txt",
+  "json": "german/narration/ch120.json",
+  "textHash": "fnv1a64:880938f9c8fea752",
+  "jsonHash": "fnv1a64:22aae5a047d8f8d9",
+  "findings": []
+}

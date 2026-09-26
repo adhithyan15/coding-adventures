@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-133-EIGEN133",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say angry, funny, serious, famous and interesting.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:03162d20c7d5c5ca",
+  "lessonIds": [
+    "GE-C131-beschaeftigt",
+    "GE-C131-frei",
+    "GE-C131-geschlossen",
+    "GE-C131-ruhig",
+    "GE-C131-eng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch131.txt",
+  "json": "german/narration/ch131.json",
+  "textHash": "fnv1a64:cfd2da15aff47dbc",
+  "jsonHash": "fnv1a64:a59b194943320b42",
+  "findings": []
+}

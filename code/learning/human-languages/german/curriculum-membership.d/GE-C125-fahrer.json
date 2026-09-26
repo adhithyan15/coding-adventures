@@ -1,0 +1,11 @@
+{
+  "id": "GE-C125-fahrer",
+  "pathSegment": "GE-PATH-125-BERUF125",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-125-BERUF125",
+      "order": 2
+    }
+  ]
+}

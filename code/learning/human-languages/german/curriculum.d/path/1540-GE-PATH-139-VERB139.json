@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-139-VERB139",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "GE-EXT-139-VERB139"
+  ],
+  "after": []
+}

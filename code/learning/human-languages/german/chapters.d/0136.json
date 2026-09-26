@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "To want, Wish, To hope, To order, Rather",
+  "label": "ch:ge-to-want-wish-to-hope-to-order-rather",
+  "canDo": "I can say to want, a wish, to hope, to order and rather.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "GE-C136-lieber",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: i can say to want, a wish, to hope, to order and rather.",
+    "assesses": [
+      "GE-LEX-C136-WUNSCH136-03",
+      "GE-LEX-C136-WUNSCH136-04",
+      "GE-LEX-C136-WUNSCH136-05"
+    ]
+  }
+}

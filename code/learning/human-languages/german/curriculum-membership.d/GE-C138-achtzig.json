@@ -1,0 +1,11 @@
+{
+  "id": "GE-C138-achtzig",
+  "pathSegment": "GE-PATH-138-ZAHL138",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-138-ZAHL138",
+      "order": 2
+    }
+  ]
+}
