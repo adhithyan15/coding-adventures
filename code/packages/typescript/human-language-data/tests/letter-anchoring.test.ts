@@ -221,7 +221,7 @@ describe("the real corpus", () => {
     japanese: [2, 35, 0],
     kannada: [10, 0, 0],
     malayalam: [3, 12, 0],
-    marathi: [43, 4, 0],
+    marathi: [37, 4, 0],
     marwadi: [0, 49, 0],
     persian: [0, 4, 0],
     punjabi: [7, 2, 0],

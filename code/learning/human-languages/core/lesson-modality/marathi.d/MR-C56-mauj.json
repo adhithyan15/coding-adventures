@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C56-mauj",
+    "language": "marathi",
+    "chapter": 56,
+    "sequence": 2279,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1d2af6fcefe332e2"
+  },
+  "findings": []
+}

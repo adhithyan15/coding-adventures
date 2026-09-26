@@ -1,9 +1,11 @@
 {
   "language": "marathi",
   "chapter": 64,
-  "sourceHash": "fnv1a64:8d7f183910ecfcf4",
+  "sourceHash": "fnv1a64:2398e959c4dbc9b4",
   "lessonIds": [
+    "MR-C64-dhol",
     "MR-W64-ddha",
+    "MR-C64-phanas",
     "MR-W64-pha",
     "MR-W64-danda",
     "MR-R64-rows-closed"
@@ -12,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "marathi/narration/ch64.txt",
   "json": "marathi/narration/ch64.json",
-  "textHash": "fnv1a64:ff9e8f923a27169d",
-  "jsonHash": "fnv1a64:d40b12b2e8d0bcfe",
+  "textHash": "fnv1a64:20152960d907e0b8",
+  "jsonHash": "fnv1a64:22373f88a0dd2a91",
   "findings": []
 }

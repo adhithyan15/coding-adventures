@@ -9,20 +9,20 @@ type: writing
 headword: फ
 romanization: "pha"
 gloss: aspirated pa — the gap in the lip row, and the one letter whose sound has drifted
-prerequisites: [MR-W64-ddha, MR-W07-pa, MR-W03-ba, MR-W02-bha]
+prerequisites: [MR-W64-ddha, MR-W07-pa, MR-W03-ba, MR-W02-bha, MR-C64-dhol, MR-C64-phanas]
 sounds: []
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-DDHA-01, MR-SCRIPT-PA-01, MR-SCRIPT-BA-01, MR-SCRIPT-BHA-01]
+  knowledge: [MR-SCRIPT-DDHA-01, MR-SCRIPT-PA-01, MR-SCRIPT-BA-01, MR-SCRIPT-BHA-01, MR-LEX-ANCHOR-DHOL, MR-LEX-ANCHOR-PHANAS]
 introduces:
   knowledge: [MR-SCRIPT-PHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-PHA-01, MR-SCRIPT-PA-01, MR-SCRIPT-BHA-01, MR-SCRIPT-DDHA-01]
+  knowledge: [MR-SCRIPT-PHA-01, MR-SCRIPT-PA-01, MR-SCRIPT-BHA-01, MR-SCRIPT-DDHA-01, MR-LEX-ANCHOR-DHOL, MR-LEX-ANCHOR-PHANAS]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W07-pa, MR-W02-bha, MR-W64-ddha]
 # फ — the gap in the lip row
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-PA-01, MR-SCRIPT-BHA-01, MR-SCRIPT-DDHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-PA-01, MR-SCRIPT-BHA-01, MR-SCRIPT-DDHA-01, MR-LEX-ANCHOR-DHOL, MR-LEX-ANCHOR-PHANAS] -->
 
 [PAUSE 2s] The lip row is **प**, **फ**, **ब**, **भ**, **म**. Name the three of
 those five you have been writing since the early chapters. Then say what the

@@ -1,11 +1,11 @@
 {
-  "id": "MR-W65-ai-independent",
+  "id": "MR-C65-aivaj",
   "pathSegment": "MR-PATH-067",
-  "pathOrder": 5,
+  "pathOrder": 4,
   "extensions": [
     {
       "id": "MR-EXT-080-STANDING-VOWELS",
-      "order": 5
+      "order": 4
     }
   ]
 }
