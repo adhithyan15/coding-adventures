@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C80-minute
 spine_node: SPINE-TAKE-LEAVE
-sequence: 4070
+sequence: 4083
 chapter: 80
 type: word
 headword: "મિનિટ"

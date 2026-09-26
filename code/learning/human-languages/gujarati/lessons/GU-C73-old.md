@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C73-old
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3730
+sequence: 3743
 chapter: 73
 type: word
 headword: "જૂનું"

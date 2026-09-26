@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 43,
-  "sourceHash": "fnv1a64:5f3b5836ac2fa18b",
+  "sourceHash": "fnv1a64:c55a478f80705041",
   "lessonIds": [
     "KA-C43-come",
     "KA-C43-sit",
@@ -13,6 +13,6 @@
   "text": "kannada/narration/ch43.txt",
   "json": "kannada/narration/ch43.json",
   "textHash": "fnv1a64:a811c8fb17e38c53",
-  "jsonHash": "fnv1a64:1cfc98871cf7e3ef",
+  "jsonHash": "fnv1a64:adcd73580da6ec93",
   "findings": []
 }

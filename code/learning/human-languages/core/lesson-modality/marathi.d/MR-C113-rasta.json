@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C113-rasta",
+    "language": "marathi",
+    "chapter": 113,
+    "sequence": 5060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d07663cf65a00e62"
+  },
+  "findings": []
+}

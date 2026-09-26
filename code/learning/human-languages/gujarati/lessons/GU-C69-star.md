@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C69-star
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3510
+sequence: 3523
 chapter: 69
 type: word
 headword: "તારો"

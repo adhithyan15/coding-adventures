@@ -3,7 +3,7 @@
     "id": "GU-C88-bag",
     "language": "gujarati",
     "chapter": 88,
-    "sequence": 4470,
+    "sequence": 4483,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e83b86e99607fc15"
+    "sourceHash": "fnv1a64:1306fe7d2fbcaefb"
   },
   "findings": []
 }

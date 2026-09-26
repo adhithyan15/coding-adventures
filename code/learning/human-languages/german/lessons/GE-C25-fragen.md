@@ -8,7 +8,7 @@ type: word
 headword: fragen
 gloss: to ask — a weak verb whose vowel stays put, and whose closest English relatives came in from Latin as pray and precarious
 concept_tag: VERB-ASK
-prerequisites: [GE-C25-nehmen, GE-C18-nein]
+prerequisites: [GE-C25-nehmen, GE-C18-nein, GE-C18-ja-more]
 sounds: [r-uvular-german, vowel-a-german]
 roots: [germanic-fregana, pie-prek]
 etymology_hook: "fragen is PIE *preḱ-, 'to ask'; English lost the native cousin and gets the root back through Latin precārī — pray, precarious — while ask is a separate word"

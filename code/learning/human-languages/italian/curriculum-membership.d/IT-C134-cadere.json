@@ -1,0 +1,11 @@
+{
+  "id": "IT-C134-cadere",
+  "pathSegment": "IT-PATH-134-VERBI134",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-134-VERBI134",
+      "order": 4
+    }
+  ]
+}

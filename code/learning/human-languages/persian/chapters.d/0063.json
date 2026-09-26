@@ -1,0 +1,19 @@
+{
+  "chapter": 63,
+  "title": "Important, Beautiful, Green, Yellow, Red",
+  "label": "ch:fa-important-beautiful-green-yellow-red",
+  "canDo": "I can say important, beautiful, green, yellow and red.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C63-ghermez",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 63: i can say important, beautiful, green, yellow and red.",
+    "assesses": [
+      "FA-LEX-C63-ADJ63-03",
+      "FA-LEX-C63-ADJ63-04",
+      "FA-LEX-C63-ADJ63-05"
+    ]
+  }
+}

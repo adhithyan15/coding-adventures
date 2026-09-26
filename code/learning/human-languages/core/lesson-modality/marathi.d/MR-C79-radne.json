@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C79-radne",
+    "language": "marathi",
+    "chapter": 79,
+    "sequence": 3330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:635a63af6e1a903f"
+  },
+  "findings": []
+}

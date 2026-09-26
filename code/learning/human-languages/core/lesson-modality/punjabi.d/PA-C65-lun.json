@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C65-lun",
+    "language": "punjabi",
+    "chapter": 65,
+    "sequence": 3520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7c3be1b05476527"
+  },
+  "findings": []
+}

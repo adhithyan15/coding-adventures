@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C88-municipio",
+    "language": "italian",
+    "chapter": 88,
+    "sequence": 4050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd598eceddb6924e"
+  },
+  "findings": []
+}

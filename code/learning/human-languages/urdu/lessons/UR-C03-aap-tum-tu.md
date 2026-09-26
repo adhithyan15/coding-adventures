@@ -18,12 +18,12 @@ duration:
 requires:
   knowledge: [UR-LEX-MERA-NAAM-HAI, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01]
 introduces:
-  knowledge: [UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-ETYMON-TUM-THOU]
+  knowledge: [UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [UR-CULTURE-YOU-REGISTER-SOCIAL-DEFAULT-01]
 practises:
-  knowledge: [UR-LEX-MERA-NAAM-HAI, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01, UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-ETYMON-TUM-THOU]
+  knowledge: [UR-LEX-MERA-NAAM-HAI, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01, UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,22 +60,15 @@ a first meeting. Move to **tum** when the relationship supports familiarity.
 Save **tū** for relationships where you already know it is welcome; used badly,
 it can sound belittling.
 
-## The word, taken apart
-<!-- hl-knowledge: introduces=[UR-ETYMON-TUM-THOU]; assesses=[] -->
-
-**Tum/tū** belong to the old Indo-European familiar-“you” family: Sanskrit
-*tvam*, English **thou**, and Latin *tū* are relatives. **Āp** followed another
-route: a word connected with “self/oneself” became honorific address.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-ETYMON-TUM-THOU] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER] -->
 
 - [YOU SAY: a new adult — **āp**]
 - [YOU SAY: a friend — **tum**]
 - [YOU SAY: the old family — **tum, tvam, thou**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-ETYMON-TUM-THOU] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER] -->
 <!-- hl-activity: {"id":"UR-C03-aap-tum-tu-first-meeting","kind":"text","assesses":["UR-PRAGMATICS-YOU-REGISTER"],"prompt":"Type the Urdu 'you' safest in a first meeting.","answer":"آپ","accepted":["aap","āp"],"feedback":{"correct":"Right: آپ āp is the respectful first-meeting choice.","incorrect":"Use آپ āp with an unfamiliar adult or anyone you wish to address respectfully."},"response_seconds":8} -->
 
 Which form is safest when unsure? (**Āp**.) Which familiar forms share history

@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "To sell, To give, To put, To open, To close",
+  "label": "ch:ar-to-sell-to-give-to-put-to-open-to-close",
+  "canDo": "I can say to sell, to give, to put, to open and to close.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C59-aghlaqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: i can say to sell, to give, to put, to open and to close.",
+    "assesses": [
+      "AR-LEX-C59-VERBS59-03",
+      "AR-LEX-C59-VERBS59-04",
+      "AR-LEX-C59-VERBS59-05"
+    ]
+  }
+}

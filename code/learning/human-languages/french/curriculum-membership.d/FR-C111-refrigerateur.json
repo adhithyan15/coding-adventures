@@ -1,0 +1,11 @@
+{
+  "id": "FR-C111-refrigerateur",
+  "pathSegment": "FR-PATH-111-MAISON63",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-111-MAISON63",
+      "order": 3
+    }
+  ]
+}

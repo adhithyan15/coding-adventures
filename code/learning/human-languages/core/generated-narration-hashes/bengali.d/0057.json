@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:84821cc3b0a98585",
+  "lessonIds": [
+    "BN-C57-gajor",
+    "BN-C57-nun",
+    "BN-C57-makhon",
+    "BN-C57-modhu",
+    "BN-C57-tel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch57.txt",
+  "json": "bengali/narration/ch57.json",
+  "textHash": "fnv1a64:f64f049308d91a44",
+  "jsonHash": "fnv1a64:e701f50e09d493a2",
+  "findings": []
+}

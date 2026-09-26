@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:769e43efd8486c68",
+  "sourceHash": "fnv1a64:ac8abf8d91315424",
   "lessons": [
     {
       "id": "ML-C03-engane",
@@ -130,6 +130,111 @@
       ]
     },
     {
+      "id": "ML-C03-ola",
+      "sequence": 161,
+      "title": "ഓല (ōla) — a palm leaf",
+      "headword": "ഓല",
+      "romanization": "ōla",
+      "gloss": "a palm leaf",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:7ce9a28387bdd8f3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഓല",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഓല — ōla — \"a palm leaf\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ōla. Look at its shape as you say it: the next lesson takes one piece of it, ഓ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ōla, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ōla*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a palm leaf\"? (ഓല, ōla.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-S126-letter-oo",
       "sequence": 162,
       "title": "ഓ (ō) — one character, met inside words you already say",
@@ -144,7 +249,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:60827ec19cc1445c",
+      "sourceHash": "fnv1a64:6199f913f8360d95",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -303,7 +408,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6cedb90674528dc3",
+      "sourceHash": "fnv1a64:71b9120d517b2d76",
       "notice": {
         "modality": "sight",
         "needs": [

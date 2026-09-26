@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C109-hinten",
+    "language": "german",
+    "chapter": 109,
+    "sequence": 4280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ddf5a5f1b1b0e29"
+  },
+  "findings": []
+}

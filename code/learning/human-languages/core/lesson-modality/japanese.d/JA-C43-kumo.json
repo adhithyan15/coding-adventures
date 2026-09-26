@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C43-kumo",
+    "language": "japanese",
+    "chapter": 43,
+    "sequence": 2810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff5c205b6df6d0f0"
+  },
+  "findings": []
+}

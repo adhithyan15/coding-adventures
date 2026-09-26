@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 74,
-  "sourceHash": "fnv1a64:7920956d80140be5",
+  "sourceHash": "fnv1a64:1a9e06a5685df956",
   "lessonIds": [
     "GU-C74-expensive",
     "GU-C74-near",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch74.txt",
   "json": "gujarati/narration/ch74.json",
   "textHash": "fnv1a64:96f6400f25d8101d",
-  "jsonHash": "fnv1a64:6df4201411d0e1c7",
+  "jsonHash": "fnv1a64:6daf758586421bd4",
   "findings": []
 }

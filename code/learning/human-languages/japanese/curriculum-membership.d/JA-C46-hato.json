@@ -1,0 +1,11 @@
+{
+  "id": "JA-C46-hato",
+  "pathSegment": "JA-PATH-46-ANIMALS46",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-46-ANIMALS46",
+      "order": 2
+    }
+  ]
+}

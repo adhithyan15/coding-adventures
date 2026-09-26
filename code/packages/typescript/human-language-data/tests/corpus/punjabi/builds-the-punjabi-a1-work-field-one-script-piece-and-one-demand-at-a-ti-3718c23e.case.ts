@@ -27,6 +27,9 @@ it("builds the Punjabi A1 work field one script piece and one demand at a time",
     "PA-W05-work-label",
     "PA-W05-kha",
     "PA-W05-farming",
+    // HL-C443: ਮੌਸਮ (mausam) comes before the ੌ lesson, so the sign is
+    // written from a word the reader has already said.
+    "PA-C20-mausam",
     "PA-W05-au-matra",
     "PA-W05-job",
   ]);

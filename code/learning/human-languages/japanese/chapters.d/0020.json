@@ -1,0 +1,19 @@
+{
+  "chapter": 20,
+  "title": "Nail, Elbow, Knee, Throat, Chest",
+  "label": "ch:ja-nail-elbow-knee-throat-chest",
+  "canDo": "I can say a nail, an elbow, a knee, the throat and the chest.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "JA-C20-mune",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 20: i can say a nail, an elbow, a knee, the throat and the chest.",
+    "assesses": [
+      "JA-LEX-C20-BODY20-03",
+      "JA-LEX-C20-BODY20-04",
+      "JA-LEX-C20-BODY20-05"
+    ]
+  }
+}

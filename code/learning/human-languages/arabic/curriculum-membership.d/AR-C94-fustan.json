@@ -1,0 +1,11 @@
+{
+  "id": "AR-C94-fustan",
+  "pathSegment": "AR-PATH-94-CLOTHES94",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-94-CLOTHES94",
+      "order": 2
+    }
+  ]
+}

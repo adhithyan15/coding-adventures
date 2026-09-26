@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 34,
+  "title": "Watermelon, White radish, Carrot, Tofu, Salt",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b307914fdef7c2a7",
+  "lessons": [
+    {
+      "id": "JA-C34-suika",
+      "sequence": 2310,
+      "title": "すいか (suika) — a watermelon",
+      "headword": "すいか",
+      "romanization": "suika",
+      "gloss": "a watermelon",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f65e5e3728940a57",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a peach, then the Japanese for a pear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: すいか",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "すいか — suika — \"a watermelon\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suika, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suika*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say suika",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *suika*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a peach, then the Japanese for a pear, then say suika again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a peach, then the Japanese for a pear, then say *suika* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does すいか (suika) mean? (\"A watermelon\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C34-suika-type",
+              "prompt": "Type the Japanese for 'a watermelon'.",
+              "assesses": [
+                "JA-LEX-C34-FOOD34-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "すいか",
+                "suika"
+              ],
+              "feedback": {
+                "correct": "Right: すいか (suika) is 'a watermelon'.",
+                "incorrect": "'a watermelon' is すいか (suika)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C34-daikon",
+      "sequence": 2320,
+      "title": "だいこん (daikon) — a white radish",
+      "headword": "だいこん",
+      "romanization": "daikon",
+      "gloss": "a white radish",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8275ed42a1f1d7cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a pear, then the Japanese for a watermelon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: だいこん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "だいこん — daikon — \"a white radish\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daikon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daikon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "daikon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *daikon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say daikon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *daikon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a pear, then the Japanese for a watermelon, then say daikon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a pear, then the Japanese for a watermelon, then say *daikon* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does だいこん (daikon) mean? (\"A white radish\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C34-daikon-type",
+              "prompt": "Type the Japanese for 'a white radish'.",
+              "assesses": [
+                "JA-LEX-C34-FOOD34-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "だいこん",
+                "daikon"
+              ],
+              "feedback": {
+                "correct": "Right: だいこん (daikon) is 'a white radish'.",
+                "incorrect": "'a white radish' is だいこん (daikon)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C34-ninjin",
+      "sequence": 2330,
+      "title": "にんじん (ninjin) — a carrot",
+      "headword": "にんじん",
+      "romanization": "ninjin",
+      "gloss": "a carrot",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12bed8a887c19f72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a watermelon, then the Japanese for a white radish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: にんじん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にんじん — ninjin — \"a carrot\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ninjin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ninjin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ninjin, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ninjin*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ninjin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ninjin*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a watermelon, then the Japanese for a white radish, then say ninjin again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a watermelon, then the Japanese for a white radish, then say *ninjin* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does にんじん (ninjin) mean? (\"A carrot\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C34-ninjin-type",
+              "prompt": "Type the Japanese for 'a carrot'.",
+              "assesses": [
+                "JA-LEX-C34-FOOD34-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "にんじん",
+                "ninjin"
+              ],
+              "feedback": {
+                "correct": "Right: にんじん (ninjin) is 'a carrot'.",
+                "incorrect": "'a carrot' is にんじん (ninjin)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C34-toufu",
+      "sequence": 2340,
+      "title": "とうふ (toufu) — tofu",
+      "headword": "とうふ",
+      "romanization": "toufu",
+      "gloss": "tofu",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b76a93cb50f740d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a white radish, then the Japanese for a carrot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: とうふ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "とうふ — toufu — \"tofu\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toufu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toufu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toufu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toufu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say toufu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *toufu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a white radish, then the Japanese for a carrot, then say toufu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a white radish, then the Japanese for a carrot, then say *toufu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does とうふ (toufu) mean? (\"Tofu\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C34-toufu-type",
+              "prompt": "Type the Japanese for 'tofu'.",
+              "assesses": [
+                "JA-LEX-C34-FOOD34-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "とうふ",
+                "toufu"
+              ],
+              "feedback": {
+                "correct": "Right: とうふ (toufu) is 'tofu'.",
+                "incorrect": "'tofu' is とうふ (toufu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C34-shio",
+      "sequence": 2350,
+      "title": "しお (shio) — salt",
+      "headword": "しお",
+      "romanization": "shio",
+      "gloss": "salt",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02c5b99b25db8028",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a carrot, then the Japanese for tofu."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しお",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しお — shio — \"salt\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shio, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shio*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say shio",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *shio*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a carrot, then the Japanese for tofu, then say shio again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a carrot, then the Japanese for tofu, then say *shio* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しお (shio) mean? (\"Salt\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C34-shio-type",
+              "prompt": "Type the Japanese for 'salt'.",
+              "assesses": [
+                "JA-LEX-C34-FOOD34-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しお",
+                "shio"
+              ],
+              "feedback": {
+                "correct": "Right: しお (shio) is 'salt'.",
+                "incorrect": "'salt' is しお (shio)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

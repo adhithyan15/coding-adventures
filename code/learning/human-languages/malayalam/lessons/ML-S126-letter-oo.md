@@ -9,17 +9,17 @@ type: writing
 headword: "ഓ"
 gloss: the single character ഓ — recognised inside words you already say
 romanization: "ō"
-prerequisites: [ML-S131-chillu-nn]
+prerequisites: [ML-S131-chillu-nn, ML-C03-ola]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-131]
+  knowledge: [ML-SCRIPT-RECOG-131, ML-LEX-ANCHOR-OLA]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-126]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-131, ML-SCRIPT-RECOG-126]
+  knowledge: [ML-SCRIPT-RECOG-131, ML-SCRIPT-RECOG-126, ML-LEX-ANCHOR-OLA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-S131-chillu-nn]
 # ഓ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-131] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-131, ML-LEX-ANCHOR-OLA] -->
 
 [PAUSE 1s] Before the new one: ൺ — what does it do?
 

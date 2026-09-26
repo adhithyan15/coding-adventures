@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:8662cb8b7a64e7e3",
+  "lessonIds": [
+    "FA-C69-inja",
+    "FA-C69-anja",
+    "FA-C69-rast",
+    "FA-C69-chap",
+    "FA-C69-khiyaban"
+  ],
+  "tex": "persian/book/chapters/ch69-here-there-right-left-street.tex"
+}

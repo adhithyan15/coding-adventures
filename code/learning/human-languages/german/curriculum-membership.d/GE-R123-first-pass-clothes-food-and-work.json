@@ -1,0 +1,11 @@
+{
+  "id": "GE-R123-first-pass-clothes-food-and-work",
+  "pathSegment": "GE-PATH-123-ESSEN123",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-123-ESSEN123",
+      "order": 5
+    }
+  ]
+}

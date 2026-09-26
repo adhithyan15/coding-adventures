@@ -4,11 +4,11 @@
   "chapter": 10,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1c3b31a8b5be138a",
+  "sourceHash": "fnv1a64:2e742bca81697358",
   "lessons": [
     {
       "id": "GU-C04-malishun",
-      "sequence": 240,
+      "sequence": 253,
       "title": "મળીશું (maḷīshũ) — \"(we) will meet\"",
       "headword": "મળીશું",
       "romanization": "maḷīshũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b471bf7c2e824f9f",
+      "sourceHash": "fnv1a64:0144b312a2b8e94f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -142,7 +142,7 @@
     },
     {
       "id": "GU-C04-kaale",
-      "sequence": 250,
+      "sequence": 263,
       "title": "કાલે મળીશું (kāle maḷīshũ) — \"see you tomorrow\"",
       "headword": "કાલે મળીશું",
       "romanization": "kāle maḷīshũ",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c056774b2c19272a",
+      "sourceHash": "fnv1a64:1f85579f351e7970",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -265,7 +265,7 @@
     },
     {
       "id": "GU-C04-pachha",
-      "sequence": 260,
+      "sequence": 273,
       "title": "પાછા (pāchhā) — \"again, back\"",
       "headword": "પાછા",
       "romanization": "pāchhā",
@@ -276,7 +276,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:45c27dc44d9d57a3",
+      "sourceHash": "fnv1a64:7a5295160f332973",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -379,7 +379,7 @@
     },
     {
       "id": "GU-C04-pachha-malishun",
-      "sequence": 270,
+      "sequence": 283,
       "title": "પાછા મળીશું (pāchhā maḷīshũ) — \"we'll meet again\"",
       "headword": "પાછા મળીશું",
       "romanization": "pāchhā maḷīshũ",
@@ -390,7 +390,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ee11226d486e730",
+      "sourceHash": "fnv1a64:efef7a1e4987397a",
       "notice": null,
       "blocks": [
         {
@@ -482,7 +482,7 @@
     },
     {
       "id": "GU-C04-practice",
-      "sequence": 280,
+      "sequence": 293,
       "title": "Chapter 6 — The farewells",
       "headword": "(dialogue)",
       "romanization": "",
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfb8461d09ad30ea",
+      "sourceHash": "fnv1a64:fadc99bb044ad896",
       "notice": null,
       "blocks": [
         {

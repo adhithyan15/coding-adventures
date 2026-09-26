@@ -1,0 +1,11 @@
+{
+  "id": "PA-C52-khush",
+  "pathSegment": "PA-PATH-52-HEALTH52",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-52-HEALTH52",
+      "order": 4
+    }
+  ]
+}

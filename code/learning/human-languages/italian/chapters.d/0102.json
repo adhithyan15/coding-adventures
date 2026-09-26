@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "Rucksack, World, People, Woman, Chest",
+  "label": "ch:it-rucksack-world-people-woman-chest",
+  "canDo": "I can say a rucksack, the world, people, a woman and the chest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C102-petto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can say a rucksack, the world, people, a woman and the chest.",
+    "assesses": [
+      "IT-LEX-C102-OGGETTI102-03",
+      "IT-LEX-C102-OGGETTI102-04",
+      "IT-LEX-C102-OGGETTI102-05"
+    ]
+  }
+}

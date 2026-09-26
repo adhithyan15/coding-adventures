@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C65-diruz",
+    "language": "persian",
+    "chapter": 65,
+    "sequence": 3150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fb20cf1dc7990d1"
+  },
+  "findings": []
+}

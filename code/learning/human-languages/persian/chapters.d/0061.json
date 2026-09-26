@@ -1,0 +1,19 @@
+{
+  "chapter": 61,
+  "title": "Full, Empty, Rich, Poor, Clean",
+  "label": "ch:fa-full-empty-rich-poor-clean",
+  "canDo": "I can say full, empty, rich, poor and clean.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-R61-second-pass-school-nature-and-animals",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 61: i can say full, empty, rich, poor and clean.",
+    "assesses": [
+      "FA-LEX-C61-ADJ61-03",
+      "FA-LEX-C61-ADJ61-04",
+      "FA-LEX-C61-ADJ61-05"
+    ]
+  }
+}

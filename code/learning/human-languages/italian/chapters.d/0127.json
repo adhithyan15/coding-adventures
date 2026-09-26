@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Serious, Right, Wrong, Ready, Safe",
+  "label": "ch:it-serious-right-wrong-ready-safe",
+  "canDo": "I can say serious, right, wrong, ready and safe.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C127-sicuro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can say serious, right, wrong, ready and safe.",
+    "assesses": [
+      "IT-LEX-C127-QUALITA127-03",
+      "IT-LEX-C127-QUALITA127-04",
+      "IT-LEX-C127-QUALITA127-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C61-grossvater",
+    "language": "german",
+    "chapter": 61,
+    "sequence": 1830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2485101a2f03fa05"
+  },
+  "findings": []
+}

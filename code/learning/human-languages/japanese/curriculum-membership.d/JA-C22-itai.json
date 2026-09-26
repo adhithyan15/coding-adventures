@@ -1,0 +1,11 @@
+{
+  "id": "JA-C22-itai",
+  "pathSegment": "JA-PATH-22-BODY22",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-22-BODY22",
+      "order": 4
+    }
+  ]
+}

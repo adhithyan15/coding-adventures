@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:ba4d808182e72677",
+  "lessonIds": [
+    "FR-C114-dentifrice",
+    "FR-C114-shampooing",
+    "FR-C114-peigne",
+    "FR-C114-poubelle",
+    "FR-C114-balai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch114.txt",
+  "json": "french/narration/ch114.json",
+  "textHash": "fnv1a64:23330195cde8c736",
+  "jsonHash": "fnv1a64:4f4a5555a5f287d1",
+  "findings": []
+}

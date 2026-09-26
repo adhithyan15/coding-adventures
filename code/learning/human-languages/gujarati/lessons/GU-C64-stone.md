@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C64-stone
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3280
+sequence: 3293
 chapter: 64
 type: word
 headword: "પથ્થર"

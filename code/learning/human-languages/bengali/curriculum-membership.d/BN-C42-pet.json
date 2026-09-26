@@ -1,0 +1,11 @@
+{
+  "id": "BN-C42-pet",
+  "pathSegment": "BN-PATH-42-BODY42",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-42-BODY42",
+      "order": 4
+    }
+  ]
+}

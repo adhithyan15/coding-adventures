@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-99-WORLD99",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "AR-EXT-99-WORLD99"
+  ],
+  "after": []
+}

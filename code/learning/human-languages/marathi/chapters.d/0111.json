@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "Early, Lateness, Before, After, Time",
+  "label": "ch:mr-early-lateness-before-after-time",
+  "canDo": "I can say early, soon, lateness, before, after, later and time.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "MR-C111-vel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can say early, soon, lateness, before, after, later and time.",
+    "assesses": [
+      "MR-LEX-C111-TIME111-03",
+      "MR-LEX-C111-TIME111-04",
+      "MR-LEX-C111-TIME111-05"
+    ]
+  }
+}

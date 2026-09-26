@@ -3,7 +3,7 @@
     "id": "GU-C81-twelve",
     "language": "gujarati",
     "chapter": 81,
-    "sequence": 4120,
+    "sequence": 4133,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2892b620aee368a0"
+    "sourceHash": "fnv1a64:ce861c9c90024690"
   },
   "findings": []
 }

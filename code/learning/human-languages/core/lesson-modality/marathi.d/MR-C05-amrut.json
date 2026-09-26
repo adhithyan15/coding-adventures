@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C05-amrut",
+    "language": "marathi",
+    "chapter": 5,
+    "sequence": 57,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d271c01e42166272"
+  },
+  "findings": []
+}

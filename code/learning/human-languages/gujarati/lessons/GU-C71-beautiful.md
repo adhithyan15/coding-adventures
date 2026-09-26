@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C71-beautiful
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3640
+sequence: 3653
 chapter: 71
 type: word
 headword: "સુંદર"

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:84ca0ac9ca7f10dd",
+  "lessonIds": [
+    "IT-C87-aeroporto",
+    "IT-C87-fermata",
+    "IT-C87-paese",
+    "IT-C87-cinema",
+    "IT-C87-teatro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch87.txt",
+  "json": "italian/narration/ch87.json",
+  "textHash": "fnv1a64:747de1e26787fe7e",
+  "jsonHash": "fnv1a64:4053593f5fc05c59",
+  "findings": []
+}

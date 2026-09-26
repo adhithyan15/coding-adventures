@@ -1,0 +1,11 @@
+{
+  "id": "IT-C94-forno",
+  "pathSegment": "IT-PATH-94-CASA94",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-94-CASA94",
+      "order": 4
+    }
+  ]
+}

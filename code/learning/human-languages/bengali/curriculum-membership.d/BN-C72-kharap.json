@@ -1,0 +1,11 @@
+{
+  "id": "BN-C72-kharap",
+  "pathSegment": "BN-PATH-72-ADJ72",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-72-ADJ72",
+      "order": 4
+    }
+  ]
+}

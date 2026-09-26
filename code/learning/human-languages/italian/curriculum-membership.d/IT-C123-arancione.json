@@ -1,0 +1,11 @@
+{
+  "id": "IT-C123-arancione",
+  "pathSegment": "IT-PATH-123-COLORI123",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-123-COLORI123",
+      "order": 3
+    }
+  ]
+}

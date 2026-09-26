@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:438319202cc9fb22",
+  "lessonIds": [
+    "JA-C23-kusuri",
+    "JA-C23-nemui",
+    "JA-C23-kanashii",
+    "JA-C23-tanoshii",
+    "JA-C23-kowai"
+  ],
+  "tex": "japanese/book/chapters/ch23-medicine-sleepy-sad-fun-scary.tex"
+}

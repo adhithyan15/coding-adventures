@@ -1,0 +1,11 @@
+{
+  "id": "JA-R54-first-pass-food-and-the-home",
+  "pathSegment": "JA-PATH-54-TIME54",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "JA-EXT-54-TIME54",
+      "order": 5
+    }
+  ]
+}

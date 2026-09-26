@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C59-boushi",
+    "language": "japanese",
+    "chapter": 59,
+    "sequence": 3600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3bf326737a5dc0fe"
+  },
+  "findings": []
+}

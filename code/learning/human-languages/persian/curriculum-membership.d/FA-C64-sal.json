@@ -1,0 +1,11 @@
+{
+  "id": "FA-C64-sal",
+  "pathSegment": "FA-PATH-64-ADJ64",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-64-ADJ64",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C63-dakhala",
+  "pathSegment": "AR-PATH-63-VERBS63",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-63-VERBS63",
+      "order": 4
+    }
+  ]
+}

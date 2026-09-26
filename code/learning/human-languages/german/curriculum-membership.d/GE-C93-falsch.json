@@ -1,0 +1,11 @@
+{
+  "id": "GE-C93-falsch",
+  "pathSegment": "GE-PATH-93-ADJ5",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-93-ADJ5",
+      "order": 1
+    }
+  ]
+}

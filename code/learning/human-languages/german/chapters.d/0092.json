@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Clean, Dirty, Thick, Thin, Quiet",
+  "label": "ch:ge-clean-dirty-thick-thin-quiet",
+  "canDo": "I can say clean, dirty, thick, thin and quiet.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GE-C92-leise",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can say clean, dirty, thick, thin and quiet.",
+    "assesses": [
+      "GE-LEX-C92-ADJ4-03",
+      "GE-LEX-C92-ADJ4-04",
+      "GE-LEX-C92-ADJ4-05"
+    ]
+  }
+}

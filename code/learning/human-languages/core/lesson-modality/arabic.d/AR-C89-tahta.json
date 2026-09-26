@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C89-tahta",
+    "language": "arabic",
+    "chapter": 89,
+    "sequence": 3430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7a6f9bfa6639e731"
+  },
+  "findings": []
+}

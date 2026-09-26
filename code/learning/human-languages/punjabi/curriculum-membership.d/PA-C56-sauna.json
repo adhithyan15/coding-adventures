@@ -1,0 +1,11 @@
+{
+  "id": "PA-C56-sauna",
+  "pathSegment": "PA-PATH-56-FAMILY56",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-56-FAMILY56",
+      "order": 4
+    }
+  ]
+}

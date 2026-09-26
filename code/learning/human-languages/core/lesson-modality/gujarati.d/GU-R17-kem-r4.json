@@ -3,7 +3,7 @@
     "id": "GU-R17-kem-r4",
     "language": "gujarati",
     "chapter": 21,
-    "sequence": 810,
+    "sequence": 823,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:72524a3350b43762",
+    "sourceHash": "fnv1a64:30e8f177628ab958",
     "detachableSegments": [
       "Writing — from sound"
     ]

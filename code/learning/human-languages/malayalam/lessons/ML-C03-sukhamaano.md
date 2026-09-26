@@ -9,17 +9,17 @@ headword: സുഖമാണോ?
 gloss: how are you? (lit. "are you well?")
 romanization: "sukhamāṇō?"
 concept_tag: STATE-HOW-ARE-YOU
-prerequisites: [ML-C02-aanu, ML-C03-engane]
+prerequisites: [ML-C02-aanu, ML-C03-engane, ML-C03-ola]
 sounds: [question-o]
 roots: [sukha-sanskrit, aaka-dravidian]
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [ML-LEX-ANCHOR-OLA]
 introduces:
   knowledge: [ML-PHRASE-C03-ARE-YOU-WELL-01, ML-CONCEPT-C03-QUESTION-PARTICLE-O-01]
 practises:
-  knowledge: [ML-PHRASE-C03-ARE-YOU-WELL-01, ML-CONCEPT-C03-QUESTION-PARTICLE-O-01]
+  knowledge: [ML-PHRASE-C03-ARE-YOU-WELL-01, ML-CONCEPT-C03-QUESTION-PARTICLE-O-01, ML-LEX-ANCHOR-OLA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-C02-aanu]
 # സുഖമാണോ? (sukhamāṇō?) — "how are you?"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-OLA] -->
 
 [PAUSE 2s] Malayalam usually asks after your health rather than "how are you" —
 and the question is built from a Chapter-2 word plus a single new sound.

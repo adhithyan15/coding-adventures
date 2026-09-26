@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C43-beta",
+    "language": "urdu",
+    "chapter": 43,
+    "sequence": 2190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ab8412a5965fa4b"
+  },
+  "findings": []
+}

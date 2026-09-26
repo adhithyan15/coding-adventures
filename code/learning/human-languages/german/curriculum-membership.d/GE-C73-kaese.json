@@ -1,0 +1,11 @@
+{
+  "id": "GE-C73-kaese",
+  "pathSegment": "GE-PATH-73-ESSEN5",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-73-ESSEN5",
+      "order": 2
+    }
+  ]
+}

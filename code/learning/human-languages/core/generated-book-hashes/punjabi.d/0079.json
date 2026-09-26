@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:c2f1bcbe796571f2",
+  "lessonIds": [
+    "PA-C79-sapp",
+    "PA-C79-vadda",
+    "PA-C79-chhota",
+    "PA-C79-navam",
+    "PA-C79-purana"
+  ],
+  "tex": "punjabi/book/chapters/ch79-snake-big-small-new-old.tex"
+}

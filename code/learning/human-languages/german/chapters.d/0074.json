@@ -1,0 +1,19 @@
+{
+  "chapter": 74,
+  "title": "Juice, Sausage, Ham, Salad, Noodles",
+  "label": "ch:ge-juice-sausage-ham-salad-noodles",
+  "canDo": "I can say juice, a sausage, ham, a salad and noodles, pasta.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GE-C74-nudeln",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: i can say juice, a sausage, ham, a salad and noodles, pasta.",
+    "assesses": [
+      "GE-LEX-C74-ESSEN6-03",
+      "GE-LEX-C74-ESSEN6-04",
+      "GE-LEX-C74-ESSEN6-05"
+    ]
+  }
+}

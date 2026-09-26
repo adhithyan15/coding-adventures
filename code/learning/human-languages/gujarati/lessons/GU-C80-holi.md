@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C80-holi
 spine_node: SPINE-TAKE-LEAVE
-sequence: 4100
+sequence: 4113
 chapter: 80
 type: word
 headword: "હોળી"

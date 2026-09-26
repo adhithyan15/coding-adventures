@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C39-chha
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 2190
+sequence: 2203
 chapter: 43
 type: word
 headword: છ

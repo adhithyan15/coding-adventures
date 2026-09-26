@@ -1,0 +1,19 @@
+{
+  "chapter": 55,
+  "title": "Horse, Cow, Goat, Sheep, Bird",
+  "label": "ch:fa-horse-cow-goat-sheep-bird",
+  "canDo": "I can say a horse, a cow, a goat, a sheep and a bird.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C55-parande",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 55: i can say a horse, a cow, a goat, a sheep and a bird.",
+    "assesses": [
+      "FA-LEX-C55-ANIMALS55-03",
+      "FA-LEX-C55-ANIMALS55-04",
+      "FA-LEX-C55-ANIMALS55-05"
+    ]
+  }
+}

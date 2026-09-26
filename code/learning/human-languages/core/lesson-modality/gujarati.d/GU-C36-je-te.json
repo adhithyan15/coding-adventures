@@ -3,7 +3,7 @@
     "id": "GU-C36-je-te",
     "language": "gujarati",
     "chapter": 40,
-    "sequence": 2070,
+    "sequence": 2083,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:526f46378042b7a4"
+    "sourceHash": "fnv1a64:36fc16eaa5d5a91e"
   },
   "findings": []
 }

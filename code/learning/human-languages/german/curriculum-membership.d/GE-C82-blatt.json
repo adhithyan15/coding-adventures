@@ -1,0 +1,11 @@
+{
+  "id": "GE-C82-blatt",
+  "pathSegment": "GE-PATH-82-NATUR1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-82-NATUR1",
+      "order": 3
+    }
+  ]
+}

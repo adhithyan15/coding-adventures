@@ -1,0 +1,19 @@
+{
+  "chapter": 49,
+  "title": "To play, To buy, To sell, To put, To open",
+  "label": "ch:bn-to-play-to-buy-to-sell-to-put-to-open",
+  "canDo": "I can say to play, to buy, to sell, to put, to keep and to open.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C49-khola",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 49: i can say to play, to buy, to sell, to put, to keep and to open.",
+    "assesses": [
+      "BN-LEX-C49-VERBS49-03",
+      "BN-LEX-C49-VERBS49-04",
+      "BN-LEX-C49-VERBS49-05"
+    ]
+  }
+}

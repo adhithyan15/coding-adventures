@@ -1,0 +1,11 @@
+{
+  "id": "GE-C140-fuehlen",
+  "pathSegment": "GE-PATH-140-VERB140",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-140-VERB140",
+      "order": 3
+    }
+  ]
+}

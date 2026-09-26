@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C50-kalame",
+    "language": "persian",
+    "chapter": 50,
+    "sequence": 2390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45edf96ee1a2831e"
+  },
+  "findings": []
+}

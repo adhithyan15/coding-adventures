@@ -1,0 +1,11 @@
+{
+  "id": "UR-R87-first-pass-animals-describing-words-and-time",
+  "pathSegment": "UR-PATH-87-WORLD87",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "UR-EXT-87-WORLD87",
+      "order": 5
+    }
+  ]
+}

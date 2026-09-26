@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:45b12f9945c2752e",
+  "lessonIds": [
+    "FA-C55-asb",
+    "FA-C55-gav",
+    "FA-C55-boz",
+    "FA-C55-gusfand",
+    "FA-C55-parande"
+  ],
+  "tex": "persian/book/chapters/ch55-horse-cow-goat-sheep-bird.tex"
+}

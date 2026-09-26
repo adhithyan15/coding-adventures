@@ -1,0 +1,11 @@
+{
+  "id": "UR-C67-billi",
+  "pathSegment": "UR-PATH-67-NATURE67",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-67-NATURE67",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R120-first-pass-describing-words-and-time",
+    "language": "marathi",
+    "chapter": 120,
+    "sequence": 5450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d260b1234806c90"
+  },
+  "findings": []
+}

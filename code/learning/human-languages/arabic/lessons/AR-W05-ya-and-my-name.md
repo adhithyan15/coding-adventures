@@ -8,20 +8,20 @@ type: writing
 headword: "ي"
 gloss: yāʾ — two dots below, a consonant that doubles as the long vowel ī and the suffix "my" — then writing اسمي
 romanization: "yāʾ"
-prerequisites: [AR-W04-dots-family-nun-ta]
+prerequisites: [AR-W04-dots-family-nun-ta, AR-C02-thaman]
 sounds: [arabic-ya, long-i]
 roots: [phoenician-yod]
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [AR-LEX-ANCHOR-THAMAN]
 introduces:
   knowledge: [AR-CONCEPT-W05-YA-01, AR-CONCEPT-W05-YA-02, AR-CONCEPT-W05-YA-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-CONCEPT-W05-YA-01, AR-CONCEPT-W05-YA-02, AR-CONCEPT-W05-YA-03]
+  knowledge: [AR-CONCEPT-W05-YA-01, AR-CONCEPT-W05-YA-02, AR-CONCEPT-W05-YA-03, AR-LEX-ANCHOR-THAMAN]
 skills: [speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -33,7 +33,7 @@ reviews_of: [AR-W04-dots-family-nun-ta, AR-C02-ism, AR-C02-ii-my]
 # ي (yāʾ) — the last dot-letter, and "my name"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-THAMAN] -->
 
 [PAUSE 2s] One more member of the bowl family, and it is a **triple threat**:
 **ي** (*yāʾ*) is a consonant *y*, **and** the long vowel **ī**, **and** the little

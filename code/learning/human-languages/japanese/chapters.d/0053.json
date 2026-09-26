@@ -1,0 +1,19 @@
+{
+  "chapter": 53,
+  "title": "Cold, Tasty, Hot, Cold, Morning",
+  "label": "ch:ja-cold-tasty-hot-cold-morning",
+  "canDo": "I can say cold, tasty, hot, cold and morning.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "JA-C53-asa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 53: i can say cold, tasty, hot, cold and morning.",
+    "assesses": [
+      "JA-LEX-C53-ADJ53-03",
+      "JA-LEX-C53-ADJ53-04",
+      "JA-LEX-C53-ADJ53-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C61-tsuna",
+  "pathSegment": "JA-PATH-61-WORLD61",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-61-WORLD61",
+      "order": 4
+    }
+  ]
+}

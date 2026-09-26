@@ -4,8 +4,113 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b4d22d167e3782af",
+  "sourceHash": "fnv1a64:52255cd67993af76",
   "lessons": [
+    {
+      "id": "TE-C04-dappu",
+      "sequence": 204,
+      "title": "డప్పు (ḍappu) — a drum",
+      "headword": "డప్పు",
+      "romanization": "ḍappu",
+      "gloss": "a drum",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:0b95d5f25f2cbf73",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: డప్పు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "డప్పు — ḍappu — \"a drum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ḍappu. Look at its shape as you say it: the next lesson takes one piece of it, డ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍappu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍappu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍappu, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍappu*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a drum\"? (డప్పు, ḍappu.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "TE-S123-letter-dda",
       "sequence": 205,
@@ -21,7 +126,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:35f2404a58e64c14",
+      "sourceHash": "fnv1a64:f5fd338c6db5c918",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -180,7 +285,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b80bf68af018a88b",
+      "sourceHash": "fnv1a64:ca8555c1bbb4a25f",
       "notice": {
         "modality": "sight",
         "needs": [

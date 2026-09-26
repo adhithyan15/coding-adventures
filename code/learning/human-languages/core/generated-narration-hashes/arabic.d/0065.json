@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:ff9397a11799f867",
+  "lessonIds": [
+    "AR-C65-takallama",
+    "AR-C65-hamala",
+    "AR-C65-faza",
+    "AR-C65-nazala",
+    "AR-C65-samak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch65.txt",
+  "json": "arabic/narration/ch65.json",
+  "textHash": "fnv1a64:bea6ea688f76aa9a",
+  "jsonHash": "fnv1a64:cbf2c3d14003dcf8",
+  "findings": []
+}

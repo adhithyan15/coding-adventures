@@ -1,0 +1,11 @@
+{
+  "id": "FA-C35-nushidan",
+  "pathSegment": "FA-PATH-35-VERBS35",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-35-VERBS35",
+      "order": 1
+    }
+  ]
+}

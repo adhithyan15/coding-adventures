@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 46,
-  "sourceHash": "fnv1a64:553c49d406b28943",
+  "sourceHash": "fnv1a64:745610fe87b1cb91",
   "lessonIds": [
     "GE-C33-ja-nein-frage",
     "GE-C33-imperativ",
@@ -15,6 +15,6 @@
   "text": "german/narration/ch46.txt",
   "json": "german/narration/ch46.json",
   "textHash": "fnv1a64:d9ed39f083d30612",
-  "jsonHash": "fnv1a64:43b39d9cea129c01",
+  "jsonHash": "fnv1a64:4ba82f8439e33e0f",
   "findings": []
 }

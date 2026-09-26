@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C04-it",
+    "language": "bengali",
+    "chapter": 4,
+    "sequence": 269,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9348d2765d0c72ac"
+  },
+  "findings": []
+}

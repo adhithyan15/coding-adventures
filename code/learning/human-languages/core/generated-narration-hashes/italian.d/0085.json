@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:d5c0456f7a72121c",
+  "lessonIds": [
+    "IT-C85-potere",
+    "IT-C85-dovere",
+    "IT-C85-riuscire",
+    "IT-C85-bisogno",
+    "IT-C85-mestiere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch85.txt",
+  "json": "italian/narration/ch85.json",
+  "textHash": "fnv1a64:e069992beebd1519",
+  "jsonHash": "fnv1a64:d3ddbecb574a02c5",
+  "findings": []
+}

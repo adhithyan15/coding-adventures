@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:b2dca514533ead3b",
+  "lessonIds": [
+    "GE-C127-beruf",
+    "GE-C127-klasse",
+    "GE-C127-pruefung",
+    "GE-C127-tafel",
+    "GE-C127-radiergummi"
+  ],
+  "tex": "german/book/chapters/ch127-job-class-exam-board-rubber.tex"
+}

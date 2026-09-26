@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C33-ke-write
 spine_node: SPINE-SAY-WHAT-I-LIKE
-sequence: 1900
+sequence: 1913
 delivery: script
 chapter: 37
 type: writing

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C78-thalj",
+  "pathSegment": "AR-PATH-78-NATURE78",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-78-NATURE78",
+      "order": 1
+    }
+  ]
+}

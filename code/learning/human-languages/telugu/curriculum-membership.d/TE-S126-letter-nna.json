@@ -1,11 +1,11 @@
 {
   "id": "TE-S126-letter-nna",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 44,
+  "pathOrder": 47,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 44
+      "order": 47
     }
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:f89926aeb02e33c6",
+  "lessonIds": [
+    "FA-C49-medad",
+    "FA-C49-khodkar",
+    "FA-C49-madrese",
+    "FA-C49-kif",
+    "FA-C49-pul"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch49.txt",
+  "json": "persian/narration/ch49.json",
+  "textHash": "fnv1a64:869006486ff17f23",
+  "jsonHash": "fnv1a64:f417d35bf5b0fe9b",
+  "findings": []
+}

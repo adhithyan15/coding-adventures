@@ -1,0 +1,11 @@
+{
+  "id": "PA-C57-kharidna",
+  "pathSegment": "PA-PATH-57-VERBS57",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-57-VERBS57",
+      "order": 4
+    }
+  ]
+}

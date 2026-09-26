@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C07-aavvun
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 400
+sequence: 413
 chapter: 13
 type: word
 headword: આવવું

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:bf3fe03642c7da9d",
+  "lessonIds": [
+    "PA-C85-bhura",
+    "PA-C85-din",
+    "PA-C85-sham",
+    "PA-C85-saver",
+    "PA-C85-hafta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch85.txt",
+  "json": "punjabi/narration/ch85.json",
+  "textHash": "fnv1a64:3be122ebf1dcec4d",
+  "jsonHash": "fnv1a64:95002643e1d83b3f",
+  "findings": []
+}

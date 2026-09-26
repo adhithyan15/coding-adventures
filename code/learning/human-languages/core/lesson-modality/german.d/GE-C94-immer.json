@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C94-immer",
+    "language": "german",
+    "chapter": 94,
+    "sequence": 3490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a4412c3a6141748"
+  },
+  "findings": []
+}

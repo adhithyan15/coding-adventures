@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:24ab18ddcf967791",
+  "lessonIds": [
+    "GE-C89-klein",
+    "GE-C89-kurz",
+    "GE-C89-schnell",
+    "GE-C89-langsam",
+    "GE-C89-leicht"
+  ],
+  "tex": "german/book/chapters/ch89-small-short-fast-slow-light.tex"
+}

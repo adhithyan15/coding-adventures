@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Weekend, Date, Century, Never, Often",
+  "label": "ch:ge-weekend-date-century-never-often",
+  "canDo": "I can say the weekend, a date, a century, never and often.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "GE-C137-oft",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: i can say the weekend, a date, a century, never and often.",
+    "assesses": [
+      "GE-LEX-C137-ZEIT137-03",
+      "GE-LEX-C137-ZEIT137-04",
+      "GE-LEX-C137-ZEIT137-05"
+    ]
+  }
+}

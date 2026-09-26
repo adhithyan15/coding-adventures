@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C116-moja",
+    "language": "marathi",
+    "chapter": 116,
+    "sequence": 5220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc69c257863f9e8a"
+  },
+  "findings": []
+}

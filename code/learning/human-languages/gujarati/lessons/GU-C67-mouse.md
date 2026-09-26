@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C67-mouse
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3430
+sequence: 3443
 chapter: 67
 type: word
 headword: "ઉંદર"

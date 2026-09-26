@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:f43697c477eaf593",
+  "lessonIds": [
+    "MW-C49-kako",
+    "MW-C49-mamo",
+    "MW-C49-chhoro",
+    "MW-C49-chhori",
+    "MW-C49-admi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch49.txt",
+  "json": "marwadi/narration/ch49.json",
+  "textHash": "fnv1a64:f6bedd3e984e2f7e",
+  "jsonHash": "fnv1a64:c9899dbf6a1858e7",
+  "findings": []
+}

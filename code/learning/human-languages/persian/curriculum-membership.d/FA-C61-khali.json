@@ -1,0 +1,11 @@
+{
+  "id": "FA-C61-khali",
+  "pathSegment": "FA-PATH-61-ADJ61",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-61-ADJ61",
+      "order": 1
+    }
+  ]
+}

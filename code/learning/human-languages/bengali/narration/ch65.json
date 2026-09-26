@@ -1,0 +1,972 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 65,
+  "title": "Word, Picture, Tree, Flower, Leaf",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:703c689b65ab0338",
+  "lessons": [
+    {
+      "id": "BN-C65-shobdo",
+      "sequence": 3380,
+      "title": "শব্দ (shôbdo) — a word",
+      "headword": "শব্দ",
+      "romanization": "shôbdo",
+      "gloss": "a word",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a814e50e2905b61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for money; taka, then the Bengali for a question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শব্দ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শব্দ — shôbdo — \"a word\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôbdo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôbdo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôbdo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôbdo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say shôbdo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *shôbdo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for money; taka, then the Bengali for a question, then say shôbdo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for money; taka, then the Bengali for a question, then say *shôbdo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শব্দ (shôbdo) mean? (\"A word\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C65-chhobi",
+      "sequence": 3390,
+      "title": "ছবি (chhôbi) — a picture",
+      "headword": "ছবি",
+      "romanization": "chhôbi",
+      "gloss": "a picture",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6eb8615a4b2b3708",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a question, then the Bengali for a word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ছবি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ছবি — chhôbi — \"a picture\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhôbi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhôbi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhôbi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhôbi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chhôbi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chhôbi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a question, then the Bengali for a word, then say chhôbi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a question, then the Bengali for a word, then say *chhôbi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ছবি (chhôbi) mean? (\"A picture\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C65-gachh",
+      "sequence": 3400,
+      "title": "গাছ (gāchh) — a tree",
+      "headword": "গাছ",
+      "romanization": "gāchh",
+      "gloss": "a tree",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:433911c00526d7ff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a word, then the Bengali for a picture."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গাছ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গাছ — gāchh — \"a tree\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāchh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāchh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāchh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāchh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gāchh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gāchh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a word, then the Bengali for a picture, then say gāchh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a word, then the Bengali for a picture, then say *gāchh* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গাছ (gāchh) mean? (\"A tree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C65-phul",
+      "sequence": 3410,
+      "title": "ফুল (phul) — a flower",
+      "headword": "ফুল",
+      "romanization": "phul",
+      "gloss": "a flower",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:edacdf82a9676b94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a picture, then the Bengali for a tree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফুল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফুল — phul — \"a flower\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phul",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phul*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phul, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phul*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say phul",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *phul*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a picture, then the Bengali for a tree, then say phul again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a picture, then the Bengali for a tree, then say *phul* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফুল (phul) mean? (\"A flower\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C65-pata",
+      "sequence": 3420,
+      "title": "পাতা (pātā) — a leaf",
+      "headword": "পাতা",
+      "romanization": "pātā",
+      "gloss": "a leaf",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de66c32f05250e18",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a tree, then the Bengali for a flower."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পাতা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পাতা — pātā — \"a leaf\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pātā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pātā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a tree, then the Bengali for a flower, then say pātā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a tree, then the Bengali for a flower, then say *pātā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পাতা (pātā) mean? (\"A leaf\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R65-first-pass-the-body-family-and-verbs",
+      "sequence": 3430,
+      "title": "The body, family and verbs — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 42-53",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25a6e5dd363b7347",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a flower and a leaf."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hand, hair, a tooth, the throat, the stomach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hand, hair, a tooth, the throat, the stomach]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a shoulder, blood, a knee, the tongue, the head",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a shoulder, blood, a knee, the tongue, the head]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an ear, a fever, a hospital, pain, hunger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an ear, a fever, a hospital, pain, hunger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "happy, a doctor, a father, a son; a boy, a daughter; a girl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: happy, a doctor, a father, a son; a boy, a daughter; a girl]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a grandfather, a grandmother, an uncle, an uncle, an aunt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a grandfather, a grandmother, an uncle, an uncle, an aunt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an aunt, a husband, a wife, a child, a person",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an aunt, a husband, a wife, a child, a person]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a woman, a neighbour, to hear, to sit, to walk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a woman, a neighbour, to hear, to sit, to walk]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to play, to buy, to sell, to put, to open",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to play, to buy, to sell, to put, to open]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wash, to laugh, to cry, to sing, to dance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wash, to laugh, to cry, to sing, to dance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to learn, to forget, to want, to bring, to count",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to learn, to forget, to want, to bring, to count]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to hold, to cut, to stop, to look for, to lose",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to hold, to cut, to stop, to look for, to lose]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wear, to leave, to throw, to fly, to teach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wear, to leave, to throw, to fly, to teach]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A hand? (হাত, hāt.) Hair? (চুল, chul.) A tooth? (দাঁত, dā̃t.) The throat? (গলা, gôlā.) The stomach? (পেট, peṭ.) A shoulder? (কাঁধ, kā̃dh.) Blood? (রক্ত, rôkto.) A knee? (হাঁটু, hā̃ṭu.) The tongue? (জিভ, jibh.) The head? (মাথা, māthā.) An ear? (কান, kān.) A fever? (জ্বর, jbôr.) A hospital? (হাসপাতাল, hāspātāl.) Pain? (ব্যথা, bæthā.) Hunger? (খিদে, khide.) Happy? (খুশি, khushi.) A doctor? (ডাক্তার, ḍāktār.) A father? (বাবা, bābā.) A son; a boy? (ছেলে, chhele.) A daughter; a girl? (মেয়ে, meye.) A grandfather? (দাদু, dādu.) A grandmother? (দিদিমা, didimā.) An uncle? (কাকা, kākā.) An uncle? (মামা, māmā.) An aunt? (মাসি, māshi.) An aunt? (পিসি, pishi.) A husband? (স্বামী, shbāmi.) A wife? (স্ত্রী, stri.) A child? (শিশু, shishu.) A person? (লোক, lok.) A woman? (মহিলা, môhilā.) A neighbour? (প্রতিবেশী, prôtibeshi.) To hear? (শোনা, shonā.) To sit? (বসা, bôsā.) To walk? (হাঁটা, hā̃ṭā.) To play? (খেলা, khælā.) To buy? (কেনা, kenā.) To sell? (বেচা, bechā.) To put? (রাখা, rākhā.) To open? (খোলা, kholā.) To wash? (ধোয়া, dhoyā.) To laugh? (হাসা, hāsā.) To cry? (কাঁদা, kā̃dā.) To sing? (গাওয়া, gāowā.) To dance? (নাচা, nāchā.) To learn? (শেখা, shekhā.) To forget? (ভোলা, bholā.) To want? (চাওয়া, chāowā.) To bring? (আনা, ānā.) To count? (গোনা, gonā.) To hold? (ধরা, dhôrā.) To cut? (কাটা, kāṭā.) To stop? (থামা, thāmā.) To look for? (খোঁজা, khõjā.) To lose? (হারানো, hārāno.) To wear? (পরা, pôrā.) To leave? (ছাড়া, chhāṛā.) To throw? (ফেলা, phælā.) To fly? (ওড়া, oṛā.) To teach? (শেখানো, shekhāno.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R65-second-pass-food-and-the-home",
+      "sequence": 3440,
+      "title": "Food and the home — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 54-65",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aaba997b549ff8d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to make and to lift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to make, to lift, to pull, to hide, to win",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to make, to lift, to pull, to hide, to win]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to change, to call, to get, meat, a fish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to change, to call, to get, meat, a fish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lentils, a fruit, an apple, a banana, a potato",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: lentils, a fruit, an apple, a banana, a potato]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a carrot, salt, butter, honey, oil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a carrot, salt, butter, honey, oil]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an orange, a lemon, an egg, yoghurt, an onion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an orange, a lemon, an egg, yoghurt, an onion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bread, a mango, vegetables, a house, a window",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bread, a mango, vegetables, a house, a window]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a chair, a table, a wall, a roof, a bed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a chair, a table, a wall, a roof, a bed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cupboard, the floor, stairs, a mirror, a lamp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cupboard, the floor, stairs, a mirror, a lamp]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fan, a key, a lock, a plate, a spoon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fan, a key, a lock, a plate, a spoon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a knife, a bottle, a door, a book, an exercise book",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a knife, a bottle, a door, a book, an exercise book]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pen, paper, a school, money; taka, a question",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pen, paper, a school, money; taka, a question]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a word, a picture, a tree, a flower, a leaf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a word, a picture, a tree, a flower, a leaf]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To make? (বানানো, bānāno.) To lift? (তোলা, tolā.) To pull? (টানা, ṭānā.) To hide? (লুকানো, lukāno.) To win? (জেতা, jetā.) To change? (বদলানো, bôdlāno.) To call? (ডাকা, ḍākā.) To get? (পাওয়া, pāowā.) Meat? (মাংস, māngsho.) A fish? (মাছ, māchh.) Lentils? (ডাল, ḍāl.) A fruit? (ফল, phôl.) An apple? (আপেল, āpel.) A banana? (কলা, kôlā.) A potato? (আলু, ālu.) A carrot? (গাজর, gājôr.) Salt? (নুন, nun.) Butter? (মাখন, mākhôn.) Honey? (মধু, môdhu.) Oil? (তেল, tel.) An orange? (কমলা, kômlā.) A lemon? (লেবু, lebu.) An egg? (ডিম, ḍim.) Yoghurt? (দই, dôi.) An onion? (পেঁয়াজ, pẽyāj.) Bread? (রুটি, ruṭi.) A mango? (আম, ām.) Vegetables? (সবজি, sôbji.) A house? (বাড়ি, bāṛi.) A window? (জানালা, jānālā.) A chair? (চেয়ার, cheyār.) A table? (টেবিল, ṭebil.) A wall? (দেয়াল, deyāl.) A roof? (ছাদ, chhād.) A bed? (বিছানা, bichhānā.) A cupboard? (আলমারি, ālmāri.) The floor? (মেঝে, mejhe.) Stairs? (সিঁড়ি, sĩṛi.) A mirror? (আয়না, āynā.) A lamp? (বাতি, bāti.) A fan? (পাখা, pākhā.) A key? (চাবি, chābi.) A lock? (তালা, tālā.) A plate? (থালা, thālā.) A spoon? (চামচ, chāmôch.) A knife? (ছুরি, chhuri.) A bottle? (বোতল, botôl.) A door? (দরজা, dôrjā.) A book? (বই, bôi.) An exercise book? (খাতা, khātā.) A pen? (কলম, kôlôm.) Paper? (কাগজ, kāgôj.) A school? (স্কুল, skul.) Money; taka? (টাকা, ṭākā.) A question? (প্রশ্ন, prôshno.) A word? (শব্দ, shôbdo.) A picture? (ছবি, chhôbi.) A tree? (গাছ, gāchh.) A flower? (ফুল, phul.) A leaf? (পাতা, pātā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

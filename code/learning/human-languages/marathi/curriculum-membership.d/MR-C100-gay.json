@@ -1,0 +1,11 @@
+{
+  "id": "MR-C100-gay",
+  "pathSegment": "MR-PATH-100-ANIMALS100",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-100-ANIMALS100",
+      "order": 1
+    }
+  ]
+}

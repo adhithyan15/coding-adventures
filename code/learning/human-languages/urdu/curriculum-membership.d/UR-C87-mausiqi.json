@@ -1,0 +1,11 @@
+{
+  "id": "UR-C87-mausiqi",
+  "pathSegment": "UR-PATH-87-WORLD87",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-87-WORLD87",
+      "order": 4
+    }
+  ]
+}

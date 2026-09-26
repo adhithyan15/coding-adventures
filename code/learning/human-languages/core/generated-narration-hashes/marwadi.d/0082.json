@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:4d3853d21438bdcf",
+  "lessonIds": [
+    "MW-C82-athai",
+    "MW-C82-bathai",
+    "MW-C82-sarak",
+    "MW-C82-gali",
+    "MW-C82-tesan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch82.txt",
+  "json": "marwadi/narration/ch82.json",
+  "textHash": "fnv1a64:3f4eb33b12142111",
+  "jsonHash": "fnv1a64:74afbd5c141cafdd",
+  "findings": []
+}

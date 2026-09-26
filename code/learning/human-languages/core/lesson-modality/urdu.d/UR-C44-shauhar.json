@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C44-shauhar",
+    "language": "urdu",
+    "chapter": 44,
+    "sequence": 2250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d844a6c663c40db"
+  },
+  "findings": []
+}

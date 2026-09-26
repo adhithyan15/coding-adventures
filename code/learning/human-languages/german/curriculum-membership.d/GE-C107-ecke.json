@@ -1,0 +1,11 @@
+{
+  "id": "GE-C107-ecke",
+  "pathSegment": "GE-PATH-107-ORT107",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-107-ORT107",
+      "order": 1
+    }
+  ]
+}

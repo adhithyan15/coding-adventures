@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Thousand, World, Colour, Song, Holiday",
+  "label": "ch:bn-thousand-world-colour-song-holiday",
+  "canDo": "I can say a thousand, the world, a colour, a song and a holiday.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C88-chhuti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can say a thousand, the world, a colour, a song and a holiday.",
+    "assesses": [
+      "BN-LEX-C88-NUMBERS88-03",
+      "BN-LEX-C88-NUMBERS88-04",
+      "BN-LEX-C88-NUMBERS88-05"
+    ]
+  }
+}

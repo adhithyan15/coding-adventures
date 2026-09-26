@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-122-CORPO122",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "IT-EXT-122-CORPO122"
+  ],
+  "after": []
+}

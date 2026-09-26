@@ -4,11 +4,11 @@
   "chapter": 15,
   "title": "Taking, Asking, Helping, Liking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3c63c8a7c4813ab8",
+  "sourceHash": "fnv1a64:320e1f45080fd105",
   "lessons": [
     {
       "id": "GU-C09-levun",
-      "sequence": 480,
+      "sequence": 493,
       "title": "લેવું (levũ) — \"to take,\" and a family tree with an argument in it",
       "headword": "લેવું",
       "romanization": "levũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ce5092e39460ac48",
+      "sourceHash": "fnv1a64:604426944db7cc04",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -190,7 +190,7 @@
     },
     {
       "id": "GU-C09-puchhvun",
-      "sequence": 490,
+      "sequence": 503,
       "title": "પૂછવું (pūchhvũ) — \"to ask,\" the verb English kept for praying",
       "headword": "પૂછવું",
       "romanization": "pūchhvũ",
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e550f5f6385447a4",
+      "sourceHash": "fnv1a64:adafa1526a6231ed",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -372,7 +372,7 @@
     },
     {
       "id": "GU-C09-madad-karvi",
-      "sequence": 500,
+      "sequence": 513,
       "title": "મદદ કરવી (madad karvī) — \"to help,\" which is a hand held out",
       "headword": "મદદ કરવી",
       "romanization": "madad karvī",
@@ -383,7 +383,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8bd812d51a92376d",
+      "sourceHash": "fnv1a64:f119fb3ce6e0c4fd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -549,7 +549,7 @@
     },
     {
       "id": "GU-C09-gamvun",
-      "sequence": 510,
+      "sequence": 523,
       "title": "ગમવું (gamvũ) — \"to like,\" which is not something you do",
       "headword": "ગમવું",
       "romanization": "gamvũ",
@@ -560,7 +560,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ca41bfff49c9f465",
+      "sourceHash": "fnv1a64:2fdcc2e30023d56b",
       "notice": {
         "modality": "sight",
         "needs": [

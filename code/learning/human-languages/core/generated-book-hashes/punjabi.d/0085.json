@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:19bc52f734a43bbb",
+  "lessonIds": [
+    "PA-C85-bhura",
+    "PA-C85-din",
+    "PA-C85-sham",
+    "PA-C85-saver",
+    "PA-C85-hafta"
+  ],
+  "tex": "punjabi/book/chapters/ch85-brown-day-evening-morning-week.tex"
+}

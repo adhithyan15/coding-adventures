@@ -1,0 +1,11 @@
+{
+  "id": "GE-C63-schuelerin",
+  "pathSegment": "GE-PATH-63-LEUTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-63-LEUTE",
+      "order": 4
+    }
+  ]
+}

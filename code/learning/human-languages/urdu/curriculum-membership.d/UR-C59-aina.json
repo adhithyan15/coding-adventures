@@ -1,0 +1,11 @@
+{
+  "id": "UR-C59-aina",
+  "pathSegment": "UR-PATH-59-HOME59",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-59-HOME59",
+      "order": 3
+    }
+  ]
+}

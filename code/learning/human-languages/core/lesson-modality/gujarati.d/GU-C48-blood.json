@@ -3,7 +3,7 @@
     "id": "GU-C48-blood",
     "language": "gujarati",
     "chapter": 48,
-    "sequence": 2460,
+    "sequence": 2473,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:fdb50e86643c6442"
+    "sourceHash": "fnv1a64:b58b09381a39037e"
   },
   "findings": []
 }

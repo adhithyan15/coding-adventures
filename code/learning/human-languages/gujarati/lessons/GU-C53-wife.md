@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C53-wife
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2690
+sequence: 2703
 chapter: 53
 type: word
 headword: "પત્ની"

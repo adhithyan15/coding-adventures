@@ -1,0 +1,19 @@
+{
+  "chapter": 75,
+  "title": "Cream, Pepper, Nut, Beer, To cut",
+  "label": "ch:ge-cream-pepper-nut-beer-to-cut",
+  "canDo": "I can say cream, pepper, a nut, beer and to cut.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GE-C75-schneiden",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 75: i can say cream, pepper, a nut, beer and to cut.",
+    "assesses": [
+      "GE-LEX-C75-ESSEN7-03",
+      "GE-LEX-C75-ESSEN7-04",
+      "GE-LEX-C75-ESSEN7-05"
+    ]
+  }
+}

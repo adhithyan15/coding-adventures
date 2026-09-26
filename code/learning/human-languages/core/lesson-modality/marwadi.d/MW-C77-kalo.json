@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C77-kalo",
+    "language": "marwadi",
+    "chapter": 77,
+    "sequence": 5190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce5629689c1f2ac0"
+  },
+  "findings": []
+}

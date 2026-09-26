@@ -3,7 +3,7 @@
     "id": "GU-C36-je",
     "language": "gujarati",
     "chapter": 40,
-    "sequence": 2060,
+    "sequence": 2073,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:01824cc9321cb35d"
+    "sourceHash": "fnv1a64:05c7aa40edcfbd4d"
   },
   "findings": []
 }

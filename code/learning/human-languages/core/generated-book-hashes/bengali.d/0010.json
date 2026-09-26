@@ -1,9 +1,11 @@
 {
   "language": "bengali",
   "chapter": 10,
-  "sourceHash": "fnv1a64:c6ceaa28ab76e072",
+  "sourceHash": "fnv1a64:aa465b38249ca06c",
   "lessonIds": [
+    "BN-C10-ojon",
     "BN-W04-o-indep",
+    "BN-C10-para",
     "BN-W04-nukta",
     "BN-W04-howa-read"
   ],

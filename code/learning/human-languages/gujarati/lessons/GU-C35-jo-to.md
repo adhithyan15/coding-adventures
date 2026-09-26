@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C35-jo-to
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 1990
+sequence: 2003
 chapter: 39
 type: phrase
 headword: જો … તો …

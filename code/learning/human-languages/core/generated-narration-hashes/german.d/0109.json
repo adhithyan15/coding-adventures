@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:63947bf7abc2b03b",
+  "lessonIds": [
+    "GE-C109-oben",
+    "GE-C109-unten",
+    "GE-C109-vorne",
+    "GE-C109-hinten",
+    "GE-C109-gegenueber"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch109.txt",
+  "json": "german/narration/ch109.json",
+  "textHash": "fnv1a64:c59b4f56af1c291a",
+  "jsonHash": "fnv1a64:bb08de46f196b5f5",
+  "findings": []
+}

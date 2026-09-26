@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C47-finger
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2390
+sequence: 2403
 chapter: 47
 type: word
 headword: "આંગળી"

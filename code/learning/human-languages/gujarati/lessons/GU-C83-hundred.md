@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C83-hundred
 spine_node: SPINE-RESPOND-BASIC
-sequence: 4220
+sequence: 4233
 chapter: 83
 type: word
 headword: "સો"

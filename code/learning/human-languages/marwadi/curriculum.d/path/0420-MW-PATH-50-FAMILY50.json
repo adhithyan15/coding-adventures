@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-50-FAMILY50",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "MW-EXT-50-FAMILY50"
+  ],
+  "after": []
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C07-jovun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 420
+sequence: 433
 chapter: 13
 type: word
 headword: જોવું

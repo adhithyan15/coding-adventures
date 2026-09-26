@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-R127-first-pass-clothes-and-things-you-carry",
+    "language": "french",
+    "chapter": 127,
+    "sequence": 5850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e50f7fe456104b4"
+  },
+  "findings": []
+}

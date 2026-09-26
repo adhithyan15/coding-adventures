@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C117-foto",
+    "language": "german",
+    "chapter": 117,
+    "sequence": 4740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9a56ff84133e4a8"
+  },
+  "findings": []
+}

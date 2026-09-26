@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Price, Football, Concert, Party, Wish",
+  "label": "ch:it-price-football-concert-party-wish",
+  "canDo": "I can say a price, football, a concert, a party and a wish.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C117-desiderio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say a price, football, a concert, a party and a wish.",
+    "assesses": [
+      "IT-LEX-C117-TEMPOLIBERO117-03",
+      "IT-LEX-C117-TEMPOLIBERO117-04",
+      "IT-LEX-C117-TEMPOLIBERO117-05"
+    ]
+  }
+}

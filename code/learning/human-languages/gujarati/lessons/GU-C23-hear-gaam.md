@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C23-hear-gaam
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1090
+sequence: 1103
 chapter: 27
 type: word
 headword: ગામ

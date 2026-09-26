@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C115-bajar",
+    "language": "marathi",
+    "chapter": 115,
+    "sequence": 5170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3fd06044e0f99e0c"
+  },
+  "findings": []
+}

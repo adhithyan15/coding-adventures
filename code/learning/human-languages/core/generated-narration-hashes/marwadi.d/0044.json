@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:a2e671b6debcd026",
+  "lessonIds": [
+    "MW-C44-pag",
+    "MW-C44-matho",
+    "MW-C44-bal",
+    "MW-C44-dant",
+    "MW-C44-galo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch44.txt",
+  "json": "marwadi/narration/ch44.json",
+  "textHash": "fnv1a64:9eb19f54a9d577c4",
+  "jsonHash": "fnv1a64:b4d62e39cbd53ca2",
+  "findings": []
+}

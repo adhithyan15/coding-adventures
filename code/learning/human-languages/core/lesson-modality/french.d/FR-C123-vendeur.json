@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C123-vendeur",
+    "language": "french",
+    "chapter": 123,
+    "sequence": 5630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:386efc495b1d720f"
+  },
+  "findings": []
+}

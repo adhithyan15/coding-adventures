@@ -1,0 +1,11 @@
+{
+  "id": "GE-C73-marmelade",
+  "pathSegment": "GE-PATH-73-ESSEN5",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-73-ESSEN5",
+      "order": 1
+    }
+  ]
+}

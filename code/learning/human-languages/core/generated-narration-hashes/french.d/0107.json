@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:0f5da66ebea927d9",
+  "lessonIds": [
+    "FR-C107-supermarche",
+    "FR-C107-cinema",
+    "FR-C107-stade",
+    "FR-C107-piscine",
+    "FR-C107-epicerie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch107.txt",
+  "json": "french/narration/ch107.json",
+  "textHash": "fnv1a64:86cdac5b7e4fa168",
+  "jsonHash": "fnv1a64:09298a794221966a",
+  "findings": []
+}

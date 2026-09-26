@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:0179e28dc20ce210",
+  "lessonIds": [
+    "FA-C31-dard",
+    "FA-C31-daru",
+    "FA-C31-teshne",
+    "FA-C31-gorosne",
+    "FA-C31-khoshhal"
+  ],
+  "tex": "persian/book/chapters/ch31-pain-medicine-thirsty-hungry-happy.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C20-nodo",
+  "pathSegment": "JA-PATH-20-BODY20",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-20-BODY20",
+      "order": 3
+    }
+  ]
+}

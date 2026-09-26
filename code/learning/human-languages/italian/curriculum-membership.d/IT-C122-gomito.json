@@ -1,0 +1,11 @@
+{
+  "id": "IT-C122-gomito",
+  "pathSegment": "IT-PATH-122-CORPO122",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-122-CORPO122",
+      "order": 0
+    }
+  ]
+}

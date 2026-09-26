@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:263b657ee7e862b2",
+  "lessonIds": [
+    "GE-C66-singen",
+    "GE-C66-reisen",
+    "GE-C66-zeigen",
+    "GE-C66-bringen",
+    "GE-C66-vergessen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch66.txt",
+  "json": "german/narration/ch66.json",
+  "textHash": "fnv1a64:898b773a0d5af311",
+  "jsonHash": "fnv1a64:be18550e6bc6f13e",
+  "findings": []
+}

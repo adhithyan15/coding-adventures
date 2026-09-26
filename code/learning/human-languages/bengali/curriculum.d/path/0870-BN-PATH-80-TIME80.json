@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-80-TIME80",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "BN-EXT-80-TIME80"
+  ],
+  "after": []
+}

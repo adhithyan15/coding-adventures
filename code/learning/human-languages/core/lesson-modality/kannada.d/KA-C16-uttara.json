@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C16-uttara",
+    "language": "kannada",
+    "chapter": 16,
+    "sequence": 444,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7a1d0ed6f2b870d2"
+  },
+  "findings": []
+}

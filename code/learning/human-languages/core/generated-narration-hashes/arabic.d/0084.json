@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:87f6b478d45dd5f0",
+  "lessonIds": [
+    "AR-C84-farigh",
+    "AR-C84-ghani",
+    "AR-C84-faqir",
+    "AR-C84-nazif",
+    "AR-C84-wasikh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch84.txt",
+  "json": "arabic/narration/ch84.json",
+  "textHash": "fnv1a64:5bf605bf742b76ef",
+  "jsonHash": "fnv1a64:bf344af35bd38072",
+  "findings": []
+}

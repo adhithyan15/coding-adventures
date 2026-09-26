@@ -122,7 +122,20 @@ describe("the gate that would have caught the A2 claim", () => {
     // after its three over-budget lessons were split.
     // 12 -> 13: French, with chapters 49-105 (285 headwords, thirty-seven verbs)
     // after its six over-budget lessons were split.
-    expect(gate.summary.tracksWithAnyLevel).toBe(13);
+    // 13 -> 14: German, with chapters 56-103 (240 headwords, twenty-eight verbs)
+    // after its eight over-budget lessons were split.
+    // 14 -> 15: Urdu, with chapters 38-87 (250 headwords, thirty-seven verbs)
+    // after its three over-budget lessons were split.
+    // 15 -> 16: Punjabi, with chapters 49-98 (250 headwords, thirty-six verbs).
+    // 16 -> 17: Marathi, with chapters 70-120 (255 headwords, thirty-six verbs).
+    // 17 -> 18: Marwadi, with chapters 44-89 (230 headwords, thirty-eight verbs).
+    // 18 -> 19: Bengali, with chapters 42-89 (240 headwords, thirty-six verbs).
+    // 19 -> 20: Arabic, with chapters 50-99 (250 headwords, forty-three verbs).
+    // 20 -> 21: Persian, with chapters 27-78 (260 headwords, twenty-seven verbs)
+    // after its two over-budget lessons were split.
+    // 21 -> 22: Japanese, with chapters 20-71 (260 hiragana headwords, spelled
+    // only with glyphs the script lessons have taught).
+    expect(gate.summary.tracksWithAnyLevel).toBe(22);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
     // C2. The tracks that hold a rung are pinned by name, and the per-level counts
@@ -140,8 +153,23 @@ describe("the gate that would have caught the A2 claim", () => {
       latin: "pre-A1",
       russian: "pre-A1",
       portuguese: "pre-A1",
-      italian: "pre-A1",
-      french: "pre-A1",
+      // Chapters 85-136 (260 words): the can/want chapters realize
+      // SAY-WHAT-I-HAVE-AND-CAN-DO and SAY-WHAT-I-WANT; three reading skills revisited.
+      italian: "A1",
+      // HL-C443 loop: chapters 106-138 (165 words), the numbers chapter filed on
+      // SPINE-COUNT-ONE-TO-FIVE, and fifteen thin atoms revisited.
+      french: "A1",
+      // Chapters 104-141 (190 words), the numbers chapter filed on
+      // SPINE-COUNT-ONE-TO-FIVE, and twenty thin atoms revisited.
+      german: "A1",
+      urdu: "pre-A1",
+      punjabi: "pre-A1",
+      marathi: "pre-A1",
+      marwadi: "pre-A1",
+      bengali: "pre-A1",
+      arabic: "pre-A1",
+      persian: "pre-A1",
+      japanese: "pre-A1",
     };
     const expectedByLevel = new Map<string, number>();
     for (const level of Object.values(HELD)) {
@@ -336,7 +364,9 @@ describe("the first rung anybody actually climbed", () => {
     // The rung comes from the gate rather than from a literal, so this reads the
     // renderer against the data it renders — which is the actual claim — instead of
     // against a constant that has now had to be edited twice.
-    expect(line).toContain(`1 track at ${held} (spanish)`);
+    // French, German and Italian joined Spanish at A1, so the line names all
+    // four, in the order the renderer sorts them.
+    expect(line).toContain(`4 tracks at ${held} (french, german, italian, spanish)`);
     // And it must really be a rung that was climbed, not `null` stringified into the
     // sentence. Without this the line above would pass on "1 track at null (spanish)".
     expect(levelRank(held)).toBeGreaterThanOrEqual(levelRank("A1"));

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:bbd469be5b1a4491",
+  "lessonIds": [
+    "MR-C101-undir",
+    "MR-C101-simha",
+    "MR-C101-vagh",
+    "MR-C101-hatti",
+    "MR-C101-makad"
+  ],
+  "tex": "marathi/book/chapters/ch101-mouse-lion-tiger-elephant-monkey.tex"
+}

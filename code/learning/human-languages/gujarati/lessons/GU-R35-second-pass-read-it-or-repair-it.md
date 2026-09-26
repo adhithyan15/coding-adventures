@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R35-second-pass-read-it-or-repair-it
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1825
+sequence: 1838
 chapter: 35
 type: review
 headword: માફ કરો

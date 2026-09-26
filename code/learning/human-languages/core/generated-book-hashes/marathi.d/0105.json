@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:ac66180b22df8622",
+  "lessonIds": [
+    "MR-C105-svasta",
+    "MR-C105-rikama",
+    "MR-C105-shrimant",
+    "MR-C105-garib",
+    "MR-C105-ghan"
+  ],
+  "tex": "marathi/book/chapters/ch105-cheap-empty-rich-poor-dirt.tex"
+}

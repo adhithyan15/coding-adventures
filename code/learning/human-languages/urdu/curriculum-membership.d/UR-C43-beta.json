@@ -1,0 +1,11 @@
+{
+  "id": "UR-C43-beta",
+  "pathSegment": "UR-PATH-43-FAMILY43",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-43-FAMILY43",
+      "order": 1
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     "id": "GU-C59-fruit",
     "language": "gujarati",
     "chapter": 59,
-    "sequence": 2990,
+    "sequence": 3003,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6e3e48803a971cfd"
+    "sourceHash": "fnv1a64:434695bf955ebc23"
   },
   "findings": []
 }

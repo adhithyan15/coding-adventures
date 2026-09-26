@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-82-ADJ82",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "AR-EXT-82-ADJ82"
+  ],
+  "after": []
+}

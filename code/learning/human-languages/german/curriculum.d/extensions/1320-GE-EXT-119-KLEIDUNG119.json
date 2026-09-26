@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-119-KLEIDUNG119",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a scarf, boots, a skirt, a coat and shoes.",
+  "prerequisites": []
+}

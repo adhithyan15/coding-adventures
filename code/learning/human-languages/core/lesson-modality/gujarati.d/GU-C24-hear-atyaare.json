@@ -3,7 +3,7 @@
     "id": "GU-C24-hear-atyaare",
     "language": "gujarati",
     "chapter": 28,
-    "sequence": 1260,
+    "sequence": 1273,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0c3bc3db98e06941"
+    "sourceHash": "fnv1a64:9db777d97ea7b3b1"
   },
   "findings": []
 }

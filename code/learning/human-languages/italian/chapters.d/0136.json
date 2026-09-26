@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "To tell, To walk, To clean, To find, To look for",
+  "label": "ch:it-to-tell-to-walk-to-clean-to-find-to-look-for",
+  "canDo": "I can say to tell, to walk, to clean, to find and to look for.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-R136-second-pass-more-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: i can say to tell, to walk, to clean, to find and to look for.",
+    "assesses": [
+      "IT-LEX-C136-VERBI136-03",
+      "IT-LEX-C136-VERBI136-04",
+      "IT-LEX-C136-VERBI136-05"
+    ]
+  }
+}

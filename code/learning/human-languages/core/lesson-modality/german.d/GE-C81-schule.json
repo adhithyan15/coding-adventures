@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C81-schule",
+    "language": "german",
+    "chapter": 81,
+    "sequence": 2810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5813d9b95e4ec3c2"
+  },
+  "findings": []
+}

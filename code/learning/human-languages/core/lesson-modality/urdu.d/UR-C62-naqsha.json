@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C62-naqsha",
+    "language": "urdu",
+    "chapter": 62,
+    "sequence": 3150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0bf860b65103b8ba"
+  },
+  "findings": []
+}

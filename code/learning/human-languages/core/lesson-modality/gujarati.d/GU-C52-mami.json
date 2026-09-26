@@ -3,7 +3,7 @@
     "id": "GU-C52-mami",
     "language": "gujarati",
     "chapter": 52,
-    "sequence": 2670,
+    "sequence": 2683,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b7ba730aee1c5fe0"
+    "sourceHash": "fnv1a64:f0a412c1401330e2"
   },
   "findings": []
 }

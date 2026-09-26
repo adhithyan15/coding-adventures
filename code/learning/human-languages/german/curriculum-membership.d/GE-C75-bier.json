@@ -1,0 +1,11 @@
+{
+  "id": "GE-C75-bier",
+  "pathSegment": "GE-PATH-75-ESSEN7",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-75-ESSEN7",
+      "order": 3
+    }
+  ]
+}

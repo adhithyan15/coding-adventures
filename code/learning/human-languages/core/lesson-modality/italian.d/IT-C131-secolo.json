@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C131-secolo",
+    "language": "italian",
+    "chapter": 131,
+    "sequence": 6520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1f2ff668a2b9660"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C123-cuisinier",
+  "pathSegment": "FR-PATH-123-METIERS75",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-123-METIERS75",
+      "order": 1
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C33-vichaarun-ke
 spine_node: SPINE-SAY-WHAT-I-LIKE
-sequence: 1890
+sequence: 1903
 chapter: 37
 type: phrase
 headword: વિચારું છું કે

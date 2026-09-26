@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 26,
+  "sourceHash": "fnv1a64:b4f504f2ee360d8c",
+  "lessonIds": [
+    "JA-C26-tonari",
+    "JA-C26-nakama",
+    "JA-C26-iku",
+    "JA-C26-kau",
+    "JA-C26-nomu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch26.txt",
+  "json": "japanese/narration/ch26.json",
+  "textHash": "fnv1a64:93a5db818a18541a",
+  "jsonHash": "fnv1a64:bf348030952b7aec",
+  "findings": []
+}

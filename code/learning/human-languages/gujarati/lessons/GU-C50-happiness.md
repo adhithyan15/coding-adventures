@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C50-happiness
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2540
+sequence: 2553
 chapter: 50
 type: word
 headword: "ખુશી"

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C51-barg",
+    "language": "persian",
+    "chapter": 51,
+    "sequence": 2450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:219550775a387c91"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C74-kharita",
+  "pathSegment": "AR-PATH-74-SCHOOL74",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-74-SCHOOL74",
+      "order": 2
+    }
+  ]
+}

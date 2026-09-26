@@ -1,0 +1,11 @@
+{
+  "id": "UR-C38-gala",
+  "pathSegment": "UR-PATH-38-BODY38",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-38-BODY38",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C55-khal",
+  "pathSegment": "AR-PATH-55-FAMILY55",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-55-FAMILY55",
+      "order": 2
+    }
+  ]
+}

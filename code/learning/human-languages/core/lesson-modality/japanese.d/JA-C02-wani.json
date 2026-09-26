@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C02-wani",
+    "language": "japanese",
+    "chapter": 2,
+    "sequence": 109,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a0db9463e8f0b06f"
+  },
+  "findings": []
+}

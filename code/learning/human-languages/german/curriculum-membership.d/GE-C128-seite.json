@@ -1,0 +1,11 @@
+{
+  "id": "GE-C128-seite",
+  "pathSegment": "GE-PATH-128-SCHULE128",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-128-SCHULE128",
+      "order": 3
+    }
+  ]
+}

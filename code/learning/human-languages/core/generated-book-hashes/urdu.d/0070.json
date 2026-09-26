@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:2853200a1de6e61c",
+  "lessonIds": [
+    "UR-C70-chhota",
+    "UR-C70-naya",
+    "UR-C70-achchha",
+    "UR-C70-bura",
+    "UR-C70-lamba"
+  ],
+  "tex": "urdu/book/chapters/ch70-small-new-good-bad-long.tex"
+}

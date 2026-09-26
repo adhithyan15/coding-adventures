@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C31-oonjaal",
+    "language": "malayalam",
+    "chapter": 31,
+    "sequence": 634,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:22fea3cbfad2cf34"
+  },
+  "findings": []
+}

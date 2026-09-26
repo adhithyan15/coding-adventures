@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:fcbfd5229915910f",
+  "lessonIds": [
+    "AR-C93-shurta",
+    "AR-C93-suq",
+    "AR-C93-qarya",
+    "AR-C93-madina",
+    "AR-C93-matam"
+  ],
+  "tex": "arabic/book/chapters/ch93-police-market-village-city-restaurant.tex"
+}

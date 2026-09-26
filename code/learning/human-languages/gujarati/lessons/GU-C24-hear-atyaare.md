@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C24-hear-atyaare
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1260
+sequence: 1273
 chapter: 28
 type: word
 headword: અત્યારે

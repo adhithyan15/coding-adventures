@@ -1,0 +1,11 @@
+{
+  "id": "FA-C53-darya",
+  "pathSegment": "FA-PATH-53-NATURE53",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-53-NATURE53",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Mouse, Lion, Tiger, Elephant, Monkey",
+  "label": "ch:mr-mouse-lion-tiger-elephant-monkey",
+  "canDo": "I can say a mouse, a lion, a tiger, an elephant and a monkey.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C101-makad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say a mouse, a lion, a tiger, an elephant and a monkey.",
+    "assesses": [
+      "MR-LEX-C101-ANIMALS101-03",
+      "MR-LEX-C101-ANIMALS101-04",
+      "MR-LEX-C101-ANIMALS101-05"
+    ]
+  }
+}

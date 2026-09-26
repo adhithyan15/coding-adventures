@@ -9,17 +9,17 @@ type: writing
 headword: "೮"
 gloss: the Kannada digit 8, met on top of a word already learned
 romanization: "8"
-prerequisites: [KA-S146-digit-seven, KA-C07-entu]
+prerequisites: [KA-S146-digit-seven, KA-C07-entu, KA-C16-uttara]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-146]
+  knowledge: [KA-SCRIPT-RECOG-146, KA-LEX-ANCHOR-UTTARA]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-147]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-147, KA-SCRIPT-RECOG-146, KA-ETYMON-C07-NUMBERS-6-10-03]
+  knowledge: [KA-SCRIPT-RECOG-147, KA-SCRIPT-RECOG-146, KA-ETYMON-C07-NUMBERS-6-10-03, KA-LEX-ANCHOR-UTTARA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [KA-S146-digit-seven, KA-C07-entu]
 # ೮ — the digit for eṇṭu
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-146] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-146, KA-LEX-ANCHOR-UTTARA] -->
 
 [PAUSE 1s] Before the new shape: **೭** — which number is it?
 

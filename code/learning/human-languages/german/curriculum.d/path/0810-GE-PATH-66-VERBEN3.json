@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-66-VERBEN3",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "GE-EXT-66-VERBEN3"
+  ],
+  "after": []
+}

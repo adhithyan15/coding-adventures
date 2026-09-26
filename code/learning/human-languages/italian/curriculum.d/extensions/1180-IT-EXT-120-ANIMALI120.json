@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-120-ANIMALI120",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a donkey, a rabbit, a tiger, a butterfly and a frog.",
+  "prerequisites": []
+}

@@ -4,11 +4,11 @@
   "chapter": 84,
   "title": "Around Town",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:689aabd60e11a358",
+  "sourceHash": "fnv1a64:b95d0d60f4b71839",
   "lessons": [
     {
       "id": "GU-C84-clinic",
-      "sequence": 4260,
+      "sequence": 4273,
       "title": "દવાખાનું (davākhānũ) — a clinic, a dispensary",
       "headword": "દવાખાનું",
       "romanization": "davākhānũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c560a8f9453cc4d2",
+      "sourceHash": "fnv1a64:e0dd79b4308d11e2",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C84-bank",
-      "sequence": 4270,
+      "sequence": 4283,
       "title": "બેંક (beṅk) — a bank",
       "headword": "બેંક",
       "romanization": "beṅk",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3d6f3f6c09ef0ad",
+      "sourceHash": "fnv1a64:6a9b8ffa78607fb3",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C84-police",
-      "sequence": 4280,
+      "sequence": 4293,
       "title": "પોલીસ (polīs) — the police",
       "headword": "પોલીસ",
       "romanization": "polīs",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c95a87c14b22e42",
+      "sourceHash": "fnv1a64:a095779a5262a552",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C84-ground",
-      "sequence": 4290,
+      "sequence": 4303,
       "title": "મેદાન (medān) — an open ground, a field for play",
       "headword": "મેદાન",
       "romanization": "medān",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cd8a392f2c51aab",
+      "sourceHash": "fnv1a64:3d1db4ae2784d12e",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C84-bridge",
-      "sequence": 4300,
+      "sequence": 4313,
       "title": "પુલ (pul) — a bridge",
       "headword": "પુલ",
       "romanization": "pul",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53ca750fbb4db68f",
+      "sourceHash": "fnv1a64:b905f404dadecd33",
       "notice": null,
       "blocks": [
         {

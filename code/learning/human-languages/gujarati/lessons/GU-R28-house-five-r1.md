@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R28-house-five-r1
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1610
+sequence: 1623
 chapter: 32
 type: practice
 headword: બારણું — બારી — ખુરશી — ચાવી — દીવો

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:6cc20f2deb8a301d",
+  "lessonIds": [
+    "GE-C126-brieftraeger",
+    "GE-C126-kellner",
+    "GE-C126-kunde",
+    "GE-C126-kasse",
+    "GE-C126-chef"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch126.txt",
+  "json": "german/narration/ch126.json",
+  "textHash": "fnv1a64:b23eb8929c63da5e",
+  "jsonHash": "fnv1a64:f54bf5413c5d1327",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C91-bank",
+    "language": "arabic",
+    "chapter": 91,
+    "sequence": 3520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8e7a5c27b7cf091"
+  },
+  "findings": []
+}

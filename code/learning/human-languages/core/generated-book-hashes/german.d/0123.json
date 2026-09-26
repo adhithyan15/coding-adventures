@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:7c2252f4b063f8fc",
+  "lessonIds": [
+    "GE-C123-butter",
+    "GE-C123-sosse",
+    "GE-C123-essig",
+    "GE-C123-nachtisch",
+    "GE-C123-mahlzeit",
+    "GE-R123-first-pass-clothes-food-and-work",
+    "GE-R123-second-pass-school-free-time-and-colours"
+  ],
+  "tex": "german/book/chapters/ch123-butter-sauce-vinegar-dessert-meal.tex"
+}

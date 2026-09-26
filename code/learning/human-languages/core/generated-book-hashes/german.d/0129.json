@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:e2ae18ce32f0d1ab",
+  "lessonIds": [
+    "GE-C129-sport",
+    "GE-C129-film",
+    "GE-C129-fussball",
+    "GE-C129-konzert",
+    "GE-C129-fest"
+  ],
+  "tex": "german/book/chapters/ch129-sport-film-football-concert-celebration.tex"
+}

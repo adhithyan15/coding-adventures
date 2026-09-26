@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C73-qalam",
+    "language": "arabic",
+    "chapter": 73,
+    "sequence": 2610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb193f23f26d2137"
+  },
+  "findings": []
+}

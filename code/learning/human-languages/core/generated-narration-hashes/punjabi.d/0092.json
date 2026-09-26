@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:0989045afb2c3b93",
+  "lessonIds": [
+    "PA-C92-pulis",
+    "PA-C92-kishti",
+    "PA-C92-saikal",
+    "PA-C92-bazar",
+    "PA-C92-kappre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch92.txt",
+  "json": "punjabi/narration/ch92.json",
+  "textHash": "fnv1a64:9e83cecd3680a89d",
+  "jsonHash": "fnv1a64:2be42a613e2946f6",
+  "findings": []
+}

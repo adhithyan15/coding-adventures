@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C63-yume",
+    "language": "japanese",
+    "chapter": 63,
+    "sequence": 3800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b2d7ae16b695a43"
+  },
+  "findings": []
+}

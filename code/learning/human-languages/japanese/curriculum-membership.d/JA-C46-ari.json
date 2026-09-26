@@ -1,0 +1,11 @@
+{
+  "id": "JA-C46-ari",
+  "pathSegment": "JA-PATH-46-ANIMALS46",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-46-ANIMALS46",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C63-gast",
+  "pathSegment": "GE-PATH-63-LEUTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-63-LEUTE",
+      "order": 1
+    }
+  ]
+}

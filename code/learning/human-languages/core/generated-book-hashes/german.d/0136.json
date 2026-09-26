@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:ea80ccf71c39c285",
+  "lessonIds": [
+    "GE-C136-wollen",
+    "GE-C136-wunsch",
+    "GE-C136-hoffen",
+    "GE-C136-bestellen",
+    "GE-C136-lieber"
+  ],
+  "tex": "german/book/chapters/ch136-to-want-wish-to-hope-to-order-rather.tex"
+}

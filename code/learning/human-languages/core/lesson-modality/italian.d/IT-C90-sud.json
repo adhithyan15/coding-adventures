@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C90-sud",
+    "language": "italian",
+    "chapter": 90,
+    "sequence": 4180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2616e5104e925d38"
+  },
+  "findings": []
+}

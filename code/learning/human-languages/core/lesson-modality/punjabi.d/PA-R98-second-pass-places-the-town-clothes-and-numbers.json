@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R98-second-pass-places-the-town-clothes-and-numbers",
+    "language": "punjabi",
+    "chapter": 98,
+    "sequence": 5220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:141a2d50bcac77c2"
+  },
+  "findings": []
+}

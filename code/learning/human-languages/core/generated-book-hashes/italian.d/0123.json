@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:3d02c60d45dcd568",
+  "lessonIds": [
+    "IT-C123-rosa",
+    "IT-C123-viola",
+    "IT-C123-marrone",
+    "IT-C123-arancione",
+    "IT-C123-carino"
+  ],
+  "tex": "italian/book/chapters/ch123-pink-purple-brown-orange-pretty.tex"
+}

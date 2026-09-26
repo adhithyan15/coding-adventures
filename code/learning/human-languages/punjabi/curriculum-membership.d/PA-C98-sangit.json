@@ -1,0 +1,11 @@
+{
+  "id": "PA-C98-sangit",
+  "pathSegment": "PA-PATH-98-WORLD98",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-98-WORLD98",
+      "order": 2
+    }
+  ]
+}

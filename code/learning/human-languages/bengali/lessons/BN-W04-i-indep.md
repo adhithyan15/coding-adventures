@@ -9,18 +9,18 @@ type: writing
 headword: ই
 romanization: "i"
 gloss: "the independent i — the form a vowel takes with nothing to lean on"
-prerequisites: [BN-W02-i-matra]
+prerequisites: [BN-W02-i-matra, BN-C04-it]
 sounds: []
 roots: []
 etymology_hook: "Every vowel in this script has two bodies, a sign for when it follows a consonant and a full letter for when it does not, and the reader has held one such pair since the first script chapter without being told it was a pair."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [BN-SCRIPT-AA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-NAAM-READ-01]
+  knowledge: [BN-SCRIPT-AA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-NAAM-READ-01, BN-LEX-ANCHOR-IT]
 introduces:
   knowledge: [BN-SCRIPT-I-INDEP-01]
 practises:
-  knowledge: [BN-SCRIPT-AA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-NAAM-READ-01, BN-SCRIPT-I-INDEP-01]
+  knowledge: [BN-SCRIPT-AA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-I-MATRA-01, BN-SCRIPT-NAAM-READ-01, BN-SCRIPT-I-INDEP-01, BN-LEX-ANCHOR-IT]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [BN-W02-i-matra, BN-W01-aa]
 # ই — the independent i
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-NAAM-READ-01, BN-SCRIPT-I-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-NAAM-READ-01, BN-SCRIPT-I-MATRA-01, BN-LEX-ANCHOR-IT] -->
 
 [PAUSE 2s] Read **নাম**, then write **ি** and say which side of its consonant it stands on.
 

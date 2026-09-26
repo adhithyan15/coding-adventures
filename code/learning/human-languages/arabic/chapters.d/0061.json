@@ -1,0 +1,19 @@
+{
+  "chapter": 61,
+  "title": "To learn, To forget, To want, To send, To cut",
+  "label": "ch:ar-to-learn-to-forget-to-want-to-send-to-cut",
+  "canDo": "I can say to learn, to forget, to want, to send and to cut.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C61-qataa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 61: i can say to learn, to forget, to want, to send and to cut.",
+    "assesses": [
+      "AR-LEX-C61-VERBS61-03",
+      "AR-LEX-C61-VERBS61-04",
+      "AR-LEX-C61-VERBS61-05"
+    ]
+  }
+}

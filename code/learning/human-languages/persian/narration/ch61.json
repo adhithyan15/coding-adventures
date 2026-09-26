@@ -1,0 +1,909 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 61,
+  "title": "Full, Empty, Rich, Poor, Clean",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:26c8f98d85787b7a",
+  "lessons": [
+    {
+      "id": "FA-C61-por",
+      "sequence": 2910,
+      "title": "پر (por) — full",
+      "headword": "پر",
+      "romanization": "por",
+      "gloss": "full",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7396903403297302",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for expensive, then the Persian for cheap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پر — por — \"full\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "por",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *por*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "por, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *por*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say por",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *por*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for expensive, then the Persian for cheap, then say por again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for expensive, then the Persian for cheap, then say *por* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پر (por) mean? (\"Full\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C61-khali",
+      "sequence": 2920,
+      "title": "خالی (khâli) — empty",
+      "headword": "خالی",
+      "romanization": "khâli",
+      "gloss": "empty",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d8707dc50e56ddb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for cheap, then the Persian for full."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: خالی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خالی — khâli — \"empty\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khâli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khâli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khâli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khâli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say khâli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *khâli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for cheap, then the Persian for full, then say khâli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for cheap, then the Persian for full, then say *khâli* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does خالی (khâli) mean? (\"Empty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C61-puldar",
+      "sequence": 2930,
+      "title": "پولدار (puldâr) — rich",
+      "headword": "پولدار",
+      "romanization": "puldâr",
+      "gloss": "rich",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b92824acb8649169",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for full, then the Persian for empty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پولدار",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پولدار — puldâr — \"rich\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puldâr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puldâr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puldâr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puldâr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say puldâr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *puldâr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for full, then the Persian for empty, then say puldâr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for full, then the Persian for empty, then say *puldâr* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پولدار (puldâr) mean? (\"Rich\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C61-faghir",
+      "sequence": 2940,
+      "title": "فقیر (faghir) — poor",
+      "headword": "فقیر",
+      "romanization": "faghir",
+      "gloss": "poor",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e8a8fc7a3327bda",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for empty, then the Persian for rich."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فقیر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فقیر — faghir — \"poor\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "faghir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *faghir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "faghir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *faghir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say faghir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *faghir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for empty, then the Persian for rich, then say faghir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for empty, then the Persian for rich, then say *faghir* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فقیر (faghir) mean? (\"Poor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C61-tamiz",
+      "sequence": 2950,
+      "title": "تمیز (tamiz) — clean",
+      "headword": "تمیز",
+      "romanization": "tamiz",
+      "gloss": "clean",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2bbc1989fbeeb039",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for rich, then the Persian for poor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: تمیز",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "تمیز — tamiz — \"clean\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamiz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamiz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamiz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamiz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tamiz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tamiz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for rich, then the Persian for poor, then say tamiz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for rich, then the Persian for poor, then say *tamiz* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does تمیز (tamiz) mean? (\"Clean\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R61-first-pass-food-and-the-home",
+      "sequence": 2960,
+      "title": "Food and the home — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 45-52",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d529bab5e54ad056",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for poor and clean."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a house, a room, a window, a chair, a table",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a house, a room, a window, a chair, a table]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wall, a bed, a cupboard, the ground; the earth, a mirror",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wall, a bed, a cupboard, the ground; the earth, a mirror]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lock, a plate, a knife, a fork, a spoon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lock, a plate, a knife, a fork, a spoon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bottle, a kitchen, a bathroom, a glass, a notebook",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bottle, a kitchen, a bathroom, a glass, a notebook]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pencil, a pen, a school, a bag, money",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pencil, a pen, a school, a bag, money]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a map, a lesson, an answer, a word, a game",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a map, a lesson, an answer, a word, a game]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a letter, a newspaper, a tree, a flower, a leaf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a letter, a newspaper, a tree, a flower, a leaf]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mountain, a forest, a river, a lake, a stone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mountain, a forest, a river, a lake, a stone]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A house? (خانه, khâne.) A room? (اتاق, otâgh.) A window? (پنجره, panjere.) A chair? (صندلی, sandali.) A table? (میز, miz.) A wall? (دیوار, divâr.) A bed? (تخت, takht.) A cupboard? (کمد, komod.) The ground; the earth? (زمین, zamin.) A mirror? (آینه, âyene.) A lock? (قفل, ghofl.) A plate? (بشقاب, boshghâb.) A knife? (چاقو, châghu.) A fork? (چنگال, chângâl.) A spoon? (قاشق, ghâshogh.) A bottle? (بطری, bottri.) A kitchen? (آشپزخانه, âshpazkhâne.) A bathroom? (حمام, hammâm.) A glass? (لیوان, livân.) A notebook? (دفتر, daftar.) A pencil? (مداد, medâd.) A pen? (خودکار, khodkâr.) A school? (مدرسه, madrese.) A bag? (کیف, kif.) Money? (پول, pul.) A map? (نقشه, naghshe.) A lesson? (درس, dars.) An answer? (جواب, javâb.) A word? (کلمه, kalame.) A game? (بازی, bâzi.) A letter? (نامه, nâme.) A newspaper? (روزنامه, ruznâme.) A tree? (درخت, derakht.) A flower? (گل, gol.) A leaf? (برگ, barg.) A mountain? (کوه, kuh.) A forest? (جنگل, jangal.) A river? (رودخانه, rudkhâne.) A lake? (دریاچه, daryâche.) A stone? (سنگ, sang.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R61-second-pass-school-nature-and-animals",
+      "sequence": 2970,
+      "title": "School, nature and animals — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 53-61",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b469dc4c39aa8d28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for sand and a cloud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sand, a cloud, the sea, fire, snow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sand, a cloud, the sea, fire, snow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soil, wind, a desert, a dog, a cat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: soil, wind, a desert, a dog, a cat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a horse, a cow, a goat, a sheep, a bird",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a horse, a cow, a goat, a sheep, a bird]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mouse, a tiger, an elephant, a monkey, a snake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mouse, a tiger, an elephant, a monkey, a snake]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bear, a camel, a donkey, a butterfly, an ant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bear, a camel, a donkey, a butterfly, an ant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wolf, big, small, fresh, old",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wolf, big, small, fresh, old]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "long, short, warm, cold, slow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: long, short, warm, cold, slow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fast, easy, hard, expensive, cheap",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fast, easy, hard, expensive, cheap]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "full, empty, rich, poor, clean",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: full, empty, rich, poor, clean]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sand? (ماسه, mâse.) A cloud? (ابر, abr.) The sea? (دریا, daryâ.) Fire? (آتش, âtash.) Snow? (برف, barf.) Soil? (خاک, khâk.) Wind? (باد, bâd.) A desert? (بیابان, biyâbân.) A dog? (سگ, sag.) A cat? (گربه, gorbe.) A horse? (اسب, asb.) A cow? (گاو, gâv.) A goat? (بز, boz.) A sheep? (گوسفند, gusfand.) A bird? (پرنده, parande.) A mouse? (موش, mush.) A tiger? (ببر, bebar.) An elephant? (فیل, fil.) A monkey? (میمون, meymun.) A snake? (مار, mâr.) A bear? (خرس, khers.) A camel? (شتر, shotor.) A donkey? (خر, khar.) A butterfly? (پروانه, parvâne.) An ant? (مورچه, murche.) A wolf? (گرگ, gorg.) Big? (بزرگ, bozorg.) Small? (کوچک, kuchek.) Fresh? (تازه, tâze.) Old? (قدیمی, ghadimi.) Long? (بلند, boland.) Short? (کوتاه, kutâh.) Warm? (گرم, garm.) Cold? (سرد, sard.) Slow? (آهسته, âheste.) Fast? (تند, tond.) Easy? (آسان, âsân.) Hard? (سخت, sakht.) Expensive? (گران, gerân.) Cheap? (ارزان, arzân.) Full? (پر, por.) Empty? (خالی, khâli.) Rich? (پولدار, puldâr.) Poor? (فقیر, faghir.) Clean? (تمیز, tamiz.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

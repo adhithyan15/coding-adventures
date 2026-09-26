@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:ee88eac2a47da509",
+  "lessonIds": [
+    "AR-C94-malabis",
+    "AR-C94-qamis",
+    "AR-C94-fustan",
+    "AR-C94-sirwal",
+    "AR-C94-jawrab"
+  ],
+  "tex": "arabic/book/chapters/ch94-clothes-shirt-dress-trousers-sock.tex"
+}

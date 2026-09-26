@@ -1,0 +1,11 @@
+{
+  "id": "GE-C116-regenschirm",
+  "pathSegment": "GE-PATH-116-DINGE116",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-116-DINGE116",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:98cee4de67ac7f38",
+  "lessonIds": [
+    "MR-C73-ajari",
+    "MR-C73-vedana",
+    "MR-C73-tahan",
+    "MR-C73-bhuk",
+    "MR-C73-anandi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch73.txt",
+  "json": "marathi/narration/ch73.json",
+  "textHash": "fnv1a64:6ad4c9d63a3e2e0b",
+  "jsonHash": "fnv1a64:baa6b3a007219fe3",
+  "findings": []
+}

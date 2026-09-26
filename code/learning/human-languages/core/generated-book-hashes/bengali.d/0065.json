@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:3499550c15ef4013",
+  "lessonIds": [
+    "BN-C65-shobdo",
+    "BN-C65-chhobi",
+    "BN-C65-gachh",
+    "BN-C65-phul",
+    "BN-C65-pata",
+    "BN-R65-first-pass-the-body-family-and-verbs",
+    "BN-R65-second-pass-food-and-the-home"
+  ],
+  "tex": "bengali/book/chapters/ch65-word-picture-tree-flower-leaf.tex"
+}

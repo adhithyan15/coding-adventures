@@ -1,9 +1,10 @@
 {
   "language": "german",
   "chapter": 36,
-  "sourceHash": "fnv1a64:e9769c208af23855",
+  "sourceHash": "fnv1a64:3b5fe984148fc8f4",
   "lessonIds": [
-    "GE-C23-gruen-gelb"
+    "GE-C23-gruen-gelb",
+    "GE-C23-gruen-gelb-more"
   ],
   "tex": "german/book/chapters/ch36-green-and-yellow.tex"
 }

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:93f4da0897e72aec",
+  "lessonIds": [
+    "PA-C89-sahmane",
+    "PA-C89-pichchhe",
+    "PA-C89-itthe",
+    "PA-C89-utthe",
+    "PA-C89-dukan"
+  ],
+  "tex": "punjabi/book/chapters/ch89-in-front-behind-here-there-shop.tex"
+}

@@ -4,11 +4,11 @@
   "chapter": 27,
   "title": "Village and Shop Complete Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4510dc11c0942a40",
+  "sourceHash": "fnv1a64:80f0f0e86346c21a",
   "lessons": [
     {
       "id": "GU-C23-hear-gaam",
-      "sequence": 1090,
+      "sequence": 1103,
       "title": "ગામ (gām) — hear village first",
       "headword": "ગામ",
       "romanization": "gām",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1998e019796f228",
+      "sourceHash": "fnv1a64:4b341774cd255a45",
       "notice": null,
       "blocks": [
         {
@@ -77,7 +77,7 @@
     },
     {
       "id": "GU-R23-route-three-r1",
-      "sequence": 1095,
+      "sequence": 1108,
       "title": "The three-word route returns at R1",
       "headword": "શહેર — શાળા — રસ્તો",
       "romanization": "shahar — shāḷā — rasto",
@@ -89,7 +89,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d219e0c17545e5aa",
+      "sourceHash": "fnv1a64:f2bbf99e43addea1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -249,7 +249,7 @@
     },
     {
       "id": "GU-C23-gaam",
-      "sequence": 1100,
+      "sequence": 1113,
       "title": "ગામ (gām) — village on the page",
       "headword": "ગામ",
       "romanization": "gām",
@@ -260,7 +260,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:61c614a28b769d29",
+      "sourceHash": "fnv1a64:4bb4d2b2fb5a4719",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -325,7 +325,7 @@
     },
     {
       "id": "GU-C23-hear-dukaan",
-      "sequence": 1110,
+      "sequence": 1123,
       "title": "દુકાન (dukān) — hear shop first",
       "headword": "દુકાન",
       "romanization": "dukān",
@@ -336,7 +336,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df57ebfd746a7e55",
+      "sourceHash": "fnv1a64:f63e4d28fc8059c7",
       "notice": null,
       "blocks": [
         {
@@ -396,7 +396,7 @@
     },
     {
       "id": "GU-C23-dukaan",
-      "sequence": 1120,
+      "sequence": 1133,
       "title": "દુકાન (dukān) — shop on the page",
       "headword": "દુકાન",
       "romanization": "dukān",
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:7b2f5556eb03d8fe",
+      "sourceHash": "fnv1a64:29fe4a7270cd126e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -472,7 +472,7 @@
     },
     {
       "id": "GU-R23-map-ten",
-      "sequence": 1130,
+      "sequence": 1143,
       "title": "Retrieve the ten-word map",
       "headword": "બજાર — ઘર — મંદિર — હાથ — પૈસા — શહેર — શાળા — રસ્તો — ગામ — દુકાન",
       "romanization": "bajār — ghar — mandir — hāth — paisā — shahar — shāḷā — rasto — gām — dukān",
@@ -483,7 +483,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:39c27b5a8ee5a5ce",
+      "sourceHash": "fnv1a64:6c348c7a175b1540",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -555,7 +555,7 @@
     },
     {
       "id": "GU-C23-map-ten",
-      "sequence": 1140,
+      "sequence": 1153,
       "title": "Payoff — ten words in four skills",
       "headword": "બજાર — ઘર — મંદિર — હાથ — પૈસા — શહેર — શાળા — રસ્તો — ગામ — દુકાન",
       "romanization": "bajār — ghar — mandir — hāth — paisā — shahar — shāḷā — rasto — gām — dukān",
@@ -566,7 +566,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:5330cb820ecdcb44",
+      "sourceHash": "fnv1a64:f8113627d656a538",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -637,7 +637,7 @@
     },
     {
       "id": "GU-R23-shaalaa-rasto-r2",
-      "sequence": 1150,
+      "sequence": 1163,
       "title": "School and road return at R2",
       "headword": "શાળા — રસ્તો",
       "romanization": "shāḷā — rasto",
@@ -649,7 +649,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:b44900025a03a964",
+      "sourceHash": "fnv1a64:29537d9883a692da",
       "notice": {
         "modality": "pen",
         "needs": [

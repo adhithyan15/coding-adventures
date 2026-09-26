@@ -1,0 +1,11 @@
+{
+  "id": "GE-C124-koch",
+  "pathSegment": "GE-PATH-124-BERUF124",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-124-BERUF124",
+      "order": 2
+    }
+  ]
+}

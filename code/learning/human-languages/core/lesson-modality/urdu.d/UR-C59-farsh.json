@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C59-farsh",
+    "language": "urdu",
+    "chapter": 59,
+    "sequence": 2990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83539f2df36192b2"
+  },
+  "findings": []
+}

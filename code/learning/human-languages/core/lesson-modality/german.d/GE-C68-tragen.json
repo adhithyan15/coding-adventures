@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C68-tragen",
+    "language": "german",
+    "chapter": 68,
+    "sequence": 2140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30ea663c54c87cb3"
+  },
+  "findings": []
+}

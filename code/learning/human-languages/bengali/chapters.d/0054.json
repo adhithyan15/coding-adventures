@@ -1,0 +1,19 @@
+{
+  "chapter": 54,
+  "title": "To make, To lift, To pull, To hide, To win",
+  "label": "ch:bn-to-make-to-lift-to-pull-to-hide-to-win",
+  "canDo": "I can say to make, to lift, to pull, to hide and to win.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C54-jeta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 54: i can say to make, to lift, to pull, to hide and to win.",
+    "assesses": [
+      "BN-LEX-C54-VERBS54-03",
+      "BN-LEX-C54-VERBS54-04",
+      "BN-LEX-C54-VERBS54-05"
+    ]
+  }
+}

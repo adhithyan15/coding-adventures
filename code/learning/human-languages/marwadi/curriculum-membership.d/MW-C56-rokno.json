@@ -1,0 +1,11 @@
+{
+  "id": "MW-C56-rokno",
+  "pathSegment": "MW-PATH-56-VERBS56",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-56-VERBS56",
+      "order": 3
+    }
+  ]
+}

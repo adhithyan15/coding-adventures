@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "Sun, Moon, Sea, Fire, Snow",
+  "label": "ch:mr-sun-moon-sea-fire-snow",
+  "canDo": "I can say the sun, the moon, the sea, fire and snow.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C98-barpha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 98: i can say the sun, the moon, the sea, fire and snow.",
+    "assesses": [
+      "MR-LEX-C98-NATURE98-03",
+      "MR-LEX-C98-NATURE98-04",
+      "MR-LEX-C98-NATURE98-05"
+    ]
+  }
+}

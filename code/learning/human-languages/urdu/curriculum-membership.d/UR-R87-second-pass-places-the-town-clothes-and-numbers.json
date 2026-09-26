@@ -1,0 +1,11 @@
+{
+  "id": "UR-R87-second-pass-places-the-town-clothes-and-numbers",
+  "pathSegment": "UR-PATH-87-WORLD87",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "UR-EXT-87-WORLD87",
+      "order": 6
+    }
+  ]
+}

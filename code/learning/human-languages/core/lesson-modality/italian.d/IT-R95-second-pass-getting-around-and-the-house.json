@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R95-second-pass-getting-around-and-the-house",
+    "language": "italian",
+    "chapter": 95,
+    "sequence": 4460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a07f1b39669fff4"
+  },
+  "findings": []
+}

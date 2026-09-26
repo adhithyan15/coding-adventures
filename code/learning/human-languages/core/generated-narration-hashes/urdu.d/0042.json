@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:7326de678dac00f9",
+  "lessonIds": [
+    "UR-C42-bhuk",
+    "UR-C42-khush",
+    "UR-C42-udas",
+    "UR-C42-bap",
+    "UR-C42-abbu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch42.txt",
+  "json": "urdu/narration/ch42.json",
+  "textHash": "fnv1a64:3652404d354e9aad",
+  "jsonHash": "fnv1a64:38ad9c61c04aee9c",
+  "findings": []
+}

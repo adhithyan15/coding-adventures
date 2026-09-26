@@ -1,8 +1,11 @@
 {
   "language": "marathi",
   "chapter": 5,
-  "sourceHash": "fnv1a64:5bb2925fd534fec3",
+  "sourceHash": "fnv1a64:37144ed46ab813b8",
   "lessonIds": [
+    "MR-C05-amrut",
+    "MR-C05-kiran",
+    "MR-C05-tup",
     "MR-W05-i-matra",
     "MR-W05-u-matra",
     "MR-W05-uu-matra",

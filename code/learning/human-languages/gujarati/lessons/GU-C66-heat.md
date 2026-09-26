@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C66-heat
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 3360
+sequence: 3373
 chapter: 66
 type: word
 headword: "ગરમી"

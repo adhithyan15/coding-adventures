@@ -1,0 +1,11 @@
+{
+  "id": "GE-R103-second-pass-town-clothes-numbers-and-more",
+  "pathSegment": "GE-PATH-103-FREIZEIT",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "GE-EXT-103-FREIZEIT",
+      "order": 6
+    }
+  ]
+}

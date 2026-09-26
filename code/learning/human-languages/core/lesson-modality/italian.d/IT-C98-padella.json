@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C98-padella",
+    "language": "italian",
+    "chapter": 98,
+    "sequence": 4630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1899d6ee3dfc17fc"
+  },
+  "findings": []
+}

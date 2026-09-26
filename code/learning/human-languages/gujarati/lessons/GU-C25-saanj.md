@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C25-saanj
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1320
+sequence: 1333
 chapter: 29
 type: practice
 headword: સાંજ

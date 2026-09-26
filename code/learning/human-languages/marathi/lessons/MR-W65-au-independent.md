@@ -9,20 +9,20 @@ type: writing
 headword: औ
 romanization: "au"
 gloss: the standing au — the fourth and last of the letters this chapter owed the reader
-prerequisites: [MR-W65-ai-independent, MR-W56-au-matra]
+prerequisites: [MR-W65-ai-independent, MR-W56-au-matra, MR-C65-aivaj]
 sounds: []
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-AI-INDEPENDENT-01, MR-SCRIPT-AU-MATRA-01]
+  knowledge: [MR-SCRIPT-AI-INDEPENDENT-01, MR-SCRIPT-AU-MATRA-01, MR-LEX-ANCHOR-AIVAJ]
 introduces:
   knowledge: [MR-SCRIPT-AU-INDEPENDENT-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-AU-INDEPENDENT-01, MR-SCRIPT-AU-MATRA-01, MR-SCRIPT-AI-INDEPENDENT-01]
+  knowledge: [MR-SCRIPT-AU-INDEPENDENT-01, MR-SCRIPT-AU-MATRA-01, MR-SCRIPT-AI-INDEPENDENT-01, MR-LEX-ANCHOR-AIVAJ]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W56-au-matra, MR-W65-ai-independent]
 # औ — the last one standing
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-AU-MATRA-01, MR-SCRIPT-AI-INDEPENDENT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-AU-MATRA-01, MR-SCRIPT-AI-INDEPENDENT-01, MR-LEX-ANCHOR-AIVAJ] -->
 
 [PAUSE 2s] Draw the **au** sign. Then draw the standing letter from the lesson
 before this one, and say which number it opened.

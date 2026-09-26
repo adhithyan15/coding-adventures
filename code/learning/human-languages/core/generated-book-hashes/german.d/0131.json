@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:dbb66f96bafbbe06",
+  "lessonIds": [
+    "GE-C131-beschaeftigt",
+    "GE-C131-frei",
+    "GE-C131-geschlossen",
+    "GE-C131-ruhig",
+    "GE-C131-eng"
+  ],
+  "tex": "german/book/chapters/ch131-busy-free-closed-quiet-narrow.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 91,
+  "title": "Stairs, Mirror, Lamp, Fan, Key",
+  "label": "ch:mr-stairs-mirror-lamp-fan-key",
+  "canDo": "I can say stairs, a mirror, a lamp, a fan and a key.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "MR-C91-killi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 91: i can say stairs, a mirror, a lamp, a fan and a key.",
+    "assesses": [
+      "MR-LEX-C91-HOME91-03",
+      "MR-LEX-C91-HOME91-04",
+      "MR-LEX-C91-HOME91-05"
+    ]
+  }
+}

@@ -3,7 +3,7 @@
     "id": "GU-C63-courtyard",
     "language": "gujarati",
     "chapter": 63,
-    "sequence": 3210,
+    "sequence": 3223,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a64105b26ad6f76d"
+    "sourceHash": "fnv1a64:9c8613da901ad027"
   },
   "findings": []
 }

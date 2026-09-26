@@ -3,7 +3,7 @@
     "id": "GU-C33-vichaarun-ke",
     "language": "gujarati",
     "chapter": 37,
-    "sequence": 1890,
+    "sequence": 1903,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ee6176bab0c2e7aa"
+    "sourceHash": "fnv1a64:8d27189fcc751701"
   },
   "findings": []
 }

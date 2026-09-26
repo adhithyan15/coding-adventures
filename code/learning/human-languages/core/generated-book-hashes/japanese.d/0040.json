@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:83a373e1eede0ad0",
+  "lessonIds": [
+    "JA-C40-kasa",
+    "JA-C40-gakkou",
+    "JA-C40-shukudai",
+    "JA-C40-mondai",
+    "JA-C40-kotae"
+  ],
+  "tex": "japanese/book/chapters/ch40-umbrella-school-homework-problem-answer.tex"
+}

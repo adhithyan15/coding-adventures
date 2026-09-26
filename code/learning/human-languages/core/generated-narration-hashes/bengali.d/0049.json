@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:42af41fe71fa8dc6",
+  "lessonIds": [
+    "BN-C49-khla",
+    "BN-C49-kena",
+    "BN-C49-becha",
+    "BN-C49-rakha",
+    "BN-C49-khola"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch49.txt",
+  "json": "bengali/narration/ch49.json",
+  "textHash": "fnv1a64:65186d2976e4f8a5",
+  "jsonHash": "fnv1a64:750b2c869255319e",
+  "findings": []
+}

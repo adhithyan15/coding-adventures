@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-R68-second-pass-food-the-land-and-animals
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3500
+sequence: 3513
 chapter: 68
 type: review
 headword: (dialogue)

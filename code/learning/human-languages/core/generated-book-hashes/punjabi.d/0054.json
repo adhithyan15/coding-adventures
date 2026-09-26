@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:669c0628a7b1acdc",
+  "lessonIds": [
+    "PA-C54-dada",
+    "PA-C54-dadi",
+    "PA-C54-nana",
+    "PA-C54-nani",
+    "PA-C54-pati"
+  ],
+  "tex": "punjabi/book/chapters/ch54-grandfather-grandmother-grandfather-grandmother-husband.tex"
+}

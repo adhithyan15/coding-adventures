@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:83640d89558ff9fe",
+  "lessonIds": [
+    "MW-C76-patlo",
+    "MW-C76-bhari",
+    "MW-C76-sacho",
+    "MW-C76-haro",
+    "MW-C76-pilo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch76.txt",
+  "json": "marwadi/narration/ch76.json",
+  "textHash": "fnv1a64:53c073e132b68228",
+  "jsonHash": "fnv1a64:7274381cdf60876d",
+  "findings": []
+}

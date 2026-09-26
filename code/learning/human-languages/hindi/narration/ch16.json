@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:19cfed5d9efafe9a",
+  "sourceHash": "fnv1a64:02bb75c19e402d04",
   "lessons": [
     {
       "id": "HI-C16-mahine",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb8534d97bedb2a8",
+      "sourceHash": "fnv1a64:41b4e8b8538d3177",
       "notice": null,
       "blocks": [
         {

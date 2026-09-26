@@ -1,0 +1,11 @@
+{
+  "id": "FR-C132-celebre",
+  "pathSegment": "FR-PATH-132-QUALITES84",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-132-QUALITES84",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:0c211261a7f43c9a",
+  "lessonIds": [
+    "JA-C34-suika",
+    "JA-C34-daikon",
+    "JA-C34-ninjin",
+    "JA-C34-toufu",
+    "JA-C34-shio"
+  ],
+  "tex": "japanese/book/chapters/ch34-watermelon-white-radish-carrot-tofu-salt.tex"
+}

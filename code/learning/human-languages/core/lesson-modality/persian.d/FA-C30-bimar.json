@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C30-bimar",
+    "language": "persian",
+    "chapter": 30,
+    "sequence": 1380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0467d6cccab7687"
+  },
+  "findings": []
+}

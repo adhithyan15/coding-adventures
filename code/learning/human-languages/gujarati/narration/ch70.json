@@ -4,11 +4,11 @@
   "chapter": 70,
   "title": "Red, Yellow, Green",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:21870c5d6ea6dd0a",
+  "sourceHash": "fnv1a64:6467aa4a788056fb",
   "lessons": [
     {
       "id": "GU-C70-red",
-      "sequence": 3560,
+      "sequence": 3573,
       "title": "લાલ (lāl) — red",
       "headword": "લાલ",
       "romanization": "lāl",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3f5dc7b60bac3a6",
+      "sourceHash": "fnv1a64:be1bc986d5bcf792",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C70-yellow",
-      "sequence": 3570,
+      "sequence": 3583,
       "title": "પીળો (pīḷo) — yellow",
       "headword": "પીળો",
       "romanization": "pīḷo",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd747177a66307e5",
+      "sourceHash": "fnv1a64:112dfa08fd0c0ceb",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C70-green",
-      "sequence": 3580,
+      "sequence": 3593,
       "title": "લીલો (līlo) — green",
       "headword": "લીલો",
       "romanization": "līlo",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7fed841149bc9e9",
+      "sourceHash": "fnv1a64:fb79c4ad42b9e879",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C70-blue",
-      "sequence": 3590,
+      "sequence": 3603,
       "title": "વાદળી (vādaḷī) — blue",
       "headword": "વાદળી",
       "romanization": "vādaḷī",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6198c075952c459f",
+      "sourceHash": "fnv1a64:26f72b6ebfe8f89e",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C70-black",
-      "sequence": 3600,
+      "sequence": 3613,
       "title": "કાળો (kāḷo) — black",
       "headword": "કાળો",
       "romanization": "kāḷo",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65aea4ee6b4cad24",
+      "sourceHash": "fnv1a64:c24f37d046899310",
       "notice": null,
       "blocks": [
         {

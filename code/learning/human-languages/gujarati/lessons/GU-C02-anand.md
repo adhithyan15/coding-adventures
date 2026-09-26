@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C02-anand
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 130
+sequence: 143
 chapter: 8
 type: phrase
 headword: તમને મળીને આનંદ થયો

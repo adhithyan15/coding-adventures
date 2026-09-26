@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C73-new
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3720
+sequence: 3733
 chapter: 73
 type: word
 headword: "નવું"

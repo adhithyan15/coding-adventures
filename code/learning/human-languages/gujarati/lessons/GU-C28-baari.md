@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C28-baari
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1600
+sequence: 1613
 chapter: 32
 type: practice
 headword: બારી

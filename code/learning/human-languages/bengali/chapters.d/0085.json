@@ -1,0 +1,19 @@
+{
+  "chapter": 85,
+  "title": "Trousers, Sock, Pocket, Ring, Cap",
+  "label": "ch:bn-trousers-sock-pocket-ring-cap",
+  "canDo": "I can say trousers, a sock, a pocket, a ring and a cap.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "BN-C85-tupi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 85: i can say trousers, a sock, a pocket, a ring and a cap.",
+    "assesses": [
+      "BN-LEX-C85-CLOTHES85-03",
+      "BN-LEX-C85-CLOTHES85-04",
+      "BN-LEX-C85-CLOTHES85-05"
+    ]
+  }
+}

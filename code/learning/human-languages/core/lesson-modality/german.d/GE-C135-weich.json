@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C135-weich",
+    "language": "german",
+    "chapter": 135,
+    "sequence": 5740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:342a5c1907a16f7c"
+  },
+  "findings": []
+}

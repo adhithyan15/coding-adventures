@@ -1,16 +1,17 @@
 {
   "language": "kannada",
   "chapter": 23,
-  "sourceHash": "fnv1a64:fda9c648f908fa8d",
+  "sourceHash": "fnv1a64:25d67db3fd05261c",
   "lessonIds": [
     "KA-C23-dina",
+    "KA-C23-kathe",
     "KA-S129-letter-tha"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "kannada/narration/ch23.txt",
   "json": "kannada/narration/ch23.json",
-  "textHash": "fnv1a64:bff58cc3d1b35dff",
-  "jsonHash": "fnv1a64:2469a1e86098e0f5",
+  "textHash": "fnv1a64:675d46abf5ad3ee5",
+  "jsonHash": "fnv1a64:e1ab6132a89a34e3",
   "findings": []
 }

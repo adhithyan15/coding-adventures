@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:0d164ec5177a36a8",
+  "lessonIds": [
+    "MR-C113-dukan",
+    "MR-C113-rasta",
+    "MR-C113-galli",
+    "MR-C113-steshan",
+    "MR-C113-gadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch113.txt",
+  "json": "marathi/narration/ch113.json",
+  "textHash": "fnv1a64:d68c5cb9afbafb66",
+  "jsonHash": "fnv1a64:ab06218a868ffce3",
+  "findings": []
+}

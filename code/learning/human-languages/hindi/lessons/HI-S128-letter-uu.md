@@ -12,17 +12,17 @@ type: writing
 headword: "ऊ"
 gloss: the independent vowel ऊ — उ with one loop added, and the longer sound to match
 romanization: "ū"
-prerequisites: [HI-S127-letter-u]
+prerequisites: [HI-S127-letter-u, HI-C22-uun]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [HI-SCRIPT-RECOG-127]
+  knowledge: [HI-SCRIPT-RECOG-127, HI-LEX-ANCHOR-UUN]
 introduces:
   knowledge: [HI-SCRIPT-RECOG-128]
 practises:
-  knowledge: [HI-SCRIPT-RECOG-127, HI-SCRIPT-RECOG-128]
+  knowledge: [HI-SCRIPT-RECOG-127, HI-SCRIPT-RECOG-128, HI-LEX-ANCHOR-UUN]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [HI-S127-letter-u]
 # ऊ — the same letter, holding the note longer
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-127] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-127, HI-LEX-ANCHOR-UUN] -->
 
 [PAUSE 1s] Before the new one: **उ** — what sound does it carry, and when does a
 word use it instead of the hook?

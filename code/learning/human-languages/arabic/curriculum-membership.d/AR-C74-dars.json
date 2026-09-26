@@ -1,0 +1,11 @@
+{
+  "id": "AR-C74-dars",
+  "pathSegment": "AR-PATH-74-SCHOOL74",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-74-SCHOOL74",
+      "order": 3
+    }
+  ]
+}

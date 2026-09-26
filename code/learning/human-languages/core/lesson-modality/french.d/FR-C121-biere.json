@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C121-biere",
+    "language": "french",
+    "chapter": 121,
+    "sequence": 5500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de6aacbbfb2d8e68"
+  },
+  "findings": []
+}

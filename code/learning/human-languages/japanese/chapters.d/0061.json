@@ -1,0 +1,19 @@
+{
+  "chapter": 61,
+  "title": "Thread, Needle, Comb, String, Rope",
+  "label": "ch:ja-thread-needle-comb-string-rope",
+  "canDo": "I can say a thread, a needle, a comb, a string and a rope.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "JA-C61-tsuna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 61: i can say a thread, a needle, a comb, a string and a rope.",
+    "assesses": [
+      "JA-LEX-C61-WORLD61-03",
+      "JA-LEX-C61-WORLD61-04",
+      "JA-LEX-C61-WORLD61-05"
+    ]
+  }
+}

@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W05-cha
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 78
+sequence: 86
 delivery: script
 chapter: 5
 type: writing
 headword: ચ
 romanization: "cha"
 gloss: "the consonant cha"
-prerequisites: [GU-W05-pa]
+prerequisites: [GU-W05-pa, GU-C05-chappal]
 sounds: []
 roots: []
 etymology_hook: "This unaspirated ch stands beside already-known છ chha; the lesson teaches one shape and one sound contrast."
 duration:
   max_seconds: 230
 requires:
-  knowledge: [GU-SCRIPT-PA-01, GU-SCRIPT-CHHA-01]
+  knowledge: [GU-SCRIPT-PA-01, GU-SCRIPT-CHHA-01, GU-LEX-ANCHOR-CHAPPAL]
 introduces:
   knowledge: [GU-SCRIPT-CHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-CHHA-01, GU-SCRIPT-CHA-01]
+  knowledge: [GU-SCRIPT-CHHA-01, GU-SCRIPT-CHA-01, GU-LEX-ANCHOR-CHAPPAL]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W05-pa, GU-W03-chha]
 # ચ — the consonant cha
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-CHHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-CHHA-01, GU-LEX-ANCHOR-CHAPPAL] -->
 
 Point to **છ** and say aspirated *chha* with its puff. The new **ચ** is the
 shorter, unaspirated *cha*: no extra puff.

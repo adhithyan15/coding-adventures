@@ -1,0 +1,11 @@
+{
+  "id": "FR-C113-serviette",
+  "pathSegment": "FR-PATH-113-MAISON65",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-113-MAISON65",
+      "order": 2
+    }
+  ]
+}

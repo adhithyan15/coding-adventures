@@ -1,0 +1,11 @@
+{
+  "id": "AR-C66-mawz",
+  "pathSegment": "AR-PATH-66-FOOD66",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-66-FOOD66",
+      "order": 3
+    }
+  ]
+}

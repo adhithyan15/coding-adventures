@@ -3,7 +3,7 @@
     "id": "GU-C24-hear-mahino",
     "language": "gujarati",
     "chapter": 28,
-    "sequence": 1230,
+    "sequence": 1243,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3dc15cffbbf8c40d"
+    "sourceHash": "fnv1a64:d5b1d47006cd2a97"
   },
   "findings": []
 }

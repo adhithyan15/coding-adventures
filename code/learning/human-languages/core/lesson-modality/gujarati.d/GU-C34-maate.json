@@ -3,7 +3,7 @@
     "id": "GU-C34-maate",
     "language": "gujarati",
     "chapter": 38,
-    "sequence": 1960,
+    "sequence": 1973,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:64caa97e66b65b9e"
+    "sourceHash": "fnv1a64:7e267968c6a794b2"
   },
   "findings": []
 }

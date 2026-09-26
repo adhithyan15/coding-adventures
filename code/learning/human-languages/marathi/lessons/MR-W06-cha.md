@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W06-cha
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 74
+sequence: 84
 delivery: script
 chapter: 6
 type: writing
 headword: छ
 romanization: "cha"
 gloss: chha — the aspirated partner of ca
-prerequisites: [MR-W06-ca]
+prerequisites: [MR-W06-ca, MR-C06-chav, MR-C06-chatri]
 sounds: [aspirated-chha]
 roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [MR-SCRIPT-CA-01, MR-SCRIPT-GHA-01]
+  knowledge: [MR-SCRIPT-CA-01, MR-SCRIPT-GHA-01, MR-LEX-ANCHOR-CHAV, MR-LEX-ANCHOR-CHATRI]
 introduces:
   knowledge: [MR-SCRIPT-CHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-CHA-01, MR-SCRIPT-CA-01, MR-SCRIPT-GHA-01]
+  knowledge: [MR-SCRIPT-CHA-01, MR-SCRIPT-CA-01, MR-SCRIPT-GHA-01, MR-LEX-ANCHOR-CHAV, MR-LEX-ANCHOR-CHATRI]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W06-ca, MR-W06-gha]
 # छ — the palate, with the breath let out
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-CHAV, MR-LEX-ANCHOR-CHATRI] -->
 
 The same pair you learned at the back of the mouth happens again at the roof of it.
 

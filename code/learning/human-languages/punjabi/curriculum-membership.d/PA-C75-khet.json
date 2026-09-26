@@ -1,0 +1,11 @@
+{
+  "id": "PA-C75-khet",
+  "pathSegment": "PA-PATH-75-NATURE75",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-75-NATURE75",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Husband, Wife, Baby, Person, Woman",
+  "label": "ch:mr-husband-wife-baby-person-woman",
+  "canDo": "I can say a husband, a wife, a baby, a person, a man and a woman.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MR-C76-bai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can say a husband, a wife, a baby, a person, a man and a woman.",
+    "assesses": [
+      "MR-LEX-C76-FAMILY76-03",
+      "MR-LEX-C76-FAMILY76-04",
+      "MR-LEX-C76-FAMILY76-05"
+    ]
+  }
+}

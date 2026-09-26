@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-87-TIME87",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "AR-EXT-87-TIME87"
+  ],
+  "after": []
+}

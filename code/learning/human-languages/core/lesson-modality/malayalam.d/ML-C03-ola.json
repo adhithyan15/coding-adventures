@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C03-ola",
+    "language": "malayalam",
+    "chapter": 3,
+    "sequence": 161,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7ce9a28387bdd8f3"
+  },
+  "findings": []
+}

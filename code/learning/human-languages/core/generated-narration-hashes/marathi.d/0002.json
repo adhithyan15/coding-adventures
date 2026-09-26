@@ -1,9 +1,13 @@
 {
   "language": "marathi",
   "chapter": 2,
-  "sourceHash": "fnv1a64:3a876d43d73fc045",
+  "sourceHash": "fnv1a64:286ee3a9d72147ca",
   "lessonIds": [
     "MR-C01-dhanyavad",
+    "MR-C02-dukh",
+    "MR-C02-aabhaal",
+    "MR-C02-sant",
+    "MR-C02-bet",
     "MR-W02-visarga",
     "MR-W02-aa-independent",
     "MR-W02-bha",
@@ -15,7 +19,7 @@
   "drivablePrefix": 1,
   "text": "marathi/narration/ch02.txt",
   "json": "marathi/narration/ch02.json",
-  "textHash": "fnv1a64:4c5208b3034c858d",
-  "jsonHash": "fnv1a64:46b7ae7d9f13a692",
+  "textHash": "fnv1a64:5ef1f067dd5ed415",
+  "jsonHash": "fnv1a64:d7f8f447e09d8318",
   "findings": []
 }

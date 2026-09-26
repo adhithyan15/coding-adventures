@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "To lose, To believe, To need, To live, To call",
+  "label": "ch:ge-to-lose-to-believe-to-need-to-live-to-call",
+  "canDo": "I can say to lose, to believe, to need, to live and to call.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "GE-C67-rufen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can say to lose, to believe, to need, to live and to call.",
+    "assesses": [
+      "GE-LEX-C67-VERBEN4-03",
+      "GE-LEX-C67-VERBEN4-04",
+      "GE-LEX-C67-VERBEN4-05"
+    ]
+  }
+}

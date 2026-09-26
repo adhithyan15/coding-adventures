@@ -4,11 +4,11 @@
   "chapter": 42,
   "title": "Which One in the Line",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5659552c7c100c45",
+  "sourceHash": "fnv1a64:5837b90991d01528",
   "lessons": [
     {
       "id": "GU-C38-panchmu",
-      "sequence": 2130,
+      "sequence": 2143,
       "title": "પાંચમું (pā̃chmũ) — fifth, and the ending you can see",
       "headword": "પાંચમું",
       "romanization": "pā̃chmũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f408770e18283614",
+      "sourceHash": "fnv1a64:dc8188673c02d6ae",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -228,7 +228,7 @@
     },
     {
       "id": "GU-C38-triju",
-      "sequence": 2140,
+      "sequence": 2153,
       "title": "ત્રીજું (trījũ) — third, and the first word that will not take -મું",
       "headword": "ત્રીજું",
       "romanization": "trījũ",
@@ -239,7 +239,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e437eb71f079af7",
+      "sourceHash": "fnv1a64:e52aeb4e8f8e5407",
       "notice": null,
       "blocks": [
         {
@@ -419,7 +419,7 @@
     },
     {
       "id": "GU-C38-biju",
-      "sequence": 2150,
+      "sequence": 2163,
       "title": "બીજું (bījũ) — second, other, and a shape with two members",
       "headword": "બીજું",
       "romanization": "bījũ",
@@ -430,7 +430,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:cc4edd88021f6395",
+      "sourceHash": "fnv1a64:a94a6a788e9dd04f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -634,7 +634,7 @@
     },
     {
       "id": "GU-C38-chothu",
-      "sequence": 2160,
+      "sequence": 2173,
       "title": "ચોથું (chothũ) — fourth, and a shape that stands alone",
       "headword": "ચોથું",
       "romanization": "chothũ",
@@ -645,7 +645,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07d5793a256e82cd",
+      "sourceHash": "fnv1a64:0281d79d13d96f71",
       "notice": null,
       "blocks": [
         {
@@ -826,7 +826,7 @@
     },
     {
       "id": "GU-C38-pahelu",
-      "sequence": 2170,
+      "sequence": 2183,
       "title": "પહેલું (pahelũ) — first, arriving last, and why",
       "headword": "પહેલું",
       "romanization": "pahelũ",
@@ -837,7 +837,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a020528ccc91f45b",
+      "sourceHash": "fnv1a64:5a41073e5a157b11",
       "notice": null,
       "blocks": [
         {
@@ -1030,7 +1030,7 @@
     },
     {
       "id": "GU-R38-first-to-fifth",
-      "sequence": 2180,
+      "sequence": 2193,
       "title": "First to fifth, in order at last",
       "headword": "પહેલું · બીજું · ત્રીજું · ચોથું · પાંચમું",
       "romanization": "pahelũ · bījũ · trījũ · chothũ · pā̃chmũ",
@@ -1041,7 +1041,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a076f7e20507471d",
+      "sourceHash": "fnv1a64:fbf926651ecec4ed",
       "notice": null,
       "blocks": [
         {

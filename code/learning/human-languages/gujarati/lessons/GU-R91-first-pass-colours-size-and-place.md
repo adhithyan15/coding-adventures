@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-R91-first-pass-colours-size-and-place
 spine_node: SPINE-COURTESY-THANK
-sequence: 4660
+sequence: 4673
 chapter: 91
 type: review
 headword: (dialogue)

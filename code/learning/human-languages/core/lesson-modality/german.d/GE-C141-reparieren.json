@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C141-reparieren",
+    "language": "german",
+    "chapter": 141,
+    "sequence": 6030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50a359b378005531"
+  },
+  "findings": []
+}

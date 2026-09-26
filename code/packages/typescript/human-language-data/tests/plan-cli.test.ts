@@ -89,7 +89,9 @@ describe("the plan CLI", () => {
     // invisible while no inventory named it.
     expect(out).toMatch(/exam-point — hindi/);
     expect(out).toMatch(/human-validation — marwadi/);
-    expect(out).toMatch(/human-validate 2 of 2 pre-A1 full mock\(s\) for marwadi/);
+    // pre-A1 -> A1: Marwadi attained pre-A1 (chapters 44-89), so the queue's
+    // human-validation item for it moved up to the rung it is now working on.
+    expect(out).toMatch(/human-validate 2 of 2 A1 full mock\(s\) for marwadi/);
     // Marathi joins with an A1 inventory of its own, so this is the first
     // exam-point item on a track with no external syllabus behind it.
     expect(out).toMatch(/exam-point — marathi/);

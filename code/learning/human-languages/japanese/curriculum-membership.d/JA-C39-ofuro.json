@@ -1,0 +1,11 @@
+{
+  "id": "JA-C39-ofuro",
+  "pathSegment": "JA-PATH-39-HOME39",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-39-HOME39",
+      "order": 1
+    }
+  ]
+}

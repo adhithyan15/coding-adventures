@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C44-bal",
+    "language": "marwadi",
+    "chapter": 44,
+    "sequence": 3520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7aa363f8852e7e1d"
+  },
+  "findings": []
+}

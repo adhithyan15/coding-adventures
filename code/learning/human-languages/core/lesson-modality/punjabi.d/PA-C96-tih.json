@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C96-tih",
+    "language": "punjabi",
+    "chapter": 96,
+    "sequence": 5080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37e68811a97de155"
+  },
+  "findings": []
+}

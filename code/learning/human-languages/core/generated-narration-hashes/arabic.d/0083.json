@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:e052faab6144c134",
+  "lessonIds": [
+    "AR-C83-bati",
+    "AR-C83-sari",
+    "AR-C83-sahl",
+    "AR-C83-sab",
+    "AR-C83-rakhis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch83.txt",
+  "json": "arabic/narration/ch83.json",
+  "textHash": "fnv1a64:38c040661addd4f6",
+  "jsonHash": "fnv1a64:2e68473341035d4d",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C81-barai",
+  "pathSegment": "MW-PATH-81-PLACE81",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-81-PLACE81",
+      "order": 3
+    }
+  ]
+}

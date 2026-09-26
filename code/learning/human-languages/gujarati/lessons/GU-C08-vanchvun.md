@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C08-vanchvun
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 460
+sequence: 473
 chapter: 14
 type: word
 headword: વાંચવું

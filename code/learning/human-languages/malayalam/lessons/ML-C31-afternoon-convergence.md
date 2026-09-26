@@ -9,18 +9,18 @@ headword: ശുഭ മധ്യാഹ്നം — three-way convergence
 gloss: Malayalam, Kannada, and Telugu converge on one formal greeting after building everyday afternoon words three different ways
 romanization: "śubha madhyāhnaṁ — three-way convergence"
 concept_tag: ML-GREETING-AFTERNOON-CONVERGENCE
-prerequisites: [ML-C31-shubha-madhyaahnam, ML-S125-letter-uu]
+prerequisites: [ML-C31-shubha-madhyaahnam, ML-S125-letter-uu, ML-C31-oonjaal]
 sounds: []
 roots: [sanskrit-shubha-beautiful, sanskrit-madhya-middle]
 etymology_hook: "three Dravidian languages share śubha plus madhyāhna at the greeting layer even though their everyday afternoon terms diverge"
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [ML-LEX-ANCHOR-OONJAAL]
 introduces:
   knowledge: [ML-CONCEPT-C31-AFTERNOON-CONVERGENCE-01]
 practises:
-  knowledge: [ML-CONCEPT-C31-AFTERNOON-CONVERGENCE-01, ML-SCRIPT-RECOG-125]
+  knowledge: [ML-CONCEPT-C31-AFTERNOON-CONVERGENCE-01, ML-SCRIPT-RECOG-125, ML-LEX-ANCHOR-OONJAAL]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ reviews_of: [ML-C31-shubha-madhyaahnam, ML-C28-uchakazhinju]
 # One greeting, three afternoon strategies
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-OONJAAL] -->
 
 [PAUSE 2s] Malayalam’s formal greeting uses **ശുഭ + മധ്യാഹ്നം**. Kannada and
 Telugu land on the same phrase—but their ordinary afternoon words took three

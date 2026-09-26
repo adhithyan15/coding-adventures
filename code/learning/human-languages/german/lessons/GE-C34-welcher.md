@@ -8,7 +8,7 @@ type: word
 headword: welcher
 gloss: which — built as "what-like", the identical two pieces English welded into *which*
 concept_tag: GE-QUESTION-WHICH
-prerequisites: [GE-R33-frag-mich, GE-C01-der-die-das, GE-C05-was]
+prerequisites: [GE-R33-frag-mich, GE-C01-der-die-das, GE-C05-was, GE-C22-hund-katze-more]
 sounds: [ich-laut]
 roots: [germanic-hwa-lik]
 etymology_hook: "welcher is *hwa-lîk, 'what-like'; English fused the same two pieces into hwilc and wore it down to which, so both languages ask 'which' by asking 'what kind'"

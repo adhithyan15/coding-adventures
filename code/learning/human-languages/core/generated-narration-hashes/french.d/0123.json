@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:872e4c2e24f198f9",
+  "lessonIds": [
+    "FR-C123-infirmiere",
+    "FR-C123-cuisinier",
+    "FR-C123-policier",
+    "FR-C123-vendeur",
+    "FR-C123-agriculteur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch123.txt",
+  "json": "french/narration/ch123.json",
+  "textHash": "fnv1a64:29e4e53b8d688910",
+  "jsonHash": "fnv1a64:c7c455ef149cd4f8",
+  "findings": []
+}

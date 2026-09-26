@@ -2,7 +2,7 @@
 schema_version: 2
 id: MR-W03-va
 spine_node: SPINE-COURTESY-THANK
-sequence: 32
+sequence: 36
 delivery: script
 chapter: 3
 type: writing

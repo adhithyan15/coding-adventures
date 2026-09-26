@@ -1,0 +1,11 @@
+{
+  "id": "BN-C68-biral",
+  "pathSegment": "BN-PATH-68-NATURE68",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-68-NATURE68",
+      "order": 4
+    }
+  ]
+}

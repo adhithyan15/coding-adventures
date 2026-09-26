@@ -1,0 +1,11 @@
+{
+  "id": "PA-C98-piar",
+  "pathSegment": "PA-PATH-98-WORLD98",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-98-WORLD98",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C74-angoshtar",
+  "pathSegment": "FA-PATH-74-CLOTHES74",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-74-CLOTHES74",
+      "order": 2
+    }
+  ]
+}

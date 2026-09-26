@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C83-hara",
+    "language": "punjabi",
+    "chapter": 83,
+    "sequence": 4450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:581e0d423e42d476"
+  },
+  "findings": []
+}

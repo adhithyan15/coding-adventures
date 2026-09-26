@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C66-wind
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 3340
+sequence: 3353
 chapter: 66
 type: word
 headword: "પવન"

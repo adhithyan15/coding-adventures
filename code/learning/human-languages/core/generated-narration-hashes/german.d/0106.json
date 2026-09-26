@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:92dddcb72ac3fad8",
+  "lessonIds": [
+    "GE-C106-supermarkt",
+    "GE-C106-tankstelle",
+    "GE-C106-schwimmbad",
+    "GE-C106-stadion",
+    "GE-C106-fabrik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch106.txt",
+  "json": "german/narration/ch106.json",
+  "textHash": "fnv1a64:be373e126349b80e",
+  "jsonHash": "fnv1a64:770454d88474f1c4",
+  "findings": []
+}

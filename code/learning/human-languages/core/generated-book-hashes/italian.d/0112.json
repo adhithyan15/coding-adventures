@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:16ce4a0c85ca1172",
+  "lessonIds": [
+    "IT-C112-fornaio",
+    "IT-C112-autista",
+    "IT-C112-avvocato",
+    "IT-C112-ingegnere",
+    "IT-C112-pompiere"
+  ],
+  "tex": "italian/book/chapters/ch112-baker-driver-lawyer-engineer-firefighter.tex"
+}

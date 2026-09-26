@@ -4,11 +4,11 @@
   "chapter": 71,
   "title": "White, Brown, Pink, and What Looks Good",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:80d26450da7481b7",
+  "sourceHash": "fnv1a64:8bd270d03a80329f",
   "lessons": [
     {
       "id": "GU-C71-white",
-      "sequence": 3610,
+      "sequence": 3623,
       "title": "સફેદ (saphed) — white",
       "headword": "સફેદ",
       "romanization": "saphed",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1e434a058df630e",
+      "sourceHash": "fnv1a64:c8123b5a3db525d8",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C71-brown",
-      "sequence": 3620,
+      "sequence": 3633,
       "title": "ભૂરો (bhūro) — brown",
       "headword": "ભૂરો",
       "romanization": "bhūro",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a050b1ac748a8998",
+      "sourceHash": "fnv1a64:2c01aec60b238c54",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C71-pink",
-      "sequence": 3630,
+      "sequence": 3643,
       "title": "ગુલાબી (gulābī) — pink",
       "headword": "ગુલાબી",
       "romanization": "gulābī",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f589f4d28a0a305d",
+      "sourceHash": "fnv1a64:0e4257bb66b2ad03",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C71-beautiful",
-      "sequence": 3640,
+      "sequence": 3653,
       "title": "સુંદર (sundar) — beautiful",
       "headword": "સુંદર",
       "romanization": "sundar",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1b88d6a06e262bd",
+      "sourceHash": "fnv1a64:a2d1b7f8ac33794d",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C71-bad",
-      "sequence": 3650,
+      "sequence": 3663,
       "title": "ખરાબ (kharāb) — bad",
       "headword": "ખરાબ",
       "romanization": "kharāb",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31e4dab740898710",
+      "sourceHash": "fnv1a64:1e788979c3748dea",
       "notice": null,
       "blocks": [
         {

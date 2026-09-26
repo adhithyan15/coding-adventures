@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C74-bhorti",
+    "language": "bengali",
+    "chapter": 74,
+    "sequence": 3880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cb9d3f0873f9035"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "Strawberry, Cherry, Melon, Garlic, Flour",
+  "label": "ch:it-strawberry-cherry-melon-garlic-flour",
+  "canDo": "I can say a strawberry, a cherry, a melon, garlic and flour.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C107-farina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say a strawberry, a cherry, a melon, garlic and flour.",
+    "assesses": [
+      "IT-LEX-C107-CIBO107-03",
+      "IT-LEX-C107-CIBO107-04",
+      "IT-LEX-C107-CIBO107-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:ab8be4880b6cbf31",
+  "lessonIds": [
+    "GE-C83-wald",
+    "GE-C83-stein",
+    "GE-C83-insel",
+    "GE-C83-feld",
+    "GE-C83-himmel"
+  ],
+  "tex": "german/book/chapters/ch83-forest-stone-island-field-sky.tex"
+}

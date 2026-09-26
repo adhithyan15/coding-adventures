@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C133-sympathique",
+    "language": "french",
+    "chapter": 133,
+    "sequence": 6150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:492773f5004022cf"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C63-chabi",
+  "pathSegment": "MW-PATH-63-HOME63",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-63-HOME63",
+      "order": 4
+    }
+  ]
+}

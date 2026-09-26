@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C71-mushkil",
+    "language": "urdu",
+    "chapter": 71,
+    "sequence": 3620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:99b6de079f201eca"
+  },
+  "findings": []
+}

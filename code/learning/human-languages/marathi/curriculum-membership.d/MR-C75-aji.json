@@ -1,0 +1,11 @@
+{
+  "id": "MR-C75-aji",
+  "pathSegment": "MR-PATH-75-FAMILY75",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-75-FAMILY75",
+      "order": 1
+    }
+  ]
+}

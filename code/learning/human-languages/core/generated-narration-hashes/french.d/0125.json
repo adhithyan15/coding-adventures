@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:b121ec656eda7d04",
+  "lessonIds": [
+    "FR-C125-pompier",
+    "FR-C125-facteur",
+    "FR-C125-serveur",
+    "FR-C125-client",
+    "FR-C125-caisse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch125.txt",
+  "json": "french/narration/ch125.json",
+  "textHash": "fnv1a64:a2b9a11e94831540",
+  "jsonHash": "fnv1a64:b6b99ea30c3d822d",
+  "findings": []
+}

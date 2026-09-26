@@ -1,0 +1,11 @@
+{
+  "id": "BN-C60-bichhana",
+  "pathSegment": "BN-PATH-60-HOME60",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-60-HOME60",
+      "order": 4
+    }
+  ]
+}

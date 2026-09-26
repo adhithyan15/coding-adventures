@@ -1,0 +1,11 @@
+{
+  "id": "GE-C74-schinken",
+  "pathSegment": "GE-PATH-74-ESSEN6",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-74-ESSEN6",
+      "order": 2
+    }
+  ]
+}

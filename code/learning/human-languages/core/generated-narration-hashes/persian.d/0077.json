@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:67d4d857b41fd696",
+  "lessonIds": [
+    "FA-C77-panjah",
+    "FA-C77-hezar",
+    "FA-C77-donya",
+    "FA-C77-rang",
+    "FA-C77-ahang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch77.txt",
+  "json": "persian/narration/ch77.json",
+  "textHash": "fnv1a64:13eee78e5e5d6c3c",
+  "jsonHash": "fnv1a64:b4e19f83691dd92d",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C56-angur",
+    "language": "urdu",
+    "chapter": 56,
+    "sequence": 2870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f80410f000c2a8cb"
+  },
+  "findings": []
+}

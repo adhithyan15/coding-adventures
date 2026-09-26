@@ -9,7 +9,7 @@ headword: ಶುಭ ಸಂಜೆ
 gloss: "good evening" (śubha sañje) — pairs with ಸಂಜೆ, already established (KA-C27) as Sanskrit-via-Prakrit, NOT native Dravidian, whatever an unverified claim you might encounter elsewhere says; leans formal, with ನಮಸ್ಕಾರ likely covering casual use, echoing (with real hedging) the formal-skew question already raised for सुप्रभात and ಶುಭೋದಯ
 romanization: "śubha sañje"
 concept_tag: GREETING-EVENING
-prerequisites: [KA-C27-sanje, KA-C29-shubhodaya]
+prerequisites: [KA-C27-sanje, KA-C29-shubhodaya, KA-C29-oota]
 sounds: [kannada-sha, kannada-anusvara]
 roots: [su-good, sanskrit-sandhya-junction]
 reviews_of: [KA-C27-sanje, KA-C29-shubhodaya]
@@ -17,11 +17,11 @@ etymology_hook: "ಶುಭ ಸಂಜೆ (śubha sañje, 'good evening') pairs ś
 duration:
   max_seconds: 280
 requires:
-  knowledge: [KA-ETYMON-C27-SANJE-01, KA-ETYMON-C27-SANJE-02, KA-ETYMON-C29-SHUBHODAYA-01, KA-PRAGMATICS-C29-SHUBHODAYA-02]
+  knowledge: [KA-ETYMON-C27-SANJE-01, KA-ETYMON-C27-SANJE-02, KA-ETYMON-C29-SHUBHODAYA-01, KA-PRAGMATICS-C29-SHUBHODAYA-02, KA-LEX-ANCHOR-OOTA]
 introduces:
   knowledge: [KA-ETYMON-C30-SHUBHA-SANJE-01, KA-PRAGMATICS-C30-SHUBHA-SANJE-02]
 practises:
-  knowledge: [KA-ETYMON-C27-SANJE-01, KA-ETYMON-C27-SANJE-02, KA-ETYMON-C29-SHUBHODAYA-01, KA-PRAGMATICS-C29-SHUBHODAYA-02, KA-ETYMON-C30-SHUBHA-SANJE-01, KA-PRAGMATICS-C30-SHUBHA-SANJE-02]
+  knowledge: [KA-ETYMON-C27-SANJE-01, KA-ETYMON-C27-SANJE-02, KA-ETYMON-C29-SHUBHODAYA-01, KA-PRAGMATICS-C29-SHUBHODAYA-02, KA-ETYMON-C30-SHUBHA-SANJE-01, KA-PRAGMATICS-C30-SHUBHA-SANJE-02, KA-LEX-ANCHOR-OOTA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ variety: standard-colloquial
 # ಶುಭ ಸಂಜೆ (śubha sañje) — formal, and correctly citing where ಸಂಜೆ comes from
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C27-SANJE-01, KA-ETYMON-C27-SANJE-02, KA-ETYMON-C29-SHUBHODAYA-01, KA-PRAGMATICS-C29-SHUBHODAYA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C27-SANJE-01, KA-ETYMON-C27-SANJE-02, KA-ETYMON-C29-SHUBHODAYA-01, KA-PRAGMATICS-C29-SHUBHODAYA-02, KA-LEX-ANCHOR-OOTA] -->
 
 [PAUSE 2s] You already have ಸಂಜೆ, "evening" — and you already know it's
 a Sanskrit word that arrived in Kannada already worn down, via Prakrit.

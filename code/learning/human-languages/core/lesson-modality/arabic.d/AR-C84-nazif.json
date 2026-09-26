@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C84-nazif",
+    "language": "arabic",
+    "chapter": 84,
+    "sequence": 3190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a40930fdc35b60ea"
+  },
+  "findings": []
+}

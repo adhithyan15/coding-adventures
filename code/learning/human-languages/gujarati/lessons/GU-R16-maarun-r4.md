@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R16-maarun-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 710
+sequence: 723
 chapter: 20
 type: practice
 headword: મારું

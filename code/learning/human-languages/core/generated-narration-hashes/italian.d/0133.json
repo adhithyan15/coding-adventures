@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:dad981c71fdf8a87",
+  "lessonIds": [
+    "IT-C133-cominciare",
+    "IT-C133-visitare",
+    "IT-C133-mettere",
+    "IT-C133-credere",
+    "IT-C133-guidare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch133.txt",
+  "json": "italian/narration/ch133.json",
+  "textHash": "fnv1a64:3517a773cf0aebee",
+  "jsonHash": "fnv1a64:4676d65515f1d929",
+  "findings": []
+}

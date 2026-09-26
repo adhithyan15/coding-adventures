@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C120-fraise",
+    "language": "french",
+    "chapter": 120,
+    "sequence": 5450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d68802a366a1606f"
+  },
+  "findings": []
+}

@@ -1,11 +1,11 @@
 {
   "id": "HI-S143-letter-tha-retroflex",
   "pathSegment": "HI-PATH-100",
-  "pathOrder": 51,
+  "pathOrder": 55,
   "extensions": [
     {
       "id": "HI-EXT-100-SCRIPT-RECOGNITION",
-      "order": 40
+      "order": 44
     }
   ]
 }

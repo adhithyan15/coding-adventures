@@ -1,0 +1,19 @@
+{
+  "chapter": 45,
+  "title": "Happy, Doctor, Father, Son, Daughter",
+  "label": "ch:bn-happy-doctor-father-son-daughter",
+  "canDo": "I can say happy, a doctor, a father, a son and a daughter.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C45-meye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 45: i can say happy, a doctor, a father, a son and a daughter.",
+    "assesses": [
+      "BN-LEX-C45-HEALTH45-03",
+      "BN-LEX-C45-HEALTH45-04",
+      "BN-LEX-C45-HEALTH45-05"
+    ]
+  }
+}

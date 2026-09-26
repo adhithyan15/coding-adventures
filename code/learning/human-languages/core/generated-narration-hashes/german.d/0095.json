@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:2b5d29efccff92cc",
+  "lessonIds": [
+    "GE-C95-heute",
+    "GE-C95-manchmal",
+    "GE-C95-dort",
+    "GE-C95-weit",
+    "GE-C95-rechts"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch95.txt",
+  "json": "german/narration/ch95.json",
+  "textHash": "fnv1a64:a5875e8a69047a65",
+  "jsonHash": "fnv1a64:83942e506cbdcc22",
+  "findings": []
+}

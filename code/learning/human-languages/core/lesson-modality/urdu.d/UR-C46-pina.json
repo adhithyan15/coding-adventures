@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C46-pina",
+    "language": "urdu",
+    "chapter": 46,
+    "sequence": 2350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b6b0636f57f2def"
+  },
+  "findings": []
+}

@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W04-tha
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 72
+sequence: 78
 delivery: script
 chapter: 4
 type: writing
 headword: થ
 romanization: "tha"
 gloss: "the aspirated consonant tha"
-prerequisites: [GU-W04-lla]
+prerequisites: [GU-W04-lla, GU-C04-athaanun]
 sounds: []
 roots: []
 etymology_hook: "A puff of air distinguishes this sound; one visible form is enough for this lesson."
 duration:
   max_seconds: 220
 requires:
-  knowledge: [GU-SCRIPT-LLA-01]
+  knowledge: [GU-SCRIPT-LLA-01, GU-LEX-ANCHOR-ATHAANUN]
 introduces:
   knowledge: [GU-SCRIPT-THA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-LLA-01, GU-SCRIPT-THA-01]
+  knowledge: [GU-SCRIPT-LLA-01, GU-SCRIPT-THA-01, GU-LEX-ANCHOR-ATHAANUN]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W04-lla]
 # થ — the consonant tha
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-LLA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-LLA-01, GU-LEX-ANCHOR-ATHAANUN] -->
 
 Write retroflex *lla* once from memory. Check only its broad bowl and tall spine.
 

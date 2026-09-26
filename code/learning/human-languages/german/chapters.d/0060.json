@@ -1,0 +1,19 @@
+{
+  "chapter": 60,
+  "title": "Healthy, Thirst, Hunger, Sad, Happy",
+  "label": "ch:ge-healthy-thirst-hunger-sad-happy",
+  "canDo": "I can say healthy, thirst, hunger, sad and happy.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GE-C60-gluecklich",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 60: i can say healthy, thirst, hunger, sad and happy.",
+    "assesses": [
+      "GE-LEX-C60-GEFUEHLE1-03",
+      "GE-LEX-C60-GEFUEHLE1-04",
+      "GE-LEX-C60-GEFUEHLE1-05"
+    ]
+  }
+}

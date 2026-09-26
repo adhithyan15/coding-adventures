@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:1a1b42776542ea9b",
+  "lessonIds": [
+    "JA-C30-osu",
+    "JA-C30-hiku",
+    "JA-C30-sagasu",
+    "JA-C30-kasu",
+    "JA-C30-kaesu"
+  ],
+  "tex": "japanese/book/chapters/ch30-to-push-to-pull-to-look-for-to-lend-to-give-back.tex"
+}

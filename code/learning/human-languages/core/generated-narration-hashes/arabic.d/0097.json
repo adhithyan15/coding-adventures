@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:09be74e336515e58",
+  "lessonIds": [
+    "AR-C97-ashara",
+    "AR-C97-thalathun",
+    "AR-C97-arbaun",
+    "AR-C97-khamsun",
+    "AR-C97-alf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch97.txt",
+  "json": "arabic/narration/ch97.json",
+  "textHash": "fnv1a64:c7cfc62a8dca4b59",
+  "jsonHash": "fnv1a64:4e63e91d77206792",
+  "findings": []
+}

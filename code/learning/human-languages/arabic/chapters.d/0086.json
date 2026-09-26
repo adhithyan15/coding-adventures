@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "Beautiful, Brown, Week, Month, Minute",
+  "label": "ch:ar-beautiful-brown-week-month-minute",
+  "canDo": "I can say beautiful, brown, a week, a month and a minute.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C86-daqiqa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can say beautiful, brown, a week, a month and a minute.",
+    "assesses": [
+      "AR-LEX-C86-ADJ86-03",
+      "AR-LEX-C86-ADJ86-04",
+      "AR-LEX-C86-ADJ86-05"
+    ]
+  }
+}

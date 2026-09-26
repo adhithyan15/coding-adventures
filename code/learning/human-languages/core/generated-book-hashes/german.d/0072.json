@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:0d4ae30961e9f141",
+  "lessonIds": [
+    "GE-C72-abendessen",
+    "GE-C72-fruehstueck",
+    "GE-C72-reis",
+    "GE-C72-birne",
+    "GE-C72-zitrone"
+  ],
+  "tex": "german/book/chapters/ch72-dinner-breakfast-rice-pear-lemon.tex"
+}

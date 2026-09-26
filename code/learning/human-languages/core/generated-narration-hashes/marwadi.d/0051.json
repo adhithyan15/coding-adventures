@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:b4c0c3259d0b8620",
+  "lessonIds": [
+    "MW-C51-pino",
+    "MW-C51-jano",
+    "MW-C51-avno",
+    "MW-C51-dekhno",
+    "MW-C51-sunno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch51.txt",
+  "json": "marwadi/narration/ch51.json",
+  "textHash": "fnv1a64:fe853d42d0b5abc4",
+  "jsonHash": "fnv1a64:f7989996d28304b1",
+  "findings": []
+}

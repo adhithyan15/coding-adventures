@@ -1,0 +1,11 @@
+{
+  "id": "MR-C99-kutra",
+  "pathSegment": "MR-PATH-99-NATURE99",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-99-NATURE99",
+      "order": 3
+    }
+  ]
+}

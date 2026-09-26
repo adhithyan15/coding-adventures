@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C59-krankenhaus",
+    "language": "german",
+    "chapter": 59,
+    "sequence": 1720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47613c2dafc82270"
+  },
+  "findings": []
+}

@@ -8,7 +8,7 @@ type: practice
 headword: mich · dich · ihn · uns · euch · sich
 gloss: the whole done-to row, and every verb in the book pointed at somebody
 concept_tag: GE-REVIEW-OBJEKTPRONOMEN
-prerequisites: [GE-C37-sich]
+prerequisites: [GE-C37-sich, GE-C22-hund-katze-more]
 sounds: []
 roots: []
 duration:

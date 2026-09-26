@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:e1d574c38d8da4d7",
+  "lessonIds": [
+    "BN-C75-dhoni",
+    "BN-C75-gorib",
+    "BN-C75-nongra",
+    "BN-C75-teto",
+    "BN-C75-tok"
+  ],
+  "tex": "bengali/book/chapters/ch75-rich-poor-dirty-bitter-sour.tex"
+}

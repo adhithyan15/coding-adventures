@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Bridge, Mosque, Hotel, Office, Police",
+  "label": "ch:fa-bridge-mosque-hotel-office-police",
+  "canDo": "I can say a bridge, a mosque, a hotel, an office and the police.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FA-C71-polis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: i can say a bridge, a mosque, a hotel, an office and the police.",
+    "assesses": [
+      "FA-LEX-C71-TOWN71-03",
+      "FA-LEX-C71-TOWN71-04",
+      "FA-LEX-C71-TOWN71-05"
+    ]
+  }
+}

@@ -8,7 +8,7 @@ type: phrase
 headword: wie viel · wie viele
 gloss: how much and how many — one distinction German marks and English marks too, on a word that is English *full*
 concept_tag: GE-QUESTION-HOW-MUCH
-prerequisites: [GE-C34-welcher, GE-C02-wie, GE-C12-zwanzig]
+prerequisites: [GE-C34-welcher, GE-C02-wie, GE-C12-zwanzig, GE-C22-hund-katze-more]
 sounds: [ie-long-ee]
 roots: [pie-pelh]
 etymology_hook: "viel is Proto-Indo-European *pelh₁-, 'fill up' — English full, Greek poly-, Latin plenus; German asks 'how full' where English asks 'how much'"

@@ -628,7 +628,12 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
             ?.absoluteFile
             ?.let { return it }
         val os = mosaicPlatform()
+        // A platform that owns its storage says where (UI89 §3.4): Android's
+        // activity sets its `filesDir` here before loading the host.
+        stateDirectory?.let { return File(File(it, MOSAIC_APPLICATION_ID), MOSAIC_STATE_FILE) }
         val root = when (os) {
+            // No `user.home` to speak of: without a directory, no persistence.
+            "android" -> return null
             "windows" -> System.getenv("LOCALAPPDATA")?.let(::File)
             "apple" -> File(System.getProperty("user.home"), "Library/Application Support")
             else -> System.getenv("XDG_DATA_HOME")?.let(::File)
@@ -718,6 +723,13 @@ class MosaicRuntimeHost private constructor(private val api: MosaicNativeApi) : 
     }
 
     companion object {
+        /**
+         * Where state is kept, when the platform decides rather than the user's
+         * home directory: Android sets its app's `filesDir` before [load].
+         */
+        @Volatile
+        var stateDirectory: File? = null
+
         fun load(): MosaicRuntimeHost? = runCatching {
             val library = System.getProperty("mosaic.app.library")
                 ?: System.getenv("MOSAIC_APP_LIBRARY")
@@ -762,6 +774,10 @@ private fun bundledMosaicLibrary(): String? {
 private fun mosaicPlatform(): String {
     val os = System.getProperty("os.name", "").lowercase(Locale.ROOT)
     return when {
+        // Android reports os.name "Linux"; its vendor ("The Android Project")
+        // and VM name ("Dalvik", kept by ART) give it away.
+        System.getProperty("java.vendor", "").contains("Android") ||
+            System.getProperty("java.vm.name", "").contains("Dalvik") -> "android"
         os.contains("mac") || os.contains("darwin") -> "apple"
         os.contains("win") -> "windows"
         else -> "linux"

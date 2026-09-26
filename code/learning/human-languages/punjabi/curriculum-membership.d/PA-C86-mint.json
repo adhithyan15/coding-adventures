@@ -1,0 +1,11 @@
+{
+  "id": "PA-C86-mint",
+  "pathSegment": "PA-PATH-86-TIME86",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-86-TIME86",
+      "order": 3
+    }
+  ]
+}

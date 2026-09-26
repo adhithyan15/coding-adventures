@@ -3,7 +3,7 @@
     "id": "GU-C68-tiger",
     "language": "gujarati",
     "chapter": 68,
-    "sequence": 3440,
+    "sequence": 3453,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:15a459f3a748091d"
+    "sourceHash": "fnv1a64:eea1918fdb562cad"
   },
   "findings": []
 }

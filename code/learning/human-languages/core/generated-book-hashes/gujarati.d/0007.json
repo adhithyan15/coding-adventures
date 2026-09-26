@@ -1,8 +1,11 @@
 {
   "language": "gujarati",
   "chapter": 7,
-  "sourceHash": "fnv1a64:e56e829d90c4598d",
+  "sourceHash": "fnv1a64:b9cb931e343e6fc7",
   "lessonIds": [
+    "GU-C07-dhool",
+    "GU-C07-int",
+    "GU-C07-dhol",
     "GU-W07-uu-matra",
     "GU-W07-tta",
     "GU-W07-independent-ii",

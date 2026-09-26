@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:a53a0984cc2ab112",
+  "lessonIds": [
+    "GE-C61-angst",
+    "GE-C61-freude",
+    "GE-C61-sohn",
+    "GE-C61-tochter",
+    "GE-C61-grossvater"
+  ],
+  "tex": "german/book/chapters/ch61-fear-joy-son-daughter-grandfather.tex"
+}

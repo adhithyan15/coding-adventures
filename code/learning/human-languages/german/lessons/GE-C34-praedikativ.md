@@ -8,7 +8,7 @@ type: grammar
 headword: Der Tag ist gut
 gloss: the adjective that does not move — an ending arrives only when the adjective stands in front of its noun
 concept_tag: GE-ADJ-PRAEDIKATIV
-prerequisites: [GE-C34-den, GE-C01-guten-tag, GE-C01-gute-nacht, GE-C13-rot, GE-C13-blau, GE-C13-rot-ruber, GE-C13-blau-bleu]
+prerequisites: [GE-C34-den, GE-C01-guten-tag, GE-C01-gute-nacht, GE-C13-rot, GE-C13-blau, GE-C13-rot-ruber, GE-C13-blau-bleu, GE-C22-hund-katze-more, GE-C23-gruen-gelb-more]
 sounds: []
 roots: []
 etymology_hook: "guten Tag has carried an ending since page one and gut has carried none, and the difference was never named: German inflects an adjective only in front of a noun, which is why the greeting is guten and the verdict is gut"

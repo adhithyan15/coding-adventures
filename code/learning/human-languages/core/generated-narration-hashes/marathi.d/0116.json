@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:a784fd33c99be510",
+  "lessonIds": [
+    "MR-C116-sadra",
+    "MR-C116-sadi",
+    "MR-C116-moja",
+    "MR-C116-khisa",
+    "MR-C116-angthi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch116.txt",
+  "json": "marathi/narration/ch116.json",
+  "textHash": "fnv1a64:5320ac3725f3041a",
+  "jsonHash": "fnv1a64:3f14b205e05f19fd",
+  "findings": []
+}

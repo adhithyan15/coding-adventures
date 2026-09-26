@@ -1,0 +1,11 @@
+{
+  "id": "MW-C74-soro",
+  "pathSegment": "MW-PATH-74-ADJ74",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-74-ADJ74",
+      "order": 3
+    }
+  ]
+}

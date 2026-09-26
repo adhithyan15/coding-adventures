@@ -1,11 +1,11 @@
 {
   "id": "AR-W08-kaf-and-ra",
   "pathSegment": "AR-PATH-008",
-  "pathOrder": 6,
+  "pathOrder": 10,
   "extensions": [
     {
       "id": "AR-EXT-008-SCRIPT",
-      "order": 6
+      "order": 10
     }
   ]
 }

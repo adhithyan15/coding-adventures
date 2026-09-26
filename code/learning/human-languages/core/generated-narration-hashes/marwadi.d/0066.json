@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:0a4f974241cfddc9",
+  "lessonIds": [
+    "MW-C66-akhbar",
+    "MW-C66-skul",
+    "MW-C66-saval",
+    "MW-C66-javab",
+    "MW-C66-sabad",
+    "MW-R66-first-pass-the-body-family-and-verbs",
+    "MW-R66-second-pass-more-verbs-food-and-the-home"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch66.txt",
+  "json": "marwadi/narration/ch66.json",
+  "textHash": "fnv1a64:5998febe66f6ed78",
+  "jsonHash": "fnv1a64:eeff35f20efdd8e6",
+  "findings": []
+}

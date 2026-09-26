@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:909d63b851cb05a2",
+  "lessonIds": [
+    "FR-C134-herbe",
+    "FR-C134-oreille",
+    "FR-C134-levre",
+    "FR-C134-numero",
+    "FR-C134-adresse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch134.txt",
+  "json": "french/narration/ch134.json",
+  "textHash": "fnv1a64:08b1c26fde034b8b",
+  "jsonHash": "fnv1a64:f4469215da3b112e",
+  "findings": []
+}

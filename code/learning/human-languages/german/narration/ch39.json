@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Sitting, Standing, Sleeping, Hearing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:467aa880848e21c1",
+  "sourceHash": "fnv1a64:f42b98bea6464efa",
   "lessons": [
     {
       "id": "GE-C26-sitzen",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76c45699dc412e9f",
+      "sourceHash": "fnv1a64:cccd269fd60160bd",
       "notice": null,
       "blocks": [
         {
@@ -620,7 +620,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36e476832bc1e516",
+      "sourceHash": "fnv1a64:33e567b0ba56b836",
       "notice": null,
       "blocks": [
         {

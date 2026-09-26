@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C49-becha",
+    "language": "bengali",
+    "chapter": 49,
+    "sequence": 2600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b9218640fbc0830"
+  },
+  "findings": []
+}

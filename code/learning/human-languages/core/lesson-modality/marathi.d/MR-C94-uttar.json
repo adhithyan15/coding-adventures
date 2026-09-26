@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C94-uttar",
+    "language": "marathi",
+    "chapter": 94,
+    "sequence": 4120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d0082d7f84d121f"
+  },
+  "findings": []
+}

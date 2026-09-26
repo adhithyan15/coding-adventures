@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C133-orage",
+    "language": "french",
+    "chapter": 133,
+    "sequence": 6180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a87ac56c891c8be"
+  },
+  "findings": []
+}

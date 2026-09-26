@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:b6fb0127d7013803",
+  "lessonIds": [
+    "MR-C85-masa",
+    "MR-C85-bhat",
+    "MR-C85-dal",
+    "MR-C85-phal",
+    "MR-C85-safarchand"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch85.txt",
+  "json": "marathi/narration/ch85.json",
+  "textHash": "fnv1a64:982024e242ff3121",
+  "jsonHash": "fnv1a64:23355c012e4f29fa",
+  "findings": []
+}

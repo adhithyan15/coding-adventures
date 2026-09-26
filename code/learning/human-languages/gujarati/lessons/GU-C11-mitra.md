@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C11-mitra
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 560
+sequence: 573
 chapter: 17
 type: word
 headword: મિત્ર

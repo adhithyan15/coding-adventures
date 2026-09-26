@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C63-address
 spine_node: SPINE-MEET-GREET
-sequence: 3230
+sequence: 3243
 chapter: 63
 type: word
 headword: "સરનામું"

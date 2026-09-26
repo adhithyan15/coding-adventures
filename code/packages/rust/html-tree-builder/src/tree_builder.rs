@@ -184,6 +184,45 @@ impl TreeBuilder {
         }
     }
 
+    /// A builder for the HTML fragment parsing algorithm (§13.4): parse as if
+    /// inside `context`. The context element exists only in the arena, never
+    /// in the tree; the fragment is the children of the `html` root that
+    /// [`Self::fragment_root`] returns.
+    pub fn for_fragment(
+        scripting: HtmlScriptingMode,
+        context_namespace: Namespace,
+        context_name: &str,
+        context_attributes: Vec<Attribute>,
+    ) -> Self {
+        let mut builder = Self::new(scripting);
+        let root = builder
+            .arena
+            .create_element(Namespace::Html, "html", Vec::new());
+        builder.arena.append(Arena::DOCUMENT, root);
+        builder.open.push(&builder.arena, root);
+        let context =
+            builder
+                .arena
+                .create_element(context_namespace, context_name, context_attributes);
+        builder.fragment_context = Some(context);
+        if builder.arena.is_html(context, "template") {
+            builder.template_modes.push(InsertionMode::InTemplate);
+        }
+        builder.reset_insertion_mode();
+        // "The nearest node to context that is a form element": the context
+        // has no ancestors here, so only the context itself can be one.
+        if builder.arena.is_html(context, "form") {
+            builder.form = Some(context);
+        }
+        builder
+    }
+
+    /// The `html` root a fragment parse collects its nodes under.
+    pub fn fragment_root(&self) -> Option<NodeId> {
+        self.fragment_context?;
+        self.open.top().or_else(|| self.arena.children(Arena::DOCUMENT).first().copied())
+    }
+
     pub fn document_mode(&self) -> DocumentMode {
         self.document_mode
     }
@@ -426,6 +465,13 @@ impl TreeBuilder {
 
     fn current_is_any(&self, names: &[&str]) -> bool {
         names.iter().any(|name| self.current_is(name))
+    }
+
+    /// "Parsing template contents" (§13.2.4.4): a template is open, or the
+    /// fragment being parsed is a template's. The form element pointer is
+    /// ignored then.
+    fn parsing_template_contents(&self) -> bool {
+        self.open.contains_html("template") || self.fragment_context_is("template")
     }
 
     fn fragment_context_is(&self, name: &str) -> bool {
@@ -1362,7 +1408,7 @@ impl TreeBuilder {
                 self.frameset_ok = false;
             }
             "form" => {
-                let in_template = self.open.contains_html("template");
+                let in_template = self.parsing_template_contents();
                 if self.form.is_some() && !in_template {
                     self.error("unexpected-start-tag");
                 } else {
@@ -1667,7 +1713,7 @@ impl TreeBuilder {
                 self.open.pop_until_html(&self.arena, &name);
             }
             "form" => {
-                if self.open.contains_html("template") {
+                if self.parsing_template_contents() {
                     if !self.open.has_in_scope(&self.arena, "form", Scope::Default) {
                         self.error("unexpected-end-tag");
                         return Flow::Done;
@@ -1951,7 +1997,7 @@ impl TreeBuilder {
             }
             Tok::StartTag(tag) if tag.name == "form" => {
                 self.error("unexpected-form-in-table");
-                let in_template = self.open.contains_html("template");
+                let in_template = self.parsing_template_contents();
                 if self.form.is_some() && !in_template {
                     return Flow::Done;
                 }
@@ -2594,7 +2640,12 @@ impl TreeBuilder {
             }
             Tok::StartTag(ref tag) if tag.name == "html" => self.in_body(token),
             Tok::EndTag(ref name) if name == "html" => {
-                self.mode = InsertionMode::AfterAfterBody;
+                if self.fragment_context.is_some() {
+                    // Fragment case: there is no document to close.
+                    self.error("unexpected-end-tag");
+                } else {
+                    self.mode = InsertionMode::AfterAfterBody;
+                }
                 Flow::Done
             }
             Tok::Eof => {
@@ -2629,7 +2680,7 @@ impl TreeBuilder {
                     self.error("unexpected-end-tag");
                 } else {
                     self.open.pop(&self.arena);
-                    if !self.current_is("frameset") {
+                    if self.fragment_context.is_none() && !self.current_is("frameset") {
                         self.mode = InsertionMode::AfterFrameset;
                     }
                 }

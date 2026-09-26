@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "To carry, To send, To count, To paint, To clean",
+  "label": "ch:ge-to-carry-to-send-to-count-to-paint-to-clean",
+  "canDo": "I can say to carry, to send, to count, to paint and to clean.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GE-C68-putzen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can say to carry, to send, to count, to paint and to clean.",
+    "assesses": [
+      "GE-LEX-C68-VERBEN5-03",
+      "GE-LEX-C68-VERBEN5-04",
+      "GE-LEX-C68-VERBEN5-05"
+    ]
+  }
+}

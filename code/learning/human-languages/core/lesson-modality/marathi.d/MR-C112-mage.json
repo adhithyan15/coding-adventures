@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C112-mage",
+    "language": "marathi",
+    "chapter": 112,
+    "sequence": 5030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:607eb6a3ffeb4fc5"
+  },
+  "findings": []
+}

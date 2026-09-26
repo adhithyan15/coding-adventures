@@ -1,11 +1,11 @@
 {
   "id": "GU-W04-i-matra",
   "pathSegment": "GU-PATH-FIRST-USE-SCRIPT-A",
-  "pathOrder": 3,
+  "pathOrder": 5,
   "extensions": [
     {
       "id": "GU-EXT-031-FIRST-USE-SCRIPT-A",
-      "order": 3
+      "order": 5
     }
   ]
 }

@@ -1,8 +1,8 @@
 Japanese, chapter 2: A Daytime Greeting, One Sign at a Time.
-7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 7.
+Lesson 1 of 8.
 こ (ko) — two strokes, and the greeting begins.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -35,7 +35,7 @@ Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japan
 How many strokes does the hiragana sign read 'ko' have?
 
 
-Lesson 2 of 7.
+Lesson 2 of 8.
 ん — one stroke, one beat, no vowel.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape, and the exception and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -66,7 +66,7 @@ Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japan
 Which vowel does this sign carry?
 
 
-Lesson 3 of 7.
+Lesson 3 of 8.
 に (ni) — three strokes, and a shape you half know.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -100,7 +100,7 @@ Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japan
 Two signs so far share a similar left-hand vertical. Does that shared shape tell you anything about their sound or meaning?
 
 
-Lesson 4 of 7.
+Lesson 4 of 8.
 ち (chi) — two strokes, four roman letters, one beat.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -130,7 +130,34 @@ Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japan
 This sign is romanised with four letters. How many beats does it take?
 
 
-Lesson 5 of 7.
+Lesson 5 of 8.
+わに (wani) — a crocodile.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before the new word: say the last thing you learned, once, out loud.
+
+You'll want to know: わに.
+わに — wani — "a crocodile".
+Say it: wani. Look at its shape as you say it: the lessons that follow take pieces of it, わ, and write each one on its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: wani]
+[pause 8 seconds for the answer]
+[your turn — say: wani, and what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "a crocodile"? (わに, wani.)
+[question — say your answer, then pause 10 seconds]
+Type the Japanese for 'a crocodile', in rōmaji.
+
+
+Lesson 6 of 8.
 わ — the sign for wa, and the trap beside it.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -171,7 +198,7 @@ Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japan
 The daytime greeting ends in a sound like 'wa'. Is it written with the sign for wa, or the sign for ha?
 
 
-Lesson 6 of 7.
+Lesson 7 of 8.
 Five signs in a row — and the greeting is readable.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the assembly and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -207,7 +234,7 @@ Source: Unicode Hiragana chart.
 How many beats (morae) does the written daytime greeting take?
 
 
-Lesson 7 of 7.
+Lesson 8 of 8.
 こんにちは (konnichiwa) — hello, and a sign that lies about its sound.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — five familiar signs until you have stopped, and I will say so again when we reach it.

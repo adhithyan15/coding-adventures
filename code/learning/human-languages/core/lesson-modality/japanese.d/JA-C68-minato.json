@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C68-minato",
+    "language": "japanese",
+    "chapter": 68,
+    "sequence": 4080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a27e1f1fd0a41086"
+  },
+  "findings": []
+}

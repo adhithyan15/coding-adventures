@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:3d6b61a412307996",
+  "lessonIds": [
+    "AR-C80-namir",
+    "AR-C80-fil",
+    "AR-C80-qird",
+    "AR-C80-thuban",
+    "AR-C80-dubb"
+  ],
+  "tex": "arabic/book/chapters/ch80-tiger-elephant-monkey-snake-bear.tex"
+}

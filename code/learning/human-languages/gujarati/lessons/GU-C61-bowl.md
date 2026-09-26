@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C61-bowl
 spine_node: SPINE-COURTESY-THANK
-sequence: 3100
+sequence: 3113
 chapter: 61
 type: word
 headword: "વાટકી"

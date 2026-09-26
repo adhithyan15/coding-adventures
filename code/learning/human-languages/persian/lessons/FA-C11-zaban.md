@@ -9,7 +9,7 @@ headword: زبان
 romanization: zabân
 gloss: tongue, and language — the word for the thing you are learning, and the tranche's closing review
 concept_tag: FA-BODY-TONGUE
-prerequisites: [FA-C11-pa]
+prerequisites: [FA-C11-pa, FA-C05-khodahafez-more]
 sounds: [rtl, ze, long-a, short-vowels-unwritten]
 roots: [middle-persian-zaban, pie-dnghwehas-tongue]
 etymology_hook: zabân continues Middle Persian zabān, tracing to the Indo-European word for "tongue," the same root behind English tongue and, by a well-documented but disputed d-to-l shift, Latin lingua — the ancestor of language and linguistics; Persian, like English, uses one word for the organ and the ability.

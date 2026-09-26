@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 29,
+  "sourceHash": "fnv1a64:a1a4d73eb4b5f71a",
+  "lessonIds": [
+    "JA-C29-tatsu",
+    "JA-C29-naku",
+    "JA-C29-sumu",
+    "JA-C29-yasumu",
+    "JA-C29-tanoshimu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch29.txt",
+  "json": "japanese/narration/ch29.json",
+  "textHash": "fnv1a64:4c543f8361f50d85",
+  "jsonHash": "fnv1a64:bf305b8a172db61e",
+  "findings": []
+}

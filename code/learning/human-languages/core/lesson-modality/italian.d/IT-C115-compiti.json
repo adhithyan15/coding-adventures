@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C115-compiti",
+    "language": "italian",
+    "chapter": 115,
+    "sequence": 5500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21d063b1e882cccf"
+  },
+  "findings": []
+}

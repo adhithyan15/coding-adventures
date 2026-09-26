@@ -3,7 +3,7 @@
     "id": "GU-C90-wedding",
     "language": "gujarati",
     "chapter": 90,
-    "sequence": 4560,
+    "sequence": 4573,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:21d0319a30daa16f"
+    "sourceHash": "fnv1a64:2a7480e7afeb2803"
   },
   "findings": []
 }

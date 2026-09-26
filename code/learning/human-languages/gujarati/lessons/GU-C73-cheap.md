@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C73-cheap
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3750
+sequence: 3763
 chapter: 73
 type: word
 headword: "સસ્તું"

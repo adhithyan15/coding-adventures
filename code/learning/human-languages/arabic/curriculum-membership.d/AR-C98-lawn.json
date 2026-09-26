@@ -1,0 +1,11 @@
+{
+  "id": "AR-C98-lawn",
+  "pathSegment": "AR-PATH-98-WORLD98",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-98-WORLD98",
+      "order": 0
+    }
+  ]
+}

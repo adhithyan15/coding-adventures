@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Hard-working, Lazy, Awake, Nice, Friendly",
+  "label": "ch:ge-hard-working-lazy-awake-nice-friendly",
+  "canDo": "I can say hard-working, lazy, awake, nice and friendly.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-R132-second-pass-more-describing-words",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say hard-working, lazy, awake, nice and friendly.",
+    "assesses": [
+      "GE-LEX-C132-EIGEN132-03",
+      "GE-LEX-C132-EIGEN132-04",
+      "GE-LEX-C132-EIGEN132-05"
+    ]
+  }
+}

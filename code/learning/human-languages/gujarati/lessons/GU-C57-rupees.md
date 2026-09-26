@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C57-rupees
 spine_node: SPINE-COURTESY-THANK
-sequence: 2920
+sequence: 2933
 chapter: 57
 type: word
 headword: "રૂપિયા"

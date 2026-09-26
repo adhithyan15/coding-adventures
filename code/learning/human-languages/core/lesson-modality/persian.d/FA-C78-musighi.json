@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C78-musighi",
+    "language": "persian",
+    "chapter": 78,
+    "sequence": 3790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf1c00298be95aa1"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-101-ZAHLEN",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "GE-EXT-101-ZAHLEN"
+  ],
+  "after": []
+}

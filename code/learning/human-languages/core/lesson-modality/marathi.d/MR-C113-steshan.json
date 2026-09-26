@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C113-steshan",
+    "language": "marathi",
+    "chapter": 113,
+    "sequence": 5080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c7e1a47c6a92b65"
+  },
+  "findings": []
+}

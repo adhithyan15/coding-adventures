@@ -1,0 +1,11 @@
+{
+  "id": "IT-C106-fungo",
+  "pathSegment": "IT-PATH-106-CIBO106",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-106-CIBO106",
+      "order": 2
+    }
+  ]
+}

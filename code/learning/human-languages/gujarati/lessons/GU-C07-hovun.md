@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C07-hovun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 380
+sequence: 393
 chapter: 13
 type: word
 headword: હોવું

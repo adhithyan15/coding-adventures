@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R15-name-exchange-r3
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 690
+sequence: 703
 chapter: 19
 type: practice
 headword: મારું નામ … છે। તમારું નામ શું છે?

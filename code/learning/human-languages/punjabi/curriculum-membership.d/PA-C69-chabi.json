@@ -1,0 +1,11 @@
+{
+  "id": "PA-C69-chabi",
+  "pathSegment": "PA-PATH-69-HOME69",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-69-HOME69",
+      "order": 3
+    }
+  ]
+}

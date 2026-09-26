@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-59-VERBS59",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an apple, a banana, a potato, a tomato and a carrot.",
+  "prerequisites": []
+}

@@ -4,11 +4,11 @@
   "chapter": 85,
   "title": "Bus, Train and Plane",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:21256b3e03c585bb",
+  "sourceHash": "fnv1a64:6b0ebef582f8ae51",
   "lessons": [
     {
       "id": "GU-C85-bus",
-      "sequence": 4310,
+      "sequence": 4323,
       "title": "બસ (bas) — a bus",
       "headword": "બસ",
       "romanization": "bas",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33241856cc529305",
+      "sourceHash": "fnv1a64:c84b82931409c797",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C85-train",
-      "sequence": 4320,
+      "sequence": 4333,
       "title": "ટ્રેન (ṭren) — a train",
       "headword": "ટ્રેન",
       "romanization": "ṭren",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04a9a2c4b0b140ad",
+      "sourceHash": "fnv1a64:86d32e1dde385e9d",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C85-station",
-      "sequence": 4330,
+      "sequence": 4343,
       "title": "સ્ટેશન (sṭeśan) — a station",
       "headword": "સ્ટેશન",
       "romanization": "sṭeśan",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c977a1d7b06110a0",
+      "sourceHash": "fnv1a64:c4acfc3b7d73622e",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C85-plane",
-      "sequence": 4340,
+      "sequence": 4353,
       "title": "વિમાન (vimān) — an aeroplane",
       "headword": "વિમાન",
       "romanization": "vimān",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31df14d8e42478ea",
+      "sourceHash": "fnv1a64:484933487af9047a",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C85-port",
-      "sequence": 4350,
+      "sequence": 4363,
       "title": "બંદર (bandar) — a port, a harbour",
       "headword": "બંદર",
       "romanization": "bandar",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e1a6a6b92fbfed8",
+      "sourceHash": "fnv1a64:9640e9961c9d659a",
       "notice": null,
       "blocks": [
         {

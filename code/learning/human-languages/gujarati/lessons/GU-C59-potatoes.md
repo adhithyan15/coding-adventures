@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C59-potatoes
 spine_node: SPINE-COURTESY-THANK
-sequence: 3020
+sequence: 3033
 chapter: 59
 type: word
 headword: "બટાકા"

@@ -3,7 +3,7 @@
     "id": "GU-C91-apology",
     "language": "gujarati",
     "chapter": 91,
-    "sequence": 4640,
+    "sequence": 4653,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:bd706188e9f8e5c3"
+    "sourceHash": "fnv1a64:399a7a658f252217"
   },
   "findings": []
 }

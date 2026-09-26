@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C49-pakana",
+    "language": "urdu",
+    "chapter": 49,
+    "sequence": 2490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:10a3a86a2c4b7f47"
+  },
+  "findings": []
+}

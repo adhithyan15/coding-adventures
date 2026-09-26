@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C62-fan
 spine_node: SPINE-MEET-GREET
-sequence: 3170
+sequence: 3183
 chapter: 62
 type: word
 headword: "પંખો"

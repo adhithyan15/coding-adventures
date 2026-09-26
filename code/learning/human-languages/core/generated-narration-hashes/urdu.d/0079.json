@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:3bafb612c25a1814",
+  "lessonIds": [
+    "UR-C79-upar",
+    "UR-C79-niche",
+    "UR-C79-dukan",
+    "UR-C79-sarak",
+    "UR-C79-baink"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch79.txt",
+  "json": "urdu/narration/ch79.json",
+  "textHash": "fnv1a64:869c5b4631e8b558",
+  "jsonHash": "fnv1a64:b9f1b0ce0c2e65d0",
+  "findings": []
+}

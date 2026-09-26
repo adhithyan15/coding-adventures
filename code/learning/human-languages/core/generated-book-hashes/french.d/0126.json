@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:531f13134c97e4cb",
+  "lessonIds": [
+    "FR-C126-classe",
+    "FR-C126-lecon",
+    "FR-C126-examen",
+    "FR-C126-mot",
+    "FR-C126-tableau"
+  ],
+  "tex": "french/book/chapters/ch126-class-lesson-exam-word-board.tex"
+}

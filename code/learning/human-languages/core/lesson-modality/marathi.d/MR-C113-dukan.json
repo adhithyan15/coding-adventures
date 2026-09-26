@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C113-dukan",
+    "language": "marathi",
+    "chapter": 113,
+    "sequence": 5050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:956544a35b4ad948"
+  },
+  "findings": []
+}

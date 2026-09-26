@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "Boat, Bicycle, Bazaar, Village, City",
+  "label": "ch:fa-boat-bicycle-bazaar-village-city",
+  "canDo": "I can say a boat, a bicycle, a bazaar, a village and a city.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FA-C72-shahr",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can say a boat, a bicycle, a bazaar, a village and a city.",
+    "assesses": [
+      "FA-LEX-C72-TOWN72-03",
+      "FA-LEX-C72-TOWN72-04",
+      "FA-LEX-C72-TOWN72-05"
+    ]
+  }
+}

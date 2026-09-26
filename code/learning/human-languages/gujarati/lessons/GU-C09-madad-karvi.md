@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C09-madad-karvi
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 500
+sequence: 513
 chapter: 15
 type: phrase
 headword: મદદ કરવી

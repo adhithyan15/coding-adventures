@@ -1,0 +1,11 @@
+{
+  "id": "GE-C88-wuenschen",
+  "pathSegment": "GE-PATH-88-TIERE3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-88-TIERE3",
+      "order": 4
+    }
+  ]
+}

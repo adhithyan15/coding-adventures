@@ -1,0 +1,19 @@
+{
+  "chapter": 52,
+  "title": "White, Black, Green, Thick, Warm",
+  "label": "ch:ja-white-black-green-thick-warm",
+  "canDo": "I can say white, black, green, thick and warm.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "JA-C52-atatakai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 52: i can say white, black, green, thick and warm.",
+    "assesses": [
+      "JA-LEX-C52-ADJ52-03",
+      "JA-LEX-C52-ADJ52-04",
+      "JA-LEX-C52-ADJ52-05"
+    ]
+  }
+}

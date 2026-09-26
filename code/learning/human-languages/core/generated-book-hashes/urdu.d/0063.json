@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:38a7d92cdf8a8370",
+  "lessonIds": [
+    "UR-C63-javab",
+    "UR-C63-lafz",
+    "UR-C63-khel",
+    "UR-C63-darakht",
+    "UR-C63-phul"
+  ],
+  "tex": "urdu/book/chapters/ch63-answer-word-game-tree-flower.tex"
+}

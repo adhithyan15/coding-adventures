@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:2d56558ee4e05f6e",
+  "lessonIds": [
+    "MR-C117-ghadyal",
+    "MR-C117-topi",
+    "MR-C117-but",
+    "MR-C117-chappal",
+    "MR-C117-tis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch117.txt",
+  "json": "marathi/narration/ch117.json",
+  "textHash": "fnv1a64:39fa8fdac2ed6db9",
+  "jsonHash": "fnv1a64:9154d191eaf6a123",
+  "findings": []
+}

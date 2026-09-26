@@ -1,11 +1,11 @@
 {
   "id": "ML-S115-letter-nya",
   "pathSegment": "ML-PATH-100",
-  "pathOrder": 17,
+  "pathOrder": 22,
   "extensions": [
     {
       "id": "ML-EXT-100-SCRIPT-RECOGNITION",
-      "order": 17
+      "order": 22
     }
   ]
 }

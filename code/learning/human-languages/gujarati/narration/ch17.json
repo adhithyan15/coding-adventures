@@ -4,11 +4,11 @@
   "chapter": 17,
   "title": "Friend and Family",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:921b1f391a4662e7",
+  "sourceHash": "fnv1a64:22c1aea718439217",
   "lessons": [
     {
       "id": "GU-C11-mitra",
-      "sequence": 560,
+      "sequence": 573,
       "title": "મિત્ર (mitra) — a friend, and the word inside your own \"please\"",
       "headword": "મિત્ર",
       "romanization": "mitra",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a3c22080e5d5220d",
+      "sourceHash": "fnv1a64:6dc3118e3ed353bd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -154,7 +154,7 @@
     },
     {
       "id": "GU-C11-kutumb",
-      "sequence": 570,
+      "sequence": 583,
       "title": "કુટુંબ (kuṭumb) — a word that skipped the sound changes",
       "headword": "કુટુંબ",
       "romanization": "kuṭumb",
@@ -165,7 +165,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9b73483168a8b9ed",
+      "sourceHash": "fnv1a64:89c3547ceb9f48af",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -307,7 +307,7 @@
     },
     {
       "id": "GU-C11-bhai",
-      "sequence": 580,
+      "sequence": 593,
       "title": "ભાઈ (bhāī) — the same word as \"brother,\" unbroken",
       "headword": "ભાઈ",
       "romanization": "bhāī",
@@ -318,7 +318,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:31c4e6eb3c90f067",
+      "sourceHash": "fnv1a64:27f6ac36d39fc79b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -449,7 +449,7 @@
     },
     {
       "id": "GU-C11-bahen",
-      "sequence": 590,
+      "sequence": 603,
       "title": "બહેન (bahen) — the sister who is not \"sister\"'s cousin",
       "headword": "બહેન",
       "romanization": "bahen",
@@ -460,7 +460,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5898ee0b7ca29f0a",
+      "sourceHash": "fnv1a64:b2520cd8fc32f92d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -604,7 +604,7 @@
     },
     {
       "id": "GU-R13-doorway-nine-r3",
-      "sequence": 595,
+      "sequence": 608,
       "title": "The doorway nine return in a new order",
       "headword": "ણ જ ુ શ ં ક ો છ ી",
       "romanization": "retroflex nna — ja — u sign — sha — nasal mark — ka — o sign — chha — long-ii sign",
@@ -616,7 +616,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:455bda4b20ba2e9c",
+      "sourceHash": "fnv1a64:646ae0aa23e7018d",
       "notice": {
         "modality": "pen",
         "needs": [

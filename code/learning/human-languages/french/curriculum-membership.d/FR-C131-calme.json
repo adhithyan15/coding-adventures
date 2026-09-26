@@ -1,0 +1,11 @@
+{
+  "id": "FR-C131-calme",
+  "pathSegment": "FR-PATH-131-QUALITES83",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-131-QUALITES83",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:24c8b5153addc6b5",
+  "lessonIds": [
+    "AR-C55-jadda",
+    "AR-C55-amm",
+    "AR-C55-khal",
+    "AR-C55-zawj",
+    "AR-C55-zawja"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch55.txt",
+  "json": "arabic/narration/ch55.json",
+  "textHash": "fnv1a64:dc0380b0955b4c60",
+  "jsonHash": "fnv1a64:c03a0b829aeb00d8",
+  "findings": []
+}

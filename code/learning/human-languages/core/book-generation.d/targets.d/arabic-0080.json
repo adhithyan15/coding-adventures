@@ -1,0 +1,7 @@
+{
+  "language": "arabic",
+  "chapter": 80,
+  "output": "arabic/book/chapters/ch80-tiger-elephant-monkey-snake-bear.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ar"
+}

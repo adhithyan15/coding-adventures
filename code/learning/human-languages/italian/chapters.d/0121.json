@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Tortoise, Squirrel, Owl, Whale, Dolphin",
+  "label": "ch:it-tortoise-squirrel-owl-whale-dolphin",
+  "canDo": "I can say a tortoise, a squirrel, an owl, a whale and a dolphin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C121-delfino",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say a tortoise, a squirrel, an owl, a whale and a dolphin.",
+    "assesses": [
+      "IT-LEX-C121-ANIMALI121-03",
+      "IT-LEX-C121-ANIMALI121-04",
+      "IT-LEX-C121-ANIMALI121-05"
+    ]
+  }
+}

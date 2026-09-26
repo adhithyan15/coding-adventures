@@ -1,0 +1,19 @@
+{
+  "chapter": 80,
+  "title": "Always, Sometimes, Quickly, Delay, Before",
+  "label": "ch:mw-always-sometimes-quickly-delay-before",
+  "canDo": "I can say always, sometimes, ever, quickly, a delay and before.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "MW-C80-paila",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 80: i can say always, sometimes, ever, quickly, a delay and before.",
+    "assesses": [
+      "MW-LEX-C80-TIME80-03",
+      "MW-LEX-C80-TIME80-04",
+      "MW-LEX-C80-TIME80-05"
+    ]
+  }
+}

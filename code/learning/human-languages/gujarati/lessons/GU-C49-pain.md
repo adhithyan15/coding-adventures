@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C49-pain
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2490
+sequence: 2503
 chapter: 49
 type: word
 headword: "દુખાવો"

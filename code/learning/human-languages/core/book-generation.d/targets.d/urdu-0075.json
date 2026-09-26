@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 75,
+  "output": "urdu/book/chapters/ch75-evening-week-month-year-hour.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

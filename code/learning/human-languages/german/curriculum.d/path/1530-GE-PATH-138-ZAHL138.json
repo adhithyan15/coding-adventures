@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-138-ZAHL138",
+  "spine_node": "SPINE-COUNT-ONE-TO-FIVE",
+  "before": [],
+  "inline": [
+    "GE-EXT-138-ZAHL138"
+  ],
+  "after": []
+}

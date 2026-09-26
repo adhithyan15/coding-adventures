@@ -4,11 +4,11 @@
   "chapter": 61,
   "title": "Plate, Bowl and Spoon",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:17d69eabf3d1b846",
+  "sourceHash": "fnv1a64:ce31614de8ea7679",
   "lessons": [
     {
       "id": "GU-C61-plate",
-      "sequence": 3090,
+      "sequence": 3103,
       "title": "થાળી (thāḷī) — a plate, a thali",
       "headword": "થાળી",
       "romanization": "thāḷī",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8299ea5239c46d05",
+      "sourceHash": "fnv1a64:325316fe02fd39b4",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C61-bowl",
-      "sequence": 3100,
+      "sequence": 3113,
       "title": "વાટકી (vāṭkī) — a small bowl",
       "headword": "વાટકી",
       "romanization": "vāṭkī",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3d4d2e5023f8f25",
+      "sourceHash": "fnv1a64:d78a4c0356d405b5",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C61-spoon",
-      "sequence": 3110,
+      "sequence": 3123,
       "title": "ચમચી (camcī) — a spoon",
       "headword": "ચમચી",
       "romanization": "camcī",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9368f2621080ae2b",
+      "sourceHash": "fnv1a64:6a1b1dd6a56548fd",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C61-cup",
-      "sequence": 3120,
+      "sequence": 3133,
       "title": "પ્યાલો (pyālo) — a cup, a glass",
       "headword": "પ્યાલો",
       "romanization": "pyālo",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:921f33543cdeb178",
+      "sourceHash": "fnv1a64:171e48b675613364",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C61-pot",
-      "sequence": 3130,
+      "sequence": 3143,
       "title": "તપેલી (tapelī) — a cooking pot",
       "headword": "તપેલી",
       "romanization": "tapelī",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:287b98c457df9ae4",
+      "sourceHash": "fnv1a64:769a728a6d13d6b2",
       "notice": null,
       "blocks": [
         {

@@ -1,0 +1,19 @@
+{
+  "chapter": 51,
+  "title": "Hair, Foot, Finger, Shoulder, Neck",
+  "label": "ch:ar-hair-foot-finger-shoulder-neck",
+  "canDo": "I can say hair, a foot, a finger, a shoulder and the neck.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C51-raqaba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 51: i can say hair, a foot, a finger, a shoulder and the neck.",
+    "assesses": [
+      "AR-LEX-C51-BODY51-03",
+      "AR-LEX-C51-BODY51-04",
+      "AR-LEX-C51-BODY51-05"
+    ]
+  }
+}

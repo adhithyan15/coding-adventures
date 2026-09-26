@@ -9,20 +9,20 @@ type: writing
 headword: अ
 romanization: "a"
 gloss: independent short a — the vowel every consonant already hides
-prerequisites: [MR-W05-candrabindu]
+prerequisites: [MR-W05-candrabindu, MR-C05-amrut]
 sounds: [standalone-vowel-a]
 roots: []
 duration:
   max_seconds: 200
 requires:
-  knowledge: [MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-AA-INDEPENDENT-01]
+  knowledge: [MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-AA-INDEPENDENT-01, MR-LEX-ANCHOR-AMRUT]
 introduces:
   knowledge: [MR-SCRIPT-A-INDEPENDENT-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-A-INDEPENDENT-01, MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-AA-INDEPENDENT-01]
+  knowledge: [MR-SCRIPT-A-INDEPENDENT-01, MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-AA-INDEPENDENT-01, MR-LEX-ANCHOR-AMRUT]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W05-candrabindu, MR-W02-aa-independent]
 # अ — the vowel your consonants have been hiding
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-AMRUT] -->
 
 Say **क** on its own. You did not say a bare *k*. Something came after it.
 

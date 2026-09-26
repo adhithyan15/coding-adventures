@@ -1,11 +1,11 @@
 {
   "id": "PA-W05-work-delayed",
   "pathSegment": "PA-PATH-021",
-  "pathOrder": 11,
+  "pathOrder": 12,
   "extensions": [
     {
       "id": "PA-EXT-026-A1-WORK-FIELD",
-      "order": 11
+      "order": 12
     }
   ]
 }

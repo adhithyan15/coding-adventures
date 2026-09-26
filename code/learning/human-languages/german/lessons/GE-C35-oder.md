@@ -8,7 +8,7 @@ type: word
 headword: oder
 gloss: or — the second joining word, on the same Germanic root as English *or*, and the tag question every German speaker ends a sentence with
 concept_tag: GE-CONNECT-ODER
-prerequisites: [GE-R34-welchen, GE-C03-und, GE-C33-ja-nein-frage]
+prerequisites: [GE-R34-welchen, GE-C03-und, GE-C33-ja-nein-frage, GE-C22-hund-katze-more]
 sounds: [long-o]
 roots: [germanic-efthau]
 etymology_hook: "oder and English or are one Germanic word, *efþau; German kept two syllables where English wore its down to one, and German then gave the word a second life as the tag oder? that ends half the questions in the language"

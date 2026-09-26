@@ -1,0 +1,11 @@
+{
+  "id": "FR-C131-ferme",
+  "pathSegment": "FR-PATH-131-QUALITES83",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-131-QUALITES83",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C133-mechant",
+  "pathSegment": "FR-PATH-133-QUALITES85",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-133-QUALITES85",
+      "order": 1
+    }
+  ]
+}

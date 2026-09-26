@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C80-pakadne",
+    "language": "marathi",
+    "chapter": 80,
+    "sequence": 3390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8674a4ae5034a40"
+  },
+  "findings": []
+}

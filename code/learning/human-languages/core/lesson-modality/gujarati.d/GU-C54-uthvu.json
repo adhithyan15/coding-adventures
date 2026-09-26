@@ -3,7 +3,7 @@
     "id": "GU-C54-uthvu",
     "language": "gujarati",
     "chapter": 54,
-    "sequence": 2760,
+    "sequence": 2773,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4f800bc0a2a88df4"
+    "sourceHash": "fnv1a64:9eca3a58e517e7a4"
   },
   "findings": []
 }

@@ -3,7 +3,7 @@
     "id": "GU-C60-chilli",
     "language": "gujarati",
     "chapter": 60,
-    "sequence": 3040,
+    "sequence": 3053,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8ea5d1a7e3f7593d"
+    "sourceHash": "fnv1a64:849dafeea35583c1"
   },
   "findings": []
 }

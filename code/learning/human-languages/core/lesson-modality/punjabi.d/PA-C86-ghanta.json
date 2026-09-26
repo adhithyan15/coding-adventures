@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C86-ghanta",
+    "language": "punjabi",
+    "chapter": 86,
+    "sequence": 4580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffa8e4d0492e5e2b"
+  },
+  "findings": []
+}

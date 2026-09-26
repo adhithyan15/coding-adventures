@@ -1,0 +1,11 @@
+{
+  "id": "FR-C123-policier",
+  "pathSegment": "FR-PATH-123-METIERS75",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-123-METIERS75",
+      "order": 2
+    }
+  ]
+}

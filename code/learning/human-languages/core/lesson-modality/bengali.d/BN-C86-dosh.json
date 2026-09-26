@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C86-dosh",
+    "language": "bengali",
+    "chapter": 86,
+    "sequence": 4490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebc5924d5f8807e5"
+  },
+  "findings": []
+}

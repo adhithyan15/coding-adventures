@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C86-volere",
+    "language": "italian",
+    "chapter": 86,
+    "sequence": 3950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ea4b3a0facda52b"
+  },
+  "findings": []
+}

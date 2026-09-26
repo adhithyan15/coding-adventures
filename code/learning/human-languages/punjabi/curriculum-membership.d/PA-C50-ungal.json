@@ -1,0 +1,11 @@
+{
+  "id": "PA-C50-ungal",
+  "pathSegment": "PA-PATH-50-BODY50",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-50-BODY50",
+      "order": 0
+    }
+  ]
+}

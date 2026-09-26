@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:b990648f07c7d8ba",
+  "lessonIds": [
+    "UR-C39-pet",
+    "UR-C39-kandha",
+    "UR-C39-ungli",
+    "UR-C39-hot",
+    "UR-C39-gardan"
+  ],
+  "tex": "urdu/book/chapters/ch39-stomach-shoulder-finger-lip-neck.tex"
+}

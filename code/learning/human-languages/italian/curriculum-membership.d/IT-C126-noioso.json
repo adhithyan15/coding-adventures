@@ -1,0 +1,11 @@
+{
+  "id": "IT-C126-noioso",
+  "pathSegment": "IT-PATH-126-QUALITA126",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-126-QUALITA126",
+      "order": 0
+    }
+  ]
+}

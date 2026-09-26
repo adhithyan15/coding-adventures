@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:e044e5958379f3a8",
+  "lessonIds": [
+    "MW-C57-pairno",
+    "MW-C57-chhorno",
+    "MW-C57-bolno",
+    "MW-C57-likhno",
+    "MW-C57-sochno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch57.txt",
+  "json": "marwadi/narration/ch57.json",
+  "textHash": "fnv1a64:7b949c0aeadfdf1d",
+  "jsonHash": "fnv1a64:0e3fca7948f8f292",
+  "findings": []
+}

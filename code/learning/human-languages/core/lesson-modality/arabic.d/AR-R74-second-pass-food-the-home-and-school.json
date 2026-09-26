@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-R74-second-pass-food-the-home-and-school",
+    "language": "arabic",
+    "chapter": 74,
+    "sequence": 2700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4b6c9c1f5713dd4"
+  },
+  "findings": []
+}

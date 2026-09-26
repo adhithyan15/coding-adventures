@@ -1,0 +1,19 @@
+{
+  "chapter": 69,
+  "title": "Here, There, Right, Left, Street",
+  "label": "ch:fa-here-there-right-left-street",
+  "canDo": "I can say here, there, right, left and a street.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "FA-C69-khiyaban",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 69: i can say here, there, right, left and a street.",
+    "assesses": [
+      "FA-LEX-C69-PLACE69-03",
+      "FA-LEX-C69-PLACE69-04",
+      "FA-LEX-C69-PLACE69-05"
+    ]
+  }
+}

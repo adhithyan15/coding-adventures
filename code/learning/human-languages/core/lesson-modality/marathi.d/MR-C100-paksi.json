@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C100-paksi",
+    "language": "marathi",
+    "chapter": 100,
+    "sequence": 4420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7194634b01bc4b7c"
+  },
+  "findings": []
+}

@@ -9,18 +9,18 @@ type: writing
 headword: こんにちは
 romanization: konnichiwa
 gloss: five signs, all of them already yours — the greeting read rather than recalled
-prerequisites: [JA-W01-wa]
+prerequisites: [JA-W01-wa, JA-C02-wani]
 sounds: [mora]
 roots: []
 etymology_hook: no new sign appears here; the greeting is simply five signs you can already write, set in a row.
 duration:
   max_seconds: 200
 requires:
-  knowledge: [JA-SCRIPT-KO-01, JA-SCRIPT-N-01, JA-SCRIPT-NI-01, JA-SCRIPT-CHI-01, JA-SCRIPT-HA-01, JA-PARTICLE-WA-SPELLING]
+  knowledge: [JA-SCRIPT-KO-01, JA-SCRIPT-N-01, JA-SCRIPT-NI-01, JA-SCRIPT-CHI-01, JA-SCRIPT-HA-01, JA-PARTICLE-WA-SPELLING, JA-LEX-ANCHOR-WANI]
 introduces:
   knowledge: [JA-SCRIPT-KONNICHIWA-READ-01]
 practises:
-  knowledge: [JA-SCRIPT-KONNICHIWA-READ-01, JA-SCRIPT-KO-01, JA-SCRIPT-N-01, JA-SCRIPT-NI-01, JA-SCRIPT-CHI-01, JA-SCRIPT-HA-01, JA-SCRIPT-HIRAGANA-MORA, JA-PARTICLE-WA-SPELLING, JA-SCRIPT-WA-01]
+  knowledge: [JA-SCRIPT-KONNICHIWA-READ-01, JA-SCRIPT-KO-01, JA-SCRIPT-N-01, JA-SCRIPT-NI-01, JA-SCRIPT-CHI-01, JA-SCRIPT-HA-01, JA-SCRIPT-HIRAGANA-MORA, JA-PARTICLE-WA-SPELLING, JA-SCRIPT-WA-01, JA-LEX-ANCHOR-WANI]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ reviews_of: [JA-W01-wa, JA-W01-ko, JA-W01-n, JA-W01-ni, JA-W01-chi]
 # Five signs in a row — and the greeting is readable
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KO-01, JA-SCRIPT-N-01, JA-SCRIPT-NI-01, JA-SCRIPT-CHI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KO-01, JA-SCRIPT-N-01, JA-SCRIPT-NI-01, JA-SCRIPT-CHI-01, JA-LEX-ANCHOR-WANI] -->
 
 [PAUSE 4s] Four signs, one after another, from memory. Say each beat as you
 finish writing it:

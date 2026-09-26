@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:a9281b531e05d5fd",
+  "lessonIds": [
+    "UR-C79-upar",
+    "UR-C79-niche",
+    "UR-C79-dukan",
+    "UR-C79-sarak",
+    "UR-C79-baink"
+  ],
+  "tex": "urdu/book/chapters/ch79-above-below-shop-road-bank.tex"
+}

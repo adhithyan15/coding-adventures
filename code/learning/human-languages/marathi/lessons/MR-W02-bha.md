@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W02-bha
 spine_node: SPINE-COURTESY-THANK
-sequence: 23
+sequence: 27
 delivery: script
 chapter: 2
 type: writing
 headword: भ
 romanization: "bha"
 gloss: the breathy consonant bha
-prerequisites: [MR-W02-aa-independent]
+prerequisites: [MR-W02-aa-independent, MR-C02-aabhaal]
 sounds: [aspirated-b]
 roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [MR-SCRIPT-AA-INDEPENDENT-01]
+  knowledge: [MR-SCRIPT-AA-INDEPENDENT-01, MR-LEX-ANCHOR-AABHAAL]
 introduces:
   knowledge: [MR-SCRIPT-BHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-BHA-01]
+  knowledge: [MR-SCRIPT-BHA-01, MR-LEX-ANCHOR-AABHAAL]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W02-aa-independent]
 # भ — bha, with a puff of breath
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-AABHAAL] -->
 
 Make room for one consonant and one careful copy.
 

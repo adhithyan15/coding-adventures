@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:2147a88c69eda247",
+  "lessonIds": [
+    "MR-C97-talav",
+    "MR-C97-dagad",
+    "MR-C97-valu",
+    "MR-C97-shet",
+    "MR-C97-tara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch97.txt",
+  "json": "marathi/narration/ch97.json",
+  "textHash": "fnv1a64:8c73743889166433",
+  "jsonHash": "fnv1a64:07863431dfb7ef42",
+  "findings": []
+}

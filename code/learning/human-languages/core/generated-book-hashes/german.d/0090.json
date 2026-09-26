@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:6121a25b3b7cf3b5",
+  "lessonIds": [
+    "GE-C90-schwer",
+    "GE-C90-billig",
+    "GE-C90-hoch",
+    "GE-C90-niedrig",
+    "GE-C90-leer"
+  ],
+  "tex": "german/book/chapters/ch90-heavy-cheap-high-low-empty.tex"
+}

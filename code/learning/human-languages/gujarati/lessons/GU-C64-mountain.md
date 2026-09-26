@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C64-mountain
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3260
+sequence: 3273
 chapter: 64
 type: word
 headword: "પર્વત"

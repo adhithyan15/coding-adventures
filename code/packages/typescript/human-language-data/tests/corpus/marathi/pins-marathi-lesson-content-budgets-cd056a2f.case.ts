@@ -189,7 +189,13 @@ it("pins Marathi lesson-content budgets", () =>
     // reinforcement debt -- the first meeting retrieved as one exchange, and
     // the three script marks of chapters 64-65. No new atoms, no new headwords.
     //
-    lessons: 366,
+    // 366 -> 627: chapters 70-120, 255 word lessons and six reviews. None
+    // introduces an idiom, a sense or a culture claim.
+    // 627 -> 633: HL-C443 anchor words for six letters in chapters 56-65.
+    // 633 -> 652: HL-C443 anchor words for the opening runways, chapters 2 and
+    // 5-8. Nineteen short words, each read before the letters it holds. None
+    // introduces an idiom, a sense or a culture claim.
+    lessons: 652,
     idioms: 5,
     senses: 4,
     // 7 -> 8: MR-CULTURE-SHUBH-FORMAL-WRITTEN-REGISTER-01. The shubh greetings

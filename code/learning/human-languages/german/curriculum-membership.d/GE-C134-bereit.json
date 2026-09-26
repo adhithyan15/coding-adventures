@@ -1,0 +1,11 @@
+{
+  "id": "GE-C134-bereit",
+  "pathSegment": "GE-PATH-134-EIGEN134",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-134-EIGEN134",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 47,
+  "title": "To sit, To sleep, To get up, To walk, To run",
+  "label": "ch:ur-to-sit-to-sleep-to-get-up-to-walk-to-run",
+  "canDo": "I can say to sit, to sleep, to get up, to walk and to run.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C47-daurna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 47: i can say to sit, to sleep, to get up, to walk and to run.",
+    "assesses": [
+      "UR-LEX-C47-VERBS47-03",
+      "UR-LEX-C47-VERBS47-04",
+      "UR-LEX-C47-VERBS47-05"
+    ]
+  }
+}

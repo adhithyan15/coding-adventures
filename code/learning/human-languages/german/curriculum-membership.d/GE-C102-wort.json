@@ -1,0 +1,11 @@
+{
+  "id": "GE-C102-wort",
+  "pathSegment": "GE-PATH-102-DINGE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-102-DINGE",
+      "order": 1
+    }
+  ]
+}

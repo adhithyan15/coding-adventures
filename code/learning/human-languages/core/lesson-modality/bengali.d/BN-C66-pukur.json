@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C66-pukur",
+    "language": "bengali",
+    "chapter": 66,
+    "sequence": 3480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01d4d5c42f9fa87f"
+  },
+  "findings": []
+}

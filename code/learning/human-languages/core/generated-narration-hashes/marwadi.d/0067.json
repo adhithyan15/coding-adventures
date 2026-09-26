@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:143a2d3049bba18b",
+  "lessonIds": [
+    "MW-C67-khel",
+    "MW-C67-chitthi",
+    "MW-C67-rukh",
+    "MW-C67-patto",
+    "MW-C67-dugar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch67.txt",
+  "json": "marwadi/narration/ch67.json",
+  "textHash": "fnv1a64:ef833dcaa7eaa882",
+  "jsonHash": "fnv1a64:f99401a68911d4e3",
+  "findings": []
+}

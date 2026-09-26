@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:b4fa0692313c6292",
+  "lessonIds": [
+    "PA-C63-labbhna",
+    "PA-C63-suttna",
+    "PA-C63-mit",
+    "PA-C63-machchhi",
+    "PA-C63-chaul"
+  ],
+  "tex": "punjabi/book/chapters/ch63-to-find-to-throw-meat-fish-rice.tex"
+}

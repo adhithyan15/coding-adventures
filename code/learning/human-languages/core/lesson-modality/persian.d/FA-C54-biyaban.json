@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C54-biyaban",
+    "language": "persian",
+    "chapter": 54,
+    "sequence": 2580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:528a1a32205144ee"
+  },
+  "findings": []
+}

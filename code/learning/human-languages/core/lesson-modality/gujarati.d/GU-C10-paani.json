@@ -3,7 +3,7 @@
     "id": "GU-C10-paani",
     "language": "gujarati",
     "chapter": 16,
-    "sequence": 520,
+    "sequence": 533,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:dcb80b88c565ad38",
+    "sourceHash": "fnv1a64:7fdacaf4dd205768",
     "detachableSegments": [
       "The letters in this word"
     ]

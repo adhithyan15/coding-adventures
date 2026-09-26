@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C02-thaman",
+    "language": "arabic",
+    "chapter": 2,
+    "sequence": 229,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f3362abcd3c05d41"
+  },
+  "findings": []
+}

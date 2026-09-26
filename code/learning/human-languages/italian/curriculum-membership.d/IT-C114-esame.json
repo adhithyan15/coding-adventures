@@ -1,0 +1,11 @@
+{
+  "id": "IT-C114-esame",
+  "pathSegment": "IT-PATH-114-SCUOLA114",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-114-SCUOLA114",
+      "order": 1
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     "id": "GU-C30-hear-kaagal",
     "language": "gujarati",
     "chapter": 34,
-    "sequence": 1740,
+    "sequence": 1753,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:36f29a844e77dfc4"
+    "sourceHash": "fnv1a64:185c0ca7544995c8"
   },
   "findings": []
 }

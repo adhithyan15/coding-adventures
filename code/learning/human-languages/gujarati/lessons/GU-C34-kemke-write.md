@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C34-kemke-write
 spine_node: SPINE-SAY-WHY
-sequence: 1950
+sequence: 1963
 delivery: script
 chapter: 38
 type: writing

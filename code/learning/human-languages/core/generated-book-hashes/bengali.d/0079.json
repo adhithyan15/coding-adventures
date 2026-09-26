@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:b5f5791ed2895a60",
+  "lessonIds": [
+    "BN-C79-bochhor",
+    "BN-C79-minit",
+    "BN-C79-aj",
+    "BN-C79-ekhon",
+    "BN-C79-sobsomoy"
+  ],
+  "tex": "bengali/book/chapters/ch79-year-minute-today-now-always.tex"
+}

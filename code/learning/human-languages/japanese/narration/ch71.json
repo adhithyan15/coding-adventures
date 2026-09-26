@@ -1,0 +1,1035 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 71,
+  "title": "Horn, Hole, Rice plant, Nephew, Niece",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:a04d6cd328903998",
+  "lessons": [
+    {
+      "id": "JA-C71-tsuno",
+      "sequence": 4200,
+      "title": "つの (tsuno) — a horn",
+      "headword": "つの",
+      "romanization": "tsuno",
+      "gloss": "a horn",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e2552bbbbadec06e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a chick, then the Japanese for a wing; a feather."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つの — tsuno — \"a horn\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsuno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsuno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsuno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsuno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tsuno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tsuno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a chick, then the Japanese for a wing; a feather, then say tsuno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a chick, then the Japanese for a wing; a feather, then say *tsuno* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つの (tsuno) mean? (\"A horn\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C71-tsuno-type",
+              "prompt": "Type the Japanese for 'a horn'.",
+              "assesses": [
+                "JA-LEX-C71-THINGS71-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つの",
+                "tsuno"
+              ],
+              "feedback": {
+                "correct": "Right: つの (tsuno) is 'a horn'.",
+                "incorrect": "'a horn' is つの (tsuno)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C71-ana",
+      "sequence": 4210,
+      "title": "あな (ana) — a hole",
+      "headword": "あな",
+      "romanization": "ana",
+      "gloss": "a hole",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:94f1d973d6a6d204",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a wing; a feather, then the Japanese for a horn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あな",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あな — ana — \"a hole\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a wing; a feather, then the Japanese for a horn, then say ana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a wing; a feather, then the Japanese for a horn, then say *ana* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あな (ana) mean? (\"A hole\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C71-ana-type",
+              "prompt": "Type the Japanese for 'a hole'.",
+              "assesses": [
+                "JA-LEX-C71-THINGS71-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あな",
+                "ana"
+              ],
+              "feedback": {
+                "correct": "Right: あな (ana) is 'a hole'.",
+                "incorrect": "'a hole' is あな (ana)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C71-ine",
+      "sequence": 4220,
+      "title": "いね (ine) — a rice plant",
+      "headword": "いね",
+      "romanization": "ine",
+      "gloss": "a rice plant",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf7a9065f9448e9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a horn, then the Japanese for a hole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いね",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いね — ine — \"a rice plant\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ine*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ine, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ine*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ine",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ine*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a horn, then the Japanese for a hole, then say ine again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a horn, then the Japanese for a hole, then say *ine* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いね (ine) mean? (\"A rice plant\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C71-ine-type",
+              "prompt": "Type the Japanese for 'a rice plant'.",
+              "assesses": [
+                "JA-LEX-C71-THINGS71-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いね",
+                "ine"
+              ],
+              "feedback": {
+                "correct": "Right: いね (ine) is 'a rice plant'.",
+                "incorrect": "'a rice plant' is いね (ine)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C71-oi",
+      "sequence": 4230,
+      "title": "おい (oi) — a nephew",
+      "headword": "おい",
+      "romanization": "oi",
+      "gloss": "a nephew",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc7b648b3823b748",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a hole, then the Japanese for a rice plant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おい — oi — \"a nephew\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say oi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *oi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a hole, then the Japanese for a rice plant, then say oi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a hole, then the Japanese for a rice plant, then say *oi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おい (oi) mean? (\"A nephew\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C71-oi-type",
+              "prompt": "Type the Japanese for 'a nephew'.",
+              "assesses": [
+                "JA-LEX-C71-THINGS71-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おい",
+                "oi"
+              ],
+              "feedback": {
+                "correct": "Right: おい (oi) is 'a nephew'.",
+                "incorrect": "'a nephew' is おい (oi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C71-mei",
+      "sequence": 4240,
+      "title": "めい (mei) — a niece",
+      "headword": "めい",
+      "romanization": "mei",
+      "gloss": "a niece",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:246ff46b7ea26025",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a rice plant, then the Japanese for a nephew."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: めい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "めい — mei — \"a niece\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mei, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mei*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mei",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mei*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a rice plant, then the Japanese for a nephew, then say mei again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a rice plant, then the Japanese for a nephew, then say *mei* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does めい (mei) mean? (\"A niece\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C71-mei-type",
+              "prompt": "Type the Japanese for 'a niece'.",
+              "assesses": [
+                "JA-LEX-C71-THINGS71-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "めい",
+                "mei"
+              ],
+              "feedback": {
+                "correct": "Right: めい (mei) is 'a niece'.",
+                "incorrect": "'a niece' is めい (mei)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R71-first-pass-describing-words-and-time",
+      "sequence": 4250,
+      "title": "Describing words and time — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 55-62",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62623883c7b74f0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a nephew and a niece."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a minute, summer, winter, always, still",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a minute, summer, winter, always, still]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "after, before; in front, above, inside, left",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: after, before; in front, above, inside, left]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "near, far, a town, a road, a shop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: near, far, a town, a road, a shop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "underground, a park, a country, clothes, shoes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: underground, a park, a country, clothes, shoes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hat, socks, glasses, thirty, a thousand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hat, socks, glasses, thirty, a thousand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ten thousand, twelve, an aubergine, a song, a branch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ten thousand, twelve, an aubergine, a song, a branch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a thread, a needle, a comb, a string, a rope",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a thread, a needle, a comb, a string, a rope]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luggage, a ship, a sound, a colour, a shape",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: luggage, a ship, a sound, a colour, a shape]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A minute? (fun.) Summer? (natsu.) Winter? (fuyu.) Always? (itsumo.) Still? (mada.) After? (ato.) Before; in front? (mae.) Above? (ue.) Inside? (naka.) Left? (hidari.) Near? (chikai.) Far? (tooi.) A town? (machi.) A road? (michi.) A shop? (mise.) Underground? (chika.) A park? (kouen.) A country? (kuni.) Clothes? (fuku.) Shoes? (kutsu.) A hat? (boushi.) Socks? (kutsushita.) Glasses? (megane.) Thirty? (sanjuu.) A thousand? (sen.) Ten thousand? (man.) Twelve? (juuni.) An aubergine? (nasu.) A song? (uta.) A branch? (eda.) A thread? (ito.) A needle? (hari.) A comb? (kushi.) A string? (himo.) A rope? (tsuna.) Luggage? (nimotsu.) A ship? (fune.) A sound? (oto.) A colour? (iro.) A shape? (katachi.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R71-first-pass-describing-words-and-time-type",
+              "prompt": "Type the Japanese for 'a nephew'.",
+              "assesses": [
+                "JA-LEX-C71-THINGS71-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おい",
+                "oi"
+              ],
+              "feedback": {
+                "correct": "Right: おい (oi) is 'a nephew'.",
+                "incorrect": "'a nephew' is おい (oi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R71-second-pass-places-clothes-and-more",
+      "sequence": 4260,
+      "title": "Places, clothes and more — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 63-71",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed275f8ae390afb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a dream and a festival."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a dream, a festival, west, east, south",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a dream, a festival, west, east, south]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "powder, sesame, a sea urchin, a sardine, a flavour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: powder, sesame, a sea urchin, a sardine, a flavour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a carp, a cicada, a dragonfly, a potato, burdock root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a carp, a cicada, a dragonfly, a potato, burdock root]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a basket, a spinning top, a raft, a flute, a drum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a basket, a spinning top, a raft, a flute, a drum]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hand fan, a folding fan, charcoal; a corner, a well, a beach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hand fan, a folding fan, charcoal; a corner, a well, a beach]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hill, a valley, the countryside, a harbour, the setting sun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hill, a valley, the countryside, a harbour, the setting sun]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rainbow, thunder, frost, ice, the summer holidays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rainbow, thunder, frost, ice, the summer holidays]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rice cake, natto, a fish-paste tube, a chick, a wing; a feather",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rice cake, natto, a fish-paste tube, a chick, a wing; a feather]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a horn, a hole, a rice plant, a nephew, a niece",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a horn, a hole, a rice plant, a nephew, a niece]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A dream? (yume.) A festival? (matsuri.) West? (nishi.) East? (higashi.) South? (minami.) Powder? (kona.) Sesame? (goma.) A sea urchin? (uni.) A sardine? (iwashi.) A flavour? (aji.) A carp? (koi.) A cicada? (semi.) A dragonfly? (tonbo.) A potato? (imo.) Burdock root? (gobou.) A basket? (kago.) A spinning top? (koma.) A raft? (ikada.) A flute? (fue.) A drum? (taiko.) A hand fan? (uchiwa.) A folding fan? (sensu.) Charcoal; a corner? (sumi.) A well? (ido.) A beach? (hama.) A hill? (oka.) A valley? (tani.) The countryside? (inaka.) A harbour? (minato.) The setting sun? (yuuhi.) A rainbow? (niji.) Thunder? (kaminari.) Frost? (shimo.) Ice? (koori.) The summer holidays? (natsuyasumi.) A rice cake? (mochi.) Natto? (nattou.) A fish-paste tube? (chikuwa.) A chick? (hiyoko.) A wing; a feather? (hane.) A horn? (tsuno.) A hole? (ana.) A rice plant? (ine.) A nephew? (oi.) A niece? (mei.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R71-second-pass-places-clothes-and-more-type",
+              "prompt": "Type the Japanese for 'a dream'.",
+              "assesses": [
+                "JA-LEX-C63-WORLD63-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ゆめ",
+                "yume"
+              ],
+              "feedback": {
+                "correct": "Right: ゆめ (yume) is 'a dream'.",
+                "incorrect": "'a dream' is ゆめ (yume)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

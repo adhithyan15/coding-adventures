@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f0d14f25627b747f",
+  "sourceHash": "fnv1a64:0f72cf194df75d7d",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -2289,6 +2289,111 @@
       ]
     },
     {
+      "id": "ML-C02-puli",
+      "sequence": 141,
+      "title": "പുലി (puli) — a tiger",
+      "headword": "പുലി",
+      "romanization": "puli",
+      "gloss": "a tiger",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:56782bf0ab127be9",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പുലി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുലി — puli — \"a tiger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: puli. Look at its shape as you say it: the next lesson takes one piece of it, ു, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puli, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puli*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a tiger\"? (പുലി, puli.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-S07-vowel-sign-u",
       "sequence": 142,
       "title": "◌ു — one character, met inside words you already say",
@@ -2303,7 +2408,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:aa5d5d72a5151a6d",
+      "sourceHash": "fnv1a64:2b50c59f255bf9d1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2450,6 +2555,111 @@
       ]
     },
     {
+      "id": "ML-C02-penkutti",
+      "sequence": 143,
+      "title": "പെൺകുട്ടി (peṇkuṭṭi) — a girl",
+      "headword": "പെൺകുട്ടി",
+      "romanization": "peṇkuṭṭi",
+      "gloss": "a girl",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:c520b74b54d76d27",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പെൺകുട്ടി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പെൺകുട്ടി — peṇkuṭṭi — \"a girl\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: peṇkuṭṭi. Look at its shape as you say it: the next lesson takes one piece of it, ൺ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṇkuṭṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṇkuṭṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṇkuṭṭi, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṇkuṭṭi*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a girl\"? (പെൺകുട്ടി, peṇkuṭṭi.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-S131-chillu-nn",
       "sequence": 144,
       "title": "ൺ (ṇ) — one character, met inside words you already say",
@@ -2464,7 +2674,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a2ec246abd7f9a53",
+      "sourceHash": "fnv1a64:bc4e98f0d53add31",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -2630,7 +2840,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:a49a7407a70cb444",
+      "sourceHash": "fnv1a64:25f4dcdec2e046b4",
       "notice": {
         "modality": "pen",
         "needs": [

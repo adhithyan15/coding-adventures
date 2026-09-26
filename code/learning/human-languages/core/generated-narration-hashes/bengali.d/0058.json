@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:74b3274834eab8de",
+  "lessonIds": [
+    "BN-C58-komla",
+    "BN-C58-lebu",
+    "BN-C58-dim",
+    "BN-C58-doi",
+    "BN-C58-peyaj"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch58.txt",
+  "json": "bengali/narration/ch58.json",
+  "textHash": "fnv1a64:50c2b80e07c016d2",
+  "jsonHash": "fnv1a64:d41213dca540025a",
+  "findings": []
+}

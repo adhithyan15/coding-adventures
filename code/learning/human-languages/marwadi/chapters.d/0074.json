@@ -1,0 +1,19 @@
+{
+  "chapter": 74,
+  "title": "Hot, Cold, Fast, Easy, Difficult",
+  "label": "ch:mw-hot-cold-fast-easy-difficult",
+  "canDo": "I can say hot, cold, fast, easy and difficult.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C74-doro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: i can say hot, cold, fast, easy and difficult.",
+    "assesses": [
+      "MW-LEX-C74-ADJ74-03",
+      "MW-LEX-C74-ADJ74-04",
+      "MW-LEX-C74-ADJ74-05"
+    ]
+  }
+}

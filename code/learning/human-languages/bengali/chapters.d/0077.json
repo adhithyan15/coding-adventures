@@ -1,0 +1,19 @@
+{
+  "chapter": 77,
+  "title": "False, Yellow, Brown, Beautiful, Day",
+  "label": "ch:bn-false-yellow-brown-beautiful-day",
+  "canDo": "I can say false, yellow, brown, beautiful and a day.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C77-din",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 77: i can say false, yellow, brown, beautiful and a day.",
+    "assesses": [
+      "BN-LEX-C77-ADJ77-03",
+      "BN-LEX-C77-ADJ77-04",
+      "BN-LEX-C77-ADJ77-05"
+    ]
+  }
+}

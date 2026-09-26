@@ -1,0 +1,11 @@
+{
+  "id": "JA-C37-tsukue",
+  "pathSegment": "JA-PATH-37-HOME37",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-37-HOME37",
+      "order": 3
+    }
+  ]
+}

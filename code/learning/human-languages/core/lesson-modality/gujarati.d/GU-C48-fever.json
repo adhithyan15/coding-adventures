@@ -3,7 +3,7 @@
     "id": "GU-C48-fever",
     "language": "gujarati",
     "chapter": 48,
-    "sequence": 2470,
+    "sequence": 2483,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f2f0170894d013f5"
+    "sourceHash": "fnv1a64:e25189048d6d6deb"
   },
   "findings": []
 }

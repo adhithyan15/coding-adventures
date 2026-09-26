@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:d2088964aa38448c",
+  "lessonIds": [
+    "IT-C136-raccontare",
+    "IT-C136-camminare",
+    "IT-C136-pulire",
+    "IT-C136-trovare",
+    "IT-C136-cercare",
+    "IT-R136-first-pass-time-numbers-and-verbs",
+    "IT-R136-second-pass-more-verbs"
+  ],
+  "tex": "italian/book/chapters/ch136-to-tell-to-walk-to-clean-to-find-to-look-for.tex"
+}

@@ -3,7 +3,7 @@
     "id": "GU-R68-second-pass-food-the-land-and-animals",
     "language": "gujarati",
     "chapter": 68,
-    "sequence": 3500,
+    "sequence": 3513,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:024dcf92185dd87d"
+    "sourceHash": "fnv1a64:627bb971aaca9561"
   },
   "findings": []
 }

@@ -1,11 +1,11 @@
 {
   "id": "FR-C11-du",
   "pathSegment": "FR-PATH-015",
-  "pathOrder": 51,
+  "pathOrder": 39,
   "extensions": [
     {
       "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
-      "order": 51
+      "order": 39
     }
   ]
 }

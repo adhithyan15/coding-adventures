@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W02-e-matra
 spine_node: SPINE-COURTESY-THANK
-sequence: 24
+sequence: 28
 delivery: script
 chapter: 2
 type: writing
 headword: े
 romanization: "e"
 gloss: the e vowel sign above a consonant
-prerequisites: [MR-W02-bha]
+prerequisites: [MR-W02-bha, MR-C02-bet]
 sounds: [long-e]
 roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [MR-SCRIPT-VISARGA-01, MR-SCRIPT-AA-INDEPENDENT-01, MR-SCRIPT-BHA-01]
+  knowledge: [MR-SCRIPT-VISARGA-01, MR-SCRIPT-AA-INDEPENDENT-01, MR-SCRIPT-BHA-01, MR-LEX-ANCHOR-BET]
 introduces:
   knowledge: [MR-SCRIPT-E-MATRA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-E-MATRA-01, MR-SCRIPT-VISARGA-01, MR-SCRIPT-AA-INDEPENDENT-01, MR-SCRIPT-BHA-01]
+  knowledge: [MR-SCRIPT-E-MATRA-01, MR-SCRIPT-VISARGA-01, MR-SCRIPT-AA-INDEPENDENT-01, MR-SCRIPT-BHA-01, MR-LEX-ANCHOR-BET]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W02-visarga, MR-W02-aa-independent, MR-W02-bha]
 # े — e above the headline
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-BET] -->
 
 Leave a small space above the next practice headline.
 

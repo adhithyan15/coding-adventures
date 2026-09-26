@@ -1,0 +1,11 @@
+{
+  "id": "FR-C124-chauffeur",
+  "pathSegment": "FR-PATH-124-METIERS76",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-124-METIERS76",
+      "order": 2
+    }
+  ]
+}

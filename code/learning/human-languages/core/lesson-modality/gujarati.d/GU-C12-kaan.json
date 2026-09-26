@@ -3,7 +3,7 @@
     "id": "GU-C12-kaan",
     "language": "gujarati",
     "chapter": 18,
-    "sequence": 610,
+    "sequence": 623,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1acad2dc22951f62",
+    "sourceHash": "fnv1a64:bb58cfdce00dc004",
     "detachableSegments": [
       "The letters in this word"
     ]

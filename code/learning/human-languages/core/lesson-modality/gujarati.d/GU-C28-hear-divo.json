@@ -3,7 +3,7 @@
     "id": "GU-C28-hear-divo",
     "language": "gujarati",
     "chapter": 32,
-    "sequence": 1580,
+    "sequence": 1593,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ba824bbed794a909"
+    "sourceHash": "fnv1a64:c06f165b89bb6bb9"
   },
   "findings": []
 }

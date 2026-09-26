@@ -3,7 +3,7 @@
     "id": "GU-C55-laavvu",
     "language": "gujarati",
     "chapter": 55,
-    "sequence": 2820,
+    "sequence": 2833,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0699241c666ee4d9"
+    "sourceHash": "fnv1a64:309397e82d8208e9"
   },
   "findings": []
 }

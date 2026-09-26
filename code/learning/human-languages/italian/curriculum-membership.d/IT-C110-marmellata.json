@@ -1,0 +1,11 @@
+{
+  "id": "IT-C110-marmellata",
+  "pathSegment": "IT-PATH-110-CIBO110",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-110-CIBO110",
+      "order": 2
+    }
+  ]
+}

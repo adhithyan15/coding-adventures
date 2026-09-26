@@ -1,0 +1,11 @@
+{
+  "id": "FA-C60-arzan",
+  "pathSegment": "FA-PATH-60-ADJ60",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-60-ADJ60",
+      "order": 4
+    }
+  ]
+}

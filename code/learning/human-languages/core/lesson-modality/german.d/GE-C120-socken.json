@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C120-socken",
+    "language": "german",
+    "chapter": 120,
+    "sequence": 4850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0099eb6ab1d09a39"
+  },
+  "findings": []
+}

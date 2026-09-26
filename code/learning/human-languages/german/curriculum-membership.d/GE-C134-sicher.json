@@ -1,0 +1,11 @@
+{
+  "id": "GE-C134-sicher",
+  "pathSegment": "GE-PATH-134-EIGEN134",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-134-EIGEN134",
+      "order": 4
+    }
+  ]
+}

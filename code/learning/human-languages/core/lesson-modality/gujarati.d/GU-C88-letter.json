@@ -3,7 +3,7 @@
     "id": "GU-C88-letter",
     "language": "gujarati",
     "chapter": 88,
-    "sequence": 4490,
+    "sequence": 4503,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:15a1ee8ad6332606"
+    "sourceHash": "fnv1a64:4f9550228e532a63"
   },
   "findings": []
 }

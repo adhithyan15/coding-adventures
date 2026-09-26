@@ -1,0 +1,11 @@
+{
+  "id": "IT-C129-rotondo",
+  "pathSegment": "IT-PATH-129-QUALITA129",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-129-QUALITA129",
+      "order": 1
+    }
+  ]
+}

@@ -4,11 +4,11 @@
   "chapter": 91,
   "title": "Welcome, Congratulations, Sorry",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2fbf3b4b0f0c8493",
+  "sourceHash": "fnv1a64:3dad69df3b4b71c4",
   "lessons": [
     {
       "id": "GU-C91-welcome",
-      "sequence": 4610,
+      "sequence": 4623,
       "title": "સ્વાગત (svāgat) — welcome",
       "headword": "સ્વાગત",
       "romanization": "svāgat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a13cf3038ebc45ff",
+      "sourceHash": "fnv1a64:bdc9e3b29d1d7df1",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C91-congratulations",
-      "sequence": 4620,
+      "sequence": 4633,
       "title": "અભિનંદન (abhinandan) — congratulations",
       "headword": "અભિનંદન",
       "romanization": "abhinandan",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3255167540a872a6",
+      "sourceHash": "fnv1a64:b186cff1ca075dd6",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C91-goodwishes",
-      "sequence": 4630,
+      "sequence": 4643,
       "title": "શુભેચ્છા (śubhecchā) — good wishes",
       "headword": "શુભેચ્છા",
       "romanization": "śubhecchā",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a50477b76732423d",
+      "sourceHash": "fnv1a64:9975246486ab0bcb",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C91-apology",
-      "sequence": 4640,
+      "sequence": 4653,
       "title": "માફી (māphī) — an apology, pardon",
       "headword": "માફી",
       "romanization": "māphī",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd706188e9f8e5c3",
+      "sourceHash": "fnv1a64:399a7a658f252217",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C91-okay",
-      "sequence": 4650,
+      "sequence": 4663,
       "title": "ઠીક (ṭhīk) — okay, fine",
       "headword": "ઠીક",
       "romanization": "ṭhīk",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa69cbc2b7e168bd",
+      "sourceHash": "fnv1a64:00b7fed36cbf94d7",
       "notice": null,
       "blocks": [
         {
@@ -623,7 +623,7 @@
     },
     {
       "id": "GU-R91-first-pass-colours-size-and-place",
-      "sequence": 4660,
+      "sequence": 4673,
       "title": "Colours, size and place — a first pass",
       "headword": "(dialogue)",
       "romanization": "",
@@ -634,7 +634,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17491e4dcfc48837",
+      "sourceHash": "fnv1a64:9507e2ededcefd2b",
       "notice": null,
       "blocks": [
         {
@@ -787,7 +787,7 @@
     },
     {
       "id": "GU-R91-second-pass-time-numbers-town-and-people",
-      "sequence": 4670,
+      "sequence": 4683,
       "title": "Time, numbers, town and people — a second pass",
       "headword": "(dialogue)",
       "romanization": "",
@@ -798,7 +798,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15b02fdb6fca2571",
+      "sourceHash": "fnv1a64:4ad8e74f16ac4e3b",
       "notice": null,
       "blocks": [
         {

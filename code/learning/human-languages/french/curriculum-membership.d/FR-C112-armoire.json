@@ -1,0 +1,11 @@
+{
+  "id": "FR-C112-armoire",
+  "pathSegment": "FR-PATH-112-MAISON64",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-112-MAISON64",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C102-petto",
+  "pathSegment": "IT-PATH-102-OGGETTI102",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-102-OGGETTI102",
+      "order": 4
+    }
+  ]
+}

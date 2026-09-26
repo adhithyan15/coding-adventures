@@ -1,0 +1,19 @@
+{
+  "chapter": 69,
+  "title": "Juice, Chicken, House, Room, Window",
+  "label": "ch:ar-juice-chicken-house-room-window",
+  "canDo": "I can say juice, chicken, a house, a room and a window.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "AR-C69-nafidha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 69: i can say juice, chicken, a house, a room and a window.",
+    "assesses": [
+      "AR-LEX-C69-FOOD69-03",
+      "AR-LEX-C69-FOOD69-04",
+      "AR-LEX-C69-FOOD69-05"
+    ]
+  }
+}

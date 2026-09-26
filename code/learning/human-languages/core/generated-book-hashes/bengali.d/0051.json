@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:cf4565f420311416",
+  "lessonIds": [
+    "BN-C51-shekha",
+    "BN-C51-bhola",
+    "BN-C51-chaowa",
+    "BN-C51-ana",
+    "BN-C51-gona"
+  ],
+  "tex": "bengali/book/chapters/ch51-to-learn-to-forget-to-want-to-bring-to-count.tex"
+}

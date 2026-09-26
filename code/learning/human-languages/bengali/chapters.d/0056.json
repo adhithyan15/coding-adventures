@@ -1,0 +1,19 @@
+{
+  "chapter": 56,
+  "title": "Lentils, Fruit, Apple, Banana, Potato",
+  "label": "ch:bn-lentils-fruit-apple-banana-potato",
+  "canDo": "I can say lentils, a fruit, an apple, a banana and a potato.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "BN-C56-alu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 56: i can say lentils, a fruit, an apple, a banana and a potato.",
+    "assesses": [
+      "BN-LEX-C56-FOOD56-03",
+      "BN-LEX-C56-FOOD56-04",
+      "BN-LEX-C56-FOOD56-05"
+    ]
+  }
+}

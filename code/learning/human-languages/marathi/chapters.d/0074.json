@@ -1,0 +1,19 @@
+{
+  "chapter": 74,
+  "title": "Sad, Father, Mother, Son, Daughter",
+  "label": "ch:mr-sad-father-mother-son-daughter",
+  "canDo": "I can say sad, a father, a mother, a son and a daughter.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C74-mulgi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: i can say sad, a father, a mother, a son and a daughter.",
+    "assesses": [
+      "MR-LEX-C74-HEALTH74-03",
+      "MR-LEX-C74-HEALTH74-04",
+      "MR-LEX-C74-HEALTH74-05"
+    ]
+  }
+}

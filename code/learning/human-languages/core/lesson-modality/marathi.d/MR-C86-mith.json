@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C86-mith",
+    "language": "marathi",
+    "chapter": 86,
+    "sequence": 3700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7fa1c8c5875aa17"
+  },
+  "findings": []
+}

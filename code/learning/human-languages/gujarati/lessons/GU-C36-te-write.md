@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C36-te-write
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 2050
+sequence: 2063
 delivery: script
 chapter: 40
 type: writing

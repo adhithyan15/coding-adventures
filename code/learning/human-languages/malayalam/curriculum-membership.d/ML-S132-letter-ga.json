@@ -1,11 +1,11 @@
 {
   "id": "ML-S132-letter-ga",
   "pathSegment": "ML-PATH-100",
-  "pathOrder": 45,
+  "pathOrder": 55,
   "extensions": [
     {
       "id": "ML-EXT-100-SCRIPT-RECOGNITION",
-      "order": 45
+      "order": 55
     }
   ]
 }

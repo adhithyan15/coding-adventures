@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C78-tuesday
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3970
+sequence: 3983
 chapter: 78
 type: word
 headword: "મંગળવાર"

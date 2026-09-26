@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C02-mudarris",
+    "language": "arabic",
+    "chapter": 2,
+    "sequence": 249,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:af6157fb77a6f6f3"
+  },
+  "findings": []
+}

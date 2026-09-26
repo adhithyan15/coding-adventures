@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C62-bed
 spine_node: SPINE-MEET-GREET
-sequence: 3140
+sequence: 3153
 chapter: 62
 type: word
 headword: "પલંગ"

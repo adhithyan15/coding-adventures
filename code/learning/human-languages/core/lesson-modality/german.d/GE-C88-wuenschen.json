@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C88-wuenschen",
+    "language": "german",
+    "chapter": 88,
+    "sequence": 3200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1488a9074808b727"
+  },
+  "findings": []
+}

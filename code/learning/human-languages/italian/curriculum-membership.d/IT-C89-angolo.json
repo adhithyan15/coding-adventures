@@ -1,0 +1,11 @@
+{
+  "id": "IT-C89-angolo",
+  "pathSegment": "IT-PATH-89-LUOGHI89",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-89-LUOGHI89",
+      "order": 2
+    }
+  ]
+}

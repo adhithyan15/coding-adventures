@@ -3,7 +3,7 @@
     "id": "GU-C29-hear-varsaad",
     "language": "gujarati",
     "chapter": 33,
-    "sequence": 1650,
+    "sequence": 1663,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5838f6277301f540"
+    "sourceHash": "fnv1a64:9be529d2c2074426"
   },
   "findings": []
 }

@@ -3,7 +3,7 @@
     "id": "GU-C61-bowl",
     "language": "gujarati",
     "chapter": 61,
-    "sequence": 3100,
+    "sequence": 3113,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a3d4d2e5023f8f25"
+    "sourceHash": "fnv1a64:d78a4c0356d405b5"
   },
   "findings": []
 }

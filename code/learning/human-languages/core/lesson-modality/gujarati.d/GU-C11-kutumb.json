@@ -3,7 +3,7 @@
     "id": "GU-C11-kutumb",
     "language": "gujarati",
     "chapter": 17,
-    "sequence": 570,
+    "sequence": 583,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9b73483168a8b9ed",
+    "sourceHash": "fnv1a64:89c3547ceb9f48af",
     "detachableSegments": [
       "The letters in this word"
     ]

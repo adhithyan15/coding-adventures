@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C131-ferme",
+    "language": "french",
+    "chapter": 131,
+    "sequence": 6080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aef2284c0651fc61"
+  },
+  "findings": []
+}

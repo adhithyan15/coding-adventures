@@ -1,0 +1,19 @@
+{
+  "chapter": 77,
+  "title": "Red, Blue, Black, Brown, Sweet",
+  "label": "ch:mw-red-blue-black-brown-sweet",
+  "canDo": "I can say red, blue, black, brown and sweet.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C77-mitho",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 77: i can say red, blue, black, brown and sweet.",
+    "assesses": [
+      "MW-LEX-C77-ADJ77-03",
+      "MW-LEX-C77-ADJ77-04",
+      "MW-LEX-C77-ADJ77-05"
+    ]
+  }
+}

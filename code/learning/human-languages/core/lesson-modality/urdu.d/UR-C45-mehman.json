@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C45-mehman",
+    "language": "urdu",
+    "chapter": 45,
+    "sequence": 2320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:607b29f455e49bd7"
+  },
+  "findings": []
+}

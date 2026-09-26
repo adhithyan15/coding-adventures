@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-108-RICHTUNG108",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "GE-EXT-108-RICHTUNG108"
+  ],
+  "after": []
+}

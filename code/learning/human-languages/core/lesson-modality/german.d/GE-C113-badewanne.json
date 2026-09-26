@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C113-badewanne",
+    "language": "german",
+    "chapter": 113,
+    "sequence": 4460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3db556d98b5e907"
+  },
+  "findings": []
+}

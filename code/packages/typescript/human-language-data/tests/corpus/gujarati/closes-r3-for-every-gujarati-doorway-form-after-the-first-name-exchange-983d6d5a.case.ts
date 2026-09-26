@@ -30,6 +30,8 @@ it("closes R3 for every Gujarati doorway form after the first name exchange", ()
   const checkpointIndex = ordered.findIndex(
     (lesson) => lesson.realization.lessonId === "GU-R04-doorway-nine-r2",
   );
+  // HL-C443: every distance +9, from the nine anchor words in chapters 4-7
+  // between the doorway letters and this checkpoint. All stay inside R3.
   const checkpoint = ordered[checkpointIndex]!;
   expect(checkpoint.frontmatter["introduces.knowledge"]).toEqual([]);
   expect(
@@ -39,7 +41,7 @@ it("closes R3 for every Gujarati doorway form after the first name exchange", ()
       );
       return checkpointIndex - introducedAt;
     }),
-  ).toEqual([38, 37, 36, 35, 34, 33, 32, 31, 30]);
+  ).toEqual([47, 46, 45, 44, 43, 42, 41, 40, 39]);
 
   const stillMissingR3 = measureContinuity(lessons).reinforcement.filter(
     (defect) => doorway.has(defect.atom) && defect.missed.includes("R3"),

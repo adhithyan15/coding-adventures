@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C94-dhada",
+    "language": "marathi",
+    "chapter": 94,
+    "sequence": 4100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2d98545b4b1c505"
+  },
+  "findings": []
+}

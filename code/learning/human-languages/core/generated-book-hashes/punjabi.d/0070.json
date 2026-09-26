@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:eccccdab278d407f",
+  "lessonIds": [
+    "PA-C70-chamcha",
+    "PA-C70-chaku",
+    "PA-C70-botal",
+    "PA-C70-darvaza",
+    "PA-C70-rasoi"
+  ],
+  "tex": "punjabi/book/chapters/ch70-spoon-knife-bottle-door-kitchen.tex"
+}

@@ -3,7 +3,7 @@
     "id": "GU-W03-o-matra",
     "language": "gujarati",
     "chapter": 3,
-    "sequence": 62,
+    "sequence": 66,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:f5d037bec9b02079",
+    "sourceHash": "fnv1a64:36e8efe303c7e1f5",
     "detachableSegments": [
       "Script — meet one form",
       "Writing — notice and trace",

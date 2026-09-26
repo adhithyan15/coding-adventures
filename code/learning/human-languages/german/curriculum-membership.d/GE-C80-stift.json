@@ -1,0 +1,11 @@
+{
+  "id": "GE-C80-stift",
+  "pathSegment": "GE-PATH-80-SACHEN",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-80-SACHEN",
+      "order": 3
+    }
+  ]
+}

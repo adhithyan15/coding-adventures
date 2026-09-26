@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C60-chilli
 spine_node: SPINE-COURTESY-THANK
-sequence: 3040
+sequence: 3053
 chapter: 60
 type: word
 headword: "મરચું"

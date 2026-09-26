@@ -1,0 +1,11 @@
+{
+  "id": "PA-C52-bhukkh",
+  "pathSegment": "PA-PATH-52-HEALTH52",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-52-HEALTH52",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:003892a9c47000d6",
+  "lessonIds": [
+    "GE-C141-zahlen",
+    "GE-C141-mieten",
+    "GE-C141-packen",
+    "GE-C141-reparieren",
+    "GE-C141-anfangen",
+    "GE-R141-first-pass-wanting-time-and-numbers",
+    "GE-R141-second-pass-verbs"
+  ],
+  "tex": "german/book/chapters/ch141-to-pay-to-rent-to-pack-to-repair-to-start.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C130-rose",
+    "language": "french",
+    "chapter": 130,
+    "sequence": 6000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ff77e4ed14fccfa7"
+  },
+  "findings": []
+}

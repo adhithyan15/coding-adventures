@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:a6f139a0c9187afc",
+  "lessonIds": [
+    "GE-C98-bibliothek",
+    "GE-C98-fahrrad",
+    "GE-C98-haltestelle",
+    "GE-C98-kleidung",
+    "GE-C98-hemd"
+  ],
+  "tex": "german/book/chapters/ch98-library-bicycle-bus-or-tram-stop-clothes-shirt.tex"
+}

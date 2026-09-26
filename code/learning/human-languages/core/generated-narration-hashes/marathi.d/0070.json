@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:600bd0f4735071ba",
+  "lessonIds": [
+    "MR-C70-hat",
+    "MR-C70-pay",
+    "MR-C70-kes",
+    "MR-C70-dat",
+    "MR-C70-gala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch70.txt",
+  "json": "marathi/narration/ch70.json",
+  "textHash": "fnv1a64:c49120883acad337",
+  "jsonHash": "fnv1a64:558637c73a89d0f9",
+  "findings": []
+}

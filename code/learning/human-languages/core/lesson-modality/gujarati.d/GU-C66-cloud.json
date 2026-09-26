@@ -3,7 +3,7 @@
     "id": "GU-C66-cloud",
     "language": "gujarati",
     "chapter": 66,
-    "sequence": 3350,
+    "sequence": 3363,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:72c743da84d9efe1"
+    "sourceHash": "fnv1a64:f00c7142050165c3"
   },
   "findings": []
 }

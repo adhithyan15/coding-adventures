@@ -1,0 +1,11 @@
+{
+  "id": "GE-C61-grossvater",
+  "pathSegment": "GE-PATH-61-GEFUEHLE2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-61-GEFUEHLE2",
+      "order": 4
+    }
+  ]
+}

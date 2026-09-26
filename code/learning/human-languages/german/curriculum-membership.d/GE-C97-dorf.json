@@ -1,0 +1,11 @@
+{
+  "id": "GE-C97-dorf",
+  "pathSegment": "GE-PATH-97-STADT2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-97-STADT2",
+      "order": 3
+    }
+  ]
+}

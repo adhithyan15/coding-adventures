@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:cfc8d6bfa2ab485a",
+  "lessonIds": [
+    "IT-C120-asino",
+    "IT-C120-coniglio",
+    "IT-C120-tigre",
+    "IT-C120-farfalla",
+    "IT-C120-rana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch120.txt",
+  "json": "italian/narration/ch120.json",
+  "textHash": "fnv1a64:67684b548fbf2bdb",
+  "jsonHash": "fnv1a64:66749f8019143c57",
+  "findings": []
+}

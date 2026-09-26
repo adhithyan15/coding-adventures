@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C61-nimbu",
+    "language": "marwadi",
+    "chapter": 61,
+    "sequence": 4360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df02f088beeb64fc"
+  },
+  "findings": []
+}

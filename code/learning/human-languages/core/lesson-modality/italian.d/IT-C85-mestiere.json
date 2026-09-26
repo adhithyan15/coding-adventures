@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C85-mestiere",
+    "language": "italian",
+    "chapter": 85,
+    "sequence": 3940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b8befe1e4c76050"
+  },
+  "findings": []
+}

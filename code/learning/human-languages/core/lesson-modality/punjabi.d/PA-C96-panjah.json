@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C96-panjah",
+    "language": "punjabi",
+    "chapter": 96,
+    "sequence": 5090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8b56c9d7e5763db"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Sport, Film, Football, Concert, Celebration",
+  "label": "ch:ge-sport-film-football-concert-celebration",
+  "canDo": "I can say sport, a film, football, a concert and a celebration.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C129-fest",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say sport, a film, football, a concert and a celebration.",
+    "assesses": [
+      "GE-LEX-C129-FREIZEIT129-03",
+      "GE-LEX-C129-FREIZEIT129-04",
+      "GE-LEX-C129-FREIZEIT129-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C07-taali",
+    "language": "marathi",
+    "chapter": 7,
+    "sequence": 97,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f94b222003c59ae4"
+  },
+  "findings": []
+}

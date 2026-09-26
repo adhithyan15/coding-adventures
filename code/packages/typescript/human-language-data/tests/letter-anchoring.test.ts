@@ -94,6 +94,45 @@ describe("anchoring", () => {
     expect(track(report).cold).toBe(1);
   });
 
+  it("counts a digit no word holds as a numeral, not cold", () => {
+    // TELUGU DIGIT ONE, TELUGU LETTER KA.
+    const report = measureLetterAnchoring([
+      lesson("TE-S1", 10, { type: "writing", headword: "\u0C67", language: "telugu" }),
+      lesson("TE-S2", 20, { type: "writing", headword: "\u0C15", language: "telugu" }),
+    ]);
+    const telugu = track(report, "telugu");
+    expect(telugu.letterLessons.map((entry) => entry.anchoring)).toEqual(["numeral", "cold"]);
+    expect(telugu.numeral).toBe(1);
+    expect(telugu.cold).toBe(1);
+    expect(report.summary.numeral).toBe(1);
+  });
+
+  it("does not let a cold letter hide behind a digit in the same set", () => {
+    const report = measureLetterAnchoring([
+      lesson("TE-S1", 10, { type: "writing", headword: "\u0C67, \u0C15", language: "telugu" }),
+    ]);
+    expect(track(report, "telugu").letterLessons.map((entry) => entry.anchoring)).toEqual(["cold"]);
+  });
+
+  it("anchors a digit that an earlier word holds", () => {
+    // KANNADA DIGIT ONE + NE: "first", as on a sign.
+    const report = measureLetterAnchoring([
+      lesson("KA-C1", 10, { headword: "\u0CE7\u0CA8\u0CC7", language: "kannada" }),
+      lesson("KA-S1", 20, { type: "writing", chapter: 2, headword: "\u0CE7", language: "kannada" }),
+    ]);
+    expect(track(report, "kannada").letterLessons.map((entry) => entry.anchoring)).toEqual(["anchored"]);
+  });
+
+  it("anchors a capital in a word that holds its small letter", () => {
+    // CYRILLIC SMALL LETTER YA ("I"), then the CAPITAL YA written on its own.
+    const report = measureLetterAnchoring([
+      lesson("RU-C1", 10, { headword: "\u044F", language: "russian" }),
+      lesson("RU-S1", 20, { type: "writing", chapter: 2, headword: "\u042F", language: "russian" }),
+      lesson("RU-S2", 30, { type: "writing", chapter: 3, headword: "\u0416", language: "russian" }),
+    ]);
+    expect(track(report, "russian").letterLessons.map((entry) => entry.anchoring)).toEqual(["anchored", "cold"]);
+  });
+
   it("reports a Han component with no visible anchor as unmeasured, not cold", () => {
     const report = measureLetterAnchoring([
       lesson("ZH-S1", 10, { type: "writing", headword: PERSON_RADICAL, language: "chinese" }),
@@ -212,23 +251,62 @@ describe("the real corpus", () => {
   // औ after औरत, ण after प्रणाम. The four left need more than a move: घ and ढ
   // depend on each other in the script ladder, and ऊ and ओ have no word before
   // chapter 96.
+  //
+  // Telugu (10 -> 0), Kannada (10 -> 0) and Punjabi (7 -> 3) fell when digit
+  // lessons began to count as `numeral`: no word is spelled with ౧ or ೨, so a
+  // digit could never be anchored by a word, and its real anchor is the amount
+  // the reader already knows. Punjabi's 3 left are real letter sets. Arabic's
+  // builds-toward (5 -> 4) and Bengali's (12 -> 11) fell with the anchor words
+  // of HL-C443's earlier passes.
+  //
+  // Marathi's cold fell 37 -> 6 when its opening runways began each chapter
+  // with short words (दुःख, आभाळ, अमृत, घागर, टाळी, उलट ...) read before the
+  // letters they hold. The six left: chapter 1's five (the chapter is at its
+  // twelve-atom budget, and हो is written in the lesson itself), and ँ, which
+  // no everyday Marathi word uses.
+  //
+  // Gujarati's cold fell 34 -> 4 (and builds-toward 5 -> 4) the same way:
+  // thirteen words (આહાર, છીપ, કણ, શક, અથાણું, દિવાળી, ચપ્પલ, બગલો, ઉખાણું,
+  // એકલું, ધૂળ, ઈંટ, ઢોલ) open chapters 1 and 3-7. The four left are chapter
+  // 2's દ, ય, ધ and ૃ: that chapter is at its twelve-atom budget.
+  //
+  // Russian's last cold letter (1 -> 0) was the capital Я of chapter 14. The
+  // small я is the word "I", taught in chapter 2; a case pair is one letter in
+  // two forms, so the capital is now anchored by that word, the way が is
+  // anchored by か and ゛. The small я keeps its own lesson in chapter 28.
+  //
+  // Arabic's last two cold lessons (2 -> 0) were the mark sets of chapter 2.
+  // Headwords are written without marks, so no word held them. Two vocalized
+  // words now come first: مُدَرِّس (fatha, kasra, damma, shadda) and أَهْلًا
+  // (sukun, tanwin).
+  //
+  // Malayalam ഉ (3 -> 2) now follows ഉടുപ്പ് (uṭuppŭ, a dress), and Japanese わ
+  // (2 -> 1) follows わに (wani, a crocodile): こんにちは says "wa" with は, so
+  // no earlier word held わ. What is left: Malayalam's ഒ and ഏ ഴ, anchored by
+  // number words its numbers chapter shows only in romanization, and Japanese
+  // め, whose chapter is at its twelve-atom budget.
+  //
+  // Punjabi (3 -> 2): the chapter-20 ੌ lesson now follows ਮੌਸਮ (mausam, the
+  // weather). The two sets left, ਟ ਠ ਡ (chapter 3) and ੜ ਘ ਦ (chapter 7), sit in
+  // chapters whose R1 retrievals are one to three lessons apart, so a word
+  // inserted there pushes older atoms out of R1.
   const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
-    arabic: [7, 5, 0],
-    bengali: [5, 12, 0],
+    arabic: [0, 4, 0],
+    bengali: [0, 11, 0],
     chinese: [0, 51, 0],
-    gujarati: [34, 5, 0],
-    hindi: [4, 1, 0],
-    japanese: [2, 35, 0],
-    kannada: [19, 0, 0],
-    malayalam: [12, 12, 0],
-    marathi: [43, 4, 0],
+    gujarati: [4, 4, 0],
+    hindi: [0, 1, 0],
+    japanese: [1, 35, 0],
+    kannada: [0, 0, 0],
+    malayalam: [2, 12, 0],
+    marathi: [6, 4, 0],
     marwadi: [0, 49, 0],
     persian: [0, 4, 0],
-    punjabi: [7, 2, 0],
-    russian: [1, 0, 0],
-    sanskrit: [1, 0, 0],
-    tamil: [1, 9, 0],
-    telugu: [13, 0, 0],
+    punjabi: [2, 2, 0],
+    russian: [0, 0, 0],
+    sanskrit: [0, 0, 0],
+    tamil: [0, 9, 0],
+    telugu: [0, 0, 0],
     urdu: [0, 5, 0],
   };
 

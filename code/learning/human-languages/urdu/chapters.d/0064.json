@@ -1,0 +1,19 @@
+{
+  "chapter": 64,
+  "title": "Leaf, Mountain, Forest, River, Lake",
+  "label": "ch:ur-leaf-mountain-forest-river-lake",
+  "canDo": "I can say a leaf, a mountain, a forest, a river and a lake.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C64-jhil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 64: i can say a leaf, a mountain, a forest, a river and a lake.",
+    "assesses": [
+      "UR-LEX-C64-NATURE64-03",
+      "UR-LEX-C64-NATURE64-04",
+      "UR-LEX-C64-NATURE64-05"
+    ]
+  }
+}

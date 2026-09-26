@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-97-NUMBERS97",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "AR-EXT-97-NUMBERS97"
+  ],
+  "after": []
+}

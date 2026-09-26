@@ -1,0 +1,11 @@
+{
+  "id": "JA-C36-mame",
+  "pathSegment": "JA-PATH-36-FOOD36",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-36-FOOD36",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C33-hamsar",
+  "pathSegment": "FA-PATH-33-FAMILY33",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-33-FAMILY33",
+      "order": 2
+    }
+  ]
+}

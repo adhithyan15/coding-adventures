@@ -1,0 +1,11 @@
+{
+  "id": "BN-C43-hatu",
+  "pathSegment": "BN-PATH-43-BODY43",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-43-BODY43",
+      "order": 2
+    }
+  ]
+}

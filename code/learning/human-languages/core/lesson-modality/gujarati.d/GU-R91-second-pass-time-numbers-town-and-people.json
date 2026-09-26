@@ -3,7 +3,7 @@
     "id": "GU-R91-second-pass-time-numbers-town-and-people",
     "language": "gujarati",
     "chapter": 91,
-    "sequence": 4670,
+    "sequence": 4683,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:15b02fdb6fca2571"
+    "sourceHash": "fnv1a64:4ad8e74f16ac4e3b"
   },
   "findings": []
 }

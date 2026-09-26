@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C28-hear-divo
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1580
+sequence: 1593
 chapter: 32
 type: word
 headword: દીવો

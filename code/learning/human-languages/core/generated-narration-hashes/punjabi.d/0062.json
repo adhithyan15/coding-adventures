@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:d369886d35497f89",
+  "lessonIds": [
+    "PA-C62-guauna",
+    "PA-C62-pahinna",
+    "PA-C62-nahauna",
+    "PA-C62-chhaddna",
+    "PA-C62-udikna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch62.txt",
+  "json": "punjabi/narration/ch62.json",
+  "textHash": "fnv1a64:f60bb0b9532f0dca",
+  "jsonHash": "fnv1a64:7cdbf9dc06c79fdd",
+  "findings": []
+}

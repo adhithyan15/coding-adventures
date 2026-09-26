@@ -1,0 +1,11 @@
+{
+  "id": "IT-C101-lettera",
+  "pathSegment": "IT-PATH-101-OGGETTI101",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-101-OGGETTI101",
+      "order": 3
+    }
+  ]
+}

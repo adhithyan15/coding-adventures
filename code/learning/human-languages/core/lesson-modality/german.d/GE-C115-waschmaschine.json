@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C115-waschmaschine",
+    "language": "german",
+    "chapter": 115,
+    "sequence": 4630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f13737719b995de"
+  },
+  "findings": []
+}

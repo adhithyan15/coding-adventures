@@ -1,0 +1,11 @@
+{
+  "id": "MW-C83-hotal",
+  "pathSegment": "MW-PATH-83-TOWN83",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-83-TOWN83",
+      "order": 1
+    }
+  ]
+}

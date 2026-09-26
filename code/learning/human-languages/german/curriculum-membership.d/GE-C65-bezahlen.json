@@ -1,0 +1,11 @@
+{
+  "id": "GE-C65-bezahlen",
+  "pathSegment": "GE-PATH-65-VERBEN2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-65-VERBEN2",
+      "order": 1
+    }
+  ]
+}

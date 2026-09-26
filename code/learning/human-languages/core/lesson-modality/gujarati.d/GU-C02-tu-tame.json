@@ -3,7 +3,7 @@
     "id": "GU-C02-tu-tame",
     "language": "gujarati",
     "chapter": 8,
-    "sequence": 140,
+    "sequence": 153,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0ccf9fe758d7f6f0",
+    "sourceHash": "fnv1a64:77d8affe1c822a64",
     "detachableSegments": [
       "The letters in this word",
       "Script retrieval"

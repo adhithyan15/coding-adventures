@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Border, North, South, West, Letterbox",
+  "label": "ch:fr-border-north-south-west-letterbox",
+  "canDo": "I can name a border, the north, the south, the west, a letterbox.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FR-C109-boite-aux-lettres",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can name a border, the north, the south, the west, a letterbox.",
+    "assesses": [
+      "FR-LEX-C109-LIEU61-03",
+      "FR-LEX-C109-LIEU61-04",
+      "FR-LEX-C109-LIEU61-05"
+    ]
+  }
+}

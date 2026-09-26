@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C56-ue",
+    "language": "japanese",
+    "chapter": 56,
+    "sequence": 3470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:151230a0b165fe36"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "Here, There, Right, Shop, Street",
+  "label": "ch:ar-here-there-right-shop-street",
+  "canDo": "I can say here, there, right, a shop and a street.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "AR-C90-shari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 90: i can say here, there, right, a shop and a street.",
+    "assesses": [
+      "AR-LEX-C90-PLACE90-03",
+      "AR-LEX-C90-PLACE90-04",
+      "AR-LEX-C90-PLACE90-05"
+    ]
+  }
+}

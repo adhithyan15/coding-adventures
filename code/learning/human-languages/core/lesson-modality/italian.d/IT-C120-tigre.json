@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C120-tigre",
+    "language": "italian",
+    "chapter": 120,
+    "sequence": 5870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebf5b341593763a6"
+  },
+  "findings": []
+}

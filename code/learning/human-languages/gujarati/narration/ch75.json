@@ -4,11 +4,11 @@
   "chapter": 75,
   "title": "Ahead, Behind, In and Out",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0383920dc51c0aa5",
+  "sourceHash": "fnv1a64:17453eac059cb93d",
   "lessons": [
     {
       "id": "GU-C75-ahead",
-      "sequence": 3810,
+      "sequence": 3823,
       "title": "આગળ (āgaḷ) — ahead, in front",
       "headword": "આગળ",
       "romanization": "āgaḷ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:494b4f9900f5b8ca",
+      "sourceHash": "fnv1a64:7ece93bcfd90a8dc",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C75-behind",
-      "sequence": 3820,
+      "sequence": 3833,
       "title": "પાછળ (pāchaḷ) — behind",
       "headword": "પાછળ",
       "romanization": "pāchaḷ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:040e29fb83264dc1",
+      "sourceHash": "fnv1a64:96718d154373558d",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C75-inside",
-      "sequence": 3830,
+      "sequence": 3843,
       "title": "અંદર (andar) — inside",
       "headword": "અંદર",
       "romanization": "andar",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f3a103aa38daea0",
+      "sourceHash": "fnv1a64:eda746cb7275e23e",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C75-outside",
-      "sequence": 3840,
+      "sequence": 3853,
       "title": "બહાર (bahār) — outside",
       "headword": "બહાર",
       "romanization": "bahār",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04bbc4c2bf58800f",
+      "sourceHash": "fnv1a64:0d028f222ea1f4bb",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C75-between",
-      "sequence": 3850,
+      "sequence": 3863,
       "title": "વચ્ચે (vacce) — between, in the middle",
       "headword": "વચ્ચે",
       "romanization": "vacce",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f40f183b0f66692",
+      "sourceHash": "fnv1a64:3b3f6ef80044b244",
       "notice": null,
       "blocks": [
         {

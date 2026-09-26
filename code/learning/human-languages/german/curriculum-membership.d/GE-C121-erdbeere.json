@@ -1,0 +1,11 @@
+{
+  "id": "GE-C121-erdbeere",
+  "pathSegment": "GE-PATH-121-ESSEN121",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-121-ESSEN121",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:e297db5321897757",
+  "lessonIds": [
+    "FA-C31-dard",
+    "FA-C31-daru",
+    "FA-C31-teshne",
+    "FA-C31-gorosne",
+    "FA-C31-khoshhal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch31.txt",
+  "json": "persian/narration/ch31.json",
+  "textHash": "fnv1a64:feebe9e1ee08fe70",
+  "jsonHash": "fnv1a64:d926c169a34aa9bc",
+  "findings": []
+}

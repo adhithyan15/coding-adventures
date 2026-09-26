@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C75-ahead
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3810
+sequence: 3823
 chapter: 75
 type: word
 headword: "આગળ"

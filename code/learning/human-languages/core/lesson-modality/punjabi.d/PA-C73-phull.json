@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C73-phull",
+    "language": "punjabi",
+    "chapter": 73,
+    "sequence": 3920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5dc7c85a502b97be"
+  },
+  "findings": []
+}

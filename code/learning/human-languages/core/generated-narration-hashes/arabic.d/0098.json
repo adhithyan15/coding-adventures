@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:8dfe0e13cd279ea9",
+  "lessonIds": [
+    "AR-C98-lawn",
+    "AR-C98-ughniya",
+    "AR-C98-rihla",
+    "AR-C98-utla",
+    "AR-C98-hubb"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch98.txt",
+  "json": "arabic/narration/ch98.json",
+  "textHash": "fnv1a64:39587a4141957a32",
+  "jsonHash": "fnv1a64:2fc62899747aa7ee",
+  "findings": []
+}

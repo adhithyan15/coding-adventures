@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C11-bahen
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 590
+sequence: 603
 chapter: 17
 type: word
 headword: બહેન

@@ -1,11 +1,11 @@
 {
   "id": "TA-C08-please-register",
   "pathSegment": "TA-PATH-015",
-  "pathOrder": 6,
+  "pathOrder": 7,
   "extensions": [
     {
       "id": "TA-EXT-015-REGISTER",
-      "order": 5
+      "order": 6
     }
   ]
 }

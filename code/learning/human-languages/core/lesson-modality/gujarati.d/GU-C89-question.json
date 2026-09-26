@@ -3,7 +3,7 @@
     "id": "GU-C89-question",
     "language": "gujarati",
     "chapter": 89,
-    "sequence": 4520,
+    "sequence": 4533,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:dba418c09045d955"
+    "sourceHash": "fnv1a64:3ec4884ad12da891"
   },
   "findings": []
 }

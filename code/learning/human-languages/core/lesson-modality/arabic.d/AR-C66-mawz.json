@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C66-mawz",
+    "language": "arabic",
+    "chapter": 66,
+    "sequence": 2270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c4366776f1d2ce16"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C53-deno",
+    "language": "marwadi",
+    "chapter": 53,
+    "sequence": 3970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1c4cb15fa536030"
+  },
+  "findings": []
+}

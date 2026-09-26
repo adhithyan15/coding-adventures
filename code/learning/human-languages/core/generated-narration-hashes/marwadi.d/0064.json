@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:656d6a96a939c443",
+  "lessonIds": [
+    "MW-C64-pyalo",
+    "MW-C64-thali",
+    "MW-C64-chamcho",
+    "MW-C64-chhuri",
+    "MW-C64-botal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch64.txt",
+  "json": "marwadi/narration/ch64.json",
+  "textHash": "fnv1a64:5241d37d27693d35",
+  "jsonHash": "fnv1a64:2c8238fc14866809",
+  "findings": []
+}

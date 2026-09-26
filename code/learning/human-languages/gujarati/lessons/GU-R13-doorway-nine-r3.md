@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R13-doorway-nine-r3
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 595
+sequence: 608
 delivery: script
 chapter: 17
 type: writing

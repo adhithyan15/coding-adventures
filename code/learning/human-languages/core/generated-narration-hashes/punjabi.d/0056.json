@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:5ef2da1d0bf8bc72",
+  "lessonIds": [
+    "PA-C56-mahiman",
+    "PA-C56-pina",
+    "PA-C56-sunna",
+    "PA-C56-baithna",
+    "PA-C56-sauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch56.txt",
+  "json": "punjabi/narration/ch56.json",
+  "textHash": "fnv1a64:f042b90ad3681c84",
+  "jsonHash": "fnv1a64:7da7a7af2585c19e",
+  "findings": []
+}

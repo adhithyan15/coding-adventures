@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C115-saykal",
+    "language": "marathi",
+    "chapter": 115,
+    "sequence": 5160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fd90c3953049f2b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C57-bauch",
+    "language": "german",
+    "chapter": 57,
+    "sequence": 1630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54337b5e31b98df6"
+  },
+  "findings": []
+}

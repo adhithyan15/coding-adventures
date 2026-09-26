@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:e95d7e2586d8dbc2",
+  "lessonIds": [
+    "AR-C92-qitar",
+    "AR-C92-jisr",
+    "AR-C92-masjid",
+    "AR-C92-funduq",
+    "AR-C92-maktab"
+  ],
+  "tex": "arabic/book/chapters/ch92-train-bridge-mosque-hotel-office.tex"
+}

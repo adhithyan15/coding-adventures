@@ -1,0 +1,11 @@
+{
+  "id": "PA-C74-jangal",
+  "pathSegment": "PA-PATH-74-NATURE74",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-74-NATURE74",
+      "order": 1
+    }
+  ]
+}

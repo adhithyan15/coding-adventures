@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W01-e-matra
 spine_node: SPINE-MEET-GREET
-sequence: 9
+sequence: 10
 delivery: script
 chapter: 1
 type: writing

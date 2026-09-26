@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C76-quickly
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3890
+sequence: 3903
 chapter: 76
 type: word
 headword: "જલદી"

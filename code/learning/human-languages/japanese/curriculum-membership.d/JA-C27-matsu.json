@@ -1,0 +1,11 @@
+{
+  "id": "JA-C27-matsu",
+  "pathSegment": "JA-PATH-27-VERBS27",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-27-VERBS27",
+      "order": 3
+    }
+  ]
+}

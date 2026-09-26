@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-64-SCHOOL64",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "BN-EXT-64-SCHOOL64"
+  ],
+  "after": []
+}

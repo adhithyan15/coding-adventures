@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "Long, Hot, Slowly, Quickly, Easy",
+  "label": "ch:bn-long-hot-slowly-quickly-easy",
+  "canDo": "I can say long, tall, hot, slowly, quickly and easy.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C73-sohoj",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can say long, tall, hot, slowly, quickly and easy.",
+    "assesses": [
+      "BN-LEX-C73-ADJ73-03",
+      "BN-LEX-C73-ADJ73-04",
+      "BN-LEX-C73-ADJ73-05"
+    ]
+  }
+}

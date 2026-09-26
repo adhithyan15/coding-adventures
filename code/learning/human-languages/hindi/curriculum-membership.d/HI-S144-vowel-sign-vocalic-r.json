@@ -1,11 +1,11 @@
 {
   "id": "HI-S144-vowel-sign-vocalic-r",
   "pathSegment": "HI-PATH-100",
-  "pathOrder": 52,
+  "pathOrder": 56,
   "extensions": [
     {
       "id": "HI-EXT-100-SCRIPT-RECOGNITION",
-      "order": 41
+      "order": 45
     }
   ]
 }

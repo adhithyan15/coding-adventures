@@ -3,7 +3,7 @@
     "id": "GU-W03-anusvara",
     "language": "gujarati",
     "chapter": 3,
-    "sequence": 63,
+    "sequence": 67,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:048d3a3ab924d8b5",
+    "sourceHash": "fnv1a64:e1ab3aa923711931",
     "detachableSegments": [
       "Script — meet one form",
       "Writing — notice and trace",

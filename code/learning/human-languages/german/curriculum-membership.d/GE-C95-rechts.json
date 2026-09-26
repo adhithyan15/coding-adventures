@@ -1,0 +1,11 @@
+{
+  "id": "GE-C95-rechts",
+  "pathSegment": "GE-PATH-95-WO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-95-WO",
+      "order": 4
+    }
+  ]
+}

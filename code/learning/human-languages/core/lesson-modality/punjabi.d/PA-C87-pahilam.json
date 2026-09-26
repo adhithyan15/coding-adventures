@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C87-pahilam",
+    "language": "punjabi",
+    "chapter": 87,
+    "sequence": 4640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18bd9451a56d052a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C78-schrank",
+  "pathSegment": "GE-PATH-78-HAUS3",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-78-HAUS3",
+      "order": 0
+    }
+  ]
+}

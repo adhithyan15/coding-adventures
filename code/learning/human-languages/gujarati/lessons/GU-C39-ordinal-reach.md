@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C39-ordinal-reach
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 2250
+sequence: 2263
 chapter: 43
 type: word
 headword: સાતમું · આઠમું · નવમું · દસમું

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C66-bringen",
+  "pathSegment": "GE-PATH-66-VERBEN3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-66-VERBEN3",
+      "order": 3
+    }
+  ]
+}

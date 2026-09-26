@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "Star, Cloud, Rain, Pond, Fire",
+  "label": "ch:ge-star-cloud-rain-pond-fire",
+  "canDo": "I can say a star, a cloud, rain, a pond and fire.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GE-C84-feuer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: i can say a star, a cloud, rain, a pond and fire.",
+    "assesses": [
+      "GE-LEX-C84-NATUR3-03",
+      "GE-LEX-C84-NATUR3-04",
+      "GE-LEX-C84-NATUR3-05"
+    ]
+  }
+}

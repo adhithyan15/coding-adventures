@@ -1,0 +1,11 @@
+{
+  "id": "PA-C51-haspatal",
+  "pathSegment": "PA-PATH-51-BODY51",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-51-BODY51",
+      "order": 3
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C27-bhaat
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1520
+sequence: 1533
 chapter: 31
 type: practice
 headword: ભાત

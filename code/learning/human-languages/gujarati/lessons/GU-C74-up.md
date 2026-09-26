@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C74-up
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3790
+sequence: 3803
 chapter: 74
 type: word
 headword: "ઉપર"

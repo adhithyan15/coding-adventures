@@ -3,7 +3,7 @@
     "id": "GU-C24-hear-bapor",
     "language": "gujarati",
     "chapter": 28,
-    "sequence": 1170,
+    "sequence": 1183,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5d3fa2ba61914362"
+    "sourceHash": "fnv1a64:c69ab5902038d54c"
   },
   "findings": []
 }

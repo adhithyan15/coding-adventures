@@ -4,11 +4,11 @@
   "chapter": 90,
   "title": "Weddings, Birthdays and Work",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bbce5b764a54556e",
+  "sourceHash": "fnv1a64:85ead557f2e97ecc",
   "lessons": [
     {
       "id": "GU-C90-wedding",
-      "sequence": 4560,
+      "sequence": 4573,
       "title": "લગ્ન (lagna) — a wedding",
       "headword": "લગ્ન",
       "romanization": "lagna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21d0319a30daa16f",
+      "sourceHash": "fnv1a64:2a7480e7afeb2803",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C90-birthday",
-      "sequence": 4570,
+      "sequence": 4583,
       "title": "જન્મદિવસ (janmadivas) — a birthday",
       "headword": "જન્મદિવસ",
       "romanization": "janmadivas",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90b91305541b014c",
+      "sourceHash": "fnv1a64:f19c240ea432ca36",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C90-age",
-      "sequence": 4580,
+      "sequence": 4593,
       "title": "ઉંમર (ummar) — age",
       "headword": "ઉંમર",
       "romanization": "ummar",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cdabe875457dd1e",
+      "sourceHash": "fnv1a64:f60f67a2992692ee",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C90-field",
-      "sequence": 4590,
+      "sequence": 4603,
       "title": "ખેતર (khetar) — a field (farmland)",
       "headword": "ખેતર",
       "romanization": "khetar",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb8346d0468aa572",
+      "sourceHash": "fnv1a64:82e7aeb495f18b31",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C90-merchant",
-      "sequence": 4600,
+      "sequence": 4613,
       "title": "વેપારી (vepārī) — a merchant, a trader",
       "headword": "વેપારી",
       "romanization": "vepārī",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab4677cb14ba4aad",
+      "sourceHash": "fnv1a64:e6d4dc522ec02fdd",
       "notice": null,
       "blocks": [
         {

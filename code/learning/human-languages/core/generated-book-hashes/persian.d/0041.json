@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:e708be56df0e96d7",
+  "lessonIds": [
+    "FA-C41-miveh",
+    "FA-C41-sib",
+    "FA-C41-moz",
+    "FA-C41-gowje",
+    "FA-C41-havij"
+  ],
+  "tex": "persian/book/chapters/ch41-fruit-apple-banana-tomato-carrot.tex"
+}

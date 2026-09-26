@@ -1,0 +1,11 @@
+{
+  "id": "GE-C129-sport",
+  "pathSegment": "GE-PATH-129-FREIZEIT129",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-129-FREIZEIT129",
+      "order": 0
+    }
+  ]
+}

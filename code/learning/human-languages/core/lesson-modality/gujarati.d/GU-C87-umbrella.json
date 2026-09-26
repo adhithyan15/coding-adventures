@@ -3,7 +3,7 @@
     "id": "GU-C87-umbrella",
     "language": "gujarati",
     "chapter": 87,
-    "sequence": 4450,
+    "sequence": 4463,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:de4554161bcadad1"
+    "sourceHash": "fnv1a64:bb52cc95ba0a0823"
   },
   "findings": []
 }

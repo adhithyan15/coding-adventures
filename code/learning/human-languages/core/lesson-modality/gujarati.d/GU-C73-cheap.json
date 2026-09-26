@@ -3,7 +3,7 @@
     "id": "GU-C73-cheap",
     "language": "gujarati",
     "chapter": 73,
-    "sequence": 3750,
+    "sequence": 3763,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:49142ee24965e625"
+    "sourceHash": "fnv1a64:99ae7458430c3b17"
   },
   "findings": []
 }

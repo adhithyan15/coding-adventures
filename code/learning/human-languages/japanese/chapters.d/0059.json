@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "Hat, Socks, Glasses, Thirty, Thousand",
+  "label": "ch:ja-hat-socks-glasses-thirty-thousand",
+  "canDo": "I can say a hat, socks, glasses, thirty and a thousand.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "JA-C59-sen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: i can say a hat, socks, glasses, thirty and a thousand.",
+    "assesses": [
+      "JA-LEX-C59-CLOTHES59-03",
+      "JA-LEX-C59-CLOTHES59-04",
+      "JA-LEX-C59-CLOTHES59-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C92-jisr",
+  "pathSegment": "AR-PATH-92-TOWN92",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-92-TOWN92",
+      "order": 1
+    }
+  ]
+}

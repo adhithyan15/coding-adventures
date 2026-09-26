@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:994f23ff6542c383",
+  "lessonIds": [
+    "IT-C96-coperta",
+    "IT-C96-asciugamano",
+    "IT-C96-sapone",
+    "IT-C96-spazzolino",
+    "IT-C96-dentifricio"
+  ],
+  "tex": "italian/book/chapters/ch96-blanket-towel-soap-toothbrush-toothpaste.tex"
+}

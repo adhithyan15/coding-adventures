@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-31-HEALTH31",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say pain, medicine, thirsty, hungry and happy.",
+  "prerequisites": []
+}

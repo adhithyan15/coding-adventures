@@ -12,17 +12,17 @@ type: writing
 headword: "ऋ"
 gloss: the independent vowel ऋ — recognised, sounded, and written before ऋतु
 romanization: "ṛ (Hindi ri)"
-prerequisites: [HI-C13-haath, HI-S117-letter-ca]
+prerequisites: [HI-C13-haath, HI-S117-letter-ca, HI-C14-ghee]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [HI-CONCEPT-C13-HAATH-01, HI-CONCEPT-C13-HAATH-02, HI-SCRIPT-RECOG-117]
+  knowledge: [HI-CONCEPT-C13-HAATH-01, HI-CONCEPT-C13-HAATH-02, HI-SCRIPT-RECOG-117, HI-LEX-ANCHOR-GHEE]
 introduces:
   knowledge: [HI-SCRIPT-RECOG-125, HI-SCRIPT-WRITE-125]
 practises:
-  knowledge: [HI-SCRIPT-RECOG-117, HI-SCRIPT-RECOG-125, HI-SCRIPT-WRITE-125]
+  knowledge: [HI-SCRIPT-RECOG-117, HI-SCRIPT-RECOG-125, HI-SCRIPT-WRITE-125, HI-LEX-ANCHOR-GHEE]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [HI-S117-letter-ca, HI-C13-haath]
 # ऋ — the independent vowel waiting inside ऋतु
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-117] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-117, HI-LEX-ANCHOR-GHEE] -->
 
 [PAUSE 1s] You have said **ऋतु** (*ṛtu*), "season". Its first letter is the one this lesson writes.
 

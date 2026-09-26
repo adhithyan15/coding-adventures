@@ -1,0 +1,11 @@
+{
+  "id": "FA-R44-first-pass-the-body-health-and-family",
+  "pathSegment": "FA-PATH-44-FOOD44",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FA-EXT-44-FOOD44",
+      "order": 5
+    }
+  ]
+}

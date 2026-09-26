@@ -9,17 +9,17 @@ type: writing
 headword: "ൺ"
 gloss: the single character ൺ — recognised inside words you already say
 romanization: "ṇ"
-prerequisites: [ML-S07-vowel-sign-u]
+prerequisites: [ML-S07-vowel-sign-u, ML-C02-puli, ML-C02-penkutti]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-07]
+  knowledge: [ML-SCRIPT-RECOG-07, ML-LEX-ANCHOR-PULI, ML-LEX-ANCHOR-PENKUTTI]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-131]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-07, ML-SCRIPT-RECOG-131]
+  knowledge: [ML-SCRIPT-RECOG-07, ML-SCRIPT-RECOG-131, ML-LEX-ANCHOR-PULI, ML-LEX-ANCHOR-PENKUTTI]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-S07-vowel-sign-u]
 # ൺ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-07] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-07, ML-LEX-ANCHOR-PULI, ML-LEX-ANCHOR-PENKUTTI] -->
 
 [PAUSE 1s] Before the new one: ◌ു — what does it do?
 

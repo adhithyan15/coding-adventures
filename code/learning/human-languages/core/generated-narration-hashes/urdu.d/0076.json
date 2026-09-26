@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:6e3b29df6489fbfe",
+  "lessonIds": [
+    "UR-C76-minat",
+    "UR-C76-aj",
+    "UR-C76-kal",
+    "UR-C76-abhi",
+    "UR-C76-phir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch76.txt",
+  "json": "urdu/narration/ch76.json",
+  "textHash": "fnv1a64:76c77319d70bf38d",
+  "jsonHash": "fnv1a64:43c4ed4a6a5de409",
+  "findings": []
+}

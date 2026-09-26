@@ -1,11 +1,11 @@
 {
   "id": "BN-W04-ii-matra",
   "pathSegment": "BN-PATH-001",
-  "pathOrder": 61,
+  "pathOrder": 66,
   "extensions": [
     {
       "id": "BN-EXT-021-SCRIPT-VOWEL-BODIES",
-      "order": 6
+      "order": 7
     }
   ]
 }

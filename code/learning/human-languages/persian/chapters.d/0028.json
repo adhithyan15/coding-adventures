@@ -1,0 +1,19 @@
+{
+  "chapter": 28,
+  "title": "Hair, Finger, Shoulder, Neck, Face",
+  "label": "ch:fa-hair-finger-shoulder-neck-face",
+  "canDo": "I can say hair, a finger, a shoulder, the neck and the face.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C28-surat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 28: i can say hair, a finger, a shoulder, the neck and the face.",
+    "assesses": [
+      "FA-LEX-C28-BODY28-03",
+      "FA-LEX-C28-BODY28-04",
+      "FA-LEX-C28-BODY28-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C57-khedna",
+    "language": "punjabi",
+    "chapter": 57,
+    "sequence": 3120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01a9dacc65d0a50c"
+  },
+  "findings": []
+}

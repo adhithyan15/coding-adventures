@@ -1,0 +1,11 @@
+{
+  "id": "UR-C70-naya",
+  "pathSegment": "UR-PATH-70-ADJ70",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-70-ADJ70",
+      "order": 1
+    }
+  ]
+}

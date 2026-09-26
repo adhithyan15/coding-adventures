@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C108-salsa",
+    "language": "italian",
+    "chapter": 108,
+    "sequence": 5180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7eeda62bed14a7e2"
+  },
+  "findings": []
+}

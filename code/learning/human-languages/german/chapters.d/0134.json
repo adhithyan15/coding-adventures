@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Boring, Difficult, Finished, Ready, Safe",
+  "label": "ch:ge-boring-difficult-finished-ready-safe",
+  "canDo": "I can say boring, difficult, finished, ready and safe.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C134-sicher",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can say boring, difficult, finished, ready and safe.",
+    "assesses": [
+      "GE-LEX-C134-EIGEN134-03",
+      "GE-LEX-C134-EIGEN134-04",
+      "GE-LEX-C134-EIGEN134-05"
+    ]
+  }
+}

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C61-spoon
 spine_node: SPINE-COURTESY-THANK
-sequence: 3110
+sequence: 3123
 chapter: 61
 type: word
 headword: "ચમચી"

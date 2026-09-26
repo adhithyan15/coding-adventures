@@ -1,0 +1,11 @@
+{
+  "id": "GE-C117-geschenk",
+  "pathSegment": "GE-PATH-117-DINGE117",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-117-DINGE117",
+      "order": 3
+    }
+  ]
+}

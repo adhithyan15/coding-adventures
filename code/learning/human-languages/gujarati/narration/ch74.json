@@ -4,11 +4,11 @@
   "chapter": 74,
   "title": "Dear, Near, Far, Up and Down",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7920956d80140be5",
+  "sourceHash": "fnv1a64:1a9e06a5685df956",
   "lessons": [
     {
       "id": "GU-C74-expensive",
-      "sequence": 3760,
+      "sequence": 3773,
       "title": "મોંઘું (moṅghũ) — expensive",
       "headword": "મોંઘું",
       "romanization": "moṅghũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c69e14a61eb4ab39",
+      "sourceHash": "fnv1a64:72f373868a49e9a5",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C74-near",
-      "sequence": 3770,
+      "sequence": 3783,
       "title": "નજીક (najīk) — near",
       "headword": "નજીક",
       "romanization": "najīk",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f485256a2dc237e0",
+      "sourceHash": "fnv1a64:10f15b7c634ac37e",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C74-far",
-      "sequence": 3780,
+      "sequence": 3793,
       "title": "દૂર (dūr) — far",
       "headword": "દૂર",
       "romanization": "dūr",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c55e9971950004d",
+      "sourceHash": "fnv1a64:9deb2f5e13db68fd",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C74-up",
-      "sequence": 3790,
+      "sequence": 3803,
       "title": "ઉપર (upar) — up, above",
       "headword": "ઉપર",
       "romanization": "upar",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d760befdee58146",
+      "sourceHash": "fnv1a64:d258cd60f1a487ab",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C74-down",
-      "sequence": 3800,
+      "sequence": 3813,
       "title": "નીચે (nīce) — down, below",
       "headword": "નીચે",
       "romanization": "nīce",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8393d6f9c15dc503",
+      "sourceHash": "fnv1a64:533e825fe0ca4233",
       "notice": null,
       "blocks": [
         {

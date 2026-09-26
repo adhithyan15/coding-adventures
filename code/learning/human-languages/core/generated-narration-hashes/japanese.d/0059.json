@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:b0a89303a10834b3",
+  "lessonIds": [
+    "JA-C59-boushi",
+    "JA-C59-kutsushita",
+    "JA-C59-megane",
+    "JA-C59-sanjuu",
+    "JA-C59-sen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch59.txt",
+  "json": "japanese/narration/ch59.json",
+  "textHash": "fnv1a64:e5f31f02b9479c94",
+  "jsonHash": "fnv1a64:923d59e3243dbf67",
+  "findings": []
+}

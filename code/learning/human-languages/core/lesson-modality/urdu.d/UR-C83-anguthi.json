@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C83-anguthi",
+    "language": "urdu",
+    "chapter": 83,
+    "sequence": 4200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f5f91d42c803f00"
+  },
+  "findings": []
+}

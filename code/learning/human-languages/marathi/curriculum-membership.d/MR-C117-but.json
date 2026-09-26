@@ -1,0 +1,11 @@
+{
+  "id": "MR-C117-but",
+  "pathSegment": "MR-PATH-117-CLOTHES117",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-117-CLOTHES117",
+      "order": 2
+    }
+  ]
+}

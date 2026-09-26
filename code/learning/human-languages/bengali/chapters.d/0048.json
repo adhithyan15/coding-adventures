@@ -1,0 +1,19 @@
+{
+  "chapter": 48,
+  "title": "Woman, Neighbour, To hear, To sit, To walk",
+  "label": "ch:bn-woman-neighbour-to-hear-to-sit-to-walk",
+  "canDo": "I can say a woman, a neighbour, to hear, to listen, to sit and to walk.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "BN-C48-hata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 48: i can say a woman, a neighbour, to hear, to listen, to sit and to walk.",
+    "assesses": [
+      "BN-LEX-C48-FAMILY48-03",
+      "BN-LEX-C48-FAMILY48-04",
+      "BN-LEX-C48-FAMILY48-05"
+    ]
+  }
+}

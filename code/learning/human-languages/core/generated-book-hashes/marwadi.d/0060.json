@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:da1c731d448539fc",
+  "lessonIds": [
+    "MW-C60-khad",
+    "MW-C60-lun",
+    "MW-C60-mirach",
+    "MW-C60-dahi",
+    "MW-C60-tel"
+  ],
+  "tex": "marwadi/book/chapters/ch60-sugar-salt-chilli-yoghurt-oil.tex"
+}

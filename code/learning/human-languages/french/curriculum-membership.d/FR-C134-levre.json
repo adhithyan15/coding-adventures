@@ -1,0 +1,11 @@
+{
+  "id": "FR-C134-levre",
+  "pathSegment": "FR-PATH-134-NATURE86",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-134-NATURE86",
+      "order": 2
+    }
+  ]
+}

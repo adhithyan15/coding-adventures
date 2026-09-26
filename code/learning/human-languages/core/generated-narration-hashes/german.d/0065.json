@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:a382f93e5e62783a",
+  "lessonIds": [
+    "GE-C65-warten",
+    "GE-C65-bezahlen",
+    "GE-C65-kochen",
+    "GE-C65-lachen",
+    "GE-C65-weinen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch65.txt",
+  "json": "german/narration/ch65.json",
+  "textHash": "fnv1a64:a44bafd71de71bc2",
+  "jsonHash": "fnv1a64:155a24aee50bc108",
+  "findings": []
+}

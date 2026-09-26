@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "Library, Bicycle, Bus or tram stop, Clothes, Shirt",
+  "label": "ch:ge-library-bicycle-bus-or-tram-stop-clothes-shirt",
+  "canDo": "I can say a library, a bicycle, a bus or tram stop, clothes and a shirt.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "GE-C98-hemd",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 98: i can say a library, a bicycle, a bus or tram stop, clothes and a shirt.",
+    "assesses": [
+      "GE-LEX-C98-STADT3-03",
+      "GE-LEX-C98-STADT3-04",
+      "GE-LEX-C98-STADT3-05"
+    ]
+  }
+}

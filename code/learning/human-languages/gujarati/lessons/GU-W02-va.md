@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W02-va
 spine_node: SPINE-COURTESY-THANK
-sequence: 14
+sequence: 15
 delivery: script
 chapter: 2
 type: writing

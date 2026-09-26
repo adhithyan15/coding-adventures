@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:9f61877a61a90014",
+  "lessonIds": [
+    "PA-C51-latt",
+    "PA-C51-goda",
+    "PA-C51-bukhar",
+    "PA-C51-haspatal",
+    "PA-C51-bimar"
+  ],
+  "tex": "punjabi/book/chapters/ch51-leg-knee-fever-hospital-ill.tex"
+}

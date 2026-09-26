@@ -1,0 +1,19 @@
+{
+  "chapter": 50,
+  "title": "Sweet, Bitter, Wide, Narrow, Heavy",
+  "label": "ch:ja-sweet-bitter-wide-narrow-heavy",
+  "canDo": "I can say sweet, bitter, wide, narrow and heavy.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "JA-C50-omoi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 50: i can say sweet, bitter, wide, narrow and heavy.",
+    "assesses": [
+      "JA-LEX-C50-ADJ50-03",
+      "JA-LEX-C50-ADJ50-04",
+      "JA-LEX-C50-ADJ50-05"
+    ]
+  }
+}

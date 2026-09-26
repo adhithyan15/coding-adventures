@@ -1,0 +1,19 @@
+{
+  "chapter": 63,
+  "title": "To find, To throw, Meat, Fish, Rice",
+  "label": "ch:pa-to-find-to-throw-meat-fish-rice",
+  "canDo": "I can say to find, to look for, to throw, meat, a fish and rice.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C63-chaul",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 63: i can say to find, to look for, to throw, meat, a fish and rice.",
+    "assesses": [
+      "PA-LEX-C63-VERBS63-03",
+      "PA-LEX-C63-VERBS63-04",
+      "PA-LEX-C63-VERBS63-05"
+    ]
+  }
+}

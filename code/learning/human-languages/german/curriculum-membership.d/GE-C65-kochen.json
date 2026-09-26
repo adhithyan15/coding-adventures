@@ -1,0 +1,11 @@
+{
+  "id": "GE-C65-kochen",
+  "pathSegment": "GE-PATH-65-VERBEN2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-65-VERBEN2",
+      "order": 2
+    }
+  ]
+}

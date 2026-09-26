@@ -3,7 +3,7 @@
     "id": "GU-C49-medicine",
     "language": "gujarati",
     "chapter": 49,
-    "sequence": 2500,
+    "sequence": 2513,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:da74979bc8af82ab"
+    "sourceHash": "fnv1a64:47bc6f5384f39b2f"
   },
   "findings": []
 }

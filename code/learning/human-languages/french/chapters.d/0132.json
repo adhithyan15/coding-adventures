@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Noisy, Last, Next, Famous, Funny",
+  "label": "ch:fr-noisy-last-next-famous-funny",
+  "canDo": "I can name noisy, last, next, famous, funny.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C132-drole",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can name noisy, last, next, famous, funny.",
+    "assesses": [
+      "FR-LEX-C132-QUALITES84-03",
+      "FR-LEX-C132-QUALITES84-04",
+      "FR-LEX-C132-QUALITES84-05"
+    ]
+  }
+}

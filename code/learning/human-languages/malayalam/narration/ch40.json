@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "The Meal",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b863493db88d2938",
+  "sourceHash": "fnv1a64:f34c792e2747613e",
   "lessons": [
     {
       "id": "ML-C40-oon",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:61b25fe2b651e9ab",
+      "sourceHash": "fnv1a64:8eec19d84b3e52ce",
       "notice": {
         "modality": "sight",
         "needs": [

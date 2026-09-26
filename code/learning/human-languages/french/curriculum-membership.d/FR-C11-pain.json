@@ -1,11 +1,11 @@
 {
   "id": "FR-C11-pain",
   "pathSegment": "FR-PATH-015",
-  "pathOrder": 48,
+  "pathOrder": 36,
   "extensions": [
     {
       "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
-      "order": 48
+      "order": 36
     }
   ]
 }

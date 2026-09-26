@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-103-VESTITI103",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "IT-EXT-103-VESTITI103"
+  ],
+  "after": []
+}

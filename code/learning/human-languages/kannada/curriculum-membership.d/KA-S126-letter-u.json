@@ -1,11 +1,11 @@
 {
   "id": "KA-S126-letter-u",
   "pathSegment": "KA-PATH-100",
-  "pathOrder": 26,
+  "pathOrder": 27,
   "extensions": [
     {
       "id": "KA-EXT-100-SCRIPT-RECOGNITION",
-      "order": 26
+      "order": 27
     }
   ]
 }

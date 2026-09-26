@@ -1,0 +1,11 @@
+{
+  "id": "AR-C79-maiz",
+  "pathSegment": "AR-PATH-79-ANIMALS79",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-79-ANIMALS79",
+      "order": 1
+    }
+  ]
+}

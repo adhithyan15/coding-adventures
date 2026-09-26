@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C66-taiko",
+    "language": "japanese",
+    "chapter": 66,
+    "sequence": 3990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4271cf8df07b96f9"
+  },
+  "findings": []
+}

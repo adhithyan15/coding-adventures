@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:f02efc9922b51f89",
+  "lessonIds": [
+    "IT-C91-dritto",
+    "IT-C91-davanti",
+    "IT-C91-dietro",
+    "IT-C91-accanto",
+    "IT-C91-tra"
+  ],
+  "tex": "italian/book/chapters/ch91-straight-on-in-front-behind-next-to-between.tex"
+}

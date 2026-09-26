@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:79b31879b18ed30f",
+  "lessonIds": [
+    "PA-C49-hatth",
+    "PA-C49-pair",
+    "PA-C49-val",
+    "PA-C49-dand",
+    "PA-C49-gala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch49.txt",
+  "json": "punjabi/narration/ch49.json",
+  "textHash": "fnv1a64:1eb7e222efdb9413",
+  "jsonHash": "fnv1a64:adc161bd181f9a01",
+  "findings": []
+}

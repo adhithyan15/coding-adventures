@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:5dcb9fd6a891fbf4",
+  "lessonIds": [
+    "PA-C86-mahina",
+    "PA-C86-sal",
+    "PA-C86-ghanta",
+    "PA-C86-mint",
+    "PA-C86-ajj"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch86.txt",
+  "json": "punjabi/narration/ch86.json",
+  "textHash": "fnv1a64:a8040593a3d95a5f",
+  "jsonHash": "fnv1a64:0004d938630807fc",
+  "findings": []
+}

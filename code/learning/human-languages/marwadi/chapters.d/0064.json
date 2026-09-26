@@ -1,0 +1,19 @@
+{
+  "chapter": 64,
+  "title": "Cup, Plate, Spoon, Knife, Bottle",
+  "label": "ch:mw-cup-plate-spoon-knife-bottle",
+  "canDo": "I can say a cup, a plate, a spoon, a knife and a bottle.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "MW-C64-botal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 64: i can say a cup, a plate, a spoon, a knife and a bottle.",
+    "assesses": [
+      "MW-LEX-C64-HOME64-03",
+      "MW-LEX-C64-HOME64-04",
+      "MW-LEX-C64-HOME64-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C136-raccontare",
+    "language": "italian",
+    "chapter": 136,
+    "sequence": 6750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a514b4def9e54da"
+  },
+  "findings": []
+}

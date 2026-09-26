@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:c7c2ddb501f6c047",
+  "lessonIds": [
+    "GE-C111-taxi",
+    "GE-C111-fahrkarte",
+    "GE-C111-koffer",
+    "GE-C111-aufzug",
+    "GE-C111-fliegen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch111.txt",
+  "json": "german/narration/ch111.json",
+  "textHash": "fnv1a64:4a6e65046857dcfc",
+  "jsonHash": "fnv1a64:c8b9e1f214d882ed",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C36-istadan",
+  "pathSegment": "FA-PATH-36-VERBS36",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-36-VERBS36",
+      "order": 1
+    }
+  ]
+}

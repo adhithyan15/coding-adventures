@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:e201e67edc0b5b65",
+  "lessonIds": [
+    "MW-C81-dur",
+    "MW-C81-najik",
+    "MW-C81-may",
+    "MW-C81-barai",
+    "MW-C81-niche"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch81.txt",
+  "json": "marwadi/narration/ch81.json",
+  "textHash": "fnv1a64:2398dd3aafca5ce5",
+  "jsonHash": "fnv1a64:41ea8fa0e0280b67",
+  "findings": []
+}

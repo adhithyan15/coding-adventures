@@ -4,11 +4,11 @@
   "chapter": 64,
   "title": "Flower, Mountain and Forest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d3d9f9c35ab4b6ba",
+  "sourceHash": "fnv1a64:75cf0bb71353b847",
   "lessons": [
     {
       "id": "GU-C64-flower",
-      "sequence": 3240,
+      "sequence": 3253,
       "title": "ફૂલ (phūl) — a flower",
       "headword": "ફૂલ",
       "romanization": "phūl",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1997043a44500240",
+      "sourceHash": "fnv1a64:20eabd34ce67209c",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C64-leaf",
-      "sequence": 3250,
+      "sequence": 3263,
       "title": "પાન (pān) — a leaf",
       "headword": "પાન",
       "romanization": "pān",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b114be2553f1e3f6",
+      "sourceHash": "fnv1a64:e49607d8c88d3c40",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C64-mountain",
-      "sequence": 3260,
+      "sequence": 3273,
       "title": "પર્વત (parvat) — a mountain",
       "headword": "પર્વત",
       "romanization": "parvat",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45dceee37b661f4a",
+      "sourceHash": "fnv1a64:b6c86db7c4a736f6",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C64-forest",
-      "sequence": 3270,
+      "sequence": 3283,
       "title": "જંગલ (jaṅgal) — a forest, the jungle",
       "headword": "જંગલ",
       "romanization": "jaṅgal",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfb5916b3e33cbc6",
+      "sourceHash": "fnv1a64:4646d55e937bc68c",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C64-stone",
-      "sequence": 3280,
+      "sequence": 3293,
       "title": "પથ્થર (paththar) — a stone",
       "headword": "પથ્થર",
       "romanization": "paththar",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5cb21090b9d8dc9",
+      "sourceHash": "fnv1a64:9a8fd1ed60b9550d",
       "notice": null,
       "blocks": [
         {

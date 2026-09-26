@@ -1,0 +1,11 @@
+{
+  "id": "MR-C105-rikama",
+  "pathSegment": "MR-PATH-105-ADJ105",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-105-ADJ105",
+      "order": 1
+    }
+  ]
+}

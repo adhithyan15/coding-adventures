@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "Thin, Light, Heavy, Important, Green",
+  "label": "ch:pa-thin-light-heavy-important-green",
+  "canDo": "I can say thin, light, heavy, important, necessary and green.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C83-hara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can say thin, light, heavy, important, necessary and green.",
+    "assesses": [
+      "PA-LEX-C83-ADJ83-03",
+      "PA-LEX-C83-ADJ83-04",
+      "PA-LEX-C83-ADJ83-05"
+    ]
+  }
+}

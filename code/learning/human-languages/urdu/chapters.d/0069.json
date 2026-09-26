@@ -1,0 +1,19 @@
+{
+  "chapter": 69,
+  "title": "Elephant, Monkey, Snake, Bear, Big",
+  "label": "ch:ur-elephant-monkey-snake-bear-big",
+  "canDo": "I can say an elephant, a monkey, a snake, a bear and big.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C69-bara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 69: i can say an elephant, a monkey, a snake, a bear and big.",
+    "assesses": [
+      "UR-LEX-C69-ANIMALS69-03",
+      "UR-LEX-C69-ANIMALS69-04",
+      "UR-LEX-C69-ANIMALS69-05"
+    ]
+  }
+}

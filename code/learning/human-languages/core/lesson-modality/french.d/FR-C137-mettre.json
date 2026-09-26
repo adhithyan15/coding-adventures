@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C137-mettre",
+    "language": "french",
+    "chapter": 137,
+    "sequence": 6380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47a80ee32c1737b8"
+  },
+  "findings": []
+}

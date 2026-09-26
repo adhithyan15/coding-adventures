@@ -1,12 +1,13 @@
 {
   "language": "urdu",
   "chapter": 4,
-  "sourceHash": "fnv1a64:214e4d88b92b74a3",
+  "sourceHash": "fnv1a64:0bab31542cd555c5",
   "lessonIds": [
     "UR-C04-kaise-kaisi",
     "UR-W04-joining",
     "UR-C04-aap-kaise-hain",
     "UR-C04-main-hun",
+    "UR-C04-main-hun-more",
     "UR-W04-kaf",
     "UR-C04-thik",
     "UR-C04-main-thik-hun",

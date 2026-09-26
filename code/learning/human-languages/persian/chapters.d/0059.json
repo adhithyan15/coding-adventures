@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "Long, Short, Warm, Cold, Slow",
+  "label": "ch:fa-long-short-warm-cold-slow",
+  "canDo": "I can say long, tall, short, warm, hot, cold and slow, slowly.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C59-aheste",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: i can say long, tall, short, warm, hot, cold and slow, slowly.",
+    "assesses": [
+      "FA-LEX-C59-ADJ59-03",
+      "FA-LEX-C59-ADJ59-04",
+      "FA-LEX-C59-ADJ59-05"
+    ]
+  }
+}

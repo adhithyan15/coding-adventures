@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-102-DINGE",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "GE-EXT-102-DINGE"
+  ],
+  "after": []
+}

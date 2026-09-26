@@ -1,0 +1,11 @@
+{
+  "id": "JA-C46-hitsuji",
+  "pathSegment": "JA-PATH-46-ANIMALS46",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-46-ANIMALS46",
+      "order": 3
+    }
+  ]
+}

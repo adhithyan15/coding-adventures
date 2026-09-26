@@ -1,0 +1,11 @@
+{
+  "id": "MR-C95-chitra",
+  "pathSegment": "MR-PATH-95-SCHOOL95",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-95-SCHOOL95",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C129-stretto",
+    "language": "italian",
+    "chapter": 129,
+    "sequence": 6430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8d6d6fff0102d15"
+  },
+  "findings": []
+}

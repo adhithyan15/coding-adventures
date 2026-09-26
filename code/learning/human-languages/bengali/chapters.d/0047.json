@@ -1,0 +1,19 @@
+{
+  "chapter": 47,
+  "title": "Aunt, Husband, Wife, Child, Person",
+  "label": "ch:bn-aunt-husband-wife-child-person",
+  "canDo": "I can say an aunt, a husband, a wife, a child and a person.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "BN-C47-lok",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 47: i can say an aunt, a husband, a wife, a child and a person.",
+    "assesses": [
+      "BN-LEX-C47-FAMILY47-03",
+      "BN-LEX-C47-FAMILY47-04",
+      "BN-LEX-C47-FAMILY47-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-85-FOOD85",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a fish, cooked rice, lentils, a fruit and an apple.",
+  "prerequisites": []
+}

@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W07-nna
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 83
+sequence: 103
 delivery: script
 chapter: 7
 type: writing
 headword: ण
 romanization: "ṇa"
 gloss: retroflex na — the nasal of the curled row, the letter in paani
-prerequisites: [MR-W07-dda]
+prerequisites: [MR-W07-dda, MR-C05-kiran, MR-C07-daba]
 sounds: [retroflex-na]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-DDA-01, MR-SCRIPT-TTA-01]
+  knowledge: [MR-SCRIPT-DDA-01, MR-SCRIPT-TTA-01, MR-LEX-ANCHOR-KIRAN, MR-LEX-ANCHOR-DABA]
 introduces:
   knowledge: [MR-SCRIPT-NNA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-NNA-01, MR-SCRIPT-DDA-01, MR-SCRIPT-TTA-01]
+  knowledge: [MR-SCRIPT-NNA-01, MR-SCRIPT-DDA-01, MR-SCRIPT-TTA-01, MR-LEX-ANCHOR-KIRAN, MR-LEX-ANCHOR-DABA]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W07-dda, MR-W01-na]
 # ण — the nasal with the tongue curled back
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-KIRAN, MR-LEX-ANCHOR-DABA] -->
 
 Every row in this alphabet ends with its own nasal. The curled row is no exception.
 

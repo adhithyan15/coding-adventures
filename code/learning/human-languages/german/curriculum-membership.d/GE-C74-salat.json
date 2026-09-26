@@ -1,0 +1,11 @@
+{
+  "id": "GE-C74-salat",
+  "pathSegment": "GE-PATH-74-ESSEN6",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-74-ESSEN6",
+      "order": 3
+    }
+  ]
+}

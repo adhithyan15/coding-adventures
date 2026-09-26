@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:03a36d46e45b202f",
+  "lessonIds": [
+    "MR-C81-thambne",
+    "MR-C81-shodhne",
+    "MR-C81-haravne",
+    "MR-C81-ghalne",
+    "MR-C81-sodne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch81.txt",
+  "json": "marathi/narration/ch81.json",
+  "textHash": "fnv1a64:c4aa5534405b79fb",
+  "jsonHash": "fnv1a64:0b519e8ad9ce4103",
+  "findings": []
+}

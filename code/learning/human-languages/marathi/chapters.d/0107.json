@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "True, Green, Yellow, Red, Blue",
+  "label": "ch:mr-true-green-yellow-red-blue",
+  "canDo": "I can say true, green, yellow, red and blue.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C107-nila",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say true, green, yellow, red and blue.",
+    "assesses": [
+      "MR-LEX-C107-ADJ107-03",
+      "MR-LEX-C107-ADJ107-04",
+      "MR-LEX-C107-ADJ107-05"
+    ]
+  }
+}

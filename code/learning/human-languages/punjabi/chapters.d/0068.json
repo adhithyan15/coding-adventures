@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Table, Wall, Roof, Cupboard, Floor",
+  "label": "ch:pa-table-wall-roof-cupboard-floor",
+  "canDo": "I can say a table, a wall, a roof, a cupboard and the floor.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "PA-C68-farsh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can say a table, a wall, a roof, a cupboard and the floor.",
+    "assesses": [
+      "PA-LEX-C68-HOME68-03",
+      "PA-LEX-C68-HOME68-04",
+      "PA-LEX-C68-HOME68-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:119548560361d52e",
+  "lessonIds": [
+    "PA-C61-ginna",
+    "PA-C61-pharna",
+    "PA-C61-kattna",
+    "PA-C61-rokna",
+    "PA-C61-dassna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch61.txt",
+  "json": "punjabi/narration/ch61.json",
+  "textHash": "fnv1a64:d00080e9249ab8bb",
+  "jsonHash": "fnv1a64:208c7481e68e013e",
+  "findings": []
+}

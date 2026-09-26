@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:ba52ab9e611b4ee2",
+  "lessonIds": [
+    "AR-C52-wajh",
+    "AR-C52-dam",
+    "AR-C52-rukba",
+    "AR-C52-zahr",
+    "AR-C52-qalb"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch52.txt",
+  "json": "arabic/narration/ch52.json",
+  "textHash": "fnv1a64:a6081b23ea19f724",
+  "jsonHash": "fnv1a64:d283bb292c41d0a1",
+  "findings": []
+}

@@ -4,11 +4,11 @@
   "chapter": 79,
   "title": "The Weekend, Tomorrow and Yesterday",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:97201d317c948579",
+  "sourceHash": "fnv1a64:67bb58efe2aa1f9e",
   "lessons": [
     {
       "id": "GU-C79-saturday",
-      "sequence": 4010,
+      "sequence": 4023,
       "title": "શનિવાર (śanivār) — Saturday",
       "headword": "શનિવાર",
       "romanization": "śanivār",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef8fc2bc12a3dfcb",
+      "sourceHash": "fnv1a64:9bc6b651e8648125",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C79-sunday",
-      "sequence": 4020,
+      "sequence": 4033,
       "title": "રવિવાર (ravivār) — Sunday",
       "headword": "રવિવાર",
       "romanization": "ravivār",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ad09efbe62285b3",
+      "sourceHash": "fnv1a64:190c3fba5c0ab583",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C79-tomorrow",
-      "sequence": 4030,
+      "sequence": 4043,
       "title": "આવતીકાલ (āvtīkāl) — tomorrow",
       "headword": "આવતીકાલ",
       "romanization": "āvtīkāl",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23dc9d9e4c67f97b",
+      "sourceHash": "fnv1a64:2b5f2464f5f19019",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C79-yesterday",
-      "sequence": 4040,
+      "sequence": 4053,
       "title": "ગઈકાલ (gaīkāl) — yesterday",
       "headword": "ગઈકાલ",
       "romanization": "gaīkāl",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74acc84256b0ab38",
+      "sourceHash": "fnv1a64:d367bd5077e31ac4",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C79-time",
-      "sequence": 4050,
+      "sequence": 4063,
       "title": "સમય (samay) — time",
       "headword": "સમય",
       "romanization": "samay",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f29c0674df61804",
+      "sourceHash": "fnv1a64:2474648addfe0bbe",
       "notice": null,
       "blocks": [
         {

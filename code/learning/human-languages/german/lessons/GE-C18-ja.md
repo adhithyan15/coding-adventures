@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [GE-LEX-JA-02, GE-SOUND-JA-03, GE-ETYMON-JA-04, GE-PRAGMATICS-DOCH-05]
+  knowledge: [GE-LEX-JA-02, GE-SOUND-JA-03, GE-ETYMON-JA-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-JA-02, GE-SOUND-JA-03, GE-ETYMON-JA-04, GE-PRAGMATICS-DOCH-05]
+  knowledge: [GE-LEX-JA-02, GE-SOUND-JA-03, GE-ETYMON-JA-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -57,20 +57,8 @@ So German *ja* and English *yea* are the same little word, split between two
 cousin languages. (English's everyday *yes* is a compound of that same *yea* with
 an old "be it so.")
 
-## Grammar Lens: A German habit to file away
-<!-- hl-knowledge: introduces=[GE-PRAGMATICS-DOCH-05]; assesses=[] -->
-
-German also has a **third** answer-word, **doch**, for one special job:
-contradicting a **negative** — exactly like French *si*. If someone says
-something *isn't* so and you insist it *is*, you say **doch**, not *ja*:
-
-> *Du kommst nicht?* ("You're not coming?") — ***Doch!*** ("Yes I am!")
-
-You'll drill *doch* on its own later; for now, keep *ja* for a plain yes and know
-*doch* is waiting for the contradictions.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-JA-02, GE-SOUND-JA-03, GE-ETYMON-JA-04, GE-PRAGMATICS-DOCH-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-JA-02, GE-SOUND-JA-03, GE-ETYMON-JA-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ja" — *yah*, the j like English y]
@@ -78,7 +66,7 @@ You'll drill *doch* on its own later; for now, keep *ja* for a plain yes and kno
 - [YOU SAY: the contradiction preview — "Du kommst nicht? — Doch!"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-JA-02, GE-SOUND-JA-03, GE-ETYMON-JA-04, GE-PRAGMATICS-DOCH-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-JA-02, GE-SOUND-JA-03, GE-ETYMON-JA-04] -->
 
 [PAUSE 3s] How do you say yes in German? (**ja**, *yah*.) How is the **j**
 pronounced? (Like English **y**.) Which English word is *ja*'s firm direct

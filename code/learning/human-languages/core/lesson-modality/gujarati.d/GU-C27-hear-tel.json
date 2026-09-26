@@ -3,7 +3,7 @@
     "id": "GU-C27-hear-tel",
     "language": "gujarati",
     "chapter": 31,
-    "sequence": 1490,
+    "sequence": 1503,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:79ad1015c4ef99c0"
+    "sourceHash": "fnv1a64:e89a2299be6171d9"
   },
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:8c52dfcfff85c79e",
+  "lessonIds": [
+    "BN-C84-pulish",
+    "BN-C84-saikel",
+    "BN-C84-bajar",
+    "BN-C84-gram",
+    "BN-C84-shohor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch84.txt",
+  "json": "bengali/narration/ch84.json",
+  "textHash": "fnv1a64:9c98eec7973b48d6",
+  "jsonHash": "fnv1a64:068898a52e5226da",
+  "findings": []
+}

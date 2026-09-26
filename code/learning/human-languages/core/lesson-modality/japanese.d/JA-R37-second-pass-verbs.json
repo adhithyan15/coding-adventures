@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-R37-second-pass-verbs",
+    "language": "japanese",
+    "chapter": 37,
+    "sequence": 2520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82d6df8df80de376"
+  },
+  "findings": []
+}

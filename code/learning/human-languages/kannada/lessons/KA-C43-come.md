@@ -9,17 +9,17 @@ headword: "ಬಾ"
 gloss: "come"
 romanization: "bā"
 concept_tag: KA-VERB-COME
-prerequisites: [KA-C41-there, KA-C41-who]
+prerequisites: [KA-C41-there, KA-C41-who, KA-C42-jnaana]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: []
+  knowledge: [KA-LEX-ANCHOR-JNAANA]
 introduces:
   knowledge: [KA-LEX-COME]
 practises:
-  knowledge: [KA-LEX-COME, KA-LEX-C41-DEIXIS-04, KA-LEX-C41-DEIXIS-05]
+  knowledge: [KA-LEX-COME, KA-LEX-C41-DEIXIS-04, KA-LEX-C41-DEIXIS-05, KA-LEX-ANCHOR-JNAANA]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -31,7 +31,7 @@ reviews_of: []
 # ಬಾ (bā) — come
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-ANCHOR-JNAANA] -->
 
 [PAUSE 2s] A short run of everyday verbs, one at a time.
 

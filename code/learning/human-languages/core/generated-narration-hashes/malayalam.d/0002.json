@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 2,
-  "sourceHash": "fnv1a64:f0d14f25627b747f",
+  "sourceHash": "fnv1a64:0f72cf194df75d7d",
   "lessonIds": [
     "ML-C02-peru",
     "ML-S112-letter-pa",
@@ -19,7 +19,9 @@
     "ML-C02-entu",
     "ML-C02-ninre-peru-entaanu",
     "ML-C02-santosham",
+    "ML-C02-puli",
     "ML-S07-vowel-sign-u",
+    "ML-C02-penkutti",
     "ML-S131-chillu-nn",
     "ML-W02-santosham-guided-copy",
     "ML-C02-practice"
@@ -28,7 +30,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch02.txt",
   "json": "malayalam/narration/ch02.json",
-  "textHash": "fnv1a64:a9407c44bb7f6271",
-  "jsonHash": "fnv1a64:cc395b2af661a222",
+  "textHash": "fnv1a64:0d58998898e8381e",
+  "jsonHash": "fnv1a64:1c4e546cc4eafac9",
   "findings": []
 }

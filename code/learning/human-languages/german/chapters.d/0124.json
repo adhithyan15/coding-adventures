@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Yoghurt, Nurse, Cook, Police officer, Shop assistant",
+  "label": "ch:ge-yoghurt-nurse-cook-police-officer-shop-assistant",
+  "canDo": "I can say a yoghurt, a nurse, a cook, a police officer and a shop assistant.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C124-verkaeufer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say a yoghurt, a nurse, a cook, a police officer and a shop assistant.",
+    "assesses": [
+      "GE-LEX-C124-BERUF124-03",
+      "GE-LEX-C124-BERUF124-04",
+      "GE-LEX-C124-BERUF124-05"
+    ]
+  }
+}

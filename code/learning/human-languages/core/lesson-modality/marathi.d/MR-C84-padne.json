@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C84-padne",
+    "language": "marathi",
+    "chapter": 84,
+    "sequence": 3590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62eaf0787a659127"
+  },
+  "findings": []
+}

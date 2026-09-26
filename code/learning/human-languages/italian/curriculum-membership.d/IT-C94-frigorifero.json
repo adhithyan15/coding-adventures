@@ -1,0 +1,11 @@
+{
+  "id": "IT-C94-frigorifero",
+  "pathSegment": "IT-PATH-94-CASA94",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-94-CASA94",
+      "order": 3
+    }
+  ]
+}

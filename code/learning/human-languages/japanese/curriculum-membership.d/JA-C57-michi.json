@@ -1,0 +1,11 @@
+{
+  "id": "JA-C57-michi",
+  "pathSegment": "JA-PATH-57-PLACE57",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-57-PLACE57",
+      "order": 3
+    }
+  ]
+}

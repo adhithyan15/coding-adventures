@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:b307914fdef7c2a7",
+  "lessonIds": [
+    "JA-C34-suika",
+    "JA-C34-daikon",
+    "JA-C34-ninjin",
+    "JA-C34-toufu",
+    "JA-C34-shio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch34.txt",
+  "json": "japanese/narration/ch34.json",
+  "textHash": "fnv1a64:e4d932d6d651b6f1",
+  "jsonHash": "fnv1a64:d762fb82896be1f1",
+  "findings": []
+}

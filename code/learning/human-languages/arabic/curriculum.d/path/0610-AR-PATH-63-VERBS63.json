@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-63-VERBS63",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "AR-EXT-63-VERBS63"
+  ],
+  "after": []
+}

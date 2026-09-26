@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-110-CIBO110",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say juice, a peach, jam, a walnut and pepper.",
+  "prerequisites": []
+}

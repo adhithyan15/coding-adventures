@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Up, Down, At the front, At the back, Opposite",
+  "label": "ch:ge-up-down-at-the-front-at-the-back-opposite",
+  "canDo": "I can say up, down, at the front, at the back and opposite.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "GE-C109-gegenueber",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say up, down, at the front, at the back and opposite.",
+    "assesses": [
+      "GE-LEX-C109-RICHTUNG109-03",
+      "GE-LEX-C109-RICHTUNG109-04",
+      "GE-LEX-C109-RICHTUNG109-05"
+    ]
+  }
+}

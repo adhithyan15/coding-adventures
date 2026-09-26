@@ -1,0 +1,19 @@
+{
+  "chapter": 54,
+  "title": "Rice, Lentils, Fruit, Apple, Banana",
+  "label": "ch:ur-rice-lentils-fruit-apple-banana",
+  "canDo": "I can say rice, lentils, fruit, an apple and a banana.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "UR-C54-kela",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 54: i can say rice, lentils, fruit, an apple and a banana.",
+    "assesses": [
+      "UR-LEX-C54-FOOD54-03",
+      "UR-LEX-C54-FOOD54-04",
+      "UR-LEX-C54-FOOD54-05"
+    ]
+  }
+}

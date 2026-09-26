@@ -1,0 +1,11 @@
+{
+  "id": "IT-C98-padella",
+  "pathSegment": "IT-PATH-98-CASA98",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-98-CASA98",
+      "order": 3
+    }
+  ]
+}

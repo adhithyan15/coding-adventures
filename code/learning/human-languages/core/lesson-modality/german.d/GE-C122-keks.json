@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C122-keks",
+    "language": "german",
+    "chapter": 122,
+    "sequence": 4980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1951f54e11cbe6c4"
+  },
+  "findings": []
+}

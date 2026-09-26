@@ -1,0 +1,11 @@
+{
+  "id": "PA-C77-gam",
+  "pathSegment": "PA-PATH-77-ANIMALS77",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-77-ANIMALS77",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Inside, Outside, Up, Down, In front",
+  "label": "ch:fa-inside-outside-up-down-in-front",
+  "canDo": "I can say inside, outside, up, above, down, below and in front.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "FA-C68-jolow",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can say inside, outside, up, above, down, below and in front.",
+    "assesses": [
+      "FA-LEX-C68-PLACE68-03",
+      "FA-LEX-C68-PLACE68-04",
+      "FA-LEX-C68-PLACE68-05"
+    ]
+  }
+}

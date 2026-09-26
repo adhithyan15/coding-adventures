@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 25,
+  "sourceHash": "fnv1a64:0a5fe5023bf46961",
+  "lessonIds": [
+    "JA-C25-tomodachi",
+    "JA-C25-otona",
+    "JA-C25-otoko",
+    "JA-C25-onna",
+    "JA-C25-sensei"
+  ],
+  "tex": "japanese/book/chapters/ch25-friend-adult-man-woman-teacher.tex"
+}

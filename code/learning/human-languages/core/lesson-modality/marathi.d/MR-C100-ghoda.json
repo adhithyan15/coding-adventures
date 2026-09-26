@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C100-ghoda",
+    "language": "marathi",
+    "chapter": 100,
+    "sequence": 4380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8969c18bde566d3"
+  },
+  "findings": []
+}

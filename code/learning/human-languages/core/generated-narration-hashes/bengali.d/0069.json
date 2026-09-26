@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:caf1521506e360f9",
+  "lessonIds": [
+    "BN-C69-goru",
+    "BN-C69-chhagol",
+    "BN-C69-bhera",
+    "BN-C69-pakhi",
+    "BN-C69-idur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch69.txt",
+  "json": "bengali/narration/ch69.json",
+  "textHash": "fnv1a64:696f3c587f89d2f6",
+  "jsonHash": "fnv1a64:847f78cf00727027",
+  "findings": []
+}

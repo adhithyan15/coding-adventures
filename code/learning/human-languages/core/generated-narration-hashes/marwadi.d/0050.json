@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:4c5236ff954bf407",
+  "lessonIds": [
+    "MW-C50-lugai",
+    "MW-C50-parosi",
+    "MW-C50-pavno",
+    "MW-C50-mastar",
+    "MW-C50-khano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch50.txt",
+  "json": "marwadi/narration/ch50.json",
+  "textHash": "fnv1a64:e92e5a27824715a2",
+  "jsonHash": "fnv1a64:97c56aa688b8adbe",
+  "findings": []
+}

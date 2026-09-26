@@ -3,7 +3,7 @@
     "id": "GU-C11-bahen",
     "language": "gujarati",
     "chapter": 17,
-    "sequence": 590,
+    "sequence": 603,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5898ee0b7ca29f0a",
+    "sourceHash": "fnv1a64:b2520cd8fc32f92d",
     "detachableSegments": [
       "The letters in this word"
     ]

@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "Colour, Song, Journey, Holiday, Love",
+  "label": "ch:ar-colour-song-journey-holiday-love",
+  "canDo": "I can say a colour, a song, a journey, a holiday and love.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "AR-C98-hubb",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 98: i can say a colour, a song, a journey, a holiday and love.",
+    "assesses": [
+      "AR-LEX-C98-WORLD98-03",
+      "AR-LEX-C98-WORLD98-04",
+      "AR-LEX-C98-WORLD98-05"
+    ]
+  }
+}

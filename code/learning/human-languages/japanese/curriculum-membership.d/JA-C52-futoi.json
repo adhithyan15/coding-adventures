@@ -1,0 +1,11 @@
+{
+  "id": "JA-C52-futoi",
+  "pathSegment": "JA-PATH-52-ADJ52",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-52-ADJ52",
+      "order": 3
+    }
+  ]
+}

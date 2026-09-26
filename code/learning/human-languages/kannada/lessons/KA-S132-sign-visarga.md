@@ -9,17 +9,17 @@ type: writing
 headword: "ಃ"
 gloss: the single character ಃ — two dots of breath, the other mark that rides at the end of a syllable
 romanization: "visarga"
-prerequisites: [KA-S131-vowel-sign-vocalic-r]
+prerequisites: [KA-S131-vowel-sign-vocalic-r, KA-C38-namah]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-131]
+  knowledge: [KA-SCRIPT-RECOG-131, KA-LEX-ANCHOR-NAMAH]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-132]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-131, KA-SCRIPT-RECOG-132]
+  knowledge: [KA-SCRIPT-RECOG-131, KA-SCRIPT-RECOG-132, KA-LEX-ANCHOR-NAMAH]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [KA-S131-vowel-sign-vocalic-r]
 # ◌ಃ — one character, two dots, a breath at the end
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-131] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-131, KA-LEX-ANCHOR-NAMAH] -->
 
 [PAUSE 1s] Before the new one: ◌ೃ — where does it sit, and which standing letter
 is it the other half of?

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C85-pferd",
+    "language": "german",
+    "chapter": 85,
+    "sequence": 3040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8e32e0feae87b40"
+  },
+  "findings": []
+}

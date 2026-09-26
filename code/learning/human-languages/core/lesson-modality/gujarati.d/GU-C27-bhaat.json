@@ -3,7 +3,7 @@
     "id": "GU-C27-bhaat",
     "language": "gujarati",
     "chapter": 31,
-    "sequence": 1520,
+    "sequence": 1533,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9d1c5726d97e035d",
+    "sourceHash": "fnv1a64:f438295b953ac84d",
     "detachableSegments": [
       "Writing — guided copy, model in view"
     ]

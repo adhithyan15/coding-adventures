@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:b28cedf356ef5d60",
+  "lessonIds": [
+    "IT-C102-zaino",
+    "IT-C102-mondo",
+    "IT-C102-gente",
+    "IT-C102-donna",
+    "IT-C102-petto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch102.txt",
+  "json": "italian/narration/ch102.json",
+  "textHash": "fnv1a64:d85b2be08e51ac6e",
+  "jsonHash": "fnv1a64:80b44bc2bedb5b4c",
+  "findings": []
+}

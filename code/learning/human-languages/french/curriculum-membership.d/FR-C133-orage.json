@@ -1,0 +1,11 @@
+{
+  "id": "FR-C133-orage",
+  "pathSegment": "FR-PATH-133-QUALITES85",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-133-QUALITES85",
+      "order": 3
+    }
+  ]
+}

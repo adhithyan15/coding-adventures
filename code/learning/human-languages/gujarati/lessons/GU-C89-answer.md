@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C89-answer
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 4530
+sequence: 4543
 chapter: 89
 type: word
 headword: "જવાબ"

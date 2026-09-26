@@ -1,0 +1,11 @@
+{
+  "id": "GE-C66-zeigen",
+  "pathSegment": "GE-PATH-66-VERBEN3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-66-VERBEN3",
+      "order": 2
+    }
+  ]
+}

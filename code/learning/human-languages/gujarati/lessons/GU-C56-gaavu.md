@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C56-gaavu
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2840
+sequence: 2853
 chapter: 56
 type: word
 headword: "ગાવું"

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C98-rihla",
+    "language": "arabic",
+    "chapter": 98,
+    "sequence": 3880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42e27f66c89e5f4d"
+  },
+  "findings": []
+}

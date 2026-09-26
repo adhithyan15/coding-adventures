@@ -1,0 +1,19 @@
+{
+  "chapter": 33,
+  "title": "Aunt, Husband, Spouse, Child, Family",
+  "label": "ch:fa-aunt-husband-spouse-child-family",
+  "canDo": "I can say an aunt, a husband, a spouse, a child and a family.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "FA-C33-khanevade",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 33: i can say an aunt, a husband, a spouse, a child and a family.",
+    "assesses": [
+      "FA-LEX-C33-FAMILY33-03",
+      "FA-LEX-C33-FAMILY33-04",
+      "FA-LEX-C33-FAMILY33-05"
+    ]
+  }
+}

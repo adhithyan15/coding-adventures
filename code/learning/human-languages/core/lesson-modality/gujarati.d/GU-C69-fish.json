@@ -3,7 +3,7 @@
     "id": "GU-C69-fish",
     "language": "gujarati",
     "chapter": 69,
-    "sequence": 3550,
+    "sequence": 3563,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b96118e17afab572"
+    "sourceHash": "fnv1a64:93d982d00d13e514"
   },
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:b422ad2292b383ee",
+  "lessonIds": [
+    "BN-C88-hajar",
+    "BN-C88-prithibi",
+    "BN-C88-rong",
+    "BN-C88-gan",
+    "BN-C88-chhuti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch88.txt",
+  "json": "bengali/narration/ch88.json",
+  "textHash": "fnv1a64:aeec4b39375dbd07",
+  "jsonHash": "fnv1a64:9d3cf42759399fe5",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 49,
+  "title": "Pencil, Pen, School, Bag, Money",
+  "label": "ch:fa-pencil-pen-school-bag-money",
+  "canDo": "I can say a pencil, a pen, a school, a bag and money.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "FA-C49-pul",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 49: i can say a pencil, a pen, a school, a bag and money.",
+    "assesses": [
+      "FA-LEX-C49-SCHOOL49-03",
+      "FA-LEX-C49-SCHOOL49-04",
+      "FA-LEX-C49-SCHOOL49-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:59aca03a1d17b25d",
+  "lessonIds": [
+    "JA-C32-sakana",
+    "JA-C32-niku",
+    "JA-C32-tamago",
+    "JA-C32-yasai",
+    "JA-C32-kudamono"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch32.txt",
+  "json": "japanese/narration/ch32.json",
+  "textHash": "fnv1a64:b2cf45dd00ba341d",
+  "jsonHash": "fnv1a64:fd0e3a3cdfeaef3e",
+  "findings": []
+}

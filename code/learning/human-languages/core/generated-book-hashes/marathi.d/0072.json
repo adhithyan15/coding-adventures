@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:5ab66be91101d33e",
+  "lessonIds": [
+    "MR-C72-rakta",
+    "MR-C72-gudgha",
+    "MR-C72-doke",
+    "MR-C72-tap",
+    "MR-C72-davakhana"
+  ],
+  "tex": "marathi/book/chapters/ch72-blood-knee-head-fever-clinic.tex"
+}

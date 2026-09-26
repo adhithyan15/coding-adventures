@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C82-khali",
+    "language": "punjabi",
+    "chapter": 82,
+    "sequence": 4370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f11329e58614c40"
+  },
+  "findings": []
+}

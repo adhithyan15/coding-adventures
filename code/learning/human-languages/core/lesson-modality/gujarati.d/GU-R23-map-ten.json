@@ -3,7 +3,7 @@
     "id": "GU-R23-map-ten",
     "language": "gujarati",
     "chapter": 27,
-    "sequence": 1130,
+    "sequence": 1143,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:39c27b5a8ee5a5ce",
+    "sourceHash": "fnv1a64:6c348c7a175b1540",
     "delivery": "script",
     "authored": "pen",
     "authoredReason": "Mixed retrieval includes required model-free writing, so the complete lesson needs a pen even though its oral core is drivable."

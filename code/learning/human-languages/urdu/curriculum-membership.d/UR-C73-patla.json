@@ -1,0 +1,11 @@
+{
+  "id": "UR-C73-patla",
+  "pathSegment": "UR-PATH-73-ADJ73",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-73-ADJ73",
+      "order": 1
+    }
+  ]
+}

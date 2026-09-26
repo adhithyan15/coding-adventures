@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:35215d59d76156e1",
+  "lessonIds": [
+    "IT-C97-pettine",
+    "IT-C97-spazzatura",
+    "IT-C97-scopa",
+    "IT-C97-lavatrice",
+    "IT-C97-poltrona"
+  ],
+  "tex": "italian/book/chapters/ch97-comb-rubbish-broom-washing-machine-armchair.tex"
+}

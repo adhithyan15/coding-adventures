@@ -1,0 +1,11 @@
+{
+  "id": "PA-C92-saikal",
+  "pathSegment": "PA-PATH-92-TOWN92",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-92-TOWN92",
+      "order": 2
+    }
+  ]
+}

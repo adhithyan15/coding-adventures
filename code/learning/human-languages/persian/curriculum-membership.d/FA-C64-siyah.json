@@ -1,0 +1,11 @@
+{
+  "id": "FA-C64-siyah",
+  "pathSegment": "FA-PATH-64-ADJ64",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-64-ADJ64",
+      "order": 1
+    }
+  ]
+}

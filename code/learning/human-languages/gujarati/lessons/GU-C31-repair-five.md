@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C31-repair-five
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1820
+sequence: 1833
 chapter: 35
 type: practice
 headword: નથી — સમજતો નથી — માફ કરો

@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Candle, Calendar, Jumper, Tie, Gloves",
+  "label": "ch:ge-candle-calendar-jumper-tie-gloves",
+  "canDo": "I can say a candle, a calendar, a jumper, a tie and gloves.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C118-handschuhe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say a candle, a calendar, a jumper, a tie and gloves.",
+    "assesses": [
+      "GE-LEX-C118-DINGE118-03",
+      "GE-LEX-C118-DINGE118-04",
+      "GE-LEX-C118-DINGE118-05"
+    ]
+  }
+}

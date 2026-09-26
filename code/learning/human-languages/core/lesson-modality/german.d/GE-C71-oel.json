@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C71-oel",
+    "language": "german",
+    "chapter": 71,
+    "sequence": 2320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0ee8da905ab40d2"
+  },
+  "findings": []
+}

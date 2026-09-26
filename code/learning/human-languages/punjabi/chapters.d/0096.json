@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Twelve, Twenty, Thirty, Fifty, Hundred",
+  "label": "ch:pa-twelve-twenty-thirty-fifty-hundred",
+  "canDo": "I can say twelve, twenty, thirty, fifty and a hundred.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C96-sau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: i can say twelve, twenty, thirty, fifty and a hundred.",
+    "assesses": [
+      "PA-LEX-C96-NUMBERS96-03",
+      "PA-LEX-C96-NUMBERS96-04",
+      "PA-LEX-C96-NUMBERS96-05"
+    ]
+  }
+}

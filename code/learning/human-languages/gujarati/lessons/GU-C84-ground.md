@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C84-ground
 spine_node: SPINE-MEET-GREET
-sequence: 4290
+sequence: 4303
 chapter: 84
 type: word
 headword: "મેદાન"

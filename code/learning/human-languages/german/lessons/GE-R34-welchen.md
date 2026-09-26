@@ -8,7 +8,7 @@ type: practice
 headword: Welchen? · den · es gibt
 gloss: the chapter run cold — which one, how many, and every der-word in the book put into the form it takes when something is done to it
 concept_tag: GE-REVIEW-AKKUSATIV
-prerequisites: [GE-C34-es-gibt]
+prerequisites: [GE-C34-es-gibt, GE-C22-hund-katze-more, GE-C23-gruen-gelb-more, GE-C17-kopf-more]
 sounds: []
 roots: []
 duration:

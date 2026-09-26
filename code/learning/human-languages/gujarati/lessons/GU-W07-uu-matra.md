@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W07-uu-matra
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 86
+sequence: 99
 delivery: script
 chapter: 7
 type: writing
 headword: ૂ
 romanization: "ū"
 gloss: "the dependent long-u vowel sign"
-prerequisites: [GU-R06-first-four-r1]
+prerequisites: [GU-R06-first-four-r1, GU-C07-dhool]
 sounds: []
 roots: []
 etymology_hook: "The asking verb needs long ū; the longer below-hook arrives before the word."
 duration:
   max_seconds: 225
 requires:
-  knowledge: [GU-SCRIPT-U-MATRA-01, GU-SCRIPT-MA-01]
+  knowledge: [GU-SCRIPT-U-MATRA-01, GU-SCRIPT-MA-01, GU-LEX-ANCHOR-DHOOL]
 introduces:
   knowledge: [GU-SCRIPT-UU-MATRA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-U-MATRA-01, GU-SCRIPT-UU-MATRA-01, GU-SCRIPT-MA-01]
+  knowledge: [GU-SCRIPT-U-MATRA-01, GU-SCRIPT-UU-MATRA-01, GU-SCRIPT-MA-01, GU-LEX-ANCHOR-DHOOL]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-R06-first-four-r1, GU-W03-u-matra]
 # ૂ — the long-ū sign
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-U-MATRA-01, GU-SCRIPT-MA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-U-MATRA-01, GU-SCRIPT-MA-01, GU-LEX-ANCHOR-DHOOL] -->
 
 Write **મુ** once with the short-*u* hook below **મ**. Put it away. Long *ū*
 uses a longer below-hook, but it still needs a consonant host.

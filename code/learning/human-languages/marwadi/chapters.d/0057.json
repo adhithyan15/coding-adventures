@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "To wear, To leave, To speak, To write, To think",
+  "label": "ch:mw-to-wear-to-leave-to-speak-to-write-to-think",
+  "canDo": "I can say to wear, to leave, to let go, to speak, to write and to think.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C57-sochno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: i can say to wear, to leave, to let go, to speak, to write and to think.",
+    "assesses": [
+      "MW-LEX-C57-VERBS57-03",
+      "MW-LEX-C57-VERBS57-04",
+      "MW-LEX-C57-VERBS57-05"
+    ]
+  }
+}

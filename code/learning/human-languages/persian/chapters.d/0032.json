@@ -1,0 +1,19 @@
+{
+  "chapter": 32,
+  "title": "Upset, Doctor, Grandfather, Grandmother, Uncle",
+  "label": "ch:fa-upset-doctor-grandfather-grandmother-uncle",
+  "canDo": "I can say upset, sad, a doctor, a grandfather, a grandmother and an uncle.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C32-dayi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 32: i can say upset, sad, a doctor, a grandfather, a grandmother and an uncle.",
+    "assesses": [
+      "FA-LEX-C32-HEALTH32-03",
+      "FA-LEX-C32-HEALTH32-04",
+      "FA-LEX-C32-HEALTH32-05"
+    ]
+  }
+}

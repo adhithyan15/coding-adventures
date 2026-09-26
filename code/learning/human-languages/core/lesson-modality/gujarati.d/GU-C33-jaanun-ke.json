@@ -3,7 +3,7 @@
     "id": "GU-C33-jaanun-ke",
     "language": "gujarati",
     "chapter": 37,
-    "sequence": 1910,
+    "sequence": 1923,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e8477609d006f071"
+    "sourceHash": "fnv1a64:caa499b89b22d8a7"
   },
   "findings": []
 }

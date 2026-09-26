@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:90238b56200c4cd7",
+  "lessonIds": [
+    "FR-C133-sympathique",
+    "FR-C133-mechant",
+    "FR-C133-chaleur",
+    "FR-C133-orage",
+    "FR-C133-brouillard"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch133.txt",
+  "json": "french/narration/ch133.json",
+  "textHash": "fnv1a64:30c8687b92e65bb5",
+  "jsonHash": "fnv1a64:6edeec52695cb6da",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Oranges, Lemons, Eggs, Onions, Breakfast",
+  "label": "ch:ar-oranges-lemons-eggs-onions-breakfast",
+  "canDo": "I can say oranges, lemons, eggs, onions and breakfast.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "AR-C68-futur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can say oranges, lemons, eggs, onions and breakfast.",
+    "assesses": [
+      "AR-LEX-C68-FOOD68-03",
+      "AR-LEX-C68-FOOD68-04",
+      "AR-LEX-C68-FOOD68-05"
+    ]
+  }
+}

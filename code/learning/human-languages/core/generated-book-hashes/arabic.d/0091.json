@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:7260ab1b786b0d87",
+  "lessonIds": [
+    "AR-C91-tariq",
+    "AR-C91-bank",
+    "AR-C91-mahatta",
+    "AR-C91-sayyara",
+    "AR-C91-hafila"
+  ],
+  "tex": "arabic/book/chapters/ch91-road-bank-station-car-bus.tex"
+}

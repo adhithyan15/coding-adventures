@@ -3,7 +3,7 @@
     "id": "GU-C36-ame-aapne",
     "language": "gujarati",
     "chapter": 40,
-    "sequence": 2040,
+    "sequence": 2053,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8852faa6b0122190"
+    "sourceHash": "fnv1a64:7c23200b6fc2daa0"
   },
   "findings": []
 }

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:a803dbe046037c78",
+  "lessonIds": [
+    "PA-C53-udas",
+    "PA-C53-pita",
+    "PA-C53-mata",
+    "PA-C53-puttar",
+    "PA-C53-dhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch53.txt",
+  "json": "punjabi/narration/ch53.json",
+  "textHash": "fnv1a64:1a38ed9a03fb60d3",
+  "jsonHash": "fnv1a64:b471301c6da95e0d",
+  "findings": []
+}

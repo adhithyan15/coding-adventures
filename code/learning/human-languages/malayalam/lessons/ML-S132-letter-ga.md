@@ -9,17 +9,17 @@ type: writing
 headword: "ഗ"
 gloss: the single character ഗ — recognised inside words you already say
 romanization: "ga"
-prerequisites: [ML-S130-letter-tha]
+prerequisites: [ML-S130-letter-tha, ML-C39-gaanam]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-130]
+  knowledge: [ML-SCRIPT-RECOG-130, ML-LEX-ANCHOR-GAANAM]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-132]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-130, ML-SCRIPT-RECOG-132]
+  knowledge: [ML-SCRIPT-RECOG-130, ML-SCRIPT-RECOG-132, ML-LEX-ANCHOR-GAANAM]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-S130-letter-tha]
 # ഗ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-130] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-130, ML-LEX-ANCHOR-GAANAM] -->
 
 [PAUSE 1s] Before the new one: ഥ — what does it do?
 

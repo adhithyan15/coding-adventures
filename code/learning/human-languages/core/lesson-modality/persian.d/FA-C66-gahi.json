@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C66-gahi",
+    "language": "persian",
+    "chapter": 66,
+    "sequence": 3190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f21d181dcb00d76d"
+  },
+  "findings": []
+}

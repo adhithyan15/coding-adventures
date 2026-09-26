@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:adc0b7b01dc36915",
+  "lessonIds": [
+    "PA-C80-bura",
+    "PA-C80-lamma",
+    "PA-C80-garam",
+    "PA-C80-hauli",
+    "PA-C80-tez"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch80.txt",
+  "json": "punjabi/narration/ch80.json",
+  "textHash": "fnv1a64:71aea03ccaff9c2d",
+  "jsonHash": "fnv1a64:cd569469a6fca8a8",
+  "findings": []
+}

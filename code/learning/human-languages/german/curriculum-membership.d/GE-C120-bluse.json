@@ -1,0 +1,11 @@
+{
+  "id": "GE-C120-bluse",
+  "pathSegment": "GE-PATH-120-KLEIDUNG120",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-120-KLEIDUNG120",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C66-koma",
+    "language": "japanese",
+    "chapter": 66,
+    "sequence": 3960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1093ee1449b8fe33"
+  },
+  "findings": []
+}

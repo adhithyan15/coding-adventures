@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:89e572f10f20ed1b",
+  "lessonIds": [
+    "UR-C67-registan",
+    "UR-C67-kutta",
+    "UR-C67-billi",
+    "UR-C67-ghora",
+    "UR-C67-gae"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch67.txt",
+  "json": "urdu/narration/ch67.json",
+  "textHash": "fnv1a64:947fdc6f63be9e62",
+  "jsonHash": "fnv1a64:b708d27acb8f9d0f",
+  "findings": []
+}

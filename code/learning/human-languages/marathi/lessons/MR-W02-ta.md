@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W02-ta
 spine_node: SPINE-COURTESY-THANK
-sequence: 26
+sequence: 30
 delivery: script
 chapter: 2
 type: writing
 headword: त
 romanization: "ta"
 gloss: dental ta
-prerequisites: [MR-W02-anusvara]
+prerequisites: [MR-W02-anusvara, MR-C02-sant]
 sounds: [dental-t]
 roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [MR-SCRIPT-ANUSVARA-01]
+  knowledge: [MR-SCRIPT-ANUSVARA-01, MR-LEX-ANCHOR-SANT]
 introduces:
   knowledge: [MR-SCRIPT-TA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-TA-01]
+  knowledge: [MR-SCRIPT-TA-01, MR-LEX-ANCHOR-SANT]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W02-anusvara]
 # त — dental ta
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-SANT] -->
 
 Touch the tongue lightly behind the upper teeth once.
 

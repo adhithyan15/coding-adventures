@@ -1,0 +1,11 @@
+{
+  "id": "FA-C54-biyaban",
+  "pathSegment": "FA-PATH-54-NATURE54",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-54-NATURE54",
+      "order": 2
+    }
+  ]
+}

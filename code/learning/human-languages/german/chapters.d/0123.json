@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Butter, Sauce, Vinegar, Dessert, Meal",
+  "label": "ch:ge-butter-sauce-vinegar-dessert-meal",
+  "canDo": "I can say butter, a sauce, vinegar, a dessert and a meal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-R123-second-pass-school-free-time-and-colours",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say butter, a sauce, vinegar, a dessert and a meal.",
+    "assesses": [
+      "GE-LEX-C123-ESSEN123-03",
+      "GE-LEX-C123-ESSEN123-04",
+      "GE-LEX-C123-ESSEN123-05"
+    ]
+  }
+}

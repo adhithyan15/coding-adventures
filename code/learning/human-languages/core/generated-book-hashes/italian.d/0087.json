@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:3842c010944fb7cf",
+  "lessonIds": [
+    "IT-C87-aeroporto",
+    "IT-C87-fermata",
+    "IT-C87-paese",
+    "IT-C87-cinema",
+    "IT-C87-teatro"
+  ],
+  "tex": "italian/book/chapters/ch87-airport-stop-village-cinema-theatre.tex"
+}

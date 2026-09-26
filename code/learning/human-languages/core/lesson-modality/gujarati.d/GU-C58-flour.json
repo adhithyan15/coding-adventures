@@ -3,7 +3,7 @@
     "id": "GU-C58-flour",
     "language": "gujarati",
     "chapter": 58,
-    "sequence": 2950,
+    "sequence": 2963,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3ff9bfb11e969421"
+    "sourceHash": "fnv1a64:5102bfc2fd045093"
   },
   "findings": []
 }

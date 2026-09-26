@@ -1,0 +1,19 @@
+{
+  "chapter": 74,
+  "title": "Sock, Pocket, Ring, Hat, Shoe",
+  "label": "ch:fa-sock-pocket-ring-hat-shoe",
+  "canDo": "I can say a sock, a pocket, a ring, a hat and a shoe.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FA-C74-kafsh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: i can say a sock, a pocket, a ring, a hat and a shoe.",
+    "assesses": [
+      "FA-LEX-C74-CLOTHES74-03",
+      "FA-LEX-C74-CLOTHES74-04",
+      "FA-LEX-C74-CLOTHES74-05"
+    ]
+  }
+}

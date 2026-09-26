@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C59-sen",
+    "language": "japanese",
+    "chapter": 59,
+    "sequence": 3640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b065444ccbea910"
+  },
+  "findings": []
+}

@@ -3,7 +3,7 @@
     "id": "GU-R27-plate-five-r1",
     "language": "gujarati",
     "chapter": 31,
-    "sequence": 1530,
+    "sequence": 1543,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:814f0d02e62fb7f6",
+    "sourceHash": "fnv1a64:618af627d5a87424",
     "detachableSegments": [
       "Writing — from sound, every model covered"
     ]

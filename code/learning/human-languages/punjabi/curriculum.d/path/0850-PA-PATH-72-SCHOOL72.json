@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-72-SCHOOL72",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "PA-EXT-72-SCHOOL72"
+  ],
+  "after": []
+}

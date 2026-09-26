@@ -1,0 +1,19 @@
+{
+  "chapter": 138,
+  "title": "Sixty, Seventy, Eighty, Ninety, Million",
+  "label": "ch:ge-sixty-seventy-eighty-ninety-million",
+  "canDo": "I can say sixty, seventy, eighty, ninety and a million.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "GE-C138-million",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 138: i can say sixty, seventy, eighty, ninety and a million.",
+    "assesses": [
+      "GE-LEX-C138-ZAHL138-03",
+      "GE-LEX-C138-ZAHL138-04",
+      "GE-LEX-C138-ZAHL138-05"
+    ]
+  }
+}

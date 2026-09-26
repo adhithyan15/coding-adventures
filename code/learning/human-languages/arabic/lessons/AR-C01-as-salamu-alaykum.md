@@ -8,20 +8,20 @@ type: word
 headword: as-salāmu ʿalaykum
 gloss: peace be upon you
 concept_tag: GREETING-FORMAL
-prerequisites: [AR-C01-salam, AR-C01-al, AR-W00-ba-family-marhaba]
+prerequisites: [AR-C01-salam, AR-C01-al, AR-W00-ba-family-marhaba, AR-C01-thabit]
 sounds: [ayn, ya, kaf]
 roots: [s-l-m]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [AR-C01-SALAM-01, AR-C01-MARHABA-05]
+  knowledge: [AR-C01-SALAM-01, AR-C01-MARHABA-05, AR-LEX-ANCHOR-THABIT]
 introduces:
   knowledge: [AR-C01-FULL-GREETING-11]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [AR-CULTURE-FULL-GREETING-REPLY-01]
 practises:
-  knowledge: [AR-C01-SALAM-01, AR-C01-FULL-GREETING-11]
+  knowledge: [AR-C01-SALAM-01, AR-C01-FULL-GREETING-11, AR-LEX-ANCHOR-THABIT]
 skills: [listening, speaking]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, language-focus]
@@ -33,7 +33,7 @@ reviews_of: [AR-C01-salam, AR-C01-al, AR-C01-marhaba]
 # *as-salāmu ʿalaykum* — offer the full greeting by ear
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[AR-C01-FULL-GREETING-11]; assesses=[AR-C01-SALAM-01] -->
+<!-- hl-knowledge: introduces=[AR-C01-FULL-GREETING-11]; assesses=[AR-C01-SALAM-01, AR-LEX-ANCHOR-THABIT] -->
 
 [PAUSE 2s] You already own *salām* and *al-*. Now speak the full greeting
 before decoding or copying its unfamiliar second half.

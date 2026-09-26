@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C52-kata",
+    "language": "bengali",
+    "chapter": 52,
+    "sequence": 2740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f57f3008b488bcc"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:5fee466beda40f89",
+  "lessonIds": [
+    "UR-C83-anguthi",
+    "UR-C83-ghari",
+    "UR-C83-gyarah",
+    "UR-C83-barah",
+    "UR-C83-terah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch83.txt",
+  "json": "urdu/narration/ch83.json",
+  "textHash": "fnv1a64:461cfd801b529e81",
+  "jsonHash": "fnv1a64:8f389ff34ea1fc54",
+  "findings": []
+}

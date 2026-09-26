@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C09-levun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 480
+sequence: 493
 chapter: 15
 type: word
 headword: લેવું

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C58-peyaj",
+  "pathSegment": "BN-PATH-58-FOOD58",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-58-FOOD58",
+      "order": 4
+    }
+  ]
+}

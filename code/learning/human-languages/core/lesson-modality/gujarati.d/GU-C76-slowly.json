@@ -3,7 +3,7 @@
     "id": "GU-C76-slowly",
     "language": "gujarati",
     "chapter": 76,
-    "sequence": 3880,
+    "sequence": 3893,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9cba927d4651b869"
+    "sourceHash": "fnv1a64:9aec29c556b15999"
   },
   "findings": []
 }

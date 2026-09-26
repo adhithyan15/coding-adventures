@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C38-kagami",
+    "language": "japanese",
+    "chapter": 38,
+    "sequence": 2540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:027dc3f6dc4ffd14"
+  },
+  "findings": []
+}

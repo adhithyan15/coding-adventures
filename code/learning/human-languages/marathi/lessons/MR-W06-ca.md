@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W06-ca
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 73
+sequence: 83
 delivery: script
 chapter: 6
 type: writing
 headword: च
 romanization: "ca"
 gloss: ca — the palatal stop Marathi also says as ts
-prerequisites: [MR-W06-gha]
+prerequisites: [MR-W06-gha, MR-C06-chav]
 sounds: [cha-tsaa]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-GHA-01, MR-SCRIPT-GA-01]
+  knowledge: [MR-SCRIPT-GHA-01, MR-SCRIPT-GA-01, MR-LEX-ANCHOR-CHAV]
 introduces:
   knowledge: [MR-SCRIPT-CA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-CA-01, MR-SCRIPT-GHA-01, MR-SCRIPT-GA-01]
+  knowledge: [MR-SCRIPT-CA-01, MR-SCRIPT-GHA-01, MR-SCRIPT-GA-01, MR-LEX-ANCHOR-CHAV]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W06-gha, MR-W06-ga]
 # च — one letter, two Marathi sounds
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-CHAV] -->
 
 Move forward in your mouth: from the back, where *ka* lives, to the roof, right behind your teeth.
 

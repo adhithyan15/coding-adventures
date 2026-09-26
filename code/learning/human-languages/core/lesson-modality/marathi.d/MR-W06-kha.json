@@ -3,7 +3,7 @@
     "id": "MR-W06-kha",
     "language": "marathi",
     "chapter": 6,
-    "sequence": 70,
+    "sequence": 80,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:fc36f09404d64c15",
+    "sourceHash": "fnv1a64:efe68f3108383b84",
     "detachableSegments": [
       "Script",
       "Writing — observe and trace"

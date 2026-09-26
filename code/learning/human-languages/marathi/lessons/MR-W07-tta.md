@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W07-tta
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 80
+sequence: 100
 delivery: script
 chapter: 7
 type: writing
 headword: ट
 romanization: "ṭa"
 gloss: retroflex ta — the tongue curled back to the ridge
-prerequisites: [MR-W06-jha]
+prerequisites: [MR-W06-jha, MR-C07-taali]
 sounds: [retroflex-ta]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-JHA-01, MR-SCRIPT-JA-01]
+  knowledge: [MR-SCRIPT-JHA-01, MR-SCRIPT-JA-01, MR-LEX-ANCHOR-TAALI]
 introduces:
   knowledge: [MR-SCRIPT-TTA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-TTA-01, MR-SCRIPT-JHA-01, MR-SCRIPT-JA-01]
+  knowledge: [MR-SCRIPT-TTA-01, MR-SCRIPT-JHA-01, MR-SCRIPT-JA-01, MR-LEX-ANCHOR-TAALI]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W06-jha, MR-W01-ra]
 # ट — the tongue curled back
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-TAALI] -->
 
 Say *ta* with your tongue on your teeth. Now curl the tip up and back until it touches the ridge behind them, and say it again.
 

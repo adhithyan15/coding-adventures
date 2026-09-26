@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C71-brown
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3620
+sequence: 3633
 chapter: 71
 type: word
 headword: "ભૂરો"

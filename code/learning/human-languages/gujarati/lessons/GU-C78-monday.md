@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C78-monday
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3960
+sequence: 3973
 chapter: 78
 type: word
 headword: "સોમવાર"

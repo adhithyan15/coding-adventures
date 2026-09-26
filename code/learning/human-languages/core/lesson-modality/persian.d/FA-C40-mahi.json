@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C40-mahi",
+    "language": "persian",
+    "chapter": 40,
+    "sequence": 1860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0066c5179813413"
+  },
+  "findings": []
+}

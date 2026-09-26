@@ -3,7 +3,7 @@
     "id": "GU-C91-goodwishes",
     "language": "gujarati",
     "chapter": 91,
-    "sequence": 4630,
+    "sequence": 4643,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a50477b76732423d"
+    "sourceHash": "fnv1a64:9975246486ab0bcb"
   },
   "findings": []
 }

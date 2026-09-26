@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C27-hear-bhaat
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1460
+sequence: 1473
 chapter: 31
 type: word
 headword: ભાત

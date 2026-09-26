@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Shower, Bathtub, Shelf, Curtain, Cushion",
+  "label": "ch:ge-shower-bathtub-shelf-curtain-cushion",
+  "canDo": "I can say a shower, a bathtub, a shelf, a curtain and a cushion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-R113-second-pass-the-house-and-things-you-carry",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say a shower, a bathtub, a shelf, a curtain and a cushion.",
+    "assesses": [
+      "GE-LEX-C113-HAUS113-03",
+      "GE-LEX-C113-HAUS113-04",
+      "GE-LEX-C113-HAUS113-05"
+    ]
+  }
+}

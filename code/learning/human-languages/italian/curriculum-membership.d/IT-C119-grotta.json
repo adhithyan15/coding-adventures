@@ -1,0 +1,11 @@
+{
+  "id": "IT-C119-grotta",
+  "pathSegment": "IT-PATH-119-NATURA119",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-119-NATURA119",
+      "order": 3
+    }
+  ]
+}

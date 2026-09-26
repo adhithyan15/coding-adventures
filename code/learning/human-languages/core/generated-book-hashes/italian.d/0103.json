@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:063a9d62324df37a",
+  "lessonIds": [
+    "IT-C103-maglione",
+    "IT-C103-cravatta",
+    "IT-C103-guanti",
+    "IT-C103-sciarpa",
+    "IT-C103-stivali"
+  ],
+  "tex": "italian/book/chapters/ch103-jumper-tie-gloves-scarf-boots.tex"
+}

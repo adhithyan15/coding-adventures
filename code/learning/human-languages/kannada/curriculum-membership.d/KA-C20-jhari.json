@@ -1,0 +1,11 @@
+{
+  "id": "KA-C20-jhari",
+  "pathSegment": "KA-PATH-100",
+  "pathOrder": 30,
+  "extensions": [
+    {
+      "id": "KA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 30
+    }
+  ]
+}

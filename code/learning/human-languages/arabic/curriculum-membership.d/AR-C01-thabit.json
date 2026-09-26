@@ -1,0 +1,11 @@
+{
+  "id": "AR-C01-thabit",
+  "pathSegment": "AR-PATH-003",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-003-SCRIPT",
+      "order": 1
+    }
+  ]
+}

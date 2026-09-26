@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:5377fef39b5c4f73",
+  "lessonIds": [
+    "FA-C40-shodan",
+    "FA-C40-sakhtan",
+    "FA-C40-mahi",
+    "FA-C40-berenj",
+    "FA-C40-gusht"
+  ],
+  "tex": "persian/book/chapters/ch40-to-become-to-build-fish-rice-meat.tex"
+}

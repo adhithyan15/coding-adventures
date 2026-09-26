@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:163260d1ff77b50f",
+  "lessonIds": [
+    "GE-C96-laden",
+    "GE-C96-markt",
+    "GE-C96-bahnhof",
+    "GE-C96-flugzeug",
+    "GE-C96-auto"
+  ],
+  "tex": "german/book/chapters/ch96-shop-market-railway-station-aeroplane-car.tex"
+}

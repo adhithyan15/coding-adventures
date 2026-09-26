@@ -1,0 +1,11 @@
+{
+  "id": "GE-C22-hund-katze-more",
+  "pathSegment": "GE-PATH-026",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-026-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

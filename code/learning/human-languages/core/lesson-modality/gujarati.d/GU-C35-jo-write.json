@@ -3,7 +3,7 @@
     "id": "GU-C35-jo-write",
     "language": "gujarati",
     "chapter": 39,
-    "sequence": 2000,
+    "sequence": 2013,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:d80261ed3fdef024",
+    "sourceHash": "fnv1a64:0bb2f09b0c63b7d4",
     "detachableSegments": [
       "Script — two signs, and a caution",
       "Writing — guided copy, model in view"

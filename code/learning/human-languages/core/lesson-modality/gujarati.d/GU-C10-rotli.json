@@ -3,7 +3,7 @@
     "id": "GU-C10-rotli",
     "language": "gujarati",
     "chapter": 16,
-    "sequence": 550,
+    "sequence": 563,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ca8663bc9d0687af",
+    "sourceHash": "fnv1a64:e2bfa70bf251865d",
     "detachableSegments": [
       "The letters in this word"
     ]

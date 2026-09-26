@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C56-alu",
+    "language": "bengali",
+    "chapter": 56,
+    "sequence": 2970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70fc49dcc91ef255"
+  },
+  "findings": []
+}

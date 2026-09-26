@@ -3,7 +3,7 @@
     "id": "GU-C57-rupees",
     "language": "gujarati",
     "chapter": 57,
-    "sequence": 2920,
+    "sequence": 2933,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:869aff553e25a53b"
+    "sourceHash": "fnv1a64:27ad763eb1509d8b"
   },
   "findings": []
 }

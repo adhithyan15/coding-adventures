@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:5529504a9484dc3c",
+  "lessonIds": [
+    "IT-C98-armadio",
+    "IT-C98-divano",
+    "IT-C98-pentola",
+    "IT-C98-padella",
+    "IT-C98-vaso"
+  ],
+  "tex": "italian/book/chapters/ch98-wardrobe-sofa-pot-frying-pan-vase.tex"
+}

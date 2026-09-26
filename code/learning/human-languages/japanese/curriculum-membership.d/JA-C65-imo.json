@@ -1,0 +1,11 @@
+{
+  "id": "JA-C65-imo",
+  "pathSegment": "JA-PATH-65-FOOD265",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-65-FOOD265",
+      "order": 3
+    }
+  ]
+}

@@ -4,11 +4,11 @@
   "chapter": 62,
   "title": "Bed, Table, Fan and Lock",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d0c505d0dc246dc5",
+  "sourceHash": "fnv1a64:ef356d10a4d984e3",
   "lessons": [
     {
       "id": "GU-C62-bed",
-      "sequence": 3140,
+      "sequence": 3153,
       "title": "પલંગ (palaṅg) — a bed",
       "headword": "પલંગ",
       "romanization": "palaṅg",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d5ab8d97862aa75",
+      "sourceHash": "fnv1a64:9620ed3c37f03525",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C62-cot",
-      "sequence": 3150,
+      "sequence": 3163,
       "title": "ખાટલો (khāṭlo) — a cot, a string bed",
       "headword": "ખાટલો",
       "romanization": "khāṭlo",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56870b2718b35357",
+      "sourceHash": "fnv1a64:d6f30e45f884a849",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C62-table",
-      "sequence": 3160,
+      "sequence": 3173,
       "title": "ટેબલ (ṭebal) — a table",
       "headword": "ટેબલ",
       "romanization": "ṭebal",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95517f612e0e1bb9",
+      "sourceHash": "fnv1a64:27bd35af1c3276bd",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C62-fan",
-      "sequence": 3170,
+      "sequence": 3183,
       "title": "પંખો (paṅkho) — a fan",
       "headword": "પંખો",
       "romanization": "paṅkho",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:300e397440703422",
+      "sourceHash": "fnv1a64:b3a615ea7b75e140",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C62-lock",
-      "sequence": 3180,
+      "sequence": 3193,
       "title": "તાળું (tāḷũ) — a lock",
       "headword": "તાળું",
       "romanization": "tāḷũ",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e9dbe8b3f42dc0d",
+      "sourceHash": "fnv1a64:0091159dd89d84a1",
       "notice": null,
       "blocks": [
         {

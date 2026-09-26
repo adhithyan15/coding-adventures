@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W05-pa
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 77
+sequence: 85
 delivery: script
 chapter: 5
 type: writing

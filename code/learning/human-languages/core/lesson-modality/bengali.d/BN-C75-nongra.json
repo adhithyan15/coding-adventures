@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C75-nongra",
+    "language": "bengali",
+    "chapter": 75,
+    "sequence": 3920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8abd3bd34c2dc908"
+  },
+  "findings": []
+}

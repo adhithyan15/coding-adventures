@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:5d491961a98affc1",
+  "lessonIds": [
+    "JA-C56-ato",
+    "JA-C56-mae",
+    "JA-C56-ue",
+    "JA-C56-naka",
+    "JA-C56-hidari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch56.txt",
+  "json": "japanese/narration/ch56.json",
+  "textHash": "fnv1a64:418882aa31861832",
+  "jsonHash": "fnv1a64:38926acc19e12471",
+  "findings": []
+}

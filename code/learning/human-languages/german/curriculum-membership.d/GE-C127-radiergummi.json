@@ -1,0 +1,11 @@
+{
+  "id": "GE-C127-radiergummi",
+  "pathSegment": "GE-PATH-127-SCHULE127",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-127-SCHULE127",
+      "order": 4
+    }
+  ]
+}

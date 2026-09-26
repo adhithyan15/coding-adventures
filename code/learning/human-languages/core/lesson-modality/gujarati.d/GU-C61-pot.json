@@ -3,7 +3,7 @@
     "id": "GU-C61-pot",
     "language": "gujarati",
     "chapter": 61,
-    "sequence": 3130,
+    "sequence": 3143,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:287b98c457df9ae4"
+    "sourceHash": "fnv1a64:769a728a6d13d6b2"
   },
   "findings": []
 }

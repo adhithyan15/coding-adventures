@@ -4,11 +4,11 @@
   "chapter": 83,
   "title": "Fifty to a Thousand, and How Much",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:49d62c7354b95917",
+  "sourceHash": "fnv1a64:f3968e4db238c087",
   "lessons": [
     {
       "id": "GU-C83-fifty",
-      "sequence": 4210,
+      "sequence": 4223,
       "title": "પચાસ (pacās) — fifty",
       "headword": "પચાસ",
       "romanization": "pacās",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8306c13a1a90da4c",
+      "sourceHash": "fnv1a64:cfa933fdab536e16",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C83-hundred",
-      "sequence": 4220,
+      "sequence": 4233,
       "title": "સો (so) — a hundred",
       "headword": "સો",
       "romanization": "so",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27c71c74c735f0c0",
+      "sourceHash": "fnv1a64:0d70413bd299db70",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C83-thousand",
-      "sequence": 4230,
+      "sequence": 4243,
       "title": "હજાર (hajār) — a thousand",
       "headword": "હજાર",
       "romanization": "hajār",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe3c116174199c29",
+      "sourceHash": "fnv1a64:d14d0e3d3adc29f7",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C83-howmuch",
-      "sequence": 4240,
+      "sequence": 4253,
       "title": "કેટલું (keṭlũ) — how much",
       "headword": "કેટલું",
       "romanization": "keṭlũ",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e4408bbb02eaafa",
+      "sourceHash": "fnv1a64:63e1c289bb557f96",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C83-which",
-      "sequence": 4250,
+      "sequence": 4263,
       "title": "કયું (kayũ) — which one",
       "headword": "કયું",
       "romanization": "kayũ",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a59bbb50418fdebf",
+      "sourceHash": "fnv1a64:5f466e385e60c391",
       "notice": null,
       "blocks": [
         {

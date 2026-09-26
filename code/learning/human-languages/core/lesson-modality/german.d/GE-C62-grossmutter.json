@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C62-grossmutter",
+    "language": "german",
+    "chapter": 62,
+    "sequence": 1840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17197bf81f499d86"
+  },
+  "findings": []
+}

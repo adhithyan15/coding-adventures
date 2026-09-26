@@ -1,0 +1,11 @@
+{
+  "id": "MW-C74-thando",
+  "pathSegment": "MW-PATH-74-ADJ74",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-74-ADJ74",
+      "order": 1
+    }
+  ]
+}

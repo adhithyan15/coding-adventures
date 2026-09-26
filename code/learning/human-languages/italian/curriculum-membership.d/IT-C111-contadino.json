@@ -1,0 +1,11 @@
+{
+  "id": "IT-C111-contadino",
+  "pathSegment": "IT-PATH-111-LAVORO111",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-111-LAVORO111",
+      "order": 4
+    }
+  ]
+}

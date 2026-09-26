@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 77,
-  "sourceHash": "fnv1a64:d93137eb68d4c1ee",
+  "sourceHash": "fnv1a64:234dd47e8e9fb30c",
   "lessonIds": [
     "GU-C77-always",
     "GU-C77-sometimes",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch77.txt",
   "json": "gujarati/narration/ch77.json",
   "textHash": "fnv1a64:76e1663cc65fe213",
-  "jsonHash": "fnv1a64:211bb99989a64c60",
+  "jsonHash": "fnv1a64:2b89779636491ac7",
   "findings": []
 }

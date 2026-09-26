@@ -1,0 +1,19 @@
+{
+  "chapter": 56,
+  "title": "Mouse, Tiger, Elephant, Monkey, Snake",
+  "label": "ch:fa-mouse-tiger-elephant-monkey-snake",
+  "canDo": "I can say a mouse, a tiger, an elephant, a monkey and a snake.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C56-mar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 56: i can say a mouse, a tiger, an elephant, a monkey and a snake.",
+    "assesses": [
+      "FA-LEX-C56-ANIMALS56-03",
+      "FA-LEX-C56-ANIMALS56-04",
+      "FA-LEX-C56-ANIMALS56-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:a8e775e23b791e13",
+  "lessonIds": [
+    "AR-C53-humma",
+    "AR-C53-mustashfa",
+    "AR-C53-marid",
+    "AR-C53-alam",
+    "AR-C53-dawa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch53.txt",
+  "json": "arabic/narration/ch53.json",
+  "textHash": "fnv1a64:062dd13c211d900c",
+  "jsonHash": "fnv1a64:8c4058e3b8c22889",
+  "findings": []
+}

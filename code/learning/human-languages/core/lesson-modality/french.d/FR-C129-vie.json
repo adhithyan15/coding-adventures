@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C129-vie",
+    "language": "french",
+    "chapter": 129,
+    "sequence": 5960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:53c6dda16ae66c4d"
+  },
+  "findings": []
+}

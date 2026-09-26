@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C63-sanaa",
+    "language": "arabic",
+    "chapter": 63,
+    "sequence": 2120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44a5eb17a7e2f9c9"
+  },
+  "findings": []
+}

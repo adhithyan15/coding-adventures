@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C51-father
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2590
+sequence: 2603
 chapter: 51
 type: word
 headword: "પિતા"

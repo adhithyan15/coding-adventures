@@ -1,0 +1,11 @@
+{
+  "id": "JA-C23-nemui",
+  "pathSegment": "JA-PATH-23-HEALTH23",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-23-HEALTH23",
+      "order": 1
+    }
+  ]
+}

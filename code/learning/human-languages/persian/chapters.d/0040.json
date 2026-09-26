@@ -1,0 +1,19 @@
+{
+  "chapter": 40,
+  "title": "To become, To build, Fish, Rice, Meat",
+  "label": "ch:fa-to-become-to-build-fish-rice-meat",
+  "canDo": "I can say to become, to build, to make, a fish, rice and meat.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C40-gusht",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 40: i can say to become, to build, to make, a fish, rice and meat.",
+    "assesses": [
+      "FA-LEX-C40-VERBS40-03",
+      "FA-LEX-C40-VERBS40-04",
+      "FA-LEX-C40-VERBS40-05"
+    ]
+  }
+}

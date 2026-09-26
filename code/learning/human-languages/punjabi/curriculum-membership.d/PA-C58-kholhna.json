@@ -1,0 +1,11 @@
+{
+  "id": "PA-C58-kholhna",
+  "pathSegment": "PA-PATH-58-VERBS58",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-58-VERBS58",
+      "order": 3
+    }
+  ]
+}

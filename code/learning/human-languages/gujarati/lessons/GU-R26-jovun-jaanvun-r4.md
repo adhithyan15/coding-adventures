@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R26-jovun-jaanvun-r4
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1410
+sequence: 1423
 chapter: 30
 type: practice
 headword: જોવું — જાણવું

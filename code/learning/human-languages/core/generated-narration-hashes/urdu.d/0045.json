@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:b54fa8242afd0c65",
+  "lessonIds": [
+    "UR-C45-larka",
+    "UR-C45-larki",
+    "UR-C45-admi",
+    "UR-C45-parosi",
+    "UR-C45-mehman"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch45.txt",
+  "json": "urdu/narration/ch45.json",
+  "textHash": "fnv1a64:8e83ca9539e40e45",
+  "jsonHash": "fnv1a64:430f74f76eebdb7d",
+  "findings": []
+}

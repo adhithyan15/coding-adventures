@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:226b0109444f65c8",
+  "lessonIds": [
+    "PA-C92-pulis",
+    "PA-C92-kishti",
+    "PA-C92-saikal",
+    "PA-C92-bazar",
+    "PA-C92-kappre"
+  ],
+  "tex": "punjabi/book/chapters/ch92-police-boat-bicycle-market-clothes.tex"
+}

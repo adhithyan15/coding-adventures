@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C63-enkel",
+    "language": "german",
+    "chapter": 63,
+    "sequence": 1910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76f3285d1f257480"
+  },
+  "findings": []
+}

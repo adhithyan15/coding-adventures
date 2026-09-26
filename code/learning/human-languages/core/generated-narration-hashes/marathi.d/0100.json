@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:c32f75bb9af4ef3c",
+  "lessonIds": [
+    "MR-C100-ghoda",
+    "MR-C100-gay",
+    "MR-C100-sheli",
+    "MR-C100-mendhi",
+    "MR-C100-paksi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch100.txt",
+  "json": "marathi/narration/ch100.json",
+  "textHash": "fnv1a64:78475bebcf3fe6a4",
+  "jsonHash": "fnv1a64:3186147127b5c243",
+  "findings": []
+}

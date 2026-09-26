@@ -4,11 +4,11 @@
   "chapter": 43,
   "title": "Past Five, and the Balance Turns Over",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a0870968c8db735b",
+  "sourceHash": "fnv1a64:0065637f9d9a3053",
   "lessons": [
     {
       "id": "GU-C39-chha",
-      "sequence": 2190,
+      "sequence": 2203,
       "title": "છ (chha) — six, and a shape you have been writing since chapter two",
       "headword": "છ",
       "romanization": "chha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1108aba3466315d1",
+      "sourceHash": "fnv1a64:f5e5ce185a58d07a",
       "notice": null,
       "blocks": [
         {
@@ -205,7 +205,7 @@
     },
     {
       "id": "GU-C39-saat",
-      "sequence": 2200,
+      "sequence": 2213,
       "title": "સાત (sāt) — seven, and the place the balance turns",
       "headword": "સાત",
       "romanization": "sāt",
@@ -216,7 +216,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d80e204ff924fbdf",
+      "sourceHash": "fnv1a64:ee67059b5492d12f",
       "notice": null,
       "blocks": [
         {
@@ -395,7 +395,7 @@
     },
     {
       "id": "GU-W22-ttha",
-      "sequence": 2210,
+      "sequence": 2223,
       "title": "ઠ (ṭha) — retroflex ttha",
       "headword": "ઠ",
       "romanization": "ṭha",
@@ -408,7 +408,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:50efa184250097a7",
+      "sourceHash": "fnv1a64:e48b608a96241751",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -582,7 +582,7 @@
     },
     {
       "id": "GU-C39-aath",
-      "sequence": 2220,
+      "sequence": 2233,
       "title": "આઠ (āṭh) — eight, and a number that loses nothing",
       "headword": "આઠ",
       "romanization": "āṭh",
@@ -593,7 +593,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f81158ebb7d3734c",
+      "sourceHash": "fnv1a64:bad584c00cb0bbbc",
       "notice": null,
       "blocks": [
         {
@@ -773,7 +773,7 @@
     },
     {
       "id": "GU-C39-nav",
-      "sequence": 2230,
+      "sequence": 2243,
       "title": "નવ (nav) — nine, and the number that came through whole",
       "headword": "નવ",
       "romanization": "nav",
@@ -784,7 +784,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:318df9135b698247",
+      "sourceHash": "fnv1a64:9010927fd0f12d25",
       "notice": null,
       "blocks": [
         {
@@ -950,7 +950,7 @@
     },
     {
       "id": "GU-C39-das",
-      "sequence": 2240,
+      "sequence": 2253,
       "title": "દસ (das) — ten, and one word with two spellings",
       "headword": "દસ",
       "romanization": "das",
@@ -961,7 +961,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a679f45713245d6c",
+      "sourceHash": "fnv1a64:6f85a64889fbca90",
       "notice": null,
       "blocks": [
         {
@@ -1132,7 +1132,7 @@
     },
     {
       "id": "GU-C39-ordinal-reach",
-      "sequence": 2250,
+      "sequence": 2263,
       "title": "Where the rule starts, and where it stops",
       "headword": "સાતમું · આઠમું · નવમું · દસમું",
       "romanization": "sātmũ · āṭhmũ · navmũ · dasmũ",
@@ -1143,7 +1143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:202f8b44cedd1ccb",
+      "sourceHash": "fnv1a64:1d4ea66e3db208dd",
       "notice": null,
       "blocks": [
         {
@@ -1338,7 +1338,7 @@
     },
     {
       "id": "GU-R39-one-to-ten",
-      "sequence": 2260,
+      "sequence": 2273,
       "title": "One to ten, and the promise kept",
       "headword": "એક · બે · ત્રણ · ચાર · પાંચ · છ · સાત · આઠ · નવ · દસ",
       "romanization": "ek · be · traṇ · chār · pā̃ch · chha · sāt · āṭh · nav · das",
@@ -1349,7 +1349,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:076cd079ffd6556e",
+      "sourceHash": "fnv1a64:654d829be44f70fa",
       "notice": null,
       "blocks": [
         {

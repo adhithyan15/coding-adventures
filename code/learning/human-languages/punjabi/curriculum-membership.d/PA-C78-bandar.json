@@ -1,0 +1,11 @@
+{
+  "id": "PA-C78-bandar",
+  "pathSegment": "PA-PATH-78-ANIMALS78",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-78-ANIMALS78",
+      "order": 4
+    }
+  ]
+}

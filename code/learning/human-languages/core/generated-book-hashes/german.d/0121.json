@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:571e924065932184",
+  "lessonIds": [
+    "GE-C121-bohnen",
+    "GE-C121-gurke",
+    "GE-C121-erdbeere",
+    "GE-C121-kirsche",
+    "GE-C121-melone"
+  ],
+  "tex": "german/book/chapters/ch121-beans-cucumber-strawberry-cherry-melon.tex"
+}

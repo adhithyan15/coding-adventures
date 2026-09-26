@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C22-hear-rasto
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1060
+sequence: 1073
 chapter: 26
 type: word
 headword: રસ્તો

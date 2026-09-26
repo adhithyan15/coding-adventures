@@ -3,7 +3,7 @@
     "id": "GU-C56-saambhalvu",
     "language": "gujarati",
     "chapter": 56,
-    "sequence": 2870,
+    "sequence": 2883,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1236bddddffc651b"
+    "sourceHash": "fnv1a64:0b257083d3fa1261"
   },
   "findings": []
 }

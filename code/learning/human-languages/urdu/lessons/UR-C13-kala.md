@@ -9,7 +9,7 @@ headword: کالا
 romanization: kālā
 gloss: black — inherited, but from a root borrowed into Sanskrit itself, and the first color that changes its own ending
 concept_tag: UR-BLACK
-prerequisites: [UR-C13-safed]
+prerequisites: [UR-C13-safed, UR-C05-khuda-hafiz-more]
 sounds: [rtl, long-a]
 roots: [sanskrit-kala, proto-dravidian-kar]
 etymology_hook: kālā is inherited from Sanskrit kāla ("black, dark"), which is usually traced to Proto-Dravidian *kār- rather than to Proto-Indo-European -- Indo-Aryan borrowing a color word from its Dravidian neighbours, not descending it from a shared ancestor. Unlike bhāī or āṅkh, this inherited word's own root sits outside the Indo-European family altogether.

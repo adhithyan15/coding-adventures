@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:9a2ab573e91e81b3",
+  "lessonIds": [
+    "GE-C104-flughafen",
+    "GE-C104-platz",
+    "GE-C104-museum",
+    "GE-C104-hotel",
+    "GE-C104-post"
+  ],
+  "tex": "german/book/chapters/ch104-airport-square-museum-hotel-post-office.tex"
+}

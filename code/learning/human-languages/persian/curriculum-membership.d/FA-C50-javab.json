@@ -1,0 +1,11 @@
+{
+  "id": "FA-C50-javab",
+  "pathSegment": "FA-PATH-50-SCHOOL50",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-50-SCHOOL50",
+      "order": 2
+    }
+  ]
+}

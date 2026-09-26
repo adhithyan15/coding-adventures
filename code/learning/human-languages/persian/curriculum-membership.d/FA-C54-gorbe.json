@@ -1,0 +1,11 @@
+{
+  "id": "FA-C54-gorbe",
+  "pathSegment": "FA-PATH-54-NATURE54",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-54-NATURE54",
+      "order": 4
+    }
+  ]
+}

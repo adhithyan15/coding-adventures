@@ -1,0 +1,11 @@
+{
+  "id": "FA-C62-sabok",
+  "pathSegment": "FA-PATH-62-ADJ62",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-62-ADJ62",
+      "order": 2
+    }
+  ]
+}

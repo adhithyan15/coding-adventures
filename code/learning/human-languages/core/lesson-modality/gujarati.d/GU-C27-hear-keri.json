@@ -3,7 +3,7 @@
     "id": "GU-C27-hear-keri",
     "language": "gujarati",
     "chapter": 31,
-    "sequence": 1500,
+    "sequence": 1513,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:983972ab7b3478da"
+    "sourceHash": "fnv1a64:67c2bb528bc4b11e"
   },
   "findings": []
 }

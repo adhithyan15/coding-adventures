@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C24-hear-saanj
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1180
+sequence: 1193
 chapter: 28
 type: word
 headword: સાંજ

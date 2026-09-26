@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C69-parrot
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3520
+sequence: 3533
 chapter: 69
 type: word
 headword: "પોપટ"

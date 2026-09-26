@@ -9,18 +9,18 @@ headword: ありがとう
 romanization: arigatō
 gloss: thank you (plain)
 concept_tag: COURTESY-THANKS
-prerequisites: [JA-W03-arigatou-read]
+prerequisites: [JA-W03-arigatou-read, JA-C02-wani]
 sounds: [mora, dakuten, long-o]
 roots: [arigatashi]
 etymology_hook: Arigatashi meant “hard to exist” → rare → precious → thank you.
 duration:
   max_seconds: 220
 requires:
-  knowledge: [JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-MORA-LENGTH, JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-ARIGATOU-READ-01]
+  knowledge: [JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-MORA-LENGTH, JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-ARIGATOU-READ-01, JA-LEX-ANCHOR-WANI]
 introduces:
   knowledge: [JA-LEX-ARIGATOU, JA-SCRIPT-DAKUTEN, JA-ETYMON-ARIGATASHI]
 practises:
-  knowledge: [JA-SCRIPT-HIRAGANA-MORA, JA-LEX-ARIGATOU, JA-SCRIPT-DAKUTEN, JA-ETYMON-ARIGATASHI, JA-SCRIPT-ARIGATOU-READ-01, JA-SCRIPT-A-01, JA-SCRIPT-RI-01, JA-SCRIPT-KA-01, JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-TO-01, JA-SCRIPT-U-01]
+  knowledge: [JA-SCRIPT-HIRAGANA-MORA, JA-LEX-ARIGATOU, JA-SCRIPT-DAKUTEN, JA-ETYMON-ARIGATASHI, JA-SCRIPT-ARIGATOU-READ-01, JA-SCRIPT-A-01, JA-SCRIPT-RI-01, JA-SCRIPT-KA-01, JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-TO-01, JA-SCRIPT-U-01, JA-LEX-ANCHOR-WANI]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,10 +32,12 @@ reviews_of: [JA-W03-arigatou-read, JA-C01-konnichiwa]
 # ありがとう — thanks, from “this hardly ever happens”
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HIRAGANA-MORA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HIRAGANA-MORA, JA-LEX-ANCHOR-WANI] -->
 
 [PAUSE 2s] Back to hiragana. Five signs are coming, and one small mark that
 unlocks a whole second row of sounds.
+
+[PAUSE 2s] And one word from before: say *wani* and what it means.
 
 ## Script — five signs and two small strokes
 <!-- hl-knowledge: introduces=[JA-SCRIPT-DAKUTEN]; assesses=[] -->

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C101-candela",
+  "pathSegment": "IT-PATH-101-OGGETTI101",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-101-OGGETTI101",
+      "order": 1
+    }
+  ]
+}

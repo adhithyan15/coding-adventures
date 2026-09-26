@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Music, Sport, Game, Film, Song",
+  "label": "ch:fr-music-sport-game-film-song",
+  "canDo": "I can name music, sport, a game, a film, a song.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "FR-C128-chanson",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can name music, sport, a game, a film, a song.",
+    "assesses": [
+      "FR-LEX-C128-LOISIRS80-03",
+      "FR-LEX-C128-LOISIRS80-04",
+      "FR-LEX-C128-LOISIRS80-05"
+    ]
+  }
+}

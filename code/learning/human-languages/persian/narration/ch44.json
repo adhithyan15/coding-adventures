@@ -1,0 +1,918 @@
+{
+  "version": 1,
+  "language": "persian",
+  "chapter": 44,
+  "title": "Dinner, Juice, Cake, Cheese, Milk",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:8a1002db1bbfec04",
+  "lessons": [
+    {
+      "id": "FA-C44-sham",
+      "sequence": 2040,
+      "title": "شام (shâm) — dinner",
+      "headword": "شام",
+      "romanization": "shâm",
+      "gloss": "dinner",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7825cc08893d583d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for breakfast, then the Persian for lunch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شام",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شام — shâm — \"dinner\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shâm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shâm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shâm, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shâm*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say shâm",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *shâm*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for breakfast, then the Persian for lunch, then say shâm again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for breakfast, then the Persian for lunch, then say *shâm* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شام (shâm) mean? (\"Dinner\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C44-abmive",
+      "sequence": 2050,
+      "title": "آبمیوه (âbmive) — juice",
+      "headword": "آبمیوه",
+      "romanization": "âbmive",
+      "gloss": "juice",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:030de97be66d3d90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for lunch, then the Persian for dinner."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: آبمیوه",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "آبمیوه — âbmive — \"juice\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âbmive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âbmive*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "âbmive, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *âbmive*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say âbmive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *âbmive*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for lunch, then the Persian for dinner, then say âbmive again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for lunch, then the Persian for dinner, then say *âbmive* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does آبمیوه (âbmive) mean? (\"Juice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C44-keyk",
+      "sequence": 2060,
+      "title": "کیک (keyk) — a cake",
+      "headword": "کیک",
+      "romanization": "keyk",
+      "gloss": "a cake",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:84b75846b41fc631",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for dinner, then the Persian for juice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کیک",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کیک — keyk — \"a cake\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keyk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keyk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keyk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keyk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say keyk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *keyk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for dinner, then the Persian for juice, then say keyk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for dinner, then the Persian for juice, then say *keyk* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کیک (keyk) mean? (\"A cake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C44-panir",
+      "sequence": 2070,
+      "title": "پنیر (panir) — cheese",
+      "headword": "پنیر",
+      "romanization": "panir",
+      "gloss": "cheese",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4dacd0f41bdcfcdc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for juice, then the Persian for a cake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: پنیر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "پنیر — panir — \"cheese\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "panir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *panir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "panir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *panir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say panir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *panir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for juice, then the Persian for a cake, then say panir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for juice, then the Persian for a cake, then say *panir* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does پنیر (panir) mean? (\"Cheese\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C44-shir",
+      "sequence": 2080,
+      "title": "شیر (shir) — milk; a lion",
+      "headword": "شیر",
+      "romanization": "shir",
+      "gloss": "milk; a lion",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3c84c960768f407",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Persian for a cake, then the Persian for cheese."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: شیر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شیر — shir — \"milk; a lion\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say shir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *shir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Persian for a cake, then the Persian for cheese, then say shir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Persian for a cake, then the Persian for cheese, then say *shir* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does شیر (shir) mean? (\"Milk; a lion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R44-first-pass-the-body-health-and-family",
+      "sequence": 2090,
+      "title": "The body, health and family — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 27-35",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:327a9202fbbe68d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for cheese and milk; a lion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the head, an ear, a nose, a mouth, a tooth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the head, an ear, a nose, a mouth, a tooth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hair, a finger, a shoulder; a comb, the neck, the face",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hair, a finger, a shoulder; a comb, the neck, the face]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "blood, a knee, the back, the belly, a lip",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: blood, a knee, the back, the belly, a lip]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the heart, an arm, a fever, a hospital, ill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the heart, an arm, a fever, a hospital, ill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pain, medicine, thirsty, hungry, happy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pain, medicine, thirsty, hungry, happy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upset, a doctor, a grandfather, a grandmother, an uncle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: upset, a doctor, a grandfather, a grandmother, an uncle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an aunt, a husband, a spouse, a child, a family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an aunt, a husband, a spouse, a child, a family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a neighbour, a guest, a university student, a gentleman; Mr, a lady; Mrs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a neighbour, a guest, a university student, a gentleman; Mr, a lady; Mrs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to eat, to drink, to see, to hear, to sit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to eat, to drink, to see, to hear, to sit]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The head? (سر, sar.) An ear? (گوش, gush.) A nose? (بینی, bini.) A mouth? (دهان, dahân.) A tooth? (دندان, dandân.) Hair? (مو, mu.) A finger? (انگشت, angosht.) A shoulder; a comb? (شانه, shâne.) The neck? (گردن, gardan.) The face? (صورت, surat.) Blood? (خون, khun.) A knee? (زانو, zânu.) The back? (پشت, posht.) The belly? (شکم, shekam.) A lip? (لب, lab.) The heart? (قلب, ghalb.) An arm? (بازو, bâzu.) A fever? (تب, tab.) A hospital? (بیمارستان, bimârestân.) Ill? (بیمار, bimâr.) Pain? (درد, dard.) Medicine? (دارو, dâru.) Thirsty? (تشنه, teshne.) Hungry? (گرسنه, gorosne.) Happy? (خوشحال, khoshhâl.) Upset? (ناراحت, nârâhat.) A doctor? (پزشک, pezeshk.) A grandfather? (پدربزرگ, pedarbozorg.) A grandmother? (مادربزرگ, mâdarbozorg.) An uncle? (دایی, dâyi.) An aunt? (خاله, khâle.) A husband? (شوهر, shohar.) A spouse? (همسر, hamsar.) A child? (بچه, bachche.) A family? (خانواده, khânevâde.) A neighbour? (همسایه, hamsâye.) A guest? (مهمان, mehmân.) A university student? (دانشجو, dâneshju.) A gentleman; Mr? (آقا, âghâ.) A lady; Mrs? (خانم, khânom.) To eat? (خوردن, khordan.) To drink? (نوشیدن, nushidan.) To see? (دیدن, didan.) To hear? (شنیدن, shenidan.) To sit? (نشستن, neshastan.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-R44-second-pass-verbs",
+      "sequence": 2100,
+      "title": "Verbs — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 36-44",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70add25bf0c1ec64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to sleep and to stand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sleep, to stand, to run, to buy, to sell",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sleep, to stand, to run, to buy, to sell]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to give, to close, to cook, to wash, to laugh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to give, to close, to cook, to wash, to laugh]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to dance, to want, to bring, to send, to count",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to dance, to want, to bring, to send, to count]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to cut, to look for; to wander, to wear, to come back, to take away; to win",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to cut, to look for; to wander, to wear, to come back, to take away; to win]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to become, to build, a fish, rice, meat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to become, to build, a fish, rice, meat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fruit, an apple, a banana, a tomato, a carrot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fruit, an apple, a banana, a tomato, a carrot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugar, salt, butter, grapes, an orange",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sugar, salt, butter, grapes, an orange]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lemon, yoghurt, an onion, breakfast, lunch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lemon, yoghurt, an onion, breakfast, lunch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dinner, juice, a cake, cheese, milk; a lion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dinner, juice, a cake, cheese, milk; a lion]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To sleep? (خوابیدن, khâbidan.) To stand? (ایستادن, istâdan.) To run? (دویدن, davidan.) To buy? (خریدن, kharidan.) To sell? (فروختن, forukhtan.) To give? (دادن, dâdan.) To close? (بستن, bastan.) To cook? (پختن, pokhtan.) To wash? (شستن, shostan.) To laugh? (خندیدن, khandidan.) To dance? (رقصیدن, raghsidan.) To want? (خواستن, khâstan.) To bring? (آوردن, âvardan.) To send? (فرستادن, ferestâdan.) To count? (شمردن, shemordan.) To cut? (بریدن, boridan.) To look for; to wander? (گشتن, gashtan.) To wear? (پوشیدن, pushidan.) To come back? (برگشتن, bargashtan.) To take away; to win? (بردن, bordan.) To become? (شدن, shodan.) To build? (ساختن, sâkhtan.) A fish? (ماهی, mâhi.) Rice? (برنج, berenj.) Meat? (گوشت, gusht.) Fruit? (میوه, miveh.) An apple? (سیب, sib.) A banana? (موز, moz.) A tomato? (گوجه, gowje.) A carrot? (هویج, havij.) Sugar? (شکر, shekar.) Salt? (نمک, namak.) Butter? (کره, kare.) Grapes? (انگور, angur.) An orange? (پرتقال, porteghâl.) A lemon? (لیمو, limu.) Yoghurt? (ماست, mâst.) An onion? (پیاز, piyâz.) Breakfast? (صبحانه, sobhâne.) Lunch? (ناهار, nâhâr.) Dinner? (شام, shâm.) Juice? (آبمیوه, âbmive.) A cake? (کیک, keyk.) Cheese? (پنیر, panir.) Milk; a lion? (شیر, shir.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

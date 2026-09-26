@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W01-haa-delayed-copy
 spine_node: SPINE-RESPOND-BASIC
-sequence: 44
+sequence: 45
 delivery: script
 chapter: 2
 type: writing

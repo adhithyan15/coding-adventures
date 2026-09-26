@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:8e099b8700471350",
+  "lessonIds": [
+    "UR-C57-narangi",
+    "UR-C57-lemu",
+    "UR-C57-nashta",
+    "UR-C57-kafi",
+    "UR-C57-ghar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch57.txt",
+  "json": "urdu/narration/ch57.json",
+  "textHash": "fnv1a64:2b4a8639f5b0d382",
+  "jsonHash": "fnv1a64:df56d21fd5989aa5",
+  "findings": []
+}

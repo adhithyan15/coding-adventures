@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Nice, Nasty, Heat, Storm, Fog",
+  "label": "ch:fr-nice-nasty-heat-storm-fog",
+  "canDo": "I can name nice, nasty, heat, a storm, fog.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "FR-C133-brouillard",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can name nice, nasty, heat, a storm, fog.",
+    "assesses": [
+      "FR-LEX-C133-QUALITES85-03",
+      "FR-LEX-C133-QUALITES85-04",
+      "FR-LEX-C133-QUALITES85-05"
+    ]
+  }
+}

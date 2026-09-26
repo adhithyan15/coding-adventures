@@ -1,0 +1,11 @@
+{
+  "id": "FA-C30-ghalb",
+  "pathSegment": "FA-PATH-30-BODY30",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FA-EXT-30-BODY30",
+      "order": 0
+    }
+  ]
+}

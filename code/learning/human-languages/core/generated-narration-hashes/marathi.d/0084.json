@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:bd7109667292a3bf",
+  "lessonIds": [
+    "MR-C84-bharne",
+    "MR-C84-badalne",
+    "MR-C84-dharne",
+    "MR-C84-padne",
+    "MR-C84-mams"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch84.txt",
+  "json": "marathi/narration/ch84.json",
+  "textHash": "fnv1a64:35aece1cf6333698",
+  "jsonHash": "fnv1a64:5c8d315aaec16f5c",
+  "findings": []
+}

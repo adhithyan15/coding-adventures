@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C81-mandir",
+    "language": "urdu",
+    "chapter": 81,
+    "sequence": 4100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17fd46877012f546"
+  },
+  "findings": []
+}

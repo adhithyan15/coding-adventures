@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:eb6c17ceaabc392c",
+  "lessonIds": [
+    "IT-C110-succo",
+    "IT-C110-pesca",
+    "IT-C110-marmellata",
+    "IT-C110-noce",
+    "IT-C110-pepe"
+  ],
+  "tex": "italian/book/chapters/ch110-juice-peach-jam-walnut-pepper.tex"
+}

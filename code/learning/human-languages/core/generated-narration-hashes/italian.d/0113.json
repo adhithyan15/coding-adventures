@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:428f68127dcdbc57",
+  "lessonIds": [
+    "IT-C113-postino",
+    "IT-C113-cameriere",
+    "IT-C113-cliente",
+    "IT-C113-cassa",
+    "IT-C113-classe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch113.txt",
+  "json": "italian/narration/ch113.json",
+  "textHash": "fnv1a64:21e688ac70a7e218",
+  "jsonHash": "fnv1a64:46cb9d201b2ae289",
+  "findings": []
+}

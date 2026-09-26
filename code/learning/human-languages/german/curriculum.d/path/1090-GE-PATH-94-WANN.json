@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-94-WANN",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "GE-EXT-94-WANN"
+  ],
+  "after": []
+}

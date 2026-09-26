@@ -1,0 +1,11 @@
+{
+  "id": "MR-C89-khidki",
+  "pathSegment": "MR-PATH-89-FOOD89",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-89-FOOD89",
+      "order": 2
+    }
+  ]
+}

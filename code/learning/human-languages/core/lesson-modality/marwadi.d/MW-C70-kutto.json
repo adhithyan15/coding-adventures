@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C70-kutto",
+    "language": "marwadi",
+    "chapter": 70,
+    "sequence": 4830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e702a623bae1efe8"
+  },
+  "findings": []
+}

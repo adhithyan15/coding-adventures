@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R15-ka-r4
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 660
+sequence: 673
 delivery: script
 chapter: 19
 type: writing

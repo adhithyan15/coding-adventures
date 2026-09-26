@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:bf22ecdc3dd3219e",
+  "lessonIds": [
+    "MR-C96-phul",
+    "MR-C96-pan",
+    "MR-C96-dongar",
+    "MR-C96-jangal",
+    "MR-C96-nadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch96.txt",
+  "json": "marathi/narration/ch96.json",
+  "textHash": "fnv1a64:b55afffcc06582e0",
+  "jsonHash": "fnv1a64:1c8e260d0b5d216b",
+  "findings": []
+}

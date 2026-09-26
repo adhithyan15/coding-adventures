@@ -1,0 +1,11 @@
+{
+  "id": "MR-C113-galli",
+  "pathSegment": "MR-PATH-113-TOWN113",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-113-TOWN113",
+      "order": 2
+    }
+  ]
+}

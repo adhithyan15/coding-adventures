@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:a86802edc9e6f2ef",
+  "lessonIds": [
+    "IT-C104-gonna",
+    "IT-C104-cappotto",
+    "IT-C104-scarpe",
+    "IT-C104-calzini",
+    "IT-C104-camicetta"
+  ],
+  "tex": "italian/book/chapters/ch104-skirt-coat-shoes-socks-blouse.tex"
+}

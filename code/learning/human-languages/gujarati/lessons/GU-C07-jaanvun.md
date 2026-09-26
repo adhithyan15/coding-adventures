@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C07-jaanvun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 430
+sequence: 443
 chapter: 13
 type: word
 headword: જાણવું

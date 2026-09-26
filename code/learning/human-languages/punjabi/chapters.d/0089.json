@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "In front, Behind, Here, There, Shop",
+  "label": "ch:pa-in-front-behind-here-there-shop",
+  "canDo": "I can say in front, behind, here, there and a shop.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PA-C89-dukan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can say in front, behind, here, there and a shop.",
+    "assesses": [
+      "PA-LEX-C89-PLACE89-03",
+      "PA-LEX-C89-PLACE89-04",
+      "PA-LEX-C89-PLACE89-05"
+    ]
+  }
+}

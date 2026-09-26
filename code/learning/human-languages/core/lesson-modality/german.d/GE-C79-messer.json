@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C79-messer",
+    "language": "german",
+    "chapter": 79,
+    "sequence": 2730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6e3c89b5e3c26c9"
+  },
+  "findings": []
+}

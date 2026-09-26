@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:5024e063c1825109",
+  "lessonIds": [
+    "FA-C66-hamishe",
+    "FA-C66-gahi",
+    "FA-C66-zud",
+    "FA-C66-dir",
+    "FA-C66-ghabl"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch66.txt",
+  "json": "persian/narration/ch66.json",
+  "textHash": "fnv1a64:7d7c0a2e8dd6ed29",
+  "jsonHash": "fnv1a64:226a8de86d3edad0",
+  "findings": []
+}

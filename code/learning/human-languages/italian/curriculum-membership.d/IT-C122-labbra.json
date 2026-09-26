@@ -1,0 +1,11 @@
+{
+  "id": "IT-C122-labbra",
+  "pathSegment": "IT-PATH-122-CORPO122",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-122-CORPO122",
+      "order": 4
+    }
+  ]
+}

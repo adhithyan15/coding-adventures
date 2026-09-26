@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C139-antworten",
+    "language": "german",
+    "chapter": 139,
+    "sequence": 5920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8cec243dc55fb191"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C85-phal",
+  "pathSegment": "MR-PATH-85-FOOD85",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-85-FOOD85",
+      "order": 3
+    }
+  ]
+}

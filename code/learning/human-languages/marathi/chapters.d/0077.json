@@ -1,0 +1,19 @@
+{
+  "chapter": 77,
+  "title": "Neighbour, Guest, Teacher, To hear, To get up",
+  "label": "ch:mr-neighbour-guest-teacher-to-hear-to-get-up",
+  "canDo": "I can say a neighbour, a guest, a teacher, to hear, to listen and to get up.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "MR-C77-uthne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 77: i can say a neighbour, a guest, a teacher, to hear, to listen and to get up.",
+    "assesses": [
+      "MR-LEX-C77-FAMILY77-03",
+      "MR-LEX-C77-FAMILY77-04",
+      "MR-LEX-C77-FAMILY77-05"
+    ]
+  }
+}

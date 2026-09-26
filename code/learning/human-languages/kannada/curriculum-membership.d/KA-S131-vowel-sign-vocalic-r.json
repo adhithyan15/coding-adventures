@@ -1,11 +1,11 @@
 {
   "id": "KA-S131-vowel-sign-vocalic-r",
   "pathSegment": "KA-PATH-100",
-  "pathOrder": 32,
+  "pathOrder": 39,
   "extensions": [
     {
       "id": "KA-EXT-100-SCRIPT-RECOGNITION",
-      "order": 32
+      "order": 39
     }
   ]
 }

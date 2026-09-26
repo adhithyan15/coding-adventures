@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Right, Wrong, Important, Simple, Brown",
+  "label": "ch:ge-right-wrong-important-simple-brown",
+  "canDo": "I can say right, correct, wrong, important, simple and brown.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GE-C93-braun",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say right, correct, wrong, important, simple and brown.",
+    "assesses": [
+      "GE-LEX-C93-ADJ5-03",
+      "GE-LEX-C93-ADJ5-04",
+      "GE-LEX-C93-ADJ5-05"
+    ]
+  }
+}

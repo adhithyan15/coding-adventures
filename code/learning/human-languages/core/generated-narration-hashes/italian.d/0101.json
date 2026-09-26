@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:5a885e18b242fae9",
+  "lessonIds": [
+    "IT-C101-collana",
+    "IT-C101-candela",
+    "IT-C101-calendario",
+    "IT-C101-lettera",
+    "IT-C101-messaggio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch101.txt",
+  "json": "italian/narration/ch101.json",
+  "textHash": "fnv1a64:aa4b5e5a5befabd8",
+  "jsonHash": "fnv1a64:b3389ae004a92c96",
+  "findings": []
+}

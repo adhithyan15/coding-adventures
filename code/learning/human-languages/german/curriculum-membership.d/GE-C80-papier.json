@@ -1,0 +1,11 @@
+{
+  "id": "GE-C80-papier",
+  "pathSegment": "GE-PATH-80-SACHEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-80-SACHEN",
+      "order": 4
+    }
+  ]
+}

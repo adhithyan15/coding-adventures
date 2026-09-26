@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 40,
-  "sourceHash": "fnv1a64:b863493db88d2938",
+  "sourceHash": "fnv1a64:f34c792e2747613e",
   "lessonIds": [
     "ML-C40-oon"
   ],
@@ -10,6 +10,6 @@
   "text": "malayalam/narration/ch40.txt",
   "json": "malayalam/narration/ch40.json",
   "textHash": "fnv1a64:2aef3edb2fb4e32c",
-  "jsonHash": "fnv1a64:4413104d5dc99b97",
+  "jsonHash": "fnv1a64:7b8cdb2961bdbe82",
   "findings": []
 }
