@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:aaa2bb005657caa2",
+  "lessonIds": [
+    "MW-C71-bakri",
+    "MW-C71-bher",
+    "MW-C71-chiri",
+    "MW-C71-nahar",
+    "MW-C71-hathi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch71.txt",
+  "json": "marwadi/narration/ch71.json",
+  "textHash": "fnv1a64:e983b76c86a280c2",
+  "jsonHash": "fnv1a64:b5086758f9e47324",
+  "findings": []
+}

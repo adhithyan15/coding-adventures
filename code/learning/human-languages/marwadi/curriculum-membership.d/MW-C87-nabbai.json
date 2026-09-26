@@ -1,0 +1,11 @@
+{
+  "id": "MW-C87-nabbai",
+  "pathSegment": "MW-PATH-87-NUMBERS87",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-87-NUMBERS87",
+      "order": 1
+    }
+  ]
+}

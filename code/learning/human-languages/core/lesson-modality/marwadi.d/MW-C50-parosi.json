@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C50-parosi",
+    "language": "marwadi",
+    "chapter": 50,
+    "sequence": 3810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55768fed9a97e993"
+  },
+  "findings": []
+}

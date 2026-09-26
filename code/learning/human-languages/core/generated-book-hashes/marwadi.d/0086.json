@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:5619737b9537d991",
+  "lessonIds": [
+    "MW-C86-tis",
+    "MW-C86-chalis",
+    "MW-C86-pachas",
+    "MW-C86-sath",
+    "MW-C86-sittar"
+  ],
+  "tex": "marwadi/book/chapters/ch86-thirty-forty-fifty-sixty-seventy.tex"
+}

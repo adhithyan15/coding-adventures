@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Colour, Song, Journey, Holiday, Love",
+  "label": "ch:mw-colour-song-journey-holiday-love",
+  "canDo": "I can say a colour, a song, a journey, a holiday and love.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "MW-C88-prem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can say a colour, a song, a journey, a holiday and love.",
+    "assesses": [
+      "MW-LEX-C88-WORLD88-03",
+      "MW-LEX-C88-WORLD88-04",
+      "MW-LEX-C88-WORLD88-05"
+    ]
+  }
+}

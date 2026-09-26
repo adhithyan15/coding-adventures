@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:3149364776bc5c80",
+  "lessonIds": [
+    "MW-C53-khelno",
+    "MW-C53-bechno",
+    "MW-C53-deno",
+    "MW-C53-leno",
+    "MW-C53-rakhno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch53.txt",
+  "json": "marwadi/narration/ch53.json",
+  "textHash": "fnv1a64:cd0c6acf57d9619c",
+  "jsonHash": "fnv1a64:6dd3d265f11d276b",
+  "findings": []
+}

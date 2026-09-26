@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C85-jeb",
+    "language": "marwadi",
+    "chapter": 85,
+    "sequence": 5580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1bd57538cc4aa4f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:49b7f72b98e169d2",
+  "lessonIds": [
+    "MW-C59-seb",
+    "MW-C59-kelo",
+    "MW-C59-alu",
+    "MW-C59-tamatar",
+    "MW-C59-gajar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch59.txt",
+  "json": "marwadi/narration/ch59.json",
+  "textHash": "fnv1a64:774cd8daf32c07f2",
+  "jsonHash": "fnv1a64:b9145f499a02221e",
+  "findings": []
+}

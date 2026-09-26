@@ -1,0 +1,19 @@
+{
+  "chapter": 48,
+  "title": "Happy, Sad, Doctor, Son, Daughter",
+  "label": "ch:mw-happy-sad-doctor-son-daughter",
+  "canDo": "I can say happy, content, sad, a doctor, a son and a daughter.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C48-beti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 48: i can say happy, content, sad, a doctor, a son and a daughter.",
+    "assesses": [
+      "MW-LEX-C48-HEALTH48-03",
+      "MW-LEX-C48-HEALTH48-04",
+      "MW-LEX-C48-HEALTH48-05"
+    ]
+  }
+}

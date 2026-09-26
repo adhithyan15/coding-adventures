@@ -1,0 +1,11 @@
+{
+  "id": "MW-C88-git",
+  "pathSegment": "MW-PATH-88-WORLD88",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-88-WORLD88",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C48-udas",
+    "language": "marwadi",
+    "chapter": 48,
+    "sequence": 3710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d8ab573c2759d3d"
+  },
+  "findings": []
+}

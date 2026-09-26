@@ -1,0 +1,19 @@
+{
+  "chapter": 51,
+  "title": "To drink, To go, To come, To see, To hear",
+  "label": "ch:mw-to-drink-to-go-to-come-to-see-to-hear",
+  "canDo": "I can say to drink, to go, to come, to see and to hear, to listen.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C51-sunno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 51: i can say to drink, to go, to come, to see and to hear, to listen.",
+    "assesses": [
+      "MW-LEX-C51-VERBS51-03",
+      "MW-LEX-C51-VERBS51-04",
+      "MW-LEX-C51-VERBS51-05"
+    ]
+  }
+}

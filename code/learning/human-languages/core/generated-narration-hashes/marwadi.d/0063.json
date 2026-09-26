@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:a15635e56ac26640",
+  "lessonIds": [
+    "MW-C63-khat",
+    "MW-C63-almari",
+    "MW-C63-diyo",
+    "MW-C63-pankho",
+    "MW-C63-chabi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch63.txt",
+  "json": "marwadi/narration/ch63.json",
+  "textHash": "fnv1a64:cf31bf4c5e1eed30",
+  "jsonHash": "fnv1a64:0cbaedb6b22e9c75",
+  "findings": []
+}

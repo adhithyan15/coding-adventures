@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "Monkey, Snake, Peacock, Big, Small",
+  "label": "ch:mw-monkey-snake-peacock-big-small",
+  "canDo": "I can say a monkey, a snake, a peacock, big and small.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C72-chhoto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can say a monkey, a snake, a peacock, big and small.",
+    "assesses": [
+      "MW-LEX-C72-ANIMALS72-03",
+      "MW-LEX-C72-ANIMALS72-04",
+      "MW-LEX-C72-ANIMALS72-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C86-chalis",
+  "pathSegment": "MW-PATH-86-NUMBERS86",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-86-NUMBERS86",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C69-samandar",
+  "pathSegment": "MW-PATH-69-NATURE69",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-69-NATURE69",
+      "order": 3
+    }
+  ]
+}

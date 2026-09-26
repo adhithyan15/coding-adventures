@@ -1,0 +1,11 @@
+{
+  "id": "MW-C84-kurto",
+  "pathSegment": "MW-PATH-84-TOWN84",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-84-TOWN84",
+      "order": 2
+    }
+  ]
+}

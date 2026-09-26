@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:86501a28dfb4dd29",
+  "lessonIds": [
+    "MW-C79-ghanto",
+    "MW-C79-minat",
+    "MW-C79-aj",
+    "MW-C79-kal",
+    "MW-C79-abar"
+  ],
+  "tex": "marwadi/book/chapters/ch79-hour-minute-today-yesterday-now.tex"
+}

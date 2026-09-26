@@ -1,0 +1,19 @@
+{
+  "chapter": 66,
+  "title": "Newspaper, School, Question, Answer, Word",
+  "label": "ch:mw-newspaper-school-question-answer-word",
+  "canDo": "I can say a newspaper, a school, a question, an answer and a word.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MW-R66-second-pass-more-verbs-food-and-the-home",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: i can say a newspaper, a school, a question, an answer and a word.",
+    "assesses": [
+      "MW-LEX-C66-SCHOOL66-03",
+      "MW-LEX-C66-SCHOOL66-04",
+      "MW-LEX-C66-SCHOOL66-05"
+    ]
+  }
+}

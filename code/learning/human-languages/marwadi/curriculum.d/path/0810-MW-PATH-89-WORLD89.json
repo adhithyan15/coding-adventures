@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-89-WORLD89",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "MW-EXT-89-WORLD89"
+  ],
+  "after": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-79-TIME79",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say an hour, a minute, today, yesterday and now.",
+  "prerequisites": []
+}

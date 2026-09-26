@@ -1,0 +1,11 @@
+{
+  "id": "MW-C63-pankho",
+  "pathSegment": "MW-PATH-63-HOME63",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-63-HOME63",
+      "order": 3
+    }
+  ]
+}

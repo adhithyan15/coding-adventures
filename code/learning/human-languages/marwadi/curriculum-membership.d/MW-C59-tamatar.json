@@ -1,0 +1,11 @@
+{
+  "id": "MW-C59-tamatar",
+  "pathSegment": "MW-PATH-59-VERBS59",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-59-VERBS59",
+      "order": 3
+    }
+  ]
+}

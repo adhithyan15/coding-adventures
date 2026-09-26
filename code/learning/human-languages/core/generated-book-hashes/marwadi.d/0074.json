@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:1b1167b1b78e8e3a",
+  "lessonIds": [
+    "MW-C74-garam",
+    "MW-C74-thando",
+    "MW-C74-tej",
+    "MW-C74-soro",
+    "MW-C74-doro"
+  ],
+  "tex": "marwadi/book/chapters/ch74-hot-cold-fast-easy-difficult.tex"
+}

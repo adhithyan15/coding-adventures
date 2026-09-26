@@ -1,0 +1,11 @@
+{
+  "id": "MW-C48-udas",
+  "pathSegment": "MW-PATH-48-HEALTH48",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-48-HEALTH48",
+      "order": 1
+    }
+  ]
+}

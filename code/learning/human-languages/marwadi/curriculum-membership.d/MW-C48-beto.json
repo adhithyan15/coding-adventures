@@ -1,0 +1,11 @@
+{
+  "id": "MW-C48-beto",
+  "pathSegment": "MW-PATH-48-HEALTH48",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-48-HEALTH48",
+      "order": 3
+    }
+  ]
+}

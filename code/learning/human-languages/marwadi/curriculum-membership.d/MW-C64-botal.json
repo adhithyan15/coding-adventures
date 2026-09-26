@@ -1,0 +1,11 @@
+{
+  "id": "MW-C64-botal",
+  "pathSegment": "MW-PATH-64-HOME64",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-64-HOME64",
+      "order": 4
+    }
+  ]
+}

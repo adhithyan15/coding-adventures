@@ -1,0 +1,11 @@
+{
+  "id": "MW-C78-mahino",
+  "pathSegment": "MW-PATH-78-TIME78",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-78-TIME78",
+      "order": 3
+    }
+  ]
+}

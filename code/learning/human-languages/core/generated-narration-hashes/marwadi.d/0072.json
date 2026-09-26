@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:b053b75e849b4bd1",
+  "lessonIds": [
+    "MW-C72-badro",
+    "MW-C72-sap",
+    "MW-C72-mor",
+    "MW-C72-baro",
+    "MW-C72-chhoto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch72.txt",
+  "json": "marwadi/narration/ch72.json",
+  "textHash": "fnv1a64:964216d6fa00c633",
+  "jsonHash": "fnv1a64:fc458c4de0e67577",
+  "findings": []
+}

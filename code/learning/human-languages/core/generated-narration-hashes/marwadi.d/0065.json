@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:8ba48244caad60c9",
+  "lessonIds": [
+    "MW-C65-kivar",
+    "MW-C65-rasoi",
+    "MW-C65-kamro",
+    "MW-C65-kitab",
+    "MW-C65-kalam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch65.txt",
+  "json": "marwadi/narration/ch65.json",
+  "textHash": "fnv1a64:0fffa10056077cf5",
+  "jsonHash": "fnv1a64:f16f755e47118c53",
+  "findings": []
+}

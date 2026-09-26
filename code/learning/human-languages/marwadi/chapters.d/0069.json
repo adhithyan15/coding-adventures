@@ -1,0 +1,19 @@
+{
+  "chapter": 69,
+  "title": "Star, Sun, Moon, Sea, Fire",
+  "label": "ch:mw-star-sun-moon-sea-fire",
+  "canDo": "I can say a star, the sun, the moon, the sea and fire.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C69-ag",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 69: i can say a star, the sun, the moon, the sea and fire.",
+    "assesses": [
+      "MW-LEX-C69-NATURE69-03",
+      "MW-LEX-C69-NATURE69-04",
+      "MW-LEX-C69-NATURE69-05"
+    ]
+  }
+}

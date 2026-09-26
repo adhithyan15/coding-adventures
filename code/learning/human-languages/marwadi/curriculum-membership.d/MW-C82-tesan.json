@@ -1,0 +1,11 @@
+{
+  "id": "MW-C82-tesan",
+  "pathSegment": "MW-PATH-82-PLACE82",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-82-PLACE82",
+      "order": 4
+    }
+  ]
+}

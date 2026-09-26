@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:6b995b77841c7d52",
+  "lessonIds": [
+    "MW-C73-nuvo",
+    "MW-C73-juno",
+    "MW-C73-achho",
+    "MW-C73-maro",
+    "MW-C73-labo"
+  ],
+  "tex": "marwadi/book/chapters/ch73-new-old-good-bad-long.tex"
+}

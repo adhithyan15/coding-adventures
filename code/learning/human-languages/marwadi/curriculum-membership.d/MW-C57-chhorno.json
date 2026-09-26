@@ -1,0 +1,11 @@
+{
+  "id": "MW-C57-chhorno",
+  "pathSegment": "MW-PATH-57-VERBS57",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-57-VERBS57",
+      "order": 1
+    }
+  ]
+}

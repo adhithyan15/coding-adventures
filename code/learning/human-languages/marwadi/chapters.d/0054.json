@@ -1,0 +1,19 @@
+{
+  "chapter": 54,
+  "title": "To open, To laugh, To cry, To sing, To dance",
+  "label": "ch:mw-to-open-to-laugh-to-cry-to-sing-to-dance",
+  "canDo": "I can say to open, to laugh, to cry, to sing and to dance.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C54-nachno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 54: i can say to open, to laugh, to cry, to sing and to dance.",
+    "assesses": [
+      "MW-LEX-C54-VERBS54-03",
+      "MW-LEX-C54-VERBS54-04",
+      "MW-LEX-C54-VERBS54-05"
+    ]
+  }
+}

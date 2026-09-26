@@ -1,0 +1,11 @@
+{
+  "id": "MW-C55-sikhno",
+  "pathSegment": "MW-PATH-55-VERBS55",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-55-VERBS55",
+      "order": 1
+    }
+  ]
+}

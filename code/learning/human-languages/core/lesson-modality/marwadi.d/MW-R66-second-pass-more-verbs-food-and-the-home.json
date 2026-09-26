@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R66-second-pass-more-verbs-food-and-the-home",
+    "language": "marwadi",
+    "chapter": 66,
+    "sequence": 4660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f3c2bb8ce5195a9"
+  },
+  "findings": []
+}

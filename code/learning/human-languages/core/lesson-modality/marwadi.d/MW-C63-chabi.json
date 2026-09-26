@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C63-chabi",
+    "language": "marwadi",
+    "chapter": 63,
+    "sequence": 4490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45eb69d48a7ac663"
+  },
+  "findings": []
+}

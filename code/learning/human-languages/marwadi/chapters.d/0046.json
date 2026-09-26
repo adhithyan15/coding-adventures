@@ -1,0 +1,19 @@
+{
+  "chapter": 46,
+  "title": "Back, Tongue, Eye, Nose, Heart",
+  "label": "ch:mw-back-tongue-eye-nose-heart",
+  "canDo": "I can say the back, the tongue, an eye, the nose and the heart.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C46-dil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 46: i can say the back, the tongue, an eye, the nose and the heart.",
+    "assesses": [
+      "MW-LEX-C46-BODY46-03",
+      "MW-LEX-C46-BODY46-04",
+      "MW-LEX-C46-BODY46-05"
+    ]
+  }
+}

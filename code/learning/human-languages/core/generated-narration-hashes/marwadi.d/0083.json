@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:34059328dbacd765",
+  "lessonIds": [
+    "MW-C83-pul",
+    "MW-C83-hotal",
+    "MW-C83-pulis",
+    "MW-C83-nav",
+    "MW-C83-saikal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch83.txt",
+  "json": "marwadi/narration/ch83.json",
+  "textHash": "fnv1a64:93c82e09b412d798",
+  "jsonHash": "fnv1a64:22bc47aee71ee91c",
+  "findings": []
+}
