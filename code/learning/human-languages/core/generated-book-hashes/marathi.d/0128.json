@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:eb602e4356c97357",
+  "lessonIds": [
+    "MR-C128-cauk",
+    "MR-C128-bag",
+    "MR-C128-udyan",
+    "MR-C128-vimantal",
+    "MR-C128-rugnalay"
+  ],
+  "tex": "marathi/book/chapters/ch128-square-garden-park-airport-hospital.tex"
+}

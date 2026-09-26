@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:1adc7a438eb3544e",
+  "lessonIds": [
+    "MR-C142-cimni",
+    "MR-C142-popat",
+    "MR-C142-kabutar",
+    "MR-C142-ghubad",
+    "MR-C142-beduk"
+  ],
+  "tex": "marathi/book/chapters/ch142-sparrow-parrot-pigeon-owl-frog.tex"
+}

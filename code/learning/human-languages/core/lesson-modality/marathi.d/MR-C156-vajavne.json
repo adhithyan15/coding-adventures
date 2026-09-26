@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C156-vajavne",
+    "language": "marathi",
+    "chapter": 156,
+    "sequence": 7410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6fb93a4c2b4306e"
+  },
+  "findings": []
+}

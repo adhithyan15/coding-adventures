@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Square, Garden, Park, Airport, Hospital",
+  "label": "ch:mr-square-garden-park-airport-hospital",
+  "canDo": "I can say a square, a garden, a park, an airport and a hospital.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-C128-rugnalay",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can say a square, a garden, a park, an airport and a hospital.",
+    "assesses": [
+      "MR-LEX-C128-LOC128-03",
+      "MR-LEX-C128-LOC128-04",
+      "MR-LEX-C128-LOC128-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C156-oradne",
+    "language": "marathi",
+    "chapter": 156,
+    "sequence": 7420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b43caab75247c65"
+  },
+  "findings": []
+}

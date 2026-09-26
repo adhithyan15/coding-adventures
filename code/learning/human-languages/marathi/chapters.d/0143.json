@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "Tortoise, Crocodile, Deer, Rabbit, Wolf",
+  "label": "ch:mr-tortoise-crocodile-deer-rabbit-wolf",
+  "canDo": "I can say a tortoise, a crocodile, a deer, a rabbit and a wolf.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C143-landga",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: i can say a tortoise, a crocodile, a deer, a rabbit and a wolf.",
+    "assesses": [
+      "MR-LEX-C143-THINGS143-03",
+      "MR-LEX-C143-THINGS143-04",
+      "MR-LEX-C143-THINGS143-05"
+    ]
+  }
+}

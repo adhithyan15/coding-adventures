@@ -1,0 +1,11 @@
+{
+  "id": "MR-C145-managat",
+  "pathSegment": "MR-PATH-145-THINGS145",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-145-THINGS145",
+      "order": 4
+    }
+  ]
+}

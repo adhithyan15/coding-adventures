@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Soap, Box, Bag, Basket, Candle",
+  "label": "ch:mr-soap-box-bag-basket-candle",
+  "canDo": "I can say soap, a box, a bag, a basket and a candle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C133-menbatti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say soap, a box, a bag, a basket and a candle.",
+    "assesses": [
+      "MR-LEX-C133-THINGS133-03",
+      "MR-LEX-C133-THINGS133-04",
+      "MR-LEX-C133-THINGS133-05"
+    ]
+  }
+}

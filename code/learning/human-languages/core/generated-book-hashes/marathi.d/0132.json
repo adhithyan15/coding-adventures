@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:0e1ec829b830610b",
+  "lessonIds": [
+    "MR-C132-hatoda",
+    "MR-C132-katri",
+    "MR-C132-sui",
+    "MR-C132-dora",
+    "MR-C132-kangva"
+  ],
+  "tex": "marathi/book/chapters/ch132-hammer-scissors-needle-thread-comb.tex"
+}

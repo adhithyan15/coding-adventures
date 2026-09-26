@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C151-pramanik",
+    "language": "marathi",
+    "chapter": 151,
+    "sequence": 7150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9830ac39b7c3af32"
+  },
+  "findings": []
+}

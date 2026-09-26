@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C145-hanuvati",
+    "language": "marathi",
+    "chapter": 145,
+    "sequence": 6820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f3bb8f0ef1d3193"
+  },
+  "findings": []
+}

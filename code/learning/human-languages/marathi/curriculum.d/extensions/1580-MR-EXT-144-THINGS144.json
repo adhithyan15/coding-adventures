@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-144-THINGS144",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a fox, a donkey, an ox, a mosquito and the forehead.",
+  "prerequisites": []
+}

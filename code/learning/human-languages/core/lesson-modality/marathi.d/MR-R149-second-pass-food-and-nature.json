@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R149-second-pass-food-and-nature",
+    "language": "marathi",
+    "chapter": 149,
+    "sequence": 7060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:723e5ef0403c7527"
+  },
+  "findings": []
+}

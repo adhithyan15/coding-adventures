@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "Heavy, Soft, Hard, Lukewarm, Dry",
+  "label": "ch:mr-heavy-soft-hard-lukewarm-dry",
+  "canDo": "I can say heavy, soft, hard, lukewarm and dry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C148-suka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: i can say heavy, soft, hard, lukewarm and dry.",
+    "assesses": [
+      "MR-LEX-C148-QUAL148-03",
+      "MR-LEX-C148-QUAL148-04",
+      "MR-LEX-C148-QUAL148-05"
+    ]
+  }
+}

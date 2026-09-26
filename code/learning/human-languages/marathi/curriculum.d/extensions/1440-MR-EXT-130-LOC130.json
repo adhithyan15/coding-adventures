@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-130-LOC130",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a courtyard, a door, a pillow, a bedsheet and a mattress.",
+  "prerequisites": []
+}

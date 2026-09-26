@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C134-pensil",
+    "language": "marathi",
+    "chapter": 134,
+    "sequence": 6230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f181c1926f9c20cb"
+  },
+  "findings": []
+}

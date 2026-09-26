@@ -1,0 +1,11 @@
+{
+  "id": "MR-C156-vajavne",
+  "pathSegment": "MR-PATH-156-ACT156",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-156-ACT156",
+      "order": 1
+    }
+  ]
+}

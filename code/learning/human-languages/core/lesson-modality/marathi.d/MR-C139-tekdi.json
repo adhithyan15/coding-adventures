@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C139-tekdi",
+    "language": "marathi",
+    "chapter": 139,
+    "sequence": 6450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b555e60786e2e277"
+  },
+  "findings": []
+}

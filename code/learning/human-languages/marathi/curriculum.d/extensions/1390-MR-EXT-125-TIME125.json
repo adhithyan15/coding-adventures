@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-125-TIME125",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say Tuesday, Wednesday, Thursday, Friday and Saturday.",
+  "prerequisites": []
+}

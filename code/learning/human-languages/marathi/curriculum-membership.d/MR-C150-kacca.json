@@ -1,0 +1,11 @@
+{
+  "id": "MR-C150-kacca",
+  "pathSegment": "MR-PATH-150-QUAL150",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-150-QUAL150",
+      "order": 1
+    }
+  ]
+}

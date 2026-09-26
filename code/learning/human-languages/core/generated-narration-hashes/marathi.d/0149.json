@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:3a48fdd8f7474c0e",
+  "lessonIds": [
+    "MR-C149-kharat",
+    "MR-C149-ambat",
+    "MR-C149-kadu",
+    "MR-C149-tikhat",
+    "MR-C149-taja",
+    "MR-R149-first-pass-school-clothes-and-food",
+    "MR-R149-second-pass-food-and-nature"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch149.txt",
+  "json": "marathi/narration/ch149.json",
+  "textHash": "fnv1a64:dcf0b65e0a5a40d1",
+  "jsonHash": "fnv1a64:1fcb9e438412fa0b",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C140-bi",
+    "language": "marathi",
+    "chapter": 140,
+    "sequence": 6510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c92dc123529b725"
+  },
+  "findings": []
+}

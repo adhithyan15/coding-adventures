@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C123-garaj",
+    "language": "marathi",
+    "chapter": 123,
+    "sequence": 5600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ccfe610f25cee75"
+  },
+  "findings": []
+}

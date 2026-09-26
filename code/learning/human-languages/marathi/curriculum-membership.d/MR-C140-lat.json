@@ -1,0 +1,11 @@
+{
+  "id": "MR-C140-lat",
+  "pathSegment": "MR-PATH-140-THINGS140",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-140-THINGS140",
+      "order": 4
+    }
+  ]
+}

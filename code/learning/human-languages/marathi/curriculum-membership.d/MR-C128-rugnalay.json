@@ -1,0 +1,11 @@
+{
+  "id": "MR-C128-rugnalay",
+  "pathSegment": "MR-PATH-128-LOC128",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-128-LOC128",
+      "order": 4
+    }
+  ]
+}

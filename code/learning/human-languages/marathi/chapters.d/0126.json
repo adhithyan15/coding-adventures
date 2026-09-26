@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Sunday, Date, At present, Every day, Summer",
+  "label": "ch:mr-sunday-date-at-present-every-day-summer",
+  "canDo": "I can say Sunday, a date, at present, every day and summer.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "MR-C126-unhala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can say Sunday, a date, at present, every day and summer.",
+    "assesses": [
+      "MR-LEX-C126-TIME126-03",
+      "MR-LEX-C126-TIME126-04",
+      "MR-LEX-C126-TIME126-05"
+    ]
+  }
+}

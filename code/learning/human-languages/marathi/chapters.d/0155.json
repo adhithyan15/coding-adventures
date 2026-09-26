@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "To join, To tie, To sew, To paint, To take out",
+  "label": "ch:mr-to-join-to-tie-to-sew-to-paint-to-take-out",
+  "canDo": "I can say to join, to tie, to sew, to paint and to take out.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C155-kadhne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: i can say to join, to tie, to sew, to paint and to take out.",
+    "assesses": [
+      "MR-LEX-C155-ACT155-03",
+      "MR-LEX-C155-ACT155-04",
+      "MR-LEX-C155-ACT155-05"
+    ]
+  }
+}

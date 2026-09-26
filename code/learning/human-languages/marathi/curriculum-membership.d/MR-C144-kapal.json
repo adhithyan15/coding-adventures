@@ -1,0 +1,11 @@
+{
+  "id": "MR-C144-kapal",
+  "pathSegment": "MR-PATH-144-THINGS144",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-144-THINGS144",
+      "order": 4
+    }
+  ]
+}

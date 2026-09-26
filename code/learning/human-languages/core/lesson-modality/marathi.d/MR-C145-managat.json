@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C145-managat",
+    "language": "marathi",
+    "chapter": 145,
+    "sequence": 6840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:680514971f7ad7f5"
+  },
+  "findings": []
+}

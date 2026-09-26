@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Plan, Dawn, Midnight, Day after tomorrow, Monday",
+  "label": "ch:mr-plan-dawn-midnight-day-after-tomorrow-monday",
+  "canDo": "I can say a plan, dawn, midnight, the day after tomorrow and Monday.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "MR-C124-somvar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say a plan, dawn, midnight, the day after tomorrow and Monday.",
+    "assesses": [
+      "MR-LEX-C124-WANT124-03",
+      "MR-LEX-C124-WANT124-04",
+      "MR-LEX-C124-WANT124-05"
+    ]
+  }
+}

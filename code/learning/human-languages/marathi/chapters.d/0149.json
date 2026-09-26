@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "Salty, Sour, Bitter, Spicy, Fresh",
+  "label": "ch:mr-salty-sour-bitter-spicy-fresh",
+  "canDo": "I can say salty, sour, bitter, spicy and fresh.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-R149-second-pass-food-and-nature",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: i can say salty, sour, bitter, spicy and fresh.",
+    "assesses": [
+      "MR-LEX-C149-QUAL149-03",
+      "MR-LEX-C149-QUAL149-04",
+      "MR-LEX-C149-QUAL149-05"
+    ]
+  }
+}

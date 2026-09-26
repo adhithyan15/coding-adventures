@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C133-pisvi",
+    "language": "marathi",
+    "chapter": 133,
+    "sequence": 6170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:12b84cd7ad2c998e"
+  },
+  "findings": []
+}

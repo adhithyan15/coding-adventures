@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C135-varg",
+    "language": "marathi",
+    "chapter": 135,
+    "sequence": 6270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b50bab7fd363549"
+  },
+  "findings": []
+}

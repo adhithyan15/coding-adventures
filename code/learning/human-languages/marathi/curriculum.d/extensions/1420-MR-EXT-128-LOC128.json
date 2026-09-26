@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-128-LOC128",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a square, a garden, a park, an airport and a hospital.",
+  "prerequisites": []
+}

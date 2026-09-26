@@ -1,0 +1,11 @@
+{
+  "id": "MR-C147-rund",
+  "pathSegment": "MR-PATH-147-THINGS147",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-147-THINGS147",
+      "order": 2
+    }
+  ]
+}

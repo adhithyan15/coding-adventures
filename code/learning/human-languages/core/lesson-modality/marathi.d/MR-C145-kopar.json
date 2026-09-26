@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C145-kopar",
+    "language": "marathi",
+    "chapter": 145,
+    "sequence": 6830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32e35edeaa1b0675"
+  },
+  "findings": []
+}

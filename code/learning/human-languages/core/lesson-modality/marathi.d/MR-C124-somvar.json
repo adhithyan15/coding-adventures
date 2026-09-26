@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C124-somvar",
+    "language": "marathi",
+    "chapter": 124,
+    "sequence": 5690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c16b6ecc8fcc959d"
+  },
+  "findings": []
+}

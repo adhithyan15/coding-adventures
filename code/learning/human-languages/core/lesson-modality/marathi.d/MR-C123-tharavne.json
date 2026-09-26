@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C123-tharavne",
+    "language": "marathi",
+    "chapter": 123,
+    "sequence": 5640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be05d23a3d26df3f"
+  },
+  "findings": []
+}
