@@ -1,0 +1,11 @@
+{
+  "id": "UR-C107-chadar",
+  "pathSegment": "UR-PATH-107-THINGS107",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-107-THINGS107",
+      "order": 2
+    }
+  ]
+}

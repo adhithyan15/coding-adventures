@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:f82b640154535e0a",
+  "lessonIds": [
+    "UR-C114-imtihan",
+    "UR-C114-zaban",
+    "UR-C114-sabzi",
+    "UR-C114-piyaz",
+    "UR-C114-lahsan"
+  ],
+  "tex": "urdu/book/chapters/ch114-exam-language-vegetable-onion-garlic.tex"
+}

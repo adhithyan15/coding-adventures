@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:875867e48898f615",
+  "lessonIds": [
+    "UR-C122-chappal",
+    "UR-C122-batan",
+    "UR-C122-tai",
+    "UR-C122-dastane",
+    "UR-C122-pahari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch122.txt",
+  "json": "urdu/narration/ch122.json",
+  "textHash": "fnv1a64:7dc239031be6ccdd",
+  "jsonHash": "fnv1a64:c5c2f3cb18fcfb70",
+  "findings": []
+}

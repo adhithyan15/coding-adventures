@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:5c0d0220e3795617",
+  "lessonIds": [
+    "UR-C101-mahal",
+    "UR-C101-park",
+    "UR-C101-sinema",
+    "UR-C101-maidan",
+    "UR-C101-darvaza"
+  ],
+  "tex": "urdu/book/chapters/ch101-palace-park-cinema-field-door.tex"
+}

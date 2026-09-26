@@ -1,0 +1,11 @@
+{
+  "id": "UR-C108-hathaura",
+  "pathSegment": "UR-PATH-108-THINGS108",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-108-THINGS108",
+      "order": 1
+    }
+  ]
+}

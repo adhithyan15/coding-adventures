@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:608fcbd46d9faf42",
+  "lessonIds": [
+    "UR-C113-daraz",
+    "UR-C113-chitthi",
+    "UR-C113-khat",
+    "UR-C113-pensil",
+    "UR-C113-kapi"
+  ],
+  "tex": "urdu/book/chapters/ch113-drawer-letter-letter-pencil-exercise-book.tex"
+}

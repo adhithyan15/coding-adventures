@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C93-ab",
+    "language": "urdu",
+    "chapter": 93,
+    "sequence": 4770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acbc775255e069f8"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C120-kabab",
+  "pathSegment": "UR-PATH-120-THINGS120",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-120-THINGS120",
+      "order": 3
+    }
+  ]
+}

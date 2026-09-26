@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Television, Computer, Mobile phone, Phone, Glasses",
+  "label": "ch:ur-television-computer-mobile-phone-phone-glasses",
+  "canDo": "I can say a television, a computer, a mobile phone, a phone and glasses.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R110-second-pass-things-in-the-house",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say a television, a computer, a mobile phone, a phone and glasses.",
+    "assesses": [
+      "UR-LEX-C110-THINGS110-03",
+      "UR-LEX-C110-THINGS110-04",
+      "UR-LEX-C110-THINGS110-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Nail, Hammer, Lock, Fan, Electricity",
+  "label": "ch:ur-nail-hammer-lock-fan-electricity",
+  "canDo": "I can say a nail, a hammer, a lock, a fan and electricity.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C108-bijli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say a nail, a hammer, a lock, a fan and electricity.",
+    "assesses": [
+      "UR-LEX-C108-THINGS108-03",
+      "UR-LEX-C108-THINGS108-04",
+      "UR-LEX-C108-THINGS108-05"
+    ]
+  }
+}

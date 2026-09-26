@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C88-itna",
+    "language": "urdu",
+    "chapter": 88,
+    "sequence": 4540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d41ef6b1aa42973d"
+  },
+  "findings": []
+}

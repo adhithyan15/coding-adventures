@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:e1cb714afbe5dc76",
+  "lessonIds": [
+    "UR-C89-sab",
+    "UR-C89-har",
+    "UR-C89-koi",
+    "UR-C89-kuchh",
+    "UR-C89-donon"
+  ],
+  "tex": "urdu/book/chapters/ch89-all-every-someone-something-both.tex"
+}

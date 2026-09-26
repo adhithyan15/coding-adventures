@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C138-girna",
+    "language": "urdu",
+    "chapter": 138,
+    "sequence": 7250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8bf7885419498e7"
+  },
+  "findings": []
+}

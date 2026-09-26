@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C122-tai",
+    "language": "urdu",
+    "chapter": 122,
+    "sequence": 6420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d30fe60d0d77769"
+  },
+  "findings": []
+}

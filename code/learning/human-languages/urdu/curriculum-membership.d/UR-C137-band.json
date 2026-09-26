@@ -1,0 +1,11 @@
+{
+  "id": "UR-C137-band",
+  "pathSegment": "UR-PATH-137-QUAL137",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-137-QUAL137",
+      "order": 2
+    }
+  ]
+}

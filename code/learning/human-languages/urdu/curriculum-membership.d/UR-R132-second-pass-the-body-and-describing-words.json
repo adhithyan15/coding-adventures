@@ -1,0 +1,11 @@
+{
+  "id": "UR-R132-second-pass-the-body-and-describing-words",
+  "pathSegment": "UR-PATH-132-QUAL132",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "UR-EXT-132-QUAL132",
+      "order": 6
+    }
+  ]
+}

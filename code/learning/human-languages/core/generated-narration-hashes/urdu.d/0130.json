@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:f86ffdd6a7cef2c7",
+  "lessonIds": [
+    "UR-C130-kohni",
+    "UR-C130-angutha",
+    "UR-C130-nakhun",
+    "UR-C130-jild",
+    "UR-C130-sina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch130.txt",
+  "json": "urdu/narration/ch130.json",
+  "textHash": "fnv1a64:4364b47e1ed3ceb2",
+  "jsonHash": "fnv1a64:bb61fde645792ef7",
+  "findings": []
+}

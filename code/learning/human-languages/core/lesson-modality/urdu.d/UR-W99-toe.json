@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "UR-W99-toe",
+    "language": "urdu",
+    "chapter": 99,
+    "sequence": 5110,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:35597f8e1878380c",
+    "detachableSegments": [
+      "Script you'll notice: ط",
+      "Writing: ط"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

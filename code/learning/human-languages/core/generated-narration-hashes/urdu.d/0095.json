@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:5fd23951b3497af1",
+  "lessonIds": [
+    "UR-C95-khizan",
+    "UR-C95-tarikh",
+    "UR-C95-ajkal",
+    "UR-C95-pichhla",
+    "UR-C95-agla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch95.txt",
+  "json": "urdu/narration/ch95.json",
+  "textHash": "fnv1a64:9c76d33112005f57",
+  "jsonHash": "fnv1a64:c67cf39c8b4080bf",
+  "findings": []
+}

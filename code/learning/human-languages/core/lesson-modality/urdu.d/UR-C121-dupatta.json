@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C121-dupatta",
+    "language": "urdu",
+    "chapter": 121,
+    "sequence": 6310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ede874b0132fbe1f"
+  },
+  "findings": []
+}

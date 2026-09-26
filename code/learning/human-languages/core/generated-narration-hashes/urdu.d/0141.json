@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:0c97110bf204200b",
+  "lessonIds": [
+    "UR-C141-thaharna",
+    "UR-C141-lautna",
+    "UR-C141-pahunchna",
+    "UR-C141-nikalna",
+    "UR-C141-charhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch141.txt",
+  "json": "urdu/narration/ch141.json",
+  "textHash": "fnv1a64:28d7f31053051100",
+  "jsonHash": "fnv1a64:d219b7bda6010735",
+  "findings": []
+}

@@ -50,7 +50,11 @@ it("pins Urdu lesson-content budgets", () =>
     // 182 -> 439: three `-more` continuations split off the lessons that
     // introduced more than three atoms, then chapters 38-87 (250 word lessons)
     // and their four reviews. None introduces an idiom, sense or culture claim.
-    lessons: 439,
+    //
+    // 439 -> 721: the A1 tranche, chapters 88-142. 270 word lessons (twenty-eight
+    // verbs) and eight reviews, plus chapter 99's two letter lessons (ز and ط)
+    // and their two reviews. No idiom, sense or culture claim.
+    lessons: 721,
     idioms: 2,
     senses: 4,
     cultureClaims: 4,

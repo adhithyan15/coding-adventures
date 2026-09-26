@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:fe30ff417f372509",
+  "lessonIds": [
+    "UR-C107-kambal",
+    "UR-C107-parda",
+    "UR-C107-chadar",
+    "UR-C107-balti",
+    "UR-C107-rassi"
+  ],
+  "tex": "urdu/book/chapters/ch107-blanket-curtain-sheet-bucket-rope.tex"
+}

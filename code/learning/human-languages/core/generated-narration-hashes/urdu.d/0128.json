@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:f7ef3c443b2f972a",
+  "lessonIds": [
+    "UR-C128-hiran",
+    "UR-C128-kabutar",
+    "UR-C128-tota",
+    "UR-C128-bhalu",
+    "UR-C128-kamar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch128.txt",
+  "json": "urdu/narration/ch128.json",
+  "textHash": "fnv1a64:530b39426dad894e",
+  "jsonHash": "fnv1a64:3d87b3047b1a887e",
+  "findings": []
+}

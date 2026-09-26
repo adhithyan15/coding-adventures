@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C108-kil",
+    "language": "urdu",
+    "chapter": 108,
+    "sequence": 5600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:154cfc7927ab331e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Elbow, Thumb, Nail, Skin, Chest",
+  "label": "ch:ur-elbow-thumb-nail-skin-chest",
+  "canDo": "I can say an elbow, a thumb, a nail, the skin and the chest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C130-sina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say an elbow, a thumb, a nail, the skin and the chest.",
+    "assesses": [
+      "UR-LEX-C130-THINGS130-03",
+      "UR-LEX-C130-THINGS130-04",
+      "UR-LEX-C130-THINGS130-05"
+    ]
+  }
+}

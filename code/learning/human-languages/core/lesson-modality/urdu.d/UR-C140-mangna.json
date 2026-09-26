@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C140-mangna",
+    "language": "urdu",
+    "chapter": 140,
+    "sequence": 7390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00fa20e48efff6f2"
+  },
+  "findings": []
+}

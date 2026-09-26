@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "Corner, Side, Way, Lane, Turn",
+  "label": "ch:ur-corner-side-way-lane-turn",
+  "canDo": "I can say a corner, a side, a way, a lane and a turn.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-C98-mor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 98: i can say a corner, a side, a way, a lane and a turn.",
+    "assesses": [
+      "UR-LEX-C98-LOC98-03",
+      "UR-LEX-C98-LOC98-04",
+      "UR-LEX-C98-LOC98-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-125-THINGS125",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a storm, the ground, a coast, an island and a sparrow.",
+  "prerequisites": []
+}

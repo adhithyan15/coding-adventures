@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C118-lassi",
+    "language": "urdu",
+    "chapter": 118,
+    "sequence": 6190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c273130de006abf"
+  },
+  "findings": []
+}

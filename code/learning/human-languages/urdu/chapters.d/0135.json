@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Famous, Brave, Clever, Tired, Hungry",
+  "label": "ch:ur-famous-brave-clever-tired-hungry",
+  "canDo": "I can say famous, brave, clever, tired and hungry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C135-bhuka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say famous, brave, clever, tired and hungry.",
+    "assesses": [
+      "UR-LEX-C135-QUAL135-03",
+      "UR-LEX-C135-QUAL135-04",
+      "UR-LEX-C135-QUAL135-05"
+    ]
+  }
+}

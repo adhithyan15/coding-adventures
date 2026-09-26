@@ -1,0 +1,11 @@
+{
+  "id": "UR-C140-samjhana",
+  "pathSegment": "UR-PATH-140-ACT140",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-140-ACT140",
+      "order": 3
+    }
+  ]
+}

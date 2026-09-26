@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:b9aa81c3f2f6996b",
+  "lessonIds": [
+    "UR-C118-biskut",
+    "UR-C118-chaklet",
+    "UR-C118-qahva",
+    "UR-C118-sharbat",
+    "UR-C118-lassi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch118.txt",
+  "json": "urdu/narration/ch118.json",
+  "textHash": "fnv1a64:0ae7aca2c19f026b",
+  "jsonHash": "fnv1a64:b7f575ccafb0fbb8",
+  "findings": []
+}

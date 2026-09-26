@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:14ee97285ce6cd68",
+  "lessonIds": [
+    "UR-C126-kavva",
+    "UR-C126-mor2",
+    "UR-C126-titli",
+    "UR-C126-chyunti",
+    "UR-C126-gadha"
+  ],
+  "tex": "urdu/book/chapters/ch126-crow-peacock-butterfly-ant-donkey.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Halwa, Rice pudding, Chutney, Kebab, Biryani",
+  "label": "ch:ur-halwa-rice-pudding-chutney-kebab-biryani",
+  "canDo": "I can say halwa, rice pudding, a chutney, a kebab and biryani.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C120-biryani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say halwa, rice pudding, a chutney, a kebab and biryani.",
+    "assesses": [
+      "UR-LEX-C120-THINGS120-03",
+      "UR-LEX-C120-THINGS120-04",
+      "UR-LEX-C120-THINGS120-05"
+    ]
+  }
+}

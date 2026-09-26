@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C116-kharbuza",
+    "language": "urdu",
+    "chapter": 116,
+    "sequence": 6050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32dd45dd626a8172"
+  },
+  "findings": []
+}

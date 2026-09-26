@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "Blanket, Curtain, Sheet, Bucket, Rope",
+  "label": "ch:ur-blanket-curtain-sheet-bucket-rope",
+  "canDo": "I can say a blanket, a curtain, a sheet, a bucket and a rope.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C107-rassi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say a blanket, a curtain, a sheet, a bucket and a rope.",
+    "assesses": [
+      "UR-LEX-C107-THINGS107-03",
+      "UR-LEX-C107-THINGS107-04",
+      "UR-LEX-C107-THINGS107-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C136-pyasa",
+    "language": "urdu",
+    "chapter": 136,
+    "sequence": 7150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7445c1005e3ec087"
+  },
+  "findings": []
+}

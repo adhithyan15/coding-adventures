@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:6ea2ec5ade6132fb",
+  "lessonIds": [
+    "UR-C123-nadi",
+    "UR-C123-mitti",
+    "UR-C123-ghas",
+    "UR-C123-bij",
+    "UR-C123-jar"
+  ],
+  "tex": "urdu/book/chapters/ch123-stream-earth-grass-seed-root.tex"
+}

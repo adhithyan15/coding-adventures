@@ -1,0 +1,15 @@
+{
+  "language": "urdu",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:571f60f5124319a5",
+  "lessonIds": [
+    "UR-C121-shalvar",
+    "UR-C121-dupatta",
+    "UR-C121-svetar",
+    "UR-C121-jaiket",
+    "UR-C121-pajama",
+    "UR-R121-first-pass-things-you-carry-school-and-food",
+    "UR-R121-second-pass-food-and-clothes"
+  ],
+  "tex": "urdu/book/chapters/ch121-loose-trousers-scarf-jumper-jacket-pyjamas.tex"
+}

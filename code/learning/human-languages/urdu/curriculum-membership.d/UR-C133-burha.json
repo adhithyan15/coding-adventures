@@ -1,0 +1,11 @@
+{
+  "id": "UR-C133-burha",
+  "pathSegment": "UR-PATH-133-QUAL133",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-133-QUAL133",
+      "order": 1
+    }
+  ]
+}

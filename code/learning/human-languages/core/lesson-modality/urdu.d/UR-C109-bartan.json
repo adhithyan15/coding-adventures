@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C109-bartan",
+    "language": "urdu",
+    "chapter": 109,
+    "sequence": 5660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50dad60959ddfb01"
+  },
+  "findings": []
+}

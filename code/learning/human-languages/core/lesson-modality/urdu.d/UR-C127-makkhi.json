@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C127-makkhi",
+    "language": "urdu",
+    "chapter": 127,
+    "sequence": 6680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:003052fceb375564"
+  },
+  "findings": []
+}

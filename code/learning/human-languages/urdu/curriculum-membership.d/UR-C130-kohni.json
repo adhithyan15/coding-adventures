@@ -1,0 +1,11 @@
+{
+  "id": "UR-C130-kohni",
+  "pathSegment": "UR-PATH-130-THINGS130",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-130-THINGS130",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:03fc6dae87c48ab1",
+  "lessonIds": [
+    "UR-C137-jamni",
+    "UR-C137-sunahra",
+    "UR-C137-band",
+    "UR-C137-khula",
+    "UR-C137-jagna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch137.txt",
+  "json": "urdu/narration/ch137.json",
+  "textHash": "fnv1a64:ae678baed4606d12",
+  "jsonHash": "fnv1a64:6593c5d6533b26af",
+  "findings": []
+}

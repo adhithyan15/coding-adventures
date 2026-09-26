@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Exam, Language, Vegetable, Onion, Garlic",
+  "label": "ch:ur-exam-language-vegetable-onion-garlic",
+  "canDo": "I can say an exam, a language, a vegetable, an onion and garlic.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C114-lahsan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say an exam, a language, a vegetable, an onion and garlic.",
+    "assesses": [
+      "UR-LEX-C114-THINGS114-03",
+      "UR-LEX-C114-THINGS114-04",
+      "UR-LEX-C114-THINGS114-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C137-khula",
+    "language": "urdu",
+    "chapter": 137,
+    "sequence": 7230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:866a9adca03309f6"
+  },
+  "findings": []
+}

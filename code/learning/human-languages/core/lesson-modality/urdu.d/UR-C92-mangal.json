@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C92-mangal",
+    "language": "urdu",
+    "chapter": 92,
+    "sequence": 4700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e90cf99ebc883078"
+  },
+  "findings": []
+}

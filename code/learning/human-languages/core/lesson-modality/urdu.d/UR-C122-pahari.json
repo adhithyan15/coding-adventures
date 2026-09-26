@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C122-pahari",
+    "language": "urdu",
+    "chapter": 122,
+    "sequence": 6440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ea568a3d39c204a"
+  },
+  "findings": []
+}
