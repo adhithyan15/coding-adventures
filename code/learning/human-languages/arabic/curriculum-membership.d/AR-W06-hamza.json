@@ -1,11 +1,11 @@
 {
   "id": "AR-W06-hamza",
   "pathSegment": "AR-PATH-008",
-  "pathOrder": 4,
+  "pathOrder": 5,
   "extensions": [
     {
       "id": "AR-EXT-008-SCRIPT",
-      "order": 4
+      "order": 5
     }
   ]
 }

@@ -213,7 +213,7 @@ describe("the real corpus", () => {
   // depend on each other in the script ladder, and ऊ and ओ have no word before
   // chapter 96.
   const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
-    arabic: [7, 5, 0],
+    arabic: [2, 5, 0],
     bengali: [0, 12, 0],
     chinese: [0, 51, 0],
     gujarati: [34, 5, 0],

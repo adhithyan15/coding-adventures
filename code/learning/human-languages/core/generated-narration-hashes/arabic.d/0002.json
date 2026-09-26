@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 2,
-  "sourceHash": "fnv1a64:5852c60e644321b2",
+  "sourceHash": "fnv1a64:533442603325ba2b",
   "lessonIds": [
     "AR-C02-ism",
     "AR-C02-ii-my",
@@ -11,6 +11,7 @@
     "AR-C02-maa-ismuka",
     "AR-C02-tasharrafna",
     "AR-C02-practice",
+    "AR-C02-thaman",
     "AR-W04-dots-family-nun-ta",
     "AR-W05-ya-and-my-name",
     "AR-W06-harakat-and-hamza",
@@ -21,7 +22,7 @@
   "drivablePrefix": 0,
   "text": "arabic/narration/ch02.txt",
   "json": "arabic/narration/ch02.json",
-  "textHash": "fnv1a64:325be76aef10a54a",
-  "jsonHash": "fnv1a64:032297f889507a96",
+  "textHash": "fnv1a64:de60594db2a5b407",
+  "jsonHash": "fnv1a64:67d869bf9ea2b8cd",
   "findings": []
 }
