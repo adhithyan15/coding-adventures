@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 12299,
+    "totalLessons": 12470,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -32,7 +32,7 @@
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 322,
+    "atomsNeverRevisited": 320,
     "forwardReferences": 921,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 94,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 10553,
+    "drivableLessons": 10724,
     "drivablePercent": 86,
     "chaptersWithoutDrivablePrefix": 272,
     "unexplainedModalityOverrides": 0
@@ -1986,7 +1986,40 @@
           102,
           103,
           104,
-          105
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138
         ],
         "bookChapters": [
           1,
@@ -2093,7 +2126,40 @@
           102,
           103,
           104,
-          105
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -6092,9 +6158,9 @@
       {
         "language": "french",
         "status": "version-2",
-        "lessonCount": 578,
+        "lessonCount": 749,
         "versions": {
-          "2": 578
+          "2": 749
         }
       },
       {
@@ -6947,8 +7013,8 @@
       },
       {
         "language": "french",
-        "bookChapters": 105,
-        "declaredChapters": 105,
+        "bookChapters": 138,
+        "declaredChapters": 138,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -7107,8 +7173,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 2562,
-      "declaredChapters": 2562,
+      "bookChapters": 2595,
+      "declaredChapters": 2595,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -7120,10 +7186,10 @@
     }
   },
   "levels": {
-    "totalLessons": 12299,
+    "totalLessons": 12470,
     "byLevel": {
       "pre-A1": 8747,
-      "A1": 2526,
+      "A1": 2697,
       "A2": 942,
       "B1": 39,
       "B2": 17,
@@ -7180,10 +7246,10 @@
       },
       {
         "language": "french",
-        "lessonCount": 578,
+        "lessonCount": 749,
         "byLevel": {
           "pre-A1": 355,
-          "A1": 164,
+          "A1": 335,
           "A2": 59,
           "B1": 0,
           "B2": 0,
@@ -8055,8 +8121,8 @@
       },
       {
         "language": "french",
-        "lessonCount": 578,
-        "measurable": 571,
+        "lessonCount": 749,
+        "measurable": 742,
         "unmeasurable": 7,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -8609,7 +8675,7 @@
           "language": "french",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 578,
+          "lessonCount": 749,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -11439,7 +11505,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "FR-GRAM-VOUVOIEMENT-09",
@@ -11465,7 +11531,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "FR-SKILL-CONNECTED-READING",
@@ -11478,7 +11544,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "GE-ETYMON-ABEND-03",
@@ -31663,7 +31729,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "FR-GRAM-ACCORD-UNIFIE-06",
@@ -31711,7 +31777,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "FR-GRAM-ER-PRESENT-02",
@@ -31855,7 +31921,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "FR-GRAMMAR-PRENDRE-STEM-03",
@@ -31879,7 +31945,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "FR-LEX-AIDER-07",
@@ -31927,7 +31993,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "FR-LEX-ASSEOIR-01",
@@ -31970,6 +32036,174 @@
         "language": "french",
         "introducedBy": "FR-C01-bonsoir",
         "introducedAt": 11,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-C102-VILLE54-03",
+        "language": "french",
+        "introducedBy": "FR-C102-bibliotheque",
+        "introducedAt": 558,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C102-VILLE54-04",
+        "language": "french",
+        "introducedBy": "FR-C102-boulangerie",
+        "introducedAt": 559,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C102-VILLE54-05",
+        "language": "french",
+        "introducedBy": "FR-C102-mairie",
+        "introducedAt": 560,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C103-VILLE55-01",
+        "language": "french",
+        "introducedBy": "FR-C103-quartier",
+        "introducedAt": 561,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C105-HABITS57-03",
+        "language": "french",
+        "introducedBy": "FR-C105-quarante",
+        "introducedAt": 573,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C105-HABITS57-04",
+        "language": "french",
+        "introducedBy": "FR-C105-cinquante",
+        "introducedAt": 574,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-C105-HABITS57-05",
+        "language": "french",
+        "introducedBy": "FR-C105-cent",
+        "introducedAt": 575,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-C113-MAISON65-03",
+        "language": "french",
+        "introducedBy": "FR-C113-serviette",
+        "introducedAt": 615,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C113-MAISON65-04",
+        "language": "french",
+        "introducedBy": "FR-C113-savon",
+        "introducedAt": 616,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C113-MAISON65-05",
+        "language": "french",
+        "introducedBy": "FR-C113-brosse-a-dents",
+        "introducedAt": 617,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C114-MAISON66-01",
+        "language": "french",
+        "introducedBy": "FR-C114-dentifrice",
+        "introducedAt": 618,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C116-HABITS68-03",
+        "language": "french",
+        "introducedBy": "FR-C116-ceinture",
+        "introducedAt": 630,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C116-HABITS68-04",
+        "language": "french",
+        "introducedBy": "FR-C116-gants",
+        "introducedAt": 631,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-C116-HABITS68-05",
+        "language": "french",
+        "introducedBy": "FR-C116-echarpe",
+        "introducedAt": 632,
         "missed": [
           "R2",
           "R3",
@@ -32314,6 +32548,234 @@
         "revisits": 3
       },
       {
+        "atom": "FR-LEX-C90-ADJ42-03",
+        "language": "french",
+        "introducedBy": "FR-C90-haut",
+        "introducedAt": 498,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C90-ADJ42-04",
+        "language": "french",
+        "introducedBy": "FR-C90-plein",
+        "introducedAt": 499,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C90-ADJ42-05",
+        "language": "french",
+        "introducedBy": "FR-C90-vide",
+        "introducedAt": 500,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C91-ADJ43-01",
+        "language": "french",
+        "introducedBy": "FR-C91-fort",
+        "introducedAt": 501,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C91-ADJ43-02",
+        "language": "french",
+        "introducedBy": "FR-C91-faible",
+        "introducedAt": 502,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C91-ADJ43-03",
+        "language": "french",
+        "introducedBy": "FR-C91-riche",
+        "introducedAt": 503,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C91-ADJ43-04",
+        "language": "french",
+        "introducedBy": "FR-C91-pauvre",
+        "introducedAt": 504,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C91-ADJ43-05",
+        "language": "french",
+        "introducedBy": "FR-C91-gris",
+        "introducedAt": 505,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C92-ADJ44-01",
+        "language": "french",
+        "introducedBy": "FR-C92-doux",
+        "introducedAt": 506,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C92-ADJ44-02",
+        "language": "french",
+        "introducedBy": "FR-C92-sale",
+        "introducedAt": 507,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C92-ADJ44-03",
+        "language": "french",
+        "introducedBy": "FR-C92-jeune",
+        "introducedAt": 508,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C92-ADJ44-04",
+        "language": "french",
+        "introducedBy": "FR-C92-gentil",
+        "introducedAt": 509,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C92-ADJ44-05",
+        "language": "french",
+        "introducedBy": "FR-C92-etroit",
+        "introducedAt": 510,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C93-ADJ45-01",
+        "language": "french",
+        "introducedBy": "FR-C93-mince",
+        "introducedAt": 511,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C93-ADJ45-02",
+        "language": "french",
+        "introducedBy": "FR-C93-gros",
+        "introducedAt": 512,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C93-ADJ45-03",
+        "language": "french",
+        "introducedBy": "FR-C93-lourd",
+        "introducedAt": 513,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C93-ADJ45-04",
+        "language": "french",
+        "introducedBy": "FR-C93-leger",
+        "introducedAt": 514,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C93-ADJ45-05",
+        "language": "french",
+        "introducedBy": "FR-C93-sucre",
+        "introducedAt": 515,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C94-ADJ46-01",
+        "language": "french",
+        "introducedBy": "FR-C94-sale",
+        "introducedAt": 516,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "FR-LEX-CAVA-08",
         "language": "french",
         "introducedBy": "FR-C03-comment-ca-va",
@@ -32407,7 +32869,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "FR-LEX-DIX-HUIT-03",
@@ -32527,7 +32989,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "FR-LEX-NOVEMBRE-06",
@@ -32575,7 +33037,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "FR-LEX-PARLER-01",
@@ -32755,7 +33217,7 @@
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "FR-PRAGMATICS-SI-05",
@@ -32815,7 +33277,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "FR-SEMANTICS-ENTENDRE-SPREAD-03",
@@ -32839,7 +33301,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "FR-SKILL-READ-INSTRUCTIONS",
@@ -32851,7 +33313,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "FR-SOUND-MAIN-03",
@@ -68571,6 +69033,1238 @@
         "revisits": 3
       },
       {
+        "atom": "FR-LEX-C100-VILLE52-01",
+        "language": "french",
+        "introducedBy": "FR-C100-voiture",
+        "introducedAt": 546,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C100-VILLE52-02",
+        "language": "french",
+        "introducedBy": "FR-C100-pont",
+        "introducedAt": 547,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C100-VILLE52-03",
+        "language": "french",
+        "introducedBy": "FR-C100-parc",
+        "introducedAt": 548,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C100-VILLE52-04",
+        "language": "french",
+        "introducedBy": "FR-C100-eglise",
+        "introducedAt": 549,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C100-VILLE52-05",
+        "language": "french",
+        "introducedBy": "FR-C100-musee",
+        "introducedAt": 550,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C101-VILLE53-01",
+        "language": "french",
+        "introducedBy": "FR-C101-restaurant",
+        "introducedAt": 551,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C101-VILLE53-02",
+        "language": "french",
+        "introducedBy": "FR-C101-hotel",
+        "introducedAt": 552,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C101-VILLE53-03",
+        "language": "french",
+        "introducedBy": "FR-C101-pharmacie",
+        "introducedAt": 553,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C101-VILLE53-04",
+        "language": "french",
+        "introducedBy": "FR-C101-village",
+        "introducedAt": 554,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C101-VILLE53-05",
+        "language": "french",
+        "introducedBy": "FR-C101-poste",
+        "introducedAt": 555,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C102-VILLE54-01",
+        "language": "french",
+        "introducedBy": "FR-C102-police",
+        "introducedAt": 556,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C102-VILLE54-02",
+        "language": "french",
+        "introducedBy": "FR-C102-theatre",
+        "introducedAt": 557,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C103-VILLE55-02",
+        "language": "french",
+        "introducedBy": "FR-C103-aeroport",
+        "introducedAt": 562,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C103-VILLE55-03",
+        "language": "french",
+        "introducedBy": "FR-C103-vetements",
+        "introducedAt": 563,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C103-VILLE55-04",
+        "language": "french",
+        "introducedBy": "FR-C103-chemise",
+        "introducedAt": 564,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C103-VILLE55-05",
+        "language": "french",
+        "introducedBy": "FR-C103-robe",
+        "introducedAt": 565,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C104-HABITS56-01",
+        "language": "french",
+        "introducedBy": "FR-C104-pantalon",
+        "introducedAt": 566,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C104-HABITS56-02",
+        "language": "french",
+        "introducedBy": "FR-C104-chaussures",
+        "introducedAt": 567,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C104-HABITS56-03",
+        "language": "french",
+        "introducedBy": "FR-C104-chapeau",
+        "introducedAt": 568,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C104-HABITS56-04",
+        "language": "french",
+        "introducedBy": "FR-C104-manteau",
+        "introducedAt": 569,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C104-HABITS56-05",
+        "language": "french",
+        "introducedBy": "FR-C104-jupe",
+        "introducedAt": 570,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C105-HABITS57-01",
+        "language": "french",
+        "introducedBy": "FR-C105-chaussettes",
+        "introducedAt": 571,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C105-HABITS57-02",
+        "language": "french",
+        "introducedBy": "FR-C105-trente",
+        "introducedAt": 572,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C106-TRAJET58-01",
+        "language": "french",
+        "introducedBy": "FR-C106-velo",
+        "introducedAt": 578,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C106-TRAJET58-02",
+        "language": "french",
+        "introducedBy": "FR-C106-metro",
+        "introducedAt": 579,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C106-TRAJET58-03",
+        "language": "french",
+        "introducedBy": "FR-C106-taxi",
+        "introducedAt": 580,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C106-TRAJET58-04",
+        "language": "french",
+        "introducedBy": "FR-C106-parking",
+        "introducedAt": 581,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C106-TRAJET58-05",
+        "language": "french",
+        "introducedBy": "FR-C106-ascenseur",
+        "introducedAt": 582,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C107-VILLE59-01",
+        "language": "french",
+        "introducedBy": "FR-C107-supermarche",
+        "introducedAt": 583,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C107-VILLE59-02",
+        "language": "french",
+        "introducedBy": "FR-C107-cinema",
+        "introducedAt": 584,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C107-VILLE59-03",
+        "language": "french",
+        "introducedBy": "FR-C107-stade",
+        "introducedAt": 585,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C107-VILLE59-04",
+        "language": "french",
+        "introducedBy": "FR-C107-piscine",
+        "introducedAt": 586,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C107-VILLE59-05",
+        "language": "french",
+        "introducedBy": "FR-C107-epicerie",
+        "introducedAt": 587,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C108-VILLE60-01",
+        "language": "french",
+        "introducedBy": "FR-C108-bureau",
+        "introducedAt": 588,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C108-VILLE60-02",
+        "language": "french",
+        "introducedBy": "FR-C108-usine",
+        "introducedAt": 589,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C108-VILLE60-03",
+        "language": "french",
+        "introducedBy": "FR-C108-trottoir",
+        "introducedAt": 590,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C108-VILLE60-04",
+        "language": "french",
+        "introducedBy": "FR-C108-carrefour",
+        "introducedAt": 591,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C108-VILLE60-05",
+        "language": "french",
+        "introducedBy": "FR-C108-feu-rouge",
+        "introducedAt": 592,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C109-LIEU61-01",
+        "language": "french",
+        "introducedBy": "FR-C109-frontiere",
+        "introducedAt": 593,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C109-LIEU61-02",
+        "language": "french",
+        "introducedBy": "FR-C109-nord",
+        "introducedAt": 594,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C109-LIEU61-03",
+        "language": "french",
+        "introducedBy": "FR-C109-sud",
+        "introducedAt": 595,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C109-LIEU61-04",
+        "language": "french",
+        "introducedBy": "FR-C109-ouest",
+        "introducedAt": 596,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C109-LIEU61-05",
+        "language": "french",
+        "introducedBy": "FR-C109-boite-aux-lettres",
+        "introducedAt": 597,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C110-LIEU62-01",
+        "language": "french",
+        "introducedBy": "FR-C110-droite",
+        "introducedAt": 598,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C110-LIEU62-02",
+        "language": "french",
+        "introducedBy": "FR-C110-gauche",
+        "introducedAt": 599,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C110-LIEU62-03",
+        "language": "french",
+        "introducedBy": "FR-C110-monde",
+        "introducedAt": 600,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C110-LIEU62-04",
+        "language": "french",
+        "introducedBy": "FR-C110-voyage",
+        "introducedAt": 601,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C110-LIEU62-05",
+        "language": "french",
+        "introducedBy": "FR-C110-vacances",
+        "introducedAt": 602,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C111-MAISON63-01",
+        "language": "french",
+        "introducedBy": "FR-C111-tapis",
+        "introducedAt": 603,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C111-MAISON63-02",
+        "language": "french",
+        "introducedBy": "FR-C111-television",
+        "introducedAt": 604,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C111-MAISON63-03",
+        "language": "french",
+        "introducedBy": "FR-C111-ordinateur",
+        "introducedAt": 605,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C111-MAISON63-04",
+        "language": "french",
+        "introducedBy": "FR-C111-refrigerateur",
+        "introducedAt": 606,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C111-MAISON63-05",
+        "language": "french",
+        "introducedBy": "FR-C111-radio",
+        "introducedAt": 607,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C112-MAISON64-01",
+        "language": "french",
+        "introducedBy": "FR-C112-douche",
+        "introducedAt": 608,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C112-MAISON64-02",
+        "language": "french",
+        "introducedBy": "FR-C112-baignoire",
+        "introducedAt": 609,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C112-MAISON64-03",
+        "language": "french",
+        "introducedBy": "FR-C112-armoire",
+        "introducedAt": 610,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C112-MAISON64-04",
+        "language": "french",
+        "introducedBy": "FR-C112-etagere",
+        "introducedAt": 611,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C112-MAISON64-05",
+        "language": "french",
+        "introducedBy": "FR-C112-rideau",
+        "introducedAt": 612,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C113-MAISON65-01",
+        "language": "french",
+        "introducedBy": "FR-C113-oreiller",
+        "introducedAt": 613,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C113-MAISON65-02",
+        "language": "french",
+        "introducedBy": "FR-C113-couverture",
+        "introducedAt": 614,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C114-MAISON66-02",
+        "language": "french",
+        "introducedBy": "FR-C114-shampooing",
+        "introducedAt": 619,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C114-MAISON66-03",
+        "language": "french",
+        "introducedBy": "FR-C114-peigne",
+        "introducedAt": 620,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C114-MAISON66-04",
+        "language": "french",
+        "introducedBy": "FR-C114-poubelle",
+        "introducedAt": 621,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C114-MAISON66-05",
+        "language": "french",
+        "introducedBy": "FR-C114-balai",
+        "introducedAt": 622,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C115-MAISON67-01",
+        "language": "french",
+        "introducedBy": "FR-C115-aspirateur",
+        "introducedAt": 623,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C115-MAISON67-02",
+        "language": "french",
+        "introducedBy": "FR-C115-linge",
+        "introducedAt": 624,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C115-MAISON67-03",
+        "language": "french",
+        "introducedBy": "FR-C115-lessive",
+        "introducedAt": 625,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C115-MAISON67-04",
+        "language": "french",
+        "introducedBy": "FR-C115-fer",
+        "introducedAt": 626,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C115-MAISON67-05",
+        "language": "french",
+        "introducedBy": "FR-C115-poche",
+        "introducedAt": 627,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C116-HABITS68-01",
+        "language": "french",
+        "introducedBy": "FR-C116-veste",
+        "introducedAt": 628,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C116-HABITS68-02",
+        "language": "french",
+        "introducedBy": "FR-C116-cravate",
+        "introducedAt": 629,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C117-HABITS69-01",
+        "language": "french",
+        "introducedBy": "FR-C117-bottes",
+        "introducedAt": 635,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C117-HABITS69-02",
+        "language": "french",
+        "introducedBy": "FR-C117-casquette",
+        "introducedAt": 636,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C117-HABITS69-03",
+        "language": "french",
+        "introducedBy": "FR-C117-maillot",
+        "introducedAt": 637,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C117-HABITS69-04",
+        "language": "french",
+        "introducedBy": "FR-C117-taille",
+        "introducedAt": 638,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C117-HABITS69-05",
+        "language": "french",
+        "introducedBy": "FR-C117-portefeuille",
+        "introducedAt": 639,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C118-OBJETS70-01",
+        "language": "french",
+        "introducedBy": "FR-C118-bijou",
+        "introducedAt": 640,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C118-OBJETS70-02",
+        "language": "french",
+        "introducedBy": "FR-C118-bague",
+        "introducedAt": 641,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C118-OBJETS70-03",
+        "language": "french",
+        "introducedBy": "FR-C118-collier",
+        "introducedAt": 642,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C118-OBJETS70-04",
+        "language": "french",
+        "introducedBy": "FR-C118-parfum",
+        "introducedAt": 643,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C118-OBJETS70-05",
+        "language": "french",
+        "introducedBy": "FR-C118-lettre",
+        "introducedAt": 644,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C119-REPAS71-01",
+        "language": "french",
+        "introducedBy": "FR-C119-boeuf",
+        "introducedAt": 645,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C119-REPAS71-02",
+        "language": "french",
+        "introducedBy": "FR-C119-legumes",
+        "introducedAt": 646,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C119-REPAS71-03",
+        "language": "french",
+        "introducedBy": "FR-C119-champignon",
+        "introducedAt": 647,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C119-REPAS71-04",
+        "language": "french",
+        "introducedBy": "FR-C119-haricots",
+        "introducedAt": 648,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C119-REPAS71-05",
+        "language": "french",
+        "introducedBy": "FR-C119-concombre",
+        "introducedAt": 649,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C120-REPAS72-01",
+        "language": "french",
+        "introducedBy": "FR-C120-fraise",
+        "introducedAt": 650,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C120-REPAS72-02",
+        "language": "french",
+        "introducedBy": "FR-C120-cerise",
+        "introducedAt": 651,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C120-REPAS72-03",
+        "language": "french",
+        "introducedBy": "FR-C120-melon",
+        "introducedAt": 652,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C120-REPAS72-04",
+        "language": "french",
+        "introducedBy": "FR-C120-ail",
+        "introducedAt": 653,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C120-REPAS72-05",
+        "language": "french",
+        "introducedBy": "FR-C120-farine",
+        "introducedAt": 654,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C121-REPAS73-01",
+        "language": "french",
+        "introducedBy": "FR-C121-biere",
+        "introducedAt": 655,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C121-REPAS73-02",
+        "language": "french",
+        "introducedBy": "FR-C121-jus",
+        "introducedAt": 656,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C121-REPAS73-03",
+        "language": "french",
+        "introducedBy": "FR-C121-glace",
+        "introducedAt": 657,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C121-REPAS73-04",
+        "language": "french",
+        "introducedBy": "FR-C121-chocolat",
+        "introducedAt": 658,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C121-REPAS73-05",
+        "language": "french",
+        "introducedBy": "FR-C121-biscuit",
+        "introducedAt": 659,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C122-REPAS74-01",
+        "language": "french",
+        "introducedBy": "FR-C122-sandwich",
+        "introducedAt": 660,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C122-REPAS74-02",
+        "language": "french",
+        "introducedBy": "FR-C122-sauce",
+        "introducedAt": 661,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C122-REPAS74-03",
+        "language": "french",
+        "introducedBy": "FR-C122-vinaigre",
+        "introducedAt": 662,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C122-REPAS74-04",
+        "language": "french",
+        "introducedBy": "FR-C122-dessert",
+        "introducedAt": 663,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C122-REPAS74-05",
+        "language": "french",
+        "introducedBy": "FR-C122-repas",
+        "introducedAt": 664,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C123-METIERS75-01",
+        "language": "french",
+        "introducedBy": "FR-C123-infirmiere",
+        "introducedAt": 665,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C123-METIERS75-02",
+        "language": "french",
+        "introducedBy": "FR-C123-cuisinier",
+        "introducedAt": 666,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C123-METIERS75-03",
+        "language": "french",
+        "introducedBy": "FR-C123-policier",
+        "introducedAt": 667,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C123-METIERS75-04",
+        "language": "french",
+        "introducedBy": "FR-C123-vendeur",
+        "introducedAt": 668,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C124-METIERS76-03",
+        "language": "french",
+        "introducedBy": "FR-C124-chauffeur",
+        "introducedAt": 672,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C124-METIERS76-04",
+        "language": "french",
+        "introducedBy": "FR-C124-avocat",
+        "introducedAt": 673,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C124-METIERS76-05",
+        "language": "french",
+        "introducedBy": "FR-C124-ingenieur",
+        "introducedAt": 674,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C125-METIERS77-01",
+        "language": "french",
+        "introducedBy": "FR-C125-pompier",
+        "introducedAt": 675,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C127-ECOLE79-03",
+        "language": "french",
+        "introducedBy": "FR-C127-reponse",
+        "introducedAt": 687,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C127-ECOLE79-04",
+        "language": "french",
+        "introducedBy": "FR-C127-idee",
+        "introducedAt": 688,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "FR-LEX-C127-ECOLE79-05",
+        "language": "french",
+        "introducedBy": "FR-C127-probleme",
+        "introducedAt": 689,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "FR-LEX-C49-CORPS1-01",
         "language": "french",
         "introducedBy": "FR-C49-bras",
@@ -70540,211 +72234,321 @@
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C90-ADJ42-03",
+        "atom": "FR-LEX-C94-ADJ46-02",
         "language": "french",
-        "introducedBy": "FR-C90-haut",
-        "introducedAt": 498,
+        "introducedBy": "FR-C94-amer",
+        "introducedAt": 517,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C90-ADJ42-04",
+        "atom": "FR-LEX-C94-ADJ46-03",
         "language": "french",
-        "introducedBy": "FR-C90-plein",
-        "introducedAt": 499,
+        "introducedBy": "FR-C94-rond",
+        "introducedAt": 518,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C90-ADJ42-05",
+        "atom": "FR-LEX-C94-ADJ46-04",
         "language": "french",
-        "introducedBy": "FR-C90-vide",
-        "introducedAt": 500,
+        "introducedBy": "FR-C94-carre",
+        "introducedAt": 519,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C91-ADJ43-01",
+        "atom": "FR-LEX-C94-ADJ46-05",
         "language": "french",
-        "introducedBy": "FR-C91-fort",
-        "introducedAt": 501,
+        "introducedBy": "FR-C94-sec",
+        "introducedAt": 520,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C91-ADJ43-02",
+        "atom": "FR-LEX-C95-ADJ47-01",
         "language": "french",
-        "introducedBy": "FR-C91-faible",
-        "introducedAt": 502,
+        "introducedBy": "FR-C95-mouille",
+        "introducedAt": 521,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C91-ADJ43-03",
+        "atom": "FR-LEX-C95-ADJ47-02",
         "language": "french",
-        "introducedBy": "FR-C91-riche",
-        "introducedAt": 503,
+        "introducedBy": "FR-C95-semaine",
+        "introducedAt": 522,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C91-ADJ43-04",
+        "atom": "FR-LEX-C95-ADJ47-03",
         "language": "french",
-        "introducedBy": "FR-C91-pauvre",
-        "introducedAt": 504,
+        "introducedBy": "FR-C95-mois",
+        "introducedAt": 523,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C91-ADJ43-05",
+        "atom": "FR-LEX-C95-ADJ47-04",
         "language": "french",
-        "introducedBy": "FR-C91-gris",
-        "introducedAt": 505,
+        "introducedBy": "FR-C95-matin",
+        "introducedAt": 524,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C92-ADJ44-01",
+        "atom": "FR-LEX-C95-ADJ47-05",
         "language": "french",
-        "introducedBy": "FR-C92-doux",
-        "introducedAt": 506,
+        "introducedBy": "FR-C95-toujours",
+        "introducedAt": 525,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C92-ADJ44-02",
+        "atom": "FR-LEX-C96-TEMPS48-01",
         "language": "french",
-        "introducedBy": "FR-C92-sale",
-        "introducedAt": 507,
+        "introducedBy": "FR-C96-jamais",
+        "introducedAt": 526,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C92-ADJ44-03",
+        "atom": "FR-LEX-C96-TEMPS48-02",
         "language": "french",
-        "introducedBy": "FR-C92-jeune",
-        "introducedAt": 508,
+        "introducedBy": "FR-C96-maintenant",
+        "introducedAt": 527,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C92-ADJ44-04",
+        "atom": "FR-LEX-C96-TEMPS48-03",
         "language": "french",
-        "introducedBy": "FR-C92-gentil",
-        "introducedAt": 509,
+        "introducedBy": "FR-C96-puis",
+        "introducedAt": 528,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C92-ADJ44-05",
+        "atom": "FR-LEX-C96-TEMPS48-04",
         "language": "french",
-        "introducedBy": "FR-C92-etroit",
-        "introducedAt": 510,
+        "introducedBy": "FR-C96-loin",
+        "introducedAt": 529,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C93-ADJ45-01",
+        "atom": "FR-LEX-C96-TEMPS48-05",
         "language": "french",
-        "introducedBy": "FR-C93-mince",
-        "introducedAt": 511,
+        "introducedBy": "FR-C96-pres",
+        "introducedAt": 530,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C93-ADJ45-02",
+        "atom": "FR-LEX-C97-TEMPS49-01",
         "language": "french",
-        "introducedBy": "FR-C93-gros",
-        "introducedAt": 512,
+        "introducedBy": "FR-C97-dessus",
+        "introducedAt": 531,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C93-ADJ45-03",
+        "atom": "FR-LEX-C97-TEMPS49-02",
         "language": "french",
-        "introducedBy": "FR-C93-lourd",
-        "introducedAt": 513,
+        "introducedBy": "FR-C97-dessous",
+        "introducedAt": 532,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C93-ADJ45-04",
+        "atom": "FR-LEX-C97-TEMPS49-03",
         "language": "french",
-        "introducedBy": "FR-C93-leger",
-        "introducedAt": 514,
+        "introducedBy": "FR-C97-dedans",
+        "introducedAt": 533,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C93-ADJ45-05",
+        "atom": "FR-LEX-C97-TEMPS49-04",
         "language": "french",
-        "introducedBy": "FR-C93-sucre",
-        "introducedAt": 515,
+        "introducedBy": "FR-C97-dehors",
+        "introducedAt": 534,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C94-ADJ46-01",
+        "atom": "FR-LEX-C97-TEMPS49-05",
         "language": "french",
-        "introducedBy": "FR-C94-sale",
-        "introducedAt": 516,
+        "introducedBy": "FR-C97-hui",
+        "introducedAt": 535,
         "missed": [
           "R2",
-          "R3"
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C98-TEMPS50-01",
+        "language": "french",
+        "introducedBy": "FR-C98-hier",
+        "introducedAt": 536,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C98-TEMPS50-02",
+        "language": "french",
+        "introducedBy": "FR-C98-souvent",
+        "introducedAt": 537,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C98-TEMPS50-03",
+        "language": "french",
+        "introducedBy": "FR-C98-parfois",
+        "introducedAt": 538,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C98-TEMPS50-04",
+        "language": "french",
+        "introducedBy": "FR-C98-ville",
+        "introducedAt": 539,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C98-TEMPS50-05",
+        "language": "french",
+        "introducedBy": "FR-C98-rue",
+        "introducedAt": 540,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C99-VILLE51-01",
+        "language": "french",
+        "introducedBy": "FR-C99-magasin",
+        "introducedAt": 541,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C99-VILLE51-02",
+        "language": "french",
+        "introducedBy": "FR-C99-ecole",
+        "introducedAt": 542,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C99-VILLE51-03",
+        "language": "french",
+        "introducedBy": "FR-C99-banque",
+        "introducedAt": 543,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C99-VILLE51-04",
+        "language": "french",
+        "introducedBy": "FR-C99-train",
+        "introducedAt": 544,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C99-VILLE51-05",
+        "language": "french",
+        "introducedBy": "FR-C99-avion",
+        "introducedAt": 545,
+        "missed": [
+          "R2",
+          "R4"
         ],
         "revisits": 3
       },
@@ -126272,450 +128076,550 @@
         "revisits": 8
       },
       {
-        "atom": "FR-LEX-C100-VILLE52-01",
+        "atom": "FR-LEX-C123-METIERS75-05",
         "language": "french",
-        "introducedBy": "FR-C100-voiture",
-        "introducedAt": 546,
+        "introducedBy": "FR-C123-agriculteur",
+        "introducedAt": 669,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C100-VILLE52-02",
+        "atom": "FR-LEX-C124-METIERS76-01",
         "language": "french",
-        "introducedBy": "FR-C100-pont",
-        "introducedAt": 547,
+        "introducedBy": "FR-C124-boulanger",
+        "introducedAt": 670,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C100-VILLE52-03",
+        "atom": "FR-LEX-C124-METIERS76-02",
         "language": "french",
-        "introducedBy": "FR-C100-parc",
-        "introducedAt": 548,
+        "introducedBy": "FR-C124-etudiant",
+        "introducedAt": 671,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C100-VILLE52-04",
+        "atom": "FR-LEX-C125-METIERS77-02",
         "language": "french",
-        "introducedBy": "FR-C100-eglise",
-        "introducedAt": 549,
+        "introducedBy": "FR-C125-facteur",
+        "introducedAt": 676,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C125-METIERS77-03",
+        "language": "french",
+        "introducedBy": "FR-C125-serveur",
+        "introducedAt": 677,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C125-METIERS77-04",
+        "language": "french",
+        "introducedBy": "FR-C125-client",
+        "introducedAt": 678,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C125-METIERS77-05",
+        "language": "french",
+        "introducedBy": "FR-C125-caisse",
+        "introducedAt": 679,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C126-ECOLE78-01",
+        "language": "french",
+        "introducedBy": "FR-C126-classe",
+        "introducedAt": 680,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C126-ECOLE78-02",
+        "language": "french",
+        "introducedBy": "FR-C126-lecon",
+        "introducedAt": 681,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C126-ECOLE78-03",
+        "language": "french",
+        "introducedBy": "FR-C126-examen",
+        "introducedAt": 682,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C126-ECOLE78-04",
+        "language": "french",
+        "introducedBy": "FR-C126-mot",
+        "introducedAt": 683,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C126-ECOLE78-05",
+        "language": "french",
+        "introducedBy": "FR-C126-tableau",
+        "introducedAt": 684,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C127-ECOLE79-01",
+        "language": "french",
+        "introducedBy": "FR-C127-gomme",
+        "introducedAt": 685,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C127-ECOLE79-02",
+        "language": "french",
+        "introducedBy": "FR-C127-devoirs",
+        "introducedAt": 686,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "FR-LEX-C128-LOISIRS80-01",
+        "language": "french",
+        "introducedBy": "FR-C128-musique",
+        "introducedAt": 692,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C100-VILLE52-05",
+        "atom": "FR-LEX-C128-LOISIRS80-02",
         "language": "french",
-        "introducedBy": "FR-C100-musee",
-        "introducedAt": 550,
+        "introducedBy": "FR-C128-sport",
+        "introducedAt": 693,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C101-VILLE53-01",
+        "atom": "FR-LEX-C128-LOISIRS80-03",
         "language": "french",
-        "introducedBy": "FR-C101-restaurant",
-        "introducedAt": 551,
+        "introducedBy": "FR-C128-jeu",
+        "introducedAt": 694,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C101-VILLE53-02",
+        "atom": "FR-LEX-C128-LOISIRS80-04",
         "language": "french",
-        "introducedBy": "FR-C101-hotel",
-        "introducedAt": 552,
+        "introducedBy": "FR-C128-film",
+        "introducedAt": 695,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C101-VILLE53-03",
+        "atom": "FR-LEX-C128-LOISIRS80-05",
         "language": "french",
-        "introducedBy": "FR-C101-pharmacie",
-        "introducedAt": 553,
+        "introducedBy": "FR-C128-chanson",
+        "introducedAt": 696,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C101-VILLE53-04",
+        "atom": "FR-LEX-C129-LOISIRS81-01",
         "language": "french",
-        "introducedBy": "FR-C101-village",
-        "introducedAt": 554,
+        "introducedBy": "FR-C129-dessin",
+        "introducedAt": 697,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C101-VILLE53-05",
+        "atom": "FR-LEX-C129-LOISIRS81-02",
         "language": "french",
-        "introducedBy": "FR-C101-poste",
-        "introducedAt": 555,
+        "introducedBy": "FR-C129-vie",
+        "introducedAt": 698,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C102-VILLE54-01",
+        "atom": "FR-LEX-C129-LOISIRS81-03",
         "language": "french",
-        "introducedBy": "FR-C102-police",
-        "introducedAt": 556,
+        "introducedBy": "FR-C129-fois",
+        "introducedAt": 699,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C102-VILLE54-02",
+        "atom": "FR-LEX-C129-LOISIRS81-04",
         "language": "french",
-        "introducedBy": "FR-C102-theatre",
-        "introducedAt": 557,
+        "introducedBy": "FR-C129-couleur",
+        "introducedAt": 700,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C102-VILLE54-03",
+        "atom": "FR-LEX-C129-LOISIRS81-05",
         "language": "french",
-        "introducedBy": "FR-C102-bibliotheque",
-        "introducedAt": 558,
+        "introducedBy": "FR-C129-prix",
+        "introducedAt": 701,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C102-VILLE54-04",
+        "atom": "FR-LEX-C130-COULEURS82-01",
         "language": "french",
-        "introducedBy": "FR-C102-boulangerie",
-        "introducedAt": 559,
+        "introducedBy": "FR-C130-rose",
+        "introducedAt": 702,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C102-VILLE54-05",
+        "atom": "FR-LEX-C130-COULEURS82-02",
         "language": "french",
-        "introducedBy": "FR-C102-mairie",
-        "introducedAt": 560,
+        "introducedBy": "FR-C130-violet",
+        "introducedAt": 703,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C103-VILLE55-01",
+        "atom": "FR-LEX-C130-COULEURS82-03",
         "language": "french",
-        "introducedBy": "FR-C103-quartier",
-        "introducedAt": 561,
+        "introducedBy": "FR-C130-marron",
+        "introducedAt": 704,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C94-ADJ46-02",
+        "atom": "FR-LEX-C130-COULEURS82-04",
         "language": "french",
-        "introducedBy": "FR-C94-amer",
-        "introducedAt": 517,
+        "introducedBy": "FR-C130-brun",
+        "introducedAt": 705,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C94-ADJ46-03",
+        "atom": "FR-LEX-C130-COULEURS82-05",
         "language": "french",
-        "introducedBy": "FR-C94-rond",
-        "introducedAt": 518,
+        "introducedBy": "FR-C130-joli",
+        "introducedAt": 706,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C94-ADJ46-04",
+        "atom": "FR-LEX-C131-QUALITES83-01",
         "language": "french",
-        "introducedBy": "FR-C94-carre",
-        "introducedAt": 519,
+        "introducedBy": "FR-C131-occupe",
+        "introducedAt": 707,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C94-ADJ46-05",
+        "atom": "FR-LEX-C131-QUALITES83-02",
         "language": "french",
-        "introducedBy": "FR-C94-sec",
-        "introducedAt": 520,
+        "introducedBy": "FR-C131-libre",
+        "introducedAt": 708,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C95-ADJ47-01",
+        "atom": "FR-LEX-C131-QUALITES83-03",
         "language": "french",
-        "introducedBy": "FR-C95-mouille",
-        "introducedAt": 521,
+        "introducedBy": "FR-C131-ouvert",
+        "introducedAt": 709,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C95-ADJ47-02",
+        "atom": "FR-LEX-C131-QUALITES83-04",
         "language": "french",
-        "introducedBy": "FR-C95-semaine",
-        "introducedAt": 522,
+        "introducedBy": "FR-C131-ferme",
+        "introducedAt": 710,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C95-ADJ47-03",
+        "atom": "FR-LEX-C131-QUALITES83-05",
         "language": "french",
-        "introducedBy": "FR-C95-mois",
-        "introducedAt": 523,
+        "introducedBy": "FR-C131-calme",
+        "introducedAt": 711,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C95-ADJ47-04",
+        "atom": "FR-LEX-C132-QUALITES84-01",
         "language": "french",
-        "introducedBy": "FR-C95-matin",
-        "introducedAt": 524,
+        "introducedBy": "FR-C132-bruyant",
+        "introducedAt": 712,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C95-ADJ47-05",
+        "atom": "FR-LEX-C132-QUALITES84-02",
         "language": "french",
-        "introducedBy": "FR-C95-toujours",
-        "introducedAt": 525,
+        "introducedBy": "FR-C132-dernier",
+        "introducedAt": 713,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C96-TEMPS48-01",
+        "atom": "FR-LEX-C132-QUALITES84-03",
         "language": "french",
-        "introducedBy": "FR-C96-jamais",
-        "introducedAt": 526,
+        "introducedBy": "FR-C132-prochain",
+        "introducedAt": 714,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C96-TEMPS48-02",
+        "atom": "FR-LEX-C132-QUALITES84-04",
         "language": "french",
-        "introducedBy": "FR-C96-maintenant",
-        "introducedAt": 527,
+        "introducedBy": "FR-C132-celebre",
+        "introducedAt": 715,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C96-TEMPS48-03",
+        "atom": "FR-LEX-C132-QUALITES84-05",
         "language": "french",
-        "introducedBy": "FR-C96-puis",
-        "introducedAt": 528,
+        "introducedBy": "FR-C132-drole",
+        "introducedAt": 716,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C96-TEMPS48-04",
+        "atom": "FR-LEX-C133-QUALITES85-01",
         "language": "french",
-        "introducedBy": "FR-C96-loin",
-        "introducedAt": 529,
+        "introducedBy": "FR-C133-sympathique",
+        "introducedAt": 717,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C96-TEMPS48-05",
+        "atom": "FR-LEX-C133-QUALITES85-02",
         "language": "french",
-        "introducedBy": "FR-C96-pres",
-        "introducedAt": 530,
+        "introducedBy": "FR-C133-mechant",
+        "introducedAt": 718,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C97-TEMPS49-01",
+        "atom": "FR-LEX-C133-QUALITES85-03",
         "language": "french",
-        "introducedBy": "FR-C97-dessus",
-        "introducedAt": 531,
+        "introducedBy": "FR-C133-chaleur",
+        "introducedAt": 719,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C97-TEMPS49-02",
+        "atom": "FR-LEX-C133-QUALITES85-04",
         "language": "french",
-        "introducedBy": "FR-C97-dessous",
-        "introducedAt": 532,
+        "introducedBy": "FR-C133-orage",
+        "introducedAt": 720,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C97-TEMPS49-03",
+        "atom": "FR-LEX-C133-QUALITES85-05",
         "language": "french",
-        "introducedBy": "FR-C97-dedans",
-        "introducedAt": 533,
+        "introducedBy": "FR-C133-brouillard",
+        "introducedAt": 721,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C97-TEMPS49-04",
+        "atom": "FR-LEX-C134-NATURE86-01",
         "language": "french",
-        "introducedBy": "FR-C97-dehors",
-        "introducedAt": 534,
+        "introducedBy": "FR-C134-herbe",
+        "introducedAt": 722,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C97-TEMPS49-05",
+        "atom": "FR-LEX-C134-NATURE86-02",
         "language": "french",
-        "introducedBy": "FR-C97-hui",
-        "introducedAt": 535,
+        "introducedBy": "FR-C134-oreille",
+        "introducedAt": 723,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C98-TEMPS50-01",
+        "atom": "FR-LEX-C134-NATURE86-03",
         "language": "french",
-        "introducedBy": "FR-C98-hier",
-        "introducedAt": 536,
+        "introducedBy": "FR-C134-levre",
+        "introducedAt": 724,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C98-TEMPS50-02",
+        "atom": "FR-LEX-C134-NATURE86-04",
         "language": "french",
-        "introducedBy": "FR-C98-souvent",
-        "introducedAt": 537,
+        "introducedBy": "FR-C134-numero",
+        "introducedAt": 725,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C98-TEMPS50-03",
+        "atom": "FR-LEX-C134-NATURE86-05",
         "language": "french",
-        "introducedBy": "FR-C98-parfois",
-        "introducedAt": 538,
+        "introducedBy": "FR-C134-adresse",
+        "introducedAt": 726,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C98-TEMPS50-04",
+        "atom": "FR-LEX-C135-TEMPS87-01",
         "language": "french",
-        "introducedBy": "FR-C98-ville",
-        "introducedAt": 539,
+        "introducedBy": "FR-C135-seconde",
+        "introducedAt": 727,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C98-TEMPS50-05",
+        "atom": "FR-LEX-C135-TEMPS87-02",
         "language": "french",
-        "introducedBy": "FR-C98-rue",
-        "introducedAt": 540,
+        "introducedBy": "FR-C135-monnaie",
+        "introducedAt": 728,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C99-VILLE51-01",
+        "atom": "FR-LEX-C135-TEMPS87-03",
         "language": "french",
-        "introducedBy": "FR-C99-magasin",
-        "introducedAt": 541,
+        "introducedBy": "FR-C135-date",
+        "introducedAt": 729,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C99-VILLE51-02",
+        "atom": "FR-LEX-C135-TEMPS87-04",
         "language": "french",
-        "introducedBy": "FR-C99-ecole",
-        "introducedAt": 542,
+        "introducedBy": "FR-C135-siecle",
+        "introducedAt": 730,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C99-VILLE51-03",
+        "atom": "FR-LEX-C135-TEMPS87-05",
         "language": "french",
-        "introducedBy": "FR-C99-banque",
-        "introducedAt": 543,
+        "introducedBy": "FR-C135-courriel",
+        "introducedAt": 731,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "FR-LEX-C99-VILLE51-04",
+        "atom": "FR-LEX-C136-NOMBRES88-01",
         "language": "french",
-        "introducedBy": "FR-C99-train",
-        "introducedAt": 544,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "FR-LEX-C99-VILLE51-05",
-        "language": "french",
-        "introducedBy": "FR-C99-avion",
-        "introducedAt": 545,
+        "introducedBy": "FR-C136-zero",
+        "introducedAt": 732,
         "missed": [
           "R2"
         ],
@@ -156265,12 +158169,12 @@
       },
       {
         "language": "french",
-        "lessonCount": 578,
+        "lessonCount": 749,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 641,
-        "atomsNeverRevisited": 9,
+        "atomsTaught": 806,
+        "atomsNeverRevisited": 7,
         "forwardReferences": 123
       },
       {
@@ -156469,14 +158373,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 13629,
-      "atomsNeverRevisited": 322,
+      "atomsTaught": 13794,
+      "atomsNeverRevisited": 320,
       "neverRevisitedPercent": 2,
       "missedByWindow": {
         "R1": 1759,
-        "R2": 8152,
-        "R3": 8811,
-        "R4": 8142
+        "R2": 8284,
+        "R3": 8865,
+        "R4": 8309
       },
       "forwardReferences": 921
     }
@@ -176699,8 +178603,8 @@
       },
       {
         "language": "french",
-        "lessonCount": 578,
-        "atomMeasurableLessons": 571,
+        "lessonCount": 749,
+        "atomMeasurableLessons": 742,
         "atomMeasurementBlindLessons": 7,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -176715,14 +178619,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 123,
-        "atomsTaught": 641,
-        "atomsNeverRevisited": 9,
-        "reinforcementWindowMisses": 1323,
+        "atomsTaught": 806,
+        "atomsNeverRevisited": 7,
+        "reinforcementWindowMisses": 1676,
         "reinforcementMissesByWindow": {
           "R1": 96,
-          "R2": 445,
-          "R3": 430,
-          "R4": 352
+          "R2": 577,
+          "R3": 484,
+          "R4": 519
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 14,
@@ -176746,7 +178650,7 @@
           {
             "language": "french",
             "kind": "reinforcement",
-            "count": 1323,
+            "count": 1676,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -178661,6 +180565,13 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
+        "language": "french",
+        "kind": "reinforcement",
+        "count": 1676,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
         "language": "hindi",
         "kind": "reinforcement",
         "count": 1597,
@@ -178685,13 +180596,6 @@
         "language": "tamil",
         "kind": "reinforcement",
         "count": 1406,
-        "unit": "missed window(s)",
-        "detail": "add retrieval at the expanding R1-R4 intervals"
-      },
-      {
-        "language": "french",
-        "kind": "reinforcement",
-        "count": 1323,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -179125,26 +181029,31 @@
       {
         "language": "french",
         "touches": "A2",
-        "attained": "pre-A1",
-        "inProgressAt": "A1",
+        "attained": "A1",
+        "inProgressAt": "A2",
         "blockers": [
           {
             "criterion": "spine-nodes",
-            "detail": "1 of 12 A1 spine node(s) unrealized: SPINE-COUNT-ONE-TO-FIVE",
-            "shortfall": 1
+            "detail": "4 of 5 A2 spine node(s) unrealized: SPINE-NEGATE-AND-ASK, SPINE-TALK-ABOUT-PAST, SPINE-TALK-ABOUT-FUTURE, SPINE-READ-PRACTICAL-TEXTS",
+            "shortfall": 4
           },
           {
             "criterion": "vocabulary",
-            "detail": "teaches 440 distinct headwords at or below A1, against 600",
-            "shortfall": 160
+            "detail": "teaches 631 distinct headwords at or below A2, against 1200",
+            "shortfall": 569
+          },
+          {
+            "criterion": "verb-vocabulary",
+            "detail": "teaches 84 distinct verb headwords at or below A2, against 120",
+            "shortfall": 36
           },
           {
             "criterion": "reinforcement",
-            "detail": "15 atom(s) at or below A1 are revisited fewer than twice (65 etymology hook(s) waived)",
-            "shortfall": 15
+            "detail": "8 atom(s) at or below A2 are revisited fewer than twice (82 etymology hook(s) waived)",
+            "shortfall": 8
           }
         ],
-        "vocabulary": 466
+        "vocabulary": 631
       },
       {
         "language": "german",
@@ -179757,8 +181666,8 @@
       "tracksOverstating": 23,
       "tracksWithAnyLevel": 22,
       "attainedByLevel": {
-        "pre-A1": 21,
-        "A1": 1,
+        "pre-A1": 20,
+        "A1": 2,
         "A2": 0,
         "B1": 0,
         "B2": 0,
@@ -179769,11 +181678,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 12299,
-    "voice": 9977,
+    "totalLessons": 12470,
+    "voice": 10148,
     "sight": 985,
     "pen": 1337,
-    "coreVoice": 10553,
+    "coreVoice": 10724,
     "lessonsWithWritingSegments": 854,
     "drivablePercent": 86,
     "tracks": [
@@ -182961,13 +184870,13 @@
       },
       {
         "language": "french",
-        "lessonCount": 578,
-        "voice": 550,
+        "lessonCount": 749,
+        "voice": 721,
         "sight": 16,
         "pen": 12,
-        "coreVoice": 553,
-        "drivablePercent": 96,
-        "drivablePrefixTotal": 518,
+        "coreVoice": 724,
+        "drivablePercent": 97,
+        "drivablePrefixTotal": 689,
         "chapters": [
           {
             "language": "french",
@@ -184448,6 +186357,468 @@
           {
             "language": "french",
             "chapter": 105,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 106,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 107,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 108,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 109,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 110,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 111,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 112,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 113,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 114,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 115,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 116,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 117,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 118,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 119,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 120,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 121,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 122,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 123,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 124,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 125,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 126,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 127,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 128,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 129,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 130,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 131,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 132,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 133,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 134,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 135,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 136,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 137,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "french",
+            "chapter": 138,
             "lessonCount": 7,
             "voice": 7,
             "sight": 0,
@@ -217425,7 +219796,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 12299,
+    "lessons": 12470,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -217433,11 +219804,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 12299,
-    "measuredLessons": 8126,
-    "idiomMeasuredLessons": 8126,
-    "senseMeasuredLessons": 8127,
-    "cultureClaimMeasuredLessons": 8126,
+    "lessons": 12470,
+    "measuredLessons": 8297,
+    "idiomMeasuredLessons": 8297,
+    "senseMeasuredLessons": 8298,
+    "cultureClaimMeasuredLessons": 8297,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -217446,18 +219817,18 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 11387,
-    "usesBeforeIntroduction": 28654,
-    "technicalUsesBeforeIntroduction": 6256,
-    "technicalLessons": 3495,
+    "lessonsUsingTerms": 11558,
+    "usesBeforeIntroduction": 28839,
+    "technicalUsesBeforeIntroduction": 6259,
+    "technicalLessons": 3498,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2001
+        "lessons": 2003
       },
       {
         "term": "noun",
-        "lessons": 1188
+        "lessons": 1189
       },
       {
         "term": "adjective",
@@ -217478,12 +219849,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 12299,
+    "lessonsScanned": 12470,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 2631,
+    "filesScanned": 2664,
     "mainCharacters": 134,
     "scriptCharacters": 800,
     "gaps": 0
