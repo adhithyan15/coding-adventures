@@ -130,11 +130,13 @@ by side.
 
 Work outside this crate that the corpus exposes:
 
-- **Script-data tokenization.** `html-lexer` does not end a script at
-  `</script ` followed by end of file, at `</script/ >`, or at `</script>`
-  after `<!--</scrip `. `html-parser` compensates by rescanning script text in
-  its tree builder (`rfind_script_end_marker`); this crate does not, so those
-  31 cases stay listed until the lexer is fixed.
+- **Script-data tokenization** (fixed). `html-lexer` used to decide whether
+  `</script` was a real end tag only at `>`, so `</script ` followed by end of
+  file, `</script/ >`, and `</script>` after `<!--</scrip ` came out as text.
+  It now decides at the first whitespace or `/`, as the specification does
+  (F08, conditional state switches), and those 31 cases pass. `html-parser`
+  still rescans script text in its tree builder (`rfind_script_end_marker`),
+  which step 6 deletes.
 - **`<selectedcontent>`** mirrors the selected `<option>` through DOM
   insertion steps, not tree construction. It arrives with BR02 P4 (a real
   DOM).

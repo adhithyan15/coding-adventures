@@ -6,6 +6,20 @@ documented in this file.
 ## Unreleased
 
 ### Fixed
+- RCDATA, RAWTEXT and script data decide whether `</name` is an appropriate
+  end tag at the first whitespace or `/`, as the WHATWG tokenizer does, instead
+  of only at `>`. So `<script></script ` followed by end of file drops the
+  unfinished tag with `eof-in-tag` (it used to become text), `</script/ >`
+  closes the script, and `</scrip ` inside `<!--` is text at once, so a later
+  `</script>` still closes. New `*_end_tag_mismatch` and
+  `*_self_closing_end_tag_mismatch` states turn a mismatched name back into
+  text; a mismatched tag seeded through `HtmlLexContext::end_tag_continuation`
+  keeps its literal recovery. `html-tree-builder` passes 31 more corpus cases.
+- The html5lib smoke fixture no longer rewrites the four upstream "End tag
+  closing RCDATA or RAWTEXT" cases to the old output:
+  `normalize_html5lib_fixtures.py` keeps upstream's tokens and `eof-in-tag`.
+- `tests/generated_source_test.rs` fails when `src/generated_html1.rs` drifts
+  from `html1.lexer.states.toml`; `HTML_LEXER_REGENERATE=1` rewrites it.
 - A tag with many attributes lexes in linear time (the duplicate check in
   `state-machine-tokenizer` is a set lookup now). `tests/attribute_dedup_test.rs`
   pins first-duplicate-wins, the `duplicate-attribute` error, a clean slate

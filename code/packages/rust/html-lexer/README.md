@@ -17,6 +17,12 @@ This crate owns the HTML-specific state machine and exposes a Rust lexer API.
 The TOML files in this package are authoring artifacts. Production code links
 checked-in generated Rust modules built to match the output shape of
 `state-machine-source-compiler`, so the runtime never loads TOML or JSON.
+After editing `html1.lexer.states.toml`, regenerate its module and commit both
+(`tests/generated_source_test.rs` fails while they disagree):
+
+```bash
+HTML_LEXER_REGENERATE=1 cargo test -p coding-adventures-html-lexer --test generated_source_test
+```
 
 `html1.lexer.states.toml` is the current package default and the broader
 compatibility floor for Venture's Mosaic-era target: it is not the end state of

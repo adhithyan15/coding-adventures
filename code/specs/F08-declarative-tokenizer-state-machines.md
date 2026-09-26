@@ -546,6 +546,26 @@ once so every runtime behaves the same way.
 - `goto_return_state`: switch to the stored return state.
 - `advance(count)`: consume additional code points after a lookahead match.
 
+#### Conditional state switches (as built)
+
+The Rust runtime does not evaluate transition guards yet (see Guards). Where a
+state must branch on lexer context, the transition names a default target and
+an action overrides it:
+
+- `switch_to_if_temporary_buffer_equals(text, yes, no)`: switch to `yes` when
+  the temporary buffer equals `text`, else to `no` (script double-escape).
+- `switch_to_if_appropriate_end_tag(yes, no)`: switch to `yes` when the current
+  end tag's name equals the last start tag's (WHATWG "appropriate end tag"),
+  else to `no`.
+
+With `consume = false` the input is then reconsumed in whichever state was
+chosen. The HTML lexer uses the second one at the first whitespace or `/` after
+`</name` in RCDATA, RAWTEXT and script data, which is exactly where the
+specification decides. A mismatched name goes to a `*_end_tag_mismatch` state
+that turns `</name` back into text and reconsumes in the text state; a matching
+one carries on as a tag, so `<script></script ` followed by end of file drops
+the unfinished tag (`eof-in-tag`) and `</script/ >` still closes the script.
+
 ### Text Actions
 
 - `append_text(current)`: append the current code point to `text_buffer`.

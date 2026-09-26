@@ -5,6 +5,10 @@ documented in this file.
 
 ## Unreleased
 
+- **Script-data end tags.** With `html-lexer` deciding appropriate end tags
+  at whitespace or `/`, 31 listed corpus cases (`tests16.dat`,
+  `domjs-unsafe.dat:145/146`, `scriptdata01.dat:411`)
+  pass and leave `tests/fixtures/expected-failures.txt`.
 - **BR03 step 3: foreign content.** The tree construction dispatcher now
   sends tokens to the foreign-content rules (§13.2.6.5) when the adjusted
   current node is SVG or MathML, except at MathML text integration points,

@@ -6,6 +6,10 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
 
 ### Fixed
 
+- `switch_to_if_appropriate_end_tag(yes, no)` switches state on whether the
+  current end tag matches the last start tag, so HTML text-mode end tags are
+  decided where the WHATWG tokenizer decides them.
+
 - `commit_attribute_dedup` looks names up in a set instead of scanning the
   tag's attributes, so a tag with N attributes costs N rather than N² (30,000
   attributes in 739 KB took 7.6 s to lex and parse). The set is rebuilt from
