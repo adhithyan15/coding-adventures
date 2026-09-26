@@ -1,0 +1,11 @@
+{
+  "id": "GE-C21-das-wetter-more",
+  "pathSegment": "GE-PATH-025",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-025-LANGUAGE-SPECIFIC",
+      "order": 1
+    }
+  ]
+}

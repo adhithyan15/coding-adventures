@@ -1,0 +1,19 @@
+{
+  "chapter": 44,
+  "title": "Grandfather, Grandmother, Husband, Wife, Child",
+  "label": "ch:ur-grandfather-grandmother-husband-wife-child",
+  "canDo": "I can say a grandfather, a grandmother, a husband, a wife and a child.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "UR-C44-bachcha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 44: i can say a grandfather, a grandmother, a husband, a wife and a child.",
+    "assesses": [
+      "UR-LEX-C44-FAMILY44-03",
+      "UR-LEX-C44-FAMILY44-04",
+      "UR-LEX-C44-FAMILY44-05"
+    ]
+  }
+}

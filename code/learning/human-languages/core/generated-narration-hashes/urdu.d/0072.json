@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:e3e3e4f05dacf36f",
+  "lessonIds": [
+    "UR-C72-ucha",
+    "UR-C72-nicha",
+    "UR-C72-bhara",
+    "UR-C72-khali",
+    "UR-C72-mitha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch72.txt",
+  "json": "urdu/narration/ch72.json",
+  "textHash": "fnv1a64:68a960f2b07d4919",
+  "jsonHash": "fnv1a64:6e8a66dd3b1fffd9",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 81,
+  "title": "School, Card, Picture, Bag, Money",
+  "label": "ch:ge-school-card-picture-bag-money",
+  "canDo": "I can say a school, a card, a picture, a bag and money.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GE-C81-geld",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: i can say a school, a card, a picture, a bag and money.",
+    "assesses": [
+      "GE-LEX-C81-SCHULE-03",
+      "GE-LEX-C81-SCHULE-04",
+      "GE-LEX-C81-SCHULE-05"
+    ]
+  }
+}

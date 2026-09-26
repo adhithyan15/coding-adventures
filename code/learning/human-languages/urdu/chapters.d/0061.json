@@ -1,0 +1,19 @@
+{
+  "chapter": 61,
+  "title": "Bottle, Book, Pen, Newspaper, School",
+  "label": "ch:ur-bottle-book-pen-newspaper-school",
+  "canDo": "I can say a bottle, a book, a pen, a newspaper and a school.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "UR-C61-iskul",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 61: i can say a bottle, a book, a pen, a newspaper and a school.",
+    "assesses": [
+      "UR-LEX-C61-HOME61-03",
+      "UR-LEX-C61-HOME61-04",
+      "UR-LEX-C61-HOME61-05"
+    ]
+  }
+}

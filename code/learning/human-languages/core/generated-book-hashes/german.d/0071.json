@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:64a74431a41cf7e3",
+  "lessonIds": [
+    "GE-C71-kuchen",
+    "GE-C71-suppe",
+    "GE-C71-honig",
+    "GE-C71-oel",
+    "GE-C71-mittagessen"
+  ],
+  "tex": "german/book/chapters/ch71-cake-soup-honey-oil-lunch.tex"
+}

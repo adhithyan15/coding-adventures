@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C77-pehle",
+    "language": "urdu",
+    "chapter": 77,
+    "sequence": 3940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e47a703f398dd866"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:7038e5cb393b8786",
+  "lessonIds": [
+    "GE-C86-schwein",
+    "GE-C86-vogel",
+    "GE-C86-maus",
+    "GE-C86-fuchs",
+    "GE-C86-schlange"
+  ],
+  "tex": "german/book/chapters/ch86-pig-bird-mouse-fox-snake.tex"
+}

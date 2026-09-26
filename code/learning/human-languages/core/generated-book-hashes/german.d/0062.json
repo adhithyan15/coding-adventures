@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:d3d336dd26144ad4",
+  "lessonIds": [
+    "GE-C62-grossmutter",
+    "GE-C62-frau",
+    "GE-C62-maedchen",
+    "GE-C62-onkel",
+    "GE-C62-tante"
+  ],
+  "tex": "german/book/chapters/ch62-grandmother-woman-girl-uncle-aunt.tex"
+}

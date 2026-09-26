@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:3d0a13cbca92dcd8",
+  "lessonIds": [
+    "GE-C93-richtig",
+    "GE-C93-falsch",
+    "GE-C93-wichtig",
+    "GE-C93-einfach",
+    "GE-C93-braun"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch93.txt",
+  "json": "german/narration/ch93.json",
+  "textHash": "fnv1a64:2410929203de08fb",
+  "jsonHash": "fnv1a64:97782c9be9de793f",
+  "findings": []
+}

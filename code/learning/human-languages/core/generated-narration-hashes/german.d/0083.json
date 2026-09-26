@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:f06c6d1c5a0822af",
+  "lessonIds": [
+    "GE-C83-wald",
+    "GE-C83-stein",
+    "GE-C83-insel",
+    "GE-C83-feld",
+    "GE-C83-himmel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch83.txt",
+  "json": "german/narration/ch83.json",
+  "textHash": "fnv1a64:ae8f635bb4e110a5",
+  "jsonHash": "fnv1a64:f7f172446e5a3bd2",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:1473f85b01c6c6d0",
+  "lessonIds": [
+    "UR-C77-hamesha",
+    "UR-C77-kabhi",
+    "UR-C77-jaldi",
+    "UR-C77-der",
+    "UR-C77-pehle"
+  ],
+  "tex": "urdu/book/chapters/ch77-always-sometimes-quickly-delay-before.tex"
+}

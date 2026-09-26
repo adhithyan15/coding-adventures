@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "Zero, Word, Answer, Work, Music",
+  "label": "ch:ge-zero-word-answer-work-music",
+  "canDo": "I can say zero, a word, an answer, work and music.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GE-C102-musik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can say zero, a word, an answer, work and music.",
+    "assesses": [
+      "GE-LEX-C102-DINGE-03",
+      "GE-LEX-C102-DINGE-04",
+      "GE-LEX-C102-DINGE-05"
+    ]
+  }
+}

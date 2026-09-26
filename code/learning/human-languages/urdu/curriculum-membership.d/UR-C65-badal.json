@@ -1,0 +1,11 @@
+{
+  "id": "UR-C65-badal",
+  "pathSegment": "UR-PATH-65-NATURE65",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-65-NATURE65",
+      "order": 4
+    }
+  ]
+}

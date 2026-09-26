@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C53-chhorna",
+    "language": "urdu",
+    "chapter": 53,
+    "sequence": 2700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83fd9f735ac5e4ef"
+  },
+  "findings": []
+}

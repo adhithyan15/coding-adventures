@@ -1,0 +1,11 @@
+{
+  "id": "UR-C65-sitara",
+  "pathSegment": "UR-PATH-65-NATURE65",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-65-NATURE65",
+      "order": 3
+    }
+  ]
+}

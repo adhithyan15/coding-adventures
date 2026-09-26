@@ -1,0 +1,19 @@
+{
+  "chapter": 48,
+  "title": "To play, To buy, To sell, To give, To put",
+  "label": "ch:ur-to-play-to-buy-to-sell-to-give-to-put",
+  "canDo": "I can say to play, to buy, to sell, to give and to put, to keep.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C48-rakhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 48: i can say to play, to buy, to sell, to give and to put, to keep.",
+    "assesses": [
+      "UR-LEX-C48-VERBS48-03",
+      "UR-LEX-C48-VERBS48-04",
+      "UR-LEX-C48-VERBS48-05"
+    ]
+  }
+}

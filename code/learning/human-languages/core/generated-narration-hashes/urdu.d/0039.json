@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:3ec60bd98d7bf523",
+  "lessonIds": [
+    "UR-C39-pet",
+    "UR-C39-kandha",
+    "UR-C39-ungli",
+    "UR-C39-hot",
+    "UR-C39-gardan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch39.txt",
+  "json": "urdu/narration/ch39.json",
+  "textHash": "fnv1a64:7e03ee8e86141510",
+  "jsonHash": "fnv1a64:b590959c8ff6dbfa",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:11224b72b4a4e0ab",
+  "lessonIds": [
+    "UR-C55-alu",
+    "UR-C55-tamatar",
+    "UR-C55-gajar",
+    "UR-C55-chini",
+    "UR-C55-namak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch55.txt",
+  "json": "urdu/narration/ch55.json",
+  "textHash": "fnv1a64:4f4eacf4ae4cf6ef",
+  "jsonHash": "fnv1a64:9e0d3e2eb09efb0a",
+  "findings": []
+}

@@ -9,7 +9,7 @@ headword: کہنا · کیا کہا؟ · آرام سے
 romanization: kahnā · kyā kahā? · ārām se
 gloss: the repair kit dropped into the first conversation this book ever taught — an exchange from chapter three, ninety lessons back, with the sentences that rescue it
 concept_tag: UR-REVIEW-REPAIR
-prerequisites: [UR-C22-aram-se, UR-C03-practice, UR-C04-practice, UR-C05-khuda-hafiz]
+prerequisites: [UR-C22-aram-se, UR-C03-practice, UR-C04-practice, UR-C05-khuda-hafiz, UR-C04-main-hun-more, UR-C05-khuda-hafiz-more]
 sounds: []
 roots: []
 duration:

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:307c43853ea41bcd",
+  "lessonIds": [
+    "GE-C64-kaufen",
+    "GE-C64-spielen",
+    "GE-C64-wissen",
+    "GE-C64-finden",
+    "GE-C64-suchen"
+  ],
+  "tex": "german/book/chapters/ch64-to-buy-to-play-to-know-to-find-to-look-for.tex"
+}

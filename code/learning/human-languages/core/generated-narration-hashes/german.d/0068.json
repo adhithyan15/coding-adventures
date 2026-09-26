@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:b333d963a76ac6da",
+  "lessonIds": [
+    "GE-C68-tragen",
+    "GE-C68-schicken",
+    "GE-C68-zaehlen",
+    "GE-C68-malen",
+    "GE-C68-putzen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch68.txt",
+  "json": "german/narration/ch68.json",
+  "textHash": "fnv1a64:8c60353e4fba380a",
+  "jsonHash": "fnv1a64:a54d69121334b682",
+  "findings": []
+}

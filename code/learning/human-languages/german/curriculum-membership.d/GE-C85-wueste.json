@@ -1,0 +1,11 @@
+{
+  "id": "GE-C85-wueste",
+  "pathSegment": "GE-PATH-85-NATUR4",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-85-NATUR4",
+      "order": 2
+    }
+  ]
+}

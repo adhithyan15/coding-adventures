@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:0bc1494a02eb8e6a",
+  "lessonIds": [
+    "UR-C40-chehra",
+    "UR-C40-khun",
+    "UR-C40-tang",
+    "UR-C40-ghutna",
+    "UR-C40-bukhar"
+  ],
+  "tex": "urdu/book/chapters/ch40-face-blood-leg-knee-fever.tex"
+}

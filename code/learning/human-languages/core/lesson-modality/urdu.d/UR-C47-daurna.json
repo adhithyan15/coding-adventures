@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C47-daurna",
+    "language": "urdu",
+    "chapter": 47,
+    "sequence": 2420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f19b1b9ad05cbff7"
+  },
+  "findings": []
+}

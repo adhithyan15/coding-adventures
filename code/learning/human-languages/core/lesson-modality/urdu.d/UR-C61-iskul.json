@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C61-iskul",
+    "language": "urdu",
+    "chapter": 61,
+    "sequence": 3120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1930ef954cb1f24f"
+  },
+  "findings": []
+}

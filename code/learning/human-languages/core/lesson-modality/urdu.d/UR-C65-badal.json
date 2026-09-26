@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C65-badal",
+    "language": "urdu",
+    "chapter": 65,
+    "sequence": 3340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f4becf9f20d8c5a"
+  },
+  "findings": []
+}

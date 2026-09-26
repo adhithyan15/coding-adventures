@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C62-tante",
+    "language": "german",
+    "chapter": 62,
+    "sequence": 1880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1099f77e54bcb05b"
+  },
+  "findings": []
+}

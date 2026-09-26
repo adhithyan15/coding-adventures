@@ -1,0 +1,11 @@
+{
+  "id": "GE-C103-reise",
+  "pathSegment": "GE-PATH-103-FREIZEIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-103-FREIZEIT",
+      "order": 3
+    }
+  ]
+}

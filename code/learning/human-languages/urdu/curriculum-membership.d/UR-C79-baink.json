@@ -1,0 +1,11 @@
+{
+  "id": "UR-C79-baink",
+  "pathSegment": "UR-PATH-79-PLACE79",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-79-PLACE79",
+      "order": 4
+    }
+  ]
+}

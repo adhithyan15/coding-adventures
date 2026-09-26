@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:c580b4be0b504723",
+  "lessonIds": [
+    "GE-C72-abendessen",
+    "GE-C72-fruehstueck",
+    "GE-C72-reis",
+    "GE-C72-birne",
+    "GE-C72-zitrone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch72.txt",
+  "json": "german/narration/ch72.json",
+  "textHash": "fnv1a64:0820742b6eb22abc",
+  "jsonHash": "fnv1a64:e1f2fe933e1844e4",
+  "findings": []
+}

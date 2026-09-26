@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C71-suppe",
+    "language": "german",
+    "chapter": 71,
+    "sequence": 2300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9e29d3c6c8751f0"
+  },
+  "findings": []
+}

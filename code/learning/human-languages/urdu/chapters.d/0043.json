@@ -1,0 +1,19 @@
+{
+  "chapter": 43,
+  "title": "Mum, Son, Daughter, Grandfather, Grandmother",
+  "label": "ch:ur-mum-son-daughter-grandfather-grandmother",
+  "canDo": "I can say mum, a son, a daughter, a grandfather and a grandmother.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "UR-C43-dadi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 43: i can say mum, a son, a daughter, a grandfather and a grandmother.",
+    "assesses": [
+      "UR-LEX-C43-FAMILY43-03",
+      "UR-LEX-C43-FAMILY43-04",
+      "UR-LEX-C43-FAMILY43-05"
+    ]
+  }
+}

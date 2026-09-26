@@ -8,7 +8,7 @@ type: word
 headword: grün, gelb
 gloss: green and yellow — grün is native Germanic, the direct cousin of English's OWN "green" (a different root entirely from Latin's viridis); gelb is native too, and is usually said to share its ultimate PIE root with French's jaune, though that particular link is less secure than it first appears
 concept_tag: GE-COLOUR-GREEN-YELLOW
-prerequisites: [GE-C22-hund-katze]
+prerequisites: [GE-C22-hund-katze, GE-C22-hund-katze-more]
 sounds: [umlaut-u, consonant-b-final]
 roots: [germanic-groeniz-grow, pie-ghel-shine]
 etymology_hook: "grün is native Germanic, the direct cousin of English's own 'green' (Proto-Germanic *grōniz, PIE *ǵʰreh₁-, 'to grow, become green') — a COMPLETELY DIFFERENT root from Latin's viridis, even though both independently mean 'grow' → 'green'; gelb is native too (Proto-Germanic *gelwaz), usually traced to the same ultimate PIE root, *ghel- ('to shine'), as French's jaune — though modern Latin scholarship treats jaune's Latin ancestor galbus as genuinely unknown in origin, so treat gelb/jaune as probable, not certain, cousins"
@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: [GE-LEX-HUND-02, GE-ETYMON-HUND-03, GE-LEX-KATZE-04, GE-ETYMON-KATZE-05, GE-EVIDENCE-CAT-WORDS-06]
 introduces:
-  knowledge: [GE-LEX-GRUEN-02, GE-ETYMON-GRUEN-03, GE-LEX-GELB-04, GE-ETYMON-GELB-05, GE-EVIDENCE-GELB-JAUNE-06]
+  knowledge: [GE-LEX-GRUEN-02, GE-ETYMON-GRUEN-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-GRUEN-02, GE-ETYMON-GRUEN-03, GE-LEX-GELB-04, GE-ETYMON-GELB-05, GE-EVIDENCE-GELB-JAUNE-06]
+  knowledge: [GE-LEX-GRUEN-02, GE-ETYMON-GRUEN-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -52,24 +52,8 @@ traces to its own, separate "to grow/flourish" root, ***\*weis-***. Two
 unrelated language families each independently built a "green" word out of
 a verb meaning "to grow" — a real coincidence of logic, not a shared word.
 
-## The word, taken apart: gelb
-<!-- hl-knowledge: introduces=[GE-LEX-GELB-04, GE-ETYMON-GELB-05, GE-EVIDENCE-GELB-JAUNE-06]; assesses=[] -->
-
-**gelb** ("**yellow**") is native too, from Proto-Germanic ***\*gelwaz*** —
-and the same word as English's **yellow**. Trace it back far enough, to
-**Proto-Indo-European** ***\*ghel-*** ("**to shine**," with derivatives
-covering yellow, green, and gold), and it is usually said to land on the
-**same ancient root** behind Latin's **galbus/galbinus** — the source of
-**French**'s **jaune**. Honesty check, though: that particular link is
-**less secure** than it looks — some modern Latin scholarship treats
-*galbus*'s origin as genuinely unknown rather than confirming the *\*ghel-*
-connection. So *gelb* and *jaune* are **probably** PIE-level cousins,
-despite belonging to completely different language families and reaching
-German and French by entirely separate paths — just don't treat the link
-as airtight.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GRUEN-02, GE-ETYMON-GRUEN-03, GE-LEX-GELB-04, GE-ETYMON-GELB-05, GE-EVIDENCE-GELB-JAUNE-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GRUEN-02, GE-ETYMON-GRUEN-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "grün" — green, direct cousin of English's own "green"]
@@ -78,7 +62,7 @@ as airtight.
   gelb's root is PROBABLY shared with French's jaune]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GRUEN-02, GE-ETYMON-GRUEN-03, GE-LEX-GELB-04, GE-ETYMON-GELB-05, GE-EVIDENCE-GELB-JAUNE-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-GRUEN-02, GE-ETYMON-GRUEN-03] -->
 
 [PAUSE 3s] Is **grün** related to Latin's *viridis*? (**No** — a completely
 different root, though both independently mean "grow" → "green"; *grün*

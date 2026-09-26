@@ -2,7 +2,7 @@
 schema_version: 2
 id: GE-R17-wie-geht-es-wirklich
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 681
+sequence: 685
 chapter: 30
 type: practice
 headword: Wie geht es dir? · so lala · es geht

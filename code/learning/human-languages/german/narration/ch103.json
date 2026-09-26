@@ -1,0 +1,972 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 103,
+  "title": "Song, Game, Colour, Journey, Holiday",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:930d2ada15f80b87",
+  "lessons": [
+    {
+      "id": "GE-C103-lied",
+      "sequence": 3910,
+      "title": "das Lied — a song",
+      "headword": "das Lied",
+      "romanization": "das Lied",
+      "gloss": "a song",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8082e07d1201c2d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for work, then the German for music."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Lied",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Lied — \"a song\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Lied",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Lied*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Lied, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Lied*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say das Lied",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *das Lied*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for work, then the German for music, then say das Lied again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for work, then the German for music, then say *das Lied* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Lied mean? (\"A song\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C103-spiel",
+      "sequence": 3920,
+      "title": "das Spiel — a game",
+      "headword": "das Spiel",
+      "romanization": "das Spiel",
+      "gloss": "a game",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be668fa4cc2bad66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for music, then the German for a song."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Spiel",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Spiel — \"a game\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Spiel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Spiel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Spiel, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Spiel*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say das Spiel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *das Spiel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for music, then the German for a song, then say das Spiel again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for music, then the German for a song, then say *das Spiel* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Spiel mean? (\"A game\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C103-farbe",
+      "sequence": 3930,
+      "title": "die Farbe — a colour",
+      "headword": "die Farbe",
+      "romanization": "die Farbe",
+      "gloss": "a colour",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61e4969dca2e1ce4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for a song, then the German for a game."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Farbe",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Farbe — \"a colour\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Farbe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Farbe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Farbe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Farbe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say die Farbe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *die Farbe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for a song, then the German for a game, then say die Farbe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for a song, then the German for a game, then say *die Farbe* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Farbe mean? (\"A colour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C103-reise",
+      "sequence": 3940,
+      "title": "die Reise — a journey",
+      "headword": "die Reise",
+      "romanization": "die Reise",
+      "gloss": "a journey",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c2dfd60cff214c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for a game, then the German for a colour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Reise",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Reise — \"a journey\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Reise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Reise*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Reise, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Reise*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say die Reise",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *die Reise*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for a game, then the German for a colour, then say die Reise again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for a game, then the German for a colour, then say *die Reise* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Reise mean? (\"A journey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C103-urlaub",
+      "sequence": 3950,
+      "title": "der Urlaub — a holiday",
+      "headword": "der Urlaub",
+      "romanization": "der Urlaub",
+      "gloss": "a holiday",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8cb9eb757c5081aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for a colour, then the German for a journey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Urlaub",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Urlaub — \"a holiday\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Urlaub",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Urlaub*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Urlaub, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Urlaub*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say der Urlaub",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *der Urlaub*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for a colour, then the German for a journey, then say der Urlaub again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for a colour, then the German for a journey, then say *der Urlaub* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Urlaub mean? (\"A holiday\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R103-first-pass-nature-animals-and-describing-words",
+      "sequence": 3960,
+      "title": "Nature, animals and describing words — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 80-91",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ff4482d62c29c0b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a journey and a holiday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a spoon, a bottle, an exercise book, a pen, paper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a spoon, a bottle, an exercise book, a pen, paper]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a school, a card; a map; a ticket, a picture, a bag; a pocket, money",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a school, a card; a map; a ticket, a picture, a bag; a pocket, money]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a telephone, a tree, a flower, a leaf; a sheet of paper, a mountain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a telephone, a tree, a flower, a leaf; a sheet of paper, a mountain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a forest, a stone, an island, a field, the sky; heaven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a forest, a stone, an island, a field, the sky; heaven]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a star, a cloud, rain, a pond, fire",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a star, a cloud, rain, a pond, fire]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ice; ice cream, a hill, a desert, a horse, a cow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ice; ice cream, a hill, a desert, a horse, a cow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pig, a bird, a mouse, a fox, a snake; a queue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pig, a bird, a mouse, a fox, a snake; a queue]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a duck, a sheep, a goat, a lion, a monkey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a duck, a sheep, a goat, a lion, a monkey]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bee, an ant, an elephant, to fetch, to wish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bee, an ant, an elephant, to fetch, to wish]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "small, short, fast, slow, light; easy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: small, short, fast, slow, light; easy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heavy; difficult, cheap, high, low, empty",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: heavy; difficult, cheap, high, low, empty]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strong, weak, rich, ugly, sweet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: strong, weak, rich, ugly, sweet]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A spoon? (der Löffel.) A bottle? (die Flasche.) An exercise book? (das Heft.) A pen? (der Stift.) Paper? (das Papier.) A school? (die Schule.) A card; a map; a ticket? (die Karte.) A picture? (das Bild.) A bag; a pocket? (die Tasche.) Money? (das Geld.) A telephone? (das Telefon.) A tree? (der Baum.) A flower? (die Blume.) A leaf; a sheet of paper? (das Blatt.) A mountain? (der Berg.) A forest? (der Wald.) A stone? (der Stein.) An island? (die Insel.) A field? (das Feld.) The sky; heaven? (der Himmel.) A star? (der Stern.) A cloud? (die Wolke.) Rain? (der Regen.) A pond? (der Teich.) Fire? (das Feuer.) Ice; ice cream? (das Eis.) A hill? (der Hügel.) A desert? (die Wüste.) A horse? (das Pferd.) A cow? (die Kuh.) A pig? (das Schwein.) A bird? (der Vogel.) A mouse? (die Maus.) A fox? (der Fuchs.) A snake; a queue? (die Schlange.) A duck? (die Ente.) A sheep? (das Schaf.) A goat? (die Ziege.) A lion? (der Löwe.) A monkey? (der Affe.) A bee? (die Biene.) An ant? (die Ameise.) An elephant? (der Elefant.) To fetch? (holen.) To wish? (wünschen.) Small? (klein.) Short? (kurz.) Fast? (schnell.) Slow? (langsam.) Light; easy? (leicht.) Heavy; difficult? (schwer.) Cheap? (billig.) High? (hoch.) Low? (niedrig.) Empty? (leer.) Strong? (stark.) Weak? (schwach.) Rich? (reich.) Ugly? (hässlich.) Sweet? (süß.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R103-second-pass-town-clothes-numbers-and-more",
+      "sequence": 3970,
+      "title": "Town, clothes, numbers and more — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 92-103",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:93add51e567d137f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for clean and dirty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clean, dirty, thick; fat, thin, quiet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: clean, dirty, thick; fat, thin, quiet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "right, wrong, important, simple, brown",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: right, wrong, important, simple, brown]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grey, purple, a second, always, immediately",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: grey, purple, a second, always, immediately]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "today, sometimes, there, far, on the right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: today, sometimes, there, far, on the right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a shop, a market, a railway station, an aeroplane, a car",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a shop, a market, a railway station, an aeroplane, a car]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bridge, a church, a pharmacy, a village, the police",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bridge, a church, a pharmacy, a village, the police]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a library, a bicycle, a bus or tram stop, clothes, a shirt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a library, a bicycle, a bus or tram stop, clothes, a shirt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a dress, trousers, a shoe, a cap, a sock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a dress, trousers, a shoe, a cap, a sock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a belt, a jacket, a border, the world, a language",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a belt, a jacket, a border, the world, a language]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thirty, forty, fifty, a hundred, a thousand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thirty, forty, fifty, a hundred, a thousand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zero, a word, an answer, work, music",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: zero, a word, an answer, work, music]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a song, a game, a colour, a journey, a holiday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a song, a game, a colour, a journey, a holiday]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Clean? (sauber.) Dirty? (schmutzig.) Thick; fat? (dick.) Thin? (dünn.) Quiet? (leise.) Right? (richtig.) Wrong? (falsch.) Important? (wichtig.) Simple? (einfach.) Brown? (braun.) Grey? (grau.) Purple? (lila.) A second? (die Sekunde.) Always? (immer.) Immediately? (sofort.) Today? (heute.) Sometimes? (manchmal.) There? (dort.) Far? (weit.) On the right? (rechts.) A shop? (der Laden.) A market? (der Markt.) A railway station? (der Bahnhof.) An aeroplane? (das Flugzeug.) A car? (das Auto.) A bridge? (die Brücke.) A church? (die Kirche.) A pharmacy? (die Apotheke.) A village? (das Dorf.) The police? (die Polizei.) A library? (die Bibliothek.) A bicycle? (das Fahrrad.) A bus or tram stop? (die Haltestelle.) Clothes? (die Kleidung.) A shirt? (das Hemd.) A dress? (das Kleid.) Trousers? (die Hose.) A shoe? (der Schuh.) A cap? (die Mütze.) A sock? (die Socke.) A belt? (der Gürtel.) A jacket? (die Jacke.) A border? (die Grenze.) The world? (die Welt.) A language? (die Sprache.) Thirty? (dreißig.) Forty? (vierzig.) Fifty? (fünfzig.) A hundred? (hundert.) A thousand? (tausend.) Zero? (null.) A word? (das Wort.) An answer? (die Antwort.) Work? (die Arbeit.) Music? (die Musik.) A song? (das Lied.) A game? (das Spiel.) A colour? (die Farbe.) A journey? (die Reise.) A holiday? (der Urlaub.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

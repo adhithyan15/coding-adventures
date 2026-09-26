@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:9f366273ec830460",
+  "lessonIds": [
+    "GE-C64-kaufen",
+    "GE-C64-spielen",
+    "GE-C64-wissen",
+    "GE-C64-finden",
+    "GE-C64-suchen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch64.txt",
+  "json": "german/narration/ch64.json",
+  "textHash": "fnv1a64:4a698a7508262ff5",
+  "jsonHash": "fnv1a64:596ede856f6ac745",
+  "findings": []
+}

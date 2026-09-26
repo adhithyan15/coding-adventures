@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:930d2ada15f80b87",
+  "lessonIds": [
+    "GE-C103-lied",
+    "GE-C103-spiel",
+    "GE-C103-farbe",
+    "GE-C103-reise",
+    "GE-C103-urlaub",
+    "GE-R103-first-pass-nature-animals-and-describing-words",
+    "GE-R103-second-pass-town-clothes-numbers-and-more"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch103.txt",
+  "json": "german/narration/ch103.json",
+  "textHash": "fnv1a64:1437adb53dccce1b",
+  "jsonHash": "fnv1a64:c2e295225d5f3492",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C51-bhejna",
+    "language": "urdu",
+    "chapter": 51,
+    "sequence": 2610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e27f747edaeee3c1"
+  },
+  "findings": []
+}

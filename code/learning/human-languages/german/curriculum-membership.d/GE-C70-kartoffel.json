@@ -1,0 +1,11 @@
+{
+  "id": "GE-C70-kartoffel",
+  "pathSegment": "GE-PATH-70-ESSEN2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-70-ESSEN2",
+      "order": 1
+    }
+  ]
+}

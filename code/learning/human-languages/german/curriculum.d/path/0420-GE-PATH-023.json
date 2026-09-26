@@ -2,6 +2,8 @@
   "id": "GE-PATH-023",
   "spine_node": "SPINE-RESPOND-BASIC",
   "before": [],
-  "inline": [],
+  "inline": [
+    "GE-EXT-023-LANGUAGE-SPECIFIC"
+  ],
   "after": []
 }

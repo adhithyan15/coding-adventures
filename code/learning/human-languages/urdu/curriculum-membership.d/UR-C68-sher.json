@@ -1,0 +1,11 @@
+{
+  "id": "UR-C68-sher",
+  "pathSegment": "UR-PATH-68-ANIMALS68",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-68-ANIMALS68",
+      "order": 4
+    }
+  ]
+}

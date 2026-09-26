@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C86-schwein",
+    "language": "german",
+    "chapter": 86,
+    "sequence": 3060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fbbf9884e73e37e"
+  },
+  "findings": []
+}

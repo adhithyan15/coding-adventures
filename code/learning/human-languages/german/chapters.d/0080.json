@@ -1,0 +1,19 @@
+{
+  "chapter": 80,
+  "title": "Spoon, Bottle, Exercise book, Pen, Paper",
+  "label": "ch:ge-spoon-bottle-exercise-book-pen-paper",
+  "canDo": "I can say a spoon, a bottle, an exercise book, a pen, a pencil and paper.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GE-C80-papier",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 80: i can say a spoon, a bottle, an exercise book, a pen, a pencil and paper.",
+    "assesses": [
+      "GE-LEX-C80-SACHEN-03",
+      "GE-LEX-C80-SACHEN-04",
+      "GE-LEX-C80-SACHEN-05"
+    ]
+  }
+}

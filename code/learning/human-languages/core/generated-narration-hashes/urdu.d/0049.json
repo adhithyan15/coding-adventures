@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:b25a50c93efb2e32",
+  "lessonIds": [
+    "UR-C49-kholna",
+    "UR-C49-pakana",
+    "UR-C49-dhona",
+    "UR-C49-hasna",
+    "UR-C49-rona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch49.txt",
+  "json": "urdu/narration/ch49.json",
+  "textHash": "fnv1a64:53fc206c40c0303b",
+  "jsonHash": "fnv1a64:dd6b4a4f4ae137d1",
+  "findings": []
+}

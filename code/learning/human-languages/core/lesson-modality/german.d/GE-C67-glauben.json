@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C67-glauben",
+    "language": "german",
+    "chapter": 67,
+    "sequence": 2100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c181e61c2fe30675"
+  },
+  "findings": []
+}

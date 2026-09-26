@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C21-das-wetter-more",
+    "language": "german",
+    "chapter": 34,
+    "sequence": 735,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9c71da2359975f0"
+  },
+  "findings": []
+}

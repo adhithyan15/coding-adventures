@@ -1,0 +1,11 @@
+{
+  "id": "GE-C74-nudeln",
+  "pathSegment": "GE-PATH-74-ESSEN6",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-74-ESSEN6",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:0f181433915b3b01",
+  "lessonIds": [
+    "GE-C68-tragen",
+    "GE-C68-schicken",
+    "GE-C68-zaehlen",
+    "GE-C68-malen",
+    "GE-C68-putzen"
+  ],
+  "tex": "german/book/chapters/ch68-to-carry-to-send-to-count-to-paint-to-clean.tex"
+}

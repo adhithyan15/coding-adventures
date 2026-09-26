@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 38,
-  "sourceHash": "fnv1a64:568e55739fed4987",
+  "sourceHash": "fnv1a64:a2adf59fde531950",
   "lessonIds": [
     "GE-C25-nehmen",
     "GE-C25-fragen",
@@ -13,6 +13,6 @@
   "text": "german/narration/ch38.txt",
   "json": "german/narration/ch38.json",
   "textHash": "fnv1a64:9a07820792ba662c",
-  "jsonHash": "fnv1a64:6f668bd40e62db10",
+  "jsonHash": "fnv1a64:6459fb253f34f95b",
   "findings": []
 }

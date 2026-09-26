@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "Ring, Watch, Eleven, Twelve, Thirteen",
+  "label": "ch:ur-ring-watch-eleven-twelve-thirteen",
+  "canDo": "I can say a ring, a watch, a clock, eleven, twelve and thirteen.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "UR-C83-terah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can say a ring, a watch, a clock, eleven, twelve and thirteen.",
+    "assesses": [
+      "UR-LEX-C83-CLOTHES83-03",
+      "UR-LEX-C83-CLOTHES83-04",
+      "UR-LEX-C83-CLOTHES83-05"
+    ]
+  }
+}

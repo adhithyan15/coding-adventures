@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:8fde317ba6eed9ab",
+  "lessonIds": [
+    "UR-C69-hathi",
+    "UR-C69-bandar",
+    "UR-C69-sap",
+    "UR-C69-richh",
+    "UR-C69-bara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch69.txt",
+  "json": "urdu/narration/ch69.json",
+  "textHash": "fnv1a64:2f98358e21a82228",
+  "jsonHash": "fnv1a64:8dbcc9a160e00bc5",
+  "findings": []
+}

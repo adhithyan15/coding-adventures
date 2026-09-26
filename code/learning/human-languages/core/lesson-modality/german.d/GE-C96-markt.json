@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C96-markt",
+    "language": "german",
+    "chapter": 96,
+    "sequence": 3570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5408c0e6ee3ab1be"
+  },
+  "findings": []
+}

@@ -9,7 +9,7 @@ headword: دوست
 romanization: dost
 gloss: friend — a Persian word that refuses to pick a gender, and exactly the relationship تم was made for
 concept_tag: UR-FRIEND
-prerequisites: [UR-C09-bahan]
+prerequisites: [UR-C09-bahan, UR-C03-aap-tum-tu-more]
 sounds: [rtl, long-o, short-vowels-unwritten]
 roots: [persian-dausta, pie-geus]
 etymology_hook: dost is Persian, inherited from Old Persian dauštā, from Proto-Iranian *jawštā́, from Proto-Indo-European *ǵews- "to taste, to choose, to enjoy" — the same root behind English choose and Latin gustus (English gusto), so a friend is etymologically someone chosen, the way pūchhnā and Persian porsīdan were two roads down one root.

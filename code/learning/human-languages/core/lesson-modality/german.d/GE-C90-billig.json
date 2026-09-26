@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C90-billig",
+    "language": "german",
+    "chapter": 90,
+    "sequence": 3270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86abb50f9fa9dc30"
+  },
+  "findings": []
+}

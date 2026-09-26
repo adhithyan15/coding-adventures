@@ -46,7 +46,11 @@ it("pins Urdu lesson-content budgets", () =>
     // letter the reader had read in words and never written) and two reviews.
     // RE-MEASURED against the tree. A letter lesson introduces one script atom
     // and no idiom, sense or culture claim.
-    lessons: 182,
+    //
+    // 182 -> 439: three `-more` continuations split off the lessons that
+    // introduced more than three atoms, then chapters 38-87 (250 word lessons)
+    // and their four reviews. None introduces an idiom, sense or culture claim.
+    lessons: 439,
     idioms: 2,
     senses: 4,
     cultureClaims: 4,

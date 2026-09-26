@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:bc8a44ba23cb77f9",
+  "lessonIds": [
+    "GE-C85-eis",
+    "GE-C85-huegel",
+    "GE-C85-wueste",
+    "GE-C85-pferd",
+    "GE-C85-kuh"
+  ],
+  "tex": "german/book/chapters/ch85-ice-hill-desert-horse-cow.tex"
+}

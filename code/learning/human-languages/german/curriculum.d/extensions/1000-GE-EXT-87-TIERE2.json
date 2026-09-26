@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-87-TIERE2",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a duck, a sheep, a goat, a lion and a monkey.",
+  "prerequisites": []
+}

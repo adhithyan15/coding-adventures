@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:53ae00e6640c1c28",
+  "lessonIds": [
+    "UR-C71-garm",
+    "UR-C71-ahista",
+    "UR-C71-mushkil",
+    "UR-C71-mahaga",
+    "UR-C71-sasta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch71.txt",
+  "json": "urdu/narration/ch71.json",
+  "textHash": "fnv1a64:5f5e1c3a10b915c5",
+  "jsonHash": "fnv1a64:82be7607fc675bce",
+  "findings": []
+}

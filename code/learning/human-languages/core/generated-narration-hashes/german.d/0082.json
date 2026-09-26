@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:37f9e6c3b48ee60a",
+  "lessonIds": [
+    "GE-C82-telefon",
+    "GE-C82-baum",
+    "GE-C82-blume",
+    "GE-C82-blatt",
+    "GE-C82-berg"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch82.txt",
+  "json": "german/narration/ch82.json",
+  "textHash": "fnv1a64:35e7becc840c5b12",
+  "jsonHash": "fnv1a64:fcc76d7598ca2867",
+  "findings": []
+}

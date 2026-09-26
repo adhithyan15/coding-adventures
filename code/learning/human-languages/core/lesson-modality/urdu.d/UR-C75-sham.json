@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C75-sham",
+    "language": "urdu",
+    "chapter": 75,
+    "sequence": 3800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2aa75d881738f641"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C52-batana",
+  "pathSegment": "UR-PATH-52-VERBS52",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-52-VERBS52",
+      "order": 3
+    }
+  ]
+}

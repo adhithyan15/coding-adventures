@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:6860230c77fa684a",
+  "lessonIds": [
+    "GE-C99-kleid",
+    "GE-C99-hose",
+    "GE-C99-schuh",
+    "GE-C99-muetze",
+    "GE-C99-socke"
+  ],
+  "tex": "german/book/chapters/ch99-dress-trousers-shoe-cap-sock.tex"
+}

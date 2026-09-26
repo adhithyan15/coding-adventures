@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C87-safar",
+    "language": "urdu",
+    "chapter": 87,
+    "sequence": 4410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:53de1cd5786fa0ed"
+  },
+  "findings": []
+}

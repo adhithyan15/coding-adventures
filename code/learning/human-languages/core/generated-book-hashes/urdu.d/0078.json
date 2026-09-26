@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:c0cc99934794e879",
+  "lessonIds": [
+    "UR-C78-vaqt",
+    "UR-C78-dur",
+    "UR-C78-qarib",
+    "UR-C78-andar",
+    "UR-C78-bahar"
+  ],
+  "tex": "urdu/book/chapters/ch78-time-far-near-inside-outside.tex"
+}

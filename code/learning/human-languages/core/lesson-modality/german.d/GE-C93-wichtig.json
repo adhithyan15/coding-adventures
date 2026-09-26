@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C93-wichtig",
+    "language": "german",
+    "chapter": 93,
+    "sequence": 3430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37215993f883aac6"
+  },
+  "findings": []
+}

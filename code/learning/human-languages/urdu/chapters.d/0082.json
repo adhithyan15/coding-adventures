@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "Clothes, Kurta, Trousers, Sock, Pocket",
+  "label": "ch:ur-clothes-kurta-trousers-sock-pocket",
+  "canDo": "I can say clothes, a kurta, a long shirt, trousers, a sock and a pocket.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "UR-C82-jeb",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can say clothes, a kurta, a long shirt, trousers, a sock and a pocket.",
+    "assesses": [
+      "UR-LEX-C82-CLOTHES82-03",
+      "UR-LEX-C82-CLOTHES82-04",
+      "UR-LEX-C82-CLOTHES82-05"
+    ]
+  }
+}

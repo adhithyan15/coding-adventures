@@ -1,0 +1,11 @@
+{
+  "id": "GE-C62-tante",
+  "pathSegment": "GE-PATH-62-FAMILIE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-62-FAMILIE",
+      "order": 4
+    }
+  ]
+}

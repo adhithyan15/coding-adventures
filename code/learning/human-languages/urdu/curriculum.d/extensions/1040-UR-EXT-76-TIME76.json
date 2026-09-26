@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-76-TIME76",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a minute, today, yesterday, right now and then, again.",
+  "prerequisites": []
+}

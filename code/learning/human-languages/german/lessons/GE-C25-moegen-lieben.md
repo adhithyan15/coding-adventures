@@ -8,7 +8,7 @@ type: word
 headword: mögen, lieben
 gloss: to like and to love — plus gern, the adverb that lets any verb say "I like doing this" and has no English shape at all
 concept_tag: VERB-LIKE-LOVE
-prerequisites: [GE-C25-helfen, GE-C22-hund-katze, GE-C21-das-wetter]
+prerequisites: [GE-C25-helfen, GE-C22-hund-katze, GE-C21-das-wetter, GE-C22-hund-katze-more]
 sounds: [umlaut-oe, ie-long-ee]
 roots: [germanic-magana, germanic-leubaz, germanic-gernaz]
 etymology_hook: "mögen is English may — 'to have power over' became 'to like'; lieben is love; and gern is yearn, an adverb that turns any verb into liking it"

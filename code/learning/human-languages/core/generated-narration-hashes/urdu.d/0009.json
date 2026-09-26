@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 9,
-  "sourceHash": "fnv1a64:8e5736cf32056b40",
+  "sourceHash": "fnv1a64:e12650e085883cdf",
   "lessonIds": [
     "UR-C09-bhai",
     "UR-C09-bahan",
@@ -13,6 +13,6 @@
   "text": "urdu/narration/ch09.txt",
   "json": "urdu/narration/ch09.json",
   "textHash": "fnv1a64:4d60ca665d1a1a65",
-  "jsonHash": "fnv1a64:5e2f4879277e2b39",
+  "jsonHash": "fnv1a64:dd0d989b2d334faa",
   "findings": []
 }

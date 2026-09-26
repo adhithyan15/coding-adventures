@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:8e876baaf6170d1f",
+  "lessonIds": [
+    "UR-C46-ustad",
+    "UR-C46-khana",
+    "UR-C46-pina",
+    "UR-C46-dekhna",
+    "UR-C46-sunna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch46.txt",
+  "json": "urdu/narration/ch46.json",
+  "textHash": "fnv1a64:a8613a68b4bf0593",
+  "jsonHash": "fnv1a64:99dd8255590b7802",
+  "findings": []
+}

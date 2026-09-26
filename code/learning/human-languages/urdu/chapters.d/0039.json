@@ -1,0 +1,19 @@
+{
+  "chapter": 39,
+  "title": "Stomach, Shoulder, Finger, Lip, Neck",
+  "label": "ch:ur-stomach-shoulder-finger-lip-neck",
+  "canDo": "I can say the stomach, a shoulder, a finger, a lip and the neck.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C39-gardan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 39: i can say the stomach, a shoulder, a finger, a lip and the neck.",
+    "assesses": [
+      "UR-LEX-C39-BODY39-03",
+      "UR-LEX-C39-BODY39-04",
+      "UR-LEX-C39-BODY39-05"
+    ]
+  }
+}

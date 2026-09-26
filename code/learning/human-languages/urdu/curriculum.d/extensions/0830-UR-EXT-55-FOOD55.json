@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-55-FOOD55",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a potato, a tomato, a carrot, sugar and salt.",
+  "prerequisites": []
+}

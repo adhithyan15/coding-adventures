@@ -1,0 +1,11 @@
+{
+  "id": "GE-C101-tausend",
+  "pathSegment": "GE-PATH-101-ZAHLEN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-101-ZAHLEN",
+      "order": 4
+    }
+  ]
+}

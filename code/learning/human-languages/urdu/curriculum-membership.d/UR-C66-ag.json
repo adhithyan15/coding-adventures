@@ -1,0 +1,11 @@
+{
+  "id": "UR-C66-ag",
+  "pathSegment": "UR-PATH-66-NATURE66",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-66-NATURE66",
+      "order": 3
+    }
+  ]
+}

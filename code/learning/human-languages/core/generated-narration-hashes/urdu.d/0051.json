@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:68dce123d04b97be",
+  "lessonIds": [
+    "UR-C51-bhulna",
+    "UR-C51-chahna",
+    "UR-C51-lana",
+    "UR-C51-bhejna",
+    "UR-C51-ginna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch51.txt",
+  "json": "urdu/narration/ch51.json",
+  "textHash": "fnv1a64:a2db7f44657a1b2e",
+  "jsonHash": "fnv1a64:fe8fef85d83c90d0",
+  "findings": []
+}

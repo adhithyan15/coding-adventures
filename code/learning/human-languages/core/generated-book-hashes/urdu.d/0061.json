@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:3cd57c0a53775d2a",
+  "lessonIds": [
+    "UR-C61-botal",
+    "UR-C61-kitab",
+    "UR-C61-qalam",
+    "UR-C61-akhbar",
+    "UR-C61-iskul"
+  ],
+  "tex": "urdu/book/chapters/ch61-bottle-book-pen-newspaper-school.tex"
+}

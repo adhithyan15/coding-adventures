@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:33612676430bd1df",
+  "lessonIds": [
+    "GE-C98-bibliothek",
+    "GE-C98-fahrrad",
+    "GE-C98-haltestelle",
+    "GE-C98-kleidung",
+    "GE-C98-hemd"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch98.txt",
+  "json": "german/narration/ch98.json",
+  "textHash": "fnv1a64:cfc38a6f4b62ec44",
+  "jsonHash": "fnv1a64:5b66eac0bf97d626",
+  "findings": []
+}

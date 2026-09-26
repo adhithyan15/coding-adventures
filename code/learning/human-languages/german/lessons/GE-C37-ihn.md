@@ -8,7 +8,7 @@ type: word
 headword: ihn
 gloss: him — the pronoun that moves on the same row as den, einen, keinen and meinen
 concept_tag: GE-PRON-ACC-IHN
-prerequisites: [GE-C37-dich, GE-C05-er-sie-es, GE-C34-den]
+prerequisites: [GE-C37-dich, GE-C05-er-sie-es, GE-C34-den, GE-C22-hund-katze-more]
 sounds: [h-silent-lengthening]
 roots: [germanic-ina]
 etymology_hook: "English him is not the same shape as German ihn: him is the old DATIVE that swallowed the accusative, which is exactly the merger German did not make — so ihn is the form English used to have and threw away"

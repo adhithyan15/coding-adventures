@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:c491ce28f08e81b7",
+  "lessonIds": [
+    "UR-C48-khelna",
+    "UR-C48-kharidna",
+    "UR-C48-bechna",
+    "UR-C48-dena",
+    "UR-C48-rakhna"
+  ],
+  "tex": "urdu/book/chapters/ch48-to-play-to-buy-to-sell-to-give-to-put.tex"
+}

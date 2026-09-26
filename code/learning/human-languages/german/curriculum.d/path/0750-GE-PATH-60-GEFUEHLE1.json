@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-60-GEFUEHLE1",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "GE-EXT-60-GEFUEHLE1"
+  ],
+  "after": []
+}

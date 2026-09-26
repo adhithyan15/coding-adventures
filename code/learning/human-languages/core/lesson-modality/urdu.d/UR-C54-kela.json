@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C54-kela",
+    "language": "urdu",
+    "chapter": 54,
+    "sequence": 2770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b7ac4c11b952e3d"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:618fdcfa7bc9d49e",
+  "lessonIds": [
+    "UR-C44-nana",
+    "UR-C44-nani",
+    "UR-C44-shauhar",
+    "UR-C44-bivi",
+    "UR-C44-bachcha"
+  ],
+  "tex": "urdu/book/chapters/ch44-grandfather-grandmother-husband-wife-child.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C73-zaruri",
+    "language": "urdu",
+    "chapter": 73,
+    "sequence": 3740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8faf31f16a659d7b"
+  },
+  "findings": []
+}

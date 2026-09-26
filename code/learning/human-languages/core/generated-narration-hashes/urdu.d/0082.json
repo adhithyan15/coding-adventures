@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:6fe1ff262dfdc537",
+  "lessonIds": [
+    "UR-C82-kapre",
+    "UR-C82-kurta",
+    "UR-C82-patlun",
+    "UR-C82-jurab",
+    "UR-C82-jeb"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch82.txt",
+  "json": "urdu/narration/ch82.json",
+  "textHash": "fnv1a64:79cbf8d41216cc26",
+  "jsonHash": "fnv1a64:d943da210a7ce3f3",
+  "findings": []
+}

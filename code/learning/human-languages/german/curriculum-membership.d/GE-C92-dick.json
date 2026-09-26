@@ -1,0 +1,11 @@
+{
+  "id": "GE-C92-dick",
+  "pathSegment": "GE-PATH-92-ADJ4",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-92-ADJ4",
+      "order": 2
+    }
+  ]
+}

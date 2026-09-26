@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:f7e21219cb6d8548",
+  "lessonIds": [
+    "UR-C74-hara",
+    "UR-C74-pila",
+    "UR-C74-bhura",
+    "UR-C74-din",
+    "UR-C74-rat"
+  ],
+  "tex": "urdu/book/chapters/ch74-green-yellow-brown-day-night.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C43-dada",
+    "language": "urdu",
+    "chapter": 43,
+    "sequence": 2210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d9ce43dc4e016dd"
+  },
+  "findings": []
+}

@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "UR-C05-khuda-hafiz-more",
+    "language": "urdu",
+    "chapter": 5,
+    "sequence": 193,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09aad8e22ce9cdd8",
+    "detachableSegments": [
+      "Script Bridge — shared history, local spacing"
+    ]
+  },
+  "findings": []
+}

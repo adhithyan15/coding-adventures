@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:21abcdb33e01e7a4",
+  "lessonIds": [
+    "GE-C74-saft",
+    "GE-C74-wurst",
+    "GE-C74-schinken",
+    "GE-C74-salat",
+    "GE-C74-nudeln"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch74.txt",
+  "json": "german/narration/ch74.json",
+  "textHash": "fnv1a64:e6990fb2066871d4",
+  "jsonHash": "fnv1a64:ca558eaa449e84ce",
+  "findings": []
+}

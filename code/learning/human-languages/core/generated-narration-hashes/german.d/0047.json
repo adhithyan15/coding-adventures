@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 47,
-  "sourceHash": "fnv1a64:2716c0078dc452a6",
+  "sourceHash": "fnv1a64:c25d42e2b3df8831",
   "lessonIds": [
     "GE-C34-welcher",
     "GE-C34-wie-viel",
@@ -15,6 +15,6 @@
   "text": "german/narration/ch47.txt",
   "json": "german/narration/ch47.json",
   "textHash": "fnv1a64:66b2a8930bd37ad6",
-  "jsonHash": "fnv1a64:c71eced72cfbc3da",
+  "jsonHash": "fnv1a64:20cd736e88026f66",
   "findings": []
 }

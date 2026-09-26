@@ -1,0 +1,11 @@
+{
+  "id": "UR-C54-seb",
+  "pathSegment": "UR-PATH-54-FOOD54",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-54-FOOD54",
+      "order": 3
+    }
+  ]
+}

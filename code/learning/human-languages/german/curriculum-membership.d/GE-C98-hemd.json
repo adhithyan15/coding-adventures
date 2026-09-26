@@ -1,0 +1,11 @@
+{
+  "id": "GE-C98-hemd",
+  "pathSegment": "GE-PATH-98-STADT3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-98-STADT3",
+      "order": 4
+    }
+  ]
+}

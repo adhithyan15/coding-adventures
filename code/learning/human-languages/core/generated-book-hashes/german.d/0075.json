@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:8d4983131ee50410",
+  "lessonIds": [
+    "GE-C75-sahne",
+    "GE-C75-pfeffer",
+    "GE-C75-nuss",
+    "GE-C75-bier",
+    "GE-C75-schneiden"
+  ],
+  "tex": "german/book/chapters/ch75-cream-pepper-nut-beer-to-cut.tex"
+}

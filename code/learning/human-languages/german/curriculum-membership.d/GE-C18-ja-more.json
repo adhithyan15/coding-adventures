@@ -1,0 +1,11 @@
+{
+  "id": "GE-C18-ja-more",
+  "pathSegment": "GE-PATH-023",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-023-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

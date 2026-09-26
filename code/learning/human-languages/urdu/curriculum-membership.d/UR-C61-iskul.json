@@ -1,0 +1,11 @@
+{
+  "id": "UR-C61-iskul",
+  "pathSegment": "UR-PATH-61-HOME61",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-61-HOME61",
+      "order": 4
+    }
+  ]
+}

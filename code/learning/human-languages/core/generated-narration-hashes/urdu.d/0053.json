@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:321e31dcdfac390d",
+  "lessonIds": [
+    "UR-C53-pahanna",
+    "UR-C53-nahana",
+    "UR-C53-chhorna",
+    "UR-C53-gosht",
+    "UR-C53-machhli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch53.txt",
+  "json": "urdu/narration/ch53.json",
+  "textHash": "fnv1a64:007d1f5e763e3427",
+  "jsonHash": "fnv1a64:46b2bcfd2537a294",
+  "findings": []
+}

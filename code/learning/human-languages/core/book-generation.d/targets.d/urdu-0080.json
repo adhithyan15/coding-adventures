@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 80,
+  "output": "urdu/book/chapters/ch80-station-car-bus-bridge-mosque.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

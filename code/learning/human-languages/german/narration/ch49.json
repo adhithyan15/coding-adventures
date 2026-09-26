@@ -4,7 +4,7 @@
   "chapter": 49,
   "title": "Mine, Yours, His, Hers",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ebdeff3c626b6fc6",
+  "sourceHash": "fnv1a64:ae494534248d10f7",
   "lessons": [
     {
       "id": "GE-C36-mein",
@@ -663,7 +663,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:9e2be09b2d34a255",
+      "sourceHash": "fnv1a64:659090703e0b2147",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -826,7 +826,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b28218844492d265",
+      "sourceHash": "fnv1a64:41fbbf8300cdd502",
       "notice": null,
       "blocks": [
         {

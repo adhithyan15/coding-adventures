@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-62-FAMILIE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "GE-EXT-62-FAMILIE"
+  ],
+  "after": []
+}

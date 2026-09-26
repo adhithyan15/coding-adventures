@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:3f25e15c9ee4cfed",
+  "lessonIds": [
+    "UR-C48-khelna",
+    "UR-C48-kharidna",
+    "UR-C48-bechna",
+    "UR-C48-dena",
+    "UR-C48-rakhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch48.txt",
+  "json": "urdu/narration/ch48.json",
+  "textHash": "fnv1a64:d261d8bdde7d0abe",
+  "jsonHash": "fnv1a64:9788d5ceb2675376",
+  "findings": []
+}

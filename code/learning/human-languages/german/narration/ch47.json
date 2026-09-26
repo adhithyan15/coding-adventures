@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Which One, and the Form the Book Owed You",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:2716c0078dc452a6",
+  "sourceHash": "fnv1a64:c25d42e2b3df8831",
   "lessons": [
     {
       "id": "GE-C34-welcher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7efbe819e1c13c48",
+      "sourceHash": "fnv1a64:f2c4ffc8fb5b7e62",
       "notice": null,
       "blocks": [
         {
@@ -189,7 +189,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21159da5b3d099a8",
+      "sourceHash": "fnv1a64:b9ec165a4eea66ca",
       "notice": null,
       "blocks": [
         {
@@ -541,7 +541,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5d0a44e3564f4f4",
+      "sourceHash": "fnv1a64:c8ddf2a187e02438",
       "notice": null,
       "blocks": [
         {
@@ -706,7 +706,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f39e8027e20ffd4",
+      "sourceHash": "fnv1a64:0045a1debacdf6c4",
       "notice": null,
       "blocks": [
         {
@@ -875,7 +875,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:033b5be60740e180",
+      "sourceHash": "fnv1a64:eecbd86884952749",
       "notice": null,
       "blocks": [
         {

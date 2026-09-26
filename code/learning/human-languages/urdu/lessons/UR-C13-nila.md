@@ -9,7 +9,7 @@ headword: نیلا
 romanization: nīlā
 gloss: blue — an honest dead end backward, and the word behind English aniline going forward
 concept_tag: UR-BLUE
-prerequisites: [UR-C13-kala]
+prerequisites: [UR-C13-kala, UR-C05-khuda-hafiz-more]
 sounds: [rtl, long-i]
 roots: [sanskrit-nila]
 etymology_hook: nīlā comes from Sanskrit nīla ("dark blue"), and no further root is documented behind it -- a dead end backward, like کالا's root was not. But nīlī, Sanskrit's word for the indigo plant from the same root, travelled forward through Persian and Arabic an-nīl into Portuguese anil and then into English aniline, the dye-chemistry name -- the same word arriving in English by an entirely different, much later road than khudā, dil, or safed did.

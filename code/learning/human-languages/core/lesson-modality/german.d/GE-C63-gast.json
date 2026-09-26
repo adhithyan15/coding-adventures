@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C63-gast",
+    "language": "german",
+    "chapter": 63,
+    "sequence": 1900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d4eca0435046b71"
+  },
+  "findings": []
+}

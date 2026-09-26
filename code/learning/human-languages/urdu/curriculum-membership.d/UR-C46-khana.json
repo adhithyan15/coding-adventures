@@ -1,0 +1,11 @@
+{
+  "id": "UR-C46-khana",
+  "pathSegment": "UR-PATH-46-FAMILY46",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-46-FAMILY46",
+      "order": 1
+    }
+  ]
+}

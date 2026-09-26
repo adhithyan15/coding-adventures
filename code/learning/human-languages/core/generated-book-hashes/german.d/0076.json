@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:a2f0727f3fc141ef",
+  "lessonIds": [
+    "GE-C76-fenster",
+    "GE-C76-stuhl",
+    "GE-C76-tisch",
+    "GE-C76-wand",
+    "GE-C76-dach"
+  ],
+  "tex": "german/book/chapters/ch76-window-chair-table-wall-roof.tex"
+}

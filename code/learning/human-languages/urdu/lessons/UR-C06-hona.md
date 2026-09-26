@@ -9,7 +9,7 @@ headword: ہونا
 romanization: honā
 gloss: to be — and the ending every Urdu verb wears when you name it
 concept_tag: VERB-BE
-prerequisites: [UR-C05-practice, UR-C04-thik]
+prerequisites: [UR-C05-practice, UR-C04-thik, UR-C04-main-hun-more]
 sounds: [rtl, long-a, long-u, short-vowels-unwritten]
 roots: [indo-aryan-ho, sanskrit-bhu, pie-bhuh]
 etymology_hook: honā descends from Sanskrit bhavati “becomes”, from PIE *bʰuH- — the root English wore down into be and Latin into future.

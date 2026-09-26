@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:569c651502829b4b",
+  "lessonIds": [
+    "GE-C56-bein",
+    "GE-C56-zahn",
+    "GE-C56-hals",
+    "GE-C56-schulter",
+    "GE-C56-knie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch56.txt",
+  "json": "german/narration/ch56.json",
+  "textHash": "fnv1a64:5c0760215db8c555",
+  "jsonHash": "fnv1a64:9383aa54962449d3",
+  "findings": []
+}

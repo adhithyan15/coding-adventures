@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:ac1f1427c03e2191",
+  "lessonIds": [
+    "UR-C72-ucha",
+    "UR-C72-nicha",
+    "UR-C72-bhara",
+    "UR-C72-khali",
+    "UR-C72-mitha"
+  ],
+  "tex": "urdu/book/chapters/ch72-high-low-full-empty-sweet.tex"
+}

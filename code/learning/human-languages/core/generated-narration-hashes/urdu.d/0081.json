@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:112d476290bf8423",
+  "lessonIds": [
+    "UR-C81-mandir",
+    "UR-C81-hotal",
+    "UR-C81-polis",
+    "UR-C81-kashti",
+    "UR-C81-saikil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch81.txt",
+  "json": "urdu/narration/ch81.json",
+  "textHash": "fnv1a64:de8d0bb50865f477",
+  "jsonHash": "fnv1a64:1dcbc68f46e8f549",
+  "findings": []
+}

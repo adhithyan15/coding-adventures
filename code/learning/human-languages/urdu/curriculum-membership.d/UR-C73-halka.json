@@ -1,0 +1,11 @@
+{
+  "id": "UR-C73-halka",
+  "pathSegment": "UR-PATH-73-ADJ73",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-73-ADJ73",
+      "order": 2
+    }
+  ]
+}

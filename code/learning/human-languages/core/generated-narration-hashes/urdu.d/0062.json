@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:c3b753aa2c426b63",
+  "lessonIds": [
+    "UR-C62-basta",
+    "UR-C62-paisa",
+    "UR-C62-naqsha",
+    "UR-C62-sabaq",
+    "UR-C62-saval",
+    "UR-R62-first-pass-the-body-family-verbs-and-food",
+    "UR-R62-second-pass-home-school-and-nature"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch62.txt",
+  "json": "urdu/narration/ch62.json",
+  "textHash": "fnv1a64:60456f225fdb9011",
+  "jsonHash": "fnv1a64:203877508428ddf4",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C86-assi",
+    "language": "urdu",
+    "chapter": 86,
+    "sequence": 4360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3baa4d75afb2b943"
+  },
+  "findings": []
+}

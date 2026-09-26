@@ -30,7 +30,12 @@ it("pins German lesson-content budgets", () =>
     // criterion asks for two, so the true cost was 56 retrieval slots rather
     // than 37. None of the seven introduces an atom, so every other number in
     // this object is unchanged.
-    lessons: 354,
+    //
+    // 354 -> 606: eight `-more` continuations split off the eight lessons that
+    // introduced more than three atoms, then chapters 56-103 (240 word lessons,
+    // five per chapter) and their four review lessons. None of them introduces
+    // an idiom, a sense or a culture claim, so those counts stand.
+    lessons: 606,
     idioms: 1,
     senses: 5,
     cultureClaims: 32,

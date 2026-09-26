@@ -1,0 +1,11 @@
+{
+  "id": "GE-C56-knie",
+  "pathSegment": "GE-PATH-56-KOERPER1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-56-KOERPER1",
+      "order": 4
+    }
+  ]
+}

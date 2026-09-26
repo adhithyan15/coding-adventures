@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:0cd75c9aec4fa570",
+  "lessonIds": [
+    "UR-C41-haspatal",
+    "UR-C41-bimar",
+    "UR-C41-dard",
+    "UR-C41-dava",
+    "UR-C41-pyas"
+  ],
+  "tex": "urdu/book/chapters/ch41-hospital-ill-pain-medicine-thirst.tex"
+}

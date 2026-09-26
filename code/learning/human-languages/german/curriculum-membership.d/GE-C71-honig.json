@@ -1,0 +1,11 @@
+{
+  "id": "GE-C71-honig",
+  "pathSegment": "GE-PATH-71-ESSEN3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-71-ESSEN3",
+      "order": 2
+    }
+  ]
+}

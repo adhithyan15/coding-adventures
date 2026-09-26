@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:bd8690d57207e455",
+  "lessonIds": [
+    "GE-C81-schule",
+    "GE-C81-karte",
+    "GE-C81-bild",
+    "GE-C81-tasche",
+    "GE-C81-geld"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch81.txt",
+  "json": "german/narration/ch81.json",
+  "textHash": "fnv1a64:02e68be69d44d92a",
+  "jsonHash": "fnv1a64:d8880f7b2b1b1950",
+  "findings": []
+}
