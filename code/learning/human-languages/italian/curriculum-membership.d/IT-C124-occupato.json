@@ -1,0 +1,11 @@
+{
+  "id": "IT-C124-occupato",
+  "pathSegment": "IT-PATH-124-QUALITA124",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-124-QUALITA124",
+      "order": 0
+    }
+  ]
+}

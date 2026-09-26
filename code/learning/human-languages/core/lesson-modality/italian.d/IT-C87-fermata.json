@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C87-fermata",
+    "language": "italian",
+    "chapter": 87,
+    "sequence": 4010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5cedf231458f66c0"
+  },
+  "findings": []
+}

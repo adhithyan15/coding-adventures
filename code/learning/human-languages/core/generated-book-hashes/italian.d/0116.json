@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:88280a445250652c",
+  "lessonIds": [
+    "IT-C116-musica",
+    "IT-C116-film",
+    "IT-C116-canzone",
+    "IT-C116-disegno",
+    "IT-C116-vita",
+    "IT-R116-first-pass-work-school-and-free-time",
+    "IT-R116-second-pass-nature-and-animals"
+  ],
+  "tex": "italian/book/chapters/ch116-music-film-song-drawing-life.tex"
+}

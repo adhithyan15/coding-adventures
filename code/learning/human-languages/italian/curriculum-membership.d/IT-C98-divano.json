@@ -1,0 +1,11 @@
+{
+  "id": "IT-C98-divano",
+  "pathSegment": "IT-PATH-98-CASA98",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-98-CASA98",
+      "order": 1
+    }
+  ]
+}

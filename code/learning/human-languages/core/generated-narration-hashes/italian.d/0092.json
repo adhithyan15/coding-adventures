@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:c41f7ac52b8562c7",
+  "lessonIds": [
+    "IT-C92-di-fronte",
+    "IT-C92-metropolitana",
+    "IT-C92-taxi",
+    "IT-C92-traghetto",
+    "IT-C92-viaggio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch92.txt",
+  "json": "italian/narration/ch92.json",
+  "textHash": "fnv1a64:13f1026ef42fbcc2",
+  "jsonHash": "fnv1a64:d9e5582b7efc041c",
+  "findings": []
+}

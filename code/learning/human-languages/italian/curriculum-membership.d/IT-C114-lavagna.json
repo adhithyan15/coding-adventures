@@ -1,0 +1,11 @@
+{
+  "id": "IT-C114-lavagna",
+  "pathSegment": "IT-PATH-114-SCUOLA114",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-114-SCUOLA114",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C107-farina",
+  "pathSegment": "IT-PATH-107-CIBO107",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-107-CIBO107",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-R95-first-pass-can-want-and-places",
+  "pathSegment": "IT-PATH-95-CASA95",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "IT-EXT-95-CASA95",
+      "order": 5
+    }
+  ]
+}

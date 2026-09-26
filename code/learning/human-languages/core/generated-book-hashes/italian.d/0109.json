@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:03361031e510266e",
+  "lessonIds": [
+    "IT-C109-pasto",
+    "IT-C109-yogurt",
+    "IT-C109-gelato",
+    "IT-C109-bistecca",
+    "IT-C109-prosciutto"
+  ],
+  "tex": "italian/book/chapters/ch109-meal-yoghurt-ice-cream-steak-ham.tex"
+}

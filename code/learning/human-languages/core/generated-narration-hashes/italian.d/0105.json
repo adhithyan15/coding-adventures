@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:b8bef2315afec6d5",
+  "lessonIds": [
+    "IT-C105-cappello",
+    "IT-C105-giacca",
+    "IT-C105-camicia",
+    "IT-C105-pantaloni",
+    "IT-C105-vestito"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch105.txt",
+  "json": "italian/narration/ch105.json",
+  "textHash": "fnv1a64:8d04a3b8cb4b8d5e",
+  "jsonHash": "fnv1a64:a9fdc335e2cf85be",
+  "findings": []
+}

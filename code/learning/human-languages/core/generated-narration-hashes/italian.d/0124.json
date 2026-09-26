@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:1a067f65471c87f9",
+  "lessonIds": [
+    "IT-C124-occupato",
+    "IT-C124-libero",
+    "IT-C124-aperto",
+    "IT-C124-chiuso",
+    "IT-C124-tranquillo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch124.txt",
+  "json": "italian/narration/ch124.json",
+  "textHash": "fnv1a64:60cf02942f03cc37",
+  "jsonHash": "fnv1a64:094fe597ddb25d0a",
+  "findings": []
+}

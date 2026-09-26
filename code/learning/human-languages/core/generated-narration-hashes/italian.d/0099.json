@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:0df4c4ac36e68e6e",
+  "lessonIds": [
+    "IT-C99-secchio",
+    "IT-C99-corda",
+    "IT-C99-chiodo",
+    "IT-C99-martello",
+    "IT-C99-colla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch99.txt",
+  "json": "italian/narration/ch99.json",
+  "textHash": "fnv1a64:abeefdab38ef0f37",
+  "jsonHash": "fnv1a64:c916aecde63b647c",
+  "findings": []
+}

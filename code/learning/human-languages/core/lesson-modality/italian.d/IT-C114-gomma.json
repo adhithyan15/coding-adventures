@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C114-gomma",
+    "language": "italian",
+    "chapter": 114,
+    "sequence": 5490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00627ba5fa87fb31"
+  },
+  "findings": []
+}

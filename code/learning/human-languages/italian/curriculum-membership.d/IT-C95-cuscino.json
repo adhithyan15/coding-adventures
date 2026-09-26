@@ -1,0 +1,11 @@
+{
+  "id": "IT-C95-cuscino",
+  "pathSegment": "IT-PATH-95-CASA95",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-95-CASA95",
+      "order": 4
+    }
+  ]
+}

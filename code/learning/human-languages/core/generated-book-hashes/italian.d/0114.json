@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:b36f511b7eff47ec",
+  "lessonIds": [
+    "IT-C114-lezione",
+    "IT-C114-esame",
+    "IT-C114-parola",
+    "IT-C114-lavagna",
+    "IT-C114-gomma"
+  ],
+  "tex": "italian/book/chapters/ch114-lesson-exam-word-board-rubber.tex"
+}

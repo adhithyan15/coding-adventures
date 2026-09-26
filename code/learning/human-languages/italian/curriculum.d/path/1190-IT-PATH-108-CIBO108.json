@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-108-CIBO108",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "IT-EXT-108-CIBO108"
+  ],
+  "after": []
+}

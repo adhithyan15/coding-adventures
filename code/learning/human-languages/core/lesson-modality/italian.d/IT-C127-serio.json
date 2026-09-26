@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C127-serio",
+    "language": "italian",
+    "chapter": 127,
+    "sequence": 6300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c7c231abf3c15a4"
+  },
+  "findings": []
+}

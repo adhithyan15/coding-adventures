@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C115-risposta",
+    "language": "italian",
+    "chapter": 115,
+    "sequence": 5510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13de9e3328ce1246"
+  },
+  "findings": []
+}

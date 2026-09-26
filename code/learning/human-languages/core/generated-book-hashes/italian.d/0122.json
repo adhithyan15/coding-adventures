@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:c5fd21b676b198ef",
+  "lessonIds": [
+    "IT-C122-gomito",
+    "IT-C122-caviglia",
+    "IT-C122-polso",
+    "IT-C122-guancia",
+    "IT-C122-labbra"
+  ],
+  "tex": "italian/book/chapters/ch122-elbow-ankle-wrist-cheek-lips.tex"
+}

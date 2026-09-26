@@ -1,0 +1,11 @@
+{
+  "id": "IT-C121-balena",
+  "pathSegment": "IT-PATH-121-ANIMALI121",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-121-ANIMALI121",
+      "order": 3
+    }
+  ]
+}

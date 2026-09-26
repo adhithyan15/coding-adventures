@@ -1,0 +1,11 @@
+{
+  "id": "IT-C130-salato",
+  "pathSegment": "IT-PATH-130-QUALITA130",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-130-QUALITA130",
+      "order": 1
+    }
+  ]
+}

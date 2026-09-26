@@ -1,0 +1,11 @@
+{
+  "id": "IT-C106-cetriolo",
+  "pathSegment": "IT-PATH-106-CIBO106",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-106-CIBO106",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:315c5ab5fdbd4cc3",
+  "lessonIds": [
+    "IT-C121-tartaruga",
+    "IT-C121-scoiattolo",
+    "IT-C121-gufo",
+    "IT-C121-balena",
+    "IT-C121-delfino"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch121.txt",
+  "json": "italian/narration/ch121.json",
+  "textHash": "fnv1a64:3f93205810412875",
+  "jsonHash": "fnv1a64:7e4fe1c09c53b7e0",
+  "findings": []
+}

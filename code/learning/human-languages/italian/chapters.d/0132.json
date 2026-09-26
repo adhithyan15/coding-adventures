@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Zero, Sixty, Seventy, Eighty, Ninety",
+  "label": "ch:it-zero-sixty-seventy-eighty-ninety",
+  "canDo": "I can say zero, sixty, seventy, eighty and ninety.",
+  "spineNodes": [
+    "SPINE-COUNT-ONE-TO-FIVE"
+  ],
+  "payoff": {
+    "lesson": "IT-C132-novanta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say zero, sixty, seventy, eighty and ninety.",
+    "assesses": [
+      "IT-LEX-C132-NUMERI132-03",
+      "IT-LEX-C132-NUMERI132-04",
+      "IT-LEX-C132-NUMERI132-05"
+    ]
+  }
+}

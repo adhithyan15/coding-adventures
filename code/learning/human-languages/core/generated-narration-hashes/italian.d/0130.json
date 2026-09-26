@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:a60d894e1bf0df1a",
+  "lessonIds": [
+    "IT-C130-amaro",
+    "IT-C130-salato",
+    "IT-C130-leggero",
+    "IT-C130-pesante",
+    "IT-C130-magro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch130.txt",
+  "json": "italian/narration/ch130.json",
+  "textHash": "fnv1a64:432f8b92bbbd7657",
+  "jsonHash": "fnv1a64:fafa2af93b71997e",
+  "findings": []
+}

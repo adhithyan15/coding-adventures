@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C89-angolo",
+    "language": "italian",
+    "chapter": 89,
+    "sequence": 4120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d7745ca3b82f217b"
+  },
+  "findings": []
+}

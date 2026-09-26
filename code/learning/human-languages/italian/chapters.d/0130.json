@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Bitter, Salty, Light, Heavy, Thin",
+  "label": "ch:it-bitter-salty-light-heavy-thin",
+  "canDo": "I can say bitter, salty, light, heavy and thin.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C130-magro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say bitter, salty, light, heavy and thin.",
+    "assesses": [
+      "IT-LEX-C130-QUALITA130-03",
+      "IT-LEX-C130-QUALITA130-04",
+      "IT-LEX-C130-QUALITA130-05"
+    ]
+  }
+}

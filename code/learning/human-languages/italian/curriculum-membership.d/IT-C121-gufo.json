@@ -1,0 +1,11 @@
+{
+  "id": "IT-C121-gufo",
+  "pathSegment": "IT-PATH-121-ANIMALI121",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-121-ANIMALI121",
+      "order": 2
+    }
+  ]
+}

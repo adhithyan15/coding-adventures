@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Weekend, Date, Century, Often, Sometimes",
+  "label": "ch:it-weekend-date-century-often-sometimes",
+  "canDo": "I can say the weekend, a date, a century, often and sometimes.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "IT-C131-qualche-volta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: i can say the weekend, a date, a century, often and sometimes.",
+    "assesses": [
+      "IT-LEX-C131-TEMPO131-03",
+      "IT-LEX-C131-TEMPO131-04",
+      "IT-LEX-C131-TEMPO131-05"
+    ]
+  }
+}

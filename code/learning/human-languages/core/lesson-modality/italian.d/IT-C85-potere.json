@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C85-potere",
+    "language": "italian",
+    "chapter": 85,
+    "sequence": 3900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3f046b3e065ff1b"
+  },
+  "findings": []
+}

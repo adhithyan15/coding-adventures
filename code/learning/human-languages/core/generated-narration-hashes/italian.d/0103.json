@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:958ce2a397cf0952",
+  "lessonIds": [
+    "IT-C103-maglione",
+    "IT-C103-cravatta",
+    "IT-C103-guanti",
+    "IT-C103-sciarpa",
+    "IT-C103-stivali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch103.txt",
+  "json": "italian/narration/ch103.json",
+  "textHash": "fnv1a64:978ece5671535a42",
+  "jsonHash": "fnv1a64:34d8aa17a5e18e01",
+  "findings": []
+}

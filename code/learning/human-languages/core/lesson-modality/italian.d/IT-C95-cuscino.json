@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C95-cuscino",
+    "language": "italian",
+    "chapter": 95,
+    "sequence": 4440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b63b0edea23747f7"
+  },
+  "findings": []
+}

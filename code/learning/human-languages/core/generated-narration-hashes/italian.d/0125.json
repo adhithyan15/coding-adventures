@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:e61789b2612cf274",
+  "lessonIds": [
+    "IT-C125-rumoroso",
+    "IT-C125-ultimo",
+    "IT-C125-famoso",
+    "IT-C125-importante",
+    "IT-C125-interessante"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch125.txt",
+  "json": "italian/narration/ch125.json",
+  "textHash": "fnv1a64:0d7db4e3b092246f",
+  "jsonHash": "fnv1a64:913e8251eb1ba3ba",
+  "findings": []
+}

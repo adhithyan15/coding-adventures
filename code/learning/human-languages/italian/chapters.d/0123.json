@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Pink, Purple, Brown, Orange, Pretty",
+  "label": "ch:it-pink-purple-brown-orange-pretty",
+  "canDo": "I can say pink, purple, brown, orange and pretty.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C123-carino",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say pink, purple, brown, orange and pretty.",
+    "assesses": [
+      "IT-LEX-C123-COLORI123-03",
+      "IT-LEX-C123-COLORI123-04",
+      "IT-LEX-C123-COLORI123-05"
+    ]
+  }
+}

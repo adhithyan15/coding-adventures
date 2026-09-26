@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-107-CIBO107",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a strawberry, a cherry, a melon, garlic and flour.",
+  "prerequisites": []
+}

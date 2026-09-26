@@ -1,0 +1,11 @@
+{
+  "id": "IT-C120-coniglio",
+  "pathSegment": "IT-PATH-120-ANIMALI120",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-120-ANIMALI120",
+      "order": 1
+    }
+  ]
+}

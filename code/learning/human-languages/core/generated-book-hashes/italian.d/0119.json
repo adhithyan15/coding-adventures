@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:50159da9b4a9a242",
+  "lessonIds": [
+    "IT-C119-onda",
+    "IT-C119-deserto",
+    "IT-C119-vulcano",
+    "IT-C119-grotta",
+    "IT-C119-cascata"
+  ],
+  "tex": "italian/book/chapters/ch119-wave-desert-volcano-cave-waterfall.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C94-frigorifero",
+    "language": "italian",
+    "chapter": 94,
+    "sequence": 4380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2dd77435e0d5b23"
+  },
+  "findings": []
+}

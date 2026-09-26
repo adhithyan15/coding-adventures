@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C96-asciugamano",
+    "language": "italian",
+    "chapter": 96,
+    "sequence": 4510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9c6c21c1ec65f31"
+  },
+  "findings": []
+}

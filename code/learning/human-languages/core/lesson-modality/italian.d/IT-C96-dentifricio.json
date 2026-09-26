@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C96-dentifricio",
+    "language": "italian",
+    "chapter": 96,
+    "sequence": 4540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea5d2a92b510be92"
+  },
+  "findings": []
+}

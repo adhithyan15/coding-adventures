@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:53372aceaa7587c3",
+  "lessonIds": [
+    "IT-C115-compiti",
+    "IT-C115-risposta",
+    "IT-C115-problema",
+    "IT-C115-frase",
+    "IT-C115-pagina"
+  ],
+  "tex": "italian/book/chapters/ch115-homework-answer-problem-sentence-page.tex"
+}

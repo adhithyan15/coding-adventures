@@ -1,0 +1,19 @@
+{
+  "chapter": 112,
+  "title": "Baker, Driver, Lawyer, Engineer, Firefighter",
+  "label": "ch:it-baker-driver-lawyer-engineer-firefighter",
+  "canDo": "I can say a baker, a driver, a lawyer, an engineer and a firefighter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C112-pompiere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 112: i can say a baker, a driver, a lawyer, an engineer and a firefighter.",
+    "assesses": [
+      "IT-LEX-C112-LAVORO112-03",
+      "IT-LEX-C112-LAVORO112-04",
+      "IT-LEX-C112-LAVORO112-05"
+    ]
+  }
+}

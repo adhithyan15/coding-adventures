@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:c36cee6d2380d62e",
+  "lessonIds": [
+    "IT-C131-fine-settimana",
+    "IT-C131-data",
+    "IT-C131-secolo",
+    "IT-C131-spesso",
+    "IT-C131-qualche-volta"
+  ],
+  "tex": "italian/book/chapters/ch131-weekend-date-century-often-sometimes.tex"
+}

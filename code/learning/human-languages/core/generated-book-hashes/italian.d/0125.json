@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:7011a8baa896af82",
+  "lessonIds": [
+    "IT-C125-rumoroso",
+    "IT-C125-ultimo",
+    "IT-C125-famoso",
+    "IT-C125-importante",
+    "IT-C125-interessante"
+  ],
+  "tex": "italian/book/chapters/ch125-noisy-last-famous-important-interesting.tex"
+}

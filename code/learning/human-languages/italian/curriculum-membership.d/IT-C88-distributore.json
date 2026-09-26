@@ -1,0 +1,11 @@
+{
+  "id": "IT-C88-distributore",
+  "pathSegment": "IT-PATH-88-LUOGHI88",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-88-LUOGHI88",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:65556c99f7b905f2",
+  "lessonIds": [
+    "IT-C135-salire",
+    "IT-C135-scendere",
+    "IT-C135-restare",
+    "IT-C135-affittare",
+    "IT-C135-riparare"
+  ],
+  "tex": "italian/book/chapters/ch135-to-go-up-to-go-down-to-stay-to-rent-to-repair.tex"
+}

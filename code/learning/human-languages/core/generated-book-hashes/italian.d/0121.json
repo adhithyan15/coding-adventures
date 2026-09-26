@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:77dd1ad76ba24d8b",
+  "lessonIds": [
+    "IT-C121-tartaruga",
+    "IT-C121-scoiattolo",
+    "IT-C121-gufo",
+    "IT-C121-balena",
+    "IT-C121-delfino"
+  ],
+  "tex": "italian/book/chapters/ch121-tortoise-squirrel-owl-whale-dolphin.tex"
+}

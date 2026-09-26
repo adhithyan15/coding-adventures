@@ -1,0 +1,11 @@
+{
+  "id": "IT-C102-gente",
+  "pathSegment": "IT-PATH-102-OGGETTI102",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-102-OGGETTI102",
+      "order": 2
+    }
+  ]
+}

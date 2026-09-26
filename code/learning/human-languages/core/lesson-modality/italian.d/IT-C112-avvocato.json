@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C112-avvocato",
+    "language": "italian",
+    "chapter": 112,
+    "sequence": 5370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b08b9613a52c00e4"
+  },
+  "findings": []
+}

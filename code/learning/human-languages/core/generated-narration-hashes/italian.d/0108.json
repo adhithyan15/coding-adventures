@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:3b636516d6821763",
+  "lessonIds": [
+    "IT-C108-cioccolato",
+    "IT-C108-biscotto",
+    "IT-C108-panino",
+    "IT-C108-salsa",
+    "IT-C108-aceto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch108.txt",
+  "json": "italian/narration/ch108.json",
+  "textHash": "fnv1a64:97031e1d0b052297",
+  "jsonHash": "fnv1a64:ebd4855d4b6d2d68",
+  "findings": []
+}

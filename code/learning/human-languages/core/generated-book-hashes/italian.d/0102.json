@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:61c506312e7a2846",
+  "lessonIds": [
+    "IT-C102-zaino",
+    "IT-C102-mondo",
+    "IT-C102-gente",
+    "IT-C102-donna",
+    "IT-C102-petto"
+  ],
+  "tex": "italian/book/chapters/ch102-rucksack-world-people-woman-chest.tex"
+}

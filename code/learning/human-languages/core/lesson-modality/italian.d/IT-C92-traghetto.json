@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C92-traghetto",
+    "language": "italian",
+    "chapter": 92,
+    "sequence": 4280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26c3211e57d3dcaa"
+  },
+  "findings": []
+}

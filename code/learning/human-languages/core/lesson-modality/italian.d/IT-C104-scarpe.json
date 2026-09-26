@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C104-scarpe",
+    "language": "italian",
+    "chapter": 104,
+    "sequence": 4920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7bae2c87a5a7b33c"
+  },
+  "findings": []
+}

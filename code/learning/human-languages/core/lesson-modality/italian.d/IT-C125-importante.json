@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C125-importante",
+    "language": "italian",
+    "chapter": 125,
+    "sequence": 6130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09f65d8d43401707"
+  },
+  "findings": []
+}

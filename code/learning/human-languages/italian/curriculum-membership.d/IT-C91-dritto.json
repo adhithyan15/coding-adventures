@@ -1,0 +1,11 @@
+{
+  "id": "IT-C91-dritto",
+  "pathSegment": "IT-PATH-91-LUOGHI91",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-91-LUOGHI91",
+      "order": 0
+    }
+  ]
+}

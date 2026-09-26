@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Elbow, Ankle, Wrist, Cheek, Lips",
+  "label": "ch:it-elbow-ankle-wrist-cheek-lips",
+  "canDo": "I can say an elbow, an ankle, a wrist, a cheek and lips.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C122-labbra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say an elbow, an ankle, a wrist, a cheek and lips.",
+    "assesses": [
+      "IT-LEX-C122-CORPO122-03",
+      "IT-LEX-C122-CORPO122-04",
+      "IT-LEX-C122-CORPO122-05"
+    ]
+  }
+}

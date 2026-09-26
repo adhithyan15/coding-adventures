@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C128-fresco",
+    "language": "italian",
+    "chapter": 128,
+    "sequence": 6380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:50848e4713e9ad31"
+  },
+  "findings": []
+}

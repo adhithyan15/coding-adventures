@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:f77a8e78593ada01",
+  "lessonIds": [
+    "IT-C134-vestirsi",
+    "IT-C134-lavarsi",
+    "IT-C134-alzarsi",
+    "IT-C134-sedersi",
+    "IT-C134-cadere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch134.txt",
+  "json": "italian/narration/ch134.json",
+  "textHash": "fnv1a64:d899a63ee868db32",
+  "jsonHash": "fnv1a64:e9460e12d087f83e",
+  "findings": []
+}

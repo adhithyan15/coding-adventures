@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:d7c2b045afc628cd",
+  "lessonIds": [
+    "IT-C133-cominciare",
+    "IT-C133-visitare",
+    "IT-C133-mettere",
+    "IT-C133-credere",
+    "IT-C133-guidare"
+  ],
+  "tex": "italian/book/chapters/ch133-to-begin-to-visit-to-put-to-believe-to-drive.tex"
+}

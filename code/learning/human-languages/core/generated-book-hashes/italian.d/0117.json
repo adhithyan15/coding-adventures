@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:6e3e4d715c47a461",
+  "lessonIds": [
+    "IT-C117-prezzo",
+    "IT-C117-calcio",
+    "IT-C117-concerto",
+    "IT-C117-festa",
+    "IT-C117-desiderio"
+  ],
+  "tex": "italian/book/chapters/ch117-price-football-concert-party-wish.tex"
+}

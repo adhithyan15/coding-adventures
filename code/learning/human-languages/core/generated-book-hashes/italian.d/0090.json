@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:b5a46a93ebd0ef47",
+  "lessonIds": [
+    "IT-C90-parcheggio",
+    "IT-C90-ascensore",
+    "IT-C90-nord",
+    "IT-C90-sud",
+    "IT-C90-ovest"
+  ],
+  "tex": "italian/book/chapters/ch90-car-park-lift-north-south-west.tex"
+}

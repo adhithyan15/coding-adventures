@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C116-disegno",
+    "language": "italian",
+    "chapter": 116,
+    "sequence": 5580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1749444492e0a7de"
+  },
+  "findings": []
+}

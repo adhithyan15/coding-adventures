@@ -1,0 +1,11 @@
+{
+  "id": "IT-C99-colla",
+  "pathSegment": "IT-PATH-99-ATTREZZI99",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-99-ATTREZZI99",
+      "order": 4
+    }
+  ]
+}

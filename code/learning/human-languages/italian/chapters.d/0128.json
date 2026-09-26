@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Dangerous, Wet, Dry, Cool, Soft",
+  "label": "ch:it-dangerous-wet-dry-cool-soft",
+  "canDo": "I can say dangerous, wet, dry, cool and soft.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C128-morbido",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can say dangerous, wet, dry, cool and soft.",
+    "assesses": [
+      "IT-LEX-C128-QUALITA128-03",
+      "IT-LEX-C128-QUALITA128-04",
+      "IT-LEX-C128-QUALITA128-05"
+    ]
+  }
+}
