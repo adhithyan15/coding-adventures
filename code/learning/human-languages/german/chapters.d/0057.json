@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "Face, Blood, Skin, Hair, Belly",
+  "label": "ch:ge-face-blood-skin-hair-belly",
+  "canDo": "I can say the face, blood, skin, a hair and the belly.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GE-C57-bauch",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: i can say the face, blood, skin, a hair and the belly.",
+    "assesses": [
+      "GE-LEX-C57-KOERPER2-03",
+      "GE-LEX-C57-KOERPER2-04",
+      "GE-LEX-C57-KOERPER2-05"
+    ]
+  }
+}

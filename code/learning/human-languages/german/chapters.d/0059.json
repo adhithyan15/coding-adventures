@@ -1,0 +1,19 @@
+{
+  "chapter": 59,
+  "title": "Fever, Doctor, Doctor, Hospital, Ill",
+  "label": "ch:ge-fever-doctor-doctor-hospital-ill",
+  "canDo": "I can say a fever, a doctor, a doctor, a hospital and ill, sick.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GE-C59-krank",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 59: i can say a fever, a doctor, a doctor, a hospital and ill, sick.",
+    "assesses": [
+      "GE-LEX-C59-GESUNDHEIT-03",
+      "GE-LEX-C59-GESUNDHEIT-04",
+      "GE-LEX-C59-GESUNDHEIT-05"
+    ]
+  }
+}

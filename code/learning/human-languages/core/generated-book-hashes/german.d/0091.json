@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:4dceafa14cb0c0be",
+  "lessonIds": [
+    "GE-C91-stark",
+    "GE-C91-schwach",
+    "GE-C91-reich",
+    "GE-C91-haesslich",
+    "GE-C91-suess"
+  ],
+  "tex": "german/book/chapters/ch91-strong-weak-rich-ugly-sweet.tex"
+}

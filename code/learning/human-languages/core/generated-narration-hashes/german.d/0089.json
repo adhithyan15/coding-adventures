@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:c023c9fdb3464fc2",
+  "lessonIds": [
+    "GE-C89-klein",
+    "GE-C89-kurz",
+    "GE-C89-schnell",
+    "GE-C89-langsam",
+    "GE-C89-leicht"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch89.txt",
+  "json": "german/narration/ch89.json",
+  "textHash": "fnv1a64:f838fd4f1007af7d",
+  "jsonHash": "fnv1a64:6a5cb9388deacf97",
+  "findings": []
+}

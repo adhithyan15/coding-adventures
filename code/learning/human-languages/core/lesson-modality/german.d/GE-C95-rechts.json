@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C95-rechts",
+    "language": "german",
+    "chapter": 95,
+    "sequence": 3550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c2a128fbf1bfeb1"
+  },
+  "findings": []
+}

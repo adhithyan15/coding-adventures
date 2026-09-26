@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:a1402c031e8efc05",
+  "lessonIds": [
+    "GE-C67-verlieren",
+    "GE-C67-glauben",
+    "GE-C67-brauchen",
+    "GE-C67-leben",
+    "GE-C67-rufen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch67.txt",
+  "json": "german/narration/ch67.json",
+  "textHash": "fnv1a64:9529ecbc0a0f4044",
+  "jsonHash": "fnv1a64:3eecbf749d64844b",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C59-aerztin",
+  "pathSegment": "GE-PATH-59-GESUNDHEIT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-59-GESUNDHEIT",
+      "order": 2
+    }
+  ]
+}

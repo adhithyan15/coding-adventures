@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:79c056cb6ceec286",
+  "lessonIds": [
+    "GE-C65-warten",
+    "GE-C65-bezahlen",
+    "GE-C65-kochen",
+    "GE-C65-lachen",
+    "GE-C65-weinen"
+  ],
+  "tex": "german/book/chapters/ch65-to-wait-to-pay-to-cook-to-laugh-to-cry.tex"
+}

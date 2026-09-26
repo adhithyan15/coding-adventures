@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C71-honig",
+    "language": "german",
+    "chapter": 71,
+    "sequence": 2310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b35133985bf413ac"
+  },
+  "findings": []
+}

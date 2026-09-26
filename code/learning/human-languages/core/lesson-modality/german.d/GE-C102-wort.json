@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C102-wort",
+    "language": "german",
+    "chapter": 102,
+    "sequence": 3870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb293ca909759421"
+  },
+  "findings": []
+}

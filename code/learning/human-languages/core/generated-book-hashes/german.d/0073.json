@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:928823180251f40f",
+  "lessonIds": [
+    "GE-C73-traube",
+    "GE-C73-marmelade",
+    "GE-C73-kaese",
+    "GE-C73-salz",
+    "GE-C73-zucker"
+  ],
+  "tex": "german/book/chapters/ch73-grape-jam-cheese-salt-sugar.tex"
+}

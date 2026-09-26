@@ -1,0 +1,11 @@
+{
+  "id": "GE-C63-schueler",
+  "pathSegment": "GE-PATH-63-LEUTE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-63-LEUTE",
+      "order": 3
+    }
+  ]
+}

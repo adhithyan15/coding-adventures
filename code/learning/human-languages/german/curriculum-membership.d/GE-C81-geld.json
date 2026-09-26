@@ -1,0 +1,11 @@
+{
+  "id": "GE-C81-geld",
+  "pathSegment": "GE-PATH-81-SCHULE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-81-SCHULE",
+      "order": 4
+    }
+  ]
+}

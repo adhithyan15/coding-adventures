@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "Small, Short, Fast, Slow, Light",
+  "label": "ch:ge-small-short-fast-slow-light",
+  "canDo": "I can say small, short, fast, slow and light.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GE-C89-leicht",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can say small, short, fast, slow and light.",
+    "assesses": [
+      "GE-LEX-C89-ADJ1-03",
+      "GE-LEX-C89-ADJ1-04",
+      "GE-LEX-C89-ADJ1-05"
+    ]
+  }
+}

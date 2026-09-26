@@ -1,0 +1,11 @@
+{
+  "id": "GE-C88-holen",
+  "pathSegment": "GE-PATH-88-TIERE3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-88-TIERE3",
+      "order": 3
+    }
+  ]
+}

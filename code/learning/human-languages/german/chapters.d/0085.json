@@ -1,0 +1,19 @@
+{
+  "chapter": 85,
+  "title": "Ice, Hill, Desert, Horse, Cow",
+  "label": "ch:ge-ice-hill-desert-horse-cow",
+  "canDo": "I can say ice, a hill, a desert, a horse and a cow.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GE-C85-kuh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 85: i can say ice, a hill, a desert, a horse and a cow.",
+    "assesses": [
+      "GE-LEX-C85-NATUR4-03",
+      "GE-LEX-C85-NATUR4-04",
+      "GE-LEX-C85-NATUR4-05"
+    ]
+  }
+}

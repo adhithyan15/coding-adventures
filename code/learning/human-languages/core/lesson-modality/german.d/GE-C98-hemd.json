@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C98-hemd",
+    "language": "german",
+    "chapter": 98,
+    "sequence": 3700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:221bea0acbe3ae92"
+  },
+  "findings": []
+}

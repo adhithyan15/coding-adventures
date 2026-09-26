@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-95-WO",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "GE-EXT-95-WO"
+  ],
+  "after": []
+}

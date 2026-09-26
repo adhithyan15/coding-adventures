@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:6b2fb33082879a9b",
+  "lessonIds": [
+    "GE-C93-richtig",
+    "GE-C93-falsch",
+    "GE-C93-wichtig",
+    "GE-C93-einfach",
+    "GE-C93-braun"
+  ],
+  "tex": "german/book/chapters/ch93-right-wrong-important-simple-brown.tex"
+}

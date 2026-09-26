@@ -1,0 +1,11 @@
+{
+  "id": "GE-C79-messer",
+  "pathSegment": "GE-PATH-79-GESCHIRR",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-79-GESCHIRR",
+      "order": 4
+    }
+  ]
+}

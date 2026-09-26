@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Two Thoughts, One Sentence",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2208691a91f5edb0",
+  "sourceHash": "fnv1a64:134ce422f3162bf4",
   "lessons": [
     {
       "id": "GE-C35-oder",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3b1b4606ec828d3",
+      "sourceHash": "fnv1a64:95bef55138615223",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +341,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6672d5f2fa2c1805",
+      "sourceHash": "fnv1a64:e3a68a62469313f4",
       "notice": null,
       "blocks": [
         {
@@ -846,7 +846,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f3287043bd4199c",
+      "sourceHash": "fnv1a64:40dccfdc812a7e82",
       "notice": null,
       "blocks": [
         {

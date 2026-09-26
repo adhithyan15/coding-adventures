@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R103-first-pass-nature-animals-and-describing-words",
+    "language": "german",
+    "chapter": 103,
+    "sequence": 3960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ff4482d62c29c0b"
+  },
+  "findings": []
+}

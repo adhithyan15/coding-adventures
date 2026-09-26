@@ -1,0 +1,19 @@
+{
+  "chapter": 61,
+  "title": "Fear, Joy, Son, Daughter, Grandfather",
+  "label": "ch:ge-fear-joy-son-daughter-grandfather",
+  "canDo": "I can say fear, joy, a son, a daughter and a grandfather.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GE-C61-grossvater",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 61: i can say fear, joy, a son, a daughter and a grandfather.",
+    "assesses": [
+      "GE-LEX-C61-GEFUEHLE2-03",
+      "GE-LEX-C61-GEFUEHLE2-04",
+      "GE-LEX-C61-GEFUEHLE2-05"
+    ]
+  }
+}

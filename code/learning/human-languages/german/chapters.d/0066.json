@@ -1,0 +1,19 @@
+{
+  "chapter": 66,
+  "title": "To sing, To travel, To show, To bring, To forget",
+  "label": "ch:ge-to-sing-to-travel-to-show-to-bring-to-forget",
+  "canDo": "I can say to sing, to travel, to show, to bring and to forget.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GE-C66-vergessen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: i can say to sing, to travel, to show, to bring and to forget.",
+    "assesses": [
+      "GE-LEX-C66-VERBEN3-03",
+      "GE-LEX-C66-VERBEN3-04",
+      "GE-LEX-C66-VERBEN3-05"
+    ]
+  }
+}

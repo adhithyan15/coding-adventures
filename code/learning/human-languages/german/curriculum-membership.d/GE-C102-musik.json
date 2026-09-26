@@ -1,0 +1,11 @@
+{
+  "id": "GE-C102-musik",
+  "pathSegment": "GE-PATH-102-DINGE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-102-DINGE",
+      "order": 4
+    }
+  ]
+}

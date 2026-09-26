@@ -1,0 +1,11 @@
+{
+  "id": "GE-C79-gabel",
+  "pathSegment": "GE-PATH-79-GESCHIRR",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-79-GESCHIRR",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C99-kleid",
+    "language": "german",
+    "chapter": 99,
+    "sequence": 3710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b06f84f4a196c285"
+  },
+  "findings": []
+}

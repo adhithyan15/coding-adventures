@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:e7addbaa879492dd",
+  "lessonIds": [
+    "GE-C77-garten",
+    "GE-C77-lampe",
+    "GE-C77-bad",
+    "GE-C77-zimmer",
+    "GE-C77-bett"
+  ],
+  "tex": "german/book/chapters/ch77-garden-lamp-bath-room-bed.tex"
+}

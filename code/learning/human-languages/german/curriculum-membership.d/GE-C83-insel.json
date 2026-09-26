@@ -1,0 +1,11 @@
+{
+  "id": "GE-C83-insel",
+  "pathSegment": "GE-PATH-83-NATUR2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-83-NATUR2",
+      "order": 2
+    }
+  ]
+}

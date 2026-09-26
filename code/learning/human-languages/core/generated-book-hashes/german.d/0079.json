@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:262e2bd8bcae10b6",
+  "lessonIds": [
+    "GE-C79-tasse",
+    "GE-C79-teller",
+    "GE-C79-glas",
+    "GE-C79-gabel",
+    "GE-C79-messer",
+    "GE-R79-first-pass-the-body-people-and-food",
+    "GE-R79-second-pass-the-house-school-things-and-nature"
+  ],
+  "tex": "german/book/chapters/ch79-cup-plate-glass-fork-knife.tex"
+}

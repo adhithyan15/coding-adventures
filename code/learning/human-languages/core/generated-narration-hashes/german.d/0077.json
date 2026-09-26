@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:a8cfd352b234614a",
+  "lessonIds": [
+    "GE-C77-garten",
+    "GE-C77-lampe",
+    "GE-C77-bad",
+    "GE-C77-zimmer",
+    "GE-C77-bett"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch77.txt",
+  "json": "german/narration/ch77.json",
+  "textHash": "fnv1a64:6e426f513100f9ea",
+  "jsonHash": "fnv1a64:6617db87eff9abd8",
+  "findings": []
+}

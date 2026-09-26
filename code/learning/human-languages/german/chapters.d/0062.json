@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "Grandmother, Woman, Girl, Uncle, Aunt",
+  "label": "ch:ge-grandmother-woman-girl-uncle-aunt",
+  "canDo": "I can say a grandmother, a woman, a girl, an uncle and an aunt.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "GE-C62-tante",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: i can say a grandmother, a woman, a girl, an uncle and an aunt.",
+    "assesses": [
+      "GE-LEX-C62-FAMILIE-03",
+      "GE-LEX-C62-FAMILIE-04",
+      "GE-LEX-C62-FAMILIE-05"
+    ]
+  }
+}

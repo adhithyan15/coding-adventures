@@ -1,0 +1,11 @@
+{
+  "id": "GE-C100-sprache",
+  "pathSegment": "GE-PATH-100-WELT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-100-WELT",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C95-dort",
+  "pathSegment": "GE-PATH-95-WO",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-95-WO",
+      "order": 2
+    }
+  ]
+}

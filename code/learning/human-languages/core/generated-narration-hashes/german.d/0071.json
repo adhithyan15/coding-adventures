@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:25c8a05e6fa12f5c",
+  "lessonIds": [
+    "GE-C71-kuchen",
+    "GE-C71-suppe",
+    "GE-C71-honig",
+    "GE-C71-oel",
+    "GE-C71-mittagessen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch71.txt",
+  "json": "german/narration/ch71.json",
+  "textHash": "fnv1a64:88e351b3acba37a9",
+  "jsonHash": "fnv1a64:1fb47343ca9a491f",
+  "findings": []
+}

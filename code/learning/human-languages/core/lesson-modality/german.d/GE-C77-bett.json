@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C77-bett",
+    "language": "german",
+    "chapter": 77,
+    "sequence": 2630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8b8fe36b93464d0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:3a32aa0069f679e8",
+  "lessonIds": [
+    "GE-C96-laden",
+    "GE-C96-markt",
+    "GE-C96-bahnhof",
+    "GE-C96-flugzeug",
+    "GE-C96-auto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch96.txt",
+  "json": "german/narration/ch96.json",
+  "textHash": "fnv1a64:87c982c2252686ef",
+  "jsonHash": "fnv1a64:aa4aa22df2a24e8b",
+  "findings": []
+}

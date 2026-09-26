@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:b52fd9ed2ea84c95",
+  "lessonIds": [
+    "GE-C76-fenster",
+    "GE-C76-stuhl",
+    "GE-C76-tisch",
+    "GE-C76-wand",
+    "GE-C76-dach"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch76.txt",
+  "json": "german/narration/ch76.json",
+  "textHash": "fnv1a64:d2d17e6447cdc9fd",
+  "jsonHash": "fnv1a64:6f22c1ddb5577a10",
+  "findings": []
+}

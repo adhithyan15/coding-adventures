@@ -1,0 +1,11 @@
+{
+  "id": "GE-C72-fruehstueck",
+  "pathSegment": "GE-PATH-72-ESSEN4",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-72-ESSEN4",
+      "order": 1
+    }
+  ]
+}

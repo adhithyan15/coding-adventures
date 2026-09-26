@@ -1,0 +1,11 @@
+{
+  "id": "GE-C94-sekunde",
+  "pathSegment": "GE-PATH-94-WANN",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-94-WANN",
+      "order": 2
+    }
+  ]
+}

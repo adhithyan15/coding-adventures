@@ -1,0 +1,11 @@
+{
+  "id": "GE-C58-zunge",
+  "pathSegment": "GE-PATH-58-KOERPER3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-58-KOERPER3",
+      "order": 1
+    }
+  ]
+}

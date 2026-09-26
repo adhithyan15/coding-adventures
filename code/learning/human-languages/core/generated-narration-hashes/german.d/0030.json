@@ -1,18 +1,21 @@
 {
   "language": "german",
   "chapter": 30,
-  "sourceHash": "fnv1a64:29132e62d6535d85",
+  "sourceHash": "fnv1a64:e4fcf3d81fefd049",
   "lessonIds": [
     "GE-C17-kopf",
+    "GE-C17-kopf-more",
     "GE-C17-kopf-haupt",
+    "GE-C17-kopf-haupt-more",
     "GE-C17-hand",
+    "GE-C17-hand-more",
     "GE-R17-wie-geht-es-wirklich"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 4,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "german/narration/ch30.txt",
   "json": "german/narration/ch30.json",
-  "textHash": "fnv1a64:94349ddab75a515e",
-  "jsonHash": "fnv1a64:5a92a08a916ce8d2",
+  "textHash": "fnv1a64:cd2378b95fec4677",
+  "jsonHash": "fnv1a64:1cc22ab001e43dd7",
   "findings": []
 }

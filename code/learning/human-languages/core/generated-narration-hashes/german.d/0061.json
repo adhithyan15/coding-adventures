@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:3a70bd14f4c4b9d5",
+  "lessonIds": [
+    "GE-C61-angst",
+    "GE-C61-freude",
+    "GE-C61-sohn",
+    "GE-C61-tochter",
+    "GE-C61-grossvater"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch61.txt",
+  "json": "german/narration/ch61.json",
+  "textHash": "fnv1a64:87a7de97d3141bd1",
+  "jsonHash": "fnv1a64:0b661c4fe9b25e00",
+  "findings": []
+}

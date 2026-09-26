@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-93-ADJ5",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "GE-EXT-93-ADJ5"
+  ],
+  "after": []
+}

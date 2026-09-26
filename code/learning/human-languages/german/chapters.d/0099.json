@@ -1,0 +1,19 @@
+{
+  "chapter": 99,
+  "title": "Dress, Trousers, Shoe, Cap, Sock",
+  "label": "ch:ge-dress-trousers-shoe-cap-sock",
+  "canDo": "I can say a dress, trousers, a shoe, a cap, a woollen hat and a sock.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GE-C99-socke",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: i can say a dress, trousers, a shoe, a cap, a woollen hat and a sock.",
+    "assesses": [
+      "GE-LEX-C99-KLEIDUNG-03",
+      "GE-LEX-C99-KLEIDUNG-04",
+      "GE-LEX-C99-KLEIDUNG-05"
+    ]
+  }
+}

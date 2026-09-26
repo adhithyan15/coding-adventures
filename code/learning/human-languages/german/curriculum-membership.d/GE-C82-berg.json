@@ -1,0 +1,11 @@
+{
+  "id": "GE-C82-berg",
+  "pathSegment": "GE-PATH-82-NATUR1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-82-NATUR1",
+      "order": 4
+    }
+  ]
+}

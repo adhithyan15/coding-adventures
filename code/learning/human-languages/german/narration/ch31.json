@@ -3,8 +3,8 @@
   "language": "german",
   "chapter": 31,
   "title": "Yes and No",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f801890d0ae7476a",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:d86d119a8d944493",
   "lessons": [
     {
       "id": "GE-C18-ja",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4b1edffdf3fb47c",
+      "sourceHash": "fnv1a64:e2cc8a5b2b38dd09",
       "notice": null,
       "blocks": [
         {
@@ -68,25 +68,6 @@
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: A German habit to file away",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "German also has a third answer-word, doch, for one special job: contradicting a negative — exactly like French si. If someone says something isn't so and you insist it is, you say doch, not ja:"
-            },
-            {
-              "kind": "speech",
-              "text": "Du kommst nicht? (\"You're not coming?\") — Doch! (\"Yes I am!\")"
-            },
-            {
-              "kind": "speech",
-              "text": "You'll drill doch on its own later; for now, keep ja for a plain yes and know doch is waiting for the contradictions."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -126,7 +107,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -145,6 +126,99 @@
       ]
     },
     {
+      "id": "GE-C18-ja-more",
+      "sequence": 695,
+      "title": "(ja, continued) — A German habit to file away",
+      "headword": "(ja, continued)",
+      "romanization": "(ja, continued)",
+      "gloss": "A German habit to file away",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8874fd5901f827a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say ja again, and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: A German habit to file away",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "German also has a third answer-word, doch, for one special job: contradicting a negative — exactly like French si. If someone says something isn't so and you insist it is, you say doch, not ja:"
+            },
+            {
+              "kind": "speech",
+              "text": "Du kommst nicht? (\"You're not coming?\") — Doch! (\"Yes I am!\")"
+            },
+            {
+              "kind": "speech",
+              "text": "You'll drill doch on its own later; for now, keep ja for a plain yes and know doch is waiting for the contradictions."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what this lesson added to ja, in one sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what this lesson added to **ja**, in one sentence]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did this lesson add to ja? Say it once more, without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GE-C18-nein",
       "sequence": 700,
       "title": "nein — no",
@@ -157,7 +231,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d509f56e1be666d",
+      "sourceHash": "fnv1a64:987f61b175691f52",
       "notice": null,
       "blocks": [
         {
@@ -194,36 +268,6 @@
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way: One \"no\" runs across the whole chain",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "That n‑ at the front is not a coincidence. A single ancient sound — linguists write it PIE ne — is the negator behind an astonishing sweep of languages you're learning:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "from PIE ne",
-                ""
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "from PIE ne: Latin, nōn becomes Spanish no, French non.",
-                "from PIE ne: German, nein (ni-ein).",
-                "from PIE ne: Hindi, nahīṃ (from na).",
-                "from PIE ne: English, no, not, none."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Learn nein and you've really met the same \"n‑of‑no\" that will greet you again in Hindi, and that also sits inside Spanish and French. One negative, half the world."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -263,7 +307,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -276,6 +320,110 @@
             {
               "kind": "speech",
               "text": "How do you say no in German? (nein, rhymes with nine.) What two words is it fused from, and what do they mean? (ni + ein — \"not one.\") Which English word is built the same way? (none = ne + one.) What ancient sound links German nein, Latin nōn and Hindi nahīṃ? (PIE ne, the negator.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C18-nein-more",
+      "sequence": 705,
+      "title": "(nein, continued) — One \"no\" runs across the whole chain",
+      "headword": "(nein, continued)",
+      "romanization": "(nein, continued)",
+      "gloss": "One 'no' runs across the whole chain",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7ddc84a0015bc8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say nein again, and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way: One \"no\" runs across the whole chain",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "That n‑ at the front is not a coincidence. A single ancient sound — linguists write it PIE ne — is the negator behind an astonishing sweep of languages you're learning:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "from PIE ne",
+                ""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "from PIE ne: Latin, nōn becomes Spanish no, French non.",
+                "from PIE ne: German, nein (ni-ein).",
+                "from PIE ne: Hindi, nahīṃ (from na).",
+                "from PIE ne: English, no, not, none."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Learn nein and you've really met the same \"n‑of‑no\" that will greet you again in Hindi, and that also sits inside Spanish and French. One negative, half the world."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what this lesson added to nein, in one sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what this lesson added to **nein**, in one sentence]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did this lesson add to nein? Say it once more, without looking."
             }
           ]
         }

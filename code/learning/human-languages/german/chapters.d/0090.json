@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "Heavy, Cheap, High, Low, Empty",
+  "label": "ch:ge-heavy-cheap-high-low-empty",
+  "canDo": "I can say heavy, cheap, high, tall, low and empty.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GE-C90-leer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 90: i can say heavy, cheap, high, tall, low and empty.",
+    "assesses": [
+      "GE-LEX-C90-ADJ2-03",
+      "GE-LEX-C90-ADJ2-04",
+      "GE-LEX-C90-ADJ2-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:d0baf908561712c5",
+  "lessonIds": [
+    "GE-C67-verlieren",
+    "GE-C67-glauben",
+    "GE-C67-brauchen",
+    "GE-C67-leben",
+    "GE-C67-rufen"
+  ],
+  "tex": "german/book/chapters/ch67-to-lose-to-believe-to-need-to-live-to-call.tex"
+}

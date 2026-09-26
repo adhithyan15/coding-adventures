@@ -3,8 +3,8 @@
   "language": "german",
   "chapter": 34,
   "title": "Weather",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7a9c69337b4388b8",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:62f920aa14af5f01",
   "lessons": [
     {
       "id": "GE-C21-das-wetter",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19e94af4f6dabd35",
+      "sourceHash": "fnv1a64:66f549d6c35eb5b6",
       "notice": null,
       "blocks": [
         {
@@ -67,17 +67,6 @@
         },
         {
           "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart: es regnet",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Es regnet. — \"It's raining.\" — from regnen from Proto-Germanic regnōną — the same root as English rain. Just like Wetter/ \"weather,\" this is a genuine Germanic cousin-pair, not a shared Latin borrowing the way Spanish's llueve and French's pleut are."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -117,7 +106,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -130,6 +119,91 @@
             {
               "kind": "speech",
               "text": "Does Wetter come from Latin, like the Romance languages' weather words? (No — it's native Germanic, the same word as English \"weather.\") What verb does German use for \"it's hot/cold\" — sein (\"be\") or a hacer-style \"make\"? (Sein, \"to be\" — matching German's own AGE pattern.) What English word is regnet related to? (Rain — same Proto-Germanic root, regnōną.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C21-das-wetter-more",
+      "sequence": 735,
+      "title": "(das Wetter, es regnet, continued) — es regnet",
+      "headword": "(das Wetter, es regnet, continued)",
+      "romanization": "(das Wetter, es regnet, continued)",
+      "gloss": "es regnet",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9c71da2359975f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say das Wetter, es regnet again, and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart: es regnet",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Es regnet. — \"It's raining.\" — from regnen from Proto-Germanic regnōną — the same root as English rain. Just like Wetter/ \"weather,\" this is a genuine Germanic cousin-pair, not a shared Latin borrowing the way Spanish's llueve and French's pleut are."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what this lesson added to das Wetter, es regnet, in one sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what this lesson added to **das Wetter, es regnet**, in one sentence]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did this lesson add to das Wetter, es regnet? Say it once more, without looking."
             }
           ]
         }

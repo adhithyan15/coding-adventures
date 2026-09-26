@@ -1,0 +1,11 @@
+{
+  "id": "GE-C78-wohnung",
+  "pathSegment": "GE-PATH-78-HAUS3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-78-HAUS3",
+      "order": 4
+    }
+  ]
+}

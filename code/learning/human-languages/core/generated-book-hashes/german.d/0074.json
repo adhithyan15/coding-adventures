@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:388f8168d669c633",
+  "lessonIds": [
+    "GE-C74-saft",
+    "GE-C74-wurst",
+    "GE-C74-schinken",
+    "GE-C74-salat",
+    "GE-C74-nudeln"
+  ],
+  "tex": "german/book/chapters/ch74-juice-sausage-ham-salad-noodles.tex"
+}

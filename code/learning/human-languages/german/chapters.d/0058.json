@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "Back, Tongue, Lip, Toe, Stomach",
+  "label": "ch:ge-back-tongue-lip-toe-stomach",
+  "canDo": "I can say the back, the tongue, a lip, a toe and the stomach.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GE-C58-magen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 58: i can say the back, the tongue, a lip, a toe and the stomach.",
+    "assesses": [
+      "GE-LEX-C58-KOERPER3-03",
+      "GE-LEX-C58-KOERPER3-04",
+      "GE-LEX-C58-KOERPER3-05"
+    ]
+  }
+}

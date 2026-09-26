@@ -1,0 +1,11 @@
+{
+  "id": "GE-C99-hose",
+  "pathSegment": "GE-PATH-99-KLEIDUNG",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-99-KLEIDUNG",
+      "order": 1
+    }
+  ]
+}

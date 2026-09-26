@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "When the Verb Steps to the Front",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:553c49d406b28943",
+  "sourceHash": "fnv1a64:745610fe87b1cb91",
   "lessons": [
     {
       "id": "GE-C33-ja-nein-frage",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8129626be57e1f2b",
+      "sourceHash": "fnv1a64:52aec017ca69562a",
       "notice": null,
       "blocks": [
         {
@@ -876,7 +876,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79466e46f8943dee",
+      "sourceHash": "fnv1a64:da03ff39c3c6ff9e",
       "notice": null,
       "blocks": [
         {

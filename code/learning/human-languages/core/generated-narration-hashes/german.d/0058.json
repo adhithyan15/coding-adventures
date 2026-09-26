@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:a657f145807454df",
+  "lessonIds": [
+    "GE-C58-ruecken",
+    "GE-C58-zunge",
+    "GE-C58-lippe",
+    "GE-C58-zehe",
+    "GE-C58-magen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch58.txt",
+  "json": "german/narration/ch58.json",
+  "textHash": "fnv1a64:0cbb9526a90678de",
+  "jsonHash": "fnv1a64:e6e984cd97388675",
+  "findings": []
+}

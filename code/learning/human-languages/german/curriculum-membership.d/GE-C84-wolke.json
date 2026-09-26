@@ -1,0 +1,11 @@
+{
+  "id": "GE-C84-wolke",
+  "pathSegment": "GE-PATH-84-NATUR3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-84-NATUR3",
+      "order": 1
+    }
+  ]
+}

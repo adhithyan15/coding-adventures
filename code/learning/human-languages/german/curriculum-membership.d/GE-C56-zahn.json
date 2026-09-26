@@ -1,0 +1,11 @@
+{
+  "id": "GE-C56-zahn",
+  "pathSegment": "GE-PATH-56-KOERPER1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-56-KOERPER1",
+      "order": 1
+    }
+  ]
+}

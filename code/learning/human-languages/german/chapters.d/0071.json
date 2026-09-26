@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Cake, Soup, Honey, Oil, Lunch",
+  "label": "ch:ge-cake-soup-honey-oil-lunch",
+  "canDo": "I can say a cake, a soup, honey, oil and lunch.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "GE-C71-mittagessen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: i can say a cake, a soup, honey, oil and lunch.",
+    "assesses": [
+      "GE-LEX-C71-ESSEN3-03",
+      "GE-LEX-C71-ESSEN3-04",
+      "GE-LEX-C71-ESSEN3-05"
+    ]
+  }
+}

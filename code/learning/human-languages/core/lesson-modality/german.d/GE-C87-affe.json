@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C87-affe",
+    "language": "german",
+    "chapter": 87,
+    "sequence": 3150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bda915298490e03d"
+  },
+  "findings": []
+}

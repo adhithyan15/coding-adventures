@@ -3,7 +3,7 @@
     "id": "GE-R17-wie-geht-es-wirklich",
     "language": "german",
     "chapter": 30,
-    "sequence": 681,
+    "sequence": 685,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:fea4b03ba54f62ce"
+    "sourceHash": "fnv1a64:b73febf2e2c033ea"
   },
   "findings": []
 }

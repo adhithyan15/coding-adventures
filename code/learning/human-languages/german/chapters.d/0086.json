@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "Pig, Bird, Mouse, Fox, Snake",
+  "label": "ch:ge-pig-bird-mouse-fox-snake",
+  "canDo": "I can say a pig, a bird, a mouse, a fox and a snake.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GE-C86-schlange",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can say a pig, a bird, a mouse, a fox and a snake.",
+    "assesses": [
+      "GE-LEX-C86-TIERE1-03",
+      "GE-LEX-C86-TIERE1-04",
+      "GE-LEX-C86-TIERE1-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:2f6f33301746e6ea",
+  "lessonIds": [
+    "GE-C56-bein",
+    "GE-C56-zahn",
+    "GE-C56-hals",
+    "GE-C56-schulter",
+    "GE-C56-knie"
+  ],
+  "tex": "german/book/chapters/ch56-leg-tooth-neck-shoulder-knee.tex"
+}
