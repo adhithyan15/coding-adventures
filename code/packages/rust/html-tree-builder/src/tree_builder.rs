@@ -129,6 +129,9 @@ pub struct TreeBuilder {
     pub(crate) arena: Arena,
     mode: InsertionMode,
     original_mode: InsertionMode,
+    /// §13.2.6.4.9 "pending table character tokens", kept as the runs they
+    /// arrived in.
+    pending_table_text: Vec<(TextKind, String)>,
     template_modes: Vec<InsertionMode>,
     open: OpenElements,
     formatting: ActiveFormatting,
@@ -155,6 +158,7 @@ impl TreeBuilder {
             arena: Arena::new(),
             mode: InsertionMode::Initial,
             original_mode: InsertionMode::Initial,
+            pending_table_text: Vec::new(),
             template_modes: Vec::new(),
             open: OpenElements::default(),
             formatting: ActiveFormatting::default(),
@@ -311,17 +315,19 @@ impl TreeBuilder {
             InsertionMode::AfterHead => self.after_head(token),
             InsertionMode::InBody => self.in_body(token),
             InsertionMode::Text => self.text(token),
+            InsertionMode::InTable => self.in_table(token),
+            InsertionMode::InTableText => self.in_table_text(token),
+            InsertionMode::InCaption => self.in_caption(token),
+            InsertionMode::InColumnGroup => self.in_column_group(token),
+            InsertionMode::InTableBody => self.in_table_body(token),
+            InsertionMode::InRow => self.in_row(token),
+            InsertionMode::InCell => self.in_cell(token),
             InsertionMode::InTemplate => self.in_template(token),
             InsertionMode::AfterBody => self.after_body(token),
             InsertionMode::InFrameset => self.in_frameset(token),
             InsertionMode::AfterFrameset => self.after_frameset(token),
             InsertionMode::AfterAfterBody => self.after_after_body(token),
             InsertionMode::AfterAfterFrameset => self.after_after_frameset(token),
-            unwritten => {
-                debug_assert!(!unwritten.is_implemented());
-                self.error("tree-builder-mode-not-implemented");
-                self.in_body(token)
-            }
         }
     }
 
@@ -1731,6 +1737,559 @@ impl TreeBuilder {
             }
             // The tokenizer emits nothing else while it is in a text state.
             _ => Flow::Done,
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // §13.2.6.4.9 The "in table" insertion mode
+    // ----------------------------------------------------------------------
+
+    fn current_is_html_any(&self, names: &[&str]) -> bool {
+        self.current_is_any(names)
+    }
+
+    /// "Clear the stack back to" a context: pop while the current node is not
+    /// one of `names` (or `html`, which ends every such loop).
+    fn clear_stack_back_to(&mut self, names: &[&str]) {
+        while let Some(current) = self.current() {
+            if self.arena.is_html(current, "html")
+                || names.iter().any(|name| self.arena.is_html(current, name))
+            {
+                break;
+            }
+            self.open.pop(&self.arena);
+        }
+    }
+
+    fn clear_to_table_context(&mut self) {
+        self.clear_stack_back_to(&["table", "template"]);
+    }
+
+    fn clear_to_table_body_context(&mut self) {
+        self.clear_stack_back_to(&["tbody", "tfoot", "thead", "template"]);
+    }
+
+    fn clear_to_table_row_context(&mut self) {
+        self.clear_stack_back_to(&["tr", "template"]);
+    }
+
+    fn in_table(&mut self, token: Tok) -> Flow {
+        match token {
+            Tok::Text(..)
+                if self.current_is_html_any(&[
+                    "table", "tbody", "template", "tfoot", "thead", "tr",
+                ]) =>
+            {
+                self.pending_table_text.clear();
+                self.original_mode = self.mode;
+                self.mode = InsertionMode::InTableText;
+                Flow::Reprocess(token)
+            }
+            Tok::Comment(_) | Tok::ProcessingInstruction { .. } => {
+                self.insert_comment_like(token, None);
+                Flow::Done
+            }
+            Tok::Doctype { .. } => {
+                self.error("unexpected-doctype");
+                Flow::Done
+            }
+            Tok::StartTag(tag) if tag.name == "caption" => {
+                self.clear_to_table_context();
+                self.formatting.push_marker();
+                self.insert_html_element(&tag);
+                self.mode = InsertionMode::InCaption;
+                Flow::Done
+            }
+            Tok::StartTag(tag) if tag.name == "colgroup" => {
+                self.clear_to_table_context();
+                self.insert_html_element(&tag);
+                self.mode = InsertionMode::InColumnGroup;
+                Flow::Done
+            }
+            Tok::StartTag(ref tag) if tag.name == "col" => {
+                self.clear_to_table_context();
+                self.insert_html_element(&Tag::named("colgroup"));
+                self.mode = InsertionMode::InColumnGroup;
+                Flow::Reprocess(token)
+            }
+            Tok::StartTag(tag) if matches!(tag.name.as_str(), "tbody" | "tfoot" | "thead") => {
+                self.clear_to_table_context();
+                self.insert_html_element(&tag);
+                self.mode = InsertionMode::InTableBody;
+                Flow::Done
+            }
+            Tok::StartTag(ref tag) if matches!(tag.name.as_str(), "td" | "th" | "tr") => {
+                self.clear_to_table_context();
+                self.insert_html_element(&Tag::named("tbody"));
+                self.mode = InsertionMode::InTableBody;
+                Flow::Reprocess(token)
+            }
+            Tok::StartTag(ref tag) if tag.name == "table" => {
+                self.error("unexpected-start-tag-implies-end-tag");
+                if !self.open.has_in_scope(&self.arena, "table", Scope::Table) {
+                    return Flow::Done;
+                }
+                self.open.pop_until_html(&self.arena, "table");
+                self.reset_insertion_mode();
+                Flow::Reprocess(token)
+            }
+            Tok::EndTag(ref name) if name == "table" => {
+                if !self.open.has_in_scope(&self.arena, "table", Scope::Table) {
+                    self.error("unexpected-end-tag");
+                    return Flow::Done;
+                }
+                self.open.pop_until_html(&self.arena, "table");
+                self.reset_insertion_mode();
+                Flow::Done
+            }
+            Tok::EndTag(ref name)
+                if matches!(
+                    name.as_str(),
+                    "body"
+                        | "caption"
+                        | "col"
+                        | "colgroup"
+                        | "html"
+                        | "tbody"
+                        | "td"
+                        | "tfoot"
+                        | "th"
+                        | "thead"
+                        | "tr"
+                ) =>
+            {
+                self.error("unexpected-end-tag");
+                Flow::Done
+            }
+            Tok::StartTag(ref tag)
+                if matches!(tag.name.as_str(), "style" | "script" | "template") =>
+            {
+                self.in_head(token)
+            }
+            Tok::EndTag(ref name) if name == "template" => self.in_head(token),
+            Tok::StartTag(ref tag)
+                if tag.name == "input"
+                    && tag
+                        .attribute("type")
+                        .is_some_and(|kind| kind.eq_ignore_ascii_case("hidden")) =>
+            {
+                self.error("unexpected-hidden-input-in-table");
+                let Tok::StartTag(tag) = token else {
+                    unreachable!("matched a start tag")
+                };
+                self.insert_void_element(&tag);
+                Flow::Done
+            }
+            Tok::StartTag(tag) if tag.name == "form" => {
+                self.error("unexpected-form-in-table");
+                let in_template = self.open.contains_html("template");
+                if self.form.is_some() && !in_template {
+                    return Flow::Done;
+                }
+                let form = self.insert_html_element(&tag);
+                if !in_template {
+                    self.form = Some(form);
+                }
+                self.open.pop(&self.arena);
+                Flow::Done
+            }
+            Tok::Eof => self.in_body(token),
+            other => self.in_table_anything_else(other),
+        }
+    }
+
+    /// The "anything else" entry of "in table": the in-body rules, with
+    /// foster parenting on, so content lands before the table.
+    fn in_table_anything_else(&mut self, token: Tok) -> Flow {
+        self.error("unexpected-token-in-table");
+        self.foster_parenting = true;
+        let flow = self.in_body(token);
+        self.foster_parenting = false;
+        flow
+    }
+
+    // ----------------------------------------------------------------------
+    // §13.2.6.4.10 The "in table text" insertion mode
+    // ----------------------------------------------------------------------
+
+    fn in_table_text(&mut self, token: Tok) -> Flow {
+        match token {
+            Tok::Text(TextKind::Null, _) => {
+                self.error("unexpected-null-character");
+                Flow::Done
+            }
+            Tok::Text(kind, text) => {
+                self.pending_table_text.push((kind, text));
+                Flow::Done
+            }
+            other => {
+                let pending = std::mem::take(&mut self.pending_table_text);
+                if pending
+                    .iter()
+                    .any(|(kind, _)| *kind != TextKind::Whitespace)
+                {
+                    // Non-whitespace in a table is foster-parented, runs and all.
+                    for (kind, text) in pending {
+                        let flow = self.in_table_anything_else(Tok::Text(kind, text));
+                        debug_assert!(matches!(flow, Flow::Done));
+                    }
+                } else {
+                    for (_, text) in pending {
+                        self.insert_text(&text);
+                    }
+                }
+                self.mode = self.original_mode;
+                Flow::Reprocess(other)
+            }
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // §13.2.6.4.11 The "in caption" insertion mode
+    // ----------------------------------------------------------------------
+
+    /// The shared steps of `</caption>` and the tokens that imply it. Returns
+    /// whether a caption was closed.
+    fn close_caption(&mut self) -> bool {
+        if !self.open.has_in_scope(&self.arena, "caption", Scope::Table) {
+            self.error("unexpected-end-tag");
+            return false;
+        }
+        self.generate_implied_end_tags(None);
+        if !self.current_is("caption") {
+            self.error("end-tag-too-early");
+        }
+        self.open.pop_until_html(&self.arena, "caption");
+        self.formatting.clear_to_last_marker();
+        self.mode = InsertionMode::InTable;
+        true
+    }
+
+    fn in_caption(&mut self, token: Tok) -> Flow {
+        match token {
+            Tok::EndTag(ref name) if name == "caption" => {
+                self.close_caption();
+                Flow::Done
+            }
+            Tok::StartTag(ref tag)
+                if matches!(
+                    tag.name.as_str(),
+                    "caption"
+                        | "col"
+                        | "colgroup"
+                        | "tbody"
+                        | "td"
+                        | "tfoot"
+                        | "th"
+                        | "thead"
+                        | "tr"
+                ) =>
+            {
+                if self.close_caption() {
+                    Flow::Reprocess(token)
+                } else {
+                    Flow::Done
+                }
+            }
+            Tok::EndTag(ref name) if name == "table" => {
+                if self.close_caption() {
+                    Flow::Reprocess(token)
+                } else {
+                    Flow::Done
+                }
+            }
+            Tok::EndTag(ref name)
+                if matches!(
+                    name.as_str(),
+                    "body"
+                        | "col"
+                        | "colgroup"
+                        | "html"
+                        | "tbody"
+                        | "td"
+                        | "tfoot"
+                        | "th"
+                        | "thead"
+                        | "tr"
+                ) =>
+            {
+                self.error("unexpected-end-tag");
+                Flow::Done
+            }
+            other => self.in_body(other),
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // §13.2.6.4.12 The "in column group" insertion mode
+    // ----------------------------------------------------------------------
+
+    fn in_column_group(&mut self, token: Tok) -> Flow {
+        match token {
+            Tok::Text(TextKind::Whitespace, text) => {
+                self.insert_text(&text);
+                Flow::Done
+            }
+            Tok::Comment(_) | Tok::ProcessingInstruction { .. } => {
+                self.insert_comment_like(token, None);
+                Flow::Done
+            }
+            Tok::Doctype { .. } => {
+                self.error("unexpected-doctype");
+                Flow::Done
+            }
+            Tok::StartTag(ref tag) if tag.name == "html" => self.in_body(token),
+            Tok::StartTag(tag) if tag.name == "col" => {
+                self.insert_void_element(&tag);
+                Flow::Done
+            }
+            Tok::EndTag(ref name) if name == "colgroup" => {
+                if !self.current_is("colgroup") {
+                    self.error("unexpected-end-tag");
+                } else {
+                    self.open.pop(&self.arena);
+                    self.mode = InsertionMode::InTable;
+                }
+                Flow::Done
+            }
+            Tok::EndTag(ref name) if name == "col" => {
+                self.error("unexpected-end-tag");
+                Flow::Done
+            }
+            Tok::StartTag(ref tag) if tag.name == "template" => self.in_head(token),
+            Tok::EndTag(ref name) if name == "template" => self.in_head(token),
+            Tok::Eof => self.in_body(token),
+            other => {
+                if !self.current_is("colgroup") {
+                    self.error("unexpected-token-in-column-group");
+                    return Flow::Done;
+                }
+                self.open.pop(&self.arena);
+                self.mode = InsertionMode::InTable;
+                Flow::Reprocess(other)
+            }
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // §13.2.6.4.13 The "in table body" insertion mode
+    // ----------------------------------------------------------------------
+
+    fn in_table_body(&mut self, token: Tok) -> Flow {
+        match token {
+            Tok::StartTag(tag) if tag.name == "tr" => {
+                self.clear_to_table_body_context();
+                self.insert_html_element(&tag);
+                self.mode = InsertionMode::InRow;
+                Flow::Done
+            }
+            Tok::StartTag(ref tag) if matches!(tag.name.as_str(), "th" | "td") => {
+                self.error("unexpected-cell-in-table-body");
+                self.clear_to_table_body_context();
+                self.insert_html_element(&Tag::named("tr"));
+                self.mode = InsertionMode::InRow;
+                Flow::Reprocess(token)
+            }
+            Tok::EndTag(ref name) if matches!(name.as_str(), "tbody" | "tfoot" | "thead") => {
+                if !self.open.has_in_scope(&self.arena, name, Scope::Table) {
+                    self.error("unexpected-end-tag");
+                    return Flow::Done;
+                }
+                self.clear_to_table_body_context();
+                self.open.pop(&self.arena);
+                self.mode = InsertionMode::InTable;
+                Flow::Done
+            }
+            Tok::StartTag(ref tag)
+                if matches!(
+                    tag.name.as_str(),
+                    "caption" | "col" | "colgroup" | "tbody" | "tfoot" | "thead"
+                ) =>
+            {
+                self.leave_table_body(token)
+            }
+            Tok::EndTag(ref name) if name == "table" => self.leave_table_body(token),
+            Tok::EndTag(ref name)
+                if matches!(
+                    name.as_str(),
+                    "body" | "caption" | "col" | "colgroup" | "html" | "td" | "th" | "tr"
+                ) =>
+            {
+                self.error("unexpected-end-tag");
+                Flow::Done
+            }
+            other => self.in_table(other),
+        }
+    }
+
+    /// Close the open table section, then reprocess in "in table".
+    fn leave_table_body(&mut self, token: Tok) -> Flow {
+        if !self
+            .open
+            .has_any_in_scope(&self.arena, &["tbody", "thead", "tfoot"], Scope::Table)
+        {
+            self.error("unexpected-token-in-table-body");
+            return Flow::Done;
+        }
+        self.clear_to_table_body_context();
+        self.open.pop(&self.arena);
+        self.mode = InsertionMode::InTable;
+        Flow::Reprocess(token)
+    }
+
+    // ----------------------------------------------------------------------
+    // §13.2.6.4.14 The "in row" insertion mode
+    // ----------------------------------------------------------------------
+
+    /// Close the open `tr` (the shared steps of `</tr>` and the tokens that
+    /// imply it). Returns whether one was closed.
+    fn close_row(&mut self) -> bool {
+        if !self.open.has_in_scope(&self.arena, "tr", Scope::Table) {
+            self.error("unexpected-end-tag");
+            return false;
+        }
+        self.clear_to_table_row_context();
+        self.open.pop(&self.arena);
+        self.mode = InsertionMode::InTableBody;
+        true
+    }
+
+    fn in_row(&mut self, token: Tok) -> Flow {
+        match token {
+            Tok::StartTag(tag) if matches!(tag.name.as_str(), "th" | "td") => {
+                self.clear_to_table_row_context();
+                self.insert_html_element(&tag);
+                self.mode = InsertionMode::InCell;
+                self.formatting.push_marker();
+                Flow::Done
+            }
+            Tok::EndTag(ref name) if name == "tr" => {
+                self.close_row();
+                Flow::Done
+            }
+            Tok::StartTag(ref tag)
+                if matches!(
+                    tag.name.as_str(),
+                    "caption" | "col" | "colgroup" | "tbody" | "tfoot" | "thead" | "tr"
+                ) =>
+            {
+                if self.close_row() {
+                    Flow::Reprocess(token)
+                } else {
+                    Flow::Done
+                }
+            }
+            Tok::EndTag(ref name) if name == "table" => {
+                if self.close_row() {
+                    Flow::Reprocess(token)
+                } else {
+                    Flow::Done
+                }
+            }
+            Tok::EndTag(ref name) if matches!(name.as_str(), "tbody" | "tfoot" | "thead") => {
+                if !self.open.has_in_scope(&self.arena, name, Scope::Table) {
+                    self.error("unexpected-end-tag");
+                    return Flow::Done;
+                }
+                if !self.open.has_in_scope(&self.arena, "tr", Scope::Table) {
+                    return Flow::Done;
+                }
+                self.clear_to_table_row_context();
+                self.open.pop(&self.arena);
+                self.mode = InsertionMode::InTableBody;
+                Flow::Reprocess(token)
+            }
+            Tok::EndTag(ref name)
+                if matches!(
+                    name.as_str(),
+                    "body" | "caption" | "col" | "colgroup" | "html" | "td" | "th"
+                ) =>
+            {
+                self.error("unexpected-end-tag");
+                Flow::Done
+            }
+            other => self.in_table(other),
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // §13.2.6.4.15 The "in cell" insertion mode
+    // ----------------------------------------------------------------------
+
+    /// "Close the cell".
+    fn close_cell(&mut self) {
+        self.generate_implied_end_tags(None);
+        if !self.current_is_any(&["td", "th"]) {
+            self.error("end-tag-too-early");
+        }
+        self.open.pop_until_any_html(&self.arena, &["td", "th"]);
+        self.formatting.clear_to_last_marker();
+        self.mode = InsertionMode::InRow;
+    }
+
+    fn in_cell(&mut self, token: Tok) -> Flow {
+        match token {
+            Tok::EndTag(ref name) if matches!(name.as_str(), "td" | "th") => {
+                if !self.open.has_in_scope(&self.arena, name, Scope::Table) {
+                    self.error("unexpected-end-tag");
+                    return Flow::Done;
+                }
+                self.generate_implied_end_tags(None);
+                if !self.current_is(name) {
+                    self.error("end-tag-too-early");
+                }
+                self.open.pop_until_html(&self.arena, name);
+                self.formatting.clear_to_last_marker();
+                self.mode = InsertionMode::InRow;
+                Flow::Done
+            }
+            Tok::StartTag(ref tag)
+                if matches!(
+                    tag.name.as_str(),
+                    "caption"
+                        | "col"
+                        | "colgroup"
+                        | "tbody"
+                        | "td"
+                        | "tfoot"
+                        | "th"
+                        | "thead"
+                        | "tr"
+                ) =>
+            {
+                // The specification asserts a cell is in table scope here; if a
+                // hostile stack ever breaks that, ignoring the token is what
+                // keeps "close the cell and reprocess" from looping.
+                if !self
+                    .open
+                    .has_any_in_scope(&self.arena, &["td", "th"], Scope::Table)
+                {
+                    self.error("unexpected-start-tag");
+                    return Flow::Done;
+                }
+                self.close_cell();
+                Flow::Reprocess(token)
+            }
+            Tok::EndTag(ref name)
+                if matches!(
+                    name.as_str(),
+                    "body" | "caption" | "col" | "colgroup" | "html"
+                ) =>
+            {
+                self.error("unexpected-end-tag");
+                Flow::Done
+            }
+            Tok::EndTag(ref name)
+                if matches!(name.as_str(), "table" | "tbody" | "tfoot" | "thead" | "tr") =>
+            {
+                if !self.open.has_in_scope(&self.arena, name, Scope::Table) {
+                    self.error("unexpected-end-tag");
+                    return Flow::Done;
+                }
+                self.close_cell();
+                Flow::Reprocess(token)
+            }
+            other => self.in_body(other),
         }
     }
 

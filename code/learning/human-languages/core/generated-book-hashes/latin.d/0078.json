@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:b991154b84513fb2",
+  "lessonIds": [
+    "LA-C78-vivo",
+    "LA-C78-intro",
+    "LA-C78-redeo",
+    "LA-C78-timeo",
+    "LA-C78-gaudeo"
+  ],
+  "tex": "latin/book/chapters/ch78-live-enter-return-fear-rejoice.tex"
+}

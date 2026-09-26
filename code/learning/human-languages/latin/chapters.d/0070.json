@@ -1,0 +1,19 @@
+{
+  "chapter": 70,
+  "title": "Son, Daughter, Grandparents",
+  "label": "ch:la-son-daughter-grandparents",
+  "canDo": "I can name a son, a daughter, a grandfather, a grandmother and a family.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "LA-C70-familia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 70: i can name a son, a daughter, a grandfather, a grandmother and a family.",
+    "assesses": [
+      "LA-LEX-C70-FAMILIA1-03",
+      "LA-LEX-C70-FAMILIA1-04",
+      "LA-LEX-C70-FAMILIA1-05"
+    ]
+  }
+}

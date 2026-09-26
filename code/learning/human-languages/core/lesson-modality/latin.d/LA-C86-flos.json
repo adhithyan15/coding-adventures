@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C86-flos",
+    "language": "latin",
+    "chapter": 86,
+    "sequence": 2920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a79ec9f0d8d8831"
+  },
+  "findings": []
+}

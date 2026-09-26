@@ -1,0 +1,19 @@
+{
+  "chapter": 77,
+  "title": "Send, Stay, Fall, Put, Find",
+  "label": "ch:la-send-stay-fall-put-find",
+  "canDo": "I can say to send, to stay, to fall, to put and to find.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "LA-C77-invenio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 77: i can say to send, to stay, to fall, to put and to find.",
+    "assesses": [
+      "LA-LEX-C77-VERBA3-03",
+      "LA-LEX-C77-VERBA3-04",
+      "LA-LEX-C77-VERBA3-05"
+    ]
+  }
+}

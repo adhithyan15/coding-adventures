@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:d3b18b1b14205173",
+  "lessonIds": [
+    "LA-C84-arca",
+    "LA-C84-charta",
+    "LA-C84-stilus",
+    "LA-C84-tabula",
+    "LA-C84-speculum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch84.txt",
+  "json": "latin/narration/ch84.json",
+  "textHash": "fnv1a64:615481c25eab4f82",
+  "jsonHash": "fnv1a64:1608b926e5be8a26",
+  "findings": []
+}

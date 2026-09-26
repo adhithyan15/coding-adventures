@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:fc5e283c62dacf0f",
+  "lessonIds": [
+    "LA-C77-mitto",
+    "LA-C77-maneo",
+    "LA-C77-cado",
+    "LA-C77-pono",
+    "LA-C77-invenio"
+  ],
+  "tex": "latin/book/chapters/ch77-send-stay-fall-put-find.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "Girl, Old Man, Queen, Sailor, Poet",
+  "label": "ch:la-girl-old-man-queen-sailor-poet",
+  "canDo": "I can name a girl, an old man, a queen, a sailor and a poet.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "LA-C73-poeta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can name a girl, an old man, a queen, a sailor and a poet.",
+    "assesses": [
+      "LA-LEX-C73-HOMINES2-03",
+      "LA-LEX-C73-HOMINES2-04",
+      "LA-LEX-C73-HOMINES2-05"
+    ]
+  }
+}

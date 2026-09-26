@@ -2,6 +2,13 @@
 
 ## 0.1.0 — unreleased
 
+- **Export (J6a).** The host creates Mosaic's browser file executor
+  (`createBrowserFileEffects`) with the runtime, runs `files.*` effects
+  synchronously from the click that raised them (a picker needs the gesture),
+  and saves the journal once no Await is outstanding (a pending effect blocks
+  snapshots). A new test exports through a fake `showSaveFilePicker` and checks
+  the file is Journal's versioned JSON (18 tests).
+
 - **Published at /journal/ (J5d).** The owner decided this app replaces the
   old TypeScript Journal on the web. `deploy-journal.yml` now builds this host
   and pushes it into `gh-pages/journal/`, as Trestle is published. The old

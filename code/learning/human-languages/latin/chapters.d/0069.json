@@ -1,0 +1,19 @@
+{
+  "chapter": 69,
+  "title": "Joy, Anger, Fear",
+  "label": "ch:la-joy-anger-fear",
+  "canDo": "I can name joy, anger and fear, and say happy and sad.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "LA-C69-tristis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 69: i can name joy, anger and fear, and say happy and sad.",
+    "assesses": [
+      "LA-LEX-C69-AFFECTUS-03",
+      "LA-LEX-C69-AFFECTUS-04",
+      "LA-LEX-C69-AFFECTUS-05"
+    ]
+  }
+}

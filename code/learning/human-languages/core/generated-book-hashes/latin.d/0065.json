@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:c7072385e5e184b8",
+  "lessonIds": [
+    "LA-C65-capillus",
+    "LA-C65-venter",
+    "LA-C65-tergum",
+    "LA-C65-frons",
+    "LA-C65-barba"
+  ],
+  "tex": "latin/book/chapters/ch65-hair-belly-back-forehead-beard.tex"
+}

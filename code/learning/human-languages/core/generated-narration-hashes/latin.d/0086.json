@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:8fdeb879aecbfbff",
+  "lessonIds": [
+    "LA-C86-arbor",
+    "LA-C86-flos",
+    "LA-C86-folium",
+    "LA-C86-silva",
+    "LA-C86-mons"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch86.txt",
+  "json": "latin/narration/ch86.json",
+  "textHash": "fnv1a64:a4d05cf55248bdb7",
+  "jsonHash": "fnv1a64:ca4f101a7c0b2393",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:2714d246a91d1f2b",
+  "lessonIds": [
+    "LA-C70-filius",
+    "LA-C70-filia",
+    "LA-C70-avus",
+    "LA-C70-avia",
+    "LA-C70-familia"
+  ],
+  "tex": "latin/book/chapters/ch70-son-daughter-grandparents.tex"
+}

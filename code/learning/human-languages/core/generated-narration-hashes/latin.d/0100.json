@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:0a579bf99ee3a34b",
+  "lessonIds": [
+    "LA-C100-pugno",
+    "LA-C100-navigo",
+    "LA-C100-paro",
+    "LA-C100-tango",
+    "LA-C100-traho"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch100.txt",
+  "json": "latin/narration/ch100.json",
+  "textHash": "fnv1a64:f7819921d40998ba",
+  "jsonHash": "fnv1a64:0998ada438da4e88",
+  "findings": []
+}

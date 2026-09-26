@@ -1,0 +1,11 @@
+{
+  "id": "LA-C98-satis",
+  "pathSegment": "LA-PATH-98-DIVES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-98-DIVES",
+      "order": 3
+    }
+  ]
+}

@@ -3676,8 +3676,8 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
 
     let mil_src = read_to_string(&mil_path)?;
     let mll_src = read_to_string(&mll_path)?;
-    let msl_src = if let Some(msl_path) = msl_path {
-        read_to_string(&msl_path)?
+    let msl_src = if let Some(msl_path) = &msl_path {
+        read_to_string(msl_path)?
     } else {
         format!("style {component} {{ }}")
     };
@@ -4114,12 +4114,16 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     bound_package
                 };
                 let app_swift = swift_app_with_initial_window_size(
-                    &swift_app_with_host_effects(
-                        &mosaic_app_bindings::swift_app_with_runtime_binding(
-                            &proj.app_swift,
-                            bundle_runtime,
-                        ),
-                        host_effects,
+                    &swift_app_with_color_scheme(
+                        &swift_app_with_host_effects(
+                            &mosaic_app_bindings::swift_app_with_runtime_binding(
+                                &proj.app_swift,
+                                bundle_runtime,
+                            ),
+                            host_effects,
+                        )?,
+                        compiled_color_scheme(msl_path.as_deref(), component),
+                        component,
                     )?,
                     initial_window_size,
                     component,
@@ -4355,6 +4359,69 @@ fn xaml_main_with_initial_window_size(
         size.width, size.height
     );
     replace_unique_generated_statement(generated, initialize, &resized, component, Backend::Xaml)
+}
+
+/// The color scheme a stylesheet was written for, from its file name:
+/// `<Component>.dark.msl` is dark, `<Component>.light.msl` light, anything
+/// else (a theme-neutral `<Component>.msl`, another theme name) none (UI32).
+fn compiled_color_scheme(stylesheet: Option<&Path>, component: &str) -> Option<&'static str> {
+    let name = stylesheet?.file_name()?.to_str()?;
+    match name.strip_prefix(component)? {
+        ".dark.msl" => Some("dark"),
+        ".light.msl" => Some("light"),
+        _ => None,
+    }
+}
+
+/// Tell the platform which scheme the app was compiled for, so the status
+/// bar, window chrome and the background behind the root view match it
+/// (UI32, "The shell declares its compiled color scheme"). Inserted just
+/// before the generated `WindowGroup`'s close, chained onto the root view,
+/// using the same anchors [`swift_app_with_initial_window_size`] trusts.
+fn swift_app_with_color_scheme(
+    generated: &str,
+    scheme: Option<&str>,
+    component: &str,
+) -> Result<String, BuildError> {
+    let Some(scheme) = scheme else {
+        return Ok(generated.to_string());
+    };
+    let window_group = format!("WindowGroup(\"{component}\") {{");
+    let openings = find_all_anchored(generated, &window_group, |prefix| {
+        prefix
+            .chars()
+            .all(|character| character.is_ascii_whitespace())
+    });
+    let anchor_error = |detail: String| {
+        BuildError::Io(format!(
+            "SwiftUI shell for {component}: cannot declare its color scheme: {detail}"
+        ))
+    };
+    if openings.len() != 1 {
+        return Err(anchor_error(format!(
+            "expected one line-leading {window_group:?} anchor, found {}",
+            openings.len()
+        )));
+    }
+    let start = openings[0];
+    let end = generated[start..]
+        .find("class MosaicHostState")
+        .map(|relative| start + relative)
+        .unwrap_or(generated.len());
+    const TERMINATOR: &str = "\n    }\n  }\n";
+    let closes: Vec<usize> = generated[start..end]
+        .match_indices(TERMINATOR)
+        .map(|(relative, _)| start + relative)
+        .collect();
+    if closes.len() != 1 {
+        return Err(anchor_error(format!(
+            "expected one WindowGroup terminator before MosaicHostState, found {}",
+            closes.len()
+        )));
+    }
+    let mut out = generated.to_string();
+    out.insert_str(closes[0], &format!("\n      .preferredColorScheme(.{scheme})"));
+    Ok(out)
 }
 
 fn swift_app_with_initial_window_size(
@@ -10515,6 +10582,46 @@ layout NativeEvents {
             emit_project: true,
             theme: None,
         }
+    }
+
+    #[test]
+    fn compiled_color_scheme_reads_the_stylesheet_name() {
+        let scheme = |name: &str| compiled_color_scheme(Some(Path::new(name)), "Card");
+        assert_eq!(scheme("src/Card.dark.msl"), Some("dark"));
+        assert_eq!(scheme("src/Card.light.msl"), Some("light"));
+        assert_eq!(scheme("src/Card.msl"), None);
+        assert_eq!(scheme("src/Card.contrast.msl"), None);
+        assert_eq!(scheme("src/Other.dark.msl"), None);
+        assert_eq!(compiled_color_scheme(None, "Card"), None);
+    }
+
+    #[test]
+    fn swift_shell_declares_the_compiled_scheme_on_the_root_view() {
+        let generated = "struct App {\n  var body: some Scene {\n    WindowGroup(\"Card\") {\n      CardView()\n    }\n  }\n}\nclass MosaicHostState {}\n";
+        let dark = swift_app_with_color_scheme(generated, Some("dark"), "Card").unwrap();
+        assert!(dark.contains("      CardView()\n      .preferredColorScheme(.dark)\n    }\n  }\n"), "{dark}");
+        assert_eq!(swift_app_with_color_scheme(generated, None, "Card").unwrap(), generated);
+        // The window-size edit still finds its terminator afterwards.
+        let sized = swift_app_with_initial_window_size(
+            &dark,
+            Some(&WindowSize { width: 800, height: 600 }),
+            "Card",
+        )
+        .unwrap();
+        assert!(sized.contains(".preferredColorScheme(.dark)\n    }\n    #if os(macOS)"), "{sized}");
+        assert!(swift_app_with_color_scheme("no window group", Some("dark"), "Card").is_err());
+    }
+
+    #[test]
+    fn a_dark_stylesheet_makes_a_dark_swiftui_shell() {
+        let pkg = card_package();
+        // Only themed stylesheets: a bare Card.msl is theme-neutral and wins.
+        let _ = fs::remove_file(pkg.path().join("src/Card.msl"));
+        fs::write(pkg.path().join("src/Card.dark.msl"), "style Card { }\n").unwrap();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).expect("SwiftUI shell");
+        let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
+        assert!(app.contains(".preferredColorScheme(.dark)"), "{app}");
     }
 
     /// UI89 §2.1: an .xcframework runtime is linked into the SwiftUI package,

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C91-lupus",
+  "pathSegment": "LA-PATH-91-ANIMALIA2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-91-ANIMALIA2",
+      "order": 1
+    }
+  ]
+}

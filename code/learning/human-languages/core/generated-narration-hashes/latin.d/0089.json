@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:f19b544219cf1407",
+  "lessonIds": [
+    "LA-C89-nubes",
+    "LA-C89-pluvia",
+    "LA-C89-nix",
+    "LA-C89-campus",
+    "LA-C89-litus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch89.txt",
+  "json": "latin/narration/ch89.json",
+  "textHash": "fnv1a64:e0ffc97637bf3e96",
+  "jsonHash": "fnv1a64:3bb71b008ca8f708",
+  "findings": []
+}

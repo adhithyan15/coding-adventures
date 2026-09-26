@@ -1,0 +1,11 @@
+{
+  "id": "LA-C88-spelunca",
+  "pathSegment": "LA-PATH-88-TERRA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-88-TERRA",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C82-mensa",
+    "language": "latin",
+    "chapter": 82,
+    "sequence": 2690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a0789e6697332b6"
+  },
+  "findings": []
+}

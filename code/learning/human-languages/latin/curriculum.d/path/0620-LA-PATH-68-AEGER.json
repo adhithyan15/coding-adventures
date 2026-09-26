@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-68-AEGER",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "LA-EXT-68-AEGER"
+  ],
+  "after": []
+}

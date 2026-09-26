@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:3b33c77e629fba55",
+  "lessonIds": [
+    "LA-C74-civis",
+    "LA-C74-coquus",
+    "LA-C74-mercator",
+    "LA-C74-agricola",
+    "LA-C74-ager"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch74.txt",
+  "json": "latin/narration/ch74.json",
+  "textHash": "fnv1a64:441117294f13d6bd",
+  "jsonHash": "fnv1a64:cb5b791487bdc4cf",
+  "findings": []
+}

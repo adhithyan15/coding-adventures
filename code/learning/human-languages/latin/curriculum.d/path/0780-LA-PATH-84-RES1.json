@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-84-RES1",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "LA-EXT-84-RES1"
+  ],
+  "after": []
+}

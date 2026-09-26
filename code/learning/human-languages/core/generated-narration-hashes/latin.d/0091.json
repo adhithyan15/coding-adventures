@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:617a4bd67d1fbf70",
+  "lessonIds": [
+    "LA-C91-avis",
+    "LA-C91-lupus",
+    "LA-C91-leo",
+    "LA-C91-ursus",
+    "LA-C91-serpens"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch91.txt",
+  "json": "latin/narration/ch91.json",
+  "textHash": "fnv1a64:4dea2414df5a76ee",
+  "jsonHash": "fnv1a64:326ff703f34d3ebe",
+  "findings": []
+}

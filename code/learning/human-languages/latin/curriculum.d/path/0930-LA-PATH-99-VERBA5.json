@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-99-VERBA5",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "LA-EXT-99-VERBA5"
+  ],
+  "after": []
+}

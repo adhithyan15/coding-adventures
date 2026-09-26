@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C77-mitto",
+    "language": "latin",
+    "chapter": 77,
+    "sequence": 2440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8b5cebb8eb62403"
+  },
+  "findings": []
+}

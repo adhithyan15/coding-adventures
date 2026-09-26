@@ -1,0 +1,11 @@
+{
+  "id": "LA-C69-gaudium",
+  "pathSegment": "LA-PATH-69-AFFECTUS",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-69-AFFECTUS",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-94-NOVUS",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "LA-EXT-94-NOVUS"
+  ],
+  "after": []
+}

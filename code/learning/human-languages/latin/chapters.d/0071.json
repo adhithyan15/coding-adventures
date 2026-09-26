@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Husband, Wife, Children",
+  "label": "ch:la-husband-wife-children",
+  "canDo": "I can name a husband, a wife, children, a baby and an uncle.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "LA-C71-patruus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: i can name a husband, a wife, children, a baby and an uncle.",
+    "assesses": [
+      "LA-LEX-C71-FAMILIA2-03",
+      "LA-LEX-C71-FAMILIA2-04",
+      "LA-LEX-C71-FAMILIA2-05"
+    ]
+  }
+}

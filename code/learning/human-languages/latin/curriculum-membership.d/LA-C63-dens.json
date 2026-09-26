@@ -1,0 +1,11 @@
+{
+  "id": "LA-C63-dens",
+  "pathSegment": "LA-PATH-63-CORPUS1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-63-CORPUS1",
+      "order": 2
+    }
+  ]
+}
