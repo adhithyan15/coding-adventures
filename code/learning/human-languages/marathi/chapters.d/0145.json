@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "Cheek, Tongue, Chin, Elbow, Wrist",
+  "label": "ch:mr-cheek-tongue-chin-elbow-wrist",
+  "canDo": "I can say a cheek, the tongue, the chin, an elbow and a wrist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C145-managat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: i can say a cheek, the tongue, the chin, an elbow and a wrist.",
+    "assesses": [
+      "MR-LEX-C145-THINGS145-03",
+      "MR-LEX-C145-THINGS145-04",
+      "MR-LEX-C145-THINGS145-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C121-sakne",
+    "language": "marathi",
+    "chapter": 121,
+    "sequence": 5500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f923fdfaaada550"
+  },
+  "findings": []
+}

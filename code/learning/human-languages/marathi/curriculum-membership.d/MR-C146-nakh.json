@@ -1,0 +1,11 @@
+{
+  "id": "MR-C146-nakh",
+  "pathSegment": "MR-PATH-146-THINGS146",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-146-THINGS146",
+      "order": 1
+    }
+  ]
+}

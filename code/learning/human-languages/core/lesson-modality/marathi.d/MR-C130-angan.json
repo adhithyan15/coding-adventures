@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C130-angan",
+    "language": "marathi",
+    "chapter": 130,
+    "sequence": 5950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7b731a690c4afa9"
+  },
+  "findings": []
+}

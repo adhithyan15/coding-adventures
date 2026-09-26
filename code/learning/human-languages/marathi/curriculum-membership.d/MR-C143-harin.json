@@ -1,0 +1,11 @@
+{
+  "id": "MR-C143-harin",
+  "pathSegment": "MR-PATH-143-THINGS143",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-143-THINGS143",
+      "order": 2
+    }
+  ]
+}

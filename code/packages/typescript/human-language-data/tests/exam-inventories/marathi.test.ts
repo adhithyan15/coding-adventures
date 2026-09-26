@@ -24,9 +24,14 @@ describe("the committed Marathi A1 inventory", () => {
     expect(existsSync(aggregate)).toBe(false);
     expect(readdirSync(owners)).toHaveLength(302);
     expect(inventory.points).toHaveLength(301);
-    expect(Buffer.byteLength(rendered)).toBe(151_077);
+    // 151,077 -> 151,041: point MR-A1-SN-04 no longer probes
+    // MR-SCRIPT-PAACH-NONNASAL. Chapter 13's numbers lesson introduced four
+    // atoms, one over the budget; its two visible spelling tells (don's final n
+    // and paach's missing nasal) are now one atom, MR-SCRIPT-DON-FINAL-N, which
+    // the point still probes.
+    expect(Buffer.byteLength(rendered)).toBe(151_041);
     expect(createHash("sha256").update(rendered).digest("hex")).toBe(
-      "1f20cac7b2c45ae26ec5a68d628d8117e19b44a31d2a1478ab2d5a3b94a29fc0",
+      "35cd589328757ff3ba9406379d95331c361dd65a74d8cbdd5e61c422cda6f495",
     );
   });
 

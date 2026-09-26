@@ -1,0 +1,837 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 158,
+  "title": "To wipe, To sweep, To quarrel, To obtain, To save",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:260b890778fca4b0",
+  "lessons": [
+    {
+      "id": "MR-C158-pusne",
+      "sequence": 7500,
+      "title": "पुसणे (pusṇe) — to wipe",
+      "headword": "पुसणे",
+      "romanization": "pusṇe",
+      "gloss": "to wipe",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81ef0370a4a0e5be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to get tired, then the Marathi for to stay awake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुसणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुसणे — pusṇe — \"to wipe\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pusṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pusṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pusṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pusṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pusṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pusṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to get tired, then the Marathi for to stay awake, then say pusṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to get tired, then the Marathi for to stay awake, then say *pusṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुसणे (pusṇe) mean? (\"To wipe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C158-jhadne",
+      "sequence": 7510,
+      "title": "झाडणे (jhāḍṇe) — to sweep",
+      "headword": "झाडणे",
+      "romanization": "jhāḍṇe",
+      "gloss": "to sweep",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f93d3d7ca38d7a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to stay awake, then the Marathi for to wipe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झाडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झाडणे — jhāḍṇe — \"to sweep\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhāḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhāḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhāḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhāḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say jhāḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *jhāḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to stay awake, then the Marathi for to wipe, then say jhāḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to stay awake, then the Marathi for to wipe, then say *jhāḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झाडणे (jhāḍṇe) mean? (\"To sweep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C158-bhandne",
+      "sequence": 7520,
+      "title": "भांडणे (bhāṇḍṇe) — to quarrel",
+      "headword": "भांडणे",
+      "romanization": "bhāṇḍṇe",
+      "gloss": "to quarrel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c459347745f687a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to wipe, then the Marathi for to sweep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भांडणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भांडणे — bhāṇḍṇe — \"to quarrel\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāṇḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāṇḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāṇḍṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāṇḍṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bhāṇḍṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bhāṇḍṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to wipe, then the Marathi for to sweep, then say bhāṇḍṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to wipe, then the Marathi for to sweep, then say *bhāṇḍṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भांडणे (bhāṇḍṇe) mean? (\"To quarrel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C158-milavne",
+      "sequence": 7530,
+      "title": "मिळवणे (miḷavṇe) — to obtain, to earn",
+      "headword": "मिळवणे",
+      "romanization": "miḷavṇe",
+      "gloss": "to obtain, to earn",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3e69edcfa77b8c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to sweep, then the Marathi for to quarrel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मिळवणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिळवणे — miḷavṇe — \"to obtain, to earn\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miḷavṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miḷavṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miḷavṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miḷavṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say miḷavṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *miḷavṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to sweep, then the Marathi for to quarrel, then say miḷavṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to sweep, then the Marathi for to quarrel, then say *miḷavṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मिळवणे (miḷavṇe) mean? (\"To obtain, to earn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C158-vacavne",
+      "sequence": 7540,
+      "title": "वाचवणे (vācavṇe) — to save, to rescue",
+      "headword": "वाचवणे",
+      "romanization": "vācavṇe",
+      "gloss": "to save, to rescue",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45413b3b6d34cd8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for to quarrel, then the Marathi for to obtain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वाचवणे",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाचवणे — vācavṇe — \"to save, to rescue\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vācavṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vācavṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vācavṇe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vācavṇe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vācavṇe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vācavṇe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for to quarrel, then the Marathi for to obtain, then say vācavṇe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for to quarrel, then the Marathi for to obtain, then say *vācavṇe* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वाचवणे (vācavṇe) mean? (\"To save, to rescue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R158-first-pass-animals-the-body-and-describing-words",
+      "sequence": 7550,
+      "title": "Animals, the body and describing words — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 150-153",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:330957b1f6c59bed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to obtain and to save."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stale, raw, calm, lazy, hard-working",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stale, raw, calm, lazy, hard-working]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "honest, brave, timid, foolish, famous",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: honest, brave, timid, foolish, famous]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "safe, dangerous, false, purple, orange",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: safe, dangerous, false, purple, orange]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grey, golden, to climb, to get down, to arrive",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: grey, golden, to climb, to get down, to arrive]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Stale? (शिळा, śiḷā.) Raw? (कच्चा, kaccā.) Calm? (शांत, śānt.) Lazy? (आळशी, āḷśī.) Hard-working? (मेहनती, mehantī.) Honest? (प्रामाणिक, prāmāṇik.) Brave? (धाडसी, dhāḍsī.) Timid? (भित्रा, bhitrā.) Foolish? (मूर्ख, mūrkh.) Famous? (प्रसिद्ध, prasiddh.) Safe? (सुरक्षित, surakṣit.) Dangerous? (धोकादायक, dhokādāyak.) False? (खोटे, khoṭe.) Purple? (जांभळा, jāmbhaḷā.) Orange? (नारिंगी, nāriṅgī.) Grey? (करडा, karḍā.) Golden? (सोनेरी, sonerī.) To climb? (चढणे, caḍhṇe.) To get down? (उतरणे, utarṇe.) To arrive? (पोहोचणे, pohocṇe.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R158-second-pass-describing-words-and-verbs",
+      "sequence": 7560,
+      "title": "Describing words and verbs — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 154-158",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7e1ad31c66d078b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to return and to set out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to return, to set out, to run away, to break off, to break",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to return, to set out, to run away, to break off, to break]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to join, to tie, to sew, to paint, to take out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to join, to tie, to sew, to paint, to take out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to show, to play, to shout, to bite, to swallow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to show, to play, to shout, to bite, to swallow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to taste, to sow, to grow, to get tired, to stay awake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to taste, to sow, to grow, to get tired, to stay awake]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wipe, to sweep, to quarrel, to obtain, to save",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wipe, to sweep, to quarrel, to obtain, to save]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To return? (परतणे, paratṇe.) To set out? (निघणे, nighṇe.) To run away? (पळणे, paḷṇe.) To break off? (तोडणे, toḍṇe.) To break? (मोडणे, moḍṇe.) To join? (जोडणे, joḍṇe.) To tie? (बांधणे, bāndhṇe.) To sew? (शिवणे, śivṇe.) To paint? (रंगवणे, raṅgavṇe.) To take out? (काढणे, kāḍhṇe.) To show? (दाखवणे, dākhavṇe.) To play? (वाजवणे, vājavṇe.) To shout? (ओरडणे, oraḍṇe.) To bite? (चावणे, cāvṇe.) To swallow? (गिळणे, giḷṇe.) To taste? (चाखणे, cākhṇe.) To sow? (पेरणे, perṇe.) To grow? (वाढणे, vāḍhṇe.) To get tired? (थकणे, thakṇe.) To stay awake? (जागणे, jāgṇe.) To wipe? (पुसणे, pusṇe.) To sweep? (झाडणे, jhāḍṇe.) To quarrel? (भांडणे, bhāṇḍṇe.) To obtain? (मिळवणे, miḷavṇe.) To save? (वाचवणे, vācavṇe.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

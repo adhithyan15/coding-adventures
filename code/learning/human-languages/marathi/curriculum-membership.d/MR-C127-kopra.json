@@ -1,0 +1,11 @@
+{
+  "id": "MR-C127-kopra",
+  "pathSegment": "MR-PATH-127-TIME127",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-127-TIME127",
+      "order": 4
+    }
+  ]
+}

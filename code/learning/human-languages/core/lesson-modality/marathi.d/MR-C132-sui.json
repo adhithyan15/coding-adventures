@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C132-sui",
+    "language": "marathi",
+    "chapter": 132,
+    "sequence": 6120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e96facb98e95c842"
+  },
+  "findings": []
+}

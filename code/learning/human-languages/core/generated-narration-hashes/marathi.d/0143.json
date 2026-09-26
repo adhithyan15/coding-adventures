@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:b7eb3f1969b7df4e",
+  "lessonIds": [
+    "MR-C143-kasav",
+    "MR-C143-magar",
+    "MR-C143-harin",
+    "MR-C143-sasa",
+    "MR-C143-landga"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch143.txt",
+  "json": "marathi/narration/ch143.json",
+  "textHash": "fnv1a64:b24a895c8281275b",
+  "jsonHash": "fnv1a64:fdbeb1f30a07ac35",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C121-kausalya",
+    "language": "marathi",
+    "chapter": 121,
+    "sequence": 5520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ede8d738fd95b5c3"
+  },
+  "findings": []
+}

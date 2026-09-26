@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C144-kolha",
+    "language": "marathi",
+    "chapter": 144,
+    "sequence": 6750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc14d33407819921"
+  },
+  "findings": []
+}

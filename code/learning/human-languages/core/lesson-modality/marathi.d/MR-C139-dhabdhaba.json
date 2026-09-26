@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C139-dhabdhaba",
+    "language": "marathi",
+    "chapter": 139,
+    "sequence": 6470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cd5aa3b9c0d701b"
+  },
+  "findings": []
+}

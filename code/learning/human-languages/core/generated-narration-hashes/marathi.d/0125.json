@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:4676070614b8b117",
+  "lessonIds": [
+    "MR-C125-mangalvar",
+    "MR-C125-budhvar",
+    "MR-C125-guruvar",
+    "MR-C125-sukravar",
+    "MR-C125-sanivar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch125.txt",
+  "json": "marathi/narration/ch125.json",
+  "textHash": "fnv1a64:89faa0a7faf4af8a",
+  "jsonHash": "fnv1a64:f1a4347be8fb7f8e",
+  "findings": []
+}

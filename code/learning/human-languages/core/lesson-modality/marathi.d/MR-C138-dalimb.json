@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C138-dalimb",
+    "language": "marathi",
+    "chapter": 138,
+    "sequence": 6410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a597e401936cf649"
+  },
+  "findings": []
+}

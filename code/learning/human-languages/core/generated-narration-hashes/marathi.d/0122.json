@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:02280edfb566b6a8",
+  "lessonIds": [
+    "MR-C122-sadhan",
+    "MR-C122-malak",
+    "MR-C122-takad",
+    "MR-C122-hava",
+    "MR-C122-iccha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch122.txt",
+  "json": "marathi/narration/ch122.json",
+  "textHash": "fnv1a64:cf98f07a6dd928d5",
+  "jsonHash": "fnv1a64:81c0df8f542291f4",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C131-kulup",
+    "language": "marathi",
+    "chapter": 131,
+    "sequence": 6060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73a4c2a9d5dd078d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:f31c71c2b1cd60a3",
+  "lessonIds": [
+    "MR-C154-paratne",
+    "MR-C154-nighne",
+    "MR-C154-palne",
+    "MR-C154-todne",
+    "MR-C154-modne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch154.txt",
+  "json": "marathi/narration/ch154.json",
+  "textHash": "fnv1a64:2920035664fb7610",
+  "jsonHash": "fnv1a64:1703439871741f41",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:93fe41fdbc9fbea8",
+  "lessonIds": [
+    "MR-C127-hivala",
+    "MR-C127-pavsala",
+    "MR-C127-saral",
+    "MR-C127-valan",
+    "MR-C127-kopra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch127.txt",
+  "json": "marathi/narration/ch127.json",
+  "textHash": "fnv1a64:c2cd6c6116e747be",
+  "jsonHash": "fnv1a64:b98d8d4ce3553ccc",
+  "findings": []
+}

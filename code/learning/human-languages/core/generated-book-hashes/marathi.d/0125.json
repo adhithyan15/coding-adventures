@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:3a2ea8cfa66a702f",
+  "lessonIds": [
+    "MR-C125-mangalvar",
+    "MR-C125-budhvar",
+    "MR-C125-guruvar",
+    "MR-C125-sukravar",
+    "MR-C125-sanivar"
+  ],
+  "tex": "marathi/book/chapters/ch125-tuesday-wednesday-thursday-friday-saturday.tex"
+}

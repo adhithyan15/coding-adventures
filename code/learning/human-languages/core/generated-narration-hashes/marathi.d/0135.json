@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:0e6ddbec42026ddd",
+  "lessonIds": [
+    "MR-C135-daptar",
+    "MR-C135-pariksa",
+    "MR-C135-varg",
+    "MR-C135-abhyas",
+    "MR-C135-sart"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch135.txt",
+  "json": "marathi/narration/ch135.json",
+  "textHash": "fnv1a64:7ec9248af7fcf442",
+  "jsonHash": "fnv1a64:7bdfd72afcb70565",
+  "findings": []
+}

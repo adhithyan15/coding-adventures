@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "To show, To play, To shout, To bite, To swallow",
+  "label": "ch:mr-to-show-to-play-to-shout-to-bite-to-swallow",
+  "canDo": "I can say to show, to play, to shout, to bite and to swallow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C156-gilne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: i can say to show, to play, to shout, to bite and to swallow.",
+    "assesses": [
+      "MR-LEX-C156-ACT156-03",
+      "MR-LEX-C156-ACT156-04",
+      "MR-LEX-C156-ACT156-05"
+    ]
+  }
+}

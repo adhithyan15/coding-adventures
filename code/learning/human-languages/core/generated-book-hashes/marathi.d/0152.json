@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:b58bd6a4a9977949",
+  "lessonIds": [
+    "MR-C152-suraksit",
+    "MR-C152-dhokadayak",
+    "MR-C152-khote",
+    "MR-C152-jambhala",
+    "MR-C152-naringi"
+  ],
+  "tex": "marathi/book/chapters/ch152-safe-dangerous-false-purple-orange.tex"
+}

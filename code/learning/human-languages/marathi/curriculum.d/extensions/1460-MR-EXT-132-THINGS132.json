@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-132-THINGS132",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a hammer, scissors, a needle, a thread and a comb.",
+  "prerequisites": []
+}

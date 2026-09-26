@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Library, Restaurant, Post, Building, Bathroom",
+  "label": "ch:mr-library-restaurant-post-building-bathroom",
+  "canDo": "I can say a library, a restaurant, the post, a building and a bathroom.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-C129-nhanighar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say a library, a restaurant, the post, a building and a bathroom.",
+    "assesses": [
+      "MR-LEX-C129-LOC129-03",
+      "MR-LEX-C129-LOC129-04",
+      "MR-LEX-C129-LOC129-05"
+    ]
+  }
+}

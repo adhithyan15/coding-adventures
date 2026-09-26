@@ -18,12 +18,12 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA]
+  knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SOUND-CHA-TSAA]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA]
+  knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SOUND-CHA-TSAA]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -52,7 +52,7 @@ so their numbers look almost identical. **Almost** is where the interest is.
 | 5 | **पाच** | *pāch* |
 
 ## What you've built: three Marathi tells
-<!-- hl-knowledge: introduces=[MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA]; assesses=[] -->
+<!-- hl-knowledge: introduces=[MR-SCRIPT-DON-FINAL-N, MR-SOUND-CHA-TSAA]; assesses=[] -->
 
 Set them against Hindi. Two differences are visible and one is audible:
 
@@ -66,7 +66,7 @@ Do not explain all three histories yet. First make the five forms automatic;
 the next lesson earns the deeper comparison.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SOUND-CHA-TSAA] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ek, don, tīn, tsār, pāch"]
@@ -74,7 +74,7 @@ the next lesson earns the deeper comparison.
 - [YOU SAY: the audible tell — written *chār*, Marathi *tsār*]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SOUND-CHA-TSAA] -->
 
 [PAUSE 3s] Count to five in Marathi. (*Ek, don, tīn, tsār, pāch*.) Where does
 Marathi add a letter compared with Hindi? (**दोन**, *don*.) Which form drops a

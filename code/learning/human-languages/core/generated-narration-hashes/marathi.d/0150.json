@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:5d029f3435bfd34f",
+  "lessonIds": [
+    "MR-C150-sila",
+    "MR-C150-kacca",
+    "MR-C150-sant",
+    "MR-C150-alsi",
+    "MR-C150-mehanti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch150.txt",
+  "json": "marathi/narration/ch150.json",
+  "textHash": "fnv1a64:cc373b845d72b574",
+  "jsonHash": "fnv1a64:fa8f48afed050123",
+  "findings": []
+}

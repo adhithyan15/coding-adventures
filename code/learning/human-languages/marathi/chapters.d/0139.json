@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "Hill, Spring, Waterfall, Grass, Branch",
+  "label": "ch:mr-hill-spring-waterfall-grass-branch",
+  "canDo": "I can say a hill, a spring, a waterfall, grass and a branch.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C139-phandi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: i can say a hill, a spring, a waterfall, grass and a branch.",
+    "assesses": [
+      "MR-LEX-C139-THINGS139-03",
+      "MR-LEX-C139-THINGS139-04",
+      "MR-LEX-C139-THINGS139-05"
+    ]
+  }
+}

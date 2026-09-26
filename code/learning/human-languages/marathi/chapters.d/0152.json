@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "Safe, Dangerous, False, Purple, Orange",
+  "label": "ch:mr-safe-dangerous-false-purple-orange",
+  "canDo": "I can say safe, dangerous, false, purple and orange.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C152-naringi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: i can say safe, dangerous, false, purple and orange.",
+    "assesses": [
+      "MR-LEX-C152-QUAL152-03",
+      "MR-LEX-C152-QUAL152-04",
+      "MR-LEX-C152-QUAL152-05"
+    ]
+  }
+}

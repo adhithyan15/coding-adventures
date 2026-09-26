@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:b992f78e87118ea2",
+  "lessonIds": [
+    "MR-C146-angtha",
+    "MR-C146-nakh",
+    "MR-C146-path",
+    "MR-C146-kambar",
+    "MR-C146-chati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch146.txt",
+  "json": "marathi/narration/ch146.json",
+  "textHash": "fnv1a64:23f194a0efeb5b1f",
+  "jsonHash": "fnv1a64:2ca5086db54dade3",
+  "findings": []
+}

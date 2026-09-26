@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R158-first-pass-animals-the-body-and-describing-words",
+    "language": "marathi",
+    "chapter": 158,
+    "sequence": 7550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:330957b1f6c59bed"
+  },
+  "findings": []
+}

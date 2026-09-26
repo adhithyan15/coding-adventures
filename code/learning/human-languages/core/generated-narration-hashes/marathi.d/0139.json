@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:4c90e72e1cbdbc11",
+  "lessonIds": [
+    "MR-C139-tekdi",
+    "MR-C139-jhara",
+    "MR-C139-dhabdhaba",
+    "MR-C139-gavat",
+    "MR-C139-phandi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch139.txt",
+  "json": "marathi/narration/ch139.json",
+  "textHash": "fnv1a64:5d77a027c2b17e5f",
+  "jsonHash": "fnv1a64:1a2f1e4aac4c8b0b",
+  "findings": []
+}

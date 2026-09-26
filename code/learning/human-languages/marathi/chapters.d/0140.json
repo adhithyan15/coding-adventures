@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "Root, Seed, Soil, Rock, Wave",
+  "label": "ch:mr-root-seed-soil-rock-wave",
+  "canDo": "I can say a root, a seed, soil, a rock and a wave.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-R140-second-pass-things-you-use",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: i can say a root, a seed, soil, a rock and a wave.",
+    "assesses": [
+      "MR-LEX-C140-THINGS140-03",
+      "MR-LEX-C140-THINGS140-04",
+      "MR-LEX-C140-THINGS140-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C141-kavla",
+    "language": "marathi",
+    "chapter": 141,
+    "sequence": 6640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a28ca8c509c1c1e2"
+  },
+  "findings": []
+}

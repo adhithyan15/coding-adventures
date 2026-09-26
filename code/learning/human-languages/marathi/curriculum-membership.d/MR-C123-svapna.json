@@ -1,0 +1,11 @@
+{
+  "id": "MR-C123-svapna",
+  "pathSegment": "MR-PATH-123-WANT123",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-123-WANT123",
+      "order": 2
+    }
+  ]
+}

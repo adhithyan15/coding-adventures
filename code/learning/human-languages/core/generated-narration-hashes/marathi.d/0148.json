@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:3a670639fc322ad9",
+  "lessonIds": [
+    "MR-C148-jad",
+    "MR-C148-mau",
+    "MR-C148-kadak",
+    "MR-C148-komat",
+    "MR-C148-suka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch148.txt",
+  "json": "marathi/narration/ch148.json",
+  "textHash": "fnv1a64:e30ff5353177f541",
+  "jsonHash": "fnv1a64:28b29e01c804a78e",
+  "findings": []
+}

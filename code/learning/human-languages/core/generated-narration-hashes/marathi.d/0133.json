@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:3ce1f42b47458d76",
+  "lessonIds": [
+    "MR-C133-saban",
+    "MR-C133-peti",
+    "MR-C133-pisvi",
+    "MR-C133-topli",
+    "MR-C133-menbatti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch133.txt",
+  "json": "marathi/narration/ch133.json",
+  "textHash": "fnv1a64:fe3276515dffc62d",
+  "jsonHash": "fnv1a64:4a36e8862b795f03",
+  "findings": []
+}

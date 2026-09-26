@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:cdd4b83d8488e72c",
+  "lessonIds": [
+    "MR-C124-yojana",
+    "MR-C124-pahat",
+    "MR-C124-madhyaratra",
+    "MR-C124-parva",
+    "MR-C124-somvar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch124.txt",
+  "json": "marathi/narration/ch124.json",
+  "textHash": "fnv1a64:c76f472697af0e4f",
+  "jsonHash": "fnv1a64:898740b757dabbf0",
+  "findings": []
+}
