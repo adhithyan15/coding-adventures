@@ -4,7 +4,7 @@
   "chapter": 84,
   "title": "Chest, Paper, Pen, Tablet, Mirror",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d3b18b1b14205173",
+  "sourceHash": "fnv1a64:4b58b7a3fadb49f6",
   "lessons": [
     {
       "id": "LA-C84-arca",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a47fe62b84cd6c5",
+      "sourceHash": "fnv1a64:a6e9ee5810eb5bc7",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for chest, paper, pen, tablet, mirror."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01605e8b2bfd1e1b",
+      "sourceHash": "fnv1a64:1496a7f4137aa49b",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for chest, paper, pen, tablet, mirror."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b09914517d702631",
+      "sourceHash": "fnv1a64:8f639549551ce141",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for chest, paper, pen, tablet, mirror."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b3d16d348d6ccea",
+      "sourceHash": "fnv1a64:24545b976dc705c6",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for chest, paper, pen, tablet, mirror."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e61154103743ad0",
+      "sourceHash": "fnv1a64:0621c69969e4ddda",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for chest, paper, pen, tablet, mirror."
+              "text": "One more word for this chapter."
             }
           ]
         },

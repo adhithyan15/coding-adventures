@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Dog, Cat, Horse, Cow, Pig",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6d04f436526bd3ae",
+  "sourceHash": "fnv1a64:b032290f1d9f56e9",
   "lessons": [
     {
       "id": "RU-C60-dog",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7e508676249757b",
+      "sourceHash": "fnv1a64:e17dc4085b34cd0d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for dog, cat, horse, cow, pig."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b70269e9a5cca1b2",
+      "sourceHash": "fnv1a64:a1870128d18836a6",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for dog, cat, horse, cow, pig."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33683e44addcfd68",
+      "sourceHash": "fnv1a64:af22051f61744070",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for dog, cat, horse, cow, pig."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f6aa0071de4b120",
+      "sourceHash": "fnv1a64:c84a579de59e4fcc",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for dog, cat, horse, cow, pig."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85c152a1feda0416",
+      "sourceHash": "fnv1a64:1dec3c302546a2b4",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for dog, cat, horse, cow, pig."
+              "text": "One more word for this chapter."
             }
           ]
         },

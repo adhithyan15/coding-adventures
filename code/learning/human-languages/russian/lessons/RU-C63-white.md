@@ -46,7 +46,7 @@ reviews_of: [RU-C62-goat]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for white, black, red, blue, green.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C63-COLOUR1-01, RU-LEX-C62-ANIMALS3-04, RU-LEX-C62-ANIMALS3-05] -->

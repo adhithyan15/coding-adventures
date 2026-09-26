@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Breakfast, Lunch, Dinner",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c7137d2db6905128",
+  "sourceHash": "fnv1a64:68993d28696f09a4",
   "lessons": [
     {
       "id": "RU-C46-breakfast",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c127559aac4930c",
+      "sourceHash": "fnv1a64:0048625c871d17b8",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for breakfast, lunch, dinner."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdb0a3fc5896877f",
+      "sourceHash": "fnv1a64:796fc83337723667",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for breakfast, lunch, dinner."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a505c28218d47dee",
+      "sourceHash": "fnv1a64:cd93948abc44e536",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for breakfast, lunch, dinner."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03c56fc804fa1ae0",
+      "sourceHash": "fnv1a64:64407a8dbe9c9c2c",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for breakfast, lunch, dinner."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e458bc97e46c386d",
+      "sourceHash": "fnv1a64:939dd3fdb0783971",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for breakfast, lunch, dinner."
+              "text": "One more word for this chapter."
             }
           ]
         },

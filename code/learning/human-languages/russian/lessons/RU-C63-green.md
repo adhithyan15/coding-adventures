@@ -46,7 +46,7 @@ reviews_of: [RU-C63-blue]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for white, black, red, blue, green.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C63-COLOUR1-05, RU-LEX-C63-COLOUR1-03, RU-LEX-C63-COLOUR1-04] -->

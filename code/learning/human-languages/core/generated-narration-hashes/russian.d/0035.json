@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 35,
-  "sourceHash": "fnv1a64:a913b3283db1626a",
+  "sourceHash": "fnv1a64:8e514142428c0ba3",
   "lessonIds": [
     "RU-C35-son",
     "RU-C35-daughter",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch35.txt",
   "json": "russian/narration/ch35.json",
-  "textHash": "fnv1a64:5383090f9a2e58a5",
-  "jsonHash": "fnv1a64:046b2e37b25f17b8",
+  "textHash": "fnv1a64:a5eb40b2c592e673",
+  "jsonHash": "fnv1a64:8a0722faa4164058",
   "findings": []
 }

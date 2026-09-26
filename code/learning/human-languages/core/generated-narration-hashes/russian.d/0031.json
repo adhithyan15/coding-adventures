@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 31,
-  "sourceHash": "fnv1a64:fdd81cf4689d1843",
+  "sourceHash": "fnv1a64:f8ee023c1c3ec242",
   "lessonIds": [
     "RU-C31-back",
     "RU-C31-tongue",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch31.txt",
   "json": "russian/narration/ch31.json",
-  "textHash": "fnv1a64:8d92078ceab801f0",
-  "jsonHash": "fnv1a64:7a03b9fa100d2bd0",
+  "textHash": "fnv1a64:3d315f1b90eb37c2",
+  "jsonHash": "fnv1a64:bbe37349c37a10c7",
   "findings": []
 }

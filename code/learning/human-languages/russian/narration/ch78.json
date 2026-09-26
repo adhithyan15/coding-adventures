@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Bank, Station, Museum, Theatre, Restaurant",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1048718f8431678e",
+  "sourceHash": "fnv1a64:dd0326ddb0ac62d0",
   "lessons": [
     {
       "id": "RU-C78-bank",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1570739ebc86fd43",
+      "sourceHash": "fnv1a64:684fa5e8f774efcd",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bank, station, museum, theatre, restaurant."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4110581dc29917b5",
+      "sourceHash": "fnv1a64:e39e2fb0893a490d",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bank, station, museum, theatre, restaurant."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff73e1695b904654",
+      "sourceHash": "fnv1a64:9eeb37b41e05cb76",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bank, station, museum, theatre, restaurant."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1c1446c7f81b110",
+      "sourceHash": "fnv1a64:eebbdf43dc42501c",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bank, station, museum, theatre, restaurant."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36f25ef683ba9ac2",
+      "sourceHash": "fnv1a64:57e58c6bbcd4fc00",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bank, station, museum, theatre, restaurant."
+              "text": "One more word for this chapter."
             }
           ]
         },

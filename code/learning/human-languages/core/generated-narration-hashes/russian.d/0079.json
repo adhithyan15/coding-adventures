@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 79,
-  "sourceHash": "fnv1a64:72434974d37f7913",
+  "sourceHash": "fnv1a64:e90c425c437618f4",
   "lessonIds": [
     "RU-C79-bus",
     "RU-C79-train",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch79.txt",
   "json": "russian/narration/ch79.json",
-  "textHash": "fnv1a64:5b55f69d39cd9b43",
-  "jsonHash": "fnv1a64:a60d296783926b63",
+  "textHash": "fnv1a64:e459b586e60c4f3b",
+  "jsonHash": "fnv1a64:8487ae3c25072cea",
   "findings": []
 }

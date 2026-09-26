@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "City, Street, Shop, Market, School",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6396b5226219839c",
+  "sourceHash": "fnv1a64:c425b602d00feac2",
   "lessons": [
     {
       "id": "RU-C77-city",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62d1126a8a8c9164",
+      "sourceHash": "fnv1a64:2f93634baf653b4e",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for city, street, shop, market, school."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f813e8dab8f87fe0",
+      "sourceHash": "fnv1a64:c56559d7eb0db248",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for city, street, shop, market, school."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:909539d96da362f3",
+      "sourceHash": "fnv1a64:71cce7f292470561",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for city, street, shop, market, school."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:223ee8281f9580df",
+      "sourceHash": "fnv1a64:5323e465c18c2049",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for city, street, shop, market, school."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6546439edd41d7a6",
+      "sourceHash": "fnv1a64:689857bbd0538610",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for city, street, shop, market, school."
+              "text": "One more word for this chapter."
             }
           ]
         },

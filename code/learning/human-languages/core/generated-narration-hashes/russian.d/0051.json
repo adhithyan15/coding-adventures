@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 51,
-  "sourceHash": "fnv1a64:234e3a513a9b460a",
+  "sourceHash": "fnv1a64:d40c4e1e0beeefe7",
   "lessonIds": [
     "RU-C51-cup",
     "RU-C51-plate",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch51.txt",
   "json": "russian/narration/ch51.json",
-  "textHash": "fnv1a64:28b924743588740c",
-  "jsonHash": "fnv1a64:df691441097f85e4",
+  "textHash": "fnv1a64:16e5b9e694681923",
+  "jsonHash": "fnv1a64:f4125074042ce06d",
   "findings": []
 }

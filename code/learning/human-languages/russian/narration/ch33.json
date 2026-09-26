@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Fever, Cough, Rest, Hunger, Thirst",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0f1a5d10aac8ede3",
+  "sourceHash": "fnv1a64:93df0efa2fe34a05",
   "lessons": [
     {
       "id": "RU-C33-temperature",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a7c65fb1cd8782b",
+      "sourceHash": "fnv1a64:34931ce34385090b",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fever, cough, rest, hunger, thirst."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc1e563cc2bac944",
+      "sourceHash": "fnv1a64:c5606a3436172420",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fever, cough, rest, hunger, thirst."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3a60919cf16c2e3",
+      "sourceHash": "fnv1a64:b2f80e1a2842d103",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fever, cough, rest, hunger, thirst."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88dfdac89e0dfa36",
+      "sourceHash": "fnv1a64:5716037a25790d8e",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fever, cough, rest, hunger, thirst."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d1a379944d62c81",
+      "sourceHash": "fnv1a64:dc7400fb668a2f71",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fever, cough, rest, hunger, thirst."
+              "text": "One more word for this chapter."
             }
           ]
         },

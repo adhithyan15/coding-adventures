@@ -46,7 +46,7 @@ reviews_of: [RU-C54-lesson]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for lesson, word, address, ticket, map.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C54-WORDS-02, RU-LEX-C53-THINGS-05, RU-LEX-C54-WORDS-01] -->

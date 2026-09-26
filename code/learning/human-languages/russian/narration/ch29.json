@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Head, Hand, Leg, Belly, Tooth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b506b959d4ea9672",
+  "sourceHash": "fnv1a64:ae996fb94c7a2ca9",
   "lessons": [
     {
       "id": "RU-C29-head",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:819c2f591869d69e",
+      "sourceHash": "fnv1a64:b3bb76ddcb0fb572",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for head, hand, leg, belly, tooth."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1fe1c8337ad3dd9",
+      "sourceHash": "fnv1a64:fd21a3eb49952ce5",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for head, hand, leg, belly, tooth."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b14476a295a36a8",
+      "sourceHash": "fnv1a64:8f0aa63dbaa5597c",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for head, hand, leg, belly, tooth."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:035847924648847b",
+      "sourceHash": "fnv1a64:564328a2091ea28b",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for head, hand, leg, belly, tooth."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86dd6771bc558ece",
+      "sourceHash": "fnv1a64:7aa224cbe36b9894",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for head, hand, leg, belly, tooth."
+              "text": "One more word for this chapter."
             }
           ]
         },

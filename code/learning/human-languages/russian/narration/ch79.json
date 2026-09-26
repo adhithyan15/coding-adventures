@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "Bus, Train, Plane, Car, Bridge",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:72434974d37f7913",
+  "sourceHash": "fnv1a64:e90c425c437618f4",
   "lessons": [
     {
       "id": "RU-C79-bus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d98e8b656d566f4a",
+      "sourceHash": "fnv1a64:144dc6e46cdc5472",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bus, train, plane, car, bridge."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdb233f980b5a149",
+      "sourceHash": "fnv1a64:bcb2c599c42a6169",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bus, train, plane, car, bridge."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acf5e166fcf5c10b",
+      "sourceHash": "fnv1a64:c6c301f1e3fed79f",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bus, train, plane, car, bridge."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cf525653fd69c6a",
+      "sourceHash": "fnv1a64:fb6ffa48663a850a",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bus, train, plane, car, bridge."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:251fc6e3ab1315ba",
+      "sourceHash": "fnv1a64:9c3ae4ff5422d7a6",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bus, train, plane, car, bridge."
+              "text": "One more word for this chapter."
             }
           ]
         },

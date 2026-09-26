@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "Always, Sometimes, Never, Now, Later",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8bf69101840c5221",
+  "sourceHash": "fnv1a64:028061133235e9e4",
   "lessons": [
     {
       "id": "RU-C74-always",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cdfd7b5709da37b8",
+      "sourceHash": "fnv1a64:2c9a7c127fcc6d38",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for always, sometimes, never, now, later."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f12b72786629a71",
+      "sourceHash": "fnv1a64:9b87b2c0fa21c8ad",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for always, sometimes, never, now, later."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5639334b786ab238",
+      "sourceHash": "fnv1a64:5ff370d8533d9e08",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for always, sometimes, never, now, later."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:115651096db6bf6a",
+      "sourceHash": "fnv1a64:79fb6e7f86ce8b22",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for always, sometimes, never, now, later."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7682264ce45153c7",
+      "sourceHash": "fnv1a64:4c1f359240b3a0bb",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for always, sometimes, never, now, later."
+              "text": "One more word for this chapter."
             }
           ]
         },

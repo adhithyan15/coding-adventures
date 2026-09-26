@@ -46,7 +46,7 @@ reviews_of: [RU-C62-duck]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for hare, snake, hen, duck, goat.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C62-ANIMALS3-05, RU-LEX-C62-ANIMALS3-03, RU-LEX-C62-ANIMALS3-04] -->

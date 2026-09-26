@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Cup, Plate, Spoon, Knife, Fork",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:234e3a513a9b460a",
+  "sourceHash": "fnv1a64:d40c4e1e0beeefe7",
   "lessons": [
     {
       "id": "RU-C51-cup",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9d0c0ccbe322244",
+      "sourceHash": "fnv1a64:59b4ef77d9105b08",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cup, plate, spoon, knife, fork."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d03af5be6b0b457",
+      "sourceHash": "fnv1a64:a7ddb2f85b78454b",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cup, plate, spoon, knife, fork."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3782ff7918d422c",
+      "sourceHash": "fnv1a64:16fc0b420ea457a8",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cup, plate, spoon, knife, fork."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc5850dcbeb351aa",
+      "sourceHash": "fnv1a64:787f700872d92c2a",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cup, plate, spoon, knife, fork."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c66307a94f1c9ac",
+      "sourceHash": "fnv1a64:e33e062f24d57636",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cup, plate, spoon, knife, fork."
+              "text": "One more word for this chapter."
             }
           ]
         },

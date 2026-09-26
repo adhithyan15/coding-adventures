@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Already, Quickly, Eleven, Twelve, Zero",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:eb4fc3c46ed37012",
+  "sourceHash": "fnv1a64:1b5c93d8d5d75ad9",
   "lessons": [
     {
       "id": "RU-C75-already",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b54fb7fdfc2dc9e3",
+      "sourceHash": "fnv1a64:28f1800aa3ee591d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for already, quickly, eleven, twelve, zero."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eec5414a1c49cde7",
+      "sourceHash": "fnv1a64:f80ded03db8740bd",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for already, quickly, eleven, twelve, zero."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02e55b6bf614aa88",
+      "sourceHash": "fnv1a64:6e7244f019973438",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for already, quickly, eleven, twelve, zero."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2529e9c9b215f4f4",
+      "sourceHash": "fnv1a64:42ec6b32ae3dcfcc",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for already, quickly, eleven, twelve, zero."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:774b5769fef85497",
+      "sourceHash": "fnv1a64:998ae5f393079bc3",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for already, quickly, eleven, twelve, zero."
+              "text": "One more word for this chapter."
             }
           ]
         },

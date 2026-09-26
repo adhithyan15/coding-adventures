@@ -46,7 +46,7 @@ reviews_of: [RU-C73-below]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for below, left, right, a lot, a little.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C73-WHERE2-02, RU-LEX-C72-WHERE1-05, RU-LEX-C73-WHERE2-01] -->

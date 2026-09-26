@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 81,
-  "sourceHash": "fnv1a64:a5e6454babc56eff",
+  "sourceHash": "fnv1a64:f2edf23089929159",
   "lessonIds": [
     "LA-C81-frumentum",
     "LA-C81-farina",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch81.txt",
   "json": "latin/narration/ch81.json",
-  "textHash": "fnv1a64:0e4dddaea37f241f",
-  "jsonHash": "fnv1a64:6d6e9caa2d780ab8",
+  "textHash": "fnv1a64:1eb6ed875a23eb3a",
+  "jsonHash": "fnv1a64:821dd94501e886b5",
   "findings": []
 }

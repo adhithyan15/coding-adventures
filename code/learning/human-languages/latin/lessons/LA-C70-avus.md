@@ -45,7 +45,7 @@ reviews_of: [LA-C70-filia]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for son, daughter, grandparents.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C70-FAMILIA1-03, LA-LEX-C70-FAMILIA1-01, LA-LEX-C70-FAMILIA1-02] -->

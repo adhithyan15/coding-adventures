@@ -46,7 +46,7 @@ reviews_of: [RU-C32-hospital]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for fever, cough, rest, hunger, thirst.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C33-HEALTH2-01, RU-LEX-C32-HEALTH1-04, RU-LEX-C32-HEALTH1-05] -->

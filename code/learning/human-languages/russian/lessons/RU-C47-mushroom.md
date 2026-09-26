@@ -46,7 +46,7 @@ reviews_of: [RU-C47-rice]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for sugar, honey, rice, mushrooms and a glass.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C47-PANTRY-04, RU-LEX-C47-PANTRY-02, RU-LEX-C47-PANTRY-03] -->

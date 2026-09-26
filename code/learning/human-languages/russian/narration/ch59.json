@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Rain, Snow, Wind, Weather, World",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e0f31f92bd455433",
+  "sourceHash": "fnv1a64:e430446ab674b6cd",
   "lessons": [
     {
       "id": "RU-C59-rain",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a4614c29e6bd653",
+      "sourceHash": "fnv1a64:07a883e73a3fb53b",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for rain, snow, wind, weather, world."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e94d30f0bf26490",
+      "sourceHash": "fnv1a64:908643dacadfb098",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for rain, snow, wind, weather, world."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9dd031b9c6f634d8",
+      "sourceHash": "fnv1a64:627f5b071922f9c4",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for rain, snow, wind, weather, world."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e53e134e6554221e",
+      "sourceHash": "fnv1a64:e025b538c6a8aa5a",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for rain, snow, wind, weather, world."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f2a34f406a24a67",
+      "sourceHash": "fnv1a64:d94cba37b6e5344f",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for rain, snow, wind, weather, world."
+              "text": "One more word for this chapter."
             }
           ]
         },

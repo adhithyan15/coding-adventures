@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Fruit, Apple, Pear, Cherry, Berry",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e839bc6e5a40a3bd",
+  "sourceHash": "fnv1a64:a1a35a52545defb6",
   "lessons": [
     {
       "id": "RU-C44-fruit",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2daf83d81538e033",
+      "sourceHash": "fnv1a64:e2a097c2360e1f47",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fruit, apple, pear, cherry, berry."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31caadc1c00d93d1",
+      "sourceHash": "fnv1a64:5bd66c7a19da17b3",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fruit, apple, pear, cherry, berry."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54cacfaccdffce82",
+      "sourceHash": "fnv1a64:6a2d4b7d3c8ae5d4",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fruit, apple, pear, cherry, berry."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:566951880d6feab0",
+      "sourceHash": "fnv1a64:43a366f1fd538e82",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fruit, apple, pear, cherry, berry."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fda8b988d0acb086",
+      "sourceHash": "fnv1a64:fed19da7dec82c5c",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fruit, apple, pear, cherry, berry."
+              "text": "One more word for this chapter."
             }
           ]
         },

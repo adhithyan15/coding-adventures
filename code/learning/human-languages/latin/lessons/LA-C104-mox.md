@@ -45,7 +45,7 @@ reviews_of: [LA-C104-nunc]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for often, always, never, now, soon.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C104-SEMPER-05, LA-LEX-C104-SEMPER-03, LA-LEX-C104-SEMPER-04] -->

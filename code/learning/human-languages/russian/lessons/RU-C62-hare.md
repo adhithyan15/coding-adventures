@@ -46,7 +46,7 @@ reviews_of: [RU-C61-fox]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for hare, snake, hen, duck, goat.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C62-ANIMALS3-01, RU-LEX-C61-ANIMALS2-04, RU-LEX-C61-ANIMALS2-05] -->

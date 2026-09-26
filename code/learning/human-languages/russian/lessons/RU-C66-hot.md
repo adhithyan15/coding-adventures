@@ -46,7 +46,7 @@ reviews_of: [RU-C65-short]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for hot, cold, warm, fast, slow.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C66-TEMP-01, RU-LEX-C65-SIZE-04, RU-LEX-C65-SIZE-05] -->

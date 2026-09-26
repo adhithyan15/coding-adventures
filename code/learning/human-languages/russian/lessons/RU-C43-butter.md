@@ -46,7 +46,7 @@ reviews_of: [RU-C43-egg]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for meat, fish, egg, butter, salt.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C43-FOOD1-04, RU-LEX-C43-FOOD1-02, RU-LEX-C43-FOOD1-03] -->

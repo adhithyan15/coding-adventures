@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "Lesson, Word, Address, Ticket, Map",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:a2dc6723853b7f33",
+  "sourceHash": "fnv1a64:a1ef7014ececdbcc",
   "lessons": [
     {
       "id": "RU-C54-lesson",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:958311d99d4bfd78",
+      "sourceHash": "fnv1a64:7f6e148652975036",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for lesson, word, address, ticket, map."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1913348d209af607",
+      "sourceHash": "fnv1a64:ad537be98490a5df",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for lesson, word, address, ticket, map."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78ea0bfd9aa5c49c",
+      "sourceHash": "fnv1a64:2ff88919c870994a",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for lesson, word, address, ticket, map."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfdfc92ce4f2c850",
+      "sourceHash": "fnv1a64:2dd9e5c8c4d0b04a",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for lesson, word, address, ticket, map."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7660dee4402f9920",
+      "sourceHash": "fnv1a64:39971666a5b14784",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for lesson, word, address, ticket, map."
+              "text": "One more word for this chapter."
             }
           ]
         },

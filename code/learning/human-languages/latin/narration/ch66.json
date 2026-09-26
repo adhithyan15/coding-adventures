@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Chest, Leg, Cheek, Nail, Healthy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:69e8e1a3b4c86b4c",
+  "sourceHash": "fnv1a64:25a29c688e2e5e32",
   "lessons": [
     {
       "id": "LA-C66-pectus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5fc0785fcd9dc396",
+      "sourceHash": "fnv1a64:b6766ce08b6a4f26",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for chest, leg, cheek, nail, healthy."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f17b34d2f2339efc",
+      "sourceHash": "fnv1a64:65d962f04457a51c",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for chest, leg, cheek, nail, healthy."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dffecea5b4a9d67d",
+      "sourceHash": "fnv1a64:1f05374edeebae61",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for chest, leg, cheek, nail, healthy."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54ca7de0616c36bb",
+      "sourceHash": "fnv1a64:7c0eaaed03debd59",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for chest, leg, cheek, nail, healthy."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8813fb5dcdd2947",
+      "sourceHash": "fnv1a64:95869b89774f7787",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for chest, leg, cheek, nail, healthy."
+              "text": "One more word for this chapter."
             }
           ]
         },

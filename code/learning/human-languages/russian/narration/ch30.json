@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Hair, Finger, Neck, Shoulder, Knee",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c4e123631f334c8d",
+  "sourceHash": "fnv1a64:b00ca99ace490ec4",
   "lessons": [
     {
       "id": "RU-C30-hair",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d9056b69668139c",
+      "sourceHash": "fnv1a64:9214abc8368a8864",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hair, finger, neck, shoulder, knee."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8348f68ceac12371",
+      "sourceHash": "fnv1a64:980865d2d05ce739",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hair, finger, neck, shoulder, knee."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58a9d0e1b64d4143",
+      "sourceHash": "fnv1a64:2943961f903d4417",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hair, finger, neck, shoulder, knee."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fbbf0ed0470d3222",
+      "sourceHash": "fnv1a64:1a52a43495d83aa6",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hair, finger, neck, shoulder, knee."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ba76b115e00a9cb",
+      "sourceHash": "fnv1a64:61821324d91d90a7",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hair, finger, neck, shoulder, knee."
+              "text": "One more word for this chapter."
             }
           ]
         },

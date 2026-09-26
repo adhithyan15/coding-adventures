@@ -46,7 +46,7 @@ reviews_of: [RU-C48-kitchen]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for house, room, kitchen, window, door.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C48-HOME1-04, RU-LEX-C48-HOME1-02, RU-LEX-C48-HOME1-03] -->

@@ -45,7 +45,7 @@ reviews_of: [LA-C96-rotundus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for beautiful, round, empty, bright, dark.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C96-PULCHER-03, LA-LEX-C96-PULCHER-01, LA-LEX-C96-PULCHER-02] -->

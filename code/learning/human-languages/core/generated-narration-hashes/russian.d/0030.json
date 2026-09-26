@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 30,
-  "sourceHash": "fnv1a64:c4e123631f334c8d",
+  "sourceHash": "fnv1a64:b00ca99ace490ec4",
   "lessonIds": [
     "RU-C30-hair",
     "RU-C30-finger",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch30.txt",
   "json": "russian/narration/ch30.json",
-  "textHash": "fnv1a64:d4b3da2875c7072c",
-  "jsonHash": "fnv1a64:96171d6d16702a2b",
+  "textHash": "fnv1a64:738f47c5c82f4a28",
+  "jsonHash": "fnv1a64:0d180d353c28cc53",
   "findings": []
 }

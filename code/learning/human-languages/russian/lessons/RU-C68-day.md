@@ -46,7 +46,7 @@ reviews_of: [RU-C67-badly]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for day, week, month, year, evening.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C68-TIME1-01, RU-LEX-C67-WORTH-04, RU-LEX-C67-WORTH-05] -->

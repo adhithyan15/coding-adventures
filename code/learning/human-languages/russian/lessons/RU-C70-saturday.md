@@ -46,7 +46,7 @@ reviews_of: [RU-C70-friday]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for monday to saturday.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C70-WEEK1-05, RU-LEX-C70-WEEK1-03, RU-LEX-C70-WEEK1-04] -->

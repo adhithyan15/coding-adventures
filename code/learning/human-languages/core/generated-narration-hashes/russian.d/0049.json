@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 49,
-  "sourceHash": "fnv1a64:4783d8532a76c988",
+  "sourceHash": "fnv1a64:0ee8d81edecce9a5",
   "lessonIds": [
     "RU-C49-table",
     "RU-C49-chair",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch49.txt",
   "json": "russian/narration/ch49.json",
-  "textHash": "fnv1a64:c0a76319b1d5ae6b",
-  "jsonHash": "fnv1a64:94fe4fb7632ab5da",
+  "textHash": "fnv1a64:251fd927bca2cacb",
+  "jsonHash": "fnv1a64:a110a699dd23852e",
   "findings": []
 }

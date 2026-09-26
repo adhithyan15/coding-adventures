@@ -46,7 +46,7 @@ reviews_of: [RU-C31-blood]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for pain, illness, medicine, doctor.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C32-HEALTH1-01, RU-LEX-C31-BODY3-04, RU-LEX-C31-BODY3-05] -->

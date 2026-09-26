@@ -46,7 +46,7 @@ reviews_of: [RU-C56-forest]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for mountain, forest, river, lake, sea.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C56-NATURE2-03, RU-LEX-C56-NATURE2-01, RU-LEX-C56-NATURE2-02] -->

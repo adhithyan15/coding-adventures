@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Sleep, Sit, Stand, Run, Play",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:671e57dadabbc791",
+  "sourceHash": "fnv1a64:ef410e02a45d607d",
   "lessons": [
     {
       "id": "RU-C40-spat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82b59dfe90680a9d",
+      "sourceHash": "fnv1a64:52bd0df387d4f2f3",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sleep, sit, stand, run, play."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5222f7fd7b1d86c",
+      "sourceHash": "fnv1a64:887a3c89d15d22be",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sleep, sit, stand, run, play."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c453960bf99decc",
+      "sourceHash": "fnv1a64:daf410709a68c5a6",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sleep, sit, stand, run, play."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1f24ed2457ce47a",
+      "sourceHash": "fnv1a64:cdf2b79208b6bb68",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sleep, sit, stand, run, play."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e0f8a63579c3533e",
+      "sourceHash": "fnv1a64:8e4a88246e1e04ca",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sleep, sit, stand, run, play."
+              "text": "One more word for this chapter."
             }
           ]
         },

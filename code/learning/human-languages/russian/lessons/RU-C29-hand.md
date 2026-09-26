@@ -46,7 +46,7 @@ reviews_of: [RU-C29-head]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for head, hand, leg, belly, tooth.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C29-BODY1-02, RU-LEX-VTOROY-01, RU-LEX-C29-BODY1-01] -->

@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Book, Pen, Paper, Notebook, Pencil",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0c30de1955e6c71b",
+  "sourceHash": "fnv1a64:bef6534b44c45098",
   "lessons": [
     {
       "id": "RU-C52-book",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4edc1f40d0cea59a",
+      "sourceHash": "fnv1a64:c0a9e3246b00458a",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for book, pen, paper, notebook, pencil."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e69a49a991c9a722",
+      "sourceHash": "fnv1a64:ea2eff200221c988",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for book, pen, paper, notebook, pencil."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ae187a7c26b9a70",
+      "sourceHash": "fnv1a64:a932f9dc4c5cfb8a",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for book, pen, paper, notebook, pencil."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ba5bb603bdc6793",
+      "sourceHash": "fnv1a64:88f8ff67b9f473eb",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for book, pen, paper, notebook, pencil."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2978e0266fc0cebc",
+      "sourceHash": "fnv1a64:87018c51df4d0a48",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for book, pen, paper, notebook, pencil."
+              "text": "One more word for this chapter."
             }
           ]
         },

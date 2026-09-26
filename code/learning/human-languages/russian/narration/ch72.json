@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "Here, There, Far, Near, Up Above",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dbd05767c9397c7c",
+  "sourceHash": "fnv1a64:782008b8deba753e",
   "lessons": [
     {
       "id": "RU-C72-here",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aeb3e994376d7b23",
+      "sourceHash": "fnv1a64:f0d85629f386df07",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for here, there, far, near, up above."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cd43675e76a67eb",
+      "sourceHash": "fnv1a64:3737bbce5036755f",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for here, there, far, near, up above."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19968353197211fa",
+      "sourceHash": "fnv1a64:8b437ce63d407202",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for here, there, far, near, up above."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ada191a8ef7a314e",
+      "sourceHash": "fnv1a64:0966254ff46f28ae",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for here, there, far, near, up above."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d92be4d82cc056d8",
+      "sourceHash": "fnv1a64:127a8fd2a72c6698",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for here, there, far, near, up above."
+              "text": "One more word for this chapter."
             }
           ]
         },

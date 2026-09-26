@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 63,
-  "sourceHash": "fnv1a64:f4b8c9b24134c965",
+  "sourceHash": "fnv1a64:e121547cbcd2b6e8",
   "lessonIds": [
     "LA-C63-bracchium",
     "LA-C63-digitus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch63.txt",
   "json": "latin/narration/ch63.json",
-  "textHash": "fnv1a64:8f061c67b72cba44",
-  "jsonHash": "fnv1a64:e23d92c747c139a6",
+  "textHash": "fnv1a64:6cd0794fec68749a",
+  "jsonHash": "fnv1a64:c33f13e478cfe226",
   "findings": []
 }

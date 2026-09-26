@@ -46,7 +46,7 @@ reviews_of: [RU-C36-child]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for children, a child, aunt, grandchildren.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C36-FAMILY2-03, RU-LEX-C36-FAMILY2-01, RU-LEX-C36-FAMILY2-02] -->

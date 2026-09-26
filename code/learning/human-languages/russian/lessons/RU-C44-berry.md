@@ -46,7 +46,7 @@ reviews_of: [RU-C44-cherry]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for fruit, apple, pear, cherry, berry.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C44-FRUIT-05, RU-LEX-C44-FRUIT-03, RU-LEX-C44-FRUIT-04] -->

@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "Cheese, Oil, Grapes, Olives",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:26efb170dc9d9da0",
+  "sourceHash": "fnv1a64:6c7ef4d7cdc5148e",
   "lessons": [
     {
       "id": "LA-C80-caseus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b75fec3c93755378",
+      "sourceHash": "fnv1a64:0bc5a30fa0fa707a",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cheese, oil, grapes, olives."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9dca0e47b1fc7b95",
+      "sourceHash": "fnv1a64:7c5c2230f68ef8af",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cheese, oil, grapes, olives."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f67779bf92fbd9df",
+      "sourceHash": "fnv1a64:5d1389c43d775823",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cheese, oil, grapes, olives."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33029f0746bda18a",
+      "sourceHash": "fnv1a64:2ba84ac62134baf8",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cheese, oil, grapes, olives."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:054ad5442f4b1a45",
+      "sourceHash": "fnv1a64:466f941652e8c409",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cheese, oil, grapes, olives."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -46,7 +46,7 @@ reviews_of: [RU-C49-key]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for wall, roof, garden, bathroom, clock.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C50-HOME3-01, RU-LEX-C49-HOME2-04, RU-LEX-C49-HOME2-05] -->

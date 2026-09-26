@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 55,
-  "sourceHash": "fnv1a64:4b4d66cacaae0b04",
+  "sourceHash": "fnv1a64:df62ff33fa677ec7",
   "lessonIds": [
     "RU-C55-tree",
     "RU-C55-flower",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch55.txt",
   "json": "russian/narration/ch55.json",
-  "textHash": "fnv1a64:27bf2401728b328e",
-  "jsonHash": "fnv1a64:4a5ee5975f86d7dd",
+  "textHash": "fnv1a64:39d2c086e8d4e7ee",
+  "jsonHash": "fnv1a64:487a26f73279f9c4",
   "findings": []
 }

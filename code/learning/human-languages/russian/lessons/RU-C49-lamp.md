@@ -46,7 +46,7 @@ reviews_of: [RU-C49-bed]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for table, chair, bed, lamp, key.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C49-HOME2-04, RU-LEX-C49-HOME2-02, RU-LEX-C49-HOME2-03] -->

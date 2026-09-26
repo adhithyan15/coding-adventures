@@ -46,7 +46,7 @@ reviews_of: [RU-C60-pig]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for bird, mouse, wolf, bear, fox.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C61-ANIMALS2-01, RU-LEX-C60-ANIMALS1-04, RU-LEX-C60-ANIMALS1-05] -->

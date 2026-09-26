@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Forty, Fifty, Ninety, a Thousand, a Country",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:74fbdc4a249f34b8",
+  "sourceHash": "fnv1a64:fa5275fd84e2dae1",
   "lessons": [
     {
       "id": "RU-C76-forty",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65b48760467f971d",
+      "sourceHash": "fnv1a64:09362e0cc4642865",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for forty, fifty, ninety, a thousand, a country."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d39e547aeed5915",
+      "sourceHash": "fnv1a64:088f0119e4f1b871",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for forty, fifty, ninety, a thousand, a country."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89b74359965a8992",
+      "sourceHash": "fnv1a64:3c1567abdb72899e",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for forty, fifty, ninety, a thousand, a country."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9ad94d2dec75dfe",
+      "sourceHash": "fnv1a64:cbf598eeac99a980",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for forty, fifty, ninety, a thousand, a country."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80f04af3b2c3fead",
+      "sourceHash": "fnv1a64:bad2edcbbd26131d",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for forty, fifty, ninety, a thousand, a country."
+              "text": "One more word for this chapter."
             }
           ]
         },

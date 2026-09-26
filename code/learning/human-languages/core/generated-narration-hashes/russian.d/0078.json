@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 78,
-  "sourceHash": "fnv1a64:1048718f8431678e",
+  "sourceHash": "fnv1a64:dd0326ddb0ac62d0",
   "lessonIds": [
     "RU-C78-bank",
     "RU-C78-station",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch78.txt",
   "json": "russian/narration/ch78.json",
-  "textHash": "fnv1a64:ae93084bb28701fb",
-  "jsonHash": "fnv1a64:6e4a4e4861e6b382",
+  "textHash": "fnv1a64:943577ded25cd67e",
+  "jsonHash": "fnv1a64:2f91c078f11d0edf",
   "findings": []
 }

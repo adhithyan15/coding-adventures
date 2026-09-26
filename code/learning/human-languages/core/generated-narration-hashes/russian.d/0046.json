@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 46,
-  "sourceHash": "fnv1a64:c7137d2db6905128",
+  "sourceHash": "fnv1a64:68993d28696f09a4",
   "lessonIds": [
     "RU-C46-breakfast",
     "RU-C46-lunch",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch46.txt",
   "json": "russian/narration/ch46.json",
-  "textHash": "fnv1a64:f88fcf533c536a95",
-  "jsonHash": "fnv1a64:7c98f6192cadb5a7",
+  "textHash": "fnv1a64:3819e24d2d9248af",
+  "jsonHash": "fnv1a64:0f0357bbd6b2a5b5",
   "findings": []
 }

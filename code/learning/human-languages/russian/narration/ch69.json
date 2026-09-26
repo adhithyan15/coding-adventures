@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Today, Yesterday, Hour, Minute, Time",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5fcfc518edef8abe",
+  "sourceHash": "fnv1a64:bb03c8b3b4c363b4",
   "lessons": [
     {
       "id": "RU-C69-today",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4439175e9978ffbb",
+      "sourceHash": "fnv1a64:b9d92fa49c5092b9",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for today, yesterday, hour, minute, time."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aefcf726f19ae18b",
+      "sourceHash": "fnv1a64:973e92f15aa810df",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for today, yesterday, hour, minute, time."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:255dad974c5aa678",
+      "sourceHash": "fnv1a64:003e2424313b2dd4",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for today, yesterday, hour, minute, time."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2a8f3baccd103bb",
+      "sourceHash": "fnv1a64:1ed4ce8b8b790805",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for today, yesterday, hour, minute, time."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:830761e792e4f009",
+      "sourceHash": "fnv1a64:43b3789484d33d77",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for today, yesterday, hour, minute, time."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Wall, Roof, Garden, Bathroom, Clock",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:38b41cdc8dc24280",
+  "sourceHash": "fnv1a64:7223d59074310d8f",
   "lessons": [
     {
       "id": "RU-C50-wall",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9d1a8930009599a",
+      "sourceHash": "fnv1a64:2295aa77e14086f6",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for wall, roof, garden, bathroom, clock."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c43bd5c355e2a970",
+      "sourceHash": "fnv1a64:a8167f20ffd4c82e",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for wall, roof, garden, bathroom, clock."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0e0e6c0aa6a4e46",
+      "sourceHash": "fnv1a64:f37797b99ba43420",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for wall, roof, garden, bathroom, clock."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f00f84c42ebcd71",
+      "sourceHash": "fnv1a64:e20eb0110a7ce97f",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for wall, roof, garden, bathroom, clock."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43b2c6c4a13c9b91",
+      "sourceHash": "fnv1a64:028a4abdf89c0eb7",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for wall, roof, garden, bathroom, clock."
+              "text": "One more word for this chapter."
             }
           ]
         },

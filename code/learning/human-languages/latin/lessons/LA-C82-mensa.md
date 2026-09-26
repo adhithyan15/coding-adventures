@@ -45,7 +45,7 @@ reviews_of: [LA-C81-nux]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for table, chair, bed, window.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C82-DOMUS1-01, LA-LEX-C81-CIBUS3-04, LA-LEX-C81-CIBUS3-05] -->

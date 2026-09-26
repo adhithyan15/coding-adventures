@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Meat, Fish, Egg, Butter, Salt",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1570ad6e49cb5c3b",
+  "sourceHash": "fnv1a64:b7039bf1e1185a0f",
   "lessons": [
     {
       "id": "RU-C43-meat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a86021d3a9b0b47",
+      "sourceHash": "fnv1a64:49eef7519b0df171",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for meat, fish, egg, butter, salt."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76842cb619b5e75a",
+      "sourceHash": "fnv1a64:7297ed655ae87462",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for meat, fish, egg, butter, salt."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7d5060ec2037d3a",
+      "sourceHash": "fnv1a64:2ad128ae2a7ddc4a",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for meat, fish, egg, butter, salt."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e81a5f133762ccd",
+      "sourceHash": "fnv1a64:2d3aa22549810fe7",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for meat, fish, egg, butter, salt."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48598cfdfde0bece",
+      "sourceHash": "fnv1a64:c331e92c7f1208e6",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for meat, fish, egg, butter, salt."
+              "text": "One more word for this chapter."
             }
           ]
         },

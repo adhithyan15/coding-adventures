@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Potatoes, Tomato, Onion, Cucumber, Carrot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3ba1f93ef7a22a62",
+  "sourceHash": "fnv1a64:fad9c8b7a4935331",
   "lessons": [
     {
       "id": "RU-C45-potatoes",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d07aafc21b56b56",
+      "sourceHash": "fnv1a64:902e30ae76cfb346",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for potatoes, tomato, onion, cucumber, carrot."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2351779061ee3ad7",
+      "sourceHash": "fnv1a64:15ead05018733e09",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for potatoes, tomato, onion, cucumber, carrot."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3c18f4de866a14b",
+      "sourceHash": "fnv1a64:5633fd76bf59768d",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for potatoes, tomato, onion, cucumber, carrot."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72dff51dfa7ce339",
+      "sourceHash": "fnv1a64:7b74a6f8f87b0cab",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for potatoes, tomato, onion, cucumber, carrot."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:445f5a5a7396e247",
+      "sourceHash": "fnv1a64:6f5a2b210fd663ed",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for potatoes, tomato, onion, cucumber, carrot."
+              "text": "One more word for this chapter."
             }
           ]
         },

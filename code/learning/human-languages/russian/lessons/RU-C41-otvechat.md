@@ -46,7 +46,7 @@ reviews_of: [RU-C41-uchit]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for listen, learn, answer, wait, give.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C41-VERB4-03, RU-LEX-C41-VERB4-01, RU-LEX-C41-VERB4-02] -->

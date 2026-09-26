@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Monday to Saturday",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fbb8aa675a6e8df0",
+  "sourceHash": "fnv1a64:fa2ac3f131f07b44",
   "lessons": [
     {
       "id": "RU-C70-monday",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74cf9b08268bd99f",
+      "sourceHash": "fnv1a64:23cae2aaefaf7d9d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for monday to saturday."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d13c8e0cfe5f5d80",
+      "sourceHash": "fnv1a64:fcbaf80723c26210",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for monday to saturday."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:089cfc5b3c3c8786",
+      "sourceHash": "fnv1a64:b6f90b97d7c4e32a",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for monday to saturday."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:020237428e338c53",
+      "sourceHash": "fnv1a64:6fa08f7a25f8e849",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for monday to saturday."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42583589fc3c1610",
+      "sourceHash": "fnv1a64:5547a34afe940ad6",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for monday to saturday."
+              "text": "One more word for this chapter."
             }
           ]
         },

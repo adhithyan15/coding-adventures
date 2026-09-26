@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 41,
-  "sourceHash": "fnv1a64:1c5fa3b29844ff47",
+  "sourceHash": "fnv1a64:e1d1c383a42b7a15",
   "lessonIds": [
     "RU-C41-slushat",
     "RU-C41-uchit",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch41.txt",
   "json": "russian/narration/ch41.json",
-  "textHash": "fnv1a64:246d3c7710065544",
-  "jsonHash": "fnv1a64:08df061a89c560bc",
+  "textHash": "fnv1a64:0c7336b7c446a854",
+  "jsonHash": "fnv1a64:023bc698870d2ec4",
   "findings": []
 }

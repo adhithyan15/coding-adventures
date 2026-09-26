@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Children, a Child, Aunt, Grandchildren",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ac3c258ab7132325",
+  "sourceHash": "fnv1a64:2597188fc2db6c2f",
   "lessons": [
     {
       "id": "RU-C36-children",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f79525038d6d6633",
+      "sourceHash": "fnv1a64:cfd24560e2bd75c3",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for children, a child, aunt, grandchildren."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dffbf1f15017c8b9",
+      "sourceHash": "fnv1a64:24f53f7ebdc74fe1",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for children, a child, aunt, grandchildren."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30089565896830b0",
+      "sourceHash": "fnv1a64:08af7c6839166320",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for children, a child, aunt, grandchildren."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3ec262805b77246",
+      "sourceHash": "fnv1a64:ba1a5bac2ab2ebd2",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for children, a child, aunt, grandchildren."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c4af8c3797e7eff",
+      "sourceHash": "fnv1a64:d5d61023dbd53b87",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for children, a child, aunt, grandchildren."
+              "text": "One more word for this chapter."
             }
           ]
         },

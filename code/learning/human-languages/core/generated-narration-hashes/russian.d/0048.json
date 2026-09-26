@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 48,
-  "sourceHash": "fnv1a64:14a089e9fbb9eafd",
+  "sourceHash": "fnv1a64:c05bb0ed7ae58d80",
   "lessonIds": [
     "RU-C48-house",
     "RU-C48-room",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch48.txt",
   "json": "russian/narration/ch48.json",
-  "textHash": "fnv1a64:8b08da312c1cb437",
-  "jsonHash": "fnv1a64:2ebf4a1ec37ccda6",
+  "textHash": "fnv1a64:a57f4756a7e6ba4b",
+  "jsonHash": "fnv1a64:d1d325eb958761e0",
   "findings": []
 }

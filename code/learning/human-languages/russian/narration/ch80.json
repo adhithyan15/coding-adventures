@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "Hotel, Pharmacy, Church, Park, Taxi",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:41c7bbbdd6752884",
+  "sourceHash": "fnv1a64:719778d990993007",
   "lessons": [
     {
       "id": "RU-C80-hotel",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc90f06d6298e5aa",
+      "sourceHash": "fnv1a64:aa55f8796e07ae80",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hotel, pharmacy, church, park, taxi."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67f9bbc4f3b30639",
+      "sourceHash": "fnv1a64:f7a6035bedb19833",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hotel, pharmacy, church, park, taxi."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fadbd74bada52d2",
+      "sourceHash": "fnv1a64:f11a3c93a0cec95c",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hotel, pharmacy, church, park, taxi."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2750cc5e4ca01e9c",
+      "sourceHash": "fnv1a64:e74cee32282e24ee",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hotel, pharmacy, church, park, taxi."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62579ef44ede6af3",
+      "sourceHash": "fnv1a64:ff687d42e4ff7c7f",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hotel, pharmacy, church, park, taxi."
+              "text": "One more word for this chapter."
             }
           ]
         },

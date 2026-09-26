@@ -46,7 +46,7 @@ reviews_of: [RU-C70-saturday]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for sunday and the four seasons.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C71-SEASONS-01, RU-LEX-C70-WEEK1-04, RU-LEX-C70-WEEK1-05] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 74,
-  "sourceHash": "fnv1a64:8bf69101840c5221",
+  "sourceHash": "fnv1a64:028061133235e9e4",
   "lessonIds": [
     "RU-C74-always",
     "RU-C74-sometimes",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch74.txt",
   "json": "russian/narration/ch74.json",
-  "textHash": "fnv1a64:9113c4b2cce65386",
-  "jsonHash": "fnv1a64:c72733b0d324f262",
+  "textHash": "fnv1a64:2a0ea31ccf1a1cc0",
+  "jsonHash": "fnv1a64:ddabc2d36824a256",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 103,
-  "sourceHash": "fnv1a64:ee362311e63a1bfb",
+  "sourceHash": "fnv1a64:ce951b8168ff88f7",
   "lessonIds": [
     "LA-C103-hodie",
     "LA-C103-heri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch103.txt",
   "json": "latin/narration/ch103.json",
-  "textHash": "fnv1a64:5cc0cdd44b13b2fe",
-  "jsonHash": "fnv1a64:ec055bbb9b3d486c",
+  "textHash": "fnv1a64:7b7859416e02c4a3",
+  "jsonHash": "fnv1a64:b95276c3cfd20a0c",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Big, Small, Old, Long, Short",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3a3988a218f1dab3",
+  "sourceHash": "fnv1a64:a6b92f491aad8a84",
   "lessons": [
     {
       "id": "RU-C65-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c282b7079963f98",
+      "sourceHash": "fnv1a64:7c2f3e1d744e8e72",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for big, small, old, long, short."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2896c0dff05d0ccf",
+      "sourceHash": "fnv1a64:4b241108d1d9e2bb",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for big, small, old, long, short."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2431ec85e5b4731",
+      "sourceHash": "fnv1a64:92c3df2b43e8c397",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for big, small, old, long, short."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2aa460f12b8f8c6",
+      "sourceHash": "fnv1a64:fa66024c29c97ce2",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for big, small, old, long, short."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c81b760ddb82318f",
+      "sourceHash": "fnv1a64:37a8eec17bc3d8b5",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for big, small, old, long, short."
+              "text": "One more word for this chapter."
             }
           ]
         },

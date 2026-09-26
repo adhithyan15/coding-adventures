@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Back, Tongue, Lip, Face, Blood",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fdd81cf4689d1843",
+  "sourceHash": "fnv1a64:f8ee023c1c3ec242",
   "lessons": [
     {
       "id": "RU-C31-back",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c9b7384ecb02bfd",
+      "sourceHash": "fnv1a64:37af796ed7a8fe6d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for back, tongue, lip, face, blood."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61b8873847651f9e",
+      "sourceHash": "fnv1a64:4ea604e1fd107436",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for back, tongue, lip, face, blood."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a7aec0ae98a4199",
+      "sourceHash": "fnv1a64:a52cf0f946fca1a1",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for back, tongue, lip, face, blood."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c92396f4bc777bd7",
+      "sourceHash": "fnv1a64:b6f3789cea474ad7",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for back, tongue, lip, face, blood."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dcf444da83ba2235",
+      "sourceHash": "fnv1a64:5292dde2f30223dd",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for back, tongue, lip, face, blood."
+              "text": "One more word for this chapter."
             }
           ]
         },

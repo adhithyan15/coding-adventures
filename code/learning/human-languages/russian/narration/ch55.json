@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "Tree, Flower, Leaf, Grass, Village",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4b4d66cacaae0b04",
+  "sourceHash": "fnv1a64:df62ff33fa677ec7",
   "lessons": [
     {
       "id": "RU-C55-tree",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a77bf2d69c772ff1",
+      "sourceHash": "fnv1a64:3b9cd57293bf63bd",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for tree, flower, leaf, grass, village."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6b989b88305f1fe",
+      "sourceHash": "fnv1a64:178af88ccece9882",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for tree, flower, leaf, grass, village."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36705631c88f8491",
+      "sourceHash": "fnv1a64:6f0427e2899ff971",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for tree, flower, leaf, grass, village."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50ffa8236f8c8c17",
+      "sourceHash": "fnv1a64:6c6b43e5762ee5fb",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for tree, flower, leaf, grass, village."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f74443855bee2220",
+      "sourceHash": "fnv1a64:503067f7bb0e73cc",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for tree, flower, leaf, grass, village."
+              "text": "One more word for this chapter."
             }
           ]
         },

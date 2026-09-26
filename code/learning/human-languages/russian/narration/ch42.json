@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Open, Close, Drink, Question, Answer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2316856a76647228",
+  "sourceHash": "fnv1a64:b9a25d845f3088f4",
   "lessons": [
     {
       "id": "RU-C42-otkryvat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46fee9260ece3e69",
+      "sourceHash": "fnv1a64:f1fda870f28ec40d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for open, close, drink, question, answer."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d20319f972e8da7",
+      "sourceHash": "fnv1a64:d4149ea81c715cc9",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for open, close, drink, question, answer."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d20cb8a7bdf4484",
+      "sourceHash": "fnv1a64:e07bc0a4b0ddc642",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for open, close, drink, question, answer."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e4bce2b4b5fccae",
+      "sourceHash": "fnv1a64:35edc7715298bfa0",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for open, close, drink, question, answer."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60d2b5f24c46173e",
+      "sourceHash": "fnv1a64:16fde997b4f6eca2",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for open, close, drink, question, answer."
+              "text": "One more word for this chapter."
             }
           ]
         },

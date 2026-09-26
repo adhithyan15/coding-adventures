@@ -46,7 +46,7 @@ reviews_of: [RU-C58-cloud]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for rain, snow, wind, weather, world.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C59-WEATHER-01, RU-LEX-C58-SKY-04, RU-LEX-C58-SKY-05] -->

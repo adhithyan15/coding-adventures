@@ -46,7 +46,7 @@ reviews_of: [RU-C71-autumn]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for here, there, far, near, up above.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C72-WHERE1-01, RU-LEX-C71-SEASONS-04, RU-LEX-C71-SEASONS-05] -->

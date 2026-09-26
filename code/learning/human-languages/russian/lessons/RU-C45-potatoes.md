@@ -46,7 +46,7 @@ reviews_of: [RU-C44-berry]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for potatoes, tomato, onion, cucumber, carrot.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C45-VEG-01, RU-LEX-C44-FRUIT-04, RU-LEX-C44-FRUIT-05] -->

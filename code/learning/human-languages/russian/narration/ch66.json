@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Hot, Cold, Warm, Fast, Slow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:53f6c763c5497625",
+  "sourceHash": "fnv1a64:f33aa79facbae0ab",
   "lessons": [
     {
       "id": "RU-C66-hot",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1630316498039d0",
+      "sourceHash": "fnv1a64:a0bf34b5997669f2",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hot, cold, warm, fast, slow."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c544cf014c1b7710",
+      "sourceHash": "fnv1a64:b76037691abb4be4",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hot, cold, warm, fast, slow."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:052b0b7e6e93daa4",
+      "sourceHash": "fnv1a64:8a9aead93eb18c62",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hot, cold, warm, fast, slow."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7ff39731a0c97c0",
+      "sourceHash": "fnv1a64:263fc911b187217a",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hot, cold, warm, fast, slow."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:846929e03547789e",
+      "sourceHash": "fnv1a64:05855a886ee2f0d2",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hot, cold, warm, fast, slow."
+              "text": "One more word for this chapter."
             }
           ]
         },

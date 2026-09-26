@@ -46,7 +46,7 @@ reviews_of: [RU-C31-lip]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for back, tongue, lip, face, blood.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C31-BODY3-04, RU-LEX-C31-BODY3-02, RU-LEX-C31-BODY3-03] -->

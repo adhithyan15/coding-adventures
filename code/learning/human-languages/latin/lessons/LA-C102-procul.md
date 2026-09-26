@@ -45,7 +45,7 @@ reviews_of: [LA-C101-deinde]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for far, above, below, inside, outside.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C102-LOCUS-01, LA-LEX-C101-VERBA7-04, LA-LEX-C101-VERBA7-05] -->

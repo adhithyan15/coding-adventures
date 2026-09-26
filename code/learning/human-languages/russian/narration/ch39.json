@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Wash, Cook, Buy, Sell, Swim",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:68002588f52107e4",
+  "sourceHash": "fnv1a64:1be143b42fd578de",
   "lessons": [
     {
       "id": "RU-C39-myt",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73564fe95d68123b",
+      "sourceHash": "fnv1a64:4233eaea94cf5add",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for wash, cook, buy, sell, swim."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e96d30eb59a7df4b",
+      "sourceHash": "fnv1a64:58b6dfacc9d59fb3",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for wash, cook, buy, sell, swim."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0da182544bd411e6",
+      "sourceHash": "fnv1a64:93214e73fdc1e9d6",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for wash, cook, buy, sell, swim."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6ee443c8b869ff4",
+      "sourceHash": "fnv1a64:7ff1476efba43f9e",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for wash, cook, buy, sell, swim."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:214643fcf846276e",
+      "sourceHash": "fnv1a64:255754a20f37689e",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for wash, cook, buy, sell, swim."
+              "text": "One more word for this chapter."
             }
           ]
         },

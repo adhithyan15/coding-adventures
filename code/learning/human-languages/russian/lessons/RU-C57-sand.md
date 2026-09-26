@@ -46,7 +46,7 @@ reviews_of: [RU-C57-stone]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for stone, sand, shore, island, field.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C57-NATURE3-02, RU-LEX-C56-NATURE2-05, RU-LEX-C57-NATURE3-01] -->

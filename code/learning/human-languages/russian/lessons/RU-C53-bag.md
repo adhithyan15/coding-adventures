@@ -46,7 +46,7 @@ reviews_of: [RU-C52-pencil]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for bag, phone, umbrella, money, gift.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C53-THINGS-01, RU-LEX-C52-SCHOOL-04, RU-LEX-C52-SCHOOL-05] -->

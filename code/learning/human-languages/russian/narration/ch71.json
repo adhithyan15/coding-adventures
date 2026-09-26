@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Sunday and the Four Seasons",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f8e761e840d4c12f",
+  "sourceHash": "fnv1a64:d08a5a2fecb02beb",
   "lessons": [
     {
       "id": "RU-C71-sunday",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48911d3f8aa716b1",
+      "sourceHash": "fnv1a64:5dc7b89ec4ac355d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sunday and the four seasons."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c41afa858b706613",
+      "sourceHash": "fnv1a64:9d46973588107421",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sunday and the four seasons."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db631ea5244b3275",
+      "sourceHash": "fnv1a64:b74dfae7fde7e4cf",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sunday and the four seasons."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:114da54b2d65ceaf",
+      "sourceHash": "fnv1a64:331c26ec8332981b",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sunday and the four seasons."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b74c302cbd63fb66",
+      "sourceHash": "fnv1a64:f52da9594b7ab6ca",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sunday and the four seasons."
+              "text": "One more word for this chapter."
             }
           ]
         },

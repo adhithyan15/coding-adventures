@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Sky, Sun, Moon, Star, Cloud",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:49cf6a559ab3089e",
+  "sourceHash": "fnv1a64:e71aacb7b884af42",
   "lessons": [
     {
       "id": "RU-C58-sky",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:daba91a048d38554",
+      "sourceHash": "fnv1a64:54e33817f6543cbc",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sky, sun, moon, star, cloud."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:672ed8e32954b9dc",
+      "sourceHash": "fnv1a64:5d6180b2b6f6fa2a",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sky, sun, moon, star, cloud."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02b1241420c99dcc",
+      "sourceHash": "fnv1a64:5de7305abc2e89e8",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sky, sun, moon, star, cloud."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00589ea65f41737f",
+      "sourceHash": "fnv1a64:f66f15bce1bb2b37",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sky, sun, moon, star, cloud."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18ab5a6ee5f5cf35",
+      "sourceHash": "fnv1a64:584abe21244168ed",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sky, sun, moon, star, cloud."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -46,7 +46,7 @@ reviews_of: [RU-C33-thirst]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for joy, fear, anger, sadness, tiredness.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C34-FEEL-01, RU-LEX-C33-HEALTH2-04, RU-LEX-C33-HEALTH2-05] -->

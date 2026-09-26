@@ -46,7 +46,7 @@ reviews_of: [RU-C59-world]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for dog, cat, horse, cow, pig.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C60-ANIMALS1-01, RU-LEX-C59-WEATHER-04, RU-LEX-C59-WEATHER-05] -->

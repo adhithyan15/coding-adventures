@@ -46,7 +46,7 @@ reviews_of: [RU-C39-plavat]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for sleep, sit, stand, run, play.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C40-VERB3-01, RU-LEX-C39-VERB2-04, RU-LEX-C39-VERB2-05] -->

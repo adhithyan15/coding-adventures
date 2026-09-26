@@ -46,7 +46,7 @@ reviews_of: [RU-C76-forty]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for forty, fifty, ninety, a thousand, a country.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C76-NUM2-02, RU-LEX-C75-NUM1-05, RU-LEX-C76-NUM2-01] -->

@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "White, Black, Red, Blue, Green",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8988abdbb7cd8f39",
+  "sourceHash": "fnv1a64:bcc39a85232d4a61",
   "lessons": [
     {
       "id": "RU-C63-white",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcb3d1d6262e99ea",
+      "sourceHash": "fnv1a64:5ec73251ca04edc6",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for white, black, red, blue, green."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1721fd763466587e",
+      "sourceHash": "fnv1a64:18d3e873376c9730",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for white, black, red, blue, green."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae692224541e10d0",
+      "sourceHash": "fnv1a64:ee6ed98d1219fa18",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for white, black, red, blue, green."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09765f7c2e8aa7df",
+      "sourceHash": "fnv1a64:60bebc3d2dfffd5d",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for white, black, red, blue, green."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:838e8e463a6e410c",
+      "sourceHash": "fnv1a64:8e3e9f5243fdc204",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for white, black, red, blue, green."
+              "text": "One more word for this chapter."
             }
           ]
         },

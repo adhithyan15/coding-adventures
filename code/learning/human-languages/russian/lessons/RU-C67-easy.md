@@ -46,7 +46,7 @@ reviews_of: [RU-C66-slow]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for easy, hard, dear, cheap, badly.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C67-WORTH-01, RU-LEX-C66-TEMP-04, RU-LEX-C66-TEMP-05] -->

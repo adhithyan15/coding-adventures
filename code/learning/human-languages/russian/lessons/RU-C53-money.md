@@ -46,7 +46,7 @@ reviews_of: [RU-C53-umbrella]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for bag, phone, umbrella, money, gift.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C53-THINGS-04, RU-LEX-C53-THINGS-02, RU-LEX-C53-THINGS-03] -->

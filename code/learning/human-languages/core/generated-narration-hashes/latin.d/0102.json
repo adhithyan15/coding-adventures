@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 102,
-  "sourceHash": "fnv1a64:c92dce8f29259c1c",
+  "sourceHash": "fnv1a64:71be01e1f8cfb6df",
   "lessonIds": [
     "LA-C102-procul",
     "LA-C102-supra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch102.txt",
   "json": "latin/narration/ch102.json",
-  "textHash": "fnv1a64:c250cba80f6fcb6b",
-  "jsonHash": "fnv1a64:5dc5c5d5dd3f6f7e",
+  "textHash": "fnv1a64:c3c6e23bf5f51832",
+  "jsonHash": "fnv1a64:23493f040c7d6ff9",
   "findings": []
 }

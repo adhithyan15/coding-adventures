@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Yellow, Beautiful, Good, Bad, New",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bae3cf26adb18650",
+  "sourceHash": "fnv1a64:da7b24f4dfd0cbea",
   "lessons": [
     {
       "id": "RU-C64-yellow",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f46f70324c5134e5",
+      "sourceHash": "fnv1a64:9d4e1df734ace295",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for yellow, beautiful, good, bad, new."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b96ececf30487dbd",
+      "sourceHash": "fnv1a64:b8994180e7700183",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for yellow, beautiful, good, bad, new."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b0bb1a9f6e089f9",
+      "sourceHash": "fnv1a64:35654bb68eba5777",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for yellow, beautiful, good, bad, new."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f71f61dbb0918362",
+      "sourceHash": "fnv1a64:daa407ae9f34a6aa",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for yellow, beautiful, good, bad, new."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:395e2dd7ac0d5a02",
+      "sourceHash": "fnv1a64:60ecf0b15647311a",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for yellow, beautiful, good, bad, new."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -46,7 +46,7 @@ reviews_of: [RU-C37-work]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for work, sing, dance, laugh, cry.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C38-VERB1-01, RU-LEX-C37-PEOPLE-04, RU-LEX-C37-PEOPLE-05] -->

@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "Bag, Phone, Umbrella, Money, Gift",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c54b8b9408d3e40a",
+  "sourceHash": "fnv1a64:b1167628250128e2",
   "lessons": [
     {
       "id": "RU-C53-bag",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed2a306cd67eb14f",
+      "sourceHash": "fnv1a64:7d5ff153bd980e6f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bag, phone, umbrella, money, gift."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70f246a571b0cf4b",
+      "sourceHash": "fnv1a64:812564776d3e4dd3",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bag, phone, umbrella, money, gift."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9aaa878ab6cd4294",
+      "sourceHash": "fnv1a64:857895fa00c7b8e0",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bag, phone, umbrella, money, gift."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64b59f66f3bcd1fc",
+      "sourceHash": "fnv1a64:2bc3f040b9c23630",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bag, phone, umbrella, money, gift."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:850443db9f99c265",
+      "sourceHash": "fnv1a64:2fd14608969a1371",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bag, phone, umbrella, money, gift."
+              "text": "One more word for this chapter."
             }
           ]
         },

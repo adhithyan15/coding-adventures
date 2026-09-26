@@ -46,7 +46,7 @@ reviews_of: [RU-C46-lunch]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for breakfast, lunch, dinner.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C46-MEALS-03, RU-LEX-C46-MEALS-01, RU-LEX-C46-MEALS-02] -->

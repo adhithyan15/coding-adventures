@@ -45,7 +45,7 @@ reviews_of: [LA-C106-mille]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for city, town, forum, temple, shop.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C107-URBS-01, LA-LEX-C106-NUMERI-04, LA-LEX-C106-NUMERI-05] -->

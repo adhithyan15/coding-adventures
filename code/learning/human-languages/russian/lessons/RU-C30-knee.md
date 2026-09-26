@@ -46,7 +46,7 @@ reviews_of: [RU-C30-shoulder]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for hair, finger, neck, shoulder, knee.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C30-BODY2-05, RU-LEX-C30-BODY2-03, RU-LEX-C30-BODY2-04] -->

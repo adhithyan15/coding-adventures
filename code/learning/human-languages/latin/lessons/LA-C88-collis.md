@@ -45,7 +45,7 @@ reviews_of: [LA-C88-harena]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for stone, sand, hill, valley, cave.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C88-TERRA-03, LA-LEX-C88-TERRA-01, LA-LEX-C88-TERRA-02] -->

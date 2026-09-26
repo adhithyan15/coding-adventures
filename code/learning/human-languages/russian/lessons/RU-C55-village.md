@@ -46,7 +46,7 @@ reviews_of: [RU-C55-grass]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for tree, flower, leaf, grass, village.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C55-NATURE1-05, RU-LEX-C55-NATURE1-03, RU-LEX-C55-NATURE1-04] -->

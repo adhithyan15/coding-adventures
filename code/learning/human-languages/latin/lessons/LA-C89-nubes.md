@@ -45,7 +45,7 @@ reviews_of: [LA-C88-spelunca]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for cloud, rain, snow, plain, shore.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C89-CAELUM-01, LA-LEX-C88-TERRA-04, LA-LEX-C88-TERRA-05] -->

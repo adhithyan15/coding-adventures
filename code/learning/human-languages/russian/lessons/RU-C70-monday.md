@@ -46,7 +46,7 @@ reviews_of: [RU-C69-time]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for monday to saturday.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C70-WEEK1-01, RU-LEX-C69-TIME2-04, RU-LEX-C69-TIME2-05] -->

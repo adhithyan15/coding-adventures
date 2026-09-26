@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "Bird, Mouse, Wolf, Bear, Fox",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6a42cbaaa686e16d",
+  "sourceHash": "fnv1a64:99a90b24623e4e91",
   "lessons": [
     {
       "id": "RU-C61-bird",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41285ed8a6b32851",
+      "sourceHash": "fnv1a64:ff3bc80db68c4209",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bird, mouse, wolf, bear, fox."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e756edb042eb1429",
+      "sourceHash": "fnv1a64:2437ea7fcfe56349",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bird, mouse, wolf, bear, fox."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c927806fcae7ca53",
+      "sourceHash": "fnv1a64:5b7faf97cb7a7473",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bird, mouse, wolf, bear, fox."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3d63715ac8555cc",
+      "sourceHash": "fnv1a64:a16a0c191a56e13c",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bird, mouse, wolf, bear, fox."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:36007c1e6854f3d5",
+      "sourceHash": "fnv1a64:7274088d6402f11d",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bird, mouse, wolf, bear, fox."
+              "text": "One more word for this chapter."
             }
           ]
         },

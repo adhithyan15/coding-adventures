@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Stone, Sand, Shore, Island, Field",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:14839b90a97d1e09",
+  "sourceHash": "fnv1a64:f10ff6bec87fae2b",
   "lessons": [
     {
       "id": "RU-C57-stone",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8fca0a956d96437",
+      "sourceHash": "fnv1a64:5ce0cb5806aaaea7",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for stone, sand, shore, island, field."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cec2ac50392558f7",
+      "sourceHash": "fnv1a64:dea71f74b2cb1267",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for stone, sand, shore, island, field."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d7e4c0ba45ed2c0",
+      "sourceHash": "fnv1a64:e8e075d45be6433a",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for stone, sand, shore, island, field."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01e29a6e218a5788",
+      "sourceHash": "fnv1a64:8b7acd86cdee9f26",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for stone, sand, shore, island, field."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:654878b929f14e49",
+      "sourceHash": "fnv1a64:00c0f04c3abfcb53",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for stone, sand, shore, island, field."
+              "text": "One more word for this chapter."
             }
           ]
         },

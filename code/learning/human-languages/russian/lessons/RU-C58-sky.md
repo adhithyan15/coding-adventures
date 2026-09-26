@@ -46,7 +46,7 @@ reviews_of: [RU-C57-field]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for sky, sun, moon, star, cloud.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C58-SKY-01, RU-LEX-C57-NATURE3-04, RU-LEX-C57-NATURE3-05] -->

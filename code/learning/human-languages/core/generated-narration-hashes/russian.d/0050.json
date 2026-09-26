@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 50,
-  "sourceHash": "fnv1a64:38b41cdc8dc24280",
+  "sourceHash": "fnv1a64:7223d59074310d8f",
   "lessonIds": [
     "RU-C50-wall",
     "RU-C50-roof",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch50.txt",
   "json": "russian/narration/ch50.json",
-  "textHash": "fnv1a64:94d02e1c9c3d29a5",
-  "jsonHash": "fnv1a64:aee7ccb24ea27128",
+  "textHash": "fnv1a64:7ee3cea39652cf23",
+  "jsonHash": "fnv1a64:2f813a563637c15d",
   "findings": []
 }

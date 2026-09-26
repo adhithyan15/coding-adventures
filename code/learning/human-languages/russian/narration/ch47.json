@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Sugar, Honey, Rice, Mushrooms and a Glass",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0ad78496930510e1",
+  "sourceHash": "fnv1a64:482e3759bd145254",
   "lessons": [
     {
       "id": "RU-C47-sugar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f90cd7b8c0ded85",
+      "sourceHash": "fnv1a64:8b3b349558b89a67",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sugar, honey, rice, mushrooms and a glass."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:153d6538938dccd6",
+      "sourceHash": "fnv1a64:adf90bd6b7fc4368",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sugar, honey, rice, mushrooms and a glass."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c38b080151331de",
+      "sourceHash": "fnv1a64:bb0dc90ded0f3c86",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sugar, honey, rice, mushrooms and a glass."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53f444d16c39fe30",
+      "sourceHash": "fnv1a64:a9c84f4426a63aa2",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sugar, honey, rice, mushrooms and a glass."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2493a65d0e338cb",
+      "sourceHash": "fnv1a64:2cf97bb9bc8f7cdb",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sugar, honey, rice, mushrooms and a glass."
+              "text": "One more word for this chapter."
             }
           ]
         },

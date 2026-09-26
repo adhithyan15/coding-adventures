@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Joy, Fear, Anger, Sadness, Tiredness",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9084f1b13f9ece57",
+  "sourceHash": "fnv1a64:f92a15c2d8f04862",
   "lessons": [
     {
       "id": "RU-C34-joy",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:035869279608cb9b",
+      "sourceHash": "fnv1a64:9f3d37c1aa8a1acb",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for joy, fear, anger, sadness, tiredness."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f67700ae1325aad5",
+      "sourceHash": "fnv1a64:fbf8b090aba049bd",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for joy, fear, anger, sadness, tiredness."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ec8d0d9b85fb622",
+      "sourceHash": "fnv1a64:c8e65408e57eb31e",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for joy, fear, anger, sadness, tiredness."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05843965b8f01863",
+      "sourceHash": "fnv1a64:0e3a8e908a3d64d3",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for joy, fear, anger, sadness, tiredness."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a09c522a48e1bda",
+      "sourceHash": "fnv1a64:ce616f51684ad43e",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for joy, fear, anger, sadness, tiredness."
+              "text": "One more word for this chapter."
             }
           ]
         },

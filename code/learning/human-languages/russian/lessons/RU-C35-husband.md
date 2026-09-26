@@ -46,7 +46,7 @@ reviews_of: [RU-C35-grandmother]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for son, daughter, grandmother, husband, wife.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C35-FAMILY1-04, RU-LEX-C35-FAMILY1-02, RU-LEX-C35-FAMILY1-03] -->

@@ -45,7 +45,7 @@ reviews_of: [LA-C95-umidus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for hot, cold, dry, wet, sweet.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C95-CALIDUS-05, LA-LEX-C95-CALIDUS-03, LA-LEX-C95-CALIDUS-04] -->

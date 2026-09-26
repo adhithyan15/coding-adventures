@@ -45,7 +45,7 @@ reviews_of: [LA-C71-infans]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for husband, wife, children.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C71-FAMILIA2-05, LA-LEX-C71-FAMILIA2-03, LA-LEX-C71-FAMILIA2-04] -->

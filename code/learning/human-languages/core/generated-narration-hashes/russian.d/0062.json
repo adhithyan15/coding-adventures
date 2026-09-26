@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 62,
-  "sourceHash": "fnv1a64:b83363a4cf9fb667",
+  "sourceHash": "fnv1a64:e32eae76651e638c",
   "lessonIds": [
     "RU-C62-hare",
     "RU-C62-snake",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch62.txt",
   "json": "russian/narration/ch62.json",
-  "textHash": "fnv1a64:64dee93e8b08cf8d",
-  "jsonHash": "fnv1a64:84e946f3ebabae3a",
+  "textHash": "fnv1a64:dc3ce84d80841b03",
+  "jsonHash": "fnv1a64:069883ba4252310d",
   "findings": []
 }

@@ -46,7 +46,7 @@ reviews_of: [RU-C26-vtoroy-tretiy]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for head, hand, leg, belly, tooth.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C29-BODY1-01, RU-LEX-PERVYY-01, RU-LEX-VTOROY-01] -->

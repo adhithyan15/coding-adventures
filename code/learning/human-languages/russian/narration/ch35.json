@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Son, Daughter, Grandmother, Husband, Wife",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a913b3283db1626a",
+  "sourceHash": "fnv1a64:8e514142428c0ba3",
   "lessons": [
     {
       "id": "RU-C35-son",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8cfa8c0c78565a0e",
+      "sourceHash": "fnv1a64:9d50bfda727db90e",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for son, daughter, grandmother, husband, wife."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c162e0fee8ed513",
+      "sourceHash": "fnv1a64:f0226ed9a6f2277f",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for son, daughter, grandmother, husband, wife."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d7b0dfd29ddff35",
+      "sourceHash": "fnv1a64:59c9227e0758809f",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for son, daughter, grandmother, husband, wife."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b37270bc9b9f8587",
+      "sourceHash": "fnv1a64:14895d35c49c018b",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for son, daughter, grandmother, husband, wife."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0238f4dc810daf1e",
+      "sourceHash": "fnv1a64:d57b38e6c6f665f4",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for son, daughter, grandmother, husband, wife."
+              "text": "One more word for this chapter."
             }
           ]
         },

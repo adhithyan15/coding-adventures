@@ -46,7 +46,7 @@ reviews_of: [RU-C34-tiredness]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for son, daughter, grandmother, husband, wife.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C35-FAMILY1-01, RU-LEX-C34-FEEL-04, RU-LEX-C34-FEEL-05] -->

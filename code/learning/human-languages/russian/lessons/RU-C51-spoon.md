@@ -46,7 +46,7 @@ reviews_of: [RU-C51-plate]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for cup, plate, spoon, knife, fork.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C51-TABLE-03, RU-LEX-C51-TABLE-01, RU-LEX-C51-TABLE-02] -->

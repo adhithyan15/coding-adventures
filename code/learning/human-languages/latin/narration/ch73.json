@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "Girl, Old Man, Queen, Sailor, Poet",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a2e3bc3fcde33f99",
+  "sourceHash": "fnv1a64:c78367f09b7ee6af",
   "lessons": [
     {
       "id": "LA-C73-puella",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dff7d44f6f37c06d",
+      "sourceHash": "fnv1a64:a69e520dea397e8d",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for girl, old man, queen, sailor, poet."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acbdb40c69d7398c",
+      "sourceHash": "fnv1a64:53e19c4c35fd38c8",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for girl, old man, queen, sailor, poet."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6de612f9fb5fa81e",
+      "sourceHash": "fnv1a64:9e05c5fe1bf8ba3e",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for girl, old man, queen, sailor, poet."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b0cef88f55bc0ef",
+      "sourceHash": "fnv1a64:b04f7577d44d37bb",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for girl, old man, queen, sailor, poet."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0521d99ad843eed1",
+      "sourceHash": "fnv1a64:91b46b370e5149a9",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for girl, old man, queen, sailor, poet."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -46,7 +46,7 @@ reviews_of: [RU-C77-shop]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for city, street, shop, market, school.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C77-TOWN1-04, RU-LEX-C77-TOWN1-02, RU-LEX-C77-TOWN1-03] -->

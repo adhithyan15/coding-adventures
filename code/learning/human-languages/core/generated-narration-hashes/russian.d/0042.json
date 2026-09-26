@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 42,
-  "sourceHash": "fnv1a64:2316856a76647228",
+  "sourceHash": "fnv1a64:b9a25d845f3088f4",
   "lessonIds": [
     "RU-C42-otkryvat",
     "RU-C42-zakryvat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch42.txt",
   "json": "russian/narration/ch42.json",
-  "textHash": "fnv1a64:54f0c0bb81e5650a",
-  "jsonHash": "fnv1a64:62a8abeb3240b81c",
+  "textHash": "fnv1a64:4c1bbece19aa81b1",
+  "jsonHash": "fnv1a64:fbdb0ade51658f92",
   "findings": []
 }

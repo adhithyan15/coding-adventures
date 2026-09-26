@@ -46,7 +46,7 @@ reviews_of: [RU-C39-pokupat]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for wash, cook, buy, sell, swim.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C39-VERB2-04, RU-LEX-C39-VERB2-02, RU-LEX-C39-VERB2-03] -->

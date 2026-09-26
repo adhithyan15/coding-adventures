@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 43,
-  "sourceHash": "fnv1a64:1570ad6e49cb5c3b",
+  "sourceHash": "fnv1a64:b7039bf1e1185a0f",
   "lessonIds": [
     "RU-C43-meat",
     "RU-C43-fish",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch43.txt",
   "json": "russian/narration/ch43.json",
-  "textHash": "fnv1a64:e33e81afc9a9d5f3",
-  "jsonHash": "fnv1a64:9f0a9855ddda7689",
+  "textHash": "fnv1a64:129b90ab317063e0",
+  "jsonHash": "fnv1a64:07cb6460c5e200cf",
   "findings": []
 }

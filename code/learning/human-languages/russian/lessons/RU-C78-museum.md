@@ -46,7 +46,7 @@ reviews_of: [RU-C78-station]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for bank, station, museum, theatre, restaurant.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C78-TOWN2-03, RU-LEX-C78-TOWN2-01, RU-LEX-C78-TOWN2-02] -->

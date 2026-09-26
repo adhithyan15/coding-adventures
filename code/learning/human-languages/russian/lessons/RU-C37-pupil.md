@@ -46,7 +46,7 @@ reviews_of: [RU-C37-teacher]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for neighbour, guest, teacher, pupil, work.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C37-PEOPLE-04, RU-LEX-C37-PEOPLE-02, RU-LEX-C37-PEOPLE-03] -->

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 67,
-  "sourceHash": "fnv1a64:64beba7e4c9a27c1",
+  "sourceHash": "fnv1a64:7820e3e5c6675456",
   "lessonIds": [
     "RU-C67-easy",
     "RU-C67-hard",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch67.txt",
   "json": "russian/narration/ch67.json",
-  "textHash": "fnv1a64:3db105e499d675ba",
-  "jsonHash": "fnv1a64:79a6f07e9ae9b385",
+  "textHash": "fnv1a64:c367bab7f13045a9",
+  "jsonHash": "fnv1a64:87626d2181eb4368",
   "findings": []
 }

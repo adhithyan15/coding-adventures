@@ -46,7 +46,7 @@ reviews_of: [RU-C74-sometimes]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for always, sometimes, never, now, later.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C74-WHEN-03, RU-LEX-C74-WHEN-01, RU-LEX-C74-WHEN-02] -->

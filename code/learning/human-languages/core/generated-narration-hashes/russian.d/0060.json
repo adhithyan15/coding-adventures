@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 60,
-  "sourceHash": "fnv1a64:6d04f436526bd3ae",
+  "sourceHash": "fnv1a64:b032290f1d9f56e9",
   "lessonIds": [
     "RU-C60-dog",
     "RU-C60-cat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch60.txt",
   "json": "russian/narration/ch60.json",
-  "textHash": "fnv1a64:28a0d5f502df4c3f",
-  "jsonHash": "fnv1a64:57c937cd31941b20",
+  "textHash": "fnv1a64:783b30eeab9275a6",
+  "jsonHash": "fnv1a64:c2260a7b38aafd4a",
   "findings": []
 }

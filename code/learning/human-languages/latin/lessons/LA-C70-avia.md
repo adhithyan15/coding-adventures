@@ -45,7 +45,7 @@ reviews_of: [LA-C70-avus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for son, daughter, grandparents.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C70-FAMILIA1-04, LA-LEX-C70-FAMILIA1-02, LA-LEX-C70-FAMILIA1-03] -->

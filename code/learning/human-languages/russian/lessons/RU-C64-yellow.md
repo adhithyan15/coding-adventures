@@ -46,7 +46,7 @@ reviews_of: [RU-C63-green]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for yellow, beautiful, good, bad, new.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C64-COLOUR2-01, RU-LEX-C63-COLOUR1-04, RU-LEX-C63-COLOUR1-05] -->

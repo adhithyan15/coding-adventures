@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "Easy, Hard, Dear, Cheap, Badly",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:64beba7e4c9a27c1",
+  "sourceHash": "fnv1a64:7820e3e5c6675456",
   "lessons": [
     {
       "id": "RU-C67-easy",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ecdfa4891ce6dc4",
+      "sourceHash": "fnv1a64:fa498ad28dcb85d4",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for easy, hard, dear, cheap, badly."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ace604f831b7ff9",
+      "sourceHash": "fnv1a64:6bdf908719a86eb7",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for easy, hard, dear, cheap, badly."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ec5c0639e3da11f",
+      "sourceHash": "fnv1a64:ef88f09ca2488cfb",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for easy, hard, dear, cheap, badly."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00d5fc878964ce9b",
+      "sourceHash": "fnv1a64:f21d605642c6986f",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for easy, hard, dear, cheap, badly."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bcdb1cad1372e05",
+      "sourceHash": "fnv1a64:7296906a84613e6d",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for easy, hard, dear, cheap, badly."
+              "text": "One more word for this chapter."
             }
           ]
         },

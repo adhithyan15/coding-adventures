@@ -46,7 +46,7 @@ reviews_of: [RU-C80-hotel]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for hotel, pharmacy, church, park, taxi.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C80-PLACES-02, RU-LEX-C79-TRAVEL-05, RU-LEX-C80-PLACES-01] -->

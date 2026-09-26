@@ -45,7 +45,7 @@ reviews_of: [LA-C101-fugio]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for get up, wander, run away, at once, then.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C101-VERBA7-04, LA-LEX-C101-VERBA7-02, LA-LEX-C101-VERBA7-03] -->

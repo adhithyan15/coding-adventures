@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "Below, Left, Right, A Lot, A Little",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fd0722e7604de10a",
+  "sourceHash": "fnv1a64:ad381ed03bae3af0",
   "lessons": [
     {
       "id": "RU-C73-below",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f74f5a17ba9d997e",
+      "sourceHash": "fnv1a64:d198468278824506",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for below, left, right, a lot, a little."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b83fa091d3271306",
+      "sourceHash": "fnv1a64:392d6be8d7cba06e",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for below, left, right, a lot, a little."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4d39d1e679407df",
+      "sourceHash": "fnv1a64:d7584a2c8be31015",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for below, left, right, a lot, a little."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ac2c47897f0c546",
+      "sourceHash": "fnv1a64:0846476d29af0d44",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for below, left, right, a lot, a little."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3b20c8c1ccf1a6a",
+      "sourceHash": "fnv1a64:3460ee3fa2111946",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for below, left, right, a lot, a little."
+              "text": "One more word for this chapter."
             }
           ]
         },

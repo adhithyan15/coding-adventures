@@ -45,7 +45,7 @@ reviews_of: [LA-C66-unguis]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for chest, leg, cheek, nail, healthy.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C66-CORPUS4-05, LA-LEX-C66-CORPUS4-03, LA-LEX-C66-CORPUS4-04] -->

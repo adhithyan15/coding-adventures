@@ -46,7 +46,7 @@ reviews_of: [RU-C29-tooth]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for hair, finger, neck, shoulder, knee.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C30-BODY2-01, RU-LEX-C29-BODY1-04, RU-LEX-C29-BODY1-05] -->

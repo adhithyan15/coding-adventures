@@ -46,7 +46,7 @@ reviews_of: [RU-C32-doctor]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for pain, illness, medicine, doctor.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C32-HEALTH1-05, RU-LEX-C32-HEALTH1-03, RU-LEX-C32-HEALTH1-04] -->

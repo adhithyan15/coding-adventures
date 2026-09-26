@@ -46,7 +46,7 @@ reviews_of: [RU-C78-restaurant]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for bus, train, plane, car, bridge.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C79-TRAVEL-01, RU-LEX-C78-TOWN2-04, RU-LEX-C78-TOWN2-05] -->

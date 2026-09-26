@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 53,
-  "sourceHash": "fnv1a64:c54b8b9408d3e40a",
+  "sourceHash": "fnv1a64:b1167628250128e2",
   "lessonIds": [
     "RU-C53-bag",
     "RU-C53-phone",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch53.txt",
   "json": "russian/narration/ch53.json",
-  "textHash": "fnv1a64:4e417f1dfe35a420",
-  "jsonHash": "fnv1a64:4bc5b9a40cc74bda",
+  "textHash": "fnv1a64:7ec38e9d93ce05f5",
+  "jsonHash": "fnv1a64:e17bad44a1aa7361",
   "findings": []
 }

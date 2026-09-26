@@ -46,7 +46,7 @@ reviews_of: [RU-C33-temperature]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for fever, cough, rest, hunger, thirst.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C33-HEALTH2-02, RU-LEX-C32-HEALTH1-05, RU-LEX-C33-HEALTH2-01] -->

@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Day, Week, Month, Year, Evening",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a9b81de832237460",
+  "sourceHash": "fnv1a64:2e47eb1eb4e06463",
   "lessons": [
     {
       "id": "RU-C68-day",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c530154d4093268c",
+      "sourceHash": "fnv1a64:a03041b043bfbc62",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for day, week, month, year, evening."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64cb8583e3582363",
+      "sourceHash": "fnv1a64:9de099482991d6ab",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for day, week, month, year, evening."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f61561c16b87c3d",
+      "sourceHash": "fnv1a64:8d03d07bfd23a7db",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for day, week, month, year, evening."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64aa9a2a3b1be3f8",
+      "sourceHash": "fnv1a64:b6098d7e76824216",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for day, week, month, year, evening."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61bbc4b848f37158",
+      "sourceHash": "fnv1a64:0c9462715765a882",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for day, week, month, year, evening."
+              "text": "One more word for this chapter."
             }
           ]
         },

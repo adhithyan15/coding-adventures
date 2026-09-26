@@ -4,7 +4,7 @@
   "chapter": 89,
   "title": "Cloud, Rain, Snow, Plain, Shore",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f19b544219cf1407",
+  "sourceHash": "fnv1a64:07173e367a0860af",
   "lessons": [
     {
       "id": "LA-C89-nubes",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d60b1916465e34fd",
+      "sourceHash": "fnv1a64:91ed9adc716a93b5",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cloud, rain, snow, plain, shore."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:339eafbde470b46f",
+      "sourceHash": "fnv1a64:6600f5c759a16395",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cloud, rain, snow, plain, shore."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95be366a8a870b2f",
+      "sourceHash": "fnv1a64:5c825d11aca62e75",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cloud, rain, snow, plain, shore."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:751b8c8b3aa26d6c",
+      "sourceHash": "fnv1a64:3b0bbf23e8294df4",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cloud, rain, snow, plain, shore."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:148cb78d7046ffc4",
+      "sourceHash": "fnv1a64:448adb5ac02a35e8",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for cloud, rain, snow, plain, shore."
+              "text": "One more word for this chapter."
             }
           ]
         },

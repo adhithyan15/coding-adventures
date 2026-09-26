@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 93,
-  "sourceHash": "fnv1a64:c88f8dbc5acbd111",
+  "sourceHash": "fnv1a64:74aaa1ab8b0b8901",
   "lessonIds": [
     "LA-C93-magnus",
     "LA-C93-parvus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch93.txt",
   "json": "latin/narration/ch93.json",
-  "textHash": "fnv1a64:e522e8e6ef1437ac",
-  "jsonHash": "fnv1a64:99581b569367dd81",
+  "textHash": "fnv1a64:d0f6724f336323ba",
+  "jsonHash": "fnv1a64:5fb4e108f5a2eac7",
   "findings": []
 }

@@ -46,7 +46,7 @@ reviews_of: [RU-C42-zakryvat]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for open, close, drink, question, answer.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C42-VERB5-03, RU-LEX-C42-VERB5-01, RU-LEX-C42-VERB5-02] -->

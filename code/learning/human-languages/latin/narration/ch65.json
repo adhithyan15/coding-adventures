@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Hair, Belly, Back, Forehead, Beard",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:47ddd1168c47d92d",
+  "sourceHash": "fnv1a64:5cdfc66c32fe576e",
   "lessons": [
     {
       "id": "LA-C65-capillus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7c2c79e0ce27a67",
+      "sourceHash": "fnv1a64:38ffc791f6c1b97f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hair, belly, back, forehead, beard."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac0023d004510365",
+      "sourceHash": "fnv1a64:900d30ab73cd6641",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hair, belly, back, forehead, beard."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a3bc6b42073f0d3",
+      "sourceHash": "fnv1a64:38716bea818c2243",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hair, belly, back, forehead, beard."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78a022cb5f7fe48b",
+      "sourceHash": "fnv1a64:08156627638f84c3",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hair, belly, back, forehead, beard."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9a720a32aa3af41",
+      "sourceHash": "fnv1a64:64ea9699b1446c11",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hair, belly, back, forehead, beard."
+              "text": "One more word for this chapter."
             }
           ]
         },

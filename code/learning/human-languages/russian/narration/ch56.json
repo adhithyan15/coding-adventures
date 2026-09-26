@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "Mountain, Forest, River, Lake, Sea",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5ee342fab849e9fe",
+  "sourceHash": "fnv1a64:f163c54ceb4c5100",
   "lessons": [
     {
       "id": "RU-C56-mountain",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f7d9df14ea7c108",
+      "sourceHash": "fnv1a64:018b2664c1200c92",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for mountain, forest, river, lake, sea."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3deab2156c4b9ecf",
+      "sourceHash": "fnv1a64:64dbd8f2df8d0fa9",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for mountain, forest, river, lake, sea."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e25ecb8e60a30afb",
+      "sourceHash": "fnv1a64:f680a113acf2da5b",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for mountain, forest, river, lake, sea."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5883a9090682efab",
+      "sourceHash": "fnv1a64:50e58977acef65e1",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for mountain, forest, river, lake, sea."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eaf9d5b724aa078e",
+      "sourceHash": "fnv1a64:a134e25a39fbe06e",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for mountain, forest, river, lake, sea."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -46,7 +46,7 @@ reviews_of: [RU-C64-new]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for big, small, old, long, short.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C65-SIZE-01, RU-LEX-C64-COLOUR2-04, RU-LEX-C64-COLOUR2-05] -->

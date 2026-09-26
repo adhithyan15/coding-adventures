@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Hare, Snake, Hen, Duck, Goat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b83363a4cf9fb667",
+  "sourceHash": "fnv1a64:e32eae76651e638c",
   "lessons": [
     {
       "id": "RU-C62-hare",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c145632067ef942",
+      "sourceHash": "fnv1a64:7e56aff28ac1a7b2",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hare, snake, hen, duck, goat."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bdf9486b0aedd88",
+      "sourceHash": "fnv1a64:709745c5a6a7c9bc",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hare, snake, hen, duck, goat."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:783ee934cded0888",
+      "sourceHash": "fnv1a64:d5e0c8b4c0ddcfa0",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hare, snake, hen, duck, goat."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19e69410aa9cf3cf",
+      "sourceHash": "fnv1a64:9dec2bb917dcb0fb",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hare, snake, hen, duck, goat."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8360d4e266a5d194",
+      "sourceHash": "fnv1a64:de2984cb5e3ef5a0",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for hare, snake, hen, duck, goat."
+              "text": "One more word for this chapter."
             }
           ]
         },

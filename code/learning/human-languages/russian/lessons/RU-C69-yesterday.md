@@ -46,7 +46,7 @@ reviews_of: [RU-C69-today]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for today, yesterday, hour, minute, time.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C69-TIME2-02, RU-LEX-C68-TIME1-05, RU-LEX-C69-TIME2-01] -->

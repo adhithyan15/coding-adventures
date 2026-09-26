@@ -46,7 +46,7 @@ reviews_of: [RU-C72-near]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for here, there, far, near, up above.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C72-WHERE1-05, RU-LEX-C72-WHERE1-03, RU-LEX-C72-WHERE1-04] -->

@@ -46,7 +46,7 @@ reviews_of: [RU-C52-pen]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for book, pen, paper, notebook, pencil.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-C52-SCHOOL-03, RU-LEX-C52-SCHOOL-01, RU-LEX-C52-SCHOOL-02] -->

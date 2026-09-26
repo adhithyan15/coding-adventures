@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "House, Room, Kitchen, Window, Door",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:14a089e9fbb9eafd",
+  "sourceHash": "fnv1a64:c05bb0ed7ae58d80",
   "lessons": [
     {
       "id": "RU-C48-house",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c108b5fac54249ef",
+      "sourceHash": "fnv1a64:53f186d6524ed417",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for house, room, kitchen, window, door."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a968146c63a3833a",
+      "sourceHash": "fnv1a64:125ed49f749a52d2",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for house, room, kitchen, window, door."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25839c754c31c405",
+      "sourceHash": "fnv1a64:eb971614ad774ef5",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for house, room, kitchen, window, door."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff7d14fea1c33676",
+      "sourceHash": "fnv1a64:d409e3359aaa7b1e",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for house, room, kitchen, window, door."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:306698afb8f632c9",
+      "sourceHash": "fnv1a64:900d315754589af1",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for house, room, kitchen, window, door."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Pain, Illness, Medicine, Doctor",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8e0a4cc4de3a13f3",
+  "sourceHash": "fnv1a64:892bbeb45f328dd8",
   "lessons": [
     {
       "id": "RU-C32-pain",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef50a1d28f0a7256",
+      "sourceHash": "fnv1a64:1cf7fcd328794dd6",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for pain, illness, medicine, doctor."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:239132a11dcf2ba4",
+      "sourceHash": "fnv1a64:f06ab3d7bc8b39cc",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for pain, illness, medicine, doctor."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91849cbddb6b07c0",
+      "sourceHash": "fnv1a64:1dfaed38225cfc90",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for pain, illness, medicine, doctor."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb2a2d7de832a640",
+      "sourceHash": "fnv1a64:a8ab016de0fdbcd2",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for pain, illness, medicine, doctor."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d54bf72fe3325a1",
+      "sourceHash": "fnv1a64:c18f98faaafb22b3",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for pain, illness, medicine, doctor."
+              "text": "One more word for this chapter."
             }
           ]
         },

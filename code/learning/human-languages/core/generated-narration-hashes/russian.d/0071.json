@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 71,
-  "sourceHash": "fnv1a64:f8e761e840d4c12f",
+  "sourceHash": "fnv1a64:d08a5a2fecb02beb",
   "lessonIds": [
     "RU-C71-sunday",
     "RU-C71-winter",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch71.txt",
   "json": "russian/narration/ch71.json",
-  "textHash": "fnv1a64:3d2317f3d717800f",
-  "jsonHash": "fnv1a64:f26fffe3210cb664",
+  "textHash": "fnv1a64:c7e3e277abff3d0e",
+  "jsonHash": "fnv1a64:551b53ac1d42a4c5",
   "findings": []
 }
