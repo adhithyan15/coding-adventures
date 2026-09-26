@@ -14277,7 +14277,8 @@ entering the established-language denominator.
 
 The closed 122-case, 22-error language-neutral contract now has complete
 package-native consumers in all fifteen established lanes: Rust, Python,
-Go, Dart, Java, TypeScript, Kotlin, C#, Ruby, F#, Swift, Haskell, Perl, and Elixir. Every consumer executes all
+Go, Dart, Java, TypeScript, Kotlin, C#, Ruby, F#, Swift, Haskell, Perl, Elixir,
+and Lua. Every consumer executes all
 46 referenced DER TLV framing cases rather than treating delegated rows as
 automatic success. The refined
 corpus adds unsigned-64 OID boundaries, implicit-OID failures, exact explicit
@@ -14324,11 +14325,12 @@ capability-schema validation, and the real Go build-tool two-package
 dependency plan pass. Elixir passes the complete 122-case suite and all 46
 delegated framing cases plus native sealed-wrapper, exact-owner, shared-budget,
 transactionality, exact-u64, OID equality, tag, finite-limit, and redaction
-checks at 97.89 percent line coverage; formatting, warnings-as-errors compilation,
+checks at 96.89 percent line coverage; formatting, warnings-as-errors compilation,
 both build fronts, Windows-front validation, capability-schema validation, and
 the real Go build-tool two-package dependency plan pass. Its post-review
-hardening routes delegated rows through the typed layer, authenticates opaque
-and typed wrappers against ETF editing, shares replay-safe atomics across stale
+hardening routes delegated rows through the typed layer, keeps opaque and typed
+payloads behind private immutable handle processes, keeps mutable budgets and
+cursor progress in a private decoder state process across stale
 decoder/cursor aliases, admits the exact first combined OID u64-plus-80
 boundary, and keeps OID work linear. Lua passes the complete 122-case suite and
 all 46 delegated framing cases plus private-registry, owner, transactional
@@ -14346,10 +14348,10 @@ retain their originating decoder so a same-limit foreign decoder cannot reset
 the shared total-element budget. Perl keeps wrapper state and construction
 helpers lexical, rejects non-u32 schema tags and host-oversized limits before
 numeric conversion, and retains exact unsigned arithmetic through Math::BigInt.
-Elixir uses private lexical-function identities for immutable sealed decoder,
-element, and cursor values, threads exact-owner state without Agents or ETS,
-and rejects non-u32 tags plus non-finite or host-oversized limits before binary
-arithmetic.
+Elixir uses private library-process identities for immutable decoder, element,
+cursor, and typed-value handles, keeps canonical limits, shared budgets, and
+cursor progress behind a restricted decoder state process, and rejects non-u32
+tags plus non-finite or host-oversized limits before binary arithmetic.
 
 A bounded pre-next-lane audit closed the neutral-corpus holes before multiplying
 implementations. The prose now keeps allocation and ownership strategy

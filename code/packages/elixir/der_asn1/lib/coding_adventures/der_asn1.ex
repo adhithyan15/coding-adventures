@@ -2,9 +2,9 @@ defmodule CodingAdventures.DerAsn1 do
   @moduledoc """
   Bounded, payload-blind typed ASN.1 DER decoding above `CodingAdventures.DerTlv`.
 
-  Decoder, element, cursor, and typed values are authenticated opaque closures.
-  Shared atomics make decoder budgets and cursor progress replay-safe while
-  normal BEAM value sharing keeps parsing free of ambient authority.
+  Decoder, element, cursor, and typed values are authenticated opaque handles.
+  A private state process makes decoder budgets and cursor progress replay-safe;
+  handles never expose mutable state, even through BEAM closure introspection.
   """
 
   import Bitwise
@@ -23,13 +23,6 @@ defmodule CodingAdventures.DerAsn1 do
     max_total_elements: 16_384,
     max_oid_arcs: 128
   }
-
-  @on_load :initialize_seal
-
-  defp initialize_seal do
-    :persistent_term.put({__MODULE__, :seal_secret}, {make_ref(), make_ref()})
-    :ok
-  end
 
   defmodule Decoder do
     @moduledoc "Opaque immutable decoder state produced by `new_decoder/1`."
@@ -77,13 +70,13 @@ defmodule CodingAdventures.DerAsn1 do
 
   def new_decoder(limits \\ %{}) do
     with {:ok, normalized} <- normalize_limits(limits) do
-      budget = :atomics.new(1, signed: false)
-      {:ok, sealed_fun(:decoder, %{owner: make_ref(), limits: normalized, budget: budget})}
+      state = spawn(fn -> state_loop(normalized, 0, MapSet.new(), %{}) end)
+      {:ok, sealed_fun(:decoder, %{owner: make_ref(), limits: normalized, state: state})}
     end
   end
 
   def decoder_limits(decoder), do: decoder_data!(decoder).limits
-  def elements_read(decoder), do: decoder_data!(decoder).budget |> :atomics.get(1)
+  def elements_read(decoder), do: decoder_data!(decoder).state |> state_call(:elements_read)
 
   def decode_exact(decoder, input) when is_binary(input) do
     data = decoder_data!(decoder)
@@ -93,20 +86,21 @@ defmodule CodingAdventures.DerAsn1 do
         {:error, error("depth-limit-exceeded", 0)}
 
       true ->
-        with :ok <- reserve_budget(data, 0) do
+        with {:ok, reservation} <- reserve_budget(data, 0) do
           cond do
             byte_size(input) > data.limits.der.max_input_len ->
-              release_budget(data)
+              release_budget(data, reservation)
               {:error, error("framing", 0, "input-limit-exceeded")}
 
             true ->
               case DerTlv.decode_exact(:binary.copy(input), data.limits.der) do
                 {:ok, framed} ->
-                  element = wrap_element(framed, 0, data.owner, data.budget)
+                  commit_budget(data, reservation)
+                  element = wrap_element(framed, 0, data.owner, data.state)
                   {:ok, element, decoder}
 
                 {:error, failure} ->
-                  release_budget(data)
+                  release_budget(data, reservation)
                   {:error, framing(failure)}
               end
           end
@@ -131,21 +125,23 @@ defmodule CodingAdventures.DerAsn1 do
          {:ok, decoder_data, element_data} <- owned(decoder, element),
          :ok <- expect_tag(element_data, "context-specific", true, tag_number),
          :ok <- check_child_depth(element_data.depth, decoder_data.limits),
-         :ok <- reserve_budget(decoder_data, element_data.value_offset) do
+         {:ok, reservation} <- reserve_budget(decoder_data, element_data.value_offset) do
       case DerTlv.decode_exact(element_data.value, decoder_data.limits.der) do
         {:ok, framed} ->
+          commit_budget(decoder_data, reservation)
+
           child =
             wrap_element(
               framed,
               element_data.depth + 1,
               decoder_data.owner,
-              decoder_data.budget
+              decoder_data.state
             )
 
           {:ok, child, decoder}
 
         {:error, failure} ->
-          release_budget(decoder_data)
+          release_budget(decoder_data, reservation)
           {:error, framing(failure)}
       end
     end
@@ -153,8 +149,7 @@ defmodule CodingAdventures.DerAsn1 do
 
   def cursor_remaining(cursor) do
     data = cursor_data!(cursor)
-    offset = :atomics.get(data.progress, 1)
-    binary_part(data.input, offset, byte_size(data.input) - offset)
+    state_call(data.state, {:cursor_remaining, data.cursor})
   end
 
   def cursor_finish(cursor) do
@@ -167,51 +162,26 @@ defmodule CodingAdventures.DerAsn1 do
     cursor_data = cursor_data!(cursor)
     decoder_data = decoder_data!(decoder)
 
-    with_cursor_lock(cursor_data, fn ->
-      offset = :atomics.get(cursor_data.progress, 1)
-      lower_count = :atomics.get(cursor_data.progress, 2)
+    cond do
+      decoder_data.owner != cursor_data.owner or decoder_data.state != cursor_data.state ->
+        {:error, error("decoder-limit-mismatch", 0), cursor, decoder}
 
-      cond do
-        offset == byte_size(cursor_data.input) ->
-          {:end, cursor}
+      true ->
+        case state_call(cursor_data.state, {:cursor_read, cursor_data.cursor}) do
+          :end ->
+            {:end, cursor}
 
-        decoder_data.owner != cursor_data.owner or
-            decoder_data.budget != cursor_data.budget ->
-          {:error, error("decoder-limit-mismatch", 0), cursor, decoder}
+          :limit ->
+            {:error, error("element-limit-exceeded", 0), cursor, decoder}
 
-        true ->
-          with :ok <- reserve_budget(decoder_data, 0) do
-            framing = %DerTlv.Cursor{
-              input: cursor_data.input,
-              limits: cursor_data.limits,
-              offset: offset,
-              elements_read: lower_count
-            }
+          {:framing, failure} ->
+            {:error, framing(failure), cursor, decoder}
 
-            case DerTlv.read(framing) do
-              {:ok, framed, next_framing} ->
-                :atomics.put(cursor_data.progress, 1, next_framing.offset)
-                :atomics.put(cursor_data.progress, 2, next_framing.elements_read)
-
-                child =
-                  wrap_element(
-                    framed,
-                    cursor_data.depth,
-                    cursor_data.owner,
-                    cursor_data.budget
-                  )
-
-                {:ok, child, cursor, decoder}
-
-              {:error, failure, _same} ->
-                release_budget(decoder_data)
-                {:error, framing(failure), cursor, decoder}
-            end
-          else
-            {:error, failure} -> {:error, failure, cursor, decoder}
-          end
-      end
-    end)
+          {:ok, framed, depth} ->
+            child = wrap_element(framed, depth, cursor_data.owner, cursor_data.state)
+            {:ok, child, cursor, decoder}
+        end
+    end
   end
 
   def decode_boolean(element) do
@@ -350,16 +320,20 @@ defmodule CodingAdventures.DerAsn1 do
          :ok <- expect_tag(element_data, tag_class, constructed, number),
          :ok <- check_child_depth(element_data.depth, decoder_data.limits) do
       {:ok, _framing} = DerTlv.new_cursor(element_data.value, decoder_data.limits.der)
-      progress = :atomics.new(3, signed: false)
+
+      cursor =
+        state_call(decoder_data.state, {
+          :new_cursor,
+          element_data.value,
+          decoder_data.limits.der,
+          element_data.depth + 1
+        })
 
       {:ok,
        sealed_fun(:cursor, %{
          owner: decoder_data.owner,
-         budget: decoder_data.budget,
-         input: element_data.value,
-         limits: decoder_data.limits.der,
-         progress: progress,
-         depth: element_data.depth + 1
+         state: decoder_data.state,
+         cursor: cursor
        })}
     end
   end
@@ -451,7 +425,7 @@ defmodule CodingAdventures.DerAsn1 do
     decoder_data = decoder_data!(decoder)
     element_data = element_data!(element)
 
-    if decoder_data.owner == element_data.owner and decoder_data.budget == element_data.budget,
+    if decoder_data.owner == element_data.owner and decoder_data.state == element_data.state,
       do: {:ok, decoder_data, element_data},
       else: {:error, %ArgumentError{message: "element belongs to another decoder"}}
   end
@@ -471,21 +445,14 @@ defmodule CodingAdventures.DerAsn1 do
   end
 
   defp reserve_budget(data, offset) do
-    current = :atomics.get(data.budget, 1)
-
-    cond do
-      current >= data.limits.max_total_elements ->
-        {:error, error("element-limit-exceeded", offset)}
-
-      :atomics.compare_exchange(data.budget, 1, current, current + 1) == :ok ->
-        :ok
-
-      true ->
-        reserve_budget(data, offset)
+    case state_call(data.state, :reserve) do
+      {:ok, reservation} -> {:ok, reservation}
+      :limit -> {:error, error("element-limit-exceeded", offset)}
     end
   end
 
-  defp release_budget(data), do: :atomics.add(data.budget, 1, -1)
+  defp commit_budget(data, reservation), do: state_call(data.state, {:commit, reservation})
+  defp release_budget(data, reservation), do: state_call(data.state, {:release, reservation})
 
   defp validate_tag_number(value)
        when is_integer(value) and value >= 0 and value <= 0xFFFF_FFFF,
@@ -528,14 +495,14 @@ defmodule CodingAdventures.DerAsn1 do
   defp normalize_limits_with_der(_limits, _der),
     do: {:error, %ArgumentError{message: "DER limits must be a map"}}
 
-  defp wrap_element(framed, depth, owner, budget) do
+  defp wrap_element(framed, depth, owner, state) do
     header = :binary.copy(DerTlv.header(framed))
     value = :binary.copy(DerTlv.value(framed))
     encoded = :binary.copy(DerTlv.encoded(framed))
 
     sealed_fun(:element, %{
       owner: owner,
-      budget: budget,
+      state: state,
       tag: framed.tag,
       header: header,
       value: value,
@@ -545,40 +512,19 @@ defmodule CodingAdventures.DerAsn1 do
     })
   end
 
-  defp with_cursor_lock(data, operation) do
-    case :atomics.compare_exchange(data.progress, 3, 0, 1) do
-      :ok ->
-        try do
-          operation.()
-        after
-          :atomics.put(data.progress, 3, 0)
-        end
-
-      _ ->
-        :erlang.yield()
-        with_cursor_lock(data, operation)
-    end
-  end
-
   defp data_prefix(cursor) do
     data = cursor_data!(cursor)
-    :atomics.get(data.progress, 1)
-  end
-
-  defp seal_signature(kind, data) do
-    secret = :persistent_term.get({__MODULE__, :seal_secret})
-
-    {
-      :erlang.phash2({secret, 1, kind, data}, 4_294_967_296),
-      :erlang.phash2({data, kind, 2, secret}, 4_294_967_296),
-      :erlang.phash2({kind, secret, data, 3}, 4_294_967_296),
-      :erlang.phash2({4, data, secret, kind}, 4_294_967_296)
-    }
+    state_call(data.state, {:cursor_offset, data.cursor})
   end
 
   defp sealed_fun(kind, data) do
-    signature = seal_signature(kind, data)
-    fn :__der_asn1_sealed__ -> {kind, data, signature} end
+    owner = self()
+    process = spawn(fn -> value_loop(owner, kind, data) end)
+    sealed_closure(kind, process)
+  end
+
+  defp sealed_closure(kind, process) do
+    fn :__der_asn1_sealed__ -> {kind, process} end
   end
 
   defp decoder_data!(value), do: sealed_data!(value, :decoder, "decoder")
@@ -587,15 +533,18 @@ defmodule CodingAdventures.DerAsn1 do
   defp typed_data!(value, kind), do: sealed_data!(value, kind, Atom.to_string(kind))
 
   defp sealed_data!(value, kind, name) when is_function(value, 1) do
-    sample = sealed_fun(:sample, %{})
+    sample = sealed_closure(:sample, self())
     fields = [:module, :new_uniq, :new_index]
 
     if Enum.all?(fields, &(:erlang.fun_info(value, &1) == :erlang.fun_info(sample, &1))) do
       case value.(:__der_asn1_sealed__) do
-        {^kind, data, signature} ->
-          if signature == seal_signature(kind, data),
-            do: data,
-            else: raise(ArgumentError, "expected validated #{name}")
+        {^kind, process} when is_pid(process) ->
+          reply = value_call(process, :read)
+
+          case {trusted_value_process?(process, 10), reply} do
+            {true, {^kind, data}} -> data
+            _ -> raise ArgumentError, "expected validated #{name}"
+          end
 
         _ ->
           raise ArgumentError, "expected validated #{name}"
@@ -607,6 +556,159 @@ defmodule CodingAdventures.DerAsn1 do
 
   defp sealed_data!(_value, _kind, name),
     do: raise(ArgumentError, "expected validated #{name}")
+
+  defp value_loop(owner, kind, data) do
+    monitor = Process.monitor(owner)
+    value_loop_messages(monitor, kind, data)
+  end
+
+  defp value_loop_messages(monitor, kind, data) do
+    receive do
+      {:value_call, from, reference, :read} ->
+        send(from, {:value_reply, reference, {kind, data}})
+        value_loop_messages(monitor, kind, data)
+
+      {:DOWN, ^monitor, :process, _pid, _reason} ->
+        :ok
+
+      _other ->
+        value_loop_messages(monitor, kind, data)
+    end
+  end
+
+  defp value_call(process, operation) do
+    reference = make_ref()
+    send(process, {:value_call, self(), reference, operation})
+
+    receive do
+      {:value_reply, ^reference, reply} -> reply
+    after
+      5_000 -> raise ArgumentError, "validated value is no longer available"
+    end
+  end
+
+  defp trusted_value_process?(_process, 0), do: false
+
+  defp trusted_value_process?(process, attempts) do
+    case Process.info(process, :current_function) do
+      {:current_function, {__MODULE__, function, 3}}
+      when function in [:value_loop, :value_loop_messages] ->
+        true
+
+      _ ->
+        :erlang.yield()
+        trusted_value_process?(process, attempts - 1)
+    end
+  end
+
+  defp state_call(process, operation) do
+    reference = make_ref()
+    send(process, {:state_call, self(), reference, operation})
+
+    receive do
+      {:state_reply, ^reference, reply} -> reply
+    after
+      5_000 -> raise ArgumentError, "decoder state is no longer available"
+    end
+  end
+
+  defp state_loop(limits, count, reservations, cursors) do
+    receive do
+      {:state_call, from, reference, :elements_read} ->
+        state_reply(from, reference, count)
+        state_loop(limits, count, reservations, cursors)
+
+      {:state_call, from, reference, :reserve} ->
+        if count >= limits.max_total_elements do
+          state_reply(from, reference, :limit)
+          state_loop(limits, count, reservations, cursors)
+        else
+          reservation = make_ref()
+          state_reply(from, reference, {:ok, reservation})
+          state_loop(limits, count + 1, MapSet.put(reservations, reservation), cursors)
+        end
+
+      {:state_call, from, reference, {:commit, reservation}} ->
+        state_reply(from, reference, :ok)
+        state_loop(limits, count, MapSet.delete(reservations, reservation), cursors)
+
+      {:state_call, from, reference, {:release, reservation}} ->
+        if MapSet.member?(reservations, reservation) do
+          state_reply(from, reference, :ok)
+          state_loop(limits, count - 1, MapSet.delete(reservations, reservation), cursors)
+        else
+          state_reply(from, reference, :ok)
+          state_loop(limits, count, reservations, cursors)
+        end
+
+      {:state_call, from, reference, {:new_cursor, input, der_limits, depth}} ->
+        cursor = make_ref()
+
+        cursor_data = %{
+          input: :binary.copy(input),
+          limits: der_limits,
+          depth: depth,
+          offset: 0,
+          elements_read: 0
+        }
+
+        state_reply(from, reference, cursor)
+        state_loop(limits, count, reservations, Map.put(cursors, cursor, cursor_data))
+
+      {:state_call, from, reference, {:cursor_remaining, cursor}} ->
+        data = Map.fetch!(cursors, cursor)
+        remaining = binary_part(data.input, data.offset, byte_size(data.input) - data.offset)
+        state_reply(from, reference, remaining)
+        state_loop(limits, count, reservations, cursors)
+
+      {:state_call, from, reference, {:cursor_offset, cursor}} ->
+        state_reply(from, reference, Map.fetch!(cursors, cursor).offset)
+        state_loop(limits, count, reservations, cursors)
+
+      {:state_call, from, reference, {:cursor_read, cursor}} ->
+        data = Map.fetch!(cursors, cursor)
+
+        cond do
+          data.offset == byte_size(data.input) ->
+            state_reply(from, reference, :end)
+            state_loop(limits, count, reservations, cursors)
+
+          count >= limits.max_total_elements ->
+            state_reply(from, reference, :limit)
+            state_loop(limits, count, reservations, cursors)
+
+          true ->
+            framing = %DerTlv.Cursor{
+              input: data.input,
+              limits: data.limits,
+              offset: data.offset,
+              elements_read: data.elements_read
+            }
+
+            case DerTlv.read(framing) do
+              {:ok, framed, next_framing} ->
+                next_data = %{
+                  data
+                  | offset: next_framing.offset,
+                    elements_read: next_framing.elements_read
+                }
+
+                state_reply(from, reference, {:ok, framed, data.depth})
+                state_loop(limits, count + 1, reservations, Map.put(cursors, cursor, next_data))
+
+              {:error, failure, _same} ->
+                state_reply(from, reference, {:framing, failure})
+                state_loop(limits, count, reservations, cursors)
+            end
+        end
+
+      _other ->
+        state_loop(limits, count, reservations, cursors)
+    end
+  end
+
+  defp state_reply(process, reference, reply),
+    do: send(process, {:state_reply, reference, reply})
 
   defp framing(%DerTlv.Error{kind: kind, offset: offset}), do: error("framing", offset, kind)
 

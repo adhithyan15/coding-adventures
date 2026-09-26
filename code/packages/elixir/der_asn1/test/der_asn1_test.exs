@@ -377,13 +377,15 @@ defmodule CodingAdventures.DerAsn1Test do
       DerAsn1.decode_octet_string(fn _ -> %{tag: nil, value: "secret"} end)
     end
 
-    tampered =
-      element
-      |> :erlang.term_to_binary()
-      |> :binary.replace(<<109, 0, 0, 0, 1, 42>>, <<109, 0, 0, 0, 1, 99>>, [:global])
-      |> :erlang.binary_to_term()
+    assert {:env, [:element, process]} = :erlang.fun_info(element, :env)
+    assert is_pid(process)
 
-    assert_raise ArgumentError, fn -> DerAsn1.decode_octet_string(tampered) end
+    forged = fn :__der_asn1_sealed__ -> {:element, process} end
+    assert_raise ArgumentError, fn -> DerAsn1.decode_octet_string(forged) end
+
+    assert_raise ArgumentError, fn ->
+      :persistent_term.get({DerAsn1, :seal_secret})
+    end
 
     {:ok, other} = DerAsn1.new_decoder()
     assert {:error, %ArgumentError{}} = DerAsn1.sequence(other, element)
@@ -393,6 +395,20 @@ defmodule CodingAdventures.DerAsn1Test do
   test "shared budgets and cursors reject stale replay transactionally" do
     {:ok, one} = DerAsn1.new_decoder(%{max_total_elements: 1})
     assert {:ok, _root, ^one} = DerAsn1.decode_exact(one, <<5, 0>>)
+
+    assert {:error, %Error{kind: "element-limit-exceeded"}} =
+             DerAsn1.decode_exact(one, <<5, 0>>)
+
+    # Even a caller that introspects the private handle and sends the state
+    # process its documented internal messages cannot release committed work.
+    {:env, [:decoder, handle_process]} = :erlang.fun_info(one, :env)
+    value_reference = make_ref()
+    send(handle_process, {:value_call, self(), value_reference, :read})
+    assert_receive {:value_reply, ^value_reference, {:decoder, %{state: state_process}}}
+
+    release_reference = make_ref()
+    send(state_process, {:state_call, self(), release_reference, {:release, make_ref()}})
+    assert_receive {:state_reply, ^release_reference, :ok}
 
     assert {:error, %Error{kind: "element-limit-exceeded"}} =
              DerAsn1.decode_exact(one, <<5, 0>>)
