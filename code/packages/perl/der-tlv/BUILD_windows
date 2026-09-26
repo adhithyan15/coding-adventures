@@ -1,2 +1,2 @@
-perl -Ilib -c lib\CodingAdventures\DerTlv.pm
-perl -S prove -l -v t\
+if exist C:\Strawberry\perl\bin\perl.exe (C:\Strawberry\perl\bin\perl.exe -Ilib -c lib\CodingAdventures\DerTlv.pm) else (perl -Ilib -c lib\CodingAdventures\DerTlv.pm)
+if exist C:\Strawberry\perl\bin\perl.exe (C:\Strawberry\perl\bin\perl.exe -S prove -l -v t\) else (perl -S prove -l -v t\)

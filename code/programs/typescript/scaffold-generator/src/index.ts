@@ -139,14 +139,14 @@ export function toJoinedLower(kebab: string): string {
 /**
  * Return the directory name for a package in a given language.
  *
- * Ruby and Elixir use snake_case directories; all other languages
+ * Ruby, Elixir, and Lua use snake_case directories; all other languages
  * keep the original kebab-case name.
  *
  *   dirName("logic-gates", "ruby")   -> "logic_gates"
  *   dirName("logic-gates", "python") -> "logic-gates"
  */
 export function dirName(kebab: string, lang: string): string {
-  if (lang === "ruby" || lang === "elixir") {
+  if (lang === "ruby" || lang === "elixir" || lang === "lua") {
     return toSnakeCase(kebab);
   }
   return kebab;

@@ -12,3 +12,6 @@
 - Added universal IA5String validation and exact schema-selected implicit
   OCTET STRING, IA5String, and OBJECT IDENTIFIER decoding for later X.509
   context-specific values.
+- Added package-native execution of all 122 language-neutral DER ASN.1 v1
+  cases, including all 46 referenced DER TLV exact-decode cases and redaction
+  checks.

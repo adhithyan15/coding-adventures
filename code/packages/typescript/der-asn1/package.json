@@ -1,0 +1,23 @@
+{
+  "name": "@coding-adventures/der-asn1",
+  "version": "0.1.0",
+  "description": "Bounded typed ASN.1 DER value decoding",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/der-tlv": "file:../der-tlv"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0",
+    "@vitest/coverage-v8": "^4.1.0"
+  }
+}

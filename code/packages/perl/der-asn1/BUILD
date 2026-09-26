@@ -1,0 +1,2 @@
+if [ -x /c/Strawberry/perl/bin/perl.exe ]; then /c/Strawberry/perl/bin/perl.exe -Ilib -I../der-tlv/lib -c lib/CodingAdventures/DerAsn1.pm; else perl -Ilib -I../der-tlv/lib -c lib/CodingAdventures/DerAsn1.pm; fi
+if [ -x /c/Strawberry/perl/bin/perl.exe ]; then PERL5LIB="../der-tlv/lib${PERL5LIB:+:$PERL5LIB}" /c/Strawberry/perl/bin/perl.exe -S prove -l -v t/; else PERL5LIB="../der-tlv/lib${PERL5LIB:+:$PERL5LIB}" perl -S prove -l -v t/; fi

@@ -2,11 +2,14 @@
 
 ## Status
 
-Specification for a zero-external-dependency, allocation-free decoder of the
-small typed ASN.1 value vocabulary needed by a later repository-owned X.509
-certificate parser. It composes the canonical identifier and length framing
-from `der-tlv` with shared depth and total-element budgets, exact schema-tag
-checks, and canonical DER value checks.
+Specification for a zero-external-dependency typed layer over the
+repository-owned DER TLV decoder, covering the small ASN.1 value vocabulary
+needed by a later repository-owned X.509 certificate parser.
+It composes the canonical identifier and length framing from `der-tlv` with
+shared depth and total-element budgets, exact schema-tag checks, and canonical
+DER value checks. Allocation and ownership strategy are language-specific;
+portable behavior requires byte-exact projections, bounded work, and defensive
+results rather than one representation technique.
 
 This package is not an X.509 parser, certificate-path validator, signature
 verifier, trust store, TLS implementation, PEM decoder, or network transport.
@@ -22,16 +25,17 @@ later certificate schema decoder:
 - BOOLEAN has exactly one contents octet and uses only `0x00` or DER's
   canonical TRUE value `0xff`;
 - INTEGER is non-empty, uses minimal two's-complement contents, and can be
-  converted to `u64` only when non-negative and representable;
+  converted into the unsigned 64-bit range only when non-negative and
+  representable;
 - BIT STRING begins with an unused-bit count from zero through seven, uses zero
   for an empty payload, and has zero in every declared unused trailing bit;
-- OCTET STRING is returned as a borrowed byte slice;
-- IA5String is returned as a borrowed string only after every contents octet
-  is proven to be seven-bit ASCII;
+- OCTET STRING is returned as a byte-exact sequence;
+- IA5String is returned as text only after every contents octet is proven to be
+  seven-bit ASCII;
 - NULL has an empty contents encoding;
 - OBJECT IDENTIFIER has at least its combined first two arcs, uses minimal
-  base-128 subidentifiers, terminates each subidentifier, and cannot overflow
-  `u64`;
+  base-128 subidentifiers, terminates each subidentifier, and no arc may exceed
+  `2^64 - 1`;
 - SEQUENCE and SET must carry their exact constructed universal tags;
 - an explicit context-specific wrapper must be constructed and contain exactly
   one complete DER element.
@@ -71,17 +75,23 @@ total-element unit. `sequence`, `set`, and explicit-wrapper entry derive the
 child depth from an unforgeable element wrapper and reject entry before parsing
 when the depth limit would be exceeded.
 
-An `Asn1Cursor` is allocation-free and iterative. Its `read` method accepts the
-same mutable decoder, so sibling cursors and nested cursors can share one work
-budget without self-referential borrows. Failure advances neither the cursor
-nor the decoder's element count.
+An `Asn1Cursor` is semantically iterative. Its `read` method accepts the same
+decoder state, so sibling cursors and nested cursors share one work budget.
+Failure advances neither the cursor nor the decoder's element count. A lane may
+borrow immutable input or retain bounded defensive copies without changing this
+contract.
 
 The bounded-work claim applies only when descendants are opened through this
-API. Borrowed values remain available for schema interpretation; callers that
+API. Validated values remain available for schema interpretation; callers that
 independently invoke lower-level framing start a separate budget and cannot
 claim that it is the same bounded document walk.
 
 ## Public Contract
+
+The Rust signatures below define the reference surface. Other lanes use
+idiomatic equivalents while preserving the same validated values, stable
+errors, offsets, limits, and shared decoder state; borrowing, copying, and
+native integer representation are not portable requirements.
 
 ```rust
 pub struct Asn1Element<'a> { /* private framing and depth */ }
@@ -125,9 +135,10 @@ impl<'a> Asn1Cursor<'a> {
 }
 ```
 
-The element wrapper is `Copy` because it contains only borrowed immutable
-slices, a tag, and a depth. Copying an already-counted element does not consume
-more parsing work and cannot create a different depth.
+The Rust element wrapper is `Copy` because it contains only borrowed immutable
+slices, a tag, and a depth. Other lanes may expose immutable value wrappers or
+defensive snapshots. Reusing an already-counted element never consumes more
+parsing work and cannot create a different depth.
 
 Typed functions accept an `Asn1Element` and require the exact universal class,
 constructed bit, and tag number:
@@ -166,15 +177,19 @@ pub fn decode_implicit_object_identifier(
 ) -> Result<ObjectIdentifier<'_>, Asn1Error>;
 ```
 
-`DerInteger` exposes the canonical signed contents without allocation,
-`is_negative`, and a checked `to_u64`. The positive conversion ignores only a
-single required sign-protection `0x00`; it never truncates.
+`DerInteger` exposes the canonical signed contents, `is_negative`, and a checked
+nonnegative conversion whose portable projection is an exact decimal string in
+the range zero through `2^64 - 1`. The positive conversion ignores only a
+single required sign-protection `0x00`; it never truncates. Lanes without a
+native unsigned 64-bit value may use an exact big integer or another lossless
+representation.
 
 `DerBitString` exposes the unused-bit count, payload bytes, and checked bit
-length. `ObjectIdentifier` retains the encoded contents and provides a
-cloneable, exact-size-independent arc iterator plus comparison against a caller
-slice. Construction validates the complete encoding and arc budget first, so
-iteration is infallible and never exposes a partially validated identifier.
+length. `ObjectIdentifier` retains the encoded contents and exposes the
+complete ordered validated arcs, lazily or as an immutable materialized
+collection, plus exact comparison against caller-provided arcs. Construction
+validates the complete encoding and arc budget first, so access is infallible
+and never exposes a partially validated identifier.
 
 ## Error Contract
 
@@ -196,8 +211,8 @@ categories include:
 - malformed explicit contents or trailing sibling data.
 
 Offsets never contain secret or certificate bytes. No error path may panic,
-allocate from a wire value, advance a cursor, or consume shared work after a
-failed parse.
+perform unbounded allocation derived from a hostile wire length, advance a
+cursor, or consume shared work after a failed parse.
 
 ## Adversarial Matrix
 
@@ -205,12 +220,39 @@ Tests cover exact tags and constructed bits; root trailing data; nested depth
 at and over the limit; total-element exhaustion shared across sibling and
 nested cursors; non-advancement after failure; BOOLEAN canonical values and
 all alternate encodings; INTEGER sign boundaries, redundant sign octets,
-negative conversion, and `u64` overflow; BIT STRING empty and partial-byte
-boundaries plus nonzero padding; empty/non-empty NULL; OCTET STRING borrowing;
+negative conversion, and unsigned-64 overflow; BIT STRING empty and partial-byte
+boundaries plus nonzero padding; empty/non-empty NULL; OCTET STRING byte
+equality;
 universal and implicit IA5String ASCII validation with exact offsets; OID
 first-arc folding, multi-octet arcs, minimality, truncation, overflow, and arc
 limits in universal and implicit forms; exact primitive context-specific tags
 and constructed bits; exact explicit wrappers; and SEQUENCE/SET tag confusion.
+
+## Language-Neutral Conformance
+
+The normative portable behavior corpus is
+`code/specs/fixtures/der-asn1-v1/cases.json`, validated by its closed schema.
+It composes with the DER TLV v1 corpus through stable case references instead
+of duplicating identifier and length bytes. Every DER TLV reference must name
+an exact-decode row, and every consumer must preserve its raw-element or
+framing-error projection before applying typed semantics.
+
+Portable success values use byte-exact lowercase-hex projections, decimal
+strings for values in the unsigned 64-bit range and OID arcs, and explicit depth and shared-work
+counters. This avoids host numeric precision becoming an accidental protocol
+rule. Portable errors use the stable typed category, a numeric byte offset, and
+an explicit `operation-input` or `container-value` domain. A lower-level
+failure additionally carries the exact DER TLV framing identifier.
+
+The contract targets all 15 established implementation lanes through
+package-native tests and empty capability manifests. The aggregate registry
+gate closes the final consumer set and requires each package's real BUILD
+fronts, metadata, README, changelog, production source, and fixture test. Until
+that gate closes, the registry may list planned consumers whose implementation
+is still in progress; the roadmap records the measured lane count. C, C++, and
+OCaml remain emerging lanes; explicit OCaml DER TLV and DER ASN.1 consumer
+owners are registered behind the current-contract OCaml build tool without
+changing the established denominator.
 
 ## Non-Goals
 
