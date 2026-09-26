@@ -1,0 +1,11 @@
+{
+  "id": "TA-C121-paruppu",
+  "pathSegment": "TA-PATH-121-THINGS121",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-121-THINGS121",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "Bitter, Sour, Spicy, Rich, Poor",
+  "label": "ch:ta-bitter-sour-spicy-rich-poor",
+  "canDo": "I can say bitter, sour, spicy, rich and poor.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C146-elai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: i can say bitter, sour, spicy, rich and poor.",
+    "assesses": [
+      "TA-LEX-C146-QUAL146-03",
+      "TA-LEX-C146-QUAL146-04",
+      "TA-LEX-C146-QUAL146-05"
+    ]
+  }
+}

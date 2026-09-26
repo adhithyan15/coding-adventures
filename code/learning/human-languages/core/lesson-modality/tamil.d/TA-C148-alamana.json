@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C148-alamana",
+    "language": "tamil",
+    "chapter": 148,
+    "sequence": 6800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9fcadcaf4dfa3a6"
+  },
+  "findings": []
+}

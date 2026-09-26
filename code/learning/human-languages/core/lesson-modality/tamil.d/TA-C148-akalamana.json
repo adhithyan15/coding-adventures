@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C148-akalamana",
+    "language": "tamil",
+    "chapter": 148,
+    "sequence": 6810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39369552a2e8d8c5"
+  },
+  "findings": []
+}

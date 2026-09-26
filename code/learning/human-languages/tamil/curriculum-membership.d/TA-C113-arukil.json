@@ -1,0 +1,11 @@
+{
+  "id": "TA-C113-arukil",
+  "pathSegment": "TA-PATH-113-LOC113",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-113-LOC113",
+      "order": 1
+    }
+  ]
+}

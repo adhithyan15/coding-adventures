@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C127-pani",
+    "language": "tamil",
+    "chapter": 127,
+    "sequence": 5660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a8d5195fd32ccc3"
+  },
+  "findings": []
+}

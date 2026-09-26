@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:b7a30074f863ba7c",
+  "lessonIds": [
+    "TA-C150-uta",
+    "TA-C150-campal",
+    "TA-C150-patu",
+    "TA-C150-camai",
+    "TA-C150-vettu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch150.txt",
+  "json": "tamil/narration/ch150.json",
+  "textHash": "fnv1a64:103a2dafbf2d9eb5",
+  "jsonHash": "fnv1a64:920be1abf27db4c7",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:a5186d0854d73e3d",
+  "lessonIds": [
+    "TA-C144-uyaramana",
+    "TA-C144-cutana",
+    "TA-C144-kulirnta",
+    "TA-C144-kanamana",
+    "TA-C144-lecana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch144.txt",
+  "json": "tamil/narration/ch144.json",
+  "textHash": "fnv1a64:4fd46af80fb58168",
+  "jsonHash": "fnv1a64:1a43800f04ff10b4",
+  "findings": []
+}

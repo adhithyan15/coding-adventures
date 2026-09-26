@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C135-minviciri",
+    "language": "tamil",
+    "chapter": 135,
+    "sequence": 6100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4318e7abc336540f"
+  },
+  "findings": []
+}

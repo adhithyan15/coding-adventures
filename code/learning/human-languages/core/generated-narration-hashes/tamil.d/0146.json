@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:465c09b3173697a8",
+  "lessonIds": [
+    "TA-C146-kacappu",
+    "TA-C146-pulippu",
+    "TA-C146-karam",
+    "TA-C146-panakkara",
+    "TA-C146-elai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch146.txt",
+  "json": "tamil/narration/ch146.json",
+  "textHash": "fnv1a64:6b1415f0d065ce75",
+  "jsonHash": "fnv1a64:32863ad1e32b9347",
+  "findings": []
+}

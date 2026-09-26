@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:20a148ef072469d8",
+  "lessonIds": [
+    "TA-C152-mara",
+    "TA-C152-kuti",
+    "TA-C152-nintu",
+    "TA-C152-para",
+    "TA-C152-vilu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch152.txt",
+  "json": "tamil/narration/ch152.json",
+  "textHash": "fnv1a64:8a20be716a808b8e",
+  "jsonHash": "fnv1a64:67d5a9217a2c0821",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C147-ilaiya",
+    "language": "tamil",
+    "chapter": 147,
+    "sequence": 6750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd778a4fdbfbb7f0"
+  },
+  "findings": []
+}

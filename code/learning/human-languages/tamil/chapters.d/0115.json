@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Library, Bank, Market, Beach, Office",
+  "label": "ch:ta-library-bank-market-beach-office",
+  "canDo": "I can say a library, a bank, a market, a beach and an office.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C115-aluvalakam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: i can say a library, a bank, a market, a beach and an office.",
+    "assesses": [
+      "TA-LEX-C115-LOC115-03",
+      "TA-LEX-C115-LOC115-04",
+      "TA-LEX-C115-LOC115-05"
+    ]
+  }
+}

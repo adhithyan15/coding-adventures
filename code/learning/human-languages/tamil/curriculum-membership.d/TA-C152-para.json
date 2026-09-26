@@ -1,0 +1,11 @@
+{
+  "id": "TA-C152-para",
+  "pathSegment": "TA-PATH-152-ACT152",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-152-ACT152",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C121-katikaram",
+    "language": "tamil",
+    "chapter": 121,
+    "sequence": 5300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e770900cecf7cfb0"
+  },
+  "findings": []
+}

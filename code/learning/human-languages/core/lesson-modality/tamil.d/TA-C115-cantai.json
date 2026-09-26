@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C115-cantai",
+    "language": "tamil",
+    "chapter": 115,
+    "sequence": 5020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:02eb8f8ddff10512"
+  },
+  "findings": []
+}

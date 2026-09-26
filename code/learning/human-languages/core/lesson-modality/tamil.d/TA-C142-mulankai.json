@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C142-mulankai",
+    "language": "tamil",
+    "chapter": 142,
+    "sequence": 6540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe8cf36824a23672"
+  },
+  "findings": []
+}

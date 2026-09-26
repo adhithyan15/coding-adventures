@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "Purple, Grey, To sing, To cook, To cut",
+  "label": "ch:ta-purple-grey-to-sing-to-cook-to-cut",
+  "canDo": "I can say purple, grey, to sing, to cook and to cut.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C150-vettu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: i can say purple, grey, to sing, to cook and to cut.",
+    "assesses": [
+      "TA-LEX-C150-QUAL150-03",
+      "TA-LEX-C150-QUAL150-04",
+      "TA-LEX-C150-QUAL150-05"
+    ]
+  }
+}

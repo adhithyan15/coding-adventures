@@ -1,0 +1,11 @@
+{
+  "id": "TA-C144-uyaramana",
+  "pathSegment": "TA-PATH-144-QUAL144",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-144-QUAL144",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C151-karpi",
+  "pathSegment": "TA-PATH-151-ACT151",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-151-ACT151",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C150-camai",
+    "language": "tamil",
+    "chapter": 150,
+    "sequence": 6980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c79d3ae38bc70f47"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "To hide, To save, To blow, To burn, To put out",
+  "label": "ch:ta-to-hide-to-save-to-blow-to-burn-to-put-out",
+  "canDo": "I can say to hide, to save, to blow, to burn and to put out.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-R157-second-pass-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: i can say to hide, to save, to blow, to burn and to put out.",
+    "assesses": [
+      "TA-LEX-C157-ACT157-03",
+      "TA-LEX-C157-ACT157-04",
+      "TA-LEX-C157-ACT157-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R121-first-pass-places-and-what-you-can-do",
+    "language": "tamil",
+    "chapter": 121,
+    "sequence": 5350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:563c1c37cf675d8a"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C144-lecana",
+    "language": "tamil",
+    "chapter": 144,
+    "sequence": 6640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f72a90aa88593b3"
+  },
+  "findings": []
+}

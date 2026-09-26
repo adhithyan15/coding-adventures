@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Rasam, Butter, Egg, Fish, Meat",
+  "label": "ch:ta-rasam-butter-egg-fish-meat",
+  "canDo": "I can say rasam, butter, an egg, a fish and meat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C122-iraicci",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say rasam, butter, an egg, a fish and meat.",
+    "assesses": [
+      "TA-LEX-C122-THINGS122-03",
+      "TA-LEX-C122-THINGS122-04",
+      "TA-LEX-C122-THINGS122-05"
+    ]
+  }
+}

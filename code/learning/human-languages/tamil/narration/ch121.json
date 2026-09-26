@@ -1,0 +1,857 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 121,
+  "title": "Clock, Skirt, Sari, Lentils, Curry",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:7be7df5400816935",
+  "lessons": [
+    {
+      "id": "TA-C121-katikaram",
+      "sequence": 5300,
+      "title": "கடிகாரம் (kaṭikāram) — a clock",
+      "headword": "கடிகாரம்",
+      "romanization": "kaṭikāram",
+      "gloss": "a clock",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e770900cecf7cfb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a pen, then the Tamil for paper."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tell the time, ஒரு மணி, இரண்டு மணி, then name the afternoon three ways: நடுப்பகல், மதியம், பிற்பகல்."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கடிகாரம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கடிகாரம் — kaṭikāram — \"a clock\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭikāram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭikāram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭikāram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭikāram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kaṭikāram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kaṭikāram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a pen, then the Tamil for paper, then say kaṭikāram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a pen, then the Tamil for paper, then say *kaṭikāram* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கடிகாரம் (kaṭikāram) mean? (\"A clock\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C121-pavatai",
+      "sequence": 5310,
+      "title": "பாவாடை (pāvāṭai) — a skirt",
+      "headword": "பாவாடை",
+      "romanization": "pāvāṭai",
+      "gloss": "a skirt",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed6c4f83f3dda267",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for paper, then the Tamil for a clock."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பாவாடை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பாவாடை — pāvāṭai — \"a skirt\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvāṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvāṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāvāṭai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāvāṭai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say pāvāṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *pāvāṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for paper, then the Tamil for a clock, then say pāvāṭai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for paper, then the Tamil for a clock, then say *pāvāṭai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பாவாடை (pāvāṭai) mean? (\"A skirt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C121-celai",
+      "sequence": 5320,
+      "title": "சேலை (cēlai) — a sari",
+      "headword": "சேலை",
+      "romanization": "cēlai",
+      "gloss": "a sari",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18369b8b11af8cfa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a clock, then the Tamil for a skirt."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the colours: கருப்பு, வெள்ளை, சிவப்பு, நீலம், பச்சை, மஞ்சள். Blue is the one many languages named last."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சேலை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சேலை — cēlai — \"a sari\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēlai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēlai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēlai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēlai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say cēlai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *cēlai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a clock, then the Tamil for a skirt, then say cēlai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a clock, then the Tamil for a skirt, then say *cēlai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சேலை (cēlai) mean? (\"A sari\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C121-paruppu",
+      "sequence": 5330,
+      "title": "பருப்பு (paruppu) — lentils, dal",
+      "headword": "பருப்பு",
+      "romanization": "paruppu",
+      "gloss": "lentils, dal",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7937eba74bac56c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a skirt, then the Tamil for a sari."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பருப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பருப்பு — paruppu — \"lentils, dal\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paruppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paruppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paruppu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paruppu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say paruppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *paruppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a skirt, then the Tamil for a sari, then say paruppu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a skirt, then the Tamil for a sari, then say *paruppu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பருப்பு (paruppu) mean? (\"Lentils, dal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C121-kulambu",
+      "sequence": 5340,
+      "title": "குழம்பு (kuḻambu) — a curry, a gravy",
+      "headword": "குழம்பு",
+      "romanization": "kuḻambu",
+      "gloss": "a curry, a gravy",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a4d4c79344e8487",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a sari, then the Tamil for lentils."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குழம்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குழம்பு — kuḻambu — \"a curry, a gravy\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻambu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻambu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuḻambu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuḻambu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kuḻambu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kuḻambu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a sari, then the Tamil for lentils, then say kuḻambu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a sari, then the Tamil for lentils, then say *kuḻambu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குழம்பு (kuḻambu) mean? (\"A curry, a gravy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R121-first-pass-places-and-what-you-can-do",
+      "sequence": 5350,
+      "title": "Places and what you can do — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 113-116",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:563c1c37cf675d8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for lentils and a curry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "straight ahead, near, distance; far, behind, in front",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: straight ahead, near, distance; far, behind, in front]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "in the middle, a street, a bridge, a park, a temple",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: in the middle, a street, a bridge, a park, a temple]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a library, a bank, a market, a beach, an office",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a library, a bank, a market, a beach, an office]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a garden, a corner, a turn, can, a skill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a garden, a corner, a turn, can, a skill]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Straight ahead? (நேராக, nērāka.) Near? (அருகில், arukil.) Distance; far? (தூரம், tūram.) Behind? (பின்னால், piṉṉāl.) In front? (முன்னால், muṉṉāl.) In the middle? (நடுவில், naṭuvil.) A street? (தெரு, teru.) A bridge? (பாலம், pālam.) A park? (பூங்கா, pūṅkā.) A temple? (கோயில், kōyil.) A library? (நூலகம், nūlakam.) A bank? (வங்கி, vaṅki.) A market? (சந்தை, cantai.) A beach? (கடற்கரை, kaṭaṟkarai.) An office? (அலுவலகம், aluvalakam.) A garden? (தோட்டம், tōṭṭam.) A corner? (மூலை, mūlai.) A turn? (திருப்பம், tiruppam.) Can? (முடியும், muṭiyum.) A skill? (திறமை, tiṟamai.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R121-second-pass-things-in-the-house",
+      "sequence": 5360,
+      "title": "Things in the house — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 117-121",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:faea24c63033f99b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for ability and a right."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ability, a right, a chance, a tool, a possession",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ability, a right, a chance, a tool, a possession]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stove, a vessel, a plate, a cup, a spoon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stove, a vessel, a plate, a cup, a spoon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a key, a lock, a towel; a piece, a pillow, a blanket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a key, a lock, a towel; a piece, a pillow, a blanket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mirror; glasses, soap, a bucket, a pen, paper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mirror; glasses, soap, a bucket, a pen, paper]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a clock, a skirt, a sari, lentils, a curry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a clock, a skirt, a sari, lentils, a curry]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ability? (வல்லமை, vallamai.) A right? (உரிமை, urimai.) A chance? (வாய்ப்பு, vāyppu.) A tool? (கருவி, karuvi.) A possession? (உடைமை, uṭaimai.) A stove? (அடுப்பு, aṭuppu.) A vessel? (பாத்திரம், pāttiram.) A plate? (தட்டு, taṭṭu.) A cup? (கோப்பை, kōppai.) A spoon? (கரண்டி, karaṇṭi.) A key? (சாவி, cāvi.) A lock? (பூட்டு, pūṭṭu.) A towel; a piece? (துண்டு, tuṇṭu.) A pillow? (தலையணை, talaiyaṇai.) A blanket? (போர்வை, pōrvai.) A mirror; glasses? (கண்ணாடி, kaṇṇāṭi.) Soap? (சோப்பு, cōppu.) A bucket? (வாளி, vāḷi.) A pen? (பேனா, pēṉā.) Paper? (காகிதம், kāgitam.) A clock? (கடிகாரம், kaṭikāram.) A skirt? (பாவாடை, pāvāṭai.) A sari? (சேலை, cēlai.) Lentils? (பருப்பு, paruppu.) A curry? (குழம்பு, kuḻambu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

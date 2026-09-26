@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:fffe9a5cab46c076",
+  "lessonIds": [
+    "TA-C122-rasam",
+    "TA-C122-venney",
+    "TA-C122-muttai",
+    "TA-C122-min",
+    "TA-C122-iraicci"
+  ],
+  "tex": "tamil/book/chapters/ch122-rasam-butter-egg-fish-meat.tex"
+}

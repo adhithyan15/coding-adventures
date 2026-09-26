@@ -1,0 +1,11 @@
+{
+  "id": "TA-C132-mukam",
+  "pathSegment": "TA-PATH-132-THINGS132",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-132-THINGS132",
+      "order": 1
+    }
+  ]
+}

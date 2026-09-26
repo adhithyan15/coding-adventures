@@ -1,0 +1,11 @@
+{
+  "id": "TA-C115-cantai",
+  "pathSegment": "TA-PATH-115-LOC115",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-115-LOC115",
+      "order": 2
+    }
+  ]
+}

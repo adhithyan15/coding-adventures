@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C145-menmaiyana",
+    "language": "tamil",
+    "chapter": 145,
+    "sequence": 6650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a16192f9f81d5a28"
+  },
+  "findings": []
+}

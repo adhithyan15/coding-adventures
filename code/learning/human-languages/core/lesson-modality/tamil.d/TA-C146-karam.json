@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C146-karam",
+    "language": "tamil",
+    "chapter": 146,
+    "sequence": 6720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcb79a5585394ab4"
+  },
+  "findings": []
+}

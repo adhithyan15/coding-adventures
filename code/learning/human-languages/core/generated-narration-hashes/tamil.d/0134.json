@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:824a3dcb96a731ef",
+  "lessonIds": [
+    "TA-C134-tiraiccilai",
+    "TA-C134-mettai",
+    "TA-C134-tolaikkatci",
+    "TA-C134-kaippeci",
+    "TA-C134-kanini"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch134.txt",
+  "json": "tamil/narration/ch134.json",
+  "textHash": "fnv1a64:d3c0ae95f407ae84",
+  "jsonHash": "fnv1a64:1de87b5724f122cd",
+  "findings": []
+}

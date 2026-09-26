@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:78d2e348c8d835af",
+  "lessonIds": [
+    "TA-C123-kaykari",
+    "TA-C123-valaippalam",
+    "TA-C123-mampalam",
+    "TA-C123-tenkay",
+    "TA-C123-venkayam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch123.txt",
+  "json": "tamil/narration/ch123.json",
+  "textHash": "fnv1a64:d4fdedbba7a49ada",
+  "jsonHash": "fnv1a64:f24bf71bcbaa35ce",
+  "findings": []
+}

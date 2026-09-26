@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:10f3904cf29359db",
+  "lessonIds": [
+    "TA-C155-tallu",
+    "TA-C155-ilu",
+    "TA-C155-potu",
+    "TA-C155-kattu2",
+    "TA-C155-tuvai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch155.txt",
+  "json": "tamil/narration/ch155.json",
+  "textHash": "fnv1a64:c77e6d8dace77aff",
+  "jsonHash": "fnv1a64:1c8a18a5cc686cfa",
+  "findings": []
+}

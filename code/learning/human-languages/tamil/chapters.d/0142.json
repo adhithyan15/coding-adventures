@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "Camel, Duck, Cheek, Wrist, Elbow",
+  "label": "ch:ta-camel-duck-cheek-wrist-elbow",
+  "canDo": "I can say a camel, a duck, a cheek, a wrist and an elbow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C142-mulankai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: i can say a camel, a duck, a cheek, a wrist and an elbow.",
+    "assesses": [
+      "TA-LEX-C142-THINGS142-03",
+      "TA-LEX-C142-THINGS142-04",
+      "TA-LEX-C142-THINGS142-05"
+    ]
+  }
+}

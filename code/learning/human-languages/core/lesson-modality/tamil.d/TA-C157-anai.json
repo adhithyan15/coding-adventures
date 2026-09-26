@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C157-anai",
+    "language": "tamil",
+    "chapter": 157,
+    "sequence": 7340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:486fd2144b592597"
+  },
+  "findings": []
+}

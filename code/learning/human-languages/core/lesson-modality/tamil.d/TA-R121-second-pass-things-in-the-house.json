@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-R121-second-pass-things-in-the-house",
+    "language": "tamil",
+    "chapter": 121,
+    "sequence": 5360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:faea24c63033f99b"
+  },
+  "findings": []
+}

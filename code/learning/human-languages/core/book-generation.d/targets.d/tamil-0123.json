@@ -1,0 +1,6 @@
+{
+  "language": "tamil",
+  "chapter": 123,
+  "output": "tamil/book/chapters/ch123-vegetables-banana-mango-coconut-onion.tex",
+  "scriptSet": "tamil-comparisons"
+}

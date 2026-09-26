@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C134-tolaikkatci",
+    "language": "tamil",
+    "chapter": 134,
+    "sequence": 6070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e647e647872d680"
+  },
+  "findings": []
+}

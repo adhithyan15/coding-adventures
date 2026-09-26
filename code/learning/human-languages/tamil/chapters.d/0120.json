@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Mirror, Soap, Bucket, Pen, Paper",
+  "label": "ch:ta-mirror-soap-bucket-pen-paper",
+  "canDo": "I can say a mirror, soap, a bucket, a pen and paper.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C120-kagitam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say a mirror, soap, a bucket, a pen and paper.",
+    "assesses": [
+      "TA-LEX-C120-THINGS120-03",
+      "TA-LEX-C120-THINGS120-04",
+      "TA-LEX-C120-THINGS120-05"
+    ]
+  }
+}

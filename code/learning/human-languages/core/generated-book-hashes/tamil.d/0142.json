@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:068a634e93b30e6b",
+  "lessonIds": [
+    "TA-C142-ottakam",
+    "TA-C142-vattu",
+    "TA-C142-kannam",
+    "TA-C142-manikkattu",
+    "TA-C142-mulankai"
+  ],
+  "tex": "tamil/book/chapters/ch142-camel-duck-cheek-wrist-elbow.tex"
+}

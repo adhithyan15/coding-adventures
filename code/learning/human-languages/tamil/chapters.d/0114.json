@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "In the middle, Street, Bridge, Park, Temple",
+  "label": "ch:ta-in-the-middle-street-bridge-park-temple",
+  "canDo": "I can say in the middle, a street, a bridge, a park and a temple.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C114-koyil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say in the middle, a street, a bridge, a park and a temple.",
+    "assesses": [
+      "TA-LEX-C114-LOC114-03",
+      "TA-LEX-C114-LOC114-04",
+      "TA-LEX-C114-LOC114-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:1d416e935b4232bd",
+  "lessonIds": [
+    "TA-C130-nari",
+    "TA-C130-pampu",
+    "TA-C130-eli",
+    "TA-C130-tavalai",
+    "TA-C130-amai",
+    "TA-R130-first-pass-the-house-things-you-carry-and-school",
+    "TA-R130-second-pass-food"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch130.txt",
+  "json": "tamil/narration/ch130.json",
+  "textHash": "fnv1a64:37eadabce9495881",
+  "jsonHash": "fnv1a64:7182000fac2f3f91",
+  "findings": []
+}

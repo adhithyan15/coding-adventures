@@ -1,0 +1,11 @@
+{
+  "id": "TA-C148-akalamana",
+  "pathSegment": "TA-PATH-148-QUAL148",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-148-QUAL148",
+      "order": 1
+    }
+  ]
+}

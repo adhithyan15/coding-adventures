@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:f8113039a57f3ce6",
+  "lessonIds": [
+    "TA-C135-minviciri",
+    "TA-C135-kattarikkol",
+    "TA-C135-cuttiyal",
+    "TA-C135-ani",
+    "TA-C135-eni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch135.txt",
+  "json": "tamil/narration/ch135.json",
+  "textHash": "fnv1a64:a10034b1426628e4",
+  "jsonHash": "fnv1a64:0928728673984963",
+  "findings": []
+}

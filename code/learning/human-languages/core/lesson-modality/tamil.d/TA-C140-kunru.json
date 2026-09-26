@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C140-kunru",
+    "language": "tamil",
+    "chapter": 140,
+    "sequence": 6440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49d8458e3f6ac79c"
+  },
+  "findings": []
+}

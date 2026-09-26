@@ -1,0 +1,11 @@
+{
+  "id": "TA-R130-first-pass-the-house-things-you-carry-and-school",
+  "pathSegment": "TA-PATH-130-THINGS130",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TA-EXT-130-THINGS130",
+      "order": 5
+    }
+  ]
+}

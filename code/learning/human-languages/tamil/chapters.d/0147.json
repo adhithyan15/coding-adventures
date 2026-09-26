@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "Young, Old, Clever, Lazy, Brave",
+  "label": "ch:ta-young-old-clever-lazy-brave",
+  "canDo": "I can say young, old, clever, lazy and brave.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C147-tairiyamana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: i can say young, old, clever, lazy and brave.",
+    "assesses": [
+      "TA-LEX-C147-QUAL147-03",
+      "TA-LEX-C147-QUAL147-04",
+      "TA-LEX-C147-QUAL147-05"
+    ]
+  }
+}

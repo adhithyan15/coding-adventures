@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Shoulder, Chest, Knee, Hair, Skin",
+  "label": "ch:ta-shoulder-chest-knee-hair-skin",
+  "canDo": "I can say a shoulder, the chest, a knee, hair and the skin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C133-tol2",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say a shoulder, the chest, a knee, hair and the skin.",
+    "assesses": [
+      "TA-LEX-C133-THINGS133-03",
+      "TA-LEX-C133-THINGS133-04",
+      "TA-LEX-C133-THINGS133-05"
+    ]
+  }
+}

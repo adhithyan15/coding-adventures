@@ -1,0 +1,11 @@
+{
+  "id": "TA-C124-milakay",
+  "pathSegment": "TA-PATH-124-THINGS124",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-124-THINGS124",
+      "order": 1
+    }
+  ]
+}

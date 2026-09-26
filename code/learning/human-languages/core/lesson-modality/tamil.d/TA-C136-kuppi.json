@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C136-kuppi",
+    "language": "tamil",
+    "chapter": 136,
+    "sequence": 6150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ca206ce16b3fc76"
+  },
+  "findings": []
+}

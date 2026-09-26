@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C144-kulirnta",
+    "language": "tamil",
+    "chapter": 144,
+    "sequence": 6620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a712ccd538515823"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C146-pulippu",
+  "pathSegment": "TA-PATH-146-QUAL146",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-146-QUAL146",
+      "order": 1
+    }
+  ]
+}

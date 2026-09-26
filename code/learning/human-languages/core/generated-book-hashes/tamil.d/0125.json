@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:897afb987ddce358",
+  "lessonIds": [
+    "TA-C125-itli",
+    "TA-C125-tocai",
+    "TA-C125-vatai",
+    "TA-C125-kapi",
+    "TA-C125-katal"
+  ],
+  "tex": "tamil/book/chapters/ch125-idli-dosa-vadai-coffee-sea.tex"
+}

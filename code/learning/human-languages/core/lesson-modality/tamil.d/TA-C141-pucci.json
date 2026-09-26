@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C141-pucci",
+    "language": "tamil",
+    "chapter": 141,
+    "sequence": 6460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a7b15de22c6e3ff"
+  },
+  "findings": []
+}

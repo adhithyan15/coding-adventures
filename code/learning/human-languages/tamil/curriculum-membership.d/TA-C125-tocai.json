@@ -1,0 +1,11 @@
+{
+  "id": "TA-C125-tocai",
+  "pathSegment": "TA-PATH-125-THINGS125",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-125-THINGS125",
+      "order": 1
+    }
+  ]
+}

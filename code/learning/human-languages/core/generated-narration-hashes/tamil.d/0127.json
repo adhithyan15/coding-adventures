@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:f7be5b24264719ca",
+  "lessonIds": [
+    "TA-C127-natcattiram",
+    "TA-C127-pani",
+    "TA-C127-iti",
+    "TA-C127-minnal",
+    "TA-C127-puyal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch127.txt",
+  "json": "tamil/narration/ch127.json",
+  "textHash": "fnv1a64:89bf09fb09c6ea31",
+  "jsonHash": "fnv1a64:24009b17990c8a70",
+  "findings": []
+}

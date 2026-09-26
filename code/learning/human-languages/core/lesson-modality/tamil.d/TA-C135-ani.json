@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C135-ani",
+    "language": "tamil",
+    "chapter": 135,
+    "sequence": 6130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ca6c8f5a7db7b84"
+  },
+  "findings": []
+}

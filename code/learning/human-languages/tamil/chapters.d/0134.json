@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Curtain, Mattress, Television, Mobile phone, Computer",
+  "label": "ch:ta-curtain-mattress-television-mobile-phone-computer",
+  "canDo": "I can say a curtain, a mattress, a television, a mobile phone and a computer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C134-kanini",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can say a curtain, a mattress, a television, a mobile phone and a computer.",
+    "assesses": [
+      "TA-LEX-C134-THINGS134-03",
+      "TA-LEX-C134-THINGS134-04",
+      "TA-LEX-C134-THINGS134-05"
+    ]
+  }
+}

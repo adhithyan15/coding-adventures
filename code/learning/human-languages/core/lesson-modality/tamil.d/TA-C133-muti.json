@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C133-muti",
+    "language": "tamil",
+    "chapter": 133,
+    "sequence": 6030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:226e6e5d30954bdf"
+  },
+  "findings": []
+}

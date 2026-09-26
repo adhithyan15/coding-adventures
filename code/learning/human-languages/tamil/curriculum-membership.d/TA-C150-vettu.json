@@ -1,0 +1,11 @@
+{
+  "id": "TA-C150-vettu",
+  "pathSegment": "TA-PATH-150-QUAL150",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-150-QUAL150",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C142-ottakam",
+    "language": "tamil",
+    "chapter": 142,
+    "sequence": 6500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0fa2fe2241a22a6"
+  },
+  "findings": []
+}

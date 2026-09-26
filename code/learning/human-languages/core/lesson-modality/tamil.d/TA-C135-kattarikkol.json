@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C135-kattarikkol",
+    "language": "tamil",
+    "chapter": 135,
+    "sequence": 6110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e41d13d0e6bfe87"
+  },
+  "findings": []
+}
