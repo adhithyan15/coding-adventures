@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:533442603325ba2b",
+  "sourceHash": "fnv1a64:5158c217c6da89c6",
   "lessons": [
     {
       "id": "AR-C02-ism",
@@ -1418,6 +1418,111 @@
       ]
     },
     {
+      "id": "AR-C02-mudarris",
+      "sequence": 249,
+      "title": "مُدَرِّس (mudarris) — a teacher",
+      "headword": "مُدَرِّس",
+      "romanization": "mudarris",
+      "gloss": "a teacher",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:af6157fb77a6f6f3",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: مُدَرِّس",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "مُدَرِّس — mudarris — \"a teacher\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: mudarris. Look at its shape as you say it: the lessons that follow take pieces of it, the short-vowel marks ـَ, ـِ and ـُ, and the doubling mark ـّ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mudarris",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mudarris*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mudarris, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mudarris*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a teacher\"? (مُدَرِّس, mudarris.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "AR-W06-harakat-and-hamza",
       "sequence": 250,
       "title": "َ ِ ُ (fatḥa, kasra, ḍamma; hamza) — the short vowels the abjad usually hides",
@@ -1432,7 +1537,7 @@
         "script-block",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:db3fd4a03bfd114e",
+      "sourceHash": "fnv1a64:bb8a64cd93966973",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1567,6 +1672,111 @@
       ]
     },
     {
+      "id": "AR-C02-ahlan",
+      "sequence": 254,
+      "title": "أَهْلًا (ahlan) — welcome",
+      "headword": "أَهْلًا",
+      "romanization": "ahlan",
+      "gloss": "welcome",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:882b2bf22ae05e21",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: أَهْلًا",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "أَهْلًا — ahlan — \"welcome\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ahlan. Look at its shape as you say it: the lessons that follow take pieces of it, the no-vowel mark ـْ and the ending ـً, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahlan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahlan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ahlan, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ahlan*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"welcome\"? (أَهْلًا, ahlan.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "AR-W06-sukun-shadda-tanwin",
       "sequence": 255,
       "title": "ْ ّ ً (sukūn, shadda, fatḥatan) — stop, double, or add -an",
@@ -1581,7 +1791,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:afd802bb60cf57b9",
+      "sourceHash": "fnv1a64:40b0325c0e194c24",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1725,7 +1935,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7030933d57baf47b",
+      "sourceHash": "fnv1a64:50f797c1dbe47f51",
       "notice": {
         "modality": "pen",
         "needs": [

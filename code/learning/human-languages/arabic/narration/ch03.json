@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:489697b043b754b7",
+  "sourceHash": "fnv1a64:5dea0c110535830e",
   "lessons": [
     {
       "id": "AR-C03-haajj",
@@ -620,7 +620,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73038833f9bf8888",
+      "sourceHash": "fnv1a64:6a272073b1c14a56",
       "notice": null,
       "blocks": [
         {
@@ -637,6 +637,16 @@
             {
               "kind": "speech",
               "text": "Chapter 2 gave you ما (mā, \"what\"). Here is its partner: كيف (kayfa, \"how\"). Two question words, and you can already build with both."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two words from the marks lessons: say mudarris and ahlan, and what each means."
             }
           ]
         },

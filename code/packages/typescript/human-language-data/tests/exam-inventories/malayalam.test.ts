@@ -117,7 +117,9 @@ describe("the committed Malayalam A1 inventory", () => {
     // `shown` and the directly-owned overlap both hold at 69.
     // 643 -> 652: HL-C443 anchor words, one short word lesson before each of
     // nine letter lessons that no earlier word held.
-    expect(lessons).toHaveLength(652);
+    // 652 -> 653: HL-C443, ഉടുപ്പ് before the chapter-4 ഉ lesson. It prints
+    // only glyphs the track already shows, so `shown` holds at 69.
+    expect(lessons).toHaveLength(653);
     expect(shown.size).toBe(69);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(69);
     expect(open).toEqual([]);

@@ -123,6 +123,16 @@ describe("anchoring", () => {
     expect(track(report, "kannada").letterLessons.map((entry) => entry.anchoring)).toEqual(["anchored"]);
   });
 
+  it("anchors a capital in a word that holds its small letter", () => {
+    // CYRILLIC SMALL LETTER YA ("I"), then the CAPITAL YA written on its own.
+    const report = measureLetterAnchoring([
+      lesson("RU-C1", 10, { headword: "\u044F", language: "russian" }),
+      lesson("RU-S1", 20, { type: "writing", chapter: 2, headword: "\u042F", language: "russian" }),
+      lesson("RU-S2", 30, { type: "writing", chapter: 3, headword: "\u0416", language: "russian" }),
+    ]);
+    expect(track(report, "russian").letterLessons.map((entry) => entry.anchoring)).toEqual(["anchored", "cold"]);
+  });
+
   it("reports a Han component with no visible anchor as unmeasured, not cold", () => {
     const report = measureLetterAnchoring([
       lesson("ZH-S1", 10, { type: "writing", headword: PERSON_RADICAL, language: "chinese" }),
@@ -259,20 +269,36 @@ describe("the real corpus", () => {
   // thirteen words (આહાર, છીપ, કણ, શક, અથાણું, દિવાળી, ચપ્પલ, બગલો, ઉખાણું,
   // એકલું, ધૂળ, ઈંટ, ઢોલ) open chapters 1 and 3-7. The four left are chapter
   // 2's દ, ય, ધ and ૃ: that chapter is at its twelve-atom budget.
+  //
+  // Russian's last cold letter (1 -> 0) was the capital Я of chapter 14. The
+  // small я is the word "I", taught in chapter 2; a case pair is one letter in
+  // two forms, so the capital is now anchored by that word, the way が is
+  // anchored by か and ゛. The small я keeps its own lesson in chapter 28.
+  //
+  // Arabic's last two cold lessons (2 -> 0) were the mark sets of chapter 2.
+  // Headwords are written without marks, so no word held them. Two vocalized
+  // words now come first: مُدَرِّس (fatha, kasra, damma, shadda) and أَهْلًا
+  // (sukun, tanwin).
+  //
+  // Malayalam ഉ (3 -> 2) now follows ഉടുപ്പ് (uṭuppŭ, a dress), and Japanese わ
+  // (2 -> 1) follows わに (wani, a crocodile): こんにちは says "wa" with は, so
+  // no earlier word held わ. What is left: Malayalam's ഒ and ഏ ഴ, anchored by
+  // number words its numbers chapter shows only in romanization, and Japanese
+  // め, whose chapter is at its twelve-atom budget.
   const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
-    arabic: [2, 4, 0],
+    arabic: [0, 4, 0],
     bengali: [0, 11, 0],
     chinese: [0, 51, 0],
     gujarati: [4, 4, 0],
     hindi: [0, 1, 0],
-    japanese: [2, 35, 0],
+    japanese: [1, 35, 0],
     kannada: [0, 0, 0],
-    malayalam: [3, 12, 0],
+    malayalam: [2, 12, 0],
     marathi: [6, 4, 0],
     marwadi: [0, 49, 0],
     persian: [0, 4, 0],
     punjabi: [3, 2, 0],
-    russian: [1, 0, 0],
+    russian: [0, 0, 0],
     sanskrit: [0, 0, 0],
     tamil: [0, 9, 0],
     telugu: [0, 0, 0],

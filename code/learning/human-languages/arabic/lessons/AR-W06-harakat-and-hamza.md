@@ -8,20 +8,20 @@ type: writing
 headword: "َ ِ ُ"
 gloss: the abjad's optional short-vowel marks, where one tiny dash flips anta to anti
 romanization: "fatḥa, kasra, ḍamma; hamza"
-prerequisites: [AR-W05-ya-and-my-name]
+prerequisites: [AR-W05-ya-and-my-name, AR-C02-mudarris]
 sounds: [arabic-harakat, arabic-hamza]
 roots: [abjad-vowels]
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [AR-LEX-ANCHOR-MUDARRIS]
 introduces:
   knowledge: [AR-CONCEPT-W06-HARAKAT-01, AR-CONCEPT-W06-HARAKAT-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-CONCEPT-W06-HARAKAT-01, AR-CONCEPT-W06-HARAKAT-02]
+  knowledge: [AR-CONCEPT-W06-HARAKAT-01, AR-CONCEPT-W06-HARAKAT-02, AR-LEX-ANCHOR-MUDARRIS]
 skills: [speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -33,7 +33,7 @@ reviews_of: [AR-W05-ya-and-my-name, AR-W00-alif-mim-salam, AR-C02-anta-anti]
 # َ ِ ُ — the short vowels the abjad usually hides
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-MUDARRIS] -->
 
 [PAUSE 2s] In the first writing cluster you learned Arabic is an **abjad**: short
 vowels are **usually left out**. This lesson shows the marks that a beginner's

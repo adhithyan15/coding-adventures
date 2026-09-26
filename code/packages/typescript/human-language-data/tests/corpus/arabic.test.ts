@@ -53,7 +53,9 @@ it("pins Arabic lesson-content budgets", () =>
     // introduces an idiom, a sense or a culture claim.
     // 414 -> 419: HL-C443 anchor words for five letter sets in chapters 1-3
     // (ثابت, عيد, كوخ, ثمن, حاج), each placed before the set it anchors.
-    lessons: 419,
+    // 419 -> 421: HL-C443 anchor words for the two mark sets of chapter 2
+    // (مُدَرِّس, أَهْلًا). No idioms, senses or culture claims.
+    lessons: 421,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,

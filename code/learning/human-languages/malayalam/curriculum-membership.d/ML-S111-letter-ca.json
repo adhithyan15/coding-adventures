@@ -1,11 +1,11 @@
 {
   "id": "ML-S111-letter-ca",
   "pathSegment": "ML-PATH-100",
-  "pathOrder": 26,
+  "pathOrder": 27,
   "extensions": [
     {
       "id": "ML-EXT-100-SCRIPT-RECOGNITION",
-      "order": 26
+      "order": 27
     }
   ]
 }
