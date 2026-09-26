@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:a9afb0fbe1cb0e8c",
+  "lessonIds": [
+    "PT-C44-carne",
+    "PT-C44-peixe",
+    "PT-C44-manteiga",
+    "PT-C44-sal",
+    "PT-C44-frango"
+  ],
+  "tex": "portuguese/book/chapters/ch44-meat-fish-butter-salt-chicken.tex"
+}

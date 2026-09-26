@@ -1,0 +1,11 @@
+{
+  "id": "PT-C73-banco",
+  "pathSegment": "PT-PATH-73-CIDADE1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-73-CIDADE1",
+      "order": 4
+    }
+  ]
+}

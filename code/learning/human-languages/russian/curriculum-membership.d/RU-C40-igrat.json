@@ -1,0 +1,11 @@
+{
+  "id": "RU-C40-igrat",
+  "pathSegment": "RU-PATH-40-VERB3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-40-VERB3",
+      "order": 4
+    }
+  ]
+}

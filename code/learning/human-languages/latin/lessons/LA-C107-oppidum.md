@@ -45,7 +45,7 @@ reviews_of: [LA-C107-urbs]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for city, town, forum, temple, shop.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C107-URBS-02, LA-LEX-C106-NUMERI-05, LA-LEX-C107-URBS-01] -->

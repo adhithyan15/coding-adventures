@@ -1,0 +1,11 @@
+{
+  "id": "PT-C62-ovelha",
+  "pathSegment": "PT-PATH-62-ANIMAIS3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-62-ANIMAIS3",
+      "order": 3
+    }
+  ]
+}

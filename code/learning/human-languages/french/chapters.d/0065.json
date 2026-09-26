@@ -1,0 +1,19 @@
+{
+  "chapter": 65,
+  "title": "Leave, Carry, Send, Receive, Feel",
+  "label": "ch:fr-leave-carry-send-receive-feel",
+  "canDo": "I can say to leave (something), to carry, to send, to receive, to feel.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C65-sentir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: i can say to leave (something), to carry, to send, to receive, to feel.",
+    "assesses": [
+      "FR-LEX-C65-VERBES17-03",
+      "FR-LEX-C65-VERBES17-04",
+      "FR-LEX-C65-VERBES17-05"
+    ]
+  }
+}

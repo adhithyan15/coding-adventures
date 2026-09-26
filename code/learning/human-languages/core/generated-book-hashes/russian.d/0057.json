@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:0863ef4e58bc98d1",
+  "lessonIds": [
+    "RU-C57-stone",
+    "RU-C57-sand",
+    "RU-C57-shore",
+    "RU-C57-island",
+    "RU-C57-field"
+  ],
+  "tex": "russian/book/chapters/ch57-stone-sand-shore-island-field.tex"
+}

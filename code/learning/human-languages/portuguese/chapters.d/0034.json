@@ -1,0 +1,19 @@
+{
+  "chapter": 34,
+  "title": "Pain, Fever, Cough, Medicine",
+  "label": "ch:pt-pain-fever-cough-medicine",
+  "canDo": "I can name pain, a fever, a cough, medicine and a hospital.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C34-hospital",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 34: i can name pain, a fever, a cough, medicine and a hospital.",
+    "assesses": [
+      "PT-LEX-C34-SAUDE1-03",
+      "PT-LEX-C34-SAUDE1-04",
+      "PT-LEX-C34-SAUDE1-05"
+    ]
+  }
+}

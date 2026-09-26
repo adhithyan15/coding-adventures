@@ -1,0 +1,11 @@
+{
+  "id": "RU-C46-porridge",
+  "pathSegment": "RU-PATH-46-MEALS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-46-MEALS",
+      "order": 3
+    }
+  ]
+}

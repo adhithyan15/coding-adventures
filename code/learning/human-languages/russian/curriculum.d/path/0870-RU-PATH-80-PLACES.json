@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-80-PLACES",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "RU-EXT-80-PLACES"
+  ],
+  "after": []
+}

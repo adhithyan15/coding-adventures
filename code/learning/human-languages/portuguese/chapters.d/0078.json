@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Hat, Coat, Skirt, Socks, Belt",
+  "label": "ch:pt-hat-coat-skirt-socks-belt",
+  "canDo": "I can name a hat, a coat, a skirt, socks and a belt.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "PT-C78-cinto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can name a hat, a coat, a skirt, socks and a belt.",
+    "assesses": [
+      "PT-LEX-C78-ROUPA2-03",
+      "PT-LEX-C78-ROUPA2-04",
+      "PT-LEX-C78-ROUPA2-05"
+    ]
+  }
+}

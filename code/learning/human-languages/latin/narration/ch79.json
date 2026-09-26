@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "Food and Meals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bdbdfaee4e26889d",
+  "sourceHash": "fnv1a64:ebfefd203f7f527e",
   "lessons": [
     {
       "id": "LA-C79-cibus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f79bd4c33aecf155",
+      "sourceHash": "fnv1a64:5f53ab3c4bb448b9",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for food and meals."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d38f9b8797df60a0",
+      "sourceHash": "fnv1a64:ada6f77ee657b240",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for food and meals."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7ab040303897f28",
+      "sourceHash": "fnv1a64:b52330e2413bc064",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for food and meals."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:415b71c1fb4157f3",
+      "sourceHash": "fnv1a64:aaca7faea3b2f4c7",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for food and meals."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ecbda95b28f8fbe",
+      "sourceHash": "fnv1a64:6b39e07c446d10a2",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for food and meals."
+              "text": "One more word for this chapter."
             }
           ]
         },

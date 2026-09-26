@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C55-peur",
+    "language": "french",
+    "chapter": 55,
+    "sequence": 2120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c83f6ed13199a598"
+  },
+  "findings": []
+}

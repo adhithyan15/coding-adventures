@@ -45,7 +45,7 @@ reviews_of: [LA-C106-quadraginta]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for thirty to a thousand.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C106-NUMERI-03, LA-LEX-C106-NUMERI-01, LA-LEX-C106-NUMERI-02] -->

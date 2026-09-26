@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C93-lourd",
+    "language": "french",
+    "chapter": 93,
+    "sequence": 4050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9ab99c91b46a68d"
+  },
+  "findings": []
+}

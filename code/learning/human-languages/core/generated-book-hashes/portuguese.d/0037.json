@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:d650ddee6c79d4d0",
+  "lessonIds": [
+    "PT-C37-filha",
+    "PT-C37-avo-m",
+    "PT-C37-avo-f",
+    "PT-C37-marido",
+    "PT-C37-esposa"
+  ],
+  "tex": "portuguese/book/chapters/ch37-daughter-grandparents-husband-wife.tex"
+}

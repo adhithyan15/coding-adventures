@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:2d9da2458d54c014",
+  "lessonIds": [
+    "FR-C61-enseigner",
+    "FR-C61-boire",
+    "FR-C61-manger",
+    "FR-C61-donner",
+    "FR-C61-vivre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch61.txt",
+  "json": "french/narration/ch61.json",
+  "textHash": "fnv1a64:ec7335fc4a6ec629",
+  "jsonHash": "fnv1a64:20186d08a4f5d9fc",
+  "findings": []
+}

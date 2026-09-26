@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:b9221930f9189023",
+  "lessonIds": [
+    "FR-C81-arbre",
+    "FR-C81-fleur",
+    "FR-C81-feuille",
+    "FR-C81-montagne",
+    "FR-C81-riviere"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch81.txt",
+  "json": "french/narration/ch81.json",
+  "textHash": "fnv1a64:b307aade6a71b33b",
+  "jsonHash": "fnv1a64:ead06f92804ba163",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:597031e1a9d38191",
+  "lessonIds": [
+    "RU-C40-spat",
+    "RU-C40-sidet",
+    "RU-C40-stoyat",
+    "RU-C40-bezhat",
+    "RU-C40-igrat"
+  ],
+  "tex": "russian/book/chapters/ch40-sleep-sit-stand-run-play.tex"
+}

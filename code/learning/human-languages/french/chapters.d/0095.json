@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Wet, Week, Month, Morning, Always",
+  "label": "ch:fr-wet-week-month-morning-always",
+  "canDo": "I can name wet, a week, a month, the morning, always.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C95-toujours",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can name wet, a week, a month, the morning, always.",
+    "assesses": [
+      "FR-LEX-C95-ADJ47-03",
+      "FR-LEX-C95-ADJ47-04",
+      "FR-LEX-C95-ADJ47-05"
+    ]
+  }
+}

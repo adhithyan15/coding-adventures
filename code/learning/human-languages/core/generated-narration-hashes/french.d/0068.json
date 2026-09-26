@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:7d532f32e597068c",
+  "lessonIds": [
+    "FR-C68-banane",
+    "FR-C68-orange",
+    "FR-C68-terre",
+    "FR-C68-tomate",
+    "FR-C68-oignon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch68.txt",
+  "json": "french/narration/ch68.json",
+  "textHash": "fnv1a64:93de6b0d02fb6b04",
+  "jsonHash": "fnv1a64:0a02ef2283c40870",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C79-parapluie",
+  "pathSegment": "FR-PATH-79-CHOSES31",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-79-CHOSES31",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C73-freddo",
+  "pathSegment": "IT-PATH-73-AGG2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-73-AGG2",
+      "order": 4
+    }
+  ]
+}

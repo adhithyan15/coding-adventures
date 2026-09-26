@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "Hare, Snake, Hen, Duck, Goat",
+  "label": "ch:ru-hare-snake-hen-duck-goat",
+  "canDo": "I can name a hare, a snake, a hen, a duck and a goat.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C62-goat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: i can name a hare, a snake, a hen, a duck and a goat.",
+    "assesses": [
+      "RU-LEX-C62-ANIMALS3-03",
+      "RU-LEX-C62-ANIMALS3-04",
+      "RU-LEX-C62-ANIMALS3-05"
+    ]
+  }
+}

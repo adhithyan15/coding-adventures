@@ -45,7 +45,7 @@ reviews_of: [LA-C83-culina]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for kitchen, roof, lamp, cup, knife.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C83-DOMUS2-02, LA-LEX-C82-DOMUS1-05, LA-LEX-C83-DOMUS2-01] -->

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C84-desert",
+  "pathSegment": "FR-PATH-84-NATURE36",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-84-NATURE36",
+      "order": 3
+    }
+  ]
+}

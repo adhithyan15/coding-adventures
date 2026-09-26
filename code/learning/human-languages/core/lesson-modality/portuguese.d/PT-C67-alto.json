@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C67-alto",
+    "language": "portuguese",
+    "chapter": 67,
+    "sequence": 2990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0fcc4eabb88f390b"
+  },
+  "findings": []
+}

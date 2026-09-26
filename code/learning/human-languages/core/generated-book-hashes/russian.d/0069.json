@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:976661bc3823e91c",
+  "lessonIds": [
+    "RU-C69-today",
+    "RU-C69-yesterday",
+    "RU-C69-hour",
+    "RU-C69-minute",
+    "RU-C69-time"
+  ],
+  "tex": "russian/book/chapters/ch69-today-yesterday-hour-minute-time.tex"
+}

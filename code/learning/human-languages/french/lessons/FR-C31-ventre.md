@@ -8,7 +8,7 @@ type: word
 headword: le ventre
 gloss: stomach — masculine, nasal like la main but through a different vowel, and the word that closes four chapters of everyday nouns
 concept_tag: FR-BODY-VENTRE
-prerequisites: [FR-C31-bouche, FR-C17-main, FR-C17-tete, FR-C18-oui]
+prerequisites: [FR-C31-bouche, FR-C17-main, FR-C17-tete, FR-C18-oui, FR-C17-tete-more, FR-C18-oui-more]
 sounds: [nasal-en]
 roots: [latin-venter]
 etymology_hook: "ventre ← Latin venter, ventris, 'belly' — English ventral and ventriloquist ('belly-speaker', venter + loqui 'to speak') are learned borrowings of the same stem; the nasal -en here is a different vowel from la main's nasal -ain, though both are written with a following nasal consonant"

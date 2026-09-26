@@ -1,0 +1,19 @@
+{
+  "chapter": 51,
+  "title": "Glass, Plate, Spoon, Knife, Fork",
+  "label": "ch:pt-glass-plate-spoon-knife-fork",
+  "canDo": "I can name a glass, a plate, a spoon, a knife and a fork.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "PT-C51-garfo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 51: i can name a glass, a plate, a spoon, a knife and a fork.",
+    "assesses": [
+      "PT-LEX-C51-MESA-03",
+      "PT-LEX-C51-MESA-04",
+      "PT-LEX-C51-MESA-05"
+    ]
+  }
+}

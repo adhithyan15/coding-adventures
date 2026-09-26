@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C84-colline",
+    "language": "french",
+    "chapter": 84,
+    "sequence": 3600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:64ca689ff1654ffa"
+  },
+  "findings": []
+}

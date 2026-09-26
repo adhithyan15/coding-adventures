@@ -1,0 +1,19 @@
+{
+  "chapter": 29,
+  "title": "Head, Hand, Leg, Belly, Tooth",
+  "label": "ch:ru-head-hand-leg-belly-tooth",
+  "canDo": "I can name the head, a hand, a leg, the belly and a tooth.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C29-tooth",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 29: i can name the head, a hand, a leg, the belly and a tooth.",
+    "assesses": [
+      "RU-LEX-C29-BODY1-03",
+      "RU-LEX-C29-BODY1-04",
+      "RU-LEX-C29-BODY1-05"
+    ]
+  }
+}

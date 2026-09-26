@@ -1,9 +1,10 @@
 {
   "language": "french",
   "chapter": 26,
-  "sourceHash": "fnv1a64:0af5804404ed1cc4",
+  "sourceHash": "fnv1a64:5ae4598d24c307d1",
   "lessonIds": [
-    "FR-C22-chien-chat"
+    "FR-C22-chien-chat",
+    "FR-C22-chien-chat-more"
   ],
   "tex": "french/book/chapters/ch26-dog-and-cat.tex"
 }

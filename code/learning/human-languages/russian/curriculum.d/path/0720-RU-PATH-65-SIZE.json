@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-65-SIZE",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "RU-EXT-65-SIZE"
+  ],
+  "after": []
+}

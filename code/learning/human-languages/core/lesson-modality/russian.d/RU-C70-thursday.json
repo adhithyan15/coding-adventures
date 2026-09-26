@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C70-thursday",
+    "language": "russian",
+    "chapter": 70,
+    "sequence": 3490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6f90b97d7c4e32a"
+  },
+  "findings": []
+}

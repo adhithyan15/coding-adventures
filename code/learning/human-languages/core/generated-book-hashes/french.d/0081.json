@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:f2c81aa4f9289f1f",
+  "lessonIds": [
+    "FR-C81-arbre",
+    "FR-C81-fleur",
+    "FR-C81-feuille",
+    "FR-C81-montagne",
+    "FR-C81-riviere"
+  ],
+  "tex": "french/book/chapters/ch81-tree-flower-leaf-mountain-river.tex"
+}

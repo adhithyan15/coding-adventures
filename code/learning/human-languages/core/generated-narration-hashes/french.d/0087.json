@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:c1a5a2b77ec0881d",
+  "lessonIds": [
+    "FR-C87-mouton",
+    "FR-C87-chevre",
+    "FR-C87-lion",
+    "FR-C87-singe",
+    "FR-C87-abeille"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch87.txt",
+  "json": "french/narration/ch87.json",
+  "textHash": "fnv1a64:4a7f26128768d7a3",
+  "jsonHash": "fnv1a64:8e123ae90fefeaab",
+  "findings": []
+}

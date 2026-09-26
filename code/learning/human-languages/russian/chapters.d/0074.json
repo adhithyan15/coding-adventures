@@ -1,0 +1,19 @@
+{
+  "chapter": 74,
+  "title": "Always, Sometimes, Never, Now, Later",
+  "label": "ch:ru-always-sometimes-never-now-later",
+  "canDo": "I can say always, sometimes, never, now and later.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "RU-C74-later",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: i can say always, sometimes, never, now and later.",
+    "assesses": [
+      "RU-LEX-C74-WHEN-03",
+      "RU-LEX-C74-WHEN-04",
+      "RU-LEX-C74-WHEN-05"
+    ]
+  }
+}

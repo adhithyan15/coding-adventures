@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:0ec645112fc7b799",
+  "lessonIds": [
+    "FR-C100-voiture",
+    "FR-C100-pont",
+    "FR-C100-parc",
+    "FR-C100-eglise",
+    "FR-C100-musee"
+  ],
+  "tex": "french/book/chapters/ch100-car-bridge-park-church-museum.tex"
+}

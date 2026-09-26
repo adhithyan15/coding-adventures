@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:c425b602d00feac2",
+  "lessonIds": [
+    "RU-C77-city",
+    "RU-C77-street",
+    "RU-C77-shop",
+    "RU-C77-market",
+    "RU-C77-school"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch77.txt",
+  "json": "russian/narration/ch77.json",
+  "textHash": "fnv1a64:bada4949504d3733",
+  "jsonHash": "fnv1a64:b232feca33a16d84",
+  "findings": []
+}

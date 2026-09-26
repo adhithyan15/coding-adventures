@@ -1,0 +1,11 @@
+{
+  "id": "FR-C57-tante",
+  "pathSegment": "FR-PATH-57-FAMILLE9",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-57-FAMILLE9",
+      "order": 3
+    }
+  ]
+}

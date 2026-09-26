@@ -192,3 +192,24 @@ fn foster_parenting_stays_linear() {
     let body_children = output.document.children.len();
     assert_eq!(body_children, 1);
 }
+
+// Foreign content (BR03 step 3).
+
+#[test]
+fn deep_foreign_nesting_and_integration_points() {
+    let output = parse(&("<svg>".to_string() + &"<g>".repeat(10_000)));
+    assert!(depth(&output.document.children) <= MAX_TREE_DEPTH);
+    parse(&"<math><mi><svg><foreignObject><div>".repeat(2_000));
+}
+
+#[test]
+fn cdata_sections_that_keep_switching_the_tokenizer() {
+    parse(&("<svg><![CDATA[".to_string() + &"x>".repeat(50_000) + "]]>"));
+    parse(&"<svg><![CDATA[a>b]]></svg>".repeat(5_000));
+}
+
+#[test]
+fn html_breaking_out_of_foreign_content_repeatedly() {
+    parse(&"<svg><g><g><p>".repeat(5_000));
+    parse(&("<svg>".to_string() + &"<g></p>".repeat(10_000)));
+}

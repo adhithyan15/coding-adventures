@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:f4e89954362b57ce",
+  "lessonIds": [
+    "FR-C97-dessus",
+    "FR-C97-dessous",
+    "FR-C97-dedans",
+    "FR-C97-dehors",
+    "FR-C97-hui"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch97.txt",
+  "json": "french/narration/ch97.json",
+  "textHash": "fnv1a64:c1f5f0a4921be58f",
+  "jsonHash": "fnv1a64:0e96a6982e52e357",
+  "findings": []
+}

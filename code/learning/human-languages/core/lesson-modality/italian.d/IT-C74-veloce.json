@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C74-veloce",
+    "language": "italian",
+    "chapter": 74,
+    "sequence": 3280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1cbd00f96c17856"
+  },
+  "findings": []
+}

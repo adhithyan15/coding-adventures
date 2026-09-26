@@ -45,7 +45,7 @@ reviews_of: [LA-C105-parum]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for thirty to a thousand.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C106-NUMERI-01, LA-LEX-C105-QUANTUM-04, LA-LEX-C105-QUANTUM-05] -->

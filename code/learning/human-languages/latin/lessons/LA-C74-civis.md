@@ -45,7 +45,7 @@ reviews_of: [LA-C73-poeta]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for citizen, cook, merchant, farmer.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C74-OPUS-01, LA-LEX-C73-HOMINES2-04, LA-LEX-C73-HOMINES2-05] -->

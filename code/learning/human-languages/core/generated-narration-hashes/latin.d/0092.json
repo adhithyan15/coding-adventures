@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 92,
-  "sourceHash": "fnv1a64:1a7a1a60d6471bf8",
+  "sourceHash": "fnv1a64:181cb385e7855fb4",
   "lessonIds": [
     "LA-C92-mus",
     "LA-C92-gallina",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch92.txt",
   "json": "latin/narration/ch92.json",
-  "textHash": "fnv1a64:716d22a3bff17478",
-  "jsonHash": "fnv1a64:bdc0dc923021e328",
+  "textHash": "fnv1a64:76ca33d87fe55d7e",
+  "jsonHash": "fnv1a64:824c8638c708a065",
   "findings": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C68-rico",
+    "language": "portuguese",
+    "chapter": 68,
+    "sequence": 3050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b242ff1d87860651"
+  },
+  "findings": []
+}

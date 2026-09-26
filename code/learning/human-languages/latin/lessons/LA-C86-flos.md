@@ -45,7 +45,7 @@ reviews_of: [LA-C86-arbor]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for tree, flower, leaf, forest, mountain.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C86-ARBOR-02, LA-LEX-C85-RES2-05, LA-LEX-C86-ARBOR-01] -->

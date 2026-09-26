@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C48-house",
+    "language": "russian",
+    "chapter": 48,
+    "sequence": 2350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:53f186d6524ed417"
+  },
+  "findings": []
+}

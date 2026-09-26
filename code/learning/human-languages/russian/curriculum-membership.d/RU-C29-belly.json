@@ -1,0 +1,11 @@
+{
+  "id": "RU-C29-belly",
+  "pathSegment": "RU-PATH-29-BODY1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-29-BODY1",
+      "order": 3
+    }
+  ]
+}

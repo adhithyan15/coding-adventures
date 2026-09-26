@@ -1,0 +1,11 @@
+{
+  "id": "FR-C82-mer",
+  "pathSegment": "FR-PATH-82-NATURE34",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-82-NATURE34",
+      "order": 0
+    }
+  ]
+}

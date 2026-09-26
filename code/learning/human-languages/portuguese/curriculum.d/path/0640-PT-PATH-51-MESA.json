@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-51-MESA",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "PT-EXT-51-MESA"
+  ],
+  "after": []
+}

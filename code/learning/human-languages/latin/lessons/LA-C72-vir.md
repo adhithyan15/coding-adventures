@@ -45,7 +45,7 @@ reviews_of: [LA-C72-hospes]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for aunt, neighbour, guest, man, woman.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C72-HOMINES1-04, LA-LEX-C72-HOMINES1-02, LA-LEX-C72-HOMINES1-03] -->

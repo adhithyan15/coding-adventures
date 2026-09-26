@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C66-cacher",
+    "language": "french",
+    "chapter": 66,
+    "sequence": 2700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e6e0c19817a7524"
+  },
+  "findings": []
+}

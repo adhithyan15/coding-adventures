@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04, FR-SOUND-TETE-05]
+  knowledge: [FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04, FR-SOUND-TETE-05]
+  knowledge: [FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -81,20 +81,8 @@ hurts."
 *Testa* is still visible in English **test** — which began as the shallow pot an
 alchemist used to assay metals.
 
-## Sounds you'll need: The circumflex is a receipt
-<!-- hl-knowledge: introduces=[FR-SOUND-TETE-05]; assesses=[] -->
-
-Look at the accent: **tê**te. Chapter W01 taught what a circumflex records — a
-letter that used to be there, almost always an **s**.
-
-> *testa* → Old French **teste** → modern **tête**
-
-The *s* stopped being pronounced, and the accent was put in to mark the grave.
-That is why English, which borrowed from Old French *before* the *s* fell,
-still has it in **test**.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04, FR-SOUND-TETE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "la tête"]
@@ -103,7 +91,7 @@ still has it in **test**.
 - [YOU SAY: the receipt — "te**s**te → tê-te"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04, FR-SOUND-TETE-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04] -->
 
 [PAUSE 3s] Say "the head." (*La tête* — feminine.) Does it come from Latin
 *caput*? (**No** — from ***testa***, an **earthenware pot**.) Why a pot? (Roman

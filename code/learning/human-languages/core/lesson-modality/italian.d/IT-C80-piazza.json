@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C80-piazza",
+    "language": "italian",
+    "chapter": 80,
+    "sequence": 3610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9d67308519d2a0e"
+  },
+  "findings": []
+}

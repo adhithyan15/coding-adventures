@@ -1,0 +1,19 @@
+{
+  "chapter": 49,
+  "title": "Run, Hear, Teach, Learn, Open",
+  "label": "ch:it-run-hear-teach-learn-open",
+  "canDo": "I can say to run, to hear, to teach, to learn, to open.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "IT-C49-aprire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 49: i can say to run, to hear, to teach, to learn, to open.",
+    "assesses": [
+      "IT-LEX-C49-VERBI3-03",
+      "IT-LEX-C49-VERBI3-04",
+      "IT-LEX-C49-VERBI3-05"
+    ]
+  }
+}

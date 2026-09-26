@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C53-carota",
+    "language": "italian",
+    "chapter": 53,
+    "sequence": 2240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef8051a3104879f4"
+  },
+  "findings": []
+}

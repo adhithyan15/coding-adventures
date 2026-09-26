@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:ad381ed03bae3af0",
+  "lessonIds": [
+    "RU-C73-below",
+    "RU-C73-left",
+    "RU-C73-right",
+    "RU-C73-alot",
+    "RU-C73-alittle"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch73.txt",
+  "json": "russian/narration/ch73.json",
+  "textHash": "fnv1a64:406af9471e960ccf",
+  "jsonHash": "fnv1a64:f97152aff32b4408",
+  "findings": []
+}

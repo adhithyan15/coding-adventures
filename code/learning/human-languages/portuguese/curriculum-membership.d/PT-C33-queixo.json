@@ -1,0 +1,11 @@
+{
+  "id": "PT-C33-queixo",
+  "pathSegment": "PT-PATH-33-CORPO4",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-33-CORPO4",
+      "order": 2
+    }
+  ]
+}

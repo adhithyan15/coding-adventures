@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:fd7b903f994fb075",
+  "lessonIds": [
+    "FR-C95-mouille",
+    "FR-C95-semaine",
+    "FR-C95-mois",
+    "FR-C95-matin",
+    "FR-C95-toujours"
+  ],
+  "tex": "french/book/chapters/ch95-wet-week-month-morning-always.tex"
+}

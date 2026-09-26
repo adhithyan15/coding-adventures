@@ -1,0 +1,11 @@
+{
+  "id": "RU-C79-bridge",
+  "pathSegment": "RU-PATH-79-TRAVEL",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-79-TRAVEL",
+      "order": 4
+    }
+  ]
+}

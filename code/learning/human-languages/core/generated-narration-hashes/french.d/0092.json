@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:962236bd7a0c6194",
+  "lessonIds": [
+    "FR-C92-doux",
+    "FR-C92-sale",
+    "FR-C92-jeune",
+    "FR-C92-gentil",
+    "FR-C92-etroit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch92.txt",
+  "json": "french/narration/ch92.json",
+  "textHash": "fnv1a64:d70351fde0bcad77",
+  "jsonHash": "fnv1a64:5b74acdf284e00d5",
+  "findings": []
+}

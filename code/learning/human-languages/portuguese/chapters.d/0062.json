@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "Snake, Hen, Duck, Sheep, Goat",
+  "label": "ch:pt-snake-hen-duck-sheep-goat",
+  "canDo": "I can name a snake, a hen, a duck, a sheep and a goat.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PT-C62-cabra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: i can name a snake, a hen, a duck, a sheep and a goat.",
+    "assesses": [
+      "PT-LEX-C62-ANIMAIS3-03",
+      "PT-LEX-C62-ANIMAIS3-04",
+      "PT-LEX-C62-ANIMAIS3-05"
+    ]
+  }
+}

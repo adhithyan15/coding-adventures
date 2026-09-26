@@ -1,15 +1,16 @@
 {
   "language": "french",
   "chapter": 25,
-  "sourceHash": "fnv1a64:f9be94bf8bf6c982",
+  "sourceHash": "fnv1a64:da88518815e29e6f",
   "lessonIds": [
-    "FR-C21-le-temps"
+    "FR-C21-le-temps",
+    "FR-C21-le-temps-more"
   ],
-  "voiceLessons": 1,
-  "drivablePrefix": 1,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "french/narration/ch25.txt",
   "json": "french/narration/ch25.json",
-  "textHash": "fnv1a64:f69fc7fc05b057d4",
-  "jsonHash": "fnv1a64:8016ccfe36e66877",
+  "textHash": "fnv1a64:8f482c4dfaec9834",
+  "jsonHash": "fnv1a64:328f3aaa3351daf5",
   "findings": []
 }

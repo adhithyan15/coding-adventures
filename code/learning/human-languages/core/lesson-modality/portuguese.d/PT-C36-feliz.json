@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C36-feliz",
+    "language": "portuguese",
+    "chapter": 36,
+    "sequence": 1440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c624eeed6896a3c4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C81-mercato",
+  "pathSegment": "IT-PATH-81-CITTA1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-81-CITTA1",
+      "order": 2
+    }
+  ]
+}

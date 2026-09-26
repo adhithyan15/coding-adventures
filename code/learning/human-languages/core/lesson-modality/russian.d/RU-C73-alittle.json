@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C73-alittle",
+    "language": "russian",
+    "chapter": 73,
+    "sequence": 3660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3460ee3fa2111946"
+  },
+  "findings": []
+}

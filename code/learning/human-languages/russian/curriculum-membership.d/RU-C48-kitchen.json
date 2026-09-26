@@ -1,0 +1,11 @@
+{
+  "id": "RU-C48-kitchen",
+  "pathSegment": "RU-PATH-48-HOME1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-48-HOME1",
+      "order": 2
+    }
+  ]
+}

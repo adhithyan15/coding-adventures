@@ -1,0 +1,990 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 54,
+  "title": "Lesson, Word, Address, Ticket, Map",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:a1ef7014ececdbcc",
+  "lessons": [
+    {
+      "id": "RU-C54-lesson",
+      "sequence": 2650,
+      "title": "урок (urók) — a lesson",
+      "headword": "урок",
+      "romanization": "urók",
+      "gloss": "a lesson",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f6e148652975036",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for money, then the Russian for a gift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: урок",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "урок (urók) — \"a lesson\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "urók",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *urók*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "urók, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *urók*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say urók",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *urók*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for money, then the Russian for a gift, then say urók again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for money, then the Russian for a gift, then say *urók* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does урок (urók) mean? (\"A lesson\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C54-word",
+      "sequence": 2660,
+      "title": "слово (slóvo) — a word",
+      "headword": "слово",
+      "romanization": "slóvo",
+      "gloss": "a word",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad537be98490a5df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a gift, then the Russian for a lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: слово",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "слово (slóvo) — \"a word\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "slóvo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *slóvo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "slóvo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *slóvo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say slóvo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *slóvo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a gift, then the Russian for a lesson, then say slóvo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a gift, then the Russian for a lesson, then say *slóvo* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does слово (slóvo) mean? (\"A word\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C54-address",
+      "sequence": 2670,
+      "title": "адрес (ádres) — an address",
+      "headword": "адрес",
+      "romanization": "ádres",
+      "gloss": "an address",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ff88919c870994a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a lesson, then the Russian for a word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: адрес",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "адрес (ádres) — \"an address\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ádres",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ádres*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ádres, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ádres*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ádres",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ádres*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a lesson, then the Russian for a word, then say ádres again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a lesson, then the Russian for a word, then say *ádres* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does адрес (ádres) mean? (\"An address\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C54-ticket",
+      "sequence": 2680,
+      "title": "билет (bilét) — a ticket",
+      "headword": "билет",
+      "romanization": "bilét",
+      "gloss": "a ticket",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2dd9e5c8c4d0b04a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for a word, then the Russian for an address."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: билет",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "билет (bilét) — \"a ticket\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bilét",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bilét*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bilét, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bilét*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say bilét",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *bilét*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for a word, then the Russian for an address, then say bilét again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for a word, then the Russian for an address, then say *bilét* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does билет (bilét) mean? (\"A ticket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C54-map",
+      "sequence": 2690,
+      "title": "карта (kárta) — a map; a card",
+      "headword": "карта",
+      "romanization": "kárta",
+      "gloss": "a map; a card",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39971666a5b14784",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Russian for an address, then the Russian for a ticket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: карта",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "карта (kárta) — \"a map; a card\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kárta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kárta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kárta, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kárta*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kárta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kárta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Russian for an address, then the Russian for a ticket, then say kárta again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Russian for an address, then the Russian for a ticket, then say *kárta* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does карта (kárta) mean? (\"A map; a card\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R54-first-pass-the-body-family-and-verbs",
+      "sequence": 2700,
+      "title": "The body, family and verbs — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 29-41",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8547ef9d840ed695",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a ticket and a map; a card."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the head, a hand, a leg, the belly, a tooth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the head, a hand, a leg, the belly, a tooth]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hair, a finger, the neck, a shoulder, a knee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: hair, a finger, the neck, a shoulder, a knee]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the back, the tongue; a language, a lip, the face, blood",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the back, the tongue; a language, a lip, the face, blood]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pain, an illness, medicine, a doctor, a hospital",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pain, an illness, medicine, a doctor, a hospital]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a temperature, a cough, rest, hunger, thirst",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a temperature, a cough, rest, hunger, thirst]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "joy, fear, anger, sadness, tiredness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: joy, fear, anger, sadness, tiredness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a son, a daughter, a grandmother, a husband, a wife",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a son, a daughter, a grandmother, a husband, a wife]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "children, a child, an aunt, a grandson, a granddaughter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: children, a child, an aunt, a grandson, a granddaughter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a neighbour, a guest, a teacher, a pupil, work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a neighbour, a guest, a teacher, a pupil, work]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to work, to sing, to dance, to laugh, to cry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to work, to sing, to dance, to laugh, to cry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wash, to cook, to buy, to sell, to swim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wash, to cook, to buy, to sell, to swim]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sleep, to sit, to stand, to run, to play",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sleep, to sit, to stand, to run, to play]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to listen, to learn; to teach, to answer, to wait, to give",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to listen, to learn; to teach, to answer, to wait, to give]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The head? (голова.) A hand? (рука.) A leg? (нога.) The belly? (живот.) A tooth? (зуб.) Hair? (волосы.) A finger? (палец.) The neck? (шея.) A shoulder? (плечо.) A knee? (колено.) The back? (спина.) The tongue; a language? (язык.) A lip? (губа.) The face? (лицо.) Blood? (кровь.) Pain? (боль.) An illness? (болезнь.) Medicine? (лекарство.) A doctor? (врач.) A hospital? (больница.) A temperature? (температура.) A cough? (кашель.) Rest? (отдых.) Hunger? (голод.) Thirst? (жажда.) Joy? (радость.) Fear? (страх.) Anger? (гнев.) Sadness? (грусть.) Tiredness? (усталость.) A son? (сын.) A daughter? (дочь.) A grandmother? (бабушка.) A husband? (муж.) A wife? (жена.) Children? (дети.) A child? (ребёнок.) An aunt? (тётя.) A grandson? (внук.) A granddaughter? (внучка.) A neighbour? (сосед.) A guest? (гость.) A teacher? (учитель.) A pupil? (ученик.) Work? (работа.) To work? (работать.) To sing? (петь.) To dance? (танцевать.) To laugh? (смеяться.) To cry? (плакать.) To wash? (мыть.) To cook? (готовить.) To buy? (покупать.) To sell? (продавать.) To swim? (плавать.) To sleep? (спать.) To sit? (сидеть.) To stand? (стоять.) To run? (бежать.) To play? (играть.) To listen? (слушать.) To learn; to teach? (учить.) To answer? (отвечать.) To wait? (ждать.) To give? (давать.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-R54-second-pass-food-the-house-and-things",
+      "sequence": 2710,
+      "title": "Food, the house and things — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 42-54",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:018543725f7fe38a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to open and to close."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to open, to close, to drink, a question, an answer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to open, to close, to drink, a question, an answer]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meat, fish, an egg, butter; oil, salt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: meat, fish, an egg, butter; oil, salt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fruit, an apple, a pear, a cherry, a berry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fruit, an apple, a pear, a cherry, a berry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "potatoes, a tomato, an onion, a cucumber, a carrot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: potatoes, a tomato, an onion, a cucumber, a carrot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "breakfast, lunch, dinner, porridge, a pie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: breakfast, lunch, dinner, porridge, a pie]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugar, honey, rice, a mushroom, a glass",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sugar, honey, rice, a mushroom, a glass]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a house, a room, a kitchen, a window, a door",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a house, a room, a kitchen, a window, a door]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a table, a chair, a bed, a lamp, a key",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a table, a chair, a bed, a lamp, a key]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wall, a roof, a garden, the bathroom, a clock",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wall, a roof, a garden, the bathroom, a clock]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cup, a plate, a spoon, a knife, a fork",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cup, a plate, a spoon, a knife, a fork]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a book, a pen, paper, a notebook, a pencil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a book, a pen, paper, a notebook, a pencil]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bag, a phone, an umbrella, money, a gift",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bag, a phone, an umbrella, money, a gift]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lesson, a word, an address, a ticket, a map; a card",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lesson, a word, an address, a ticket, a map; a card]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To open? (открывать.) To close? (закрывать.) To drink? (пить.) A question? (вопрос.) An answer? (ответ.) Meat? (мясо.) Fish? (рыба.) An egg? (яйцо.) Butter; oil? (масло.) Salt? (соль.) Fruit? (фрукты.) An apple? (яблоко.) A pear? (груша.) A cherry? (вишня.) A berry? (ягода.) Potatoes? (картошка.) A tomato? (помидор.) An onion? (лук.) A cucumber? (огурец.) A carrot? (морковь.) Breakfast? (завтрак.) Lunch? (обед.) Dinner? (ужин.) Porridge? (каша.) A pie? (пирог.) Sugar? (сахар.) Honey? (мёд.) Rice? (рис.) A mushroom? (гриб.) A glass? (стакан.) A house? (дом.) A room? (комната.) A kitchen? (кухня.) A window? (окно.) A door? (дверь.) A table? (стол.) A chair? (стул.) A bed? (кровать.) A lamp? (лампа.) A key? (ключ.) A wall? (стена.) A roof? (крыша.) A garden? (сад.) The bathroom? (ванная.) A clock? (часы.) A cup? (чашка.) A plate? (тарелка.) A spoon? (ложка.) A knife? (нож.) A fork? (вилка.) A book? (книга.) A pen? (ручка.) Paper? (бумага.) A notebook? (тетрадь.) A pencil? (карандаш.) A bag? (сумка.) A phone? (телефон.) An umbrella? (зонт.) Money? (деньги.) A gift? (подарок.) A lesson? (урок (urók).) A word? (слово (slóvo).) An address? (адрес (ádres).) A ticket? (билет (bilét).) A map; a card? (карта (kárta).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

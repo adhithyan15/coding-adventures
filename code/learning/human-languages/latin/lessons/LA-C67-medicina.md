@@ -45,7 +45,7 @@ reviews_of: [LA-C67-dolor]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for fever, cough, pain.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C67-MORBUS-04, LA-LEX-C67-MORBUS-02, LA-LEX-C67-MORBUS-03] -->

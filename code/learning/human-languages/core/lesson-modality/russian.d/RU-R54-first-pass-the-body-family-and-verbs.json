@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R54-first-pass-the-body-family-and-verbs",
+    "language": "russian",
+    "chapter": 54,
+    "sequence": 2700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8547ef9d840ed695"
+  },
+  "findings": []
+}

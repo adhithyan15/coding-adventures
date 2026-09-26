@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C77-bouteille",
+    "language": "french",
+    "chapter": 77,
+    "sequence": 3240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c7e35ec24240bc9"
+  },
+  "findings": []
+}

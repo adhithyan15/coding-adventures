@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C103-vetements",
+    "language": "french",
+    "chapter": 103,
+    "sequence": 4550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a3696566048390c"
+  },
+  "findings": []
+}

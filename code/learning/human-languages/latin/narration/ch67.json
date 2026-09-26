@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "Fever, Cough, Pain",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:786b7127b21884b5",
+  "sourceHash": "fnv1a64:c5d9b165e1a4036b",
   "lessons": [
     {
       "id": "LA-C67-febris",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfdf80449d749c4e",
+      "sourceHash": "fnv1a64:122dd155713b70fe",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fever, cough, pain."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d964cad61adda54",
+      "sourceHash": "fnv1a64:a3146937463bff44",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fever, cough, pain."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2dc0210202337b0a",
+      "sourceHash": "fnv1a64:1392cecc8776d67c",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fever, cough, pain."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b478add5a006aba",
+      "sourceHash": "fnv1a64:04b19c2d64a1110a",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fever, cough, pain."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:541486196873f924",
+      "sourceHash": "fnv1a64:f9b6073c9fabfd8a",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for fever, cough, pain."
+              "text": "One more word for this chapter."
             }
           ]
         },

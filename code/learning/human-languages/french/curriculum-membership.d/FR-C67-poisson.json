@@ -1,0 +1,11 @@
+{
+  "id": "FR-C67-poisson",
+  "pathSegment": "FR-PATH-67-VERBES19",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-67-VERBES19",
+      "order": 1
+    }
+  ]
+}

@@ -45,7 +45,7 @@ reviews_of: [LA-C65-frons]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for hair, belly, back, forehead, beard.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C65-CORPUS3-05, LA-LEX-C65-CORPUS3-03, LA-LEX-C65-CORPUS3-04] -->

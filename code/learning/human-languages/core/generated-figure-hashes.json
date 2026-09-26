@@ -2251,6 +2251,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "RU-W81-yo",
+      "sourceHash": "fnv1a64:66b4f20e78f70acf",
+      "svgHash": "fnv1a64:e8e74faae55e6089",
+      "svg": "russian/book/figures/RU-W81-yo-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "SA-S01-letter-ma",
       "sourceHash": "fnv1a64:e1331ae7e27b0733",
       "svgHash": "fnv1a64:4507a2a0b3bb2cb0",

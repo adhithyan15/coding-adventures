@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:a76bba4c89c858ca",
+  "lessonIds": [
+    "PT-C48-casa",
+    "PT-C48-cozinha",
+    "PT-C48-janela",
+    "PT-C48-mesa",
+    "PT-C48-cadeira"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch48.txt",
+  "json": "portuguese/narration/ch48.json",
+  "textHash": "fnv1a64:9723cf9fea498998",
+  "jsonHash": "fnv1a64:85f77d2b49b0999c",
+  "findings": []
+}

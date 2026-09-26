@@ -21,7 +21,13 @@ it("pins Italian lesson-content budgets", () =>
     // 147 -> 148: HL-C428, one `review` lesson that gives chapter 2-4's practice
     // atoms their second revisit. No new atom, no new headword.
     //
-    lessons: 148,
+    // 148 -> 151: three over-budget pre-A1 lessons (rosso-blu, eta,
+    // passato-remoto) each gave their fourth atom to a new one-atom lesson
+    // placed right after them, so no lesson introduces more than three.
+    // 151 -> 395: the pre-A1 vocabulary tranche, chapters 37-84. 240 word
+    // lessons (twenty-five verbs) and four reviews; each word lesson introduces
+    // one lexical atom and no idiom, sense or culture claim. Re-measured.
+    lessons: 395,
     idioms: 4,
     senses: 9,
     cultureClaims: 11,

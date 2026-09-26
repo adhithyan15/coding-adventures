@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-98-TEMPS50",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name yesterday, often, sometimes, a town, a street.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 54,
+  "title": "Cake, Soup, Honey, Oil, Lunch",
+  "label": "ch:it-cake-soup-honey-oil-lunch",
+  "canDo": "I can name a cake, a soup, honey, oil, lunch.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "IT-C54-pranzo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 54: i can name a cake, a soup, honey, oil, lunch.",
+    "assesses": [
+      "IT-LEX-C54-PASTI-03",
+      "IT-LEX-C54-PASTI-04",
+      "IT-LEX-C54-PASTI-05"
+    ]
+  }
+}

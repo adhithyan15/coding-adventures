@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:b00ca99ace490ec4",
+  "lessonIds": [
+    "RU-C30-hair",
+    "RU-C30-finger",
+    "RU-C30-neck",
+    "RU-C30-shoulder",
+    "RU-C30-knee"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch30.txt",
+  "json": "russian/narration/ch30.json",
+  "textHash": "fnv1a64:738f47c5c82f4a28",
+  "jsonHash": "fnv1a64:0d180d353c28cc53",
+  "findings": []
+}

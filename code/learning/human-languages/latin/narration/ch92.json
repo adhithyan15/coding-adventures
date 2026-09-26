@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "Mouse, Hen, Donkey, Elephant, Deer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1a7a1a60d6471bf8",
+  "sourceHash": "fnv1a64:181cb385e7855fb4",
   "lessons": [
     {
       "id": "LA-C92-mus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e70f60c2148bffc",
+      "sourceHash": "fnv1a64:8ac474de4f41a638",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for mouse, hen, donkey, elephant, deer."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d79a347ac2efa15",
+      "sourceHash": "fnv1a64:121e6c862abe5b11",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for mouse, hen, donkey, elephant, deer."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c0512d9e4780a95",
+      "sourceHash": "fnv1a64:041206caa6ee81e9",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for mouse, hen, donkey, elephant, deer."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7a0c9a014ce939e",
+      "sourceHash": "fnv1a64:f20b9dcd0273131e",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for mouse, hen, donkey, elephant, deer."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5636f16480b57785",
+      "sourceHash": "fnv1a64:f0c76491404ff8d1",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for mouse, hen, donkey, elephant, deer."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C69-miel",
+  "pathSegment": "FR-PATH-69-CUISINE21",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-69-CUISINE21",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:bb09776b7dc3b966",
+  "lessonIds": [
+    "FR-C84-vent",
+    "FR-C84-feu",
+    "FR-C84-colline",
+    "FR-C84-desert",
+    "FR-C84-vague"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch84.txt",
+  "json": "french/narration/ch84.json",
+  "textHash": "fnv1a64:59f38cebe8bbc315",
+  "jsonHash": "fnv1a64:ace4051df2b380ae",
+  "findings": []
+}

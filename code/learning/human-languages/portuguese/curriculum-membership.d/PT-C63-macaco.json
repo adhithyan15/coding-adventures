@@ -1,0 +1,11 @@
+{
+  "id": "PT-C63-macaco",
+  "pathSegment": "PT-PATH-63-ANIMAIS4",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-63-ANIMAIS4",
+      "order": 1
+    }
+  ]
+}

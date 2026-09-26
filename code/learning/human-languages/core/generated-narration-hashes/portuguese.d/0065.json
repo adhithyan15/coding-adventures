@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:fd2de35d068f3bf6",
+  "lessonIds": [
+    "PT-C65-bonito",
+    "PT-C65-feio",
+    "PT-C65-longo",
+    "PT-C65-curto",
+    "PT-C65-quente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch65.txt",
+  "json": "portuguese/narration/ch65.json",
+  "textHash": "fnv1a64:17b4f2779797c1ca",
+  "jsonHash": "fnv1a64:3aa0c56db10ce409",
+  "findings": []
+}

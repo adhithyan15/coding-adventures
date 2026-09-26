@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:b1a3cdd28a0ab9ed",
+  "lessonIds": [
+    "FR-C65-laisser",
+    "FR-C65-porter",
+    "FR-C65-envoyer",
+    "FR-C65-recevoir",
+    "FR-C65-sentir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch65.txt",
+  "json": "french/narration/ch65.json",
+  "textHash": "fnv1a64:69a51ad1473cef11",
+  "jsonHash": "fnv1a64:2f7679782ff9442e",
+  "findings": []
+}

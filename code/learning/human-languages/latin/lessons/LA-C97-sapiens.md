@@ -45,7 +45,7 @@ reviews_of: [LA-C97-fortis]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for easy, hard, dear, brave, wise.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C97-FACILIS-05, LA-LEX-C97-FACILIS-03, LA-LEX-C97-FACILIS-04] -->

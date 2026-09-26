@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 66,
-  "sourceHash": "fnv1a64:69e8e1a3b4c86b4c",
+  "sourceHash": "fnv1a64:25a29c688e2e5e32",
   "lessonIds": [
     "LA-C66-pectus",
     "LA-C66-crus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch66.txt",
   "json": "latin/narration/ch66.json",
-  "textHash": "fnv1a64:2634ea2186eaafd0",
-  "jsonHash": "fnv1a64:dec237e65b52ee4d",
+  "textHash": "fnv1a64:5e2b24720b9a94f3",
+  "jsonHash": "fnv1a64:29a48707f688083b",
   "findings": []
 }

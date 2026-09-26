@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:d62f437522805690",
+  "lessonIds": [
+    "IT-C47-cantare",
+    "IT-C47-ballare",
+    "IT-C47-ridere",
+    "IT-C47-piangere",
+    "IT-C47-lavare"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch47.txt",
+  "json": "italian/narration/ch47.json",
+  "textHash": "fnv1a64:99fbef6dc40c11d1",
+  "jsonHash": "fnv1a64:75b6eb8ba14b8e0e",
+  "findings": []
+}

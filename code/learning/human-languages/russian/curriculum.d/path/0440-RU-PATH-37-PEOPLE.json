@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-37-PEOPLE",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "RU-EXT-37-PEOPLE"
+  ],
+  "after": []
+}

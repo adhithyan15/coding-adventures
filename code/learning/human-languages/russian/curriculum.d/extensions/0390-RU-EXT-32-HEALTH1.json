@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-32-HEALTH1",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name pain, an illness, medicine, a doctor and a hospital.",
+  "prerequisites": []
+}

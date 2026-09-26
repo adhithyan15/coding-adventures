@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Pen, Paper, Notebook, Pencil, Bag",
+  "label": "ch:fr-pen-paper-notebook-pencil-bag",
+  "canDo": "I can name a pen, paper, a notebook, a pencil, a bag.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "FR-C78-sac",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can name a pen, paper, a notebook, a pencil, a bag.",
+    "assesses": [
+      "FR-LEX-C78-CHOSES30-03",
+      "FR-LEX-C78-CHOSES30-04",
+      "FR-LEX-C78-CHOSES30-05"
+    ]
+  }
+}

@@ -8,7 +8,7 @@ type: word
 headword: l'amico, l'amica
 gloss: friend (m./f.) — from loving, and the reason "enemy" is its own opposite
 concept_tag: IT-PEOPLE-FRIEND
-prerequisites: [IT-C10-fratello-sorella, IT-C14-eta, IT-C22-zucchero]
+prerequisites: [IT-C10-fratello-sorella, IT-C14-eta, IT-C22-zucchero, IT-C14-avere-o-essere]
 sounds: [hard-c, open-a]
 roots: [amicus-latin, amare-latin]
 etymology_hook: "amico/amica ← Latin amicus/amica, from amare 'to love' → English amiable, amicable, amity — and enemy, from Latin inimicus, literally 'not-a-friend'"

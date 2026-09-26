@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:bcc39a85232d4a61",
+  "lessonIds": [
+    "RU-C63-white",
+    "RU-C63-black",
+    "RU-C63-red",
+    "RU-C63-blue",
+    "RU-C63-green"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch63.txt",
+  "json": "russian/narration/ch63.json",
+  "textHash": "fnv1a64:1ead97279acc19de",
+  "jsonHash": "fnv1a64:fc2f14c029dbc9b5",
+  "findings": []
+}

@@ -45,7 +45,7 @@ reviews_of: [LA-C73-regina]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for girl, old man, queen, sailor, poet.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C73-HOMINES2-04, LA-LEX-C73-HOMINES2-02, LA-LEX-C73-HOMINES2-03] -->

@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-34-SAUDE1",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name pain, a fever, a cough, medicine and a hospital.",
+  "prerequisites": []
+}

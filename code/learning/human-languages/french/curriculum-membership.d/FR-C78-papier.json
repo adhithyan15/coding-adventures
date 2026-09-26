@@ -1,0 +1,11 @@
+{
+  "id": "FR-C78-papier",
+  "pathSegment": "FR-PATH-78-CHOSES30",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-78-CHOSES30",
+      "order": 1
+    }
+  ]
+}

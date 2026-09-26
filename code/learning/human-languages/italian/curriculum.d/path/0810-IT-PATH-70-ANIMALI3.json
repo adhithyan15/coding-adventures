@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-70-ANIMALI3",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "IT-EXT-70-ANIMALI3"
+  ],
+  "after": []
+}

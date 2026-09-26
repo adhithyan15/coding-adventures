@@ -1,0 +1,11 @@
+{
+  "id": "FR-C75-escalier",
+  "pathSegment": "FR-PATH-75-MAISON27",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-75-MAISON27",
+      "order": 1
+    }
+  ]
+}

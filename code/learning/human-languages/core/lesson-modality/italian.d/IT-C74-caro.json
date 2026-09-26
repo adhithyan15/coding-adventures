@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C74-caro",
+    "language": "italian",
+    "chapter": 74,
+    "sequence": 3320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e55a4e7d4cfcc16a"
+  },
+  "findings": []
+}

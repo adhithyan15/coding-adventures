@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:7d5500970c1da6ad",
+  "lessonIds": [
+    "FR-C53-douleur",
+    "FR-C53-fievre",
+    "FR-C53-toux",
+    "FR-C53-medicament",
+    "FR-C53-medecin"
+  ],
+  "tex": "french/book/chapters/ch53-pain-fever-cough-medicine-doctor.tex"
+}

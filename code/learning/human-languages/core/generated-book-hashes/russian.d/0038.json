@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:45cbe651891f4855",
+  "lessonIds": [
+    "RU-C38-rabotat",
+    "RU-C38-pet",
+    "RU-C38-tantsevat",
+    "RU-C38-smeyatsya",
+    "RU-C38-plakat"
+  ],
+  "tex": "russian/book/chapters/ch38-work-sing-dance-laugh-cry.tex"
+}

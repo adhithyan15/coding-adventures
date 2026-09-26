@@ -45,7 +45,7 @@ reviews_of: [LA-C71-patruus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for aunt, neighbour, guest, man, woman.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C72-HOMINES1-01, LA-LEX-C71-FAMILIA2-04, LA-LEX-C71-FAMILIA2-05] -->

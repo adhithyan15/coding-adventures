@@ -1,0 +1,19 @@
+{
+  "chapter": 81,
+  "title": "Remember, Forget, Look For, Lose, Arrive",
+  "label": "ch:pt-remember-forget-look-for-lose-arrive",
+  "canDo": "I can say to remember, to forget, to look for, to lose and to arrive.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "PT-R81-second-pass-time-the-town-clothes-and-more-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: i can say to remember, to forget, to look for, to lose and to arrive.",
+    "assesses": [
+      "PT-LEX-C81-VERBOS7-03",
+      "PT-LEX-C81-VERBOS7-04",
+      "PT-LEX-C81-VERBOS7-05"
+    ]
+  }
+}

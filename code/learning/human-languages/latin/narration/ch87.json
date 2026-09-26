@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "River, Lake, Stream, Spring, Coast",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a44b5aa098518123",
+  "sourceHash": "fnv1a64:f39a3ffc5bc42605",
   "lessons": [
     {
       "id": "LA-C87-flumen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63d6faf6c7eec8cd",
+      "sourceHash": "fnv1a64:667fe5d20762bfeb",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for river, lake, stream, spring, coast."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee70edbe8bd58afc",
+      "sourceHash": "fnv1a64:430cd758e4bff8ee",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for river, lake, stream, spring, coast."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4be384c062c4fa37",
+      "sourceHash": "fnv1a64:5d5d032aa5ea680b",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for river, lake, stream, spring, coast."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6be31fe6e2b2842",
+      "sourceHash": "fnv1a64:bc5df49f9e93d87a",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for river, lake, stream, spring, coast."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49983f772901ee11",
+      "sourceHash": "fnv1a64:a1dc2df97fa4e5bd",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for river, lake, stream, spring, coast."
+              "text": "One more word for this chapter."
             }
           ]
         },

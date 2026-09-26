@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 75,
-  "sourceHash": "fnv1a64:e04e496f733c3f46",
+  "sourceHash": "fnv1a64:374345d19724b135",
   "lessonIds": [
     "LA-C75-laboro",
     "LA-C75-cano",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch75.txt",
   "json": "latin/narration/ch75.json",
-  "textHash": "fnv1a64:43470df4da3d9dfa",
-  "jsonHash": "fnv1a64:83e0eab1323950e5",
+  "textHash": "fnv1a64:fe0610810fefb740",
+  "jsonHash": "fnv1a64:79fcaa3f18b6ab7a",
   "findings": []
 }

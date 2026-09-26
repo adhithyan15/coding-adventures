@@ -1,0 +1,11 @@
+{
+  "id": "FR-C94-sec",
+  "pathSegment": "FR-PATH-94-ADJ46",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-94-ADJ46",
+      "order": 4
+    }
+  ]
+}

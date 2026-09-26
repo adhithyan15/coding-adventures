@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:1cba750c70b9d001",
+  "lessonIds": [
+    "PT-C42-correr",
+    "PT-C42-ouvir",
+    "PT-C42-ensinar",
+    "PT-C42-aprender",
+    "PT-C42-abrir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch42.txt",
+  "json": "portuguese/narration/ch42.json",
+  "textHash": "fnv1a64:520af76f52a1a559",
+  "jsonHash": "fnv1a64:77c7396838dcd052",
+  "findings": []
+}

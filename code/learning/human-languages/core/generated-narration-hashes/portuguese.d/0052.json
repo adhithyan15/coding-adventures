@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:07f2a15278827500",
+  "lessonIds": [
+    "PT-C52-caneta",
+    "PT-C52-papel",
+    "PT-C52-caderno",
+    "PT-C52-lapis",
+    "PT-C52-bolsa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch52.txt",
+  "json": "portuguese/narration/ch52.json",
+  "textHash": "fnv1a64:e944ffc084765973",
+  "jsonHash": "fnv1a64:fe7a8bdb61fa9f70",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C54-miele",
+  "pathSegment": "IT-PATH-54-PASTI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-54-PASTI",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:8e3fcd1683c0bc21",
+  "lessonIds": [
+    "IT-C51-carne",
+    "IT-C51-pesce",
+    "IT-C51-burro",
+    "IT-C51-sale",
+    "IT-C51-pollo"
+  ],
+  "tex": "italian/book/chapters/ch51-meat-fish-butter-salt-chicken.tex"
+}

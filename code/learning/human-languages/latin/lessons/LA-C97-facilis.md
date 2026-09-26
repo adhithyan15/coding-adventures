@@ -45,7 +45,7 @@ reviews_of: [LA-C96-obscurus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for easy, hard, dear, brave, wise.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C97-FACILIS-01, LA-LEX-C96-PULCHER-04, LA-LEX-C96-PULCHER-05] -->

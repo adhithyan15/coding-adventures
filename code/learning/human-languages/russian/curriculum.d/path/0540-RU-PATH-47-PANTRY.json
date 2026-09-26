@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-47-PANTRY",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "RU-EXT-47-PANTRY"
+  ],
+  "after": []
+}

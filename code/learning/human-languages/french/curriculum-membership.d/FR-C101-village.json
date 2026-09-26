@@ -1,0 +1,11 @@
+{
+  "id": "FR-C101-village",
+  "pathSegment": "FR-PATH-101-VILLE53",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-101-VILLE53",
+      "order": 3
+    }
+  ]
+}

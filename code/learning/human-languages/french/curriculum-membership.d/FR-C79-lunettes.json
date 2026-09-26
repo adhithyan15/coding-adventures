@@ -1,0 +1,11 @@
+{
+  "id": "FR-C79-lunettes",
+  "pathSegment": "FR-PATH-79-CHOSES31",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-79-CHOSES31",
+      "order": 4
+    }
+  ]
+}

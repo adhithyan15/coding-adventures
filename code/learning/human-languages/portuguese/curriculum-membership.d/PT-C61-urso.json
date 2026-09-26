@@ -1,0 +1,11 @@
+{
+  "id": "PT-C61-urso",
+  "pathSegment": "PT-PATH-61-ANIMAIS2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-61-ANIMAIS2",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C53-medecin",
+  "pathSegment": "FR-PATH-53-SANTE5",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-53-SANTE5",
+      "order": 4
+    }
+  ]
+}

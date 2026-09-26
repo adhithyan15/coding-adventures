@@ -1,0 +1,11 @@
+{
+  "id": "IT-C77-grigio",
+  "pathSegment": "IT-PATH-77-AGG6",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-77-AGG6",
+      "order": 1
+    }
+  ]
+}

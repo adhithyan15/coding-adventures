@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Sick, Tired, Hungry, Thirsty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:231d114ed277150e",
+  "sourceHash": "fnv1a64:f2853405a1304604",
   "lessons": [
     {
       "id": "LA-C68-aeger",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32d1581c1979c744",
+      "sourceHash": "fnv1a64:97bcd3beb60c9490",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sick, tired, hungry, thirsty."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76c57d83fbb51655",
+      "sourceHash": "fnv1a64:85eda14350becb33",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sick, tired, hungry, thirsty."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6e5d805c2d6cd8c",
+      "sourceHash": "fnv1a64:a1b13ed0154e1ebe",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sick, tired, hungry, thirsty."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9dfe2558be880101",
+      "sourceHash": "fnv1a64:f14cd76b44c9b9d5",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sick, tired, hungry, thirsty."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5509065fb46a8da8",
+      "sourceHash": "fnv1a64:3c429af67bb3ac70",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for sick, tired, hungry, thirsty."
+              "text": "One more word for this chapter."
             }
           ]
         },

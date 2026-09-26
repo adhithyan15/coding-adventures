@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C77-fourchette",
+    "language": "french",
+    "chapter": 77,
+    "sequence": 3230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7bb3fe59ebf0e48f"
+  },
+  "findings": []
+}

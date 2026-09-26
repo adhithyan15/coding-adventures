@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "Always, Never, Now, Far, Above",
+  "label": "ch:it-always-never-now-far-above",
+  "canDo": "I can name always, never, now, far, above.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "IT-C79-sopra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can name always, never, now, far, above.",
+    "assesses": [
+      "IT-LEX-C79-QUANDO-03",
+      "IT-LEX-C79-QUANDO-04",
+      "IT-LEX-C79-QUANDO-05"
+    ]
+  }
+}

@@ -45,7 +45,7 @@ reviews_of: [LA-C68-aeger]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for sick, tired, hungry, thirsty.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C68-AEGER-02, LA-LEX-C67-MORBUS-05, LA-LEX-C68-AEGER-01] -->

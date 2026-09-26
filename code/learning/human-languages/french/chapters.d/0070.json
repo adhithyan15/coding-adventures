@@ -1,0 +1,19 @@
+{
+  "chapter": 70,
+  "title": "Lunch, Dinner, Breakfast, Rice, Pear",
+  "label": "ch:fr-lunch-dinner-breakfast-rice-pear",
+  "canDo": "I can name lunch, dinner, breakfast, rice, a pear.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FR-C70-poire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 70: i can name lunch, dinner, breakfast, rice, a pear.",
+    "assesses": [
+      "FR-LEX-C70-CUISINE22-03",
+      "FR-LEX-C70-CUISINE22-04",
+      "FR-LEX-C70-CUISINE22-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C57-muro",
+    "language": "italian",
+    "chapter": 57,
+    "sequence": 2410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f5457afe7d19408"
+  },
+  "findings": []
+}

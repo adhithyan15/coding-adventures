@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C88-grenouille",
+    "language": "french",
+    "chapter": 88,
+    "sequence": 3810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efdbe3b4f6312061"
+  },
+  "findings": []
+}

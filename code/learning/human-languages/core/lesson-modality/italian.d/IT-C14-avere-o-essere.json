@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C14-avere-o-essere",
+    "language": "italian",
+    "chapter": 14,
+    "sequence": 505,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c1e6f7fd775ba433"
+  },
+  "findings": []
+}

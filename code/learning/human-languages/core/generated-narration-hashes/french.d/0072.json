@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:2c8fa275da3c8bad",
+  "lessonIds": [
+    "FR-C72-salade",
+    "FR-C72-pates",
+    "FR-C72-creme",
+    "FR-C72-poivre",
+    "FR-C72-noix"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch72.txt",
+  "json": "french/narration/ch72.json",
+  "textHash": "fnv1a64:ea01f926959b840b",
+  "jsonHash": "fnv1a64:142cf00aa8b0391e",
+  "findings": []
+}

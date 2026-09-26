@@ -1,0 +1,11 @@
+{
+  "id": "FR-C63-nettoyer",
+  "pathSegment": "FR-PATH-63-VERBES15",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-63-VERBES15",
+      "order": 0
+    }
+  ]
+}

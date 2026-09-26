@@ -45,7 +45,7 @@ reviews_of: [LA-C63-digitus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for arm, finger, tooth.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C63-CORPUS1-03, LA-LEX-C63-CORPUS1-01, LA-LEX-C63-CORPUS1-02] -->

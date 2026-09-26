@@ -45,7 +45,7 @@ reviews_of: [LA-C69-timor]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for joy, anger, fear.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C69-AFFECTUS-04, LA-LEX-C69-AFFECTUS-02, LA-LEX-C69-AFFECTUS-03] -->

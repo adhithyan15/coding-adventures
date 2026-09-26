@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:8923b2af2e84ecd5",
+  "lessonIds": [
+    "IT-C73-brutto",
+    "IT-C73-lungo",
+    "IT-C73-corto",
+    "IT-C73-caldo",
+    "IT-C73-freddo"
+  ],
+  "tex": "italian/book/chapters/ch73-ugly-long-short-hot-cold.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 48,
+  "title": "Cook, Sell, Swim, Call, Sleep",
+  "label": "ch:it-cook-sell-swim-call-sleep",
+  "canDo": "I can say to cook, to sell, to swim, to call, to sleep.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "IT-C48-dormire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 48: i can say to cook, to sell, to swim, to call, to sleep.",
+    "assesses": [
+      "IT-LEX-C48-VERBI2-03",
+      "IT-LEX-C48-VERBI2-04",
+      "IT-LEX-C48-VERBI2-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:3eb16a4cdcb79ed1",
+  "lessonIds": [
+    "FR-C59-neveu",
+    "FR-C59-niece",
+    "FR-C59-eleve",
+    "FR-C59-professeur",
+    "FR-C59-rire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch59.txt",
+  "json": "french/narration/ch59.json",
+  "textHash": "fnv1a64:44c5c26d509b26ce",
+  "jsonHash": "fnv1a64:d338584d7664c5cd",
+  "findings": []
+}

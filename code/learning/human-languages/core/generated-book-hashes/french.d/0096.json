@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:116cdcba24c8ba23",
+  "lessonIds": [
+    "FR-C96-jamais",
+    "FR-C96-maintenant",
+    "FR-C96-puis",
+    "FR-C96-loin",
+    "FR-C96-pres"
+  ],
+  "tex": "french/book/chapters/ch96-never-now-then-far-near.tex"
+}

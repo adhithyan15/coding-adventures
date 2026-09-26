@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Hearing, Sleeping, Walking, Running",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:23d1e0d49ea18d57",
+  "sourceHash": "fnv1a64:6af385a667e6cfeb",
   "lessons": [
     {
       "id": "FR-C26-entendre",
@@ -246,7 +246,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f46f08f9218ca093",
+      "sourceHash": "fnv1a64:5a34fde169a47d56",
       "notice": null,
       "blocks": [
         {
@@ -642,7 +642,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab794d975b927c8c",
+      "sourceHash": "fnv1a64:d7998db320d36bd6",
       "notice": null,
       "blocks": [
         {

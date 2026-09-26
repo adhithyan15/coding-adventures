@@ -1,0 +1,11 @@
+{
+  "id": "IT-C68-cavallo",
+  "pathSegment": "IT-PATH-68-ANIMALI1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-68-ANIMALI1",
+      "order": 2
+    }
+  ]
+}

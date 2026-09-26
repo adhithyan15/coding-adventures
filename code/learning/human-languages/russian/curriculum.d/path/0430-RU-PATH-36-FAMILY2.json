@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-36-FAMILY2",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "RU-EXT-36-FAMILY2"
+  ],
+  "after": []
+}

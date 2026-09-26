@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "Police, Theatre, Library, Bakery, Town hall",
+  "label": "ch:fr-police-theatre-library-bakery-town-hall",
+  "canDo": "I can name the police, a theatre, a library, a bakery, the town hall.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FR-C102-mairie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can name the police, a theatre, a library, a bakery, the town hall.",
+    "assesses": [
+      "FR-LEX-C102-VILLE54-03",
+      "FR-LEX-C102-VILLE54-04",
+      "FR-LEX-C102-VILLE54-05"
+    ]
+  }
+}

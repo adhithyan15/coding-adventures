@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "River, Lake, Stone, Sand, Island",
+  "label": "ch:pt-river-lake-stone-sand-island",
+  "canDo": "I can name a river, a lake, a stone, sand and an island.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PT-C57-ilha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: i can name a river, a lake, a stone, sand and an island.",
+    "assesses": [
+      "PT-LEX-C57-NATUREZA2-03",
+      "PT-LEX-C57-NATUREZA2-04",
+      "PT-LEX-C57-NATUREZA2-05"
+    ]
+  }
+}

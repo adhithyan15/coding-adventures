@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:046a9bc91fd19f80",
+  "lessonIds": [
+    "PT-C57-rio",
+    "PT-C57-lago",
+    "PT-C57-pedra",
+    "PT-C57-areia",
+    "PT-C57-ilha"
+  ],
+  "tex": "portuguese/book/chapters/ch57-river-lake-stone-sand-island.tex"
+}

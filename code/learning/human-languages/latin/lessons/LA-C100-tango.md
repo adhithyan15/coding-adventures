@@ -45,7 +45,7 @@ reviews_of: [LA-C100-paro]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for fight, sail, prepare, touch, pull.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C100-VERBA6-04, LA-LEX-C100-VERBA6-02, LA-LEX-C100-VERBA6-03] -->

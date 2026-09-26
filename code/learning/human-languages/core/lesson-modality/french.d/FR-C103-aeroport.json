@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C103-aeroport",
+    "language": "french",
+    "chapter": 103,
+    "sequence": 4540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cce1074da9bbac15"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-59-TAVOLA",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "IT-EXT-59-TAVOLA"
+  ],
+  "after": []
+}

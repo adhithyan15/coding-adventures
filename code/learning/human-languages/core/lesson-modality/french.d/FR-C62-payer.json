@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C62-payer",
+    "language": "french",
+    "chapter": 62,
+    "sequence": 2480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6c2a97af33df50d"
+  },
+  "findings": []
+}

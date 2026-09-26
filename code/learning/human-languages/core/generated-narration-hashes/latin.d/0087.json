@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 87,
-  "sourceHash": "fnv1a64:a44b5aa098518123",
+  "sourceHash": "fnv1a64:f39a3ffc5bc42605",
   "lessonIds": [
     "LA-C87-flumen",
     "LA-C87-lacus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch87.txt",
   "json": "latin/narration/ch87.json",
-  "textHash": "fnv1a64:65e65858960c7e37",
-  "jsonHash": "fnv1a64:8006021068127992",
+  "textHash": "fnv1a64:5924e173ad4ff19a",
+  "jsonHash": "fnv1a64:569683293794ffba",
   "findings": []
 }

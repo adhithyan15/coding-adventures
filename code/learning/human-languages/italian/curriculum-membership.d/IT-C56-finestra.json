@@ -1,0 +1,11 @@
+{
+  "id": "IT-C56-finestra",
+  "pathSegment": "IT-PATH-56-CASA1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-56-CASA1",
+      "order": 1
+    }
+  ]
+}

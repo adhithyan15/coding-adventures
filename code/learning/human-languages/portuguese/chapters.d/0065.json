@@ -1,0 +1,19 @@
+{
+  "chapter": 65,
+  "title": "Pretty, Ugly, Long, Short, Hot",
+  "label": "ch:pt-pretty-ugly-long-short-hot",
+  "canDo": "I can say pretty, ugly, long, short and hot.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PT-C65-quente",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: i can say pretty, ugly, long, short and hot.",
+    "assesses": [
+      "PT-LEX-C65-ADJ2-03",
+      "PT-LEX-C65-ADJ2-04",
+      "PT-LEX-C65-ADJ2-05"
+    ]
+  }
+}

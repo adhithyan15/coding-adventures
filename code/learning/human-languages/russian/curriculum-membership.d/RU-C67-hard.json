@@ -1,0 +1,11 @@
+{
+  "id": "RU-C67-hard",
+  "pathSegment": "RU-PATH-67-WORTH",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-67-WORTH",
+      "order": 1
+    }
+  ]
+}
