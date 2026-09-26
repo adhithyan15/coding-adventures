@@ -8,20 +8,20 @@ type: writing
 headword: "ع ي"
 gloss: observe and trace ayn and ya after speaking the full greeting
 romanization: ʿayn, yāʾ
-prerequisites: [AR-C01-as-salamu-alaykum]
+prerequisites: [AR-C01-as-salamu-alaykum, AR-C01-iid]
 sounds: [arabic-ayn, arabic-ya]
 roots: [phoenician-ayin, phoenician-yod]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [AR-C01-FULL-GREETING-11]
+  knowledge: [AR-C01-FULL-GREETING-11, AR-LEX-ANCHOR-IID]
 introduces:
   knowledge: [AR-SCRIPT-AYN-YA-12]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12]
+  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-LEX-ANCHOR-IID]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -33,7 +33,7 @@ reviews_of: [AR-C01-as-salamu-alaykum, AR-C01-salam]
 # ع and ي — open *ʿalaykum* gently
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11, AR-LEX-ANCHOR-IID] -->
 
 [PAUSE 2s] Say *as-salāmu ʿalaykum*. Only after speaking the whole greeting do
 you meet two shapes from its second block.

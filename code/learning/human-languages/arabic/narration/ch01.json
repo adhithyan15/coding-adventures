@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c535300ed58a4266",
+  "sourceHash": "fnv1a64:15ed1010282c3637",
   "lessons": [
     {
       "id": "AR-C01-salam",
@@ -646,6 +646,111 @@
       ]
     },
     {
+      "id": "AR-C01-thabit",
+      "sequence": 23,
+      "title": "ثابت (thābit) — steady, firm",
+      "headword": "ثابت",
+      "romanization": "thābit",
+      "gloss": "steady, firm",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:223b4544c7f4acd8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ثابت",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ثابت — thābit — \"steady, firm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: thābit. Look at its shape as you say it: the next lesson takes one piece of it, ب ت ث — مرحبا (bāʾ, tāʾ, thāʾ — marḥaban), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thābit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thābit*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thābit, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thābit*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"steady, firm\"? (ثابت, thābit.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "AR-W00-ba-family-marhaba",
       "sequence": 24,
       "title": "ب ت ث — one bowl, three dot choices",
@@ -660,7 +765,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ca32f384717a23fe",
+      "sourceHash": "fnv1a64:756f798bb6a76d17",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -918,7 +1023,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9e969119cff2430",
+      "sourceHash": "fnv1a64:963b4861d4301001",
       "notice": null,
       "blocks": [
         {
@@ -1028,6 +1133,111 @@
       ]
     },
     {
+      "id": "AR-C01-iid",
+      "sequence": 41,
+      "title": "عيد (ʿīd) — a feast day",
+      "headword": "عيد",
+      "romanization": "ʿīd",
+      "gloss": "a feast day",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9d43adb5a3b69014",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: عيد",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "عيد — ʿīd — \"a feast day\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ʿīd. Look at its shape as you say it: the next lesson takes one piece of it, ع ي (ʿayn, yāʾ), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿīd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿīd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ʿīd, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ʿīd*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a feast day\"? (عيد, ʿīd.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "AR-W00-ayn-ya",
       "sequence": 42,
       "title": "ع and ي — open ʿalaykum gently",
@@ -1041,7 +1251,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:61f70b8872bb0f9c",
+      "sourceHash": "fnv1a64:638fd1b044a4243d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1151,6 +1361,111 @@
       ]
     },
     {
+      "id": "AR-C01-kukh",
+      "sequence": 43,
+      "title": "كوخ (kūkh) — a hut",
+      "headword": "كوخ",
+      "romanization": "kūkh",
+      "gloss": "a hut",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:43d3155ca4367c51",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: كوخ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "كوخ — kūkh — \"a hut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: kūkh. Look at its shape as you say it: the next lesson takes one piece of it, ك و — السلام عليكم (kāf, wāw — as-salāmu ʿalaykum), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūkh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūkh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūkh, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūkh*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a hut\"? (كوخ, kūkh.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "AR-W00-kaf-waw-alaykum",
       "sequence": 44,
       "title": "ك and و — complete the greeting after the sound",
@@ -1165,7 +1480,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:83ed41d33f33b1bc",
+      "sourceHash": "fnv1a64:b936cd0f30dfdeb9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1270,7 +1585,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:bb2ffdba9a259cfa",
+      "sourceHash": "fnv1a64:dda282ebb991b146",
       "notice": {
         "modality": "pen",
         "needs": [
