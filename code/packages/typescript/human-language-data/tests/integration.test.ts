@@ -463,8 +463,10 @@ describe("real curriculum", () => {
       );
       // Urdu's Nastaliq ladder was redistributed out of chapters 16-18 and back
       // into chapters 1-8 (HL-C240), so its per-chapter lesson counts now differ
-      // from Persian's. Persian's expectations are unchanged.
-      expect(chapter).toHaveLength(language === "urdu" ? 7 : 5);
+      // from Persian's. Persian's expectations are unchanged. 7 -> 8: the
+      // etymology section of aap/tum/tu moved to its own continuation lesson
+      // so no Urdu lesson introduces more than three atoms.
+      expect(chapter).toHaveLength(language === "urdu" ? 8 : 5);
       expect(
         chapter.every((lesson) => lesson.frontmatter.schema_version === "2"),
       ).toBe(true);
@@ -495,8 +497,9 @@ describe("real curriculum", () => {
       );
       // Urdu's Nastaliq ladder was redistributed out of chapters 16-18 and back
       // into chapters 1-8 (HL-C240), so its per-chapter lesson counts now differ
-      // from Persian's. Persian's expectations are unchanged.
-      expect(chapter).toHaveLength(language === "urdu" ? 9 : 6);
+      // from Persian's. Persian's expectations are unchanged. 9 -> 10: the
+      // mein ... hun frame moved to its own continuation lesson (atom budget).
+      expect(chapter).toHaveLength(language === "urdu" ? 10 : 6);
       expect(
         chapter.every((lesson) => lesson.frontmatter.schema_version === "2"),
       ).toBe(true);
@@ -528,7 +531,7 @@ describe("real curriculum", () => {
       // Urdu's Nastaliq ladder was redistributed out of chapters 16-18 and back
       // into chapters 1-8 (HL-C240), so its per-chapter lesson counts now differ
       // from Persian's. Persian's expectations are unchanged.
-      expect(chapter).toHaveLength(language === "urdu" ? 6 : 4);
+      expect(chapter).toHaveLength(language === "urdu" ? 7 : 4);
       expect(
         chapter.every((lesson) => lesson.frontmatter.schema_version === "2"),
       ).toBe(true);

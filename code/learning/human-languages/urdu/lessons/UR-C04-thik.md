@@ -9,7 +9,7 @@ headword: ٹھیک
 romanization: ṭhīk
 gloss: fine, well, correct
 concept_tag: WORD-WELL
-prerequisites: [UR-C04-main-hun, UR-C03-aap-tum-tu, UR-C03-kya]
+prerequisites: [UR-C04-main-hun, UR-C03-aap-tum-tu, UR-C03-kya, UR-C03-aap-tum-tu-more, UR-C04-main-hun-more]
 sounds: [rtl, retroflex-aspirated-th, long-i]
 roots: [shared-hindustani-thik]
 etymology_hook: Thik is shared everyday Hindustani vocabulary; Urdu writes it ٹھیک, while Hindi writes the very same word in its own script.

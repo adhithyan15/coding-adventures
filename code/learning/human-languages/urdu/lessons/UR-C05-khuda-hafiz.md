@@ -18,12 +18,12 @@ duration:
 requires:
   knowledge: [UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-LEX-HAFIZ, UR-SCRIPT-HAFIZ, UR-ETYMON-KHUDA-PERSIAN, UR-ETYMON-HAFIZ-ARABIC]
 introduces:
-  knowledge: [UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS, UR-PRAGMATICS-STANDARD-FAREWELL, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING]
+  knowledge: [UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED]
 introduces_idioms: [UR-IDIOM-KHUDA-HAFIZ-GOODBYE-01]
 introduces_senses: []
 introduces_culture_claims: [UR-CULTURE-KHUDA-HAFIZ-STANDARD-POLITE-01]
 practises:
-  knowledge: [UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-LEX-HAFIZ, UR-SCRIPT-HAFIZ, UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS, UR-PRAGMATICS-STANDARD-FAREWELL, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING]
+  knowledge: [UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-LEX-HAFIZ, UR-SCRIPT-HAFIZ, UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -49,30 +49,15 @@ Urdu keeps a visible space between the two words. Read **خدا** first, then
 **حافظ**, and preserve that space in the complete spelling **خدا حافظ**. Say the
 whole expression smoothly.
 
-## Grammar Lens — a whole social move
-<!-- hl-knowledge: introduces=[UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS, UR-PRAGMATICS-STANDARD-FAREWELL]; assesses=[] -->
-
-The protective sense is “God [be] guardian,” but everyday speakers use the
-formula as **goodbye** and nothing more. No new verb or agreement ending is needed. It is
-a reliable polite close for the short interaction learned so far.
-
-## Script Bridge — shared history, local spacing
-<!-- hl-knowledge: introduces=[UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING]; assesses=[] -->
-
-Urdu **خدا حافظ** and Persian **خداحافظ** share the same historical pieces.
-Urdu conventionally keeps the visible space; Persian normally joins them.
-Mixed practice may compare the two only now that each local phrase is
-independently readable.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS, UR-PRAGMATICS-STANDARD-FAREWELL, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED] -->
 
 - [YOU BUILD: **khudā** + **hāfiz**]
 - [YOU READ: spaced Urdu **خدا حافظ**]
 - [YOU USE: say it when the interaction ends]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS, UR-PRAGMATICS-STANDARD-FAREWELL, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED] -->
 <!-- hl-activity: {"id":"UR-C05-khuda-hafiz-goodbye","kind":"text","assesses":["UR-LEX-KHUDA-HAFIZ"],"prompt":"Type the standard Urdu expression for 'goodbye'.","answer":"خدا حافظ","accepted":["khuda hafiz","khudā hāfiz","xuda hafiz","khudahafiz"],"feedback":{"correct":"Right: خدا حافظ khudā hāfiz ends the interaction.","incorrect":"Use خدا حافظ — khudā hāfiz."},"response_seconds":9} -->
 
 Where is the local writing contrast? (Urdu shows a space; Persian joins its
