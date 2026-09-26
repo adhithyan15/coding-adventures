@@ -12,17 +12,17 @@ headword: "കൂട്"
 romanization: "kūṭŭ"
 gloss: "a nest"
 concept_tag: ML-ANCHOR-KOODU
-prerequisites: [ML-S116-letter-u]
+prerequisites: [ML-S116-letter-u, ML-C04-uduppu]
 sounds: []
 roots: []
 duration:
   max_seconds: 120
 requires:
-  knowledge: [ML-SCRIPT-RECOG-116]
+  knowledge: [ML-SCRIPT-RECOG-116, ML-LEX-ANCHOR-UDUPPU]
 introduces:
   knowledge: [ML-LEX-ANCHOR-KOODU]
 practises:
-  knowledge: [ML-LEX-ANCHOR-KOODU, ML-SCRIPT-RECOG-116]
+  knowledge: [ML-LEX-ANCHOR-KOODU, ML-SCRIPT-RECOG-116, ML-LEX-ANCHOR-UDUPPU]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -33,7 +33,7 @@ variety: standard-colloquial
 # കൂട് (kūṭŭ) — a nest
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-116] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-116, ML-LEX-ANCHOR-UDUPPU] -->
 
 [PAUSE 2s] Before the new word: say the last thing you learned, once, out loud.
 

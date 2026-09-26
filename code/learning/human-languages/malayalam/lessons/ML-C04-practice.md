@@ -8,17 +8,17 @@ type: practice
 headword: (dialogue)
 gloss: Chapter 4 recap — the farewells
 concept_tag: REVIEW
-prerequisites: [ML-C04-poyi-varaam, ML-C04-naale-kaanaam, ML-C04-veendum-kaanaam, ML-C04-pokuka, ML-S141-vowel-sign-uu]
+prerequisites: [ML-C04-poyi-varaam, ML-C04-naale-kaanaam, ML-C04-veendum-kaanaam, ML-C04-pokuka, ML-S141-vowel-sign-uu, ML-C04-uduppu]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [ML-LEX-ANCHOR-UDUPPU]
 introduces:
   knowledge: []
 practises:
-  knowledge: [ML-LEX-POKUKA-VARIKA-01, ML-PHRASE-C04-POYI-VARAAM-01, ML-PHRASE-C04-NAALE-KAANAAM-01, ML-PHRASE-C04-VEENDUM-KAANAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01, ML-CONCEPT-C04-UKA-DICTIONARY-FORM-01, ML-SCRIPT-RECOG-110, ML-SCRIPT-RECOG-116, ML-SCRIPT-RECOG-141]
+  knowledge: [ML-LEX-POKUKA-VARIKA-01, ML-PHRASE-C04-POYI-VARAAM-01, ML-PHRASE-C04-NAALE-KAANAAM-01, ML-PHRASE-C04-VEENDUM-KAANAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01, ML-CONCEPT-C04-UKA-DICTIONARY-FORM-01, ML-SCRIPT-RECOG-110, ML-SCRIPT-RECOG-116, ML-SCRIPT-RECOG-141, ML-LEX-ANCHOR-UDUPPU]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,9 +30,11 @@ reviews_of: [ML-C04-pokuka, ML-C04-poyi-varaam, ML-C04-naale-kaanaam, ML-C04-vee
 # Chapter 4 — The farewells
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-UDUPPU] -->
 
 [PAUSE 2s] No new words. Three ways to part — none of them a blunt "goodbye."
+
+[PAUSE 2s] And one word from the start of the chapter: say *uṭuppŭ* and what it means.
 
 ## The exchange — the farewells
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-POKUKA-VARIKA-01, ML-PHRASE-C04-POYI-VARAAM-01, ML-PHRASE-C04-NAALE-KAANAAM-01, ML-PHRASE-C04-VEENDUM-KAANAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01, ML-CONCEPT-C04-UKA-DICTIONARY-FORM-01] -->

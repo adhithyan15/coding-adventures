@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "ML-C04-koodu",
-    "language": "malayalam",
-    "chapter": 4,
-    "sequence": 225,
+    "id": "JA-C02-wani",
+    "language": "japanese",
+    "chapter": 2,
+    "sequence": 109,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:c10974d16eb1fc01"
+    "sourceHash": "fnv1a64:a0db9463e8f0b06f"
   },
   "findings": []
 }

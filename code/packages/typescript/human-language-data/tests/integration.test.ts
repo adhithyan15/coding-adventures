@@ -598,7 +598,10 @@ describe("real curriculum", () => {
     // 160 -> 426: chapters 20-71, the pre-A1 vocabulary tranche -- 260
     // hiragana word lessons (spelled only with kana the reader has written,
     // or their voiced forms) and six reviews, each with one objective activity.
-    expect(japanese).toHaveLength(426);
+    // 426 -> 427: HL-C443, わに (wani) before the chapter-2 わ lesson, since
+    // こんにちは spells its "wa" with は and no word held わ. One activity, in
+    // rōmaji, because わ is written only in the next lesson.
+    expect(japanese).toHaveLength(427);
     expect(
       new Set(japanese.map((lesson) => lesson.realization.chapter)),
     ).toEqual(new Set(Array.from({ length: 71 }, (_, i) => i + 1)));

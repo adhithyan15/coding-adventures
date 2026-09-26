@@ -1,11 +1,11 @@
 {
   "id": "ML-S143-vowel-sign-o",
   "pathSegment": "ML-PATH-100",
-  "pathOrder": 25,
+  "pathOrder": 26,
   "extensions": [
     {
       "id": "ML-EXT-100-SCRIPT-RECOGNITION",
-      "order": 25
+      "order": 26
     }
   ]
 }

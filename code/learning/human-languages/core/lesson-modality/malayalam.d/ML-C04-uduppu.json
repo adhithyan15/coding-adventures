@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "ML-C04-koodu",
+    "id": "ML-C04-uduppu",
     "language": "malayalam",
     "chapter": 4,
-    "sequence": 225,
+    "sequence": 217,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:c10974d16eb1fc01"
+    "sourceHash": "fnv1a64:87c1c5d1ac490fb6"
   },
   "findings": []
 }

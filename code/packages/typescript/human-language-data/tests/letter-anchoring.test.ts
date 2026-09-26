@@ -279,15 +279,21 @@ describe("the real corpus", () => {
   // Headwords are written without marks, so no word held them. Two vocalized
   // words now come first: مُدَرِّس (fatha, kasra, damma, shadda) and أَهْلًا
   // (sukun, tanwin).
+  //
+  // Malayalam ഉ (3 -> 2) now follows ഉടുപ്പ് (uṭuppŭ, a dress), and Japanese わ
+  // (2 -> 1) follows わに (wani, a crocodile): こんにちは says "wa" with は, so
+  // no earlier word held わ. What is left: Malayalam's ഒ and ഏ ഴ, anchored by
+  // number words its numbers chapter shows only in romanization, and Japanese
+  // め, whose chapter is at its twelve-atom budget.
   const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
     arabic: [0, 4, 0],
     bengali: [0, 11, 0],
     chinese: [0, 51, 0],
     gujarati: [4, 4, 0],
     hindi: [0, 1, 0],
-    japanese: [2, 35, 0],
+    japanese: [1, 35, 0],
     kannada: [0, 0, 0],
-    malayalam: [3, 12, 0],
+    malayalam: [2, 12, 0],
     marathi: [6, 4, 0],
     marwadi: [0, 49, 0],
     persian: [0, 4, 0],

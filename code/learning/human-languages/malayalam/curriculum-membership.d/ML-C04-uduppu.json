@@ -1,11 +1,11 @@
 {
-  "id": "ML-S119-vowel-sign-oo",
+  "id": "ML-C04-uduppu",
   "pathSegment": "ML-PATH-100",
-  "pathOrder": 44,
+  "pathOrder": 18,
   "extensions": [
     {
       "id": "ML-EXT-100-SCRIPT-RECOGNITION",
-      "order": 44
+      "order": 18
     }
   ]
 }
