@@ -21,8 +21,8 @@
 //! | §13.2.6 tree construction | [`tree_builder::TreeBuilder`], one method per mode |
 //! | §13.2.6.4.7 adoption agency algorithm | `TreeBuilder::adoption_agency` |
 //!
-//! **Not written yet** (BR03 §5): fragment parsing, and parse errors by
-//! specification code. The corpus cases that need them are
+//! **Not written yet** (BR03 §5): parse errors by specification code.
+//! [`parse_fragment`] is §13.4, what `innerHTML` does. The corpus cases that need them are
 //! listed in `tests/fixtures/expected-failures.txt`.
 //!
 //! ```
@@ -114,17 +114,7 @@ pub fn parse_document(
 ) -> Result<ParseOutput, ParseError> {
     let mut lexer = create_html_lexer_with_context(&HtmlLexContext::data())?;
     let mut builder = TreeBuilder::new(options.scripting);
-
-    let mut cdata = CdataTally::default();
-    let mut buffer = [0; 4];
-    for character in source.chars() {
-        lexer.push(character.encode_utf8(&mut buffer))?;
-        drain(&mut lexer, &mut builder, &mut cdata)?;
-    }
-    lexer.finish()?;
-    builder.input_finished();
-    drain(&mut lexer, &mut builder, &mut cdata)?;
-    builder.process(Token::Eof, lexer.position());
+    feed(source, &mut lexer, &mut builder)?;
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
     let document_mode = builder.document_mode();
@@ -142,6 +132,95 @@ pub fn parse_document(
         lexer_diagnostics,
         tree_diagnostics,
     })
+}
+
+/// The element a fragment is parsed inside (§13.4), e.g. `<td>` for a
+/// table cell's `innerHTML`, or SVG `<desc>`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FragmentContext {
+    pub namespace: arena::Namespace,
+    /// The local name, lowercase for HTML.
+    pub name: String,
+    pub attributes: Vec<dom_core::Attribute>,
+}
+
+impl FragmentContext {
+    /// An HTML context element with no attributes.
+    pub fn html(name: &str) -> Self {
+        Self {
+            namespace: arena::Namespace::Html,
+            name: name.to_ascii_lowercase(),
+            attributes: Vec::new(),
+        }
+    }
+}
+
+/// The nodes of a parsed fragment plus its diagnostics.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FragmentOutput {
+    pub nodes: Vec<dom_core::Node>,
+    pub lexer_diagnostics: Vec<Diagnostic>,
+    pub tree_diagnostics: Vec<TreeDiagnostic>,
+}
+
+/// Parse `source` as the children of `context` (§13.4, "parsing HTML
+/// fragments"): what `innerHTML` and `insertAdjacentHTML` do.
+pub fn parse_fragment(
+    source: &str,
+    context: &FragmentContext,
+    options: TreeBuilderOptions,
+) -> Result<FragmentOutput, ParseError> {
+    let mut lexer = create_html_lexer_with_context(&fragment_lex_context(context, options.scripting))?;
+    let mut builder = TreeBuilder::for_fragment(
+        options.scripting,
+        context.namespace,
+        &context.name,
+        context.attributes.clone(),
+    );
+    feed(source, &mut lexer, &mut builder)?;
+    let lexer_diagnostics = lexer.diagnostics().to_vec();
+    let root = builder.fragment_root();
+    let (arena, tree_diagnostics) = builder.finish();
+    Ok(FragmentOutput {
+        nodes: root.map(|root| arena.to_nodes(root)).unwrap_or_default(),
+        lexer_diagnostics,
+        tree_diagnostics,
+    })
+}
+
+/// The tokenizer state a fragment starts in, by its context (§13.4). There
+/// is no "appropriate end tag" in the fragment case: `</textarea>` inside a
+/// `textarea` fragment is text, so no last start tag is set.
+fn fragment_lex_context(context: &FragmentContext, scripting: HtmlScriptingMode) -> HtmlLexContext {
+    use coding_adventures_html_lexer::HtmlTokenizerState as State;
+    if context.namespace != arena::Namespace::Html {
+        return HtmlLexContext::data();
+    }
+    let state = match context.name.as_str() {
+        "title" | "textarea" => State::Rcdata,
+        "style" | "xmp" | "iframe" | "noembed" | "noframes" => State::Rawtext,
+        "script" => State::ScriptData,
+        "noscript" if scripting == HtmlScriptingMode::Enabled => State::Rawtext,
+        "plaintext" => State::Plaintext,
+        _ => State::Data,
+    };
+    HtmlLexContext::new(state)
+}
+
+/// Run the tokenizer over `source`, handing each token to the builder, then
+/// end of file.
+fn feed(source: &str, lexer: &mut HtmlLexer, builder: &mut TreeBuilder) -> Result<(), ParseError> {
+    let mut cdata = CdataTally::default();
+    let mut buffer = [0; 4];
+    for character in source.chars() {
+        lexer.push(character.encode_utf8(&mut buffer))?;
+        drain(lexer, builder, &mut cdata)?;
+    }
+    lexer.finish()?;
+    builder.input_finished();
+    drain(lexer, builder, &mut cdata)?;
+    builder.process(Token::Eof, lexer.position());
+    Ok(())
 }
 
 /// How many `<![CDATA[` the lexer has turned into bogus comments so far, and
