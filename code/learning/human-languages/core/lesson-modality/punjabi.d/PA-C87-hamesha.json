@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C87-hamesha",
+    "language": "punjabi",
+    "chapter": 87,
+    "sequence": 4620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2d8e40301b8109f"
+  },
+  "findings": []
+}

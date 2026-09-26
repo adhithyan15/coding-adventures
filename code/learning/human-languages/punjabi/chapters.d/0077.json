@@ -1,0 +1,19 @@
+{
+  "chapter": 77,
+  "title": "Dog, Cat, Cow, Goat, Sheep",
+  "label": "ch:pa-dog-cat-cow-goat-sheep",
+  "canDo": "I can say a dog, a cat, a cow, a goat and a sheep.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C77-bhed",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 77: i can say a dog, a cat, a cow, a goat and a sheep.",
+    "assesses": [
+      "PA-LEX-C77-ANIMALS77-03",
+      "PA-LEX-C77-ANIMALS77-04",
+      "PA-LEX-C77-ANIMALS77-05"
+    ]
+  }
+}

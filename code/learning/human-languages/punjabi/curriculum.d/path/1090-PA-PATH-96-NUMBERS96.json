@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-96-NUMBERS96",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "PA-EXT-96-NUMBERS96"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 50,
+  "title": "Finger, Lip, Neck, Face, Blood",
+  "label": "ch:pa-finger-lip-neck-face-blood",
+  "canDo": "I can say a finger, a lip, the neck, the face and blood.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C50-khun",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 50: i can say a finger, a lip, the neck, the face and blood.",
+    "assesses": [
+      "PA-LEX-C50-BODY50-03",
+      "PA-LEX-C50-BODY50-04",
+      "PA-LEX-C50-BODY50-05"
+    ]
+  }
+}

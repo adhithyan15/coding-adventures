@@ -1,0 +1,11 @@
+{
+  "id": "PA-C81-uchcha",
+  "pathSegment": "PA-PATH-81-ADJ81",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-81-ADJ81",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C74-patthar",
+    "language": "punjabi",
+    "chapter": 74,
+    "sequence": 4000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebbd51b6cdb6b679"
+  },
+  "findings": []
+}

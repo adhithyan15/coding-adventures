@@ -1,0 +1,19 @@
+{
+  "chapter": 49,
+  "title": "Hand, Foot, Hair, Tooth, Throat",
+  "label": "ch:pa-hand-foot-hair-tooth-throat",
+  "canDo": "I can say a hand, a foot, hair, a tooth and the throat.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C49-gala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 49: i can say a hand, a foot, hair, a tooth and the throat.",
+    "assesses": [
+      "PA-LEX-C49-BODY49-03",
+      "PA-LEX-C49-BODY49-04",
+      "PA-LEX-C49-BODY49-05"
+    ]
+  }
+}

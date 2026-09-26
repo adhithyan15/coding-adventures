@@ -1,0 +1,11 @@
+{
+  "id": "PA-C81-saukha",
+  "pathSegment": "PA-PATH-81-ADJ81",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-81-ADJ81",
+      "order": 0
+    }
+  ]
+}

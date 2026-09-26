@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:1ac3d11dea112782",
+  "lessonIds": [
+    "PA-C52-darad",
+    "PA-C52-davai",
+    "PA-C52-pias",
+    "PA-C52-bhukkh",
+    "PA-C52-khush"
+  ],
+  "tex": "punjabi/book/chapters/ch52-pain-medicine-thirst-hunger-happy.tex"
+}

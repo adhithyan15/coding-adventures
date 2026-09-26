@@ -1,0 +1,11 @@
+{
+  "id": "PA-R98-first-pass-animals-describing-words-and-time",
+  "pathSegment": "PA-PATH-98-WORLD98",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-98-WORLD98",
+      "order": 5
+    }
+  ]
+}

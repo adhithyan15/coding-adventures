@@ -1,0 +1,11 @@
+{
+  "id": "PA-C88-bahar",
+  "pathSegment": "PA-PATH-88-PLACE88",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-88-PLACE88",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-R73-first-pass-the-body-family-verbs-and-food",
+  "pathSegment": "PA-PATH-73-SCHOOL73",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-73-SCHOOL73",
+      "order": 5
+    }
+  ]
+}

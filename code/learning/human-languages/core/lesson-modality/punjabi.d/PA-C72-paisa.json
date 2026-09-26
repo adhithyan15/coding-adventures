@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C72-paisa",
+    "language": "punjabi",
+    "chapter": 72,
+    "sequence": 3850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:239fc8cacdfac2c3"
+  },
+  "findings": []
+}

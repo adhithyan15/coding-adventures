@@ -1,0 +1,11 @@
+{
+  "id": "PA-C54-pati",
+  "pathSegment": "PA-PATH-54-FAMILY54",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-54-FAMILY54",
+      "order": 4
+    }
+  ]
+}

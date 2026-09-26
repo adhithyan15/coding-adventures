@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C53-puttar",
+    "language": "punjabi",
+    "chapter": 53,
+    "sequence": 2920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8fde7782a29b9a1c"
+  },
+  "findings": []
+}

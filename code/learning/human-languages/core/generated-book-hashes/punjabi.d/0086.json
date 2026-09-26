@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:0c978c5d3ea6ed2f",
+  "lessonIds": [
+    "PA-C86-mahina",
+    "PA-C86-sal",
+    "PA-C86-ghanta",
+    "PA-C86-mint",
+    "PA-C86-ajj"
+  ],
+  "tex": "punjabi/book/chapters/ch86-month-year-hour-minute-today.tex"
+}

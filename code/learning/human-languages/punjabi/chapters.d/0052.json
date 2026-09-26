@@ -1,0 +1,19 @@
+{
+  "chapter": 52,
+  "title": "Pain, Medicine, Thirst, Hunger, Happy",
+  "label": "ch:pa-pain-medicine-thirst-hunger-happy",
+  "canDo": "I can say pain, medicine, thirst, hunger and happy.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C52-khush",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 52: i can say pain, medicine, thirst, hunger and happy.",
+    "assesses": [
+      "PA-LEX-C52-HEALTH52-03",
+      "PA-LEX-C52-HEALTH52-04",
+      "PA-LEX-C52-HEALTH52-05"
+    ]
+  }
+}

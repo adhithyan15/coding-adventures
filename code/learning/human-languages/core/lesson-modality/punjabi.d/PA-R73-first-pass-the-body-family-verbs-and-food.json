@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R73-first-pass-the-body-family-verbs-and-food",
+    "language": "punjabi",
+    "chapter": 73,
+    "sequence": 3940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5fff446a61ef884d"
+  },
+  "findings": []
+}

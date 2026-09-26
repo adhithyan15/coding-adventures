@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C88-utte",
+    "language": "punjabi",
+    "chapter": 88,
+    "sequence": 4690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e521395399cdbcfa"
+  },
+  "findings": []
+}

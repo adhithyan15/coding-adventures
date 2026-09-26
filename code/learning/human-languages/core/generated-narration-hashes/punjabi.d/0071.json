@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:9c1d2c2a45b6bbff",
+  "lessonIds": [
+    "PA-C71-kamra",
+    "PA-C71-kitab",
+    "PA-C71-kalam",
+    "PA-C71-akhbar",
+    "PA-C71-sakul"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch71.txt",
+  "json": "punjabi/narration/ch71.json",
+  "textHash": "fnv1a64:b35ce96b716ab9f8",
+  "jsonHash": "fnv1a64:6018f1cffe8bdb0a",
+  "findings": []
+}

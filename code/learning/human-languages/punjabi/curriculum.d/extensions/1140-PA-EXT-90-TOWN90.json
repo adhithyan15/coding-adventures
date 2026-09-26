@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-90-TOWN90",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a road, a lane, a bank, a station and a car.",
+  "prerequisites": []
+}

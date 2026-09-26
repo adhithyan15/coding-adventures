@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:4a57b102489a93fe",
+  "lessonIds": [
+    "PA-C51-latt",
+    "PA-C51-goda",
+    "PA-C51-bukhar",
+    "PA-C51-haspatal",
+    "PA-C51-bimar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch51.txt",
+  "json": "punjabi/narration/ch51.json",
+  "textHash": "fnv1a64:be4c3f9f4e0d8b0e",
+  "jsonHash": "fnv1a64:5c023da6821e5ef9",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C55-kuri",
+  "pathSegment": "PA-PATH-55-FAMILY55",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-55-FAMILY55",
+      "order": 3
+    }
+  ]
+}

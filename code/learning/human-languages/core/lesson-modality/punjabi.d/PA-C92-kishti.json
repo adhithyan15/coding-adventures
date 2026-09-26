@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C92-kishti",
+    "language": "punjabi",
+    "chapter": 92,
+    "sequence": 4870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:91d5f92e8bf813a9"
+  },
+  "findings": []
+}

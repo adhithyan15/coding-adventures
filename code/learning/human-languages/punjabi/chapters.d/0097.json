@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "Thousand, World, Colour, Song, Journey",
+  "label": "ch:pa-thousand-world-colour-song-journey",
+  "canDo": "I can say a thousand, the world, a colour, a song and a journey.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C97-safar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can say a thousand, the world, a colour, a song and a journey.",
+    "assesses": [
+      "PA-LEX-C97-NUMBERS97-03",
+      "PA-LEX-C97-NUMBERS97-04",
+      "PA-LEX-C97-NUMBERS97-05"
+    ]
+  }
+}

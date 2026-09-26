@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Bird, Mouse, Lion, Elephant, Monkey",
+  "label": "ch:pa-bird-mouse-lion-elephant-monkey",
+  "canDo": "I can say a bird, a mouse, a lion, a tiger, an elephant and a monkey.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C78-bandar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can say a bird, a mouse, a lion, a tiger, an elephant and a monkey.",
+    "assesses": [
+      "PA-LEX-C78-ANIMALS78-03",
+      "PA-LEX-C78-ANIMALS78-04",
+      "PA-LEX-C78-ANIMALS78-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C57-kharidna",
+    "language": "punjabi",
+    "chapter": 57,
+    "sequence": 3130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa041c38bb5d1b05"
+  },
+  "findings": []
+}

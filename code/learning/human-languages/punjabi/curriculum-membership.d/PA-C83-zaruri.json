@@ -1,0 +1,11 @@
+{
+  "id": "PA-C83-zaruri",
+  "pathSegment": "PA-PATH-83-ADJ83",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-83-ADJ83",
+      "order": 3
+    }
+  ]
+}

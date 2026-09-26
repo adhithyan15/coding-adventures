@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-88-PLACE88",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "PA-EXT-88-PLACE88"
+  ],
+  "after": []
+}

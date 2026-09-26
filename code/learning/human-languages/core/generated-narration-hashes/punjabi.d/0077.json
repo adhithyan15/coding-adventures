@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:d3b61408fc0d7ac2",
+  "lessonIds": [
+    "PA-C77-kutta",
+    "PA-C77-billi",
+    "PA-C77-gam",
+    "PA-C77-bakkri",
+    "PA-C77-bhed"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch77.txt",
+  "json": "punjabi/narration/ch77.json",
+  "textHash": "fnv1a64:5c38e82ec22fa698",
+  "jsonHash": "fnv1a64:2398d037c3cb2092",
+  "findings": []
+}

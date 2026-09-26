@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C83-halka",
+    "language": "punjabi",
+    "chapter": 83,
+    "sequence": 4420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:917698b6e14b0a3c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C75-ret",
+    "language": "punjabi",
+    "chapter": 75,
+    "sequence": 4010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:823aa7d6cf1da4fd"
+  },
+  "findings": []
+}

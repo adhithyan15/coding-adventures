@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:6e6da5fd0a8a1d20",
+  "lessonIds": [
+    "PA-C68-mez",
+    "PA-C68-kandh",
+    "PA-C68-chhatt",
+    "PA-C68-almari",
+    "PA-C68-farsh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch68.txt",
+  "json": "punjabi/narration/ch68.json",
+  "textHash": "fnv1a64:e9c326c3567d1de1",
+  "jsonHash": "fnv1a64:631ce6053fb7d95a",
+  "findings": []
+}

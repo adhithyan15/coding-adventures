@@ -1,0 +1,11 @@
+{
+  "id": "PA-C94-topi",
+  "pathSegment": "PA-PATH-94-CLOTHES94",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-94-CLOTHES94",
+      "order": 2
+    }
+  ]
+}

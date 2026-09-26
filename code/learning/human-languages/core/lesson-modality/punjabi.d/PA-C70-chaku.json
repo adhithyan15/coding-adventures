@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C70-chaku",
+    "language": "punjabi",
+    "chapter": 70,
+    "sequence": 3750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:073a0588cb6ba7aa"
+  },
+  "findings": []
+}

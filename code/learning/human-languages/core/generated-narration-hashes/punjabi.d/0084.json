@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:470b1c985f23870d",
+  "lessonIds": [
+    "PA-C84-pila",
+    "PA-C84-lal",
+    "PA-C84-nila",
+    "PA-C84-kala",
+    "PA-C84-chitta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch84.txt",
+  "json": "punjabi/narration/ch84.json",
+  "textHash": "fnv1a64:98c1f35762f0a0af",
+  "jsonHash": "fnv1a64:978a0aa7f8fbae9a",
+  "findings": []
+}

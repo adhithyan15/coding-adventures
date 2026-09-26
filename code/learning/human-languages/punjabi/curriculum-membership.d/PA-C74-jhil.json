@@ -1,0 +1,11 @@
+{
+  "id": "PA-C74-jhil",
+  "pathSegment": "PA-PATH-74-NATURE74",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-74-NATURE74",
+      "order": 3
+    }
+  ]
+}

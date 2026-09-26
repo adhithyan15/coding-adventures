@@ -1,0 +1,11 @@
+{
+  "id": "PA-C88-hetham",
+  "pathSegment": "PA-PATH-88-PLACE88",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-88-PLACE88",
+      "order": 4
+    }
+  ]
+}

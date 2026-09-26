@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "Snake, Big, Small, New, Old",
+  "label": "ch:pa-snake-big-small-new-old",
+  "canDo": "I can say a snake, big, small, new and old.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C79-purana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can say a snake, big, small, new and old.",
+    "assesses": [
+      "PA-LEX-C79-ANIMALS79-03",
+      "PA-LEX-C79-ANIMALS79-04",
+      "PA-LEX-C79-ANIMALS79-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C79-vadda",
+    "language": "punjabi",
+    "chapter": 79,
+    "sequence": 4220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:add5e031a3cdb2a0"
+  },
+  "findings": []
+}

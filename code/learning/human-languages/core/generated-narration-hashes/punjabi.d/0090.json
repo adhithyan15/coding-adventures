@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:04b83aa67f123812",
+  "lessonIds": [
+    "PA-C90-sarak",
+    "PA-C90-gali",
+    "PA-C90-baink",
+    "PA-C90-sateshan",
+    "PA-C90-gaddi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch90.txt",
+  "json": "punjabi/narration/ch90.json",
+  "textHash": "fnv1a64:14f5d7195140a69b",
+  "jsonHash": "fnv1a64:a055154051720106",
+  "findings": []
+}

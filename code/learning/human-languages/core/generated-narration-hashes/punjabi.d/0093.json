@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:c6fd59c006246efe",
+  "lessonIds": [
+    "PA-C93-kurta",
+    "PA-C93-jurab",
+    "PA-C93-jeb",
+    "PA-C93-mundri",
+    "PA-C93-ghari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch93.txt",
+  "json": "punjabi/narration/ch93.json",
+  "textHash": "fnv1a64:94c3cc3602d1c963",
+  "jsonHash": "fnv1a64:e17712e872a53597",
+  "findings": []
+}

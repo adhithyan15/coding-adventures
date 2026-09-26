@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:87b614f362f1b3c4",
+  "lessonIds": [
+    "PA-C91-bass",
+    "PA-C91-pul",
+    "PA-C91-gurduara",
+    "PA-C91-mandar",
+    "PA-C91-hotal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch91.txt",
+  "json": "punjabi/narration/ch91.json",
+  "textHash": "fnv1a64:c3a9e349f2cddd80",
+  "jsonHash": "fnv1a64:42915dec7395e5a7",
+  "findings": []
+}

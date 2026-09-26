@@ -1,0 +1,11 @@
+{
+  "id": "PA-C68-chhatt",
+  "pathSegment": "PA-PATH-68-HOME68",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-68-HOME68",
+      "order": 2
+    }
+  ]
+}

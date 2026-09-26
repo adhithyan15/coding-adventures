@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Breakfast, Egg, House, Window, Chair",
+  "label": "ch:pa-breakfast-egg-house-window-chair",
+  "canDo": "I can say breakfast, an egg, a house, home, a window and a chair.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "PA-C67-kursi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can say breakfast, an egg, a house, home, a window and a chair.",
+    "assesses": [
+      "PA-LEX-C67-FOOD67-03",
+      "PA-LEX-C67-FOOD67-04",
+      "PA-LEX-C67-FOOD67-05"
+    ]
+  }
+}

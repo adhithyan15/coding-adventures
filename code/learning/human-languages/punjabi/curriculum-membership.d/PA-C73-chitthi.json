@@ -1,0 +1,11 @@
+{
+  "id": "PA-C73-chitthi",
+  "pathSegment": "PA-PATH-73-SCHOOL73",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-73-SCHOOL73",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C69-shisha",
+  "pathSegment": "PA-PATH-69-HOME69",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-69-HOME69",
+      "order": 1
+    }
+  ]
+}
