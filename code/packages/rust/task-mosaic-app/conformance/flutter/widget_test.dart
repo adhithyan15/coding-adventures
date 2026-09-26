@@ -61,6 +61,19 @@ Future<void> _settle(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+class _FailingInitialPropsHost extends MosaicHost {
+  bool disposed = false;
+
+  @override
+  Future<Map<String, Object?>?> props() =>
+      Future.error(StateError('forced TaskApp initial-props failure'));
+
+  @override
+  void dispose() {
+    disposed = true;
+  }
+}
+
 void main() {
   testWidgets('generated controls drive the Rust scheduling lifecycle', (
     tester,
@@ -72,9 +85,38 @@ void main() {
     final realFont = await loadRealFontIfAvailable();
     final restoredOnLaunch =
         Platform.environment['MOSAIC_EXPECT_RESTORED'] == '1';
-    final host = MosaicHost.loadRequired();
-    await tester.pumpWidget(MosaicApp(mosaicHost: host));
+    late MosaicHost host;
+    final failingHost = _FailingInitialPropsHost();
+    var startupAttempts = 0;
+    await tester.pumpWidget(
+      MosaicApp(
+        mosaicHostLoader: () {
+          startupAttempts += 1;
+          if (startupAttempts == 1) {
+            return failingHost;
+          }
+          host = MosaicHost.loadRequired();
+          return host;
+        },
+      ),
+    );
+    expect(find.byKey(const Key('mosaic-startup-loading')), findsOneWidget);
     await _settle(tester);
+    expect(find.byKey(const Key('mosaic-startup-failure')), findsOneWidget);
+    expect(find.text('TaskApp could not start'), findsOneWidget);
+    expect(
+      find.textContaining('forced TaskApp initial-props failure'),
+      findsOneWidget,
+    );
+    expect(failingHost.disposed, isTrue);
+    expect(
+      find.text('Your saved tasks have not been changed. Retrying is safe.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(const Key('mosaic-startup-retry')));
+    await _settle(tester);
+    expect(startupAttempts, 2);
+    expect(find.byKey(const Key('mosaic-startup-failure')), findsNothing);
 
     if (restoredOnLaunch) {
       expect(find.text(_persistedTaskName), findsOneWidget);

@@ -4,6 +4,15 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed — Flutter startup failures stay visible and recoverable (#16084)
+
+The strict generated Flutter app now paints a system-theme-aware loading surface
+before loading its Rust engine and saved workspace. Runtime and initial-props
+failures remain in the window with selectable diagnostic detail, saved-task
+reassurance, and an in-place **Try again** action that disposes any partial host
+before starting fresh. TaskApp's real-runtime widget acceptance forces the first
+attempt to fail and drives the generated retry control through recovery.
+
 ### Fixed — Qt startup failures stay visible and recoverable (#15818)
 
 The generated Qt app now opens on a system-themed loading surface before its

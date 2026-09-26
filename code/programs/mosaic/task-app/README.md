@@ -118,9 +118,9 @@ window without one.
   saved workspace initialize, and a failed start becomes a message with the
   underlying detail and a retry that re-runs initialization in place, rather than
   an empty page and a console error. The host-neutral contract is
-  `code/specs/task-app-startup-states-v1.md`. Compose Desktop and Qt now enforce
-  the same visible loading/failure/retry contract through generated UI
-  acceptance; Flutter, SwiftUI, and WinUI remain tracked in #13984.
+  `code/specs/task-app-startup-states-v1.md`. Compose Desktop, Qt, and Flutter
+  now enforce the same visible loading/failure/retry contract through generated UI
+  acceptance; SwiftUI and WinUI remain tracked in #13984.
 - **Persistence is explicit** — the whole workspace is saved to IndexedDB after each
   change and restored on reload when durable browser storage is available (see
   `host/web/`); an in-app warning identifies volatile fallback, failed writes, or a

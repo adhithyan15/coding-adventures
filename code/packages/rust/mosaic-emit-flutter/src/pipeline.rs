@@ -641,42 +641,83 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "import '{component_name}.dart';\n",
             "import 'mosaic_host.dart';\n\n",
             "void main() {{\n",
-            "  runApp(MosaicApp(mosaicHost: MosaicHost.loadRequired()));\n",
+            "  runApp(MosaicApp());\n",
             "}}\n\n",
+            "typedef MosaicHostLoader = MosaicHost Function();\n\n",
             "class MosaicApp extends StatefulWidget {{\n",
-            "  const MosaicApp({{super.key, required this.mosaicHost}});\n\n",
-            "  final MosaicHost mosaicHost;\n\n",
+            "  const MosaicApp({{\n",
+            "    super.key,\n",
+            "    this.mosaicHost,\n",
+            "    this.mosaicHostLoader = MosaicHost.loadRequired,\n",
+            "  }});\n\n",
+            "  final MosaicHost? mosaicHost;\n",
+            "  final MosaicHostLoader mosaicHostLoader;\n\n",
             "  @override\n",
             "  State<MosaicApp> createState() => _MosaicAppState();\n",
             "}}\n\n",
             "class _MosaicAppState extends State<MosaicApp> {{\n",
-            "  late final MosaicHost _mosaicHost;\n",
+            "  MosaicHost? _mosaicHost;\n",
+            "  bool _usedProvidedHost = false;\n",
             "{host_props_field}",
-            "  bool _hostReady = false;\n\n",
+            "  bool _hostReady = false;\n",
+            "  String? _startupFailure;\n\n",
             "  @override\n",
             "  void initState() {{\n",
             "    super.initState();\n",
-            "    _mosaicHost = widget.mosaicHost;\n",
-            "    _mosaicHost.setPropsChangedHandler(() =>\n",
-            "        _queueMosaicResponse(_mosaicHost.props()));\n",
-            "    _queueMosaicResponse(_mosaicHost.props());\n",
+            "    WidgetsBinding.instance.addPostFrameCallback((_) => _beginStartup());\n",
+            "  }}\n\n",
+            "  void _beginStartup() {{\n",
+            "    if (!mounted) return;\n",
+            "    final previousHost = _mosaicHost;\n",
+            "    _mosaicHost = null;\n",
+            "    previousHost?.dispose();\n",
+            "    try {{\n",
+            "      final providedHost = _usedProvidedHost ? null : widget.mosaicHost;\n",
+            "      _usedProvidedHost = true;\n",
+            "      final host = providedHost ?? widget.mosaicHostLoader();\n",
+            "      _mosaicHost = host;\n",
+            "      host.setPropsChangedHandler(() => _queueMosaicResponse(host.props()));\n",
+            "      _queueMosaicResponse(host.props());\n",
+            "    }} on Object catch (error) {{\n",
+            "      _showStartupFailure(error);\n",
+            "    }}\n",
+            "  }}\n\n",
+            "  void _showStartupFailure(Object error) {{\n",
+            "    final failedHost = _mosaicHost;\n",
+            "    _mosaicHost = null;\n",
+            "    failedHost?.dispose();\n",
+            "    if (!mounted) return;\n",
+            "    setState(() {{\n",
+            "      _hostReady = false;\n",
+            "      _startupFailure = error.toString();\n",
+            "    }});\n",
+            "  }}\n\n",
+            "  void _retryStartup() {{\n",
+            "    setState(() {{\n",
+            "      _hostReady = false;\n",
+            "      _startupFailure = null;\n",
+            "    }});\n",
+            "    WidgetsBinding.instance.addPostFrameCallback((_) => _beginStartup());\n",
             "  }}\n\n",
             "  @override\n",
             "  void dispose() {{\n",
-            "    _mosaicHost.dispose();\n",
+            "    _mosaicHost?.dispose();\n",
             "    super.dispose();\n",
             "  }}\n\n",
             "  void _queueMosaicResponse(\n",
             "    FutureOr<Map<String, Object?>?>? responseOrFuture,\n",
             "  ) {{\n",
             "    if (responseOrFuture == null) {{\n",
-            "      throw StateError('Mosaic runtime returned no response');\n",
+            "      _showStartupFailure(StateError('Mosaic runtime returned no response'));\n",
+            "      return;\n",
             "    }}\n",
             "    Future<Map<String, Object?>?>.value(responseOrFuture).then((response) {{\n",
             "      if (response == null) {{\n",
             "        throw StateError('Mosaic runtime returned no response');\n",
             "      }}\n",
             "      _applyMosaicResponse(response);\n",
+            "    }}).catchError((Object error, StackTrace stackTrace) {{\n",
+            "      _showStartupFailure(error);\n",
             "    }});\n",
             "  }}\n\n",
             "  void _applyMosaicResponse(Map<String, Object?> response) {{\n",
@@ -690,6 +731,7 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "    setState(() {{\n",
             "{assign_host_props}",
             "      _hostReady = true;\n",
+            "      _startupFailure = null;\n",
             "    }});\n",
             "    if (hostIntent.isNotEmpty) {{\n",
             "      debugPrint('hostIntent: $hostIntent');\n",
@@ -702,15 +744,51 @@ fn build_runtime_required_main_dart(component_name: &str, slots: &[SlotDecl]) ->
             "  Widget build(BuildContext context) {{\n",
             "    return MaterialApp(\n",
             "      title: '{component_name}',\n",
+            "      theme: ThemeData.light(),\n",
+            "      darkTheme: ThemeData.dark(),\n",
+            "      themeMode: ThemeMode.system,\n",
             "      home: Scaffold(\n",
             "        appBar: AppBar(title: const Text('{component_name}')),\n",
             "        body: Center(\n",
-            "          child: _hostReady\n",
-            "              ? {root_widget}\n",
-            "              : Semantics(\n",
-            "                  label: 'Starting {component_name}',\n",
-            "                  child: const CircularProgressIndicator(),\n",
-            "                ),\n",
+            "          child: _startupFailure != null\n",
+            "              ? Semantics(\n",
+            "                  key: const Key('mosaic-startup-failure'),\n",
+            "                  container: true,\n",
+            "                  liveRegion: true,\n",
+            "                  child: Padding(\n",
+            "                    padding: const EdgeInsets.all(32),\n",
+            "                    child: Column(\n",
+            "                      mainAxisSize: MainAxisSize.min,\n",
+            "                      crossAxisAlignment: CrossAxisAlignment.start,\n",
+            "                      children: [\n",
+            "                        Text(\n",
+            "                          '{component_name} could not start',\n",
+            "                          style: Theme.of(context).textTheme.headlineSmall,\n",
+            "                        ),\n",
+            "                        const SizedBox(height: 12),\n",
+            "                        SelectableText(_startupFailure!),\n",
+            "                        const SizedBox(height: 12),\n",
+            "                        const Text(\n",
+            "                          'Your saved tasks have not been changed. Retrying is safe.',\n",
+            "                        ),\n",
+            "                        const SizedBox(height: 20),\n",
+            "                        ElevatedButton(\n",
+            "                          key: const Key('mosaic-startup-retry'),\n",
+            "                          onPressed: _retryStartup,\n",
+            "                          child: const Text('Try again'),\n",
+            "                        ),\n",
+            "                      ],\n",
+            "                    ),\n",
+            "                  ),\n",
+            "                )\n",
+            "              : _hostReady\n",
+            "                  ? {root_widget}\n",
+            "                  : Semantics(\n",
+            "                      key: const Key('mosaic-startup-loading'),\n",
+            "                      label: 'Starting {component_name}',\n",
+            "                      liveRegion: true,\n",
+            "                      child: const CircularProgressIndicator(),\n",
+            "                    ),\n",
             "        ),\n",
             "      ),\n",
             "    );\n",
@@ -995,7 +1073,7 @@ fn build_runtime_required_root_widget_constructor(
     }
     out.push_str("            dispatch: (event) {\n");
     out.push_str(
-        "              _queueMosaicResponse(_mosaicHost.handleEvent(event.mosaicEnvelope));\n",
+        "              _queueMosaicResponse(_mosaicHost!.handleEvent(event.mosaicEnvelope));\n",
     );
     out.push_str("            },\n");
     out.push_str("          )");
@@ -12779,9 +12857,33 @@ mod tests {
             .project
             .expect("strict project shell");
 
-        assert!(project.main_dart.contains("MosaicHost.loadRequired()"));
-        assert!(project.main_dart.contains("required this.mosaicHost"));
+        assert!(project
+            .main_dart
+            .contains("this.mosaicHostLoader = MosaicHost.loadRequired"));
+        assert!(project.main_dart.contains("final MosaicHost? mosaicHost"));
         assert!(project.main_dart.contains("bool _hostReady = false"));
+        assert!(project
+            .main_dart
+            .contains("final host = providedHost ?? widget.mosaicHostLoader()"));
+        assert!(project
+            .main_dart
+            .contains("final providedHost = _usedProvidedHost ? null : widget.mosaicHost"));
+        assert!(project.main_dart.contains("on Object catch (error)"));
+        assert!(project
+            .main_dart
+            .contains("key: const Key('mosaic-startup-loading')"));
+        assert!(project
+            .main_dart
+            .contains("key: const Key('mosaic-startup-failure')"));
+        assert!(project.main_dart.contains("Card could not start"));
+        assert!(project
+            .main_dart
+            .contains("Your saved tasks have not been changed. Retrying is safe."));
+        assert!(project
+            .main_dart
+            .contains("key: const Key('mosaic-startup-retry')"));
+        assert!(project.main_dart.contains("onPressed: _retryStartup"));
+        assert!(project.main_dart.contains("previousHost?.dispose()"));
         assert!(project.main_dart.contains("response.containsKey('props')"));
         assert!(project
             .main_dart
@@ -12798,8 +12900,8 @@ mod tests {
             .contains("child: const CircularProgressIndicator()"));
         assert!(!project.main_dart.contains(": const Semantics("));
         assert!(project.main_dart.contains("return value;"));
-        assert!(!project.main_dart.contains("MosaicHost?"));
-        assert!(!project.main_dart.contains("_mosaicHost?."));
+        assert!(project.main_dart.contains("MosaicHost? _mosaicHost"));
+        assert!(project.main_dart.contains("_mosaicHost?.dispose()"));
         assert!(!project.main_dart.contains("debugPrint(\"event:"));
         assert!(!project.main_dart.contains("Sample Label"));
         assert!(project
