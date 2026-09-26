@@ -1,0 +1,11 @@
+{
+  "id": "FR-C65-sentir",
+  "pathSegment": "FR-PATH-65-VERBES17",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-65-VERBES17",
+      "order": 4
+    }
+  ]
+}

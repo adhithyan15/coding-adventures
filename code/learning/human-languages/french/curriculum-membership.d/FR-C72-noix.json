@@ -1,0 +1,11 @@
+{
+  "id": "FR-C72-noix",
+  "pathSegment": "FR-PATH-72-CUISINE24",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-72-CUISINE24",
+      "order": 4
+    }
+  ]
+}

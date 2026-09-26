@@ -1,0 +1,11 @@
+{
+  "id": "FR-C17-main-more",
+  "pathSegment": "FR-PATH-018",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-018-LANGUAGE-SPECIFIC",
+      "order": 3
+    }
+  ]
+}

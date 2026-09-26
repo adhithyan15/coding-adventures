@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C83-nuage",
+    "language": "french",
+    "chapter": 83,
+    "sequence": 3550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8dafad1e01f3e01"
+  },
+  "findings": []
+}

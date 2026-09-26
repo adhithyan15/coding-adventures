@@ -1,0 +1,17 @@
+{
+  "language": "russian",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:dbb91e5407b98490",
+  "lessonIds": [
+    "RU-W81-yo",
+    "RU-R81-letters-first-pass",
+    "RU-R81-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "russian/narration/ch81.txt",
+  "json": "russian/narration/ch81.json",
+  "textHash": "fnv1a64:6c38ebcaece629df",
+  "jsonHash": "fnv1a64:2ce6a8604c6a76b1",
+  "findings": []
+}

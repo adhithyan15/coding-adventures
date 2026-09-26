@@ -45,7 +45,7 @@ reviews_of: [LA-C77-pono]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for send, stay, fall, put, find.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C77-VERBA3-05, LA-LEX-C77-VERBA3-03, LA-LEX-C77-VERBA3-04] -->

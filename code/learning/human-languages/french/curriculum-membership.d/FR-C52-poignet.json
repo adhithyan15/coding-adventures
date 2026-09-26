@@ -1,0 +1,11 @@
+{
+  "id": "FR-C52-poignet",
+  "pathSegment": "FR-PATH-52-CORPS4",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-52-CORPS4",
+      "order": 4
+    }
+  ]
+}

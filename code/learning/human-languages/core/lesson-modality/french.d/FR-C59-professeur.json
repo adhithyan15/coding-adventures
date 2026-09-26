@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C59-professeur",
+    "language": "french",
+    "chapter": 59,
+    "sequence": 2340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0c323ae1633d900"
+  },
+  "findings": []
+}

@@ -1,9 +1,10 @@
 {
   "language": "french",
   "chapter": 25,
-  "sourceHash": "fnv1a64:92d18f6a13b3ddce",
+  "sourceHash": "fnv1a64:340abbbb75c56373",
   "lessonIds": [
-    "FR-C21-le-temps"
+    "FR-C21-le-temps",
+    "FR-C21-le-temps-more"
   ],
   "tex": "french/book/chapters/ch25-weather.tex"
 }

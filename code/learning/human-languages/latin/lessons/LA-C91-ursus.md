@@ -45,7 +45,7 @@ reviews_of: [LA-C91-leo]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for bird, wolf, lion, bear, snake.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C91-ANIMALIA2-04, LA-LEX-C91-ANIMALIA2-02, LA-LEX-C91-ANIMALIA2-03] -->

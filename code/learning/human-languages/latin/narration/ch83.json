@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Kitchen, Roof, Lamp, Cup, Knife",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a07befc0c46273cf",
+  "sourceHash": "fnv1a64:af824ac03eb6493d",
   "lessons": [
     {
       "id": "LA-C83-culina",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31f6b86a54199866",
+      "sourceHash": "fnv1a64:8c2faf7782113bb4",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for kitchen, roof, lamp, cup, knife."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7948ccc6f0c4ede",
+      "sourceHash": "fnv1a64:436b6b5c3e5104d2",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for kitchen, roof, lamp, cup, knife."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be9e266894273bc9",
+      "sourceHash": "fnv1a64:e39fc83ecb620a43",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for kitchen, roof, lamp, cup, knife."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6128e5408953cd04",
+      "sourceHash": "fnv1a64:5edd9e85d02c21fa",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for kitchen, roof, lamp, cup, knife."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d2aa48d837de11db",
+      "sourceHash": "fnv1a64:adf0a1ffea1eced5",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for kitchen, roof, lamp, cup, knife."
+              "text": "One more word for this chapter."
             }
           ]
         },

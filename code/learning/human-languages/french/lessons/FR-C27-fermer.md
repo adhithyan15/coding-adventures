@@ -8,7 +8,7 @@ type: word
 headword: fermer
 gloss: to close — from Latin firmāre, "to make firm," so a French door is not shut but made fast; the same verb gave Italian "to stop" and Spanish "to sign"
 concept_tag: VERB-CLOSE
-prerequisites: [FR-C27-ouvrir, FR-C19-sil-vous-plait, FR-C20-je-suis-desole, FR-C21-le-temps]
+prerequisites: [FR-C27-ouvrir, FR-C19-sil-vous-plait, FR-C20-je-suis-desole, FR-C21-le-temps, FR-C21-le-temps-more]
 sounds: [er-ending, r-uvular]
 roots: [latin-firmare]
 etymology_hook: "fermer ← Latin firmāre 'to make firm, to strengthen' ← firmus → firm, affirm, confirm, infirm, infirmary, firmament — and probably English farm, via Old French ferme 'a fixed rent'; the same Latin verb gave Italian fermare 'to stop' and Spanish firmar 'to sign', while Spanish cerrar and Portuguese fechar are 'bolt' verbs from somewhere else entirely"

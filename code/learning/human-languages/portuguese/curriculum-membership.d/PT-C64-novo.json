@@ -1,0 +1,11 @@
+{
+  "id": "PT-C64-novo",
+  "pathSegment": "PT-PATH-64-ADJ1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-64-ADJ1",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C66-lento",
+  "pathSegment": "PT-PATH-66-ADJ3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-66-ADJ3",
+      "order": 1
+    }
+  ]
+}

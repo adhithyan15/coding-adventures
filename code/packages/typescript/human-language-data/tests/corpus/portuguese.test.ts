@@ -21,7 +21,10 @@ it("pins Portuguese lesson-content budgets", () =>
     // 118 -> 120: HL-C428, two `review` lessons closing the reinforcement debt --
     // the closings with coracao, and ter + participle against adeus. No new atoms.
     //
-    lessons: 120,
+    // 120 -> 384: the pre-A1 vocabulary tranche, chapters 30-81. 260 word
+    // lessons (thirty-five verbs) and four reviews; each word lesson introduces
+    // one lexical atom and no idiom, sense or culture claim. Re-measured.
+    lessons: 384,
     idioms: 7,
     senses: 7,
     cultureClaims: 11,

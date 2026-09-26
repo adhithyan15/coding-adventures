@@ -45,7 +45,7 @@ reviews_of: [LA-C65-tergum]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for hair, belly, back, forehead, beard.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C65-CORPUS3-04, LA-LEX-C65-CORPUS3-02, LA-LEX-C65-CORPUS3-03] -->

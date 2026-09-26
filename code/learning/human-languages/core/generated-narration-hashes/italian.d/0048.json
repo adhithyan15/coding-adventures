@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:25937ae5c7e37df5",
+  "lessonIds": [
+    "IT-C48-cucinare",
+    "IT-C48-vendere",
+    "IT-C48-nuotare",
+    "IT-C48-chiamare",
+    "IT-C48-dormire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch48.txt",
+  "json": "italian/narration/ch48.json",
+  "textHash": "fnv1a64:e4bac724b2232eb9",
+  "jsonHash": "fnv1a64:919529cbe2b6c2d6",
+  "findings": []
+}

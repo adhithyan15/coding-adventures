@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C70-anatra",
+    "language": "italian",
+    "chapter": 70,
+    "sequence": 3100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78013a3b236a7447"
+  },
+  "findings": []
+}

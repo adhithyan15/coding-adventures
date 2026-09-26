@@ -8,7 +8,7 @@ type: word
 headword: la main
 gloss: the hand — feminine despite ending in a consonant, and the root of half the words you know
 concept_tag: FR-BODY-HAND
-prerequisites: [FR-C17-tete, FR-C01-le-la]
+prerequisites: [FR-C17-tete, FR-C01-le-la, FR-C17-tete-more]
 sounds: [nasal-in, silent-final]
 roots: [latin-manus]
 etymology_hook: "main ← Latin manus, the root behind MANUAL, MANUFACTURE ('made by hand'), MANUSCRIPT ('written by hand'), MAINTAIN ('hold in the hand') and MANAGE — one Latin hand is doing the work inside dozens of English words"
@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: [FR-LEX-TETE-02, FR-ETYMON-TETE-03, FR-CULTURE-TETE-04, FR-SOUND-TETE-05]
 introduces:
-  knowledge: [FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAIN-04, FR-ETYMON-MAINTENIR-05]
+  knowledge: [FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAIN-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAIN-04, FR-ETYMON-MAINTENIR-05]
+  knowledge: [FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAIN-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -67,17 +67,8 @@ number of English words, and once you see it you cannot unsee it:
 **Manufacture** is the one worth pausing on. It means "made by hand" — and it now
 names precisely the thing that *isn't*.
 
-## The phrase, taken apart: French kept it too
-<!-- hl-knowledge: introduces=[FR-ETYMON-MAINTENIR-05]; assesses=[] -->
-
-**Maintenir** / English **maintain** is Latin *manū tenēre*, "to hold in the
-hand" — a hand, plus the verb *tenēre*, "to hold."
-
-So *maintenance* — the least romantic word in any office — is literally
-**keeping something in hand**.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAIN-04, FR-ETYMON-MAINTENIR-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAIN-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "la main" — and hear *pain*, *main*]
@@ -86,7 +77,7 @@ So *maintenance* — the least romantic word in any office — is literally
 - [YOU SAY: the irony — "**manufacture** = made by hand"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAIN-04, FR-ETYMON-MAINTENIR-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-MAIN-02, FR-SOUND-MAIN-03, FR-ETYMON-MAIN-04] -->
 
 [PAUSE 3s] Say "the hand." (*La main* — **feminine**, despite the consonant
 ending.) What Latin word is it from? (***Manus***.) Give three English words

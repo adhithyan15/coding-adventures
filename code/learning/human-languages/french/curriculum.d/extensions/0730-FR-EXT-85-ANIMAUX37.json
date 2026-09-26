@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-85-ANIMAUX37",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a cow, a pig, a bird, a mouse, a wolf.",
+  "prerequisites": []
+}

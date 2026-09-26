@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "Wind, Fire, Hill, Desert, Wave",
+  "label": "ch:fr-wind-fire-hill-desert-wave",
+  "canDo": "I can name the wind, fire, a hill, a desert, a wave.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C84-vague",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: i can name the wind, fire, a hill, a desert, a wave.",
+    "assesses": [
+      "FR-LEX-C84-NATURE36-03",
+      "FR-LEX-C84-NATURE36-04",
+      "FR-LEX-C84-NATURE36-05"
+    ]
+  }
+}

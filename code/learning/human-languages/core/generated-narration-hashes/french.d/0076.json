@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:c19b12141e5dd72b",
+  "lessonIds": [
+    "FR-C76-placard",
+    "FR-C76-plafond",
+    "FR-C76-couloir",
+    "FR-C76-verre",
+    "FR-C76-assiette"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch76.txt",
+  "json": "french/narration/ch76.json",
+  "textHash": "fnv1a64:d1e81b3d1468404f",
+  "jsonHash": "fnv1a64:754668645f26230e",
+  "findings": []
+}

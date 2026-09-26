@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C45-banana",
+    "language": "portuguese",
+    "chapter": 45,
+    "sequence": 1880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d7811d412390e01"
+  },
+  "findings": []
+}

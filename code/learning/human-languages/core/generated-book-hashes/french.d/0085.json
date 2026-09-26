@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:ade075fba3643d7a",
+  "lessonIds": [
+    "FR-C85-vache",
+    "FR-C85-cochon",
+    "FR-C85-oiseau",
+    "FR-C85-souris",
+    "FR-C85-loup"
+  ],
+  "tex": "french/book/chapters/ch85-cow-pig-bird-mouse-wolf.tex"
+}

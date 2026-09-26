@@ -1,0 +1,11 @@
+{
+  "id": "RU-R54-first-pass-the-body-family-and-verbs",
+  "pathSegment": "RU-PATH-54-WORDS",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-54-WORDS",
+      "order": 5
+    }
+  ]
+}

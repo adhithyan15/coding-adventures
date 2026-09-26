@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C72-poivre",
+    "language": "french",
+    "chapter": 72,
+    "sequence": 2990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7933720c31bca7f8"
+  },
+  "findings": []
+}

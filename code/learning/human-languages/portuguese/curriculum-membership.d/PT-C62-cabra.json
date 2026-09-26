@@ -1,0 +1,11 @@
+{
+  "id": "PT-C62-cabra",
+  "pathSegment": "PT-PATH-62-ANIMAIS3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-62-ANIMAIS3",
+      "order": 4
+    }
+  ]
+}

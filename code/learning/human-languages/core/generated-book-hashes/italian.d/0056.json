@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:2c295d14c2ed461d",
+  "lessonIds": [
+    "IT-C56-cucina",
+    "IT-C56-finestra",
+    "IT-C56-tavolo",
+    "IT-C56-sedia",
+    "IT-C56-chiave"
+  ],
+  "tex": "italian/book/chapters/ch56-kitchen-window-table-chair-key.tex"
+}

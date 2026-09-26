@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "Bus, Train, Plane, Car, Bridge",
+  "label": "ch:ru-bus-train-plane-car-bridge",
+  "canDo": "I can name a bus, a train, a plane, a car and a bridge.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "RU-C79-bridge",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can name a bus, a train, a plane, a car and a bridge.",
+    "assesses": [
+      "RU-LEX-C79-TRAVEL-03",
+      "RU-LEX-C79-TRAVEL-04",
+      "RU-LEX-C79-TRAVEL-05"
+    ]
+  }
+}

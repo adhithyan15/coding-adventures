@@ -1,0 +1,19 @@
+{
+  "chapter": 66,
+  "title": "Hot, Cold, Warm, Fast, Slow",
+  "label": "ch:ru-hot-cold-warm-fast-slow",
+  "canDo": "I can say hot, cold, warm, fast and slow.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C66-slow",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: i can say hot, cold, warm, fast and slow.",
+    "assesses": [
+      "RU-LEX-C66-TEMP-03",
+      "RU-LEX-C66-TEMP-04",
+      "RU-LEX-C66-TEMP-05"
+    ]
+  }
+}

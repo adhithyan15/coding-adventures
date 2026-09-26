@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:a3bb49ba5e4c66e2",
+  "lessonIds": [
+    "FR-C50-cou",
+    "FR-C50-epaule",
+    "FR-C50-genou",
+    "FR-C50-visage",
+    "FR-C50-sang"
+  ],
+  "tex": "french/book/chapters/ch50-neck-shoulder-knee-face-blood.tex"
+}

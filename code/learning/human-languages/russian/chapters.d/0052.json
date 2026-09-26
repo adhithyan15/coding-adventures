@@ -1,0 +1,19 @@
+{
+  "chapter": 52,
+  "title": "Book, Pen, Paper, Notebook, Pencil",
+  "label": "ch:ru-book-pen-paper-notebook-pencil",
+  "canDo": "I can name a book, a pen, paper, a notebook and a pencil.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "RU-C52-pencil",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 52: i can name a book, a pen, paper, a notebook and a pencil.",
+    "assesses": [
+      "RU-LEX-C52-SCHOOL-03",
+      "RU-LEX-C52-SCHOOL-04",
+      "RU-LEX-C52-SCHOOL-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C59-eleve",
+  "pathSegment": "FR-PATH-59-FAMILLE11",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-59-FAMILLE11",
+      "order": 2
+    }
+  ]
+}

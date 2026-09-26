@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:7c5d3e4eccf3fe2b",
+  "lessonIds": [
+    "PT-C43-fechar",
+    "PT-C43-beber",
+    "PT-C43-comer",
+    "PT-C43-dar",
+    "PT-C43-viver"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch43.txt",
+  "json": "portuguese/narration/ch43.json",
+  "textHash": "fnv1a64:bb7d70bc98843041",
+  "jsonHash": "fnv1a64:9dd08ad1fd9f4384",
+  "findings": []
+}

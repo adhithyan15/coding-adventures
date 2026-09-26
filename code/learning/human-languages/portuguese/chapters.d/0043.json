@@ -1,0 +1,19 @@
+{
+  "chapter": 43,
+  "title": "Close, Drink, Eat, Give, Live",
+  "label": "ch:pt-close-drink-eat-give-live",
+  "canDo": "I can say to close, to drink, to eat, to give and to live.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PT-C43-viver",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 43: i can say to close, to drink, to eat, to give and to live.",
+    "assesses": [
+      "PT-LEX-C43-VERBOS4-03",
+      "PT-LEX-C43-VERBOS4-04",
+      "PT-LEX-C43-VERBOS4-05"
+    ]
+  }
+}

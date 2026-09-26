@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:ae69a4710dcc7cb4",
+  "lessonIds": [
+    "PT-C56-arvore",
+    "PT-C56-flor",
+    "PT-C56-folha",
+    "PT-C56-montanha",
+    "PT-C56-floresta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch56.txt",
+  "json": "portuguese/narration/ch56.json",
+  "textHash": "fnv1a64:4df0268945123bde",
+  "jsonHash": "fnv1a64:48fbbfc456b4051f",
+  "findings": []
+}

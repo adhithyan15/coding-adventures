@@ -1,0 +1,11 @@
+{
+  "id": "FR-C65-recevoir",
+  "pathSegment": "FR-PATH-65-VERBES17",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-65-VERBES17",
+      "order": 3
+    }
+  ]
+}

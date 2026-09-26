@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-56-CASA1",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a kitchen, a window, a table, a chair, a key.",
+  "prerequisites": []
+}

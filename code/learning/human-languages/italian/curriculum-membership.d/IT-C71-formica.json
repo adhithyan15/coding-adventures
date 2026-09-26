@@ -1,0 +1,11 @@
+{
+  "id": "IT-C71-formica",
+  "pathSegment": "IT-PATH-71-ANIMALI4",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-71-ANIMALI4",
+      "order": 3
+    }
+  ]
+}

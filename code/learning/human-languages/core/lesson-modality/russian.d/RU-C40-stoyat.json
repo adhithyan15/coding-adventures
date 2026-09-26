@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C40-stoyat",
+    "language": "russian",
+    "chapter": 40,
+    "sequence": 1970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:daf410709a68c5a6"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 47,
+  "title": "Sing, Dance, Laugh, Cry, Wash",
+  "label": "ch:it-sing-dance-laugh-cry-wash",
+  "canDo": "I can say to sing, to dance, to laugh, to cry, to wash.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "IT-C47-lavare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 47: i can say to sing, to dance, to laugh, to cry, to wash.",
+    "assesses": [
+      "IT-LEX-C47-VERBI1-03",
+      "IT-LEX-C47-VERBI1-04",
+      "IT-LEX-C47-VERBI1-05"
+    ]
+  }
+}

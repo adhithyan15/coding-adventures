@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:2a9c29e68cb27b25",
+  "lessonIds": [
+    "IT-C57-muro",
+    "IT-C57-tetto",
+    "IT-C57-giardino",
+    "IT-C57-lampada",
+    "IT-C57-bagno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch57.txt",
+  "json": "italian/narration/ch57.json",
+  "textHash": "fnv1a64:5d00dea49f0317a0",
+  "jsonHash": "fnv1a64:a29c0932084f6aff",
+  "findings": []
+}

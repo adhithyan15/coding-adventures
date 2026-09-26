@@ -4,7 +4,7 @@
   "chapter": 88,
   "title": "Stone, Sand, Hill, Valley, Cave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e60d5b4e280f08b0",
+  "sourceHash": "fnv1a64:693aa19d29fc8835",
   "lessons": [
     {
       "id": "LA-C88-lapis",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:777b99522c4179a2",
+      "sourceHash": "fnv1a64:9db7ea57fe555790",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for stone, sand, hill, valley, cave."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad595df91d55613f",
+      "sourceHash": "fnv1a64:5d13d6ec6a6df639",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for stone, sand, hill, valley, cave."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b835d30fc19b3313",
+      "sourceHash": "fnv1a64:d49a85fda82fc807",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for stone, sand, hill, valley, cave."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d803513646d44f2",
+      "sourceHash": "fnv1a64:31d4bc39a3f2a8aa",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for stone, sand, hill, valley, cave."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d41862479db8f45b",
+      "sourceHash": "fnv1a64:a63c0368ddbcf00f",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for stone, sand, hill, valley, cave."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:797fd18fc4b6eb01",
+  "lessonIds": [
+    "PT-C53-telefone",
+    "PT-C53-guarda-chuva",
+    "PT-C53-dinheiro",
+    "PT-C53-presente",
+    "PT-C53-relogio"
+  ],
+  "tex": "portuguese/book/chapters/ch53-phone-umbrella-money-present-watch.tex"
+}

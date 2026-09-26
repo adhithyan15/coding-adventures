@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C82-pierre",
+    "language": "french",
+    "chapter": 82,
+    "sequence": 3490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:496a2af5a0c79154"
+  },
+  "findings": []
+}

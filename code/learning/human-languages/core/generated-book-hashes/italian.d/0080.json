@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:65fe4f887603fd3d",
+  "lessonIds": [
+    "IT-C80-sotto",
+    "IT-C80-dentro",
+    "IT-C80-fuori",
+    "IT-C80-piazza",
+    "IT-C80-strada"
+  ],
+  "tex": "italian/book/chapters/ch80-under-inside-outside-square-street.tex"
+}

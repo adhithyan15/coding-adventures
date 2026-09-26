@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:e7dade2f17cc23f9",
+  "lessonIds": [
+    "RU-C41-slushat",
+    "RU-C41-uchit",
+    "RU-C41-otvechat",
+    "RU-C41-zhdat",
+    "RU-C41-davat"
+  ],
+  "tex": "russian/book/chapters/ch41-listen-learn-answer-wait-give.tex"
+}

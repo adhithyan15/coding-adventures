@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:a7c2007afed88c2c",
+  "lessonIds": [
+    "FR-C66-dessiner",
+    "FR-C66-peindre",
+    "FR-C66-compter",
+    "FR-C66-gagner",
+    "FR-C66-cacher"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch66.txt",
+  "json": "french/narration/ch66.json",
+  "textHash": "fnv1a64:b1e599a91b35ac1e",
+  "jsonHash": "fnv1a64:8924a5cf759a2fa6",
+  "findings": []
+}

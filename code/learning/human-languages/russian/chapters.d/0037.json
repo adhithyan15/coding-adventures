@@ -1,0 +1,19 @@
+{
+  "chapter": 37,
+  "title": "Neighbour, Guest, Teacher, Pupil, Work",
+  "label": "ch:ru-neighbour-guest-teacher-pupil-work",
+  "canDo": "I can name a neighbour, a guest, a teacher, a pupil and work.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "RU-C37-work",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 37: i can name a neighbour, a guest, a teacher, a pupil and work.",
+    "assesses": [
+      "RU-LEX-C37-PEOPLE-03",
+      "RU-LEX-C37-PEOPLE-04",
+      "RU-LEX-C37-PEOPLE-05"
+    ]
+  }
+}

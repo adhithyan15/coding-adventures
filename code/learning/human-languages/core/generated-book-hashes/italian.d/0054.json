@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:d16bc37bee6c3ea8",
+  "lessonIds": [
+    "IT-C54-torta",
+    "IT-C54-zuppa",
+    "IT-C54-miele",
+    "IT-C54-olio",
+    "IT-C54-pranzo"
+  ],
+  "tex": "italian/book/chapters/ch54-cake-soup-honey-oil-lunch.tex"
+}

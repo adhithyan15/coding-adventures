@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:dfbf80c9b97ab434",
+  "lessonIds": [
+    "PT-C44-carne",
+    "PT-C44-peixe",
+    "PT-C44-manteiga",
+    "PT-C44-sal",
+    "PT-C44-frango"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch44.txt",
+  "json": "portuguese/narration/ch44.json",
+  "textHash": "fnv1a64:87decdd633841cac",
+  "jsonHash": "fnv1a64:80f1d6e646fe6a1d",
+  "findings": []
+}

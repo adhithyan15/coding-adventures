@@ -1,0 +1,11 @@
+{
+  "id": "PT-C76-biblioteca",
+  "pathSegment": "PT-PATH-76-CIDADE4",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-76-CIDADE4",
+      "order": 4
+    }
+  ]
+}

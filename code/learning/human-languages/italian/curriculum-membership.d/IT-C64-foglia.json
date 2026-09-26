@@ -1,0 +1,11 @@
+{
+  "id": "IT-C64-foglia",
+  "pathSegment": "IT-PATH-64-NATURA1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-64-NATURA1",
+      "order": 2
+    }
+  ]
+}

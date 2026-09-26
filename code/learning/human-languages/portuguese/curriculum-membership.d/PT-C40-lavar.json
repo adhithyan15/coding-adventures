@@ -1,0 +1,11 @@
+{
+  "id": "PT-C40-lavar",
+  "pathSegment": "PT-PATH-40-VERBOS1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-40-VERBOS1",
+      "order": 4
+    }
+  ]
+}

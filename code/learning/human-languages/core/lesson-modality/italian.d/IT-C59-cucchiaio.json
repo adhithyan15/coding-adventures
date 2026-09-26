@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C59-cucchiaio",
+    "language": "italian",
+    "chapter": 59,
+    "sequence": 2530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4d435242fe55905"
+  },
+  "findings": []
+}

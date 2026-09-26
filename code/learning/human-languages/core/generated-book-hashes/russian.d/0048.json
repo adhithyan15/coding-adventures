@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:743fbf8af07fe04e",
+  "lessonIds": [
+    "RU-C48-house",
+    "RU-C48-room",
+    "RU-C48-kitchen",
+    "RU-C48-window",
+    "RU-C48-door"
+  ],
+  "tex": "russian/book/chapters/ch48-house-room-kitchen-window-door.tex"
+}

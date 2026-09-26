@@ -1,0 +1,19 @@
+{
+  "chapter": 35,
+  "title": "Illness, Hunger, Thirst, Tiredness, Joy",
+  "label": "ch:pt-illness-hunger-thirst-tiredness-joy",
+  "canDo": "I can name illness, hunger, thirst and tiredness, and joy.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PT-C35-alegria",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 35: i can name illness, hunger, thirst and tiredness, and joy.",
+    "assesses": [
+      "PT-LEX-C35-SAUDE2-03",
+      "PT-LEX-C35-SAUDE2-04",
+      "PT-LEX-C35-SAUDE2-05"
+    ]
+  }
+}

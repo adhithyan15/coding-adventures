@@ -1,0 +1,19 @@
+{
+  "chapter": 81,
+  "title": "Tree, Flower, Leaf, Mountain, River",
+  "label": "ch:fr-tree-flower-leaf-mountain-river",
+  "canDo": "I can name a tree, a flower, a leaf, a mountain, a river.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C81-riviere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: i can name a tree, a flower, a leaf, a mountain, a river.",
+    "assesses": [
+      "FR-LEX-C81-NATURE33-03",
+      "FR-LEX-C81-NATURE33-04",
+      "FR-LEX-C81-NATURE33-05"
+    ]
+  }
+}

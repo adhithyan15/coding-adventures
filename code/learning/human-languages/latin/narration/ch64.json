@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Neck, Shoulder, Knee, Heart",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ea0b72b223765f1a",
+  "sourceHash": "fnv1a64:63ea974535011b29",
   "lessons": [
     {
       "id": "LA-C64-collum",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88d1cccc890be2bd",
+      "sourceHash": "fnv1a64:ffae2a61b8076a83",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for neck, shoulder, knee, heart."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abffcd4df8de3416",
+      "sourceHash": "fnv1a64:bbece676054a1f9c",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for neck, shoulder, knee, heart."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6469a424523b5c5",
+      "sourceHash": "fnv1a64:855050fb8a3c2011",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for neck, shoulder, knee, heart."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b151caf988201fb1",
+      "sourceHash": "fnv1a64:a3c416f32ac9afe9",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for neck, shoulder, knee, heart."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d97afc7165d0dd6",
+      "sourceHash": "fnv1a64:b2a66143ad917d80",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for neck, shoulder, knee, heart."
+              "text": "One more word for this chapter."
             }
           ]
         },

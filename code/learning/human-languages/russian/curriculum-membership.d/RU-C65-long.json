@@ -1,0 +1,11 @@
+{
+  "id": "RU-C65-long",
+  "pathSegment": "RU-PATH-65-SIZE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-65-SIZE",
+      "order": 3
+    }
+  ]
+}

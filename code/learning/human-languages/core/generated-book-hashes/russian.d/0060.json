@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:4ea0062fa4b4ead6",
+  "lessonIds": [
+    "RU-C60-dog",
+    "RU-C60-cat",
+    "RU-C60-horse",
+    "RU-C60-cow",
+    "RU-C60-pig"
+  ],
+  "tex": "russian/book/chapters/ch60-dog-cat-horse-cow-pig.tex"
+}

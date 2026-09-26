@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "Trousers, Shoes, Hat, Coat, Skirt",
+  "label": "ch:fr-trousers-shoes-hat-coat-skirt",
+  "canDo": "I can name trousers, shoes, a hat, a coat, a skirt.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FR-C104-jupe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can name trousers, shoes, a hat, a coat, a skirt.",
+    "assesses": [
+      "FR-LEX-C104-HABITS56-03",
+      "FR-LEX-C104-HABITS56-04",
+      "FR-LEX-C104-HABITS56-05"
+    ]
+  }
+}

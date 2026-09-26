@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:089874267f8021cf",
+  "lessonIds": [
+    "PT-C59-chuva",
+    "PT-C59-vento",
+    "PT-C59-colina",
+    "PT-C59-deserto",
+    "PT-C59-fogo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch59.txt",
+  "json": "portuguese/narration/ch59.json",
+  "textHash": "fnv1a64:3a143478d8fc64d6",
+  "jsonHash": "fnv1a64:8498edc72d58966b",
+  "findings": []
+}

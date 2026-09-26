@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:8795a7773acbe722",
+  "lessonIds": [
+    "IT-C66-spiaggia",
+    "IT-C66-isola",
+    "IT-C66-campo",
+    "IT-C66-sole",
+    "IT-C66-luna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch66.txt",
+  "json": "italian/narration/ch66.json",
+  "textHash": "fnv1a64:c9bda439b7a7a438",
+  "jsonHash": "fnv1a64:29783f2980f59ec8",
+  "findings": []
+}

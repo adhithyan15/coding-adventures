@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C64-velho",
+    "language": "portuguese",
+    "chapter": 64,
+    "sequence": 2860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22cd5ed971f3b9c2"
+  },
+  "findings": []
+}

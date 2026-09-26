@@ -1,0 +1,11 @@
+{
+  "id": "FR-C61-manger",
+  "pathSegment": "FR-PATH-61-VERBES13",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-61-VERBES13",
+      "order": 2
+    }
+  ]
+}

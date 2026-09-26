@@ -1,0 +1,11 @@
+{
+  "id": "PT-C64-velho",
+  "pathSegment": "PT-PATH-64-ADJ1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-64-ADJ1",
+      "order": 3
+    }
+  ]
+}

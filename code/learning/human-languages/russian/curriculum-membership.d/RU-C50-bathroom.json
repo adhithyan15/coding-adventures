@@ -1,0 +1,11 @@
+{
+  "id": "RU-C50-bathroom",
+  "pathSegment": "RU-PATH-50-HOME3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-50-HOME3",
+      "order": 3
+    }
+  ]
+}

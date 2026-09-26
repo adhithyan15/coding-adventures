@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:ac65874fe159106b",
+  "lessonIds": [
+    "FR-C57-mari",
+    "FR-C57-femme",
+    "FR-C57-oncle",
+    "FR-C57-tante",
+    "FR-C57-cousine"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch57.txt",
+  "json": "french/narration/ch57.json",
+  "textHash": "fnv1a64:d73242dc6af824b6",
+  "jsonHash": "fnv1a64:0d2d0ba2642036c1",
+  "findings": []
+}

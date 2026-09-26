@@ -1,0 +1,11 @@
+{
+  "id": "PT-C44-peixe",
+  "pathSegment": "PT-PATH-44-COMIDA1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-44-COMIDA1",
+      "order": 1
+    }
+  ]
+}

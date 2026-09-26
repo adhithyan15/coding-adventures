@@ -1,0 +1,11 @@
+{
+  "id": "RU-C62-duck",
+  "pathSegment": "RU-PATH-62-ANIMALS3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-62-ANIMALS3",
+      "order": 3
+    }
+  ]
+}

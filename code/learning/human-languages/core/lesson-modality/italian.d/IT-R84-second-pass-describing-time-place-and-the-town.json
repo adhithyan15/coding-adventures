@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R84-second-pass-describing-time-place-and-the-town",
+    "language": "italian",
+    "chapter": 84,
+    "sequence": 3840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:491b5bff5a5b3034"
+  },
+  "findings": []
+}

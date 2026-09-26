@@ -1,0 +1,19 @@
+{
+  "chapter": 80,
+  "title": "Pay, Use, Show, Clean, Cut",
+  "label": "ch:pt-pay-use-show-clean-cut",
+  "canDo": "I can say to pay, to use, to show, to clean and to cut.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PT-C80-cortar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 80: i can say to pay, to use, to show, to clean and to cut.",
+    "assesses": [
+      "PT-LEX-C80-VERBOS6-03",
+      "PT-LEX-C80-VERBOS6-04",
+      "PT-LEX-C80-VERBOS6-05"
+    ]
+  }
+}

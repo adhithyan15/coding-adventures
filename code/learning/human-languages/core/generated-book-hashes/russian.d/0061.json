@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:42908c14a46560ed",
+  "lessonIds": [
+    "RU-C61-bird",
+    "RU-C61-mouse",
+    "RU-C61-wolf",
+    "RU-C61-bear",
+    "RU-C61-fox"
+  ],
+  "tex": "russian/book/chapters/ch61-bird-mouse-wolf-bear-fox.tex"
+}

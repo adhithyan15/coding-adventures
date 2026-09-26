@@ -1,0 +1,11 @@
+{
+  "id": "FR-C73-cle",
+  "pathSegment": "FR-PATH-73-MAISON25",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-73-MAISON25",
+      "order": 3
+    }
+  ]
+}

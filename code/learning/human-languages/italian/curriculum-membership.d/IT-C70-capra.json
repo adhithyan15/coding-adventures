@@ -1,0 +1,11 @@
+{
+  "id": "IT-C70-capra",
+  "pathSegment": "IT-PATH-70-ANIMALI3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-70-ANIMALI3",
+      "order": 4
+    }
+  ]
+}

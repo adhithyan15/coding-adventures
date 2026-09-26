@@ -1,0 +1,11 @@
+{
+  "id": "PT-C47-jantar",
+  "pathSegment": "PT-PATH-47-REFEICOES",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-47-REFEICOES",
+      "order": 3
+    }
+  ]
+}

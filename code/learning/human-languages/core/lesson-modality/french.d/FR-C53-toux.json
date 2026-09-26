@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C53-toux",
+    "language": "french",
+    "chapter": 53,
+    "sequence": 2030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82076c6ce6afd5fa"
+  },
+  "findings": []
+}

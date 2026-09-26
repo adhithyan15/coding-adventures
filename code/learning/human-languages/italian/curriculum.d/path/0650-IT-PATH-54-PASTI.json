@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-54-PASTI",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "IT-EXT-54-PASTI"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C64-foglia",
+    "language": "italian",
+    "chapter": 64,
+    "sequence": 2800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87f4a76ca5d7ed29"
+  },
+  "findings": []
+}

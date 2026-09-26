@@ -1,0 +1,19 @@
+{
+  "chapter": 42,
+  "title": "Thirst, Tiredness, Tired, Ill, Joy",
+  "label": "ch:it-thirst-tiredness-tired-ill-joy",
+  "canDo": "I can name thirst, tiredness, tired, ill, joy.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C42-gioia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 42: i can name thirst, tiredness, tired, ill, joy.",
+    "assesses": [
+      "IT-LEX-C42-STARE-03",
+      "IT-LEX-C42-STARE-04",
+      "IT-LEX-C42-STARE-05"
+    ]
+  }
+}

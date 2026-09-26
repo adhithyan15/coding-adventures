@@ -8,7 +8,7 @@ type: grammar
 headword: je sais pas
 gloss: "the ne that speech drops — and the pas that was once a step"
 concept_tag: FR-NEGATION-NE-DROP
-prerequisites: [FR-C37-finir, FR-C18-non]
+prerequisites: [FR-C37-finir, FR-C18-non, FR-C18-oui-more]
 sounds: [silent-endings]
 roots: [latin-passus]
 etymology_hook: "pas was the noun for a step: je ne marche pas meant 'I do not walk a step', and the emphasiser outlived the negative it was reinforcing -- which is why speech can now drop the ne and keep the pas"

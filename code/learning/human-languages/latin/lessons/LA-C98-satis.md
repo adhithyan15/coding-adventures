@@ -45,7 +45,7 @@ reviews_of: [LA-C98-stultus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for rich, poor, foolish, enough, too much.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C98-DIVES-04, LA-LEX-C98-DIVES-02, LA-LEX-C98-DIVES-03] -->

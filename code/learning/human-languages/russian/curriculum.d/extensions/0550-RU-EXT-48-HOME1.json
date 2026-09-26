@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-48-HOME1",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a house, a room, a kitchen, a window and a door.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C40-chorar",
+  "pathSegment": "PT-PATH-40-VERBOS1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-40-VERBOS1",
+      "order": 3
+    }
+  ]
+}

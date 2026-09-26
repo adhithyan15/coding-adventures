@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:af09453884247b23",
+  "lessonIds": [
+    "IT-C63-orologio",
+    "IT-C63-occhiali",
+    "IT-C63-scatola",
+    "IT-C63-valigia",
+    "IT-C63-biglietto"
+  ],
+  "tex": "italian/book/chapters/ch63-watch-glasses-box-suitcase-ticket.tex"
+}

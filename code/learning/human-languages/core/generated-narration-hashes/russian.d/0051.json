@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:d40c4e1e0beeefe7",
+  "lessonIds": [
+    "RU-C51-cup",
+    "RU-C51-plate",
+    "RU-C51-spoon",
+    "RU-C51-knife",
+    "RU-C51-fork"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch51.txt",
+  "json": "russian/narration/ch51.json",
+  "textHash": "fnv1a64:16e5b9e694681923",
+  "jsonHash": "fnv1a64:f4125074042ce06d",
+  "findings": []
+}

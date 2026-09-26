@@ -1,0 +1,11 @@
+{
+  "id": "RU-C35-husband",
+  "pathSegment": "RU-PATH-35-FAMILY1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-35-FAMILY1",
+      "order": 3
+    }
+  ]
+}

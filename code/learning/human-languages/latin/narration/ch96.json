@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "Beautiful, Round, Empty, Bright, Dark",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d29701b4846db909",
+  "sourceHash": "fnv1a64:669eb8d65a347b29",
   "lessons": [
     {
       "id": "LA-C96-pulcher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c039f6e84b6d41cf",
+      "sourceHash": "fnv1a64:d61fc544c07a309f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for beautiful, round, empty, bright, dark."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cefa4a1e72c5085f",
+      "sourceHash": "fnv1a64:c88e62b9604ce25f",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for beautiful, round, empty, bright, dark."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6e1f22142a70be2",
+      "sourceHash": "fnv1a64:6ec74f8deabec9e8",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for beautiful, round, empty, bright, dark."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52dbedd66cc83bb7",
+      "sourceHash": "fnv1a64:5079326ea4459549",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for beautiful, round, empty, bright, dark."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e93fb74924646862",
+      "sourceHash": "fnv1a64:abf0e89d1ccac7b2",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for beautiful, round, empty, bright, dark."
+              "text": "One more word for this chapter."
             }
           ]
         },

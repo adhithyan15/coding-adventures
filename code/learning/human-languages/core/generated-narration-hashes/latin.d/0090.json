@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 90,
-  "sourceHash": "fnv1a64:d4cb6ada94165a32",
+  "sourceHash": "fnv1a64:9723ebbf7a1747e7",
   "lessonIds": [
     "LA-C90-equus",
     "LA-C90-bos",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch90.txt",
   "json": "latin/narration/ch90.json",
-  "textHash": "fnv1a64:4247ef3677f5ac40",
-  "jsonHash": "fnv1a64:e037fa1762b277c5",
+  "textHash": "fnv1a64:8935ae5596da61c1",
+  "jsonHash": "fnv1a64:14f3cb748b10efda",
   "findings": []
 }

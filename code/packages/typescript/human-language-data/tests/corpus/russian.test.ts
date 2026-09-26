@@ -33,7 +33,11 @@ it("pins Russian lesson-content budgets", () =>
     // two. No new atoms and no new headwords.
     //
     // 148 -> 151: HL-C443: the letter chapter adds one letter lesson per letter the reader had read in words and never written, plus two reviews. RE-MEASURED against the tree; a letter lesson introduces one script atom and no idiom, sense or culture claim.
-    lessons: 151,
+    // 151 -> 418: the pre-A1 vocabulary tranche, chapters 29-80. 260 word
+    // lessons (twenty-three verbs) and four reviews; each word lesson introduces
+    // one lexical atom and no idiom, sense or culture claim. Chapter 81 adds the
+    // ё letter lesson and its two reviews (one script atom). Re-measured.
+    lessons: 418,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,

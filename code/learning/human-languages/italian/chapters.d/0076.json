@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Strong, Weak, Rich, Poor, Yellow",
+  "label": "ch:it-strong-weak-rich-poor-yellow",
+  "canDo": "I can name strong, weak, rich, poor, yellow.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "IT-C76-giallo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can name strong, weak, rich, poor, yellow.",
+    "assesses": [
+      "IT-LEX-C76-AGG5-03",
+      "IT-LEX-C76-AGG5-04",
+      "IT-LEX-C76-AGG5-05"
+    ]
+  }
+}

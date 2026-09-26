@@ -45,7 +45,7 @@ reviews_of: [LA-C57-post]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for arm, finger, tooth.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C63-CORPUS1-01, LA-LEX-C57-ORDER-01, LA-LEX-C57-ORDER-02] -->

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C62-utiliser",
+  "pathSegment": "FR-PATH-62-VERBES14",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-62-VERBES14",
+      "order": 3
+    }
+  ]
+}

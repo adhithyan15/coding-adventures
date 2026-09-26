@@ -1,0 +1,11 @@
+{
+  "id": "PT-C73-loja",
+  "pathSegment": "PT-PATH-73-CIDADE1",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-73-CIDADE1",
+      "order": 2
+    }
+  ]
+}

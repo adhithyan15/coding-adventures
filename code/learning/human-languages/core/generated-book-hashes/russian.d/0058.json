@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:9109b9f0dff628b8",
+  "lessonIds": [
+    "RU-C58-sky",
+    "RU-C58-sun",
+    "RU-C58-moon",
+    "RU-C58-star",
+    "RU-C58-cloud"
+  ],
+  "tex": "russian/book/chapters/ch58-sky-sun-moon-star-cloud.tex"
+}

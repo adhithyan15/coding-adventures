@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:a39a4a925f7a9c35",
+  "lessonIds": [
+    "FR-C90-difficile",
+    "FR-C90-cher",
+    "FR-C90-haut",
+    "FR-C90-plein",
+    "FR-C90-vide"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch90.txt",
+  "json": "french/narration/ch90.json",
+  "textHash": "fnv1a64:2a1ffb808a888273",
+  "jsonHash": "fnv1a64:ad9bd922cf031a76",
+  "findings": []
+}

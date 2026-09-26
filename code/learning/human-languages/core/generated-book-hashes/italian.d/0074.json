@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:15c7d4aab0071708",
+  "lessonIds": [
+    "IT-C74-veloce",
+    "IT-C74-lento",
+    "IT-C74-facile",
+    "IT-C74-difficile",
+    "IT-C74-caro"
+  ],
+  "tex": "italian/book/chapters/ch74-fast-slow-easy-difficult-dear.tex"
+}

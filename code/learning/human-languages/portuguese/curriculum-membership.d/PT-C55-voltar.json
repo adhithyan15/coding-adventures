@@ -1,0 +1,11 @@
+{
+  "id": "PT-C55-voltar",
+  "pathSegment": "PT-PATH-55-VERBOS5",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-55-VERBOS5",
+      "order": 2
+    }
+  ]
+}

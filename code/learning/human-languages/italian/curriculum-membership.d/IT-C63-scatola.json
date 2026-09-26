@@ -1,0 +1,11 @@
+{
+  "id": "IT-C63-scatola",
+  "pathSegment": "IT-PATH-63-COSE3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-63-COSE3",
+      "order": 2
+    }
+  ]
+}

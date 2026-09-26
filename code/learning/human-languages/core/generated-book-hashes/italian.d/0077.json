@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:8669ccc70ebbdeb2",
+  "lessonIds": [
+    "IT-C77-verde",
+    "IT-C77-grigio",
+    "IT-C77-pulito",
+    "IT-C77-sporco",
+    "IT-C77-contento"
+  ],
+  "tex": "italian/book/chapters/ch77-green-grey-clean-dirty-pleased.tex"
+}

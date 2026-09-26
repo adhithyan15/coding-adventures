@@ -1,0 +1,11 @@
+{
+  "id": "RU-C72-above",
+  "pathSegment": "RU-PATH-72-WHERE1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-72-WHERE1",
+      "order": 4
+    }
+  ]
+}

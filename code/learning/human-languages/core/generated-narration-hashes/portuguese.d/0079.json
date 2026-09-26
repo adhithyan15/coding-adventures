@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:6d4e3dcd05c3c728",
+  "lessonIds": [
+    "PT-C79-quarenta",
+    "PT-C79-cinquenta",
+    "PT-C79-cem",
+    "PT-C79-mil",
+    "PT-C79-zero"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch79.txt",
+  "json": "portuguese/narration/ch79.json",
+  "textHash": "fnv1a64:724789770ba51b91",
+  "jsonHash": "fnv1a64:7aa67422876364f6",
+  "findings": []
+}

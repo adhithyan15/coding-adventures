@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "Citizen, Cook, Merchant, Farmer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3b33c77e629fba55",
+  "sourceHash": "fnv1a64:3c7ebf768b3a0ce8",
   "lessons": [
     {
       "id": "LA-C74-civis",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1aa49c9a6cf246e2",
+      "sourceHash": "fnv1a64:10144b244bc97082",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for citizen, cook, merchant, farmer."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9981d345d6a94d5d",
+      "sourceHash": "fnv1a64:d4752224b0e352bd",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for citizen, cook, merchant, farmer."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e53bf65a768554c6",
+      "sourceHash": "fnv1a64:6eee1005bc9730f8",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for citizen, cook, merchant, farmer."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d543390eb45ca08e",
+      "sourceHash": "fnv1a64:d91e0d13c6e8bfca",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for citizen, cook, merchant, farmer."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34a5fb74835c8728",
+      "sourceHash": "fnv1a64:0459ca8d8e7226d6",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for citizen, cook, merchant, farmer."
+              "text": "One more word for this chapter."
             }
           ]
         },

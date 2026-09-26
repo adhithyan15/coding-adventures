@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C102-theatre",
+    "language": "french",
+    "chapter": 102,
+    "sequence": 4490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce329df9aa04f650"
+  },
+  "findings": []
+}

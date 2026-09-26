@@ -1,0 +1,11 @@
+{
+  "id": "IT-C81-scuola",
+  "pathSegment": "IT-PATH-81-CITTA1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-81-CITTA1",
+      "order": 3
+    }
+  ]
+}

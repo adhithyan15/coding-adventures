@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:89695526b6442c30",
+  "lessonIds": [
+    "IT-C62-borsa",
+    "IT-C62-telefono",
+    "IT-C62-ombrello",
+    "IT-C62-soldi",
+    "IT-C62-regalo"
+  ],
+  "tex": "italian/book/chapters/ch62-bag-phone-umbrella-money-present.tex"
+}

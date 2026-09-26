@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:ff789404b7be412a",
+  "lessonIds": [
+    "PT-C49-cama",
+    "PT-C49-chave",
+    "PT-C49-parede",
+    "PT-C49-telhado",
+    "PT-C49-jardim"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch49.txt",
+  "json": "portuguese/narration/ch49.json",
+  "textHash": "fnv1a64:d3e2935d45c28ac6",
+  "jsonHash": "fnv1a64:839e0e572c061051",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 46,
+  "title": "Potato, Tomato, Onion, Carrot, Beans",
+  "label": "ch:pt-potato-tomato-onion-carrot-beans",
+  "canDo": "I can name a potato, a tomato, an onion, a carrot and beans.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "PT-C46-feijao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 46: i can name a potato, a tomato, an onion, a carrot and beans.",
+    "assesses": [
+      "PT-LEX-C46-LEGUMES-03",
+      "PT-LEX-C46-LEGUMES-04",
+      "PT-LEX-C46-LEGUMES-05"
+    ]
+  }
+}

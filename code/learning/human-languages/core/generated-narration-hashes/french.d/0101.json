@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:7d198792a92be61f",
+  "lessonIds": [
+    "FR-C101-restaurant",
+    "FR-C101-hotel",
+    "FR-C101-pharmacie",
+    "FR-C101-village",
+    "FR-C101-poste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch101.txt",
+  "json": "french/narration/ch101.json",
+  "textHash": "fnv1a64:d77d588db14d76ce",
+  "jsonHash": "fnv1a64:f223b77c33295ff7",
+  "findings": []
+}

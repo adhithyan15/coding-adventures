@@ -1,0 +1,11 @@
+{
+  "id": "FR-C102-boulangerie",
+  "pathSegment": "FR-PATH-102-VILLE54",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-102-VILLE54",
+      "order": 3
+    }
+  ]
+}

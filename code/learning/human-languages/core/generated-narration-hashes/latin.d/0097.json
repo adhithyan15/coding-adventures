@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 97,
-  "sourceHash": "fnv1a64:9d80fc4cfa8bff46",
+  "sourceHash": "fnv1a64:001f9f601651db46",
   "lessonIds": [
     "LA-C97-facilis",
     "LA-C97-difficilis",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch97.txt",
   "json": "latin/narration/ch97.json",
-  "textHash": "fnv1a64:f4fbf47e28f8b657",
-  "jsonHash": "fnv1a64:cdae2d67220e6544",
+  "textHash": "fnv1a64:97df50f2217bdef7",
+  "jsonHash": "fnv1a64:eaf60e1e3116f0e7",
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C41-medico",
+  "pathSegment": "IT-PATH-41-SALUTE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-41-SALUTE",
+      "order": 1
+    }
+  ]
+}

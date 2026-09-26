@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "Send, Stay, Fall, Put, Find",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6a33ce912b374119",
+  "sourceHash": "fnv1a64:092d7ef64c60c697",
   "lessons": [
     {
       "id": "LA-C77-mitto",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8b5cebb8eb62403",
+      "sourceHash": "fnv1a64:7a7ba62cb1f24871",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for send, stay, fall, put, find."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b38dc43588033f4",
+      "sourceHash": "fnv1a64:375317f81e0d77aa",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for send, stay, fall, put, find."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:caa9c7f068b1d634",
+      "sourceHash": "fnv1a64:a19d45c0a83deb62",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for send, stay, fall, put, find."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26c12c8837a2ec92",
+      "sourceHash": "fnv1a64:226b48c76a6814a2",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for send, stay, fall, put, find."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fb292ae859d4e66",
+      "sourceHash": "fnv1a64:95d0536caaaa6632",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for send, stay, fall, put, find."
+              "text": "One more word for this chapter."
             }
           ]
         },

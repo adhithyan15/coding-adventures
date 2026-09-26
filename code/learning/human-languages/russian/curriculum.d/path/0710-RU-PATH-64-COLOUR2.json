@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-64-COLOUR2",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "RU-EXT-64-COLOUR2"
+  ],
+  "after": []
+}

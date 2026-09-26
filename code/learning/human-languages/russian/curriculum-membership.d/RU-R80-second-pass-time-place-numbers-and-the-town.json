@@ -1,0 +1,11 @@
+{
+  "id": "RU-R80-second-pass-time-place-numbers-and-the-town",
+  "pathSegment": "RU-PATH-80-PLACES",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "RU-EXT-80-PLACES",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 65,
+  "title": "River, Lake, Sea, Stone, Sand",
+  "label": "ch:it-river-lake-sea-stone-sand",
+  "canDo": "I can name a river, a lake, the sea, a stone, sand.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "IT-C65-sabbia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: i can name a river, a lake, the sea, a stone, sand.",
+    "assesses": [
+      "IT-LEX-C65-NATURA2-03",
+      "IT-LEX-C65-NATURA2-04",
+      "IT-LEX-C65-NATURA2-05"
+    ]
+  }
+}

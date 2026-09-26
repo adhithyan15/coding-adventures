@@ -1,0 +1,11 @@
+{
+  "id": "IT-C47-ballare",
+  "pathSegment": "IT-PATH-47-VERBI1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-47-VERBI1",
+      "order": 1
+    }
+  ]
+}

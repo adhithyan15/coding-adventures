@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C60-porco",
+    "language": "portuguese",
+    "chapter": 60,
+    "sequence": 2670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5212c8e05ca6f20d"
+  },
+  "findings": []
+}

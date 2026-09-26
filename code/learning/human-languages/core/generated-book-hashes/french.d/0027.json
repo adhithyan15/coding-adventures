@@ -1,9 +1,10 @@
 {
   "language": "french",
   "chapter": 27,
-  "sourceHash": "fnv1a64:f0c117db82d62581",
+  "sourceHash": "fnv1a64:e6b7023032dbeb89",
   "lessonIds": [
-    "FR-C23-vert-jaune"
+    "FR-C23-vert-jaune",
+    "FR-C23-vert-jaune-more"
   ],
   "tex": "french/book/chapters/ch27-green-and-yellow.tex"
 }

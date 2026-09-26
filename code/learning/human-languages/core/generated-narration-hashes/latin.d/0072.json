@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 72,
-  "sourceHash": "fnv1a64:084a56a3f0636080",
+  "sourceHash": "fnv1a64:b18fc532335624b3",
   "lessonIds": [
     "LA-C72-amita",
     "LA-C72-vicinus",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch72.txt",
   "json": "latin/narration/ch72.json",
-  "textHash": "fnv1a64:f9cc27584cf91418",
-  "jsonHash": "fnv1a64:e13d31c5f8d51e03",
+  "textHash": "fnv1a64:b60549b551fe6662",
+  "jsonHash": "fnv1a64:c154fdeb1cb0b5c7",
   "findings": []
 }

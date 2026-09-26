@@ -4,7 +4,7 @@
   "chapter": 106,
   "title": "Thirty to a Thousand",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:91da995d15f1ec92",
+  "sourceHash": "fnv1a64:208d2822e57b43e3",
   "lessons": [
     {
       "id": "LA-C106-triginta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a32767d2c7193c21",
+      "sourceHash": "fnv1a64:5a2a6f09c7412a8b",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for thirty to a thousand."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d799a974c75bdca",
+      "sourceHash": "fnv1a64:4a1cb349627e4e20",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for thirty to a thousand."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8dea24d9562eb0d",
+      "sourceHash": "fnv1a64:08993e05ddd26575",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for thirty to a thousand."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3dd6c5f79fbb28f",
+      "sourceHash": "fnv1a64:0d28faaeee22158f",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for thirty to a thousand."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cca69162e722b24d",
+      "sourceHash": "fnv1a64:95a460d52911d44f",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for thirty to a thousand."
+              "text": "One more word for this chapter."
             }
           ]
         },

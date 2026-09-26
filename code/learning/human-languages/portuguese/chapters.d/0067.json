@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Cheap, Tall, Low, Full, Empty",
+  "label": "ch:pt-cheap-tall-low-full-empty",
+  "canDo": "I can say cheap, tall, low, full and empty.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PT-C67-vazio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can say cheap, tall, low, full and empty.",
+    "assesses": [
+      "PT-LEX-C67-ADJ4-03",
+      "PT-LEX-C67-ADJ4-04",
+      "PT-LEX-C67-ADJ4-05"
+    ]
+  }
+}

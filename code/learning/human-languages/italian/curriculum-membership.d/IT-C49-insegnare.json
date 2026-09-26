@@ -1,0 +1,11 @@
+{
+  "id": "IT-C49-insegnare",
+  "pathSegment": "IT-PATH-49-VERBI3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-49-VERBI3",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C66-peindre",
+  "pathSegment": "FR-PATH-66-VERBES18",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-66-VERBES18",
+      "order": 1
+    }
+  ]
+}

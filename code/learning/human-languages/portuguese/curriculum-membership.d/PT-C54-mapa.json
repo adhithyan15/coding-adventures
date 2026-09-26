@@ -1,0 +1,11 @@
+{
+  "id": "PT-C54-mapa",
+  "pathSegment": "PT-PATH-54-COISAS3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-54-COISAS3",
+      "order": 4
+    }
+  ]
+}

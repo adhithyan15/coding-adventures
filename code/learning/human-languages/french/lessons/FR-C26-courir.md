@@ -8,7 +8,7 @@ type: word
 headword: courir
 gloss: to run — Latin currere, the root under current, course, courier and curriculum, and the verb that shows why chien palatalized its c and courir did not
 concept_tag: VERB-RUN
-prerequisites: [FR-C26-marcher, FR-C22-chien-chat, FR-C21-le-temps]
+prerequisites: [FR-C26-marcher, FR-C22-chien-chat, FR-C21-le-temps, FR-C21-le-temps-more, FR-C22-chien-chat-more]
 sounds: [r-uvular, silent-final]
 roots: [currere-latin]
 etymology_hook: "courir ← Latin currere 'to run' → current, currency, cursor, course, courier, corridor, curriculum ('a running'), concur, occur, recur, incur, excursion, precursor — and Latin carrus 'wagon' (→ car, carry, cargo) is a Gaulish loanword from the same ancient root, NOT a form built from currere"

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-75-MAISON27",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "FR-EXT-75-MAISON27"
+  ],
+  "after": []
+}

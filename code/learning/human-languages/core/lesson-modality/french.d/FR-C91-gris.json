@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C91-gris",
+    "language": "french",
+    "chapter": 91,
+    "sequence": 3970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14fe5f6b177045c5"
+  },
+  "findings": []
+}

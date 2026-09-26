@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:482e3759bd145254",
+  "lessonIds": [
+    "RU-C47-sugar",
+    "RU-C47-honey",
+    "RU-C47-rice",
+    "RU-C47-mushroom",
+    "RU-C47-glass"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch47.txt",
+  "json": "russian/narration/ch47.json",
+  "textHash": "fnv1a64:b1830e5a5d17998e",
+  "jsonHash": "fnv1a64:7e92fb8d2fa14d17",
+  "findings": []
+}

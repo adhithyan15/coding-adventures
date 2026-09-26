@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:9d45ee3c48ab6edf",
+  "lessonIds": [
+    "IT-C66-spiaggia",
+    "IT-C66-isola",
+    "IT-C66-campo",
+    "IT-C66-sole",
+    "IT-C66-luna"
+  ],
+  "tex": "italian/book/chapters/ch66-beach-island-field-sun-moon.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C96-jamais",
+    "language": "french",
+    "chapter": 96,
+    "sequence": 4180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4f1bdd87aaf29a5"
+  },
+  "findings": []
+}

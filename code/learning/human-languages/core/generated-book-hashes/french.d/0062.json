@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:348c7e1cd637f85d",
+  "lessonIds": [
+    "FR-C62-revenir",
+    "FR-C62-etudier",
+    "FR-C62-payer",
+    "FR-C62-utiliser",
+    "FR-C62-montrer"
+  ],
+  "tex": "french/book/chapters/ch62-come-back-study-pay-use-show.tex"
+}

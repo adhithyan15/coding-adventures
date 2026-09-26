@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C76-couloir",
+    "language": "french",
+    "chapter": 76,
+    "sequence": 3180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:009a3c179d981072"
+  },
+  "findings": []
+}

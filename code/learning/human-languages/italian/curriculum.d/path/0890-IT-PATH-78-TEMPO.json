@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-78-TEMPO",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "IT-EXT-78-TEMPO"
+  ],
+  "after": []
+}

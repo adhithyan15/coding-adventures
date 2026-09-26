@@ -72,6 +72,7 @@
 //! | `InvalidInitialWindowSize` | either `[app]` initial-window dimension is zero |
 //! | `InvalidDisplayName`    | `[app].display-name` is empty, too long, or has control characters |
 //! | `InvalidBundleIdentifier` | `[app].bundle-identifier` is not reverse DNS |
+//! | `InvalidLayoutRule`     | an `[[app.layouts]]` rule could not work (UI48 §7.2) |
 //! | `InvalidStylePath`      | `[styles].token_palette` is not a safe relative JSON path |
 //! | `DuplicateHostEffectHandler` | two `[host_effects].handlers` for one backend |
 //! | `HostEffectFileWithoutHandler` | a `[host_effects].files` backend declares no handler |
@@ -81,6 +82,8 @@
 //! Each error is *one cause, one variant* — no compound errors, no batched
 //! collection.  The first thing wrong with the manifest is the only thing
 //! the caller hears about; fixing it and re-running is the workflow.
+
+pub mod layouts;
 
 use std::collections::{HashMap, HashSet};
 use std::fs;
@@ -133,6 +136,10 @@ pub struct AppSection {
     pub display_name: Option<String>,
     /// The installed app's reverse-DNS identity (UI32, UI89).
     pub bundle_identifier: Option<String>,
+    /// `[[app.layouts]]`: which environment selects which layout variant, in
+    /// order (UI48 §7.2). Empty means the conventional names select themselves;
+    /// see [`layouts::effective_layout_rules`].
+    pub layouts: Vec<layouts::LayoutRule>,
 }
 
 /// A desktop window's initial logical-pixel dimensions.
@@ -309,6 +316,9 @@ pub enum ManifestError {
     /// dot-separated parts of ASCII letters, digits and `-`, at most 155
     /// characters.
     InvalidBundleIdentifier(String),
+    /// An `[[app.layouts]]` rule names an unknown axis or value, repeats a
+    /// variant, or could hide the rules after it.
+    InvalidLayoutRule(String),
     /// `[styles].token_palette` was not a safe, portable package-relative
     /// JSON path.
     InvalidStylePath(String),
@@ -402,6 +412,9 @@ impl std::fmt::Display for ManifestError {
                 f,
                 "invalid `[app]` bundle-identifier {identifier:?} (reverse DNS: two or more dot-separated parts of letters, digits and `-`)"
             ),
+            Self::InvalidLayoutRule(detail) => {
+                write!(f, "invalid `[[app.layouts]]` rule: {detail}")
+            }
             Self::InvalidStylePath(path) => write!(
                 f,
                 "invalid style resource path `{path}` (must be a package-relative .json path without `.` or `..` components)"
@@ -499,6 +512,7 @@ struct RawApp {
     display_name: Option<String>,
     #[serde(rename = "bundle-identifier")]
     bundle_identifier: Option<String>,
+    layouts: Option<Vec<layouts::RawLayoutRule>>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -769,6 +783,8 @@ fn validate_app(raw: Option<RawApp>) -> Result<AppSection, ManifestError> {
             });
         }
     };
+    let layouts = layouts::validate_layout_rules(raw.layouts.unwrap_or_default())
+        .map_err(ManifestError::InvalidLayoutRule)?;
     let display_name = match raw.display_name {
         Some(name)
             if !name.is_empty()
@@ -789,6 +805,7 @@ fn validate_app(raw: Option<RawApp>) -> Result<AppSection, ManifestError> {
         initial_window_size,
         display_name,
         bundle_identifier,
+        layouts,
     })
 }
 
@@ -1193,6 +1210,32 @@ version = "1"
             ), "{identifier}");
         }
         assert!(parse(&app_manifest("bundle-identifier = \"com.example.my-app2\"")).is_ok());
+    }
+
+    #[test]
+    fn parses_layout_rules_in_the_order_written() {
+        let src = r#"
+[package]
+name = "task-app"
+version = "0.1.0"
+description = "Task application"
+license = "MIT"
+[components]
+exports = ["TaskApp"]
+[[app.layouts]]
+variant = "touch"
+pointer = "coarse"
+[[app.layouts]]
+variant = "compact"
+size-class = "compact"
+[kernel]
+version = "1"
+"#;
+        let pkg = parse(src).expect("manifest valid");
+        let names: Vec<&str> = pkg.app.layouts.iter().map(|rule| rule.variant.as_str()).collect();
+        assert_eq!(names, ["touch", "compact"], "order is the order written, not alphabetical");
+        let bad = src.replace("pointer = \"coarse\"", "pointer = \"mouse\"");
+        assert!(matches!(parse(&bad), Err(ManifestError::InvalidLayoutRule(_))));
     }
 
     #[test]

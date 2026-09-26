@@ -1,0 +1,19 @@
+{
+  "chapter": 94,
+  "title": "Salty, Bitter, Round, Square, Dry",
+  "label": "ch:fr-salty-bitter-round-square-dry",
+  "canDo": "I can name salty, bitter, round, square, dry.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C94-sec",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 94: i can name salty, bitter, round, square, dry.",
+    "assesses": [
+      "FR-LEX-C94-ADJ46-03",
+      "FR-LEX-C94-ADJ46-04",
+      "FR-LEX-C94-ADJ46-05"
+    ]
+  }
+}

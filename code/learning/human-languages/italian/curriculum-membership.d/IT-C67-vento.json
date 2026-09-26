@@ -1,0 +1,11 @@
+{
+  "id": "IT-C67-vento",
+  "pathSegment": "IT-PATH-67-CIELO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-67-CIELO",
+      "order": 3
+    }
+  ]
+}

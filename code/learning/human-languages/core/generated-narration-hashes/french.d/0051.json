@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:694df3f0322d6713",
+  "lessonIds": [
+    "FR-C51-peau",
+    "FR-C51-ongle",
+    "FR-C51-menton",
+    "FR-C51-gorge",
+    "FR-C51-joue"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch51.txt",
+  "json": "french/narration/ch51.json",
+  "textHash": "fnv1a64:bf94fdc041eefc16",
+  "jsonHash": "fnv1a64:d02cf83c2c7955cd",
+  "findings": []
+}

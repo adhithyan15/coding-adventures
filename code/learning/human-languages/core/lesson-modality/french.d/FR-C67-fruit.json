@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C67-fruit",
+    "language": "french",
+    "chapter": 67,
+    "sequence": 2740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab5a0c82e9f5b16d"
+  },
+  "findings": []
+}

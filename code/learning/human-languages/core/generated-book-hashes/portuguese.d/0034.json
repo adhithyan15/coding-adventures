@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:bece7e2f91db325b",
+  "lessonIds": [
+    "PT-C34-dor",
+    "PT-C34-febre",
+    "PT-C34-tosse",
+    "PT-C34-remedio",
+    "PT-C34-hospital"
+  ],
+  "tex": "portuguese/book/chapters/ch34-pain-fever-cough-medicine.tex"
+}

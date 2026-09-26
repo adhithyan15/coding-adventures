@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:c394d3e1681f4036",
+  "lessonIds": [
+    "IT-C64-albero",
+    "IT-C64-fiore",
+    "IT-C64-foglia",
+    "IT-C64-montagna",
+    "IT-C64-bosco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch64.txt",
+  "json": "italian/narration/ch64.json",
+  "textHash": "fnv1a64:dd5447cf0fa7750e",
+  "jsonHash": "fnv1a64:2c4cec2fcb801fa7",
+  "findings": []
+}

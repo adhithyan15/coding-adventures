@@ -9,6 +9,13 @@
 digits and `-`, at most 155 characters), both optional, for installed apps.
 New errors `InvalidDisplayName` and `InvalidBundleIdentifier`.
 
+### Added — `[[app.layouts]]` and the layout selector (UI48 ENV3)
+
+The `layouts` module: `select_variant` (first rule whose axes all hold, or the
+default), `effective_layout_rules` (the conventional `compact` / `expanded` /
+`touch` rules when a package declares none), and validation of
+`[[app.layouts]]` in the order written. New error `InvalidLayoutRule`.
+
 ### Added — a handler may claim the effect kinds it answers (UI87 §7.2)
 
 `[host_effects].handlers` entries take an optional `kinds` list

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-96-TEMPS48",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "FR-EXT-96-TEMPS48"
+  ],
+  "after": []
+}

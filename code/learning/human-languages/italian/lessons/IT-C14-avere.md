@@ -8,7 +8,7 @@ type: word
 headword: avere
 gloss: to have — and Italy's only silent letter, which exists purely to prevent confusion
 concept_tag: VERB-HAVE
-prerequisites: [IT-C13-rosso-blu, IT-C05-parlare]
+prerequisites: [IT-C13-rosso-blu, IT-C05-parlare, IT-C13-colori-origini]
 sounds: [silent-h, double-n]
 roots: [habere-latin]
 etymology_hook: "avere ← habēre (→ habit/inhabit/exhibit/prohibit). Italian dropped the Latin h everywhere EXCEPT here: ho/hai/ha/hanno keep a silent h purely to distinguish them from o 'or', ai 'to the', a 'to', anno 'YEAR' — spelling doing a job sound can't"

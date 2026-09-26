@@ -1,0 +1,11 @@
+{
+  "id": "RU-C42-pit",
+  "pathSegment": "RU-PATH-42-VERB5",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-42-VERB5",
+      "order": 2
+    }
+  ]
+}

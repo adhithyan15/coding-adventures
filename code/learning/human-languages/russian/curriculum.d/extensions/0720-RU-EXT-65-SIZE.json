@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-65-SIZE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say big, small, old, long and short.",
+  "prerequisites": []
+}

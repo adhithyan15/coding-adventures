@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C91-fort",
+    "language": "french",
+    "chapter": 91,
+    "sequence": 3930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7e698358daead13"
+  },
+  "findings": []
+}

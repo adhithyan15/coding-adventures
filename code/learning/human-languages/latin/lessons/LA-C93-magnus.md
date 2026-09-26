@@ -45,7 +45,7 @@ reviews_of: [LA-C92-cervus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for big and small, long and short, high.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C93-MAGNUS-01, LA-LEX-C92-ANIMALIA3-04, LA-LEX-C92-ANIMALIA3-05] -->

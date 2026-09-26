@@ -1,0 +1,11 @@
+{
+  "id": "FR-C96-pres",
+  "pathSegment": "FR-PATH-96-TEMPS48",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-96-TEMPS48",
+      "order": 4
+    }
+  ]
+}

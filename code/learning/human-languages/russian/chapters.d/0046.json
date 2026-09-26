@@ -1,0 +1,19 @@
+{
+  "chapter": 46,
+  "title": "Breakfast, Lunch, Dinner",
+  "label": "ch:ru-breakfast-lunch-dinner",
+  "canDo": "I can name breakfast, lunch and dinner, porridge and a pie.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "RU-C46-pie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 46: i can name breakfast, lunch and dinner, porridge and a pie.",
+    "assesses": [
+      "RU-LEX-C46-MEALS-03",
+      "RU-LEX-C46-MEALS-04",
+      "RU-LEX-C46-MEALS-05"
+    ]
+  }
+}

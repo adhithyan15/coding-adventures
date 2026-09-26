@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C77-verde",
+    "language": "italian",
+    "chapter": 77,
+    "sequence": 3430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b70565812621a6e2"
+  },
+  "findings": []
+}

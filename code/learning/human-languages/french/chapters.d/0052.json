@@ -1,0 +1,19 @@
+{
+  "chapter": 52,
+  "title": "Chest, Stomach, Ankle, Elbow, Wrist",
+  "label": "ch:fr-chest-stomach-ankle-elbow-wrist",
+  "canDo": "I can name the chest, the stomach, an ankle, an elbow, a wrist.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C52-poignet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 52: i can name the chest, the stomach, an ankle, an elbow, a wrist.",
+    "assesses": [
+      "FR-LEX-C52-CORPS4-03",
+      "FR-LEX-C52-CORPS4-04",
+      "FR-LEX-C52-CORPS4-05"
+    ]
+  }
+}

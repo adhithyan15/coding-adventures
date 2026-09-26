@@ -4,7 +4,7 @@
 //! crate owns tokenizer-specific state: buffers, current token construction,
 //! diagnostics, source positions, and action interpretation.
 
-use std::collections::VecDeque;
+use std::collections::{HashSet, VecDeque};
 use std::error::Error;
 use std::fmt;
 
@@ -294,6 +294,12 @@ pub struct Tokenizer {
     temporary_buffer: String,
     current_token: Option<CurrentToken>,
     current_attribute: Option<Attribute>,
+    /// The names already on the current start tag, so the duplicate check is
+    /// a lookup rather than a scan: scanning made a tag with N attributes cost
+    /// N² (30,000 attributes in 739 KB took 7.6 s). Rebuilt from the tag
+    /// whenever the counts disagree, so a tag created or seeded anywhere is
+    /// covered.
+    attribute_names: HashSet<String>,
     return_state: Option<String>,
     last_start_tag: Option<String>,
     tokens: VecDeque<PositionedToken>,
@@ -314,6 +320,7 @@ impl Tokenizer {
             text_buffer: String::new(),
             temporary_buffer: String::new(),
             current_token: None,
+            attribute_names: HashSet::new(),
             current_attribute: None,
             return_state: None,
             last_start_tag: None,
@@ -386,6 +393,7 @@ impl Tokenizer {
             attributes: seed.attributes,
             self_closing: seed.self_closing,
         });
+        self.attribute_names.clear();
         self.current_attribute = seed.current_attribute;
     }
 
@@ -689,6 +697,7 @@ impl Tokenizer {
                         attributes: Vec::new(),
                         self_closing: false,
                     });
+                    self.attribute_names.clear();
                     self.current_attribute = None;
                 }
                 "create_end_tag" => {
@@ -1230,14 +1239,23 @@ impl Tokenizer {
                 action: action.to_string(),
             }
         })?;
-        let duplicate = match self.current_token_mut(action)? {
+        let names = &mut self.attribute_names;
+        let token = self
+            .current_token
+            .as_mut()
+            .ok_or_else(|| TokenizerError::MissingCurrentToken {
+                action: action.to_string(),
+            })?;
+        let duplicate = match token {
             CurrentToken::StartTag { attributes, .. } => {
-                if attributes
-                    .iter()
-                    .any(|existing| existing.name == attribute.name)
-                {
+                if names.len() != attributes.len() {
+                    names.clear();
+                    names.extend(attributes.iter().map(|existing| existing.name.clone()));
+                }
+                if names.contains(&attribute.name) {
                     true
                 } else {
+                    names.insert(attribute.name.clone());
                     attributes.push(attribute);
                     false
                 }

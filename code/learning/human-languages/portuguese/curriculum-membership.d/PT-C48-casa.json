@@ -1,0 +1,11 @@
+{
+  "id": "PT-C48-casa",
+  "pathSegment": "PT-PATH-48-CASA1",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-48-CASA1",
+      "order": 0
+    }
+  ]
+}

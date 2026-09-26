@@ -1,0 +1,11 @@
+{
+  "id": "RU-C34-sadness",
+  "pathSegment": "RU-PATH-34-FEEL",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-34-FEEL",
+      "order": 3
+    }
+  ]
+}

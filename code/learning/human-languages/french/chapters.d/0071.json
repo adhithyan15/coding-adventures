@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Lemon, Grapes, Jam, Yoghurt, Ham",
+  "label": "ch:fr-lemon-grapes-jam-yoghurt-ham",
+  "canDo": "I can name a lemon, grapes, jam, a yoghurt, ham.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FR-C71-jambon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: i can name a lemon, grapes, jam, a yoghurt, ham.",
+    "assesses": [
+      "FR-LEX-C71-CUISINE23-03",
+      "FR-LEX-C71-CUISINE23-04",
+      "FR-LEX-C71-CUISINE23-05"
+    ]
+  }
+}

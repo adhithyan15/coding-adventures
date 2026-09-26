@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:7084861892df6798",
+  "lessonIds": [
+    "RU-C39-myt",
+    "RU-C39-gotovit",
+    "RU-C39-pokupat",
+    "RU-C39-prodavat",
+    "RU-C39-plavat"
+  ],
+  "tex": "russian/book/chapters/ch39-wash-cook-buy-sell-swim.tex"
+}

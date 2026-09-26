@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "Bedroom, Floor, Stairs, Mirror, Cup",
+  "label": "ch:it-bedroom-floor-stairs-mirror-cup",
+  "canDo": "I can name a bedroom, the floor, stairs, a mirror, a cup.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "IT-C58-tazza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 58: i can name a bedroom, the floor, stairs, a mirror, a cup.",
+    "assesses": [
+      "IT-LEX-C58-CASA3-03",
+      "IT-LEX-C58-CASA3-04",
+      "IT-LEX-C58-CASA3-05"
+    ]
+  }
+}

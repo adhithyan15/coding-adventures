@@ -1,0 +1,19 @@
+{
+  "chapter": 52,
+  "title": "Fruit, Apple, Banana, Orange, Grapes",
+  "label": "ch:it-fruit-apple-banana-orange-grapes",
+  "canDo": "I can name fruit, an apple, a banana, an orange, grapes.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "IT-C52-uva",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 52: i can name fruit, an apple, a banana, an orange, grapes.",
+    "assesses": [
+      "IT-LEX-C52-FRUTTA-03",
+      "IT-LEX-C52-FRUTTA-04",
+      "IT-LEX-C52-FRUTTA-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-44-COMIDA1",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "PT-EXT-44-COMIDA1"
+  ],
+  "after": []
+}

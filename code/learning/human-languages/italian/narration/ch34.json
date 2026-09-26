@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Mine and Yours",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:735f8d9ec5fb71cb",
+  "sourceHash": "fnv1a64:9926c86c5104bd17",
   "lessons": [
     {
       "id": "IT-C34-mio-tuo-suo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b8d6d9340dd09b31",
+      "sourceHash": "fnv1a64:de3abf594a16bd67",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b11cfe1e8e610019",
+      "sourceHash": "fnv1a64:1408632aef979f51",
       "notice": null,
       "blocks": [
         {
@@ -831,7 +831,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca5ec05f18951245",
+      "sourceHash": "fnv1a64:105e8231fb4466c5",
       "notice": null,
       "blocks": [
         {

@@ -1,0 +1,7 @@
+{
+  "language": "russian",
+  "chapter": 65,
+  "output": "russian/book/chapters/ch65-big-small-old-long-short.tex",
+  "unicodeScript": "Cyrillic",
+  "scriptCommand": "ru"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C93-gros",
+  "pathSegment": "FR-PATH-93-ADJ45",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-93-ADJ45",
+      "order": 1
+    }
+  ]
+}
