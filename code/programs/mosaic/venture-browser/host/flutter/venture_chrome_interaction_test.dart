@@ -104,8 +104,10 @@ void main() {
       await _pumpLiveVentureShell(tester, host);
       debugPrint('flutter-live-stage=shell-pumped');
       expect(find.text('Stop'), findsOneWidget);
-      final stopButton = tester.widget<ButtonStyleButton>(
-        find.widgetWithText(ButtonStyleButton, 'Stop'),
+      // `find.widgetWithText` matches the exact widget type, not subclasses,
+      // and a Mosaic `HostButton` is an `ElevatedButton` on Flutter.
+      final stopButton = tester.widget<ElevatedButton>(
+        find.widgetWithText(ElevatedButton, 'Stop'),
       );
       expect(stopButton.onPressed, isNull);
 
@@ -204,7 +206,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('History (2)'));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(ButtonStyleButton, 'Next'));
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Next'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
