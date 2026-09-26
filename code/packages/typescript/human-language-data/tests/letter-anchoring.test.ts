@@ -285,6 +285,11 @@ describe("the real corpus", () => {
   // no earlier word held わ. What is left: Malayalam's ഒ and ഏ ഴ, anchored by
   // number words its numbers chapter shows only in romanization, and Japanese
   // め, whose chapter is at its twelve-atom budget.
+  //
+  // Punjabi (3 -> 2): the chapter-20 ੌ lesson now follows ਮੌਸਮ (mausam, the
+  // weather). The two sets left, ਟ ਠ ਡ (chapter 3) and ੜ ਘ ਦ (chapter 7), sit in
+  // chapters whose R1 retrievals are one to three lessons apart, so a word
+  // inserted there pushes older atoms out of R1.
   const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
     arabic: [0, 4, 0],
     bengali: [0, 11, 0],
@@ -297,7 +302,7 @@ describe("the real corpus", () => {
     marathi: [6, 4, 0],
     marwadi: [0, 49, 0],
     persian: [0, 4, 0],
-    punjabi: [3, 2, 0],
+    punjabi: [2, 2, 0],
     russian: [0, 0, 0],
     sanskrit: [0, 0, 0],
     tamil: [0, 9, 0],

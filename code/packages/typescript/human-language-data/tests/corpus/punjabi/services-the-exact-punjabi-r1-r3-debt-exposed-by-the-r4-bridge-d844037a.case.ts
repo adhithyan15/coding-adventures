@@ -41,7 +41,9 @@ it("services the exact Punjabi R1-R3 debt exposed by the R4 bridge", () => {
   const bridge = bridgeIds.map((id) =>
     orderedBeforeBodyR4.find((lesson) => lesson.realization.lessonId === id)!,
   );
-  expect(bridge.map((lesson) => orderedBeforeBodyR4.indexOf(lesson))).toEqual([158, 167, 168, 169]);
+  // HL-C443: +1, from ਮੌਸਮ (mausam), the anchor word placed before the
+  // chapter-20 ੌ lesson. Every bridge lesson sits after it.
+  expect(bridge.map((lesson) => orderedBeforeBodyR4.indexOf(lesson))).toEqual([159, 168, 169, 170]);
   expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 220)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("reading"))).toBe(true);
@@ -84,7 +86,12 @@ it("services the exact Punjabi R1-R3 debt exposed by the R4 bridge", () => {
   // not because reinforcement got worse. The serviced-debt assertions above still hold
   // exactly. The residue -- Chapter 4 and 5 atoms with no later lesson putting them
   // back in front of the reader -- is named in BACKLOG.d as the next tranche's work.
-  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 88, R3: 148, R4: 102 });
+  // {37, 88, 148, 102} -> {37, 89, 149, 104}. HL-C443's ਮੌਸਮ (mausam), the
+  // anchor word before the chapter-20 ੌ lesson, makes this prefix one lesson
+  // longer: its own R2 and R3 start out missed (+1 each), and the R4 window of
+  // ਸਿਰ (the word and its etymon) now begins inside the prefix (+2 R4). The
+  // whole track still services ਸਿਰ, in PA-R27-nose-heart-r4.
+  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 89, R3: 149, R4: 104 });
 
   const bodyBoundaryAtoms = new Set([
     "PA-LEX-KANN",

@@ -132,5 +132,9 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // of the reader: the growth is R2-R4 windows that now EXIST and start out
   // missed, exactly as the terminal-lesson note above describes. The Chapter 3
   // atoms this test is about are unaffected (the reinforcement filter above).
-  expect(report.summary.missedByWindow).toEqual({ R1: 55, R2: 359, R3: 379, R4: 260 });
+  // {55, 359, 379, 260} -> {55, 360, 380, 259}. HL-C443's ਮੌਸਮ (mausam)
+  // before the chapter-20 ੌ lesson: its own R2, R3 and R4 windows start out
+  // missed (+1 each), and the one extra lesson carries ਪ and ਕ into their R4
+  // for the first time (-2 R4).
+  expect(report.summary.missedByWindow).toEqual({ R1: 55, R2: 360, R3: 380, R4: 259 });
 });

@@ -49,7 +49,9 @@ it("services Punjabi's three-field R4 debt without moving the boundary forward",
   const bridge = bridgeIds.map((id) =>
     orderedAtR4.find((lesson) => lesson.realization.lessonId === id)!,
   );
-  expect(bridge.map((lesson) => orderedAtR4.indexOf(lesson))).toEqual([158, 159, 160, 161, 162, 163, 164, 165]);
+  // HL-C443: +1, from ਮੌਸਮ (mausam), the anchor word placed before the
+  // chapter-20 ੌ lesson. Every bridge lesson sits after it.
+  expect(bridge.map((lesson) => orderedAtR4.indexOf(lesson))).toEqual([159, 160, 161, 162, 163, 164, 165, 166]);
   expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 220)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("listening"))).toBe(true);
@@ -134,5 +136,9 @@ it("services Punjabi's three-field R4 debt without moving the boundary forward",
   // not because reinforcement got worse. The serviced-debt assertions above still hold
   // exactly. The residue -- Chapter 4 and 5 atoms with no later lesson putting them
   // back in front of the reader -- is named in BACKLOG.d as the next tranche's work.
-  expect(report.summary.missedByWindow.R4).toBe(95);
+  // 95 -> 97: HL-C443's ਮੌਸਮ (mausam) makes this prefix one lesson longer, so
+  // the R4 window of ਨੱਕ (the word and its etymon) now begins inside it. The
+  // whole track still services both, in PA-R27-nose-heart-r4, which this
+  // prefix leaves out by design.
+  expect(report.summary.missedByWindow.R4).toBe(97);
 });

@@ -66,7 +66,9 @@ it("pins Punjabi lesson-content budgets", () =>
     // material it retrieves. None of the six introduces an atom or a headword.
     // 278 -> 532: chapters 49-98, 250 word lessons and four reviews. None
     // introduces an idiom, a sense or a culture claim.
-    lessons: 532,
+    // 532 -> 533: HL-C443, ਮੌਸਮ (mausam) before the chapter-20 ੌ lesson. No idiom,
+    // sense or culture claim.
+    lessons: 533,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,
