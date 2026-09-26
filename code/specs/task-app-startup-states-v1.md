@@ -103,6 +103,14 @@ runtime, catches synchronous loader and asynchronous initial-props failures, and
 uses a fresh host on retry. TaskApp's real-runtime widget acceptance forces the
 first attempt to fail and then drives the emitted retry control to recovery.
 
-SwiftUI and WinUI still report startup failure only through process and log
-evidence. Their backend-sized surfaces and emitted-control acceptance remain
-tracked in [#13984](https://github.com/adhithyan15/coding-adventures/issues/13984).
+SwiftUI follows in #16092: its strict generated `WindowGroup` first mounts a
+system-theme loading view, turns runtime and initial-props failures into visible
+selectable detail with saved-task reassurance, and retries through a newly loaded
+host after closing any prior instance. The emitted-control contract pins the
+three startup states and fresh-host lifecycle; CI and release validation remove
+the packaged runtime and prove the real app stays alive in its failure window,
+then restore that same runtime and run the native lifecycle conformance.
+
+WinUI still reports startup failure only through process and log evidence. Its
+backend-sized surface and emitted-control acceptance remain tracked in
+[#13984](https://github.com/adhithyan15/coding-adventures/issues/13984).

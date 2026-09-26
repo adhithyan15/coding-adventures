@@ -529,6 +529,28 @@ jobs:
           test -x "$executable"
           test -n "$runtime"
           cmp "$expected" "$runtime"
+
+          # Release validation treats the in-window startup failure as a gate,
+          # not merely a source assertion. A missing bundled runtime must leave
+          # the app alive so its detail and retry control remain usable.
+          missing_runtime="$runtime.startup-acceptance"
+          mv "$runtime" "$missing_runtime"
+          startup_failure_log="$PWD/release-work/swiftui-startup-failure.log"
+          (
+            cd /
+            env -u MOSAIC_APP_LIBRARY "$executable" \
+              >"$startup_failure_log" 2>&1 &
+            startup_pid=$!
+            trap 'kill "$startup_pid" 2>/dev/null || true; mv "$missing_runtime" "$runtime" 2>/dev/null || true' EXIT
+            sleep 5
+            kill -0 "$startup_pid"
+            kill "$startup_pid"
+            wait "$startup_pid" || true
+            mv "$missing_runtime" "$runtime"
+            trap - EXIT
+          )
+          cmp "$expected" "$runtime"
+
           python code/scripts/taskapp_release.py archive-macos-app \
             --version "$RELEASE_VERSION" \
             --commit "$RELEASE_COMMIT" \

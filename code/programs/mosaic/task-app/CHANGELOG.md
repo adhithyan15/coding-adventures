@@ -4,6 +4,15 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed — SwiftUI startup failures stay visible and recoverable (#16092)
+
+The strict generated SwiftUI app now mounts a system-theme loading surface
+before probing its packaged Rust engine. Runtime and initial-props failures stay
+in the first window with selectable diagnostic detail, saved-task reassurance,
+and a **Try again** action that closes old state and loads a fresh host. CI and
+release validation remove the bundled runtime to prove the failure window stays
+alive, then restore it for TaskApp's native lifecycle conformance.
+
 ### Fixed — Flutter startup failures stay visible and recoverable (#16084)
 
 The strict generated Flutter app now paints a system-theme-aware loading surface

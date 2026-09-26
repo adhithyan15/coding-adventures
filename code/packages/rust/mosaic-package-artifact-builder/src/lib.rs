@@ -5040,13 +5040,15 @@ fn qt_main_with_host_effects(
 /// `.swift` under it is compiled and a copied file is already in the build --
 /// unlike Qt, which names its sources and needed `target_sources`.
 ///
-/// The call goes immediately after the host is assigned, through a downcast:
-/// `MosaicHostState` holds its host as `MosaicHostBridgeObject?`, a protocol
-/// that deliberately knows nothing about effects, and the concrete
-/// `MosaicRuntimeHost` is what carries `effectHandler`. The `if let` also makes
-/// the generated code correct when the standard host is absent and the app
-/// falls back to the reflection bridge -- there is no host to install onto
-/// then, and nothing should be.
+/// The call goes immediately after the host is assigned, through a downcast.
+/// In a strict shell that assignment lives inside every recoverable startup
+/// attempt, so retry installs the handler on the fresh host before initial
+/// props are read. `MosaicHostState` holds its host as
+/// `MosaicHostBridgeObject?`, a protocol that deliberately knows nothing about
+/// effects, and the concrete `MosaicRuntimeHost` is what carries
+/// `effectHandler`. The `if let` also makes the permissive generated code
+/// correct when the standard host is absent and the app falls back to the
+/// reflection bridge -- there is no host to install onto then.
 fn swift_app_with_host_effects(
     generated: &str,
     host_effects: &mosaic_package_manifest::HostEffectsSection,
@@ -11253,14 +11255,14 @@ layout NativeEvents {
 
         let app = fs::read_to_string(out.path().join("swiftui/Sources/App/App.swift")).unwrap();
         assert!(app.contains(
-            "MosaicRuntimeHost.loadRequired(libraryPath: Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path)"
+            "MosaicRuntimeHost.loadRecoverable(libraryPath: Bundle.module.url(forResource: \"libmosaic_app\", withExtension: \"dylib\", subdirectory: \"Runtime\")?.path)"
         ));
-        assert!(app.contains("private let bridge: MosaicHostBridgeObject"));
+        assert!(app.contains("private var bridge: MosaicHostBridgeObject?"));
+        assert!(app.contains("MosaicStartupView(host: host)"));
         assert!(app.contains("MosaicHostValue.requiredString(host.props, \"label\")"));
         assert!(app.contains("preconditionFailure(\"Mosaic runtime update omitted props\")"));
         assert!(!app.contains("MosaicHostBridge.load()"));
         assert!(!app.contains("NSClassFromString"));
-        assert!(!app.contains("MosaicHostBridgeObject?"));
         assert!(!app.contains("print(\"Mosaic dispatch:"));
         assert!(!app.contains("Sample Label"));
 
@@ -17195,8 +17197,8 @@ version = "1"
         };
         // BOTH `require_runtime` shapes, because the emitter has two separate
         // `MosaicHostState` templates and picks between them on that flag --
-        // `build_runtime_required_mosaic_host_state` declares `bridge` as
-        // non-optional and assigns `MosaicRuntimeHost.loadRequired()`.
+        // `build_runtime_required_mosaic_host_state` carries a recoverable
+        // loader and the loading/failure/ready views around the optional host.
         //
         // The runtime-required one is the shape that SHIPS: the builder sets
         // this flag for `--profile native-complete` and for any build passing
@@ -17224,7 +17226,7 @@ version = "1"
             assert_eq!(
                 emitted
                     .app_swift
-                    .contains("MosaicRuntimeHost.loadRequired()"),
+                    .contains("MosaicRuntimeHost.loadRecoverable()"),
                 require_runtime,
                 "require_runtime={require_runtime} must select the matching host template"
             );

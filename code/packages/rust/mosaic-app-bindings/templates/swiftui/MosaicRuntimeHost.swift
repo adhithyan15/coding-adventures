@@ -237,6 +237,39 @@ final class MosaicRuntimeHost: NSObject, MosaicHostBridgeObject {
     return host
   }
 
+  /// Load the strict runtime without terminating the process when startup
+  /// fails. Native shells use this result to keep the first window visible,
+  /// disclose the loader failure, and let the user retry with a fresh host.
+  static func loadRecoverable(
+    libraryPath: String? = nil
+  ) -> Result<MosaicRuntimeHost, Error> {
+    if let host = load(libraryPath: libraryPath) {
+      return .success(host)
+    }
+    let override = ProcessInfo.processInfo.environment["MOSAIC_APP_LIBRARY"]?
+      .trimmingCharacters(in: .whitespacesAndNewlines)
+    let path = override.flatMap { $0.isEmpty ? nil : $0 } ?? libraryPath
+    guard let runtime = path?.withCString({ mosaic_binding_open($0) }) ?? mosaic_binding_open(nil)
+    else {
+      return .failure(MosaicRuntimeError.unavailable(
+        "Mosaic Rust runtime loader allocation failed. Check the packaged runtime "
+          + "or MOSAIC_APP_LIBRARY, then try again."
+      ))
+    }
+    defer { mosaic_binding_close(runtime) }
+    if mosaic_binding_is_ready(runtime) == 0 {
+      let detail = mosaic_binding_error(runtime).map(String.init(cString:))
+        ?? "unknown dynamic-loader error"
+      return .failure(MosaicRuntimeError.unavailable(
+        "The Mosaic Rust application runtime could not be loaded: \(detail)"
+      ))
+    }
+    return .failure(MosaicRuntimeError.unavailable(
+      "The Mosaic Rust application runtime opened but failed to initialise its application. "
+        + "Check the runtime startup data, then try again."
+    ))
+  }
+
   func applyProps() -> NSDictionary? {
     lock.withLock { latestUpdate as NSDictionary }
   }
