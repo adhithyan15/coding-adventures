@@ -145,6 +145,23 @@ first window's starting size, while users and operating systems remain free to
 resize it afterward. Component artifacts emitted without `--emit-project` are
 therefore unaffected.
 
+### The shell declares its compiled color scheme
+
+A theme is compiled into the app (`<Component>.dark.msl` or `.light.msl`,
+chosen by `--theme`, else the first alphabetically). The platform, meanwhile,
+draws its own chrome — status bar, window title bar, the background behind
+the component, system controls — in the *system* scheme. A dark-themed app on
+a light-mode device therefore shows dark components on a white window.
+
+So a project shell tells the platform which scheme it was compiled for when
+the root component's stylesheet is `.dark.msl` or `.light.msl`: SwiftUI
+applies `.preferredColorScheme(.dark)` / `(.light)` to the root view. A
+theme-neutral stylesheet declares nothing, and the system scheme stands.
+Following the *system* scheme at run time needs both themes in one artifact
+and the color-scheme environment axis (UI48); until then the app is honest
+about the one theme it has. Compose, Flutter, Qt and XAML shells will make the
+same declaration with their own mechanism.
+
 ---
 
 ## 3. Non-negotiable contracts
