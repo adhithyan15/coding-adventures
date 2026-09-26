@@ -9,7 +9,7 @@ headword: كيف
 gloss: how
 romanization: kayfa
 concept_tag: QUESTION-HOW
-prerequisites: [AR-C02-maa]
+prerequisites: [AR-C02-maa, AR-C02-ahlan]
 sounds: [rtl-known-letters, ay-diphthong]
 roots: [k-y-f]
 etymology_hook: "kayfa is a question word, not a root-and-pattern noun — it sits beside mā ('what') from Chapter 2; the root k-y-f also gives kayfiyya, 'quality/how-ness', and kayyafa 'to adapt' (make something fit the how)"
