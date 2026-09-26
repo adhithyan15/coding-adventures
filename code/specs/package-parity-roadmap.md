@@ -14246,11 +14246,32 @@ paths, signatures, trust, revocation, clocks, TLS, transport, and ambient
 authority remain outside that owner. The graph has 862 owners and 1,597
 dependency edges: 223 merged, 638 pending, and exactly DER ASN.1 in progress.
 
-Subsequent merged package-internal Mermaid and ALGOL changes through exact
-`origin/main` revision `351361030127f89964e78a565d73f29e4eba8600` add no
-package identity, recognized manifest, BUILD root, or parity-owner gap. The
-collision-checked inventory therefore retains the counts above, and the DER
-ASN.1 branch is rebased onto that exact revision.
+### Live-main inventory and ownership refresh through PR #16076
+
+Exact `origin/main` advanced from
+`351361030127f89964e78a565d73f29e4eba8600` to
+`b166fc1951a4b06dd1590f5f1bdc63061f66b8f0` through PR #16076, and the DER
+ASN.1 branch rebased cleanly onto that revision. The collision-checked schema-3
+inventory now contains 15 established lanes, 1,470 implementation identities,
+4,709 implementation slots, and 1,512 all-reported identities. Completion
+bands are 176/265, 123/934, 181/2,282, and 990/13,860. Rust has 807 singleton
+identities, emerging OCaml remains at five packages, and canonical collisions
+and unknown buckets remain zero. The delta is eleven Rust singletons, one
+TypeScript singleton, and two Mosaic-domain identities.
+
+Every new identity is now owned without displacing the sole in-progress DER
+ASN.1 item. The existing Forme family owns the effectful GitHub Pages adapter,
+the HTML frontend owner now includes `html-tree-builder`, and the generated
+Mosaic binding review includes target-specific `mosaic-ios-project`. New
+portable pending owners cover pure `journal-core`, generic
+`source-preprocessor`, the two-package MacroOct frontend, deterministic PDP-8
+simulation, and `x509-name` above DER ASN.1. Journal's WASM boundary and Mosaic
+workbench have separate portable/native applicability reviews; the latter must
+reconcile production clock reads with its empty capability claim. The Test262
+runner remains selection-blocked behind a core-versus-host audit rather than
+becoming an automatic fifteen-lane gap. Mosaic-domain checklist and draft
+editor components stay with the Journal/workbench classification rather than
+entering the established-language denominator.
 
 ### DER ASN.1 portable implementation progress
 
@@ -14278,6 +14299,16 @@ open yet. Independent security review made validated element and primitive
 wrappers unforgeable in Python, Go, Dart, TypeScript, Kotlin, and C#, hid raw DER
 framing helpers from typed package surfaces, and added adversarial zero-value,
 runtime-token, immutable-snapshot, and redaction tests.
+
+A bounded pre-next-lane audit also found neutral-corpus holes worth closing
+inside this same work item before multiplying implementations: valid OID arcs
+at and above signed-64 boundaries, malformed and budget-limited implicit OIDs,
+wrong-class and primitive explicit wrappers, nested shared-budget and exact
+depth boundaries, and the intentionally unexercised `bit-length-overflow`
+error. The prose must also keep allocation strategy non-normative and avoid
+requiring every language to expose Rust's borrowed, `Copy`, or native `u64`
+representation. These are fixture/spec refinements, not a second implementation
+item or a reason to open another PR.
 
 ## Autonomous Loop Protocol
 
