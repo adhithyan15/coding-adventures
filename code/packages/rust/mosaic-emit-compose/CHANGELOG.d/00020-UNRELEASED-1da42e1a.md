@@ -1,0 +1,1528 @@
+## [Unreleased]
+
+### Changed — drag and drop goes through platform functions (UI89 §3.4)
+
+Components no longer touch AWT: they call `mosaicDragText`,
+`mosaicDragPosition` and `mosaicDragTransfer`, which each platform defines in
+its `MosaicPlatform.kt`. `DESKTOP_PLATFORM_KT` is the desktop one (the same AWT
+code as before); Android supplies its own.
+
+### Added — `HostNavigationSplit` lowers to Material 3 adaptive navigation (UI29-6, #15481)
+
+Compose now emits `NavigationSuiteScaffoldLayout` for the pane/detail primitive.
+Material 3 owns the adaptive navigation mode for `collapse: auto`, while
+`collapse: never` pins a leading navigation drawer. The pane keeps its authored
+preferred width and accessible title. A native-complete fixture compiles the
+generated project with the real Compose toolchain.
+
+### Security -- `$` in an expression string literal is no longer Kotlin interpolation (#15464)
+
+`moslayout-compiler` re-quotes the string tokens inside an `Expr` but does not
+escape `$`, and Kotlin expands `$name` and `${...}` inside `"..."`. So an
+authored `If ( when: ( x == "${boom()}" ) )` put live Kotlin into the generated
+file, getting around the grammar's limit of names, literals and operators.
+
+- **Fix:** `from_pipeline` now works on a copy of the layout in which every
+  `Expr` has each `$` inside a quoted string rewritten to `\$`
+  (`escape_interpolation_in_expr`). Doing it once at the entry point covers
+  every sink (If conditions, a11y labels, `disabled`, `selected`, text and the
+  rest), including sinks added later.
+- **Unchanged output:** text outside string literals is copied byte for byte,
+  and an `Expr` with no `$` is not touched, so existing output is identical.
+- **Why not the shared compiler:** `\$` is an invalid escape in Swift, so the
+  escape is backend-specific.
+- **Tests:** scanner cases (escaped backslash before `$`, an already escaped
+  `\$`, an escaped quote, two strings, single quotes, `$` outside strings)
+  and end-to-end `If` emission for `"${boom()}"` and `"$y"`, plus a
+  positive control that a normal expression comes out verbatim. The
+  end-to-end test fails with the rewrite disabled.
+
+### Added — `HostButton` `selected` lowers to `semantics { selected }` (UI86, #15420)
+
+`selected : …` adds `this.selected = …` to the button's `Modifier.semantics`
+block, after any `contentDescription`. With a name as well, both go in one
+block.
+
+- **Why `this.`:** a slot named `selected` would otherwise shadow the semantics
+  property.
+- **Accepted values:** literals, slots, loop bindings and expressions, through
+  `_mosaicTruthy`.
+- **Import:** `androidx.compose.ui.semantics.selected` is imported only when a
+  layout uses the prop.
+- **Unchanged output:** a button without `selected` produces exactly the
+  output it did before.
+- **Predicate:** `host_button_selected_is_native(node)` is the artifact
+  builder's check.
+
+### Fixed -- an empty run-time accessible name became an empty contentDescription (#15427)
+
+An accessible name known only at run time can be empty, and an empty override is not the same as no override. Not every accessibility service treats an empty
+`contentDescription` as absent. Dynamic HostButton names now set it only
+when non-empty
+(`(<name>).toString().takeIf { it.isNotEmpty() }?.let { contentDescription = it }`),
+and an empty literal writes no `.semantics` at all, so the button's own
+`Text` names it.
+
+### Fixed -- `border-width: 0` asked Compose for a hairline instead of nothing
+
+An authored `border-width: 0` means NO border. The emitter lowered it to
+`Modifier.border(0.dp, Color.Gray, ..)`, and Compose does not read that as
+"nothing": `Dp.Hairline` **is** `0.dp`, so the modifier asks for a hairline --
+a one-pixel stroke that survives any screen density. In `Color.Gray`, because
+a part that declares no width declares no colour either, so the emitter's own
+unauthored default is what gets painted.
+
+Measured in the emitted Kotlin:
+
+| product | `.border(0.dp` before | after | real borders kept |
+| --- | --- | --- | --- |
+| Trestle | 59 | **0** | 30 |
+| Engram | 8 | **0** | 236 |
+| VisiCalc | 0 | 0 | 0 |
+| Venture | 0 | 0 | 12 |
+
+Only a **statically** zero width is dropped. A state layer that raises the
+width off zero makes the width a runtime `if` rather than the literal `0`, and
+still gets its border -- so this cannot silence a border any state asks for.
+
+It reports no new degradation either: the width is still read, and honoured as
+"no border", which is what was authored. Compose's `styleDegradations` for
+Trestle is unchanged at 93, with zero `border-width` entries.
+
+Nothing caught this: the suite passed identically before and after, because no
+test asserted on a zero width. One now does, and it carries the non-zero case
+as its control -- asserting the absence alone would also pass if the emitter
+had stopped emitting borders altogether.
+
+### Fixed -- an unresolvable colour was painted invisible instead of dropped (#15141)
+
+`compose_color_value` was total, ending in `_ => Color.Transparent`.
+
+That answer compiles, renders, and what it renders is **invisible**, so the
+mistake surfaces as "the text disappeared" a long way from the authored
+value that caused it. Two ways in, both real:
+
+- **`color: inherit`.** A CSS-wide keyword and a reasonable thing to
+  author. It produced `TextStyle(color = Color.Transparent)` on an inline grid editor. Found by reading emitted source while
+  fixing #15048 -- no test failed and no degradation was reported, because
+  as far as the emitter was concerned it had produced a valid colour.
+- **Any unrecognised colour name.** `rebeccapurple`, a typo, a design-token
+  name that did not resolve -- all silently invisible.
+
+`compose_color_value` now returns `None` for a value it cannot resolve, and each caller
+keeps whatever it already had. For text that means the inherited style:
+unstyled rather than invisible. This matches how `px_or_none` has always
+handled lengths in this file. `transparent` stays a real answer -- an author
+asking for nothing painted still gets nothing painted; only the catch-all
+is gone.
+
+### Fixed -- a `sheet` part's `font-size` was a code-injection sink
+
+Found in security review of the change above, in the same `match` block.
+`sheet_text_style` lowered `font-size` through `strip_css_px`, which only
+removes a trailing `px` and validates nothing, and the result is
+interpolated UNQUOTED into generated Kotlin as `fontSize = {sz}.sp`. The
+`.msl` grammar admits a quoted STRING that reaches this verbatim, so a
+part authored as
+
+    font-size: "0.sp, color = Color.Red); mosaicPwn(" ;
+
+emitted exactly those tokens into a Kotlin argument list. Same class as the
+`border-top-color: "#00)+E(/*"` escape previously fixed in the Dart
+emitter.
+
+Every other `font-size` path already went through `px_or_none`, which
+enforces digits, `.` and `-`. That guard was nested inside
+`compose_box_style`, so `sheet_text_style` -- the one other place lowering
+`font-size` -- could not reach it. It is now at module scope with a single
+definition, and this path uses it.
+
+The regression test drives `sheet_text_style` itself rather than the helper:
+an earlier version tested `px_or_none` directly, which passed happily with
+the call site reverted to the unguarded form.
+
+**Product impact, measured by diffing emitted output before and after
+across task-app, visicalc and engram-app.** Only task-app changes, and only by removing `.background(Color.Transparent)` calls that painted nothing. They came from `background: "currentColor"` on the status dot, which Compose has no lowering for -- so that dot rendered invisible before this change and renders invisible after it. Identical output, honest source. The underlying product defect is filed separately.
+
+### Fixed — the no-starve floor reaches leaf Row children (UI59 §4, #14815)
+
+#15123 put a width floor under every `Row` child, but it lived in
+`emit_container`, so a **leaf** — a `Button`, a bare `Text` — got nothing. That
+gap was not theoretical, and the earlier measurement missed it because it only
+looked at the default view:
+
+| viewport / view | zero-width text before | after |
+| --- | --- | --- |
+| 1280, Board | **1** (`Delete`) | **0** |
+| 700, Board | **4** (`Timeline`, schedule, `Edit`, `Delete`) | **0** |
+
+`Delete` was starving at **1280 — the declared acceptance viewport** — the whole
+time. #15123's measurement reported zero starvation because the Board view was
+never entered; it has 32 text nodes against the default view's 25.
+
+The floor now reaches `emit_host_button` and `emit_text`, which read the same
+precomputed set the container path uses, so all three writers give one answer
+rather than three. The set widened to include leaves accordingly.
+
+VisiCalc and Engram remain **pixel-identical** to their pre-UI59 renders.
+
+#### What it still does not do
+
+Only Compose. And the floor is applied where a part is *named* — a leaf with no
+part carries no style to consult, so it is not floored.
+
+### Fixed — a Row child is no longer starved (UI59 §4, #14815)
+
+Every `Row` child that is not already asking to absorb slack now carries
+`Modifier.wrapContentWidth(unbounded = true)`. That is CSS's own rule: a flex
+item has `min-width: auto`, so it shrinks toward its content and then stops, and
+the container overflows rather than starving anyone. Compose has no such floor —
+it hands out the remaining width in order and the last child gets whatever is
+left, which can be nothing.
+
+**UI59 §8 had rejected this as unreachable.** It measured three mechanisms and
+concluded each "merely chose a different child to starve". All three were
+`weight`-based. This one is not a distribution mechanism at all — `weight`
+divides the row, this puts a floor under each child — which is why it was not
+found then.
+
+Measured on Trestle:
+
+| viewport | zero-width text | wrapped 3+ lines | off-screen | tallest text |
+| --- | --- | --- | --- | --- |
+| 1280 before / after | 0 / 0 | 0 / 0 | 0 / 0 | 48 / 48 |
+| 900 before / after | **1** / **0** | 2 / **1** | 0 / 0 | 168 / **72** |
+| 700 before / after | **1** / **0** | 5 / **4** | 0 / 0 | 168 / **120** |
+
+Better on every axis with nothing worse — the test §8's three mechanisms failed.
+`IntrinsicSize.Min` and `IntrinsicSize.Max` were measured too and both still
+starved the child to zero.
+
+**VisiCalc and Engram render pixel-identical** (0 differing pixels), so this is
+inert outside the product that had the defect.
+
+`flex-shrink: 0` is now honoured by default and stops being reported where the
+floor applies; a POSITIVE value asks to shrink below content, which the floor
+refuses, so it stays reported.
+
+#### What it does not do
+
+The floor lives in `emit_container`, so a **leaf** Row child — a bare `Text` —
+still gets nothing and can still be starved. On Trestle that leaves `due-input`,
+`tl-name` and `tl-window` reported rather than guarded: 8 authored, 5 guarded,
+3 reported, none in both.
+
+`row_children_use_weight_and_intrinsic_measurement_in_split_sections` needed its
+assertion rewritten. Its claim — intrinsic width — still holds; it was asserting
+the *spelling* (`modifier = Modifier,`), and a bare modifier is precisely what
+let that group be starved. It now asserts the property.
+
+### Added — a dashed border is drawn, and `border-style: none` suppresses one (UI79, #14835)
+
+`Modifier.border` draws a solid stroke and takes no `PathEffect`, so a non-solid
+border has to be drawn: `drawRoundRect` with a dashed `Stroke`, which honours
+the authored corner radius — a plain `drawRect` would square off every rounded
+box that dashes. Trestle authors two, the composer's plus box (radius 8) and the
+empty-state box (radius 13); both rendered **solid** before while the style was
+reported dropped.
+
+CSS does not specify dash geometry, so the lengths are a choice: 4dp on / 4dp
+off for `dashed`, and for `dotted` a round cap with a zero-length on-segment,
+which is what produces dots rather than short dashes.
+
+`border-style: none` now **suppresses** the border. Consuming it without acting
+would have been worse than the old drop — the report would fall silent while a
+border still painted.
+
+`border-style` degradations on Trestle go from **5 to 0**, and that is co-total
+rather than convenient: all three authored values are now genuinely handled
+(`solid` keeps `Modifier.border`, `dashed`/`dotted` are drawn, `none`
+suppresses).
+
+#### `drawWithContent`, not `drawBehind` — measured
+
+The first attempt used `drawBehind`. The Kotlin compiled, the stroke ran, and
+**no dashes appeared**: this modifier is appended after `.background(..)`, so
+drawing behind it paints the dashes under the background.
+
+The screenshot could not settle it either way — the two dashed boxes are small,
+so their straight edges are ~14px and a dash there is a one-run difference lost
+in noise. A minimal probe did: a 200x60 dashed box renders **24 separate runs**
+along its top edge where solid renders 1.
+
+### Fixed — the width guard and its drop report now share one answer (UI59, #14815)
+
+#15062 landed `flex-shrink: 0` but left the drop report claiming those parts
+were dropped, because filtering needed a second notion of "is this a direct Row
+child" and the two drifted. This replaces both with **one precomputed set**,
+carried on `PartStyleMap` — which is already threaded through every writer — so
+the emitter and the reporter read the same answer rather than each deciding.
+
+#### Three divergences, each found by tagging the emitted guard with its part
+
+A second walk cannot reproduce the emitter's traversal, and the counts alone
+hid that: 8 authored parts, 7 un-reported, 6 guarded looked nearly right. Only
+labelling each emitted guard showed which parts were which.
+
+| divergence | cause | effect before |
+| --- | --- | --- |
+| `flex-wrap` | a wrapping `Row` is emitted as `FlowRow`, whose children are **not** RowScope children. The walk read the raw tag. | parts un-reported that were never guarded — a **silent drop** |
+| leaf nodes | the guard lives in `emit_container`, so a `Text` child gets nothing | `tl-name`/`tl-window` in **neither** set |
+| `For`/`If` | meta-primitives emit no container, so their children are still RowScope children | `board-col` lost its guard |
+
+Measured on Trestle, every authored part now lands in exactly one set — guarded
+`{board-col, composer-plus, due-error-focus, due-input-focus, rail}` and
+reported `{due-input, tl-name, tl-window}`, with **nothing unaccounted and
+nothing in both**. The guard count is unchanged at 6, so this fixes the report
+without changing what is emitted.
+
+Falsified: restoring the raw-tag read fails the FlowRow case.
+
+### Added — `flex-shrink: 0` on a Row child is honoured (UI59, #14815)
+
+A previously-discarded property now lowers: a direct `Row` child that authors
+`flex-shrink: 0` gets `Modifier.wrapContentWidth(unbounded = true)`, which is
+what actually holds its width. Six sites in Trestle.
+
+**The modifier is not the one reasoning picks.** A probe measured a Row child
+beside a long `Text` at 420px:
+
+| child modifier | measured |
+| --- | --- |
+| none | `0 x 112` — starved |
+| `IntrinsicSize.Min` | `0 x 112` — still starved |
+| `IntrinsicSize.Max` | `0 x 112` — still starved |
+| `wrapContentWidth(unbounded = true)` | **`57 x 16`** |
+
+Both intrinsics looked obviously right and neither works. One probe settled it.
+
+Worth recording that the comment already in this file — "every other Row child
+stays intrinsic so it cannot starve later siblings" — is **not what happens**.
+A plain Row child measures `0 x 112`. Compose hands out the remaining width in
+order and the last child gets what is left, which can be nothing.
+
+`flex-grow` is the opposite request, so a weighted child keeps its weight and is
+not also width-guarded.
+
+#### What this does NOT do, measured rather than assumed
+
+**It changes no product rendering today.** Trestle's composer was measured at
+900px and 700px before and after, and every element is byte-identical:
+`name-input 154x24 / due-input 138x24 / add-btn 100x36` at 900, and
+`name-input 40x120 / due-input 138x24 / add-btn 100x36` at 700. The parts that
+author `flex-shrink: 0` already hold their width by other means.
+
+So this does **not** fix #14815's `On track` chip, which does not author the
+property, and does **not** fix `name-input` starving to `40 x 120` at 700px,
+which does not author it either. It makes an authored opt-out work; it does not
+change any default.
+
+UI59 §4's general rule — that an unannotated child should not be starved at all
+— remains unimplemented, and §8 records three mechanisms already measured and
+rejected for it.
+
+#### The drop report still over-reports
+
+`flex-shrink` is still listed in `styleDegradations` for the six parts that now
+honour it. Filtering it needs a second implementation of "is this a direct Row
+child" in the reporter, and a first attempt disagreed with the emitter — it
+un-reported seven parts where only six got the modifier. Under-reporting is the
+dangerous direction, and this file already says over-reporting is the safer
+error, so the filter was reverted rather than shipped half-right.
+
+### Added — a border has edges (UI79, #14835)
+
+`border-{top,right,bottom,left}-{width,color}` now lowers. **92 declarations
+across 12 stylesheets** were being discarded; Trestle alone authors 34 of them.
+
+`Modifier.border` draws all four edges and has no per-edge form, so each edge is
+**drawn** rather than configured: `Modifier.drawBehind { drawRect(..) }`, one
+rect per authored edge, emitted after `.border` and before `.padding` so the
+line sits on the border box where CSS puts it.
+
+`drawRect` rather than `drawLine`: a stroked line is centred on its path, so a
+1px rule would straddle the edge and land half outside the box. Not a sibling
+`HorizontalDivider` either — a divider is a layout child and would join the
+parent's arrangement, moving the content. A border must not move anything.
+
+#### Measured by rendering, not by grepping the Kotlin
+
+A `drawBehind` that compiles and draws nothing is exactly the failure this repo
+keeps finding, so the four edges were rendered with four distinct colours and
+the pixels sampled:
+
+| edge | authored | measured |
+| --- | --- | --- |
+| top | 2px | `y=0..1` — h=2, spanning the width |
+| right | 3px | `x=197..199` — w=3, spanning the height |
+| bottom | 4px | `y=28..31` — h=4 |
+| left | 5px | `x=0..4` — w=5 |
+
+Each on its own edge, each exactly its authored width. The control — a part
+with no authored edge — emits no `drawBehind` at all and renders none of those
+colours.
+
+#### What is reported rather than drawn
+
+`border-<edge>-style` is deliberately left unhandled so it reaches the drop
+reporter, and its reason is now specific: the edge *is* drawn from its width
+and colour, and only the dash pattern is lost. The generic "no lowering yet"
+text would have told a reader the whole declaration vanished, which stopped
+being true here.
+
+`border-top-left-radius` is a corner, not an edge. Its name splits into
+`top-left` + `radius` — exactly the shape that fools a loose parse — and it is
+asserted to stay out of the edge matcher.
+
+Trestle's Compose `styleDegradations` no longer lists any per-edge `width` or
+`color`; only the 17 `-style` halves and the two corner radii remain.
+
+### Added — `HostScroll` honours its axis; the crash it was designed around is not real (UI61, #14854)
+
+Compose composes both axes by plain modifier chaining, so `both` needs no
+nesting — two modifiers and two scroll states. `horizontalScroll` is imported
+only where it is used; a missing Kotlin import is an error and an unused one
+only a warning, so `verticalScroll` stays unconditional (the #14810 posture).
+`vertical` keeps the unchanged chain, so all 179 existing tests passed through
+untouched.
+
+**UI61 §5 hazard 1 was wrong, and this is measured rather than argued.** The
+spec claimed `fillMaxWidth` inside a `horizontalScroll` throws — a horizontal
+scroll measures against an infinite max width — and inferred a subtree-wide
+suppression of the emitter's default `fillMaxWidth` across its eight emission
+sites. Rendered on the pinned `org.jetbrains.compose` 1.6.11 it does not throw;
+Compose falls back to the minimum width when the constraint is unbounded. The
+probe was falsified before being believed: a deliberate `error(..)` planted in
+the same composable made the harness report `failures="1"`, so the clean run is
+a real absence of a throw and not a swallowed exception. No suppression was
+written and none is needed.
+
+### Added — Compose routes the table wheel; VisiCalc is native-complete (UI73, #14843)
+
+VisiCalc's **last** Compose degradation. `--profile native-complete` now builds
+it, so all three desktop products are native-complete on Compose.
+
+`HostTable` carrying `onViewportShift` with `viewport-offset` and `total-rows`
+gains an `onPointerEvent(PointerEventType.Scroll)` handler that mirrors
+`mosaic-emit-react/src/table_capacity.ts`: ignore the event when the horizontal
+delta dominates, clamp at both ends of the virtual window and reset the
+accumulator when clamped, and carry the fractional remainder between events,
+discarding it on a direction change.
+
+**One deliberate difference.** React divides `deltaY` by a measured row pitch
+because the DOM reports pixels. Compose's `scrollDelta.y` is already in line
+units, so there is no pitch, no measurement pass, and no analogue of React's
+`deltaMode` branch. The accumulator still earns its place: a trackpad delivers
+fractional lines.
+
+The `ExperimentalComposeUiApi` opt-in joins the file's existing condition rather
+than adding a second `@file:OptIn`, which is not repeatable (#14964).
+
+#### Two things only compiling could have found
+
+- **A mosstyle `number` slot lowers to a Kotlin `Double`.** The clamp arithmetic
+  and the dispatched payload each needed an explicit `.toInt()` / `.toDouble()`.
+  The API had been verified against an `Int` fixture, which type-checked fine;
+  only the real project has the real slot types.
+- **The chain is appended in two writers**, one writing to `opener` and one to
+  `out`. Patching the pattern that matched only the first emitted the handler
+  nowhere. This is the third time the Compose emitter's duplicated container
+  paths have cost a round (#14964 enumerated six).
+
+Both were caught by generating VisiCalc and running `gradle compileKotlin`, not
+by reading the output.
+
+#### Report and pin
+
+`host_table_has_wheel_routing` asks exactly what the emitter asks, and the
+capability analysis calls it, so the report cannot claim a drop the emitter does
+not make. VisiCalc's render script now asserts `nativeComplete` instead of
+pinning a count — the pin existed only because there was something to pin.
+### Fixed — `flex-wrap: wrap` reached nothing; Compose's `Row` does not wrap (#14836)
+
+Engram authors it on `app-header`, `app-nav` and `host-status`;
+`mosaic-pkg-calendar` authors it too, which Trestle picks up through the
+Calendar tab. Compose discarded all of them, so a narrow window clipped or
+squeezed the nav instead of wrapping it.
+
+`Row` becomes `FlowRow` and `Column` becomes `FlowColumn` when the part
+authors it. They take the same arrangement and alignment arguments, so
+nothing downstream changes. Measured after: **3** `FlowRow` in Engram, **1**
+in Trestle (the calendar's).
+
+`FlowRow` is behind `ExperimentalLayoutApi`, so the file gains
+`@file:OptIn(..)` and two imports — emitted **only** when some part actually
+wraps, so a project that does not keeps a byte-identical header. A test
+asserts the opt-in is absent in that case.
+
+`@file:OptIn` is **not repeatable**, so the FlowRow opt-in is merged into the
+single annotation the file already emits for `ExperimentalComposeUiApi` rather
+than added beside it. Trestle is the product that needs both — drag-and-drop
+plus the calendar's wrapping row — and two annotations are a Kotlin compile
+error (`This annotation is not repeatable`). Caught by CI's Compose Desktop
+build, because the first round rendered Engram (which compiles) but only
+*generated* Trestle.
+
+#### Where the first attempt failed
+
+This was tried once and backed out. `root_container_context`'s comment calls
+itself "the SECOND place a primitive picks its composable" and records that
+UI60 had to change both. **It undercounts.** The emitter has:
+
+| | site |
+| --- | --- |
+| chooses | `emit_node`'s `match node.tag` |
+| chooses | `root_container_context` |
+| **writes** | `emit_container` |
+| **writes** | `emit_container_frame` |
+| hardcodes `Row(` | `emit_host_checkbox` |
+| hardcodes `Row(` | `emit_host_radio` |
+
+The first attempt patched the two that *choose*. A plain root `Row` goes
+through `emit_container`, so it still emitted `Row(` while the file gained the
+FlowRow opt-in — a half-applied change of exactly the kind UI60 describes.
+
+The upgrade now sits in the two functions that **write** an opener, which are
+the last common point and cannot be bypassed by a caller. Both a root and a
+nested Row are tested, because a nested-only fixture would have passed the
+broken version.
+
+#### The drop report stays co-total
+
+`flex-wrap` is still recorded as a candidate drop in `compose_box_style`,
+which cannot see the tag, and filtered out by
+`dropped_style_properties_in_layout` for the Row and Column that now carry it.
+A `Box` has no wrapping equivalent, so it is still reported there — asserted in
+both directions, since a filter that never fires would pass the positive alone.
+
+### Fixed — `justify-content` and `align-items` reached nothing, and the drop reporter could not tell where they applied (#14834)
+
+Engram authors `justify-content: space-between` and `align-items: center` on its
+header and status rows. Compose discarded both, while the drop reason already
+described the mechanism that would work: these ARE the `horizontalArrangement`
+and `verticalAlignment` arguments of Row and Column, the same slot `gap` reaches
+as `Arrangement.spacedBy` (#14804).
+
+Measured on Engram after the change: **1** `Arrangement.SpaceBetween` and **3**
+`Alignment.CenterVertically` now emitted where there were none.
+
+#### Two collisions, resolved explicitly
+
+Compose cannot express either pair, so each is decided rather than left to
+whichever branch runs last:
+
+- **`gap` vs `justify-content`** — both want the arrangement slot.
+  `Arrangement.spacedBy(n.dp, alignment)` takes an *Alignment*, while
+  `SpaceBetween`/`SpaceAround`/`SpaceEvenly` are *Arrangements*: they do not
+  compose. A plain `start`/`center`/`end` still folds the gap in through
+  `spacedBy`, so nothing is lost there. Only the **distributing** values
+  displace the gap, because an arrangement that already decides the spacing
+  makes a fixed gap contradictory rather than additive.
+- **`align` (from `text-align`) vs `align-items` on a Column** — both want
+  `horizontalAlignment`. The explicit cross-axis property wins over the text
+  property borrowed for layout.
+
+#### The reporter needed the layout
+
+`dropped_style_properties(&StyleDef)` walked parts only and never saw a
+`LayoutNode`, so it could not know whether a part sits on a Row, a Column or a
+`Text` — and `justify-content` lowers on the first two and genuinely has nowhere
+to go on the third. Lowering these without that context would have made the
+reporter **over-report**: still listing them as dropped in the very places they
+now apply.
+
+`dropped_style_properties_in_layout(style, Some(&root))` supplies it, and the
+artifact builder passes the layout it already had to hand. Measured on Engram:
+
+| property | blind reporter | layout-aware |
+| --- | --- | --- |
+| `justify-content` | 1 | **0** |
+| `align-items` | 2 | **0** |
+| total drops | 6 | **3** |
+
+The name-only entry point remains for callers that genuinely have no layout (a
+stylesheet linted on its own), where over-reporting is the safer error.
+
+**This does not fix #14843**, but it removes that issue's stated blocker: the
+same missing input — the layout node beside the part — was what stopped a
+per-backend predicate for `table-cell-role` and `onViewportShift`.
+
+#### A bug this caught in itself
+
+The first version routed `align-items` through the existing `align` path, which
+put it on the **main** axis on a Row. `align-items` is cross-axis. The test
+asserting `verticalAlignment = Alignment.CenterVertically` on a Row failed and
+the logic was rewritten so the two axes are computed separately and compose.
+
+### Fixed — every authored button background was painted over by Material's default purple (#14912)
+
+Found by rendering Trestle and sampling the pixels. All 47 of its `HostButton`
+parts author a `background`; none of them reached the screen.
+
+| button | authored | rendered before | rendered after |
+| --- | --- | --- | --- |
+| `add-btn` | `#eaa63f` | `#6E14EF` | `#E09F3C` |
+| `del-btn` | `#252019` | `#6200EE` | `#252019` |
+| `seg-board-off` | `transparent` | `#690FE6` | `#38322A` |
+| page background (control) | `#1a1714` | `#1A1714` | `#1A1714` |
+
+`#6200EE` is exactly Material 2's default primary.
+
+**Why the emitted source looked correct.** The emitter did emit the authored
+colour — as `Modifier.background(..)`. A Material `Button` draws its own
+container from `ButtonDefaults.buttonColors()` and paints it over anything the
+modifier put down. The sibling `Text` colour worked, because that is set on the
+child, which made the whole thing read as a theming quirk rather than a dropped
+property. Any source-level grep for the colour passed, and
+`--profile native-complete` reported **0 degradations**.
+
+The authored background now goes to `ButtonDefaults.buttonColors(backgroundColor = ..)`
+and the inert modifier segment is removed, so the generated source says what
+actually happens. `backgroundColor` is Material 2's parameter name — this
+emitter imports `androidx.compose.material`, not material3, whose equivalent is
+`containerColor`.
+
+The colour expression is **moved, not re-derived**: `compose_box_style` already
+folds `state hover`/`state active` layers into one `if/else` chain, and reusing
+it verbatim keeps the two channels from drifting. A test asserts the full
+layered chain now appears inside `buttonColors`.
+
+**What this does not fix.** The rendered `add-btn` is `#E09F3C` against an
+authored `#EAA63F` — a uniform ~95% composite over the page, measured across
+2855 pixels of flat fill rather than inferred from one sample. No `.alpha(..)`
+is emitted anywhere and nothing authors an opacity, so this is a Material
+`Button` default (its own elevation) that the emitter does not currently
+control. Filed separately; it is a small residual on top of a colour that was
+previously not applied at all.
+
+Two tests were retargeted rather than deleted. Both asserted the background
+appears in the modifier, which is exactly what this changes; the rule they
+protect — that the authored background, including its state chain, reaches
+the button — is unchanged.
+
+### Added — the fixed leading cell of each table row gets its own semantics (#14843)
+
+`RowHeaderGrid` authors four `table-cell-role` values. Compose expressed two:
+`column-header` got `collectionItemInfo` plus `heading()`, `data` got
+`collectionItemInfo`. **`corner` and `row-header` got nothing at all** —
+they live on the fixed cell that opens a row, outside the `For`, and
+`in_loop` is what advances the scope to a cell.
+
+A new `TableSemanticScope::LeadingCell` covers it:
+
+| cell | emits |
+| --- | --- |
+| header row's corner | `collectionItemInfo(rowIndex = 0, columnIndex = 0)` |
+| each body row's row-header | `collectionItemInfo(rowIndex = r + 1, columnIndex = 0)` + `heading()` |
+
+`heading()` on the body one because it labels its row — the nearest thing
+Compose has to React's `scope="row"`, which is how React expresses the same
+authored role. The corner labels nothing, so it carries position only.
+
+Conditional, like the column offset it sits beside: a plain `Grid` opens its
+rows with the `For` itself and nothing claims column 0. Pinned by a test.
+
+This does **not** change VisiCalc's degradation count — `table-cell-role` is
+still reported on every non-React backend, because that gate has no
+per-backend predicate. Giving it one needs the enclosing table's context,
+which the property walker does not carry; the substance is now there for it.
+
+### Added — a HostTable's authored focus and accessible name (#14843)
+
+`accessibility.table-focus-unimplemented` was gated on `backend != React`
+with **no per-backend question at all** — unlike
+`accessibility.table-semantics-missing` next door, which asks one. So it said
+nothing about what any other backend could express, and Compose already emits
+both mechanisms elsewhere in the same file.
+
+- `a11y-label` joins the table's existing collection-semantics block as
+  `contentDescription`. One block, not two: two `semantics { }` modifiers on
+  the same node do not merge — the later replaces the earlier — and the
+  collection info is the half that would be lost.
+- `focusable: true` emits `Modifier.focusable()`. `false` emits nothing, since
+  it is the default and the call would change nothing.
+- `host_table_has_focus_semantics` is the per-backend predicate the reporter
+  now asks, so the report cannot drift from what is emitted.
+
+**The `focusable` import was inside the drag-and-drop block.** A table
+authoring `focusable: true` therefore emitted the modifier with no import, and
+the generated Kotlin did not compile. The emitter tests were perfectly happy;
+only `gradle compileKotlin` caught it — the same shape as the XAML `Not()`
+helper (#14793) and `fillMaxSize` (#14798). It is unconditional now, with a
+test that asserts the import on a component with no drag-and-drop in it.
+
+VisiCalc's degradations go **7 → 5**, and its render-harness pin moves with
+them. Engram and Trestle stay at 0. Falsified: with the predicate disabled the
+count returns to 7.
+
+### Fixed — a row-header table got no collection semantics at all (#14843)
+
+`compose_semantic_table_shape` required **exactly one** child per header and
+body row. `Grid` has that shape; `RowHeaderGrid` does not — each of its rows
+opens with a fixed cell (the corner, and the row-header) before the `For`.
+
+VisiCalc uses `RowHeaderGrid`, and it is the only `HostTable` in the product.
+So the table was not recognised at all: no `collectionInfo`, no
+`collectionItemInfo`, and `accessibility.table-semantics-missing` in the
+degradation report. Every accessibility gate passed the whole time, because
+each cell existed and was correctly named — a screen reader simply had no way
+to know it was a table.
+
+The predicate now accepts an optional leading `Box` before the `For`, and the
+counting follows:
+
+- `columnCount` becomes `columnHeaders.size + 1` — the fixed column is a real
+  column, and reporting one fewer than each row has cells is worse than
+  reporting nothing.
+- Every `For`-produced cell's `columnIndex` shifts by one, since the loop index
+  counts *data* columns from zero.
+- Both offsets are conditional. A plain `Grid` keeps unoffset indices, pinned
+  by a test — widening that silently would move every cell in every plain
+  table one column right.
+
+A **ragged** table — a corner cell in the header but not in the body rows, or
+the reverse — is rejected rather than indexed. Half its cells would be one
+column off, which is worse than reporting no semantics.
+
+VisiCalc's degradations go **8 → 7**, and its render harness pin moves with
+them. The remaining seven are `table-focus` (2), `table-wheel-shift` (1) and
+`authored-table-cell` (4), which are gated on `backend != React` with no
+per-backend predicate at all — a different problem from this one.
+
+### Fixed — `max-width` reached nothing (#14833)
+
+Six of the eight backends already lower it — html, react, webcomponent,
+SwiftUI, Qt and XAML — all measured on a minimal two-node probe rather than
+assumed. Compose and Flutter (#14851) were the two that did not, and Engram
+authors it on **all seven** of its screens (760px–1100px), so its study screen
+is a reading column that ran the full width of the window.
+
+```
+Modifier
+    .widthIn(max = 980.dp)
+    .fillMaxWidth()
+```
+
+**The order is load-bearing and not symmetric**, which cost a wrong version
+first. `.fillMaxWidth()` pins `minWidth = maxWidth` to the incoming max, after
+which `.widthIn(max = ..)` cannot lower the max below that min — Compose
+coerces and the floor wins. Engram's screens rendered at the full 1208px with
+the modifier plainly present in the emitted Kotlin. This way round, `widthIn`
+clamps the incoming max and `fillMaxWidth` fills to the clamped value.
+
+The fill is emitted alongside the cap rather than left to the container
+default, because that default is *prepended* and would land on the wrong side.
+And it must be emitted: without it the container wraps its content, which is
+also wrong — a ceiling is not a width.
+
+No alignment is added. The six backends that already lower `max-width` emit no
+centring with it, so the capped box sits at its parent's start.
+
+Measured on the rendered app, by painted extent:
+
+| | before | after |
+| --- | --- | --- |
+| Engram screen content | `1255` | **`1003`** |
+| Engram `app-header` (no cap authored) | `1255` | `1255` |
+
+Trestle's `list-wrap` (`max-width: 760`) now caps too — its task column ends at
+~1026 instead of ~1250.
+
+### Fixed — `min-height` reached nothing (#14837)
+
+Parsed and discarded. Three products author `min-height: 100vh` on their app
+shell to mean *fill the window*, and on Compose it did nothing at all.
+
+Engram's composition root measured `1280 x 776` in a `1280 x 900` window.
+Reading the rendered PNG's alpha channel: the last painted row at x=640 is
+**775**, and rows 776..899 are `(0, 0, 0, 0)` — genuinely **unpainted**, not
+painted in some other colour, so whatever composites behind the surface shows
+through. That is why the same defect read as white in one capture and black in
+another.
+
+| authored | Compose |
+| --- | --- |
+| `min-height: 100vh` / `100%` | `.fillMaxHeight()` |
+| `min-height: N` / `Npx` | `.heightIn(min = N.dp)` |
+| `min-height: 0` | nothing — a zero floor constrains nothing |
+
+A floor, so `heightIn(min = ..)` rather than `height(..)`: it composes with an
+authored `height` instead of replacing it.
+
+Compose has no viewport unit, so `fillMaxHeight()` fills the **parent**. On an
+app shell the parent is the window and the two agree; nested, they would not.
+Named rather than hidden — the alternative is what shipped, which was nothing.
+
+Both new modifiers join the unconditional import block. Emitting a modifier
+without its import is Kotlin that does not compile — the shape of the XAML
+`Not()` helper in #14793, and why #14798 pins its import too.
+
+TaskApp's `styleDegradations` go 168 → 164, and exactly four modifiers are
+emitted (one `fillMaxHeight`, three `heightIn`): the reporter and the lowering
+now ask the same question (#14810).
+
+### Fixed — `Box` overlaid its children instead of laying them out (UI60, #14828)
+
+`Box` and `Stack` both lowered to Compose's `Box`, which layers its children at
+a shared origin. That is `Stack`'s meaning; UI29 gives `Box` the generic opaque
+container — `<div>` on html, `Group { }` on SwiftUI, `Item { }` on Qt, all of
+which lay children out in flow. Compose was the only backend that disagreed.
+
+Engram's deck-stat chips drew the count on top of its label: `[0]` and
+`[Total]` both at `Rect.fromLTRB(49.0, 247.0, ..)`, eleven chips, every
+semantics gate green throughout — a node drawn over another node is still
+present, still named, and still "displayed".
+
+`Box` now lowers to `Column`; `Stack` keeps Compose's `Box`.
+
+Two things the spec did not anticipate, both fixed here:
+
+- **The composable is chosen in two places.** `emit_node`'s `match node.tag`
+  and `root_container_context`. Fixing one would have left a root `Box`
+  overlaying while every nested one flowed.
+- **A root `Stack` was not overlaying at all.** `root_container_context` never
+  named `Stack`, so it fell through to `_ => Column`. The defect UI60
+  describes and its mirror image were both live on the same primitive pair.
+
+Behaviour change worth naming: `gap` on a `Box` was silently dropped before —
+a Box had no arrangement — and is now real `verticalArrangement` spacing.
+
+Measured, not inferred: Engram's chips go from a shared origin to `[0]` bottom
+`271.0` / `[Total]` top `271.0`, and **all three Trestle renders are
+byte-identical** across 27 `Box`→`Column` swaps, because its multi-child Boxes
+render one child each.
+
+### Fixed — `text-align` on a Row or Column emitted Kotlin that did not compile (#14839)
+
+`contentAlignment` was applied from `text-align` with no check on which
+composable was being emitted, so a `Row` part with `text-align: center`
+produced `Row(contentAlignment = Alignment.Center)`. `contentAlignment` is a
+**`Box`-only** parameter; `gradle compileKotlin` rejects it with
+*"No parameter with name 'contentAlignment' found."*
+
+Latent rather than absent: every shipped package authors `text-align` only on
+a `Box`, where the argument is valid, so CI was green. Emitted output for all
+five products is unchanged by this — VisiCalc's two `contentAlignment` uses are
+both Boxes and stay exactly as they were.
+
+`arrangement_argument` is replaced by `container_alignment_arguments`, which
+owns both `text-align` and `gap` for a reason: on a `Row` they both want
+`horizontalArrangement`, and emitting it twice is a duplicate named argument
+that also does not compile. Compose's two-argument
+`Arrangement.spacedBy(space, alignment)` is the resolution — reachable only if
+one place decides both.
+
+| composable | `text-align` | `gap` |
+| --- | --- | --- |
+| `Box` | `contentAlignment` (unchanged) | dropped — a Box stacks, so a gap is meaningless there |
+| `Column` | `horizontalAlignment` | `verticalArrangement` — different axes |
+| `Row` | `horizontalArrangement = Arrangement.Start/Center/End` | folded into `spacedBy(gap, alignment)` |
+
+Each row of that table was checked against `gradle compileKotlin` on a
+generated project before being written down.
+
+This is the first step of UI60 (#14828): swapping `Box` to a flow container
+makes every existing `contentAlignment` invalid, so the mapping has to exist
+before the swap can happen.
+
+### Changed — the drop reason for `justify-content`/`align-items`/`align` (#14811)
+
+These three shared a match arm with `display`/`flex-direction`/`flex-wrap`,
+reported as *"Compose expresses layout through the composable chosen … and its
+arrangement arguments, not through a modifier on a built view"*. That sentence
+was being used to justify discarding them while describing the mechanism that
+would work: they are the `horizontalArrangement`/`verticalAlignment` arguments
+of Row and Column — the same argument slot `gap` already reaches as
+`Arrangement.spacedBy` (#14804).
+
+Split into two arms so the report says which kind of gap each property is.
+A pinned drop that misstates its own cause reads as settled when it is not
+(#14834).
+
+### Added — Compose reports the style properties it drops (#14810, #12022)
+
+Compose had no `dropped_style_properties`, so an empty `styleDegradations`
+meant "nobody looked" rather than "nothing was lost". Measuring it named **43
+distinct properties** in TaskApp alone, while the strict `native-complete`
+profile reported zero degradations:
+
+| count | property |
+| --- | --- |
+| 318 | `border-radius` — every rounded surface renders square |
+| 308 | directional `padding-*` (in flight, #14730) |
+| 172 | `gap` (fixed in #14805) |
+| 77 | `align` |
+| 48 | `font-weight` — every bold label renders at regular weight |
+| 48 / 46 | `box-shadow` / `elevation` |
+
+Drops are collected **by the builder**, in the `_` arm of its property match,
+rather than by diffing against a hand-kept list of "properties Compose
+supports". A parallel list is wrong the first time someone adds an arm and
+forgets to update it, which is exactly the drift #12022 exists to catch.
+
+Each drop carries an actionable reason rather than generic text — a missing
+modifier, a value that must be an argument, and a concept Compose does not have
+are genuinely different problems and want different fixes.
+
+Style drops do not gate `nativeComplete`; this makes them visible, not fatal.
+### Fixed — `gap` was dropped entirely (#14804)
+
+`gap` reached the lattice IR and died in the property loop's `_ => {}` arm.
+178 declarations across 27 stylesheets, discarded in silence — the strict
+`native-complete` profile still reported zero degradations, because the
+analyzer does not know the property exists.
+
+In the rendered app it showed as adjacent text running together (`Up next1`)
+and controls butting against each other. Not a string bug: two `Text` nodes in
+a row whose spacing had been thrown away.
+
+It now lowers to `Arrangement.spacedBy(n.dp)`, on the axis the container names:
+`verticalArrangement` for a `Column`, `horizontalArrangement` for a `Row`. A
+`Box` stacks its children and has no arrangement, so a gap there is meaningless
+rather than unsupported and is dropped deliberately.
+
+TaskApp emits 20 arrangements where it previously emitted none. Verified by
+rendering: `Up next 1` now has its space, and the header and sidebar have
+spacing.
+
+One subtlety the tests caught: `gap` is an **argument**, not a modifier, so it
+never sets `has_chain` — a part whose only property is a gap was still taking
+the single-line `Column(modifier = …)` form, where an argument has nowhere to
+go. It looked like it worked, because every part in TaskApp that authors a gap
+also carries another property. The multi-line form is now chosen when a gap is
+present.
+
+`row_children_use_weight_and_intrinsic_measurement_in_split_sections` asserted
+the exact string `Row(modifier = Modifier) {`. Its `progress` part authors
+`gap: 10px`, so it now takes the multi-line form. The claim that test makes is
+about **width**, not formatting, so it now asserts the width directly — bare
+`Modifier`, no fill — and was re-checked to confirm it still fails if a fill
+appears.
+
+Does not fix every case: the storage line still renders joined, so its gap sits
+on a container this does not reach. Tracked in #14804 with Flutter and SwiftUI,
+which drop `gap` the same way.
+### Added — directional padding lowering (#14709)
+
+`padding-top/-bottom/-left/-right` were dropped entirely, so a part asking for
+asymmetric insets got none at all — not even the shorthand, if it never
+declared one. 391 uses across the repository.
+
+Compose's `padding(start=, top=, end=, bottom=)` overload overrides per edge,
+which is what CSS means, so the four edges are resolved at emit time and
+emitted as one call. Resolution is by source order, so no precedence table is
+needed: the shorthand seeds all four, a directional property overwrites its
+own, and `padding-top: 20; padding: 8` correctly yields 8 everywhere.
+
+When all four agree — the common case — emission collapses back to
+`.padding(n.dp)`, byte-identical to previous output. Verified across all 23
+toolkit components: 23 unchanged, 0 mismatches.
+
+`left`/`right` lower to `start`/`end` rather than fixed sides, so a
+right-to-left layout mirrors them the way every other Compose padding does. An
+edge with no authored value is omitted rather than passed as `0.dp`: the
+overload already defaults it to zero, and naming it would claim the stylesheet
+asked for something it did not.
+### Fixed — `font-weight` was discarded (#14810)
+
+48 occurrences in TaskApp, 3 in the toolkit, every one thrown away — so every
+bold label rendered at regular weight, which is much of why the app read as
+flat.
+
+This is **not** a missing modifier. Compose's `Text` takes `fontWeight` as an
+**argument**, so it threads through the text style (beside `color`,
+`fontFamily` and `fontSize`) rather than the box modifier chain — the same
+shape as the `gap` problem in #14804, where an argument had no home in a
+chain-shaped lowering.
+
+CSS numbers map to Compose's named constants where they exist
+(`500` → `FontWeight.Medium`, `600` → `FontWeight.SemiBold`), because the
+generated Kotlin is meant to be read; other legal weights use
+`FontWeight(n)`.
+
+`lighter` and `bolder` stay **unmapped** on purpose: both are relative to the
+inherited weight, and this lowering has no inherited value to resolve them
+against. Guessing `Light`/`Bold` would be wrong for any parent that is not
+already normal, so they fall through to the drop report and say so.
+
+TaskApp emits 18 weights where it emitted none. Verified end to end: emitted,
+zero degradations, control contract, compiled, launched, rendered — bold labels
+now render bold — and the acceptance lifecycle stays green.
+### Fixed — `border-radius` was discarded entirely (#14810)
+
+318 occurrences in TaskApp alone, 31 in the toolkit, every one thrown away — so
+every rounded surface in Trestle rendered square while the strict
+`native-complete` profile reported zero degradations.
+
+The shape now reaches **every** modifier that takes one:
+
+```kotlin
+.shadow(4.dp, RoundedCornerShape(8.dp))
+.clip(RoundedCornerShape(8.dp))
+.background(Color(0xFFEAA63F), RoundedCornerShape(8.dp))
+```
+
+Passing it to only some is visibly wrong in a different way each time: a
+rounded background inside a square border, a rounded card casting a square
+shadow, or rounded chrome with content spilling past its corners. `.clip` sits
+after `.shadow` — clipping first would clip the shadow layer away — and bounds
+the children, which `background`/`border` do not.
+
+`RoundedCornerShape` and `clip` join the unconditional import block. An unused
+Kotlin import is a warning; a missing one does not compile, and that asymmetry
+is what went wrong with the XAML `Not()` helper in #14793.
+
+Verified end to end: emitted, zero degradations, control contract, compiled,
+launched, rendered. TaskApp emits 305 shapes, and the acceptance lifecycle
+stays green. A no-radius part stays byte-identical, with a test for it, so this
+cannot quietly round everything.
+
+**One behaviour change worth flagging.** The `On track` chip measures
+`0 x 168` — zero width, a defect that predates this. It used to render its
+letters stacked one per line down the screen; clipping now hides them instead.
+The bug is unchanged, but a loud symptom became a silent one. Filed as #14815.
+### Fixed — `opacity` was dropped (#14708)
+
+**A property consumed outside the style match is not a drop.** `elevation` is
+read by `part_elevation_tier` straight from the base props, so it never reaches
+the match — and the first version of this reporter counted all 16 of TaskApp's
+as dropped while the emitter was emitting 16 `.shadow(..)` calls. Exactly the
+same number, which is what gave it away.
+
+The value→tier mapping is now one shared function the reporter and the lowering
+both call, so there is no second list to drift. Both directions are tested:
+`elevation: raised` is not reported, `elevation: floaty` still is, and its
+genuinely-unlowered neighbour `box-shadow` stays reported either way.
+
+A drop report that cries wolf is worse than no report, because the real entries
+stop being read.
+
+`flex-grow` had the identical problem, found by asking whether `elevation` was
+structurally unique — it is not. `compose_row_weight` consumes it, so all 6 of
+TaskApp's usable values were reported against 6 `.weight(..)` calls actually
+emitted. Same fix: one shared predicate, `flex_grow_weight`.
+
+One known limit, stated rather than hidden: `compose_row_weight` applies only
+to Row children, and this reporter is per-part with no node context, so a
+usable `flex-grow` on a **non-Row** child is discarded without being reported.
+Under-reporting that narrow case is the lesser error against reporting every
+usable value as a drop.
+
+TaskApp's report: 532 → **510**, with 22 false entries removed and every
+genuine one (`flex-shrink` 9, `box-shadow` 17, …) still present.
+
+`opacity` is what UI57's `state disabled` treatment is built on, so dropping it
+meant a disabled control dimmed on five backends and not on this one — it
+looked disabled on the web and XAML and SwiftUI, and fully normal on Compose.
+
+It now lowers to `Modifier.alpha(..)`, placed **first** among the drawing
+modifiers so it covers the background, the border and the content alike;
+applying it later would fade only what follows it in the chain.
+
+The Float suffix goes on each **value**, not on the assembled expression. A
+state-layered opacity becomes `(if (..) 0.4f else 1f)`, and Kotlin cannot
+suffix a parenthesised expression — `(...)f` does not parse. The first version
+did exactly that, every emitter string assertion passed, and it was the Kotlin
+compiler that caught it. There is now a test for the state-layered form, which
+is the one that matters: the value worth reading is almost always layered.
+
+The toolkit emits 8 alpha expressions where it emitted none, and its generated
+Compose project compiles.
+### Fixed — any style property cancelled a container's width default (#14795)
+
+`emit_container` and `emit_container_frame` both wrote the width default and
+the style chain as mutually exclusive:
+
+```rust
+if has_style_chain { "Modifier{chain}" } else { "Modifier.fillMaxWidth()" }
+```
+
+`fillMaxWidth()` is what a container gets when nothing says otherwise, not an
+alternative to styling one. As an either/or, authoring any unrelated property —
+a background, a border, a padding — silently cancelled it and let the container
+shrink to its content. The author asked for a colour and lost their layout.
+
+Verified on unmodified `main` with two identical `Row`s, the second adding only
+a background: `plain_has_fill=true styled_has_fill=false`.
+
+The default is now prepended when the chain says nothing about width, and goes
+**first** so an explicit `width`/`fillMaxWidth` later still wins — Compose
+resolves size modifiers in order. `chain_sets_own_width` covers `width`,
+`requiredWidth`, `widthIn`, `fillMaxWidth`, `fillMaxSize` and `weight`;
+`in_row_scope` children stay intrinsic as before.
+
+Both paths are fixed together. A container only takes the split path once its
+section grows past the size threshold, so fixing one alone would hold until a
+layout grew and then quietly stop — exactly how the `HostScroll` modifier
+behaved in #14736.
+
+Checked visually rather than inferred, using the screenshot harness from
+#14798: TaskApp's empty-state panel now spans the full width instead of
+stopping short, and the one-task and completed states are pixel-identical to
+before. That is the whole visible effect on TaskApp; it was not obvious from
+the emitted diff, which changes 22 containers.
+
+### Fixed — a `HostScroll` region now fills its viewport (#14798)
+
+`HostScroll` lowered to `.verticalScroll(rememberScrollState())` and nothing
+else, leaving the container wrapping its **content**. That is wrong twice over:
+a scroller sized to its own content has nothing to scroll within, and whatever
+the content does not cover stays unpainted.
+
+In TaskApp the whole UI rendered into roughly the top 250 px of a 900 px
+window, and the remaining two thirds were **white** — not the theme background,
+which is why it read as a broken app rather than an empty one. Found by
+rendering it (#14799); no semantics assertion could see it.
+
+The lowering now emits `.fillMaxSize()` before `.verticalScroll(...)`: fill the
+space, then scroll within it. Verified by rendering the real `native-complete`
+project — the themed background covers the window, and the acceptance lifecycle
+stays green.
+
+`fillMaxSize` joins the unconditional layout import block beside `fillMaxWidth`.
+Emitting a modifier without its import is Kotlin that does not compile, the
+same shape as the XAML `Not()` helper in #14793, so the test asserts the import
+as well as the modifier order.
+
+### Added — `HostInput.disabled` (#14786)
+
+`HostInput` had `read-only` but no way to say *unavailable*. Compose spells
+availability positively, so `disabled` lowers to a negated `enabled`
+argument, distinct from `readOnly`.
+
+Spec: `code/specs/UI58-hostinput-disabled.md` (#14786). Landed on all eight
+backends in one change — a partly-landed prop would make a disabled input
+*less* restricted on whichever backend lagged.
+
+### Fixed — root-section splitting recurses, and is driven by emitted size (#14736)
+
+`should_split_root_sections` split only the **root's direct children** into
+section functions and did not recurse. TaskApp's root `Row` has two children,
+so one section held the entire main column — 112,912 characters of generated
+Kotlin against the other section's 6,468. It compiled only because it sat just
+under the JVM's hard 64KB-per-method bytecode limit, and adding a single
+`HostScroll` node crossed it:
+
+```
+Method too large: TaskAppKt.TaskAppSection1
+```
+
+Sections now split recursively until each fits, driven by the size of the
+**emitted body** rather than the shape of the IR. A child-count or depth
+heuristic is wrong in both directions: a deep-but-small tree would split
+needlessly, and a shallow-but-wide one — exactly what TaskApp is — would not
+split at all.
+
+The threshold is source length, because bytecode size is knowable only to the
+Kotlin compiler. It is set at 40,000 characters, well below the ~113,000 that
+actually failed, so the proxy has roughly 2.5x of margin.
+
+Two details this needed that were not obvious:
+
+- **Descent through single-child wrappers.** Requiring more than one child (as
+  the root check does) made a scroll viewport a hard stop, with 80,000
+  characters still inside it. A wrapper costs one extra function to pass
+  through and lets the split reach the wide node underneath.
+- **`HostScroll` keeps its modifier when split.** The split path builds its
+  frame through `emit_container_frame`, which never applied the
+  `.verticalScroll` prefix that `emit_container` adds — so a viewport large
+  enough to be split silently stopped scrolling while the generated file still
+  carried the import. Both paths now share one helper. Caught by a test
+  asserting the viewport keeps its modifier, not by reading the code.
+
+### Added — `HostScroll` lowering (#14732)
+
+Compose was the only backend of eight with no `HostScroll` arm, so a generated
+Compose app could not scroll at all: content past the viewport was simply
+unreachable, with no error and no degradation entry.
+
+Compose has no scrolling *container* composable — scrolling is a **modifier**
+on an ordinary one — so this lowers to a `Column` whose chain starts with
+`.verticalScroll(rememberScrollState())`.
+
+Routed through `emit_container` rather than a bespoke emitter, so the
+viewport's own part styles keep working. The scroll modifier is prefixed onto
+whatever chain the part already has, and deliberately comes first: the viewport
+must be able to scroll its content before padding or size constraints are
+applied to it.
+
+The two imports are conditional on the layout actually containing a
+`HostScroll`, matching how `Path` and drag imports are handled, so components
+without one are unchanged.
+
+### Fixed — state-dependent dimensions keep their Compose units
+
+Numeric state expressions are now parenthesized before applying `.dp` or
+`.sp`. This keeps every branch typed as `Dp` or `TextUnit` instead of letting
+Kotlin infer `Comparable<*>` / `Any`, which prevented toolkit Button packages
+with UI49 size states from compiling (#14383).
+
+### Added — UI49 slot-owned style states
+
+`one-of` slot values now activate their matching `.msl` state blocks in
+generated Compose code. The owning composable parameter drives the Kotlin
+conditional style expression for generic layout nodes and specialized host
+controls alike. Multiple enum axes follow `.mil` slot declaration order, while
+existing `state-when-*` structural and interaction layers remain more specific.
+
+Tracked by [#14320](https://github.com/adhithyan15/coding-adventures/issues/14320).
+
+### Fixed — components over ~229 slots could not be loaded by the JVM
+
+The emitter gave every slot its own Kotlin parameter. Engram's `EngramApp` has
+254 slots, so the emitted composable took 255 parameters, and the JVM caps a
+method signature at **255 argument slots**. The class compiled, packaged into a
+`.app`, launched, and died:
+
+```
+java.lang.ClassFormatError: Too many arguments in method signature
+```
+
+Components past the limit now take a single grouped props object instead.
+Positional parameters are kept wherever they fit, because Compose skips
+recomposition **per parameter** — collapsing every component into one object
+would trade a load-time crash for a performance regression across the board.
+
+The threshold is measured, not guessed. A probe that compiled **and loaded**
+composables of increasing arity put the boundary at exactly 229 String slots
+(254 JVM slots), with 230 failing. `compileKotlin` succeeds on both, so a
+compile-only probe finds no boundary at all. The cost model that follows —
+parameters, plus `dispatch`, plus the plugin's `$composer` and one `$changed`
+bitmask per ten parameters, with `Double`/`Long` counting twice unless nullable
+— reproduces that boundary exactly.
+
+Two things this took more than one attempt to get right, both now pinned by
+tests:
+
+- **The split-section helpers have the same problem**, and there is one per
+  top-level child, so a component that overflows once overflows eight times.
+  Fixing only the root left the class unloadable.
+- **A constructor is a method signature too.** One flat data class of 254
+  properties overflows its own constructor and its generated `copy()`, which
+  moved the failure from `EngramAppKt` to `EngramAppProps` rather than removing
+  it. The props object is therefore chunked into groups of 64.
+
+Every emitted props class is `@Immutable`. That is load-bearing: Compose can
+only skip recomposition for a type it knows to be stable, and an unannotated
+class is treated as unstable, so the whole component would recompose on any
+change.
+
+Verified end to end: Engram's Compose desktop app emits, compiles, loads all
+three classes, packages, and **runs** with the engine loaded and no
+`ClassFormatError`.
+
+### Fixed
+
+- `HostInput.a11y-label` now lowers to native Compose content-description
+  semantics for literal, slot-backed, and expression-backed names (#13717).
+
+- `HostButton.a11y-label` now lowers to native Compose semantics, including
+  expression-bound labels inside repeated rows (#13691).
+
+- Compose Rows now measure ordinary container children intrinsically instead
+  of assigning every child `fillMaxWidth()`. A direct child with `flex-grow`
+  or `width: 100%` receives scoped `Modifier.weight(...)`, including in
+  split `RowScope` section functions. This keeps TaskApp completion progress
+  visible after the flexible title without imposing Compose-specific pixel
+  widths on Flutter, SwiftUI, or web (#13565).
+
+### Added
+
+- `elevation` native shadow lowering (#12028 item 1, UI41). A part
+  declaring `elevation: raised;` or `elevation: overlay;` (mosstyle's new
+  typed shadow-intent property, #13358) now gets a real
+  `androidx.compose.ui.draw.shadow(N.dp)` modifier instead of the shadow
+  silently vanishing. New `ElevationTier` enum (`Raised` → `4.dp`,
+  `Overlay` → `16.dp`, matching `mosaic-emit-xaml`'s `ElevationTier`
+  numbers so a part reads the same "how far off the surface" intent on
+  both backends) + `part_elevation_tier` helper, read directly inside
+  `compose_box_style` — the ONE function every styled container/control in
+  this crate already funnels through (`emit_container`'s `Box`/`Row`/
+  `Column`, `emit_host_button`, `emit_host_draggable`'s delegation to
+  `emit_container("Column", ...)`, etc.). Unlike the XAML PR for the same
+  feature, which found `Row`/`Column`/`HostDraggable` needed their own
+  separate shadow wiring because XAML has per-primitive emitter functions,
+  Compose's centralized `compose_box_style` meant implementing `elevation`
+  once covered every call site for free — confirmed, not assumed, by
+  compiling the real `TaskApp`/`ProjectNav`/`Notes`/`Calendar` packages
+  (all 4 real components declaring `elevation` today) and finding every
+  one of `TaskApp.light.msl`'s 13 `elevation`-declaring parts produces at
+  least one `.shadow(...)` in the generated Kotlin — including a `Box`
+  (`brand-mark`), several `Row`/`Column` containers, and a `HostButton`
+  (`notes-row-on`), and even confirming `ProjectNav`'s own `elevation`
+  part flows through correctly when TaskApp composes `ProjectNav` as a
+  child package.
+
+  Modifier order is load-bearing: `.shadow` must be emitted right after
+  `.width`/`.height` and BEFORE `.background`/`.border` — otherwise the
+  background paints over the shadow layer instead of the shadow appearing
+  behind it. Confirmed empirically (not assumed) against a real
+  `org.jetbrains.compose` Gradle Desktop probe: `.shadow(...).background(...)`
+  compiles and matches Compose's own documented usage pattern;
+  `.background(...).shadow(...)` also compiles (both orders are valid
+  Kotlin) but visually the shadow layer would be occluded, so the emitter
+  always emits `.shadow` first.
+
+  `box-shadow` itself is still silently skipped by `compose_box_style` (as
+  it always has been — this crate never read it before this PR either);
+  `elevation` is the only native-shadow signal Compose reads, mirroring
+  the XAML PR's "no `elevation` declared → no native shadow, regardless of
+  `box-shadow`" posture. The `androidx.compose.ui.draw.shadow` import is
+  gated behind a whole-`StyleDef` walk (`uses_elevation`) rather than
+  `layout_contains_tag`, since `elevation` is a style property, not a
+  layout tag.
+
+  Verified against the real toolchain, and a real version correction along
+  the way: an initial scratch probe (matching the `org.jetbrains.compose`
+  1.6.11 pin cited in this crate's own `HostProgressRing`/`Path` CHANGELOG
+  entries) compiled `Modifier.shadow(...)` cleanly, but
+  `mosaic-compile pkg --backend compose --emit-project` against the real
+  `task-app` package revealed the *actual* generated project now pins
+  `org.jetbrains.compose` **1.11.1** / Kotlin **2.3.21** (version drift
+  since those earlier PRs landed) — a discrepancy that would have gone
+  unnoticed without re-deriving the pin from the real generator instead of
+  trusting an older CHANGELOG citation. Re-verified against the real pin:
+  `gradle compileKotlin` on the real generated `TaskApp.kt` inside the
+  real generated project scaffold (`build.gradle.kts`, `Main.kt`,
+  `MosaicRuntimeHost.kt`, all emitted by `--emit-project`) —
+  `BUILD SUCCESSFUL`, no new warnings beyond pre-existing, unrelated
+  "redundant conversion method" ones. `gradle run` launched the real
+  window with no crash or exception from Compose (the only output was the
+  expected "native library not found" warning from omitting
+  `--runtime-library`, unrelated to this change).
+
+- `HostProgressRing` native lowering (#13176, UI40). `HostProgressRing
+  [part] (value: ..., a11y-label: ...)` now lowers to a determinate
+  `androidx.compose.material.CircularProgressIndicator(progress =
+  (value).toFloat() / 100f, ...)` instead of reporting
+  `primitive.progress-ring-unimplemented`. `value` supports the full
+  `Number`/`SlotRef`/`Expr` three-way binding via the new
+  `required_progress_ring_value` helper (unlike `Path`'s coordinate
+  props, live binding is required from day one — the whole point is
+  rendering a live percent value). Sizing reuses
+  `compose_style_for_node`'s existing `.width().height()` modifier
+  chain; `a11y-label` appends a `.semantics { contentDescription =
+  ... }` suffix, matching `HostSlider`'s own accessibility pattern.
+  Widened the `CircularProgressIndicator` import gate — previously
+  scoped only to `uses_icon` (the indeterminate spinner case) — to
+  `uses_icon || uses_progress_ring`, since a component using
+  `HostProgressRing` without an `Icon` would otherwise reference an
+  unresolved Kotlin symbol. Verified against a real
+  `org.jetbrains.compose` 1.6.11 Gradle project: `gradle
+  compileKotlin` confirmed the plain-`Float` `progress:` overload
+  (this pinned Material1 version predates the newer `progress: () ->
+  Float` lambda form) with no deprecation warning, then `gradle run`
+  confirmed the widget mounts without crashing.
+
+- `Path` drawing primitive lowering (#12028 item 3, UI39). `Path [name]
+  (kind: circle|line|curve, ...)` now lowers to real Compose vector
+  geometry instead of reporting `primitive.path-unimplemented` on
+  every build. `circle` reuses `Modifier.background(color,
+  CircleShape)` + `Modifier.border(width, color, CircleShape)` —
+  `CircleShape` plus the already-unconditionally-imported
+  `.background`/`.border` modifiers match `background`/`border-color`+
+  `border-width` 1:1, the same reuse Qt's `Rectangle` and Flutter's
+  `BoxDecoration(shape: BoxShape.circle)` lowerings made for the same
+  shape. `line`/`curve` lower to a `Canvas` drawing a Compose
+  `graphics.Path` built via `moveTo`/`lineTo`/`quadraticBezierTo`,
+  using absolute canvas coordinates (mirrors Qt's `ShapePath` and
+  Flutter's `CustomPaint`). `arc` is a stretch goal not implemented in
+  this PR; it hard-errors with a named "not yet supported" message,
+  matching the XAML/Qt/Flutter lowerings' posture for the same gap.
+
+  Positioning `circle`'s authored center is notably simpler than the
+  Flutter lowering: Compose's `Modifier.offset(x, y)` shifts a
+  composable's painted position relative to wherever normal layout
+  would place it and is legal on ANY composable regardless of parent
+  type — unlike Flutter's `Positioned`, which only type-checks (and
+  only avoids a runtime panic) as a direct `Stack` child. So `circle`
+  always emits `Modifier.offset(...)` unconditionally, no
+  `direct_stack_child`-equivalent threading needed.
+
+  Import gating is split in two: `CircleShape` fires whenever any
+  `Path` is present, while `Canvas`/`graphics.Path`/`drawscope.Stroke`
+  fire only when a `line`/`curve`/`arc` kind is actually present (new
+  `tree_needs_path_canvas`, mirroring Qt's `tree_needs_shapes_import`)
+  — so a circle-only tree (the common case, the crescent moon) doesn't
+  pay for the Canvas imports it never uses.
+
+  Coordinate props (`cx`/`cy`/`r`/`x1`/`y1`/`x2`/`y2`) accept a literal
+  `Number` only; a `SlotRef`/`Expr`-bound coordinate is a clear compile
+  error, not a silent 0 — full data-driven binding is future work, the
+  same not-yet-landed gap the XAML, Qt, and Flutter lowerings all note.
+
+  Verified against the real toolchain: a `mosaic-compile pkg --backend
+  compose --profile native-complete` build of the crescent-moon shape
+  (two overlapping circles, a line, and a curve) produces
+  `nativeComplete: true` with zero degradations. The generated Kotlin
+  was dropped into a real JetBrains Compose Multiplatform Desktop
+  Gradle project (`org.jetbrains.compose` 1.6.11) and compiled cleanly
+  via `gradle compileKotlin`, then launched via `gradle run` and stayed
+  running with no crash or exception output.
+
+- Native radio-group mutual exclusion (#13007). `group:` was never read
+  anywhere in `emit_host_radio`. A container physically holding 2+
+  `HostRadio` siblings sharing a literal `group:` value now gets
+  `Modifier.selectableGroup()` on its own modifier chain (new
+  `container_needs_radio_group_semantics` + `host_radio_literal_group_key`,
+  wired into both `emit_container` and the root-splitting
+  `emit_container_frame` path) — purely additive a11y semantics; each
+  `RadioButton`'s own `selected`/`onClick` stays entirely local to its
+  own `checked`/`onSelect` props, unchanged. The
+  `androidx.compose.foundation.selection.selectableGroup` import is
+  added conditionally via a new whole-tree `layout_has_radio_group`
+  walk. New `pub fn radio_groups_with_native_semantics` lets
+  `mosaic-package-artifact-builder`'s degradation analyzer stop
+  reporting `property.radio-group-ignored` wherever this lowering
+  actually applies. Verified against a real regenerated
+  `mosaic-pkg-deck-options` project (the real multi-radio usage this
+  targets): `gradle compileKotlin` — `BUILD SUCCESSFUL`.
+
+- Native indeterminate checkbox state (#13006). `emit_host_checkbox` had
+  no code path for `indeterminate:` at all. When authored as anything
+  other than a literal `Keyword("false")`, the emitter now swaps the
+  plain `Checkbox` for Compose's own `TriStateCheckbox(state:
+  ToggleableState, onClick: () -> Unit)`, with `state` computed from
+  `indeterminate`/`checked` (`_mosaicTruthy`-wrapped for `slot:`/`Expr`
+  values, matching `bool_prop_expr`'s existing convention) and the
+  `TriStateCheckbox.material` and `androidx.compose.ui.state.ToggleableState`
+  imports added conditionally (new `layout_has_checkbox_indeterminate`
+  walk). `TriStateCheckbox.onClick` takes no argument — unlike
+  `Checkbox.onCheckedChange`'s `checked` lambda parameter — so the
+  dispatched "new checked" value is computed inline from the same
+  `ToggleableState` expression used for `state =`: clicking always
+  resolves *out of* Indeterminate, toggling towards `On` unless already
+  `On`. New `pub fn host_checkbox_has_native_semantics` lets
+  `mosaic-package-artifact-builder`'s degradation analyzer stop
+  reporting `property.checkbox-indeterminate-ignored` for Compose
+  wherever this lowering actually applies. Verified against a real
+  regenerated `mosaic-pkg-toolkit` project: `gradle compileKotlin` —
+  `BUILD SUCCESSFUL` — on the whole Compose Desktop package, including
+  the real `Checkbox.kt` this change touches.
+
+### Security
+
+- Validate `HostLink.href`'s URI scheme, literal and slot-bound (#13052).
+  Follow-up to #12038 (the identical XAML gap). A literal href is now
+  rejected at compile time when it carries an explicit, disallowed scheme
+  (new `host_link_href_expr` + `has_disallowed_uri_scheme`, reusing the
+  existing `UnsupportedHostLink` error variant). A slot-bound href — unknown
+  until runtime — is validated inside the shared `_mosaicHostLink`
+  composable via a new `_mosaicIsSafeUri` helper: when the scheme is
+  disallowed, the link degrades to the same inert `Clickable` shape the
+  `external == false` branch already uses (neither `onActivate` nor
+  `uriHandler.openUri` fires), matching the "no navigation target" outcome
+  XAML's `SafeNavigateUri` fix settled on for a null `Uri`. A relative
+  reference with no scheme at all (`"#"`, a route path) is unaffected in
+  both paths, since a relative href never reaches `uriHandler.openUri` as
+  an external target regardless (only the `external == true` branch is
+  gated).
+- Two rounds of security review caught two real gaps in the scheme
+  detection, both fixed before merge: a leading space or embedded
+  tab/CR/LF made the first-character-alphabetic check fail and
+  misclassified the string as "no scheme, therefore safe" -- but a real
+  consumer strips that whitespace before parsing the scheme, so it's
+  really the dangerous scheme it looks like. The first fix trimmed
+  leading/trailing whitespace via Kotlin's `trim()`, but a second review
+  round found `trim()`'s default `isWhitespace`-based predicate doesn't
+  cover the full C0-control range a real consumer strips (control bytes
+  like 0x01/0x1B bypassed it) -- `_mosaicIsSafeUri` now uses
+  `raw.trim { it.code <= 0x20 }`, matching the Rust-side check exactly.
+
+### Fixed
+
+- MIL slots with authored defaults now emit non-null Kotlin parameters with
+  matching default arguments, so reusable package components can consume their
+  own defaulted text, number, and boolean values without nullable type errors.
+- Preserve literal `HostInput` values and read-only state, and render its
+  placeholder through `BasicTextField`'s native decoration slot.
+
+### Added
+
+- `HostSlider` now maps literal and slot-backed `a11y-label` values to the
+  native slider semantics node without replacing its adjustable range role.
+- Slot-bound or expression-backed slider steps now derive Compose's discrete
+  interior-stop count at runtime, including continuous behavior when step is
+  non-positive.
+- `HostSlider` now lowers to Compose Material's native adjustable `Slider`,
+  including controlled numeric values, range and discrete-step mapping,
+  disabled state, continuous `onChange`, and release-time `onCommit` events.
+  Numeric values convert at the Float-based Compose boundary and return to
+  Mosaic's portable number payload as Double. CI compiles a native-complete
+  slider package through the generated Compose project shell.
+- `Text` now lowers literal or slot-backed accessible names, heading roles,
+  and intentional hiding through Compose semantics. Replacement labels clear
+  the built-in text semantics so assistive technology does not announce both
+  the visible content and its authored accessible name.
+
+- Canonical dynamic `HostTable`/UI31 Grid layouts now expose Compose's native
+  collection semantics: total row/column counts on the table, heading metadata
+  on header cells, and stable row/column coordinates on every body cell.
+  Unsupported table shapes keep their visual fallback and remain explicit
+  native-complete degradations.
+- `HostDraggable` and `HostDropTarget` now lower to Compose Desktop's native
+  drag source/target modifiers. Generated components add an instance-scoped
+  target registry, kind filtering, disabled-state enforcement, pointer
+  before/into/after hit testing, focus and Space/Enter/arrow/Escape operation,
+  RTL-aware horizontal navigation, live-region state, and shared event payload
+  construction for pointer and keyboard drops.
+- `Icon` now lowers through a dependency-free native font-glyph vocabulary,
+  including runtime glyph and accessibility-label slots, MSL color/size/test
+  tags, and a visible fallback. The semantic `spinner` glyph becomes Compose's
+  indeterminate `CircularProgressIndicator` with a default "Loading"
+  description, allowing all 23 toolkit components to emit on this backend.
+- `HostDialog` now lowers modal content to Compose's native `Dialog` and the
+  contract's non-modal form to `Popup`. Generated overlays honor controlled
+  visibility and interactive-dismiss policy, dispatch open/close events, render
+  a semantic heading, preserve nested Mosaic content and styles, and provide
+  useful Material surface chrome without application-owned dialog glue.
+- `HostLink` now lowers to Compose's native annotated-text link API. External
+  links open through the platform `UriHandler`; internal links retain link
+  semantics while dispatching Mosaic events, including item/index payloads
+  inside `For`. Generated links receive theme-aware visible styling and need no
+  application-owned URL adapter.
+- `Stack` now lowers to Compose's `Box` — the layering container it already
+  uses for the `Box` primitive itself, since Compose's `Box` natively stacks
+  its children. Found while wiring `task-app`'s icon assets (progress ring,
+  crescent moon, bridge-arc brand mark — see `task-app-icon-assets-v1.md`),
+  the first place a Mosaic component used `Stack` and hit this backend's
+  build. Not yet lowered: a child's static `position: absolute` + `top`/
+  `left` into `Modifier.offset(...)` — v1's existing "anything else
+  silently skipped" posture for static props means a Stack's children all
+  render at the Box's origin today rather than the pixel positions the
+  web/Flutter backends place them at.
+- `HostTooltip` now lowers to Compose Foundation's cross-platform
+  `BasicTooltipBox`, including native overlay placement and dismissal, Material
+  surface chrome, literal/slot/expression text, and assistive-technology
+  semantics. This restores package-expanded TaskApp generation after its richer
+  Gantt introduced per-row tooltips.
+- `HostSurface ( content: slot: ... )` now accepts an
+  `@Composable () -> Unit` node slot and invokes it at the shared native
+  composition boundary.
+- Generated Kotlin event classes now expose `mosaicName`, `mosaicPayload`, and
+  `mosaicEnvelope`, giving Compose hosts the same target-neutral event map used
+  by the HTML, Electron, SwiftUI, XAML, Qt, and Flutter shells.
+
+### Fixed
+
+- Text expressions that index a collection with an enclosing Mosaic `For`
+  index now use Compose's internal Kotlin `Int` shadow. This keeps numeric loop
+  comparisons type-correct while allowing toolkit patterns such as
+  `bodies[i]` to compile as `Text(String)`.
+- Mosaic text, number, collection, and nullable values now lower through a
+  generated Kotlin truthiness helper anywhere Compose requires a Boolean,
+  including `If`, state styles, checked/selected controls, disabled controls,
+  and read-only inputs. Package-expanded TaskApp output now passes the Kotlin
+  compiler instead of comparing dynamically typed values with `true`.
+- `HostInput.onCommit` now supplies the controlled input value when the MIL
+  event declares one payload parameter, while preserving data-object dispatch
+  for parameterless commits.
+- The legacy `Input ( multiline: true )` spelling now lowers to a native
+  multiline `BasicTextField` with a useful editor-sized minimum line count.
+  This preserves the multiline capability used by the shared Notes package
+  without requiring app-owned Compose code.
+- Generated optional boolean slot predicates now compile as nullable-safe Kotlin
+  conditions, and large root containers split their direct children into private
+  composables so generated Compose Desktop projects avoid JVM method-size
+  limits.
+

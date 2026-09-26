@@ -333,6 +333,109 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     headingLevel: 3,
     newestFirst: true,
   },
+
+  // The Mosaic and HTML changelogs, migrated as one batch for the reason given
+  // above the mermaid-parser entry. Spec: code/specs/mosaic-html-changelog-
+  // sharding.md, which also records the nine documents measured and left
+  // whole.
+  //
+  // Each mode below matches the entry shape recent commits actually insert,
+  // and `newestFirst` comes from where they insert it: every one of these
+  // documents takes its new entries at the top. "Touches" is
+  // `git log --since="21 days ago"` on the monolith as of 2026-09-26.
+  {
+    // 54 `###` entries under `## Unreleased`; the last 8 commits each insert
+    // a `###` entry at line 5. 54 touches. Level 2 would leave the whole live
+    // `## Unreleased` block as one shard.
+    path: "code/packages/rust/mosaic-package-artifact-builder/CHANGELOG.md",
+    headingLevel: 3,
+    newestFirst: true,
+  },
+  {
+    // 15 `##` sections. 11 of the last 12 commits insert a dated
+    // `## 2026-09-24 (topic)` section at the top; 54 touches. The older `###`
+    // entries stay inside the `## [Unreleased]` shard. Level 3 would put the
+    // 13 dated sections into `_meta.md`, above every new entry.
+    path: "code/packages/rust/mosaic-emit-compose/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // 67 `###` entries under `## [Unreleased]`; the last 8 commits all insert
+    // at line 8 (3 `###` entries, 5 bare bullets). 35 touches. Level 3 is the
+    // only mode that keeps each `###` entry whole; the one bare bullet above
+    // the first `###` stays in `_meta.md`.
+    path: "code/packages/rust/mosaic-emit-flutter/CHANGELOG.md",
+    headingLevel: 3,
+    newestFirst: true,
+  },
+  {
+    // 90 `###` entries; 7 of the last 8 commits insert at line 5 or 6 (5
+    // `###` entries, 2 bare bullets). 22 touches. Level 2 would leave the live
+    // `## [Unreleased]` block as one shard; the two bare bullets above the
+    // first `###` stay in `_meta.md`.
+    path: "code/packages/rust/mosaic-emit-xaml/CHANGELOG.md",
+    headingLevel: 3,
+    newestFirst: true,
+  },
+  {
+    // 11 `##` sections, the compose shape: 4 of the last 5 commits insert a
+    // dated `##` section at line 3. 20 touches. Level 3 would put the 5 dated
+    // sections into `_meta.md`.
+    path: "code/packages/rust/mosaic-emit-swiftui/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+  },
+  {
+    // 84 top-level bullets; 6 of the last 8 commits insert a bare bullet at
+    // line 5, directly under `## [Unreleased]`. 18 touches. Level 3 would put
+    // the five newest entries into `_meta.md`. The 25 older `###` headings ride
+    // at the end of the bullet above them, as version markers do elsewhere.
+    path: "code/packages/rust/mosaic-emit-html/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  },
+  {
+    // 19 `###` entries under `## Unreleased`; the last 8 commits each insert
+    // a `###` entry at line 5. 10 touches.
+    path: "code/packages/rust/mosaic-app-bindings/CHANGELOG.md",
+    headingLevel: 3,
+    newestFirst: true,
+  },
+  {
+    // 196 top-level bullets; the last 8 commits each insert one at line 8,
+    // under `## Unreleased` and above the frozen `### Added` / `### Fixed`
+    // groups. 15 touches.
+    path: "code/packages/rust/html-parser/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  },
+  {
+    // 104 top-level bullets written straight under the title; the last 8
+    // commits each insert one at line 3 or 5. 37 touches. `_meta.md` is just
+    // the `# Changelog` title.
+    path: "code/programs/mosaic/venture-browser/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  },
+  {
+    // 19 `###` entries under `## Unreleased`; the last 8 commits each insert
+    // a `###` entry at line 5. 17 touches.
+    path: "code/programs/mosaic/engram-app/CHANGELOG.md",
+    headingLevel: 3,
+    newestFirst: true,
+  },
+  {
+    // 20 top-level bullets under one `## 0.1.0 — unreleased` heading; the last
+    // 8 commits each insert one at line 5. 16 touches.
+    path: "code/programs/mosaic/journal-app/CHANGELOG.md",
+    headingLevel: 2,
+    newestFirst: true,
+    entryShape: "bullet",
+  },
 ];
 
 const BACKLOG_PATH = "code/learning/human-languages/BACKLOG.md";

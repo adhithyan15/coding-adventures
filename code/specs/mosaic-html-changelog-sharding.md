@@ -50,7 +50,7 @@ measured below insert at the top of the document, never at the bottom.
 | `programs/mosaic/engram-app` | heading 3 | 19 | 8/8 `###` at line 5 | 17 | 1,224 |
 | `programs/mosaic/journal-app` | bullet | 20 | 8/8 bullets at line 5 | 16 | 104 |
 
-The first nine rows are under `code/packages/rust/` unless a path says
+Rows are under `code/packages/rust/` unless a path says
 otherwise.
 
 ### Shape notes

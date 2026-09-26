@@ -1,0 +1,1 @@
+- Implements `MosaicRenderer` trait; driven by `MosaicVM`.

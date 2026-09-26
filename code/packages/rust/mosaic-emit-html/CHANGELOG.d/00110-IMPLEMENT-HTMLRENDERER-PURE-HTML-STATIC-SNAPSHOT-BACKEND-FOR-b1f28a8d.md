@@ -1,0 +1,1 @@
+- Implement `HtmlRenderer` — pure HTML static snapshot backend for the Mosaic compiler.

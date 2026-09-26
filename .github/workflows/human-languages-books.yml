@@ -109,6 +109,17 @@ jobs:
               'code/packages/rust/spice-netlist-parser/CHANGELOG.d/*.md'
               'code/packages/rust/venture-browser-core/CHANGELOG.d/*.md'
               'code/packages/rust/oauth-broker/CHANGELOG.d/*.md'
+              'code/packages/rust/mosaic-package-artifact-builder/CHANGELOG.d/*.md'
+              'code/packages/rust/mosaic-emit-compose/CHANGELOG.d/*.md'
+              'code/packages/rust/mosaic-emit-flutter/CHANGELOG.d/*.md'
+              'code/packages/rust/mosaic-emit-xaml/CHANGELOG.d/*.md'
+              'code/packages/rust/mosaic-emit-swiftui/CHANGELOG.d/*.md'
+              'code/packages/rust/mosaic-emit-html/CHANGELOG.d/*.md'
+              'code/packages/rust/mosaic-app-bindings/CHANGELOG.d/*.md'
+              'code/packages/rust/html-parser/CHANGELOG.d/*.md'
+              'code/programs/mosaic/venture-browser/CHANGELOG.d/*.md'
+              'code/programs/mosaic/engram-app/CHANGELOG.d/*.md'
+              'code/programs/mosaic/journal-app/CHANGELOG.d/*.md'
               'CHANGELOG.d/*.md'
             )
             # The migration PR must replace the one provisional Script Ductus
@@ -165,6 +176,17 @@ jobs:
             code/packages/rust/spice-netlist-parser/CHANGELOG.md \
             code/packages/rust/venture-browser-core/CHANGELOG.md \
             code/packages/rust/oauth-broker/CHANGELOG.md \
+            code/packages/rust/mosaic-package-artifact-builder/CHANGELOG.md \
+            code/packages/rust/mosaic-emit-compose/CHANGELOG.md \
+            code/packages/rust/mosaic-emit-flutter/CHANGELOG.md \
+            code/packages/rust/mosaic-emit-xaml/CHANGELOG.md \
+            code/packages/rust/mosaic-emit-swiftui/CHANGELOG.md \
+            code/packages/rust/mosaic-emit-html/CHANGELOG.md \
+            code/packages/rust/mosaic-app-bindings/CHANGELOG.md \
+            code/packages/rust/html-parser/CHANGELOG.md \
+            code/programs/mosaic/venture-browser/CHANGELOG.md \
+            code/programs/mosaic/engram-app/CHANGELOG.md \
+            code/programs/mosaic/journal-app/CHANGELOG.md \
             CHANGELOG.md)
           if [ -n "$tracked_doc_monoliths" ]; then
             echo "::error::Generated Markdown aggregates must remain untracked:"
