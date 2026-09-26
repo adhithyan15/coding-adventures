@@ -2,6 +2,29 @@
 
 All notable changes to the `parser` crate will be documented in this file.
 
+## Unreleased
+
+### Fixed — the packrat memo copied every subtree once per enclosing rule
+
+`GrammarParser` memoised each successful `(rule, position)` by cloning the
+matched subtree, and cloned it again on every hit. A node was therefore stored
+once for each rule above it that matched, and grammars with long precedence
+chains paid for that many times over: a 3.2 MB JavaScript file
+(test262 `staging/sm/String/string-upper-lower-mapping.js`) allocated about
+35 GB and killed CI.
+
+The parse now builds a private, reference-counted tree (`BuiltNode`); the memo
+and the parent share one node, so a store or a hit copies a pointer.
+`parse()` converts the finished tree into the public `GrammarASTNode` once,
+computing spans bottom-up from the children instead of re-walking each
+subtree. Rules are looked up through one shared `RuleInfo` (body, name,
+memo index), so entering a rule no longer clones its grammar-element tree.
+
+Measured on that file's array literal (release build): 235 KB went from
+2.1 GB peak and 1.75 s to 199 MB and 0.26 s; the whole 3.2 MB file now
+parses in about 3.1 GB and 4.5 s. The public AST, and every tree it produces,
+are unchanged.
+
 ## [0.4.5] - 2026-08-25
 
 ### Fixed — `find_nodes`/`collect_tokens` uncontrolled recursion (CWE-674)
