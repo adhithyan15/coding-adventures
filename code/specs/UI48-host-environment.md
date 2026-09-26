@@ -1,6 +1,6 @@
 # UI48 — Host environment: runtime viewport, input modality, and variant selection
 
-**Status:** In progress — ENV2 and ENV3 on SwiftUI (§7.2); the runtime half of ENV1 in `mosaic-app-runtime`
+**Status:** In progress — ENV1's runtime half implemented in `mosaic-app-runtime` (§7.1); ENV2 and ENV3 on SwiftUI (§7.2)
 **Layer:** UI / standard Mosaic app ABI
 **Depends on:** UI29 (primitive kernel), UI30 (multi-layout pipelines), UI38
 (native application runtime), `mosaic-app-runtime`, `mosaic-app-capi`
@@ -366,6 +366,39 @@ Sliced so each lands independently and provably.
 
 ---
 
+### 7.1 ENV1 as built
+
+Decisions taken while implementing ENV1 in `mosaic-app-runtime`:
+
+- **Wire shape.** The five new axes join `StartContext` flat, beside
+  `colorScheme`: `sizeClass`, `pointer`, `hover`, `orientation`,
+  `reducedMotion`, in kebab-case values (`"compact"`, `"no-preference"`). Each
+  is optional on the wire and defaults to §5.2's
+  `regular`/`fine`/`hover`/`landscape`/`no-preference`, so every existing host
+  decodes unchanged. In Rust they are one flattened field,
+  `StartContext::environment: EnvironmentAxes`, and
+  `StartContext::full_environment()` pairs them with the color scheme.
+- **The event.** `environmentChanged` (`ENVIRONMENT_CHANGED`) carries the whole
+  `Environment` — `colorScheme` plus the five axes, every one required, unknown
+  keys ignored so a newer host can add an axis. It is an ordinary event: it
+  consumes the next sequence number.
+- **The runtime intercepts it; apps opt in.** The runtime decodes the payload
+  (an invalid one is refused as `InvalidEnvironment` before the app sees
+  anything, consuming nothing) and calls a new trait method,
+  `MosaicApp::environment_changed`, instead of `dispatch`. Its default answers
+  "no reaction", so every existing app — each of which rejects event names it
+  does not know — keeps working when a host starts sending the event.
+- **"No reaction" on the wire.** Updates carry whole props, and the runtime
+  keeps no copy of them. When the app does not react, the runtime returns an
+  update with the **current** revision (not incremented), `props: null`, and
+  no effects or announcements. A host treats an update whose revision is not
+  newer than the one it rendered as nothing to render. No host sent this event
+  before ENV1, so no existing host can receive such an update.
+- **The runtime remembers the environment** (`Runtime::environment()`), from
+  the start context and each change, for hosts and tests.
+- **Reserved name.** `environmentChanged` is the runtime's; a package emitting
+  an event of that name would be intercepted. Refusing it in `mosmodel` is a
+  follow-up.
 ### 7.2 ENV2 and ENV3, designed
 
 Written before implementation, from what the pipeline does today (checked on
