@@ -4,11 +4,431 @@
   "chapter": 8,
   "title": "Two Sibilants, One Liquid, and Three Standalone Vowels",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ff2977756dc07c3e",
+  "sourceHash": "fnv1a64:0fed520fc7ddf564",
   "lessons": [
     {
+      "id": "MR-C08-ulat",
+      "sequence": 116,
+      "title": "उलट (ulaṭ) — the other way round",
+      "headword": "उलट",
+      "romanization": "ulaṭ",
+      "gloss": "the other way round",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:ff5b216fa222c9ad",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उलट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उलट — ulaṭ — \"the other way round\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ulaṭ. Look at its shape as you say it: the lessons that follow take pieces of it, ल and उ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ulaṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ulaṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ulaṭ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ulaṭ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"the other way round\"? (उलट, ulaṭ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C08-shesh",
+      "sequence": 117,
+      "title": "शेष (śeṣ) — what is left over",
+      "headword": "शेष",
+      "romanization": "śeṣ",
+      "gloss": "what is left over",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:971eb1be55425f79",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शेष",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शेष — śeṣ — \"what is left over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: śeṣ. Look at its shape as you say it: the lessons that follow take pieces of it, श (śa) and ष (ṣa), and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śeṣ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śeṣ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śeṣ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śeṣ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"what is left over\"? (शेष, śeṣ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C08-uub",
+      "sequence": 118,
+      "title": "ऊब (ūb) — warmth",
+      "headword": "ऊब",
+      "romanization": "ūb",
+      "gloss": "warmth",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:adce583771851d10",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ऊब",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऊब — ūb — \"warmth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ūb. Look at its shape as you say it: the lessons that follow take pieces of it, ऊ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūb, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūb*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"warmth\"? (ऊब, ūb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C08-ekda",
+      "sequence": 119,
+      "title": "एकदा (ekdā) — once",
+      "headword": "एकदा",
+      "romanization": "ekdā",
+      "gloss": "once",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:7f4fc33b5ee8a7ff",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: एकदा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "एकदा — ekdā — \"once\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ekdā. Look at its shape as you say it: the lessons that follow take pieces of it, ए, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekdā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekdā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekdā, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekdā*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"once\"? (एकदा, ekdā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "MR-W08-la",
-      "sequence": 90,
+      "sequence": 120,
       "title": "ल — the plain l, beside the curled one you know",
       "headword": "ल",
       "romanization": "la",
@@ -21,7 +441,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a9a78511937eefe4",
+      "sourceHash": "fnv1a64:2638828c573ef5be",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -119,7 +539,7 @@
     },
     {
       "id": "MR-W08-sha",
-      "sequence": 91,
+      "sequence": 121,
       "title": "श (śa) — the sh at the roof of the mouth",
       "headword": "श",
       "romanization": "śa",
@@ -132,7 +552,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:05293114f6f22736",
+      "sourceHash": "fnv1a64:e554a2817b060b8f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -230,7 +650,7 @@
     },
     {
       "id": "MR-W08-ssa",
-      "sequence": 92,
+      "sequence": 122,
       "title": "ष (ṣa) — the third sibilant, kept on the page",
       "headword": "ष",
       "romanization": "ṣa",
@@ -244,7 +664,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:072cd370f100e1cf",
+      "sourceHash": "fnv1a64:771a30373a0387ba",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -343,7 +763,7 @@
     },
     {
       "id": "MR-W08-u-independent",
-      "sequence": 93,
+      "sequence": 123,
       "title": "उ — short u standing on its own",
       "headword": "उ",
       "romanization": "u",
@@ -356,7 +776,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9031f8e1a119f9f9",
+      "sourceHash": "fnv1a64:0c9af94a9ee1069d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -454,7 +874,7 @@
     },
     {
       "id": "MR-W08-uu-independent",
-      "sequence": 94,
+      "sequence": 124,
       "title": "ऊ — long ū standing on its own",
       "headword": "ऊ",
       "romanization": "ū",
@@ -468,7 +888,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ab5db34280a85abe",
+      "sourceHash": "fnv1a64:48733ade7ee79f56",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -567,7 +987,7 @@
     },
     {
       "id": "MR-W08-e-independent",
-      "sequence": 95,
+      "sequence": 125,
       "title": "ए — the vowel that opens ek",
       "headword": "ए",
       "romanization": "e",
@@ -580,7 +1000,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1e243fe4b1f355d2",
+      "sourceHash": "fnv1a64:a22dd9bdd5898163",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -678,7 +1098,7 @@
     },
     {
       "id": "MR-R08-runway-recall",
-      "sequence": 96,
+      "sequence": 126,
       "title": "Twenty-four signs, at real distance",
       "headword": "चोवीस चिन्हे",
       "romanization": "covīs cinhe",
@@ -689,7 +1109,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b85397e84bcb105b",
+      "sourceHash": "fnv1a64:765d71e3391afd02",
       "notice": null,
       "blocks": [
         {

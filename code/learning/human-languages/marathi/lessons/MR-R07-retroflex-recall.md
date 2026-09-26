@@ -2,7 +2,7 @@
 schema_version: 2
 id: MR-R07-retroflex-recall
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 85
+sequence: 105
 chapter: 7
 type: review
 headword: curled row

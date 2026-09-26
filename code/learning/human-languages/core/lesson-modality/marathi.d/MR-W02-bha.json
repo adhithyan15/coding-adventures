@@ -3,7 +3,7 @@
     "id": "MR-W02-bha",
     "language": "marathi",
     "chapter": 2,
-    "sequence": 23,
+    "sequence": 27,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:9f8ddb9820b62b1b",
+    "sourceHash": "fnv1a64:2613b0285af6afe3",
     "detachableSegments": [
       "Script",
       "Writing — guided copy"

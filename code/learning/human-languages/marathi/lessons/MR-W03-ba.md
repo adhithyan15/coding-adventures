@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W03-ba
 spine_node: SPINE-COURTESY-THANK
-sequence: 29
+sequence: 33
 delivery: script
 chapter: 3
 type: writing
 headword: ब
 romanization: "ba"
 gloss: unaspirated ba
-prerequisites: [MR-W03-dha]
+prerequisites: [MR-W03-dha, MR-C02-bet]
 sounds: [unaspirated-b]
 roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [MR-SCRIPT-DHA-01]
+  knowledge: [MR-SCRIPT-DHA-01, MR-LEX-ANCHOR-BET]
 introduces:
   knowledge: [MR-SCRIPT-BA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-BA-01]
+  knowledge: [MR-SCRIPT-BA-01, MR-LEX-ANCHOR-BET]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W03-dha]
 # ब — ba without the puff
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-BET] -->
 
 Hold one hand near your mouth so you can notice the missing puff.
 

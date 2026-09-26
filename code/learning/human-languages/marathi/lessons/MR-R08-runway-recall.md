@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-R08-runway-recall
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 96
+sequence: 126
 chapter: 8
 type: review
 headword: चोवीस चिन्हे
 romanization: "covīs cinhe"
 gloss: the whole second runway at distance — twenty-four signs across four chapters
 concept_tag: REVIEW
-prerequisites: [MR-W08-e-independent, MR-R07-retroflex-recall]
+prerequisites: [MR-W08-e-independent, MR-R07-retroflex-recall, MR-C08-ekda]
 sounds: []
 roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [MR-SCRIPT-LA-01, MR-SCRIPT-SHA-01, MR-SCRIPT-SSA-01, MR-SCRIPT-U-INDEPENDENT-01, MR-SCRIPT-UU-INDEPENDENT-01, MR-SCRIPT-E-INDEPENDENT-01, MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-RU-MATRA-01, MR-SCRIPT-A-INDEPENDENT-01, MR-SCRIPT-KHA-01, MR-SCRIPT-GHA-01, MR-SCRIPT-CHA-01, MR-SCRIPT-JHA-01, MR-SCRIPT-TTHA-01, MR-SCRIPT-DDA-01, MR-SCRIPT-NNA-01, MR-SCRIPT-PA-01]
+  knowledge: [MR-SCRIPT-LA-01, MR-SCRIPT-SHA-01, MR-SCRIPT-SSA-01, MR-SCRIPT-U-INDEPENDENT-01, MR-SCRIPT-UU-INDEPENDENT-01, MR-SCRIPT-E-INDEPENDENT-01, MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-RU-MATRA-01, MR-SCRIPT-A-INDEPENDENT-01, MR-SCRIPT-KHA-01, MR-SCRIPT-GHA-01, MR-SCRIPT-CHA-01, MR-SCRIPT-JHA-01, MR-SCRIPT-TTHA-01, MR-SCRIPT-DDA-01, MR-SCRIPT-NNA-01, MR-SCRIPT-PA-01, MR-LEX-ANCHOR-EKDA]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-LA-01, MR-SCRIPT-SHA-01, MR-SCRIPT-SSA-01, MR-SCRIPT-U-INDEPENDENT-01, MR-SCRIPT-UU-INDEPENDENT-01, MR-SCRIPT-E-INDEPENDENT-01, MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-RU-MATRA-01, MR-SCRIPT-A-INDEPENDENT-01, MR-SCRIPT-KHA-01, MR-SCRIPT-GHA-01, MR-SCRIPT-CHA-01, MR-SCRIPT-JHA-01, MR-SCRIPT-TTHA-01, MR-SCRIPT-DDA-01, MR-SCRIPT-NNA-01, MR-SCRIPT-PA-01]
+  knowledge: [MR-SCRIPT-LA-01, MR-SCRIPT-SHA-01, MR-SCRIPT-SSA-01, MR-SCRIPT-U-INDEPENDENT-01, MR-SCRIPT-UU-INDEPENDENT-01, MR-SCRIPT-E-INDEPENDENT-01, MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-RU-MATRA-01, MR-SCRIPT-A-INDEPENDENT-01, MR-SCRIPT-KHA-01, MR-SCRIPT-GHA-01, MR-SCRIPT-CHA-01, MR-SCRIPT-JHA-01, MR-SCRIPT-TTHA-01, MR-SCRIPT-DDA-01, MR-SCRIPT-NNA-01, MR-SCRIPT-PA-01, MR-LEX-ANCHOR-EKDA]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W08-e-independent, MR-W08-la, MR-W08-sha, MR-W08-ssa, MR-W08-u-i
 # Twenty-four signs, at real distance
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-EKDA] -->
 
 Four chapters ago the page was still full of shapes nobody had taught you. Close every model and find out what stayed.
 

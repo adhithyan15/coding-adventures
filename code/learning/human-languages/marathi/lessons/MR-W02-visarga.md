@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W02-visarga
 spine_node: SPINE-COURTESY-THANK
-sequence: 21
+sequence: 25
 delivery: script
 chapter: 2
 type: writing
 headword: ः
 romanization: "ḥ"
 gloss: visarga — two breath dots after a vowel
-prerequisites: [MR-C01-dhanyavad]
+prerequisites: [MR-C01-dhanyavad, MR-C02-dukh]
 sounds: [post-vocalic-breath]
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [MR-LEX-DHANYAVAD-01]
+  knowledge: [MR-LEX-DHANYAVAD-01, MR-LEX-ANCHOR-DUKH]
 introduces:
   knowledge: [MR-SCRIPT-VISARGA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-VISARGA-01]
+  knowledge: [MR-SCRIPT-VISARGA-01, MR-LEX-ANCHOR-DUKH]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-C01-namaskar]
 # ः — a small breath after a vowel
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-DUKH] -->
 
 [PAUSE 2s] You already know the greeting *namaskār* and its older first piece,
 *namaḥ*, "a bow." The final breath in *namaḥ* has its own mark.

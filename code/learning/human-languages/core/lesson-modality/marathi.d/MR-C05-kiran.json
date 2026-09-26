@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C05-kiran",
+    "language": "marathi",
+    "chapter": 5,
+    "sequence": 58,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:180d2ecbace8f1ba"
+  },
+  "findings": []
+}

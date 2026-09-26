@@ -9,20 +9,20 @@ type: writing
 headword: ि
 romanization: "i"
 gloss: short i mark — written before the letter, read after it
-prerequisites: [MR-W03-dhanyavad-write]
+prerequisites: [MR-W03-dhanyavad-write, MR-C05-kiran]
 sounds: [matra-i]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-DHANYAVAD-WRITE-01]
+  knowledge: [MR-SCRIPT-DHANYAVAD-WRITE-01, MR-LEX-ANCHOR-KIRAN]
 introduces:
   knowledge: [MR-SCRIPT-I-MATRA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-I-MATRA-01, MR-SCRIPT-DHANYAVAD-WRITE-01]
+  knowledge: [MR-SCRIPT-I-MATRA-01, MR-SCRIPT-DHANYAVAD-WRITE-01, MR-LEX-ANCHOR-KIRAN]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W03-dhanyavad-write]
 # ि — short *i*, written before, read after
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-KIRAN] -->
 
 Say *dhanyavād* once from memory. Every mark in this chapter hangs on a consonant your hand already knows.
 

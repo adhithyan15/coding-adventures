@@ -4,11 +4,536 @@
   "chapter": 6,
   "title": "The Throat Row and the Palate Row",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0ad6cedb73130fa8",
+  "sourceHash": "fnv1a64:ee360a01db173fa8",
   "lessons": [
     {
+      "id": "MR-C06-ghagar",
+      "sequence": 75,
+      "title": "घागर (ghāgar) — a water pot",
+      "headword": "घागर",
+      "romanization": "ghāgar",
+      "gloss": "a water pot",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:c8b9801a6eafe0cd",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घागर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घागर — ghāgar — \"a water pot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ghāgar. Look at its shape as you say it: the lessons that follow take pieces of it, घ (gha) and ग, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghāgar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghāgar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghāgar, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghāgar*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a water pot\"? (घागर, ghāgar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C06-chav",
+      "sequence": 76,
+      "title": "चव (cav) — taste",
+      "headword": "चव",
+      "romanization": "cav",
+      "gloss": "taste",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:e84baeaa4c80b931",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चव",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चव — cav — \"taste\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: cav. Look at its shape as you say it: the lessons that follow take pieces of it, च, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cav",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cav*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cav, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cav*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"taste\"? (चव, cav.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C06-chatri",
+      "sequence": 77,
+      "title": "छत्री (chatrī) — an umbrella",
+      "headword": "छत्री",
+      "romanization": "chatrī",
+      "gloss": "an umbrella",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:47736cc0fc29045e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: छत्री",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "छत्री — chatrī — \"an umbrella\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: chatrī. Look at its shape as you say it: the lessons that follow take pieces of it, छ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chatrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chatrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chatrī, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chatrī*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"an umbrella\"? (छत्री, chatrī.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C06-jahaj",
+      "sequence": 78,
+      "title": "जहाज (jahāj) — a ship",
+      "headword": "जहाज",
+      "romanization": "jahāj",
+      "gloss": "a ship",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:aedaf675a4c24782",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जहाज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जहाज — jahāj — \"a ship\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: jahāj. Look at its shape as you say it: the lessons that follow take pieces of it, ज, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jahāj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jahāj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jahāj, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jahāj*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a ship\"? (जहाज, jahāj.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C06-jhoka",
+      "sequence": 79,
+      "title": "झोका (jhokā) — a swing",
+      "headword": "झोका",
+      "romanization": "jhokā",
+      "gloss": "a swing",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:96efd28614af5844",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झोका",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झोका — jhokā — \"a swing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: jhokā. Look at its shape as you say it: the lessons that follow take pieces of it, झ (jha), and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhokā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhokā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhokā, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhokā*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a swing\"? (झोका, jhokā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "MR-W06-kha",
-      "sequence": 70,
+      "sequence": 80,
       "title": "ख (kha) — ka with the breath let out",
       "headword": "ख",
       "romanization": "kha",
@@ -21,7 +546,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fc36f09404d64c15",
+      "sourceHash": "fnv1a64:efe68f3108383b84",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -39,6 +564,16 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two marks from the last chapter, from memory: write the long ū sign under a line, then the hook for ṛ. (ू, ृ.)"
+            },
             {
               "kind": "speech",
               "text": "Say ka with your hand in front of your mouth. Now say it again and push the air out after it. That second sound has its own letter."
@@ -118,7 +653,7 @@
     },
     {
       "id": "MR-W06-ga",
-      "sequence": 71,
+      "sequence": 81,
       "title": "ग (ga) — the same place, with the voice on",
       "headword": "ग",
       "romanization": "ga",
@@ -131,7 +666,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:69eab156742ba071",
+      "sourceHash": "fnv1a64:a6a74d424309ccc0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -229,7 +764,7 @@
     },
     {
       "id": "MR-W06-gha",
-      "sequence": 72,
+      "sequence": 82,
       "title": "घ (gha) — voice and breath together",
       "headword": "घ",
       "romanization": "gha",
@@ -243,7 +778,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e69bfe0c9c038047",
+      "sourceHash": "fnv1a64:8b251fb680a4d936",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -346,7 +881,7 @@
     },
     {
       "id": "MR-W06-ca",
-      "sequence": 73,
+      "sequence": 83,
       "title": "च (ca) — one letter, two Marathi sounds",
       "headword": "च",
       "romanization": "ca",
@@ -359,7 +894,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:435ae2577166fe1a",
+      "sourceHash": "fnv1a64:2bb30e8dabc24a55",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -457,7 +992,7 @@
     },
     {
       "id": "MR-W06-cha",
-      "sequence": 74,
+      "sequence": 84,
       "title": "छ (cha) — the palate, with the breath let out",
       "headword": "छ",
       "romanization": "cha",
@@ -470,7 +1005,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:270ee683fd5fc394",
+      "sourceHash": "fnv1a64:66624dcde046a4bc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -568,7 +1103,7 @@
     },
     {
       "id": "MR-W06-ja",
-      "sequence": 75,
+      "sequence": 85,
       "title": "ज (ja) — voice at the palate",
       "headword": "ज",
       "romanization": "ja",
@@ -582,7 +1117,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:30529a185e5c96c3",
+      "sourceHash": "fnv1a64:e2ed00278f595d77",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -681,7 +1216,7 @@
     },
     {
       "id": "MR-W06-jha",
-      "sequence": 76,
+      "sequence": 86,
       "title": "झ (jha) — the letter inside mājhe",
       "headword": "झ",
       "romanization": "jha",
@@ -694,7 +1229,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:314652ab9c26f77c",
+      "sourceHash": "fnv1a64:d57554715f25c0fa",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -792,7 +1327,7 @@
     },
     {
       "id": "MR-R06-two-rows-recall",
-      "sequence": 77,
+      "sequence": 87,
       "title": "Two rows, told apart by voice and breath",
       "headword": "two rows",
       "romanization": "don olī",
@@ -803,7 +1338,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c195b029e9d975d",
+      "sourceHash": "fnv1a64:814a5939be8e1ac5",
       "notice": null,
       "blocks": [
         {

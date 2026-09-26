@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W07-ttha
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 81
+sequence: 101
 delivery: script
 chapter: 7
 type: writing
 headword: ठ
 romanization: "ṭha"
 gloss: aspirated retroflex ta — the same curl with the breath released
-prerequisites: [MR-W07-tta]
+prerequisites: [MR-W07-tta, MR-C07-taali, MR-C07-thaam]
 sounds: [retroflex-tha]
 roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [MR-SCRIPT-TTA-01, MR-SCRIPT-JHA-01]
+  knowledge: [MR-SCRIPT-TTA-01, MR-SCRIPT-JHA-01, MR-LEX-ANCHOR-TAALI, MR-LEX-ANCHOR-THAAM]
 introduces:
   knowledge: [MR-SCRIPT-TTHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-TTHA-01, MR-SCRIPT-TTA-01, MR-SCRIPT-JHA-01]
+  knowledge: [MR-SCRIPT-TTHA-01, MR-SCRIPT-TTA-01, MR-SCRIPT-JHA-01, MR-LEX-ANCHOR-TAALI, MR-LEX-ANCHOR-THAAM]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W07-tta, MR-W06-jha]
 # ठ — the curl, with the breath let out
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-TAALI, MR-LEX-ANCHOR-THAAM] -->
 
 The four-way pattern again: you have the plain one, so you can predict the next.
 

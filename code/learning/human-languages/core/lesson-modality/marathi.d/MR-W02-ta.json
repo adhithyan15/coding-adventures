@@ -3,7 +3,7 @@
     "id": "MR-W02-ta",
     "language": "marathi",
     "chapter": 2,
-    "sequence": 26,
+    "sequence": 30,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -18,7 +18,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:cc814b2147906897",
+    "sourceHash": "fnv1a64:eebe02888a414f20",
     "detachableSegments": [
       "Script",
       "Writing — look, hide, write"

@@ -3,7 +3,7 @@
     "id": "MR-W02-e-matra",
     "language": "marathi",
     "chapter": 2,
-    "sequence": 24,
+    "sequence": 28,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:930499ba362ce7cf",
+    "sourceHash": "fnv1a64:bd17fe534ffc6fb6",
     "detachableSegments": [
       "Script",
       "Writing — guided copy and first retrieval"

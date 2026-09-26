@@ -3,7 +3,7 @@
     "id": "MR-W06-gha",
     "language": "marathi",
     "chapter": 6,
-    "sequence": 72,
+    "sequence": 82,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -18,7 +18,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:e69bfe0c9c038047",
+    "sourceHash": "fnv1a64:8b251fb680a4d936",
     "detachableSegments": [
       "Script",
       "Writing — delayed copy"
