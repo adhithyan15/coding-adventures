@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 6,
-  "sourceHash": "fnv1a64:5d8288dc82d0f143",
+  "sourceHash": "fnv1a64:ee360a01db173fa8",
   "lessonIds": [
     "MR-C06-ghagar",
     "MR-C06-chav",
@@ -21,7 +21,7 @@
   "drivablePrefix": 0,
   "text": "marathi/narration/ch06.txt",
   "json": "marathi/narration/ch06.json",
-  "textHash": "fnv1a64:960ecaa7700929e1",
-  "jsonHash": "fnv1a64:ab9b9cedb4699314",
+  "textHash": "fnv1a64:48cfecc34fde6048",
+  "jsonHash": "fnv1a64:2cbfee55cc132565",
   "findings": []
 }

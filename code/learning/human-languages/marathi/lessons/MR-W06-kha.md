@@ -15,14 +15,14 @@ roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [MR-SCRIPT-A-INDEPENDENT-01]
+  knowledge: [MR-SCRIPT-A-INDEPENDENT-01, MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-RU-MATRA-01]
 introduces:
   knowledge: [MR-SCRIPT-KHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-KHA-01, MR-SCRIPT-A-INDEPENDENT-01]
+  knowledge: [MR-SCRIPT-KHA-01, MR-SCRIPT-A-INDEPENDENT-01, MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-RU-MATRA-01]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,10 @@ reviews_of: [MR-W05-a-independent, MR-W01-ka]
 # ख — *ka* with the breath let out
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-RU-MATRA-01] -->
+
+[PAUSE 2s] Two marks from the last chapter, from memory: write the long *ū*
+sign under a line, then the hook for *ṛ*. (**ू**, **ृ**.)
 
 Say *ka* with your hand in front of your mouth. Now say it again and push the air out after it. That second sound has its own letter.
 

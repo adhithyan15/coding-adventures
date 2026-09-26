@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "The Throat Row and the Palate Row",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5d8288dc82d0f143",
+  "sourceHash": "fnv1a64:ee360a01db173fa8",
   "lessons": [
     {
       "id": "MR-C06-ghagar",
@@ -546,7 +546,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:185b8de3b40d8856",
+      "sourceHash": "fnv1a64:efe68f3108383b84",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -564,6 +564,16 @@
           "type": "warmup",
           "title": "Warm-up",
           "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two marks from the last chapter, from memory: write the long ū sign under a line, then the hook for ṛ. (ू, ृ.)"
+            },
             {
               "kind": "speech",
               "text": "Say ka with your hand in front of your mouth. Now say it again and push the air out after it. That second sound has its own letter."
