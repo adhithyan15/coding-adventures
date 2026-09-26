@@ -14361,6 +14361,64 @@ non-normative instead of requiring every language to expose Rust's borrowed,
 implemented lanes execute the refined corpus; this refinement remains part of
 the same serial work item and no second PR was opened.
 
+### PR #16088 merge, exact-main refresh, and X.509 Extension selection
+
+All 49 reported final-head checks for PR #16088 reached terminal acceptable
+conclusions at `865e53dd88a79930cfe39baa2df9c333176a22f8`: 19 successes
+and 30 expected path-gated skips. GitHub reported the reviewed head clean and
+mergeable. Guarded squash auto-merge was enabled only after that evidence was
+complete, and GitHub merged DER ASN.1 automatically at
+`2026-09-26T23:10:52Z` as
+`69f1ec320c3eb0e6d2cca699468ebb6e12e3c575`; no plain manual merge command was
+used.
+
+The collision-checked schema-3 inventory generated from that exact merged main
+contains 15 established lanes, 1,470 implementation identities, 4,723
+implementation slots, and 1,512 all-reported identities. Its completion bands
+remain 177/265, 123/934, 181/2,282, and 989/13,846. Rust has 806 singleton
+identities, emerging OCaml remains at five packages, and canonical collisions
+and unknown language buckets remain zero. A collision-checked ownership audit
+found no newly eligible unowned portable package. It did add the effectful
+`forme-deploy-runner-fs-adapter` to the existing Forme family classification,
+kept it outside autonomous parity selection, extended the Mosaic runtime owner
+with UI48 environment/start-context and `environmentChanged` behavior, and
+recorded the exact generated-wrapper identities `mosaic-emit-xaml`,
+`mosaic-package-artifact-builder`, `mosaic-emit-swiftui`, and
+`mosaic-app-bindings`.
+
+OCaml remains an emerging lane rather than entering the denominator. Its
+scaffold, reporter, capability analyzer, exact toolchain, and representative
+package chain are complete; its native build tool, current-contract adoption,
+three-platform build-tool execution, and final promotion remain pending. The
+readiness audit also found the stale `Status: in progress` line in the merged
+OCAML06 capability-analyzer specification. That editorial repair now has a
+separate pending, selection-blocked owner instead of being mistaken for missing
+implementation.
+
+The build-tool refresh confirms that full Dart, Java, and Kotlin engines remain
+missing and emerging OCaml still lacks its native engine. The neutral corpus has
+162 cases in 13 process-free domains but no execution-semantics cases, while
+every adapter remains unavailable. Preserve the dependency order: trusted
+platform execution authority, execution-semantics corpus, native
+current-contract engines, then the all-language adapter/CI closure. No
+established-lane exception has been approved; F# through the shared C# engine
+is still only a candidate pending final adapter evidence.
+
+The dependency/leverage pass selects
+`x509-extension-portable-conformance` on fresh branch
+`codex/parity-x509-extension-portable-conformance-20260926`. Its sole
+dependency, DER ASN.1, is merged; no open pull request or branch collides with
+the owner; and the generic Extension contract directly unlocks five pending
+portable owners: Extensions, Basic Constraints, Key Usage, Extended Key Usage,
+and Subject Alternative Name. The selected tranche owns exact Extension
+SEQUENCE shape, validated OID, DEFAULT FALSE critical handling, opaque OCTET
+STRING value, shared budgets, transactional failures, local offsets, and
+payload-redacted diagnostics in all 15 established lanes. Extension-specific
+semantics, certificate policy, signatures, path validation, trust, revocation,
+TLS, transport, and ambient authority remain outside it. The reconciled graph
+has 871 owners and 1,606 dependency edges: 224 merged, 646 pending, and exactly
+this owner in progress.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
