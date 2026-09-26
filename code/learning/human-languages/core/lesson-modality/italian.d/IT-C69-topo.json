@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C69-topo",
+    "language": "italian",
+    "chapter": 69,
+    "sequence": 3040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d045f09366e32f8"
+  },
+  "findings": []
+}

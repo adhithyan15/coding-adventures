@@ -1,0 +1,19 @@
+{
+  "chapter": 63,
+  "title": "Watch, Glasses, Box, Suitcase, Ticket",
+  "label": "ch:it-watch-glasses-box-suitcase-ticket",
+  "canDo": "I can name a watch, glasses, a box, a suitcase, a ticket.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "IT-C63-biglietto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 63: i can name a watch, glasses, a box, a suitcase, a ticket.",
+    "assesses": [
+      "IT-LEX-C63-COSE3-03",
+      "IT-LEX-C63-COSE3-04",
+      "IT-LEX-C63-COSE3-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:db81e18f2038f426",
+  "lessonIds": [
+    "IT-C50-chiudere",
+    "IT-C50-bere",
+    "IT-C50-vivere",
+    "IT-C50-entrare",
+    "IT-C50-uscire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch50.txt",
+  "json": "italian/narration/ch50.json",
+  "textHash": "fnv1a64:1b489e60e9c42076",
+  "jsonHash": "fnv1a64:9f7d3e78eae2f127",
+  "findings": []
+}

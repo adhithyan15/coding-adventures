@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:302d12ac78a17dfa",
+  "lessonIds": [
+    "IT-C41-medicina",
+    "IT-C41-medico",
+    "IT-C41-ospedale",
+    "IT-C41-malattia",
+    "IT-C41-fame"
+  ],
+  "tex": "italian/book/chapters/ch41-medicine-doctor-hospital-illness-hunger.tex"
+}

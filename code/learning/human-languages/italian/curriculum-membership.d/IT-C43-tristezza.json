@@ -1,0 +1,11 @@
+{
+  "id": "IT-C43-tristezza",
+  "pathSegment": "IT-PATH-43-EMOZIONI",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-43-EMOZIONI",
+      "order": 2
+    }
+  ]
+}

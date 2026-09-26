@@ -1,0 +1,19 @@
+{
+  "chapter": 40,
+  "title": "Chin, Forehead, Pain, Fever, Cough",
+  "label": "ch:it-chin-forehead-pain-fever-cough",
+  "canDo": "I can name the chin, the forehead, pain, a fever, a cough.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C40-tosse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 40: i can name the chin, the forehead, pain, a fever, a cough.",
+    "assesses": [
+      "IT-LEX-C40-CORPO4-03",
+      "IT-LEX-C40-CORPO4-04",
+      "IT-LEX-C40-CORPO4-05"
+    ]
+  }
+}

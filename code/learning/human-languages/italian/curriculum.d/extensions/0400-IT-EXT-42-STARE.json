@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-42-STARE",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name thirst, tiredness, tired, ill, joy.",
+  "prerequisites": []
+}

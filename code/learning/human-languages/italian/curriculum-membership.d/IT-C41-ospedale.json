@@ -1,0 +1,11 @@
+{
+  "id": "IT-C41-ospedale",
+  "pathSegment": "IT-PATH-41-SALUTE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-41-SALUTE",
+      "order": 2
+    }
+  ]
+}

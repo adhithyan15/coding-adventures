@@ -1,0 +1,11 @@
+{
+  "id": "IT-C13-colori-origini",
+  "pathSegment": "IT-PATH-018",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-018-LANGUAGE-SPECIFIC",
+      "order": 2
+    }
+  ]
+}

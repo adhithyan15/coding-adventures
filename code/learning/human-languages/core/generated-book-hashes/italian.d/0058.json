@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:027556edfc780a0a",
+  "lessonIds": [
+    "IT-C58-camera",
+    "IT-C58-pavimento",
+    "IT-C58-scala",
+    "IT-C58-specchio",
+    "IT-C58-tazza"
+  ],
+  "tex": "italian/book/chapters/ch58-bedroom-floor-stairs-mirror-cup.tex"
+}

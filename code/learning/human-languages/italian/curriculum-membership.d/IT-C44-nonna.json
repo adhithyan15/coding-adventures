@@ -1,0 +1,11 @@
+{
+  "id": "IT-C44-nonna",
+  "pathSegment": "IT-PATH-44-FAMIGLIA1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-44-FAMIGLIA1",
+      "order": 3
+    }
+  ]
+}

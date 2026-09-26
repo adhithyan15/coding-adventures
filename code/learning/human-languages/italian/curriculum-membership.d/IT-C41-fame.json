@@ -1,0 +1,11 @@
+{
+  "id": "IT-C41-fame",
+  "pathSegment": "IT-PATH-41-SALUTE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-41-SALUTE",
+      "order": 4
+    }
+  ]
+}

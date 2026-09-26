@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C55-pera",
+    "language": "italian",
+    "chapter": 55,
+    "sequence": 2320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0dbba86dbab7cd8"
+  },
+  "findings": []
+}

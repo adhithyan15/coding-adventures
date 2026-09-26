@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C38-lingua",
+    "language": "italian",
+    "chapter": 38,
+    "sequence": 1460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d384489b37ef47e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:14add1e2599b8fb6",
+  "lessonIds": [
+    "IT-C65-fiume",
+    "IT-C65-lago",
+    "IT-C65-mare",
+    "IT-C65-pietra",
+    "IT-C65-sabbia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch65.txt",
+  "json": "italian/narration/ch65.json",
+  "textHash": "fnv1a64:9ade55c04f368dc8",
+  "jsonHash": "fnv1a64:a72c37dc4d408f01",
+  "findings": []
+}

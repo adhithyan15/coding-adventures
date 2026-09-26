@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:afaf24ec3a5efbf7",
+  "lessonIds": [
+    "IT-C59-bicchiere",
+    "IT-C59-piatto",
+    "IT-C59-cucchiaio",
+    "IT-C59-coltello",
+    "IT-C59-forchetta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch59.txt",
+  "json": "italian/narration/ch59.json",
+  "textHash": "fnv1a64:ae9ec8523d3af208",
+  "jsonHash": "fnv1a64:6b7deca99bf15d30",
+  "findings": []
+}

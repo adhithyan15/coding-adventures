@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:77c55c3691b62306",
+  "lessonIds": [
+    "IT-C49-correre",
+    "IT-C49-sentire",
+    "IT-C49-insegnare",
+    "IT-C49-imparare",
+    "IT-C49-aprire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch49.txt",
+  "json": "italian/narration/ch49.json",
+  "textHash": "fnv1a64:2fedac26ea6ddab1",
+  "jsonHash": "fnv1a64:44559bbaf8a7e1a1",
+  "findings": []
+}

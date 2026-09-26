@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-82-CITTA2",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a station, a bus, a train, an aeroplane, a car.",
+  "prerequisites": []
+}

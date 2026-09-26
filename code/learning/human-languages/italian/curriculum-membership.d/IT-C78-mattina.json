@@ -1,0 +1,11 @@
+{
+  "id": "IT-C78-mattina",
+  "pathSegment": "IT-PATH-78-TEMPO",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-78-TEMPO",
+      "order": 3
+    }
+  ]
+}

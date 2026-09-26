@@ -1,16 +1,17 @@
 {
   "language": "italian",
   "chapter": 13,
-  "sourceHash": "fnv1a64:26d7949cc934cf86",
+  "sourceHash": "fnv1a64:7563ec9fbe04595d",
   "lessonIds": [
     "IT-C13-nero-bianco",
-    "IT-C13-rosso-blu"
+    "IT-C13-rosso-blu",
+    "IT-C13-colori-origini"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 3,
+  "drivablePrefix": 3,
   "text": "italian/narration/ch13.txt",
   "json": "italian/narration/ch13.json",
-  "textHash": "fnv1a64:44888e2120d44934",
-  "jsonHash": "fnv1a64:23202dd02367ace1",
+  "textHash": "fnv1a64:d4781f74ffe1e28f",
+  "jsonHash": "fnv1a64:a116f694f2c9399c",
   "findings": []
 }

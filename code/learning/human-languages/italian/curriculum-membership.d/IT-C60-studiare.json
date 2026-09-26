@@ -1,0 +1,11 @@
+{
+  "id": "IT-C60-studiare",
+  "pathSegment": "IT-PATH-60-VERBI5",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-60-VERBI5",
+      "order": 1
+    }
+  ]
+}

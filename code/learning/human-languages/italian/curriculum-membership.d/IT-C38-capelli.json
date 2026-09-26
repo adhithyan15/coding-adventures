@@ -1,0 +1,11 @@
+{
+  "id": "IT-C38-capelli",
+  "pathSegment": "IT-PATH-38-CORPO2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-38-CORPO2",
+      "order": 4
+    }
+  ]
+}

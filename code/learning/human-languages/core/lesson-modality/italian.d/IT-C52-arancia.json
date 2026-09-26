@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C52-arancia",
+    "language": "italian",
+    "chapter": 52,
+    "sequence": 2190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:371fbf1328c4c810"
+  },
+  "findings": []
+}

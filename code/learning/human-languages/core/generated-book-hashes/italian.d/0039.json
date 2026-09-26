@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:f2d429b5b3e3865c",
+  "lessonIds": [
+    "IT-C39-pancia",
+    "IT-C39-viso",
+    "IT-C39-sangue",
+    "IT-C39-pelle",
+    "IT-C39-unghia"
+  ],
+  "tex": "italian/book/chapters/ch39-belly-face-blood-skin-nail.tex"
+}

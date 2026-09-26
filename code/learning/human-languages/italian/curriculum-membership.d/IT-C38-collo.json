@@ -1,0 +1,11 @@
+{
+  "id": "IT-C38-collo",
+  "pathSegment": "IT-PATH-38-CORPO2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-38-CORPO2",
+      "order": 1
+    }
+  ]
+}

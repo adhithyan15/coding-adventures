@@ -1,0 +1,11 @@
+{
+  "id": "IT-C75-vuoto",
+  "pathSegment": "IT-PATH-75-AGG4",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-75-AGG4",
+      "order": 4
+    }
+  ]
+}

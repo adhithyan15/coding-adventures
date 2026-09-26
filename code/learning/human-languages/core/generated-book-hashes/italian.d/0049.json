@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 49,
+  "sourceHash": "fnv1a64:ed4ebab588448b76",
+  "lessonIds": [
+    "IT-C49-correre",
+    "IT-C49-sentire",
+    "IT-C49-insegnare",
+    "IT-C49-imparare",
+    "IT-C49-aprire"
+  ],
+  "tex": "italian/book/chapters/ch49-run-hear-teach-learn-open.tex"
+}

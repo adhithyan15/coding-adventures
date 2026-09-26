@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:cd1dfef0de264832",
+  "lessonIds": [
+    "IT-C40-mento",
+    "IT-C40-fronte",
+    "IT-C40-dolore",
+    "IT-C40-febbre",
+    "IT-C40-tosse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch40.txt",
+  "json": "italian/narration/ch40.json",
+  "textHash": "fnv1a64:d475a6d26bb6cc2f",
+  "jsonHash": "fnv1a64:e13c6393ac78b571",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:8781c3fece0d1e6d",
+  "lessonIds": [
+    "IT-C61-bottiglia",
+    "IT-C61-penna",
+    "IT-C61-carta",
+    "IT-C61-quaderno",
+    "IT-C61-matita"
+  ],
+  "tex": "italian/book/chapters/ch61-bottle-pen-paper-notebook-pencil.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "Wall, Roof, Garden, Lamp, Bathroom",
+  "label": "ch:it-wall-roof-garden-lamp-bathroom",
+  "canDo": "I can name a wall, a roof, a garden, a lamp, a bathroom.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "IT-C57-bagno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: i can name a wall, a roof, a garden, a lamp, a bathroom.",
+    "assesses": [
+      "IT-LEX-C57-CASA2-03",
+      "IT-LEX-C57-CASA2-04",
+      "IT-LEX-C57-CASA2-05"
+    ]
+  }
+}

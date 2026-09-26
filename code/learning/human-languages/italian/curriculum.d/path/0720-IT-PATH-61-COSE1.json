@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-61-COSE1",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "IT-EXT-61-COSE1"
+  ],
+  "after": []
+}

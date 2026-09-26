@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:a3bb15b7e965531a",
+  "lessonIds": [
+    "IT-C37-braccio",
+    "IT-C37-gamba",
+    "IT-C37-piede",
+    "IT-C37-dito",
+    "IT-C37-dente"
+  ],
+  "tex": "italian/book/chapters/ch37-arm-leg-foot-finger-tooth.tex"
+}

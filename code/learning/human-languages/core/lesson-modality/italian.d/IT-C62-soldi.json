@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C62-soldi",
+    "language": "italian",
+    "chapter": 62,
+    "sequence": 2710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a8cf89e0e4e1e99"
+  },
+  "findings": []
+}

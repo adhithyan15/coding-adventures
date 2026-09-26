@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C65-lago",
+    "language": "italian",
+    "chapter": 65,
+    "sequence": 2840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c91ac3ec91c1abb"
+  },
+  "findings": []
+}

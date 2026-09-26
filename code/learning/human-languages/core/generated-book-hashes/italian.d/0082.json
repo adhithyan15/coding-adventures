@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:6b50d3ca0a6d2397",
+  "lessonIds": [
+    "IT-C82-stazione",
+    "IT-C82-autobus",
+    "IT-C82-treno",
+    "IT-C82-aereo",
+    "IT-C82-macchina"
+  ],
+  "tex": "italian/book/chapters/ch82-station-bus-train-plane-car.tex"
+}

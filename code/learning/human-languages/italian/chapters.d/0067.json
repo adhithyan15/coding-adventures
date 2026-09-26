@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Star, Cloud, Rain, Wind, Fire",
+  "label": "ch:it-star-cloud-rain-wind-fire",
+  "canDo": "I can name a star, a cloud, rain, the wind, fire.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C67-fuoco",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can name a star, a cloud, rain, the wind, fire.",
+    "assesses": [
+      "IT-LEX-C67-CIELO-03",
+      "IT-LEX-C67-CIELO-04",
+      "IT-LEX-C67-CIELO-05"
+    ]
+  }
+}

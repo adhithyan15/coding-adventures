@@ -1,0 +1,11 @@
+{
+  "id": "IT-C55-riso",
+  "pathSegment": "IT-PATH-55-DISPENSA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-55-DISPENSA",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:71d07b16fd78e8e3",
+  "lessonIds": [
+    "IT-C60-tornare",
+    "IT-C60-studiare",
+    "IT-C60-viaggiare",
+    "IT-C60-pagare",
+    "IT-C60-usare",
+    "IT-R60-first-pass-the-body-family-and-doing",
+    "IT-R60-second-pass-food-the-house-and-the-table"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch60.txt",
+  "json": "italian/narration/ch60.json",
+  "textHash": "fnv1a64:bd5963ec1eacb784",
+  "jsonHash": "fnv1a64:adf758c7dcca2efc",
+  "findings": []
+}

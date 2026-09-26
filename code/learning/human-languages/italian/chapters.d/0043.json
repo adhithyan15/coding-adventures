@@ -1,0 +1,19 @@
+{
+  "chapter": 43,
+  "title": "Fear, Anger, Sadness, Happy, Sad",
+  "label": "ch:it-fear-anger-sadness-happy-sad",
+  "canDo": "I can name fear, anger, sadness, happy, sad.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "IT-C43-triste",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 43: i can name fear, anger, sadness, happy, sad.",
+    "assesses": [
+      "IT-LEX-C43-EMOZIONI-03",
+      "IT-LEX-C43-EMOZIONI-04",
+      "IT-LEX-C43-EMOZIONI-05"
+    ]
+  }
+}

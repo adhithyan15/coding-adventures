@@ -1,0 +1,11 @@
+{
+  "id": "IT-C56-sedia",
+  "pathSegment": "IT-PATH-56-CASA1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-56-CASA1",
+      "order": 3
+    }
+  ]
+}
