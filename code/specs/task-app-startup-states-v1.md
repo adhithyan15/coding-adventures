@@ -96,7 +96,9 @@ detail and saved-data reassurance replace the loading state, and retry creates a
 fresh host and re-reads initial props. Generated Compose UI acceptance drives the
 loading, failure, and recovery sequence (#15786).
 
-Qt, Flutter, SwiftUI, and WinUI still report startup failure only through process
-and log evidence. Their backend-sized surfaces and emitted-control acceptance
-remain tracked in
+Qt now implements the same visible loading, failure, and retry sequence in
+#15818, including an acceptance probe that drives the emitted retry button.
+Flutter, SwiftUI, and WinUI still report startup failure only through process and
+log evidence. Their backend-sized surfaces and emitted-control acceptance remain
+tracked in
 [#13984](https://github.com/adhithyan15/coding-adventures/issues/13984).

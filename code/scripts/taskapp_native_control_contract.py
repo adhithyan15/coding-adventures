@@ -50,6 +50,18 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
             "onMosaicEvent: function(event) { applyMosaicResponse(mosaicHost.handleRequiredEvent(event)) }",
             'text: "Your Inbox is ready"',
         ),
+        "main.cpp": (
+            'objectName: "mosaic-startup-root"',
+            'objectName: "mosaic-startup-loading"',
+            'objectName: "mosaic-startup-failure"',
+            'text: "TaskApp could not start"',
+            'text: "Your saved data has not been changed. Retrying is safe."',
+            'objectName: "mosaic-startup-retry"',
+            'text: "Try again"',
+            "QTimer::singleShot(50, &view",
+            "auto candidate = std::make_unique<MosaicHost>();",
+            "activeHost.reset();",
+        ),
     },
     "flutter": {
         "lib/TaskApp.dart": (
