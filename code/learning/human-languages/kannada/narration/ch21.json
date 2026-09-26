@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:76cbf5960e718a1e",
+  "sourceHash": "fnv1a64:19dae8bac725b762",
   "lessons": [
     {
       "id": "KA-C21-naayi-bekku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:153065c6bc344e3e",
+      "sourceHash": "fnv1a64:a44fb61476490b4d",
       "notice": null,
       "blocks": [
         {

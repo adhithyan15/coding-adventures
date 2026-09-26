@@ -9,17 +9,17 @@ type: writing
 headword: "ു"
 gloss: the single character ◌ു — recognised inside words you already say
 romanization: "u"
-prerequisites: [ML-S06-letter-chillu-ll]
+prerequisites: [ML-S06-letter-chillu-ll, ML-C02-puli]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-06]
+  knowledge: [ML-SCRIPT-RECOG-06, ML-LEX-ANCHOR-PULI]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-07]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-06, ML-SCRIPT-RECOG-07]
+  knowledge: [ML-SCRIPT-RECOG-06, ML-SCRIPT-RECOG-07, ML-LEX-ANCHOR-PULI]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-S06-letter-chillu-ll]
 # ◌ു — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-06, ML-LEX-ANCHOR-PULI] -->
 
 [PAUSE 1s] Before the new one: ൾ — what does it do?
 

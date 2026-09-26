@@ -9,17 +9,17 @@ type: writing
 headword: "സന്തോഷം"
 gloss: copy the known word for joy once with the model visible
 romanization: "santōṣaṁ"
-prerequisites: [ML-C02-santosham]
+prerequisites: [ML-C02-santosham, ML-C02-penkutti]
 sounds: [anusvara]
 roots: [santosha-sanskrit]
 duration:
   max_seconds: 120
 requires:
-  knowledge: []
+  knowledge: [ML-LEX-ANCHOR-PENKUTTI]
 introduces:
   knowledge: [ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02]
 practises:
-  knowledge: [ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02]
+  knowledge: [ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02, ML-LEX-ANCHOR-PENKUTTI]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-C02-santosham]
 # സന്തോഷം — copy one known word with help
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-PENKUTTI] -->
 
 Point to **സന്തോഷം** and say *santōṣaṁ* once. Keep the model on the page.
 Find **ഷ** near the end, then find the long *ō* sign **ോ** on the consonant

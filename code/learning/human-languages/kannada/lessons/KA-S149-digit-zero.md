@@ -9,17 +9,17 @@ type: writing
 headword: "೦"
 gloss: the Kannada digit 0, met on top of a word already learned
 romanization: "0"
-prerequisites: [KA-S148-digit-nine, KA-C07-hattu]
+prerequisites: [KA-S148-digit-nine, KA-C07-hattu, KA-C18-uurugoolu]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-148]
+  knowledge: [KA-SCRIPT-RECOG-148, KA-LEX-ANCHOR-UURUGOOLU]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-149]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-149, KA-SCRIPT-RECOG-148, KA-ETYMON-C07-NUMBERS-6-10-02]
+  knowledge: [KA-SCRIPT-RECOG-149, KA-SCRIPT-RECOG-148, KA-ETYMON-C07-NUMBERS-6-10-02, KA-LEX-ANCHOR-UURUGOOLU]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [KA-S148-digit-nine, KA-C07-hattu]
 # ೦ — the digit for hattu
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-148] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-148, KA-LEX-ANCHOR-UURUGOOLU] -->
 
 [PAUSE 1s] Before the new shape: **೯** — which number is it?
 

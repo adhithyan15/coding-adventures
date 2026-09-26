@@ -1,0 +1,11 @@
+{
+  "id": "KA-C38-namah",
+  "pathSegment": "KA-PATH-100",
+  "pathOrder": 40,
+  "extensions": [
+    {
+      "id": "KA-EXT-100-SCRIPT-RECOGNITION",
+      "order": 40
+    }
+  ]
+}

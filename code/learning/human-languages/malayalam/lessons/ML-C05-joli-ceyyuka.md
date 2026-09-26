@@ -9,17 +9,17 @@ headword: ജോലി ചെയ്യുക
 gloss: to work (lit. "work-do")
 romanization: "jōli ceyyuka"
 concept_tag: ML-VERB-CEYYUKA
-prerequisites: [ML-C05-samsaarikkuka]
+prerequisites: [ML-C05-samsaarikkuka, ML-C05-hamsam]
 sounds: [double-yy]
 roots: [cey-do-dravidian, joli-work]
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [ML-LEX-ANCHOR-HAMSAM]
 introduces:
   knowledge: [ML-LEX-JOLI-CEYYUKA-01, ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01]
 practises:
-  knowledge: [ML-LEX-JOLI-CEYYUKA-01, ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01, ML-LEX-SAMSAARIKKUKA-01, ML-CONCEPT-C05-VERB-NEVER-AGREES-01]
+  knowledge: [ML-LEX-JOLI-CEYYUKA-01, ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01, ML-LEX-SAMSAARIKKUKA-01, ML-CONCEPT-C05-VERB-NEVER-AGREES-01, ML-LEX-ANCHOR-HAMSAM]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-C05-samsaarikkuka, ML-C05-taamasikkuka]
 # ജോലി ചെയ്യുക (jōli ceyyuka) — "to work"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-HAMSAM] -->
 
 [PAUSE 2s] The last verb of the chapter — and, like Hindi's *karnā* and Tamil's
 *sey*, it is a "do" verb that builds a hundred others.

@@ -9,17 +9,17 @@ type: writing
 headword: "డ"
 gloss: the single character డ — recognised inside words you already say
 romanization: "ḍa"
-prerequisites: [TE-S144-digit-5]
+prerequisites: [TE-S144-digit-5, TE-C04-dappu]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TE-SCRIPT-RECOG-144]
+  knowledge: [TE-SCRIPT-RECOG-144, TE-LEX-ANCHOR-DAPPU]
 introduces:
   knowledge: [TE-SCRIPT-RECOG-123]
 practises:
-  knowledge: [TE-SCRIPT-RECOG-123, TE-SCRIPT-RECOG-144, TE-SCRIPT-RECOG-122, TE-SCRIPT-RECOG-109]
+  knowledge: [TE-SCRIPT-RECOG-123, TE-SCRIPT-RECOG-144, TE-SCRIPT-RECOG-122, TE-SCRIPT-RECOG-109, TE-LEX-ANCHOR-DAPPU]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [TE-S144-digit-5, TE-S122-letter-u, TE-S109-letter-na]
 # డ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-144, TE-SCRIPT-RECOG-122] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-144, TE-SCRIPT-RECOG-122, TE-LEX-ANCHOR-DAPPU] -->
 
 [PAUSE 1s] Before the new one: ౫ — what amount does it stand for? And one from further back: ఉ?
 

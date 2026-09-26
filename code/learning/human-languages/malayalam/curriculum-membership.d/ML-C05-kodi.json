@@ -1,0 +1,11 @@
+{
+  "id": "ML-C05-kodi",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 24,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 24
+    }
+  ]
+}

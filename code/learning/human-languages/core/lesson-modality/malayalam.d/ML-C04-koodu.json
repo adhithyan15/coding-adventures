@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C04-koodu",
+    "language": "malayalam",
+    "chapter": 4,
+    "sequence": 225,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:63603419d94bd1a4"
+  },
+  "findings": []
+}

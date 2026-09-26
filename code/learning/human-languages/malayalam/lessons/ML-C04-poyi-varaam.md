@@ -9,17 +9,17 @@ headword: പോയി വരാം
 gloss: goodbye (lit. "I'll go and come back")
 romanization: "pōyi varāṁ"
 concept_tag: FAREWELL
-prerequisites: [ML-C04-pokuka, ML-C03-njaan]
+prerequisites: [ML-C04-pokuka, ML-C03-njaan, ML-C04-koodu]
 sounds: [poyi-participle, aam-ending]
 roots: [po-go-dravidian, va-come-dravidian]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ML-LEX-POKUKA-VARIKA-01]
+  knowledge: [ML-LEX-POKUKA-VARIKA-01, ML-LEX-ANCHOR-KOODU]
 introduces:
   knowledge: [ML-PHRASE-C04-POYI-VARAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01, ML-CONCEPT-C08-DAYAVAYI-04]
 practises:
-  knowledge: [ML-PHRASE-C04-POYI-VARAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01, ML-CONCEPT-C08-DAYAVAYI-04]
+  knowledge: [ML-PHRASE-C04-POYI-VARAAM-01, ML-CONCEPT-C04-AAM-VOLITIONAL-01, ML-CONCEPT-C08-DAYAVAYI-04, ML-LEX-ANCHOR-KOODU]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-C04-pokuka]
 # പോയി വരാം (pōyi varāṁ) — "I'll go and come back"
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ANCHOR-KOODU] -->
 
 [PAUSE 2s] The everyday Malayalam goodbye — a promise, not a parting.
 

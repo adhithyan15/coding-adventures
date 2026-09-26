@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 42,
-  "sourceHash": "fnv1a64:67c327bd733cfd4b",
+  "sourceHash": "fnv1a64:8d42a390ea5ba6c3",
   "lessonIds": [
     "KA-C42-big",
     "KA-C42-small",
@@ -9,6 +9,7 @@
     "KA-C42-new",
     "KA-C42-old",
     "KA-C42-adjective-system",
+    "KA-C42-jnaana",
     "KA-S133-letter-nya"
   ],
   "tex": "kannada/book/chapters/ch42-describing-things.tex"

@@ -1,0 +1,11 @@
+{
+  "id": "ML-C05-hamsam",
+  "pathSegment": "ML-PATH-100",
+  "pathOrder": 29,
+  "extensions": [
+    {
+      "id": "ML-EXT-100-SCRIPT-RECOGNITION",
+      "order": 29
+    }
+  ]
+}

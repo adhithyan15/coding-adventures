@@ -1,8 +1,9 @@
 {
   "language": "telugu",
   "chapter": 4,
-  "sourceHash": "fnv1a64:ae90ad4a1e26b5f7",
+  "sourceHash": "fnv1a64:6c2013b681f29f4f",
   "lessonIds": [
+    "TE-C04-dappu",
     "TE-S123-letter-dda",
     "TE-C04-vellu",
     "TE-S145-digit-6",

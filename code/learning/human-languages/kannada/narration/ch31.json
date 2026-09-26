@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "Good Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:af46dcc8877406ba",
+  "sourceHash": "fnv1a64:3da7799b19b57669",
   "lessons": [
     {
       "id": "KA-C31-shubha-madhyahna",
@@ -121,6 +121,111 @@
       ]
     },
     {
+      "id": "KA-C31-krushi",
+      "sequence": 604,
+      "title": "ಕೃಷಿ (kṛṣi) — farming",
+      "headword": "ಕೃಷಿ",
+      "romanization": "kṛṣi",
+      "gloss": "farming",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:3d316d2031c19840",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕೃಷಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕೃಷಿ — kṛṣi — \"farming\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: kṛṣi. Look at its shape as you say it: the next lesson takes one piece of it, ೃ (vowel sign ṛ), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛṣi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛṣi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛṣi, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛṣi*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"farming\"? (ಕೃಷಿ, kṛṣi.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-S131-vowel-sign-vocalic-r",
       "sequence": 605,
       "title": "◌ೃ (vowel sign ṛ) — one character, and the pair met the other way round",
@@ -135,7 +240,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f43dbec6291a99e7",
+      "sourceHash": "fnv1a64:21b13834d77790a0",
       "notice": {
         "modality": "pen",
         "needs": [

@@ -9,18 +9,18 @@ headword: ഊണ്
 gloss: a meal — the noun behind ഉണ്ണുക, Malayalam's second eat-verb, standing beside Chapter 32's everyday തിന്നുക
 romanization: ūṇ
 concept_tag: ML-MEAL
-prerequisites: [ML-C39-paal, ML-C32-tinnuka, ML-C09-kshamikkanam, ML-C06-dative-ikku, ML-C06-dative-subject]
+prerequisites: [ML-C39-paal, ML-C32-tinnuka, ML-C09-kshamikkanam, ML-C06-dative-ikku, ML-C06-dative-subject, ML-C39-gaanam]
 sounds: [malayalam-independent-vowel-uu, malayalam-retroflex-nna]
 roots: [proto-dravidian-un-eat-meal]
 etymology_hook: "oon is native Dravidian, from a root shared with the verb unnuka, 'to eat a meal' -- a second eat-verb this book has never taught, standing beside Chapter 32's everyday tinnuka. Tamil's cognate unavu generalised the same root to 'food' itself; Kannada's oota narrowed it to 'a meal,' matching Malayalam's own oon sense for sense. This closes the polite-request-and-repair stretch where it began: dayavaayi asked nicely for eight chapters running, and kshamikkanam is what you say if you show up after the oon is over"
 duration:
   max_seconds: 290
 requires:
-  knowledge: [ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02, ML-CONCEPT-C32-TINNUKA-01, ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02]
+  knowledge: [ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02, ML-CONCEPT-C32-TINNUKA-01, ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-LEX-ANCHOR-GAANAM]
 introduces:
   knowledge: [ML-CONCEPT-C40-OON-01, ML-CONCEPT-C40-OON-02, ML-CONCEPT-C40-OON-03]
 practises:
-  knowledge: [ML-CONCEPT-C40-OON-01, ML-CONCEPT-C40-OON-02, ML-CONCEPT-C40-OON-03, ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02, ML-CONCEPT-C32-TINNUKA-01, ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02]
+  knowledge: [ML-CONCEPT-C40-OON-01, ML-CONCEPT-C40-OON-02, ML-CONCEPT-C40-OON-03, ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02, ML-CONCEPT-C32-TINNUKA-01, ML-CONCEPT-C09-KSHAMIKKANAM-01, ML-CONCEPT-C09-KSHAMIKKANAM-02, ML-CONCEPT-C09-KSHAMIKKANAM-03, ML-CONCEPT-C06-DATIVE-IKKU-01, ML-CONCEPT-C06-DATIVE-IKKU-02, ML-CONCEPT-C06-DATIVE-SUBJECT-03, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-LEX-ANCHOR-GAANAM]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ reviews_of: [ML-C39-paal, ML-C32-tinnuka, ML-C09-kshamikkanam, ML-C06-dative-ikk
 # ഊണ് (ūṇ) — "a meal," the word that closes this stretch's table
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-TINNUKA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-TINNUKA-01, ML-LEX-ANCHOR-GAANAM] -->
 
 [PAUSE 2s] An earlier chapter taught **തിന്നുക**, "to eat," for anything at
 all. It never taught the word for a proper, sit-down meal. Here it is.

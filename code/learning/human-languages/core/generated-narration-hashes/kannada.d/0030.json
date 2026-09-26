@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 30,
-  "sourceHash": "fnv1a64:3e567be5037739b3",
+  "sourceHash": "fnv1a64:b75e7901f7fdc522",
   "lessonIds": [
     "KA-C30-shubha-sanje"
   ],
@@ -10,6 +10,6 @@
   "text": "kannada/narration/ch30.txt",
   "json": "kannada/narration/ch30.json",
   "textHash": "fnv1a64:998df1514749526e",
-  "jsonHash": "fnv1a64:25cb2e7c77806bc3",
+  "jsonHash": "fnv1a64:eba271e2bed641a5",
   "findings": []
 }

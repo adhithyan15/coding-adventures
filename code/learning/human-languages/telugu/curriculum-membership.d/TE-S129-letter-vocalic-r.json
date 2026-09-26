@@ -1,11 +1,11 @@
 {
   "id": "TE-S129-letter-vocalic-r",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 47,
+  "pathOrder": 50,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 47
+      "order": 50
     }
   ]
 }

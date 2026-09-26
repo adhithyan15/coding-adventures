@@ -1,11 +1,11 @@
 {
   "id": "TE-S133-vowel-sign-au",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 51,
+  "pathOrder": 54,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 51
+      "order": 54
     }
   ]
 }

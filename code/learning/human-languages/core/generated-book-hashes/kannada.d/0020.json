@@ -1,11 +1,12 @@
 {
   "language": "kannada",
   "chapter": 20,
-  "sourceHash": "fnv1a64:7439061f76ba1ff2",
+  "sourceHash": "fnv1a64:2acbcfd162bea4ec",
   "lessonIds": [
     "KA-C20-hannondu-ippattu",
     "KA-R20-second-pass-what-the-dative-carries",
     "KA-C20-havamana",
+    "KA-C20-jhari",
     "KA-S128-letter-jha"
   ],
   "tex": "kannada/book/chapters/ch20-numbers-and-weather.tex"

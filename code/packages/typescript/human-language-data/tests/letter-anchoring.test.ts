@@ -219,8 +219,8 @@ describe("the real corpus", () => {
     gujarati: [34, 5, 0],
     hindi: [0, 1, 0],
     japanese: [2, 35, 0],
-    kannada: [19, 0, 0],
-    malayalam: [12, 12, 0],
+    kannada: [10, 0, 0],
+    malayalam: [3, 12, 0],
     marathi: [43, 4, 0],
     marwadi: [0, 49, 0],
     persian: [0, 4, 0],
@@ -228,7 +228,7 @@ describe("the real corpus", () => {
     russian: [1, 0, 0],
     sanskrit: [0, 0, 0],
     tamil: [0, 9, 0],
-    telugu: [13, 0, 0],
+    telugu: [10, 0, 0],
     urdu: [0, 5, 0],
   };
 

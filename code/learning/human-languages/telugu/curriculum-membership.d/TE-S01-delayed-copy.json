@@ -1,11 +1,11 @@
 {
   "id": "TE-S01-delayed-copy",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 21,
+  "pathOrder": 22,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 21
+      "order": 22
     }
   ]
 }

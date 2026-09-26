@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Sorry",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ae23abacaf970a59",
+  "sourceHash": "fnv1a64:1d514e637da17e8f",
   "lessons": [
     {
       "id": "TE-C09-kshaminchandi",
@@ -156,6 +156,111 @@
       ]
     },
     {
+      "id": "TE-C09-itika",
+      "sequence": 364,
+      "title": "ఇటుక (iṭuka) — a brick",
+      "headword": "ఇటుక",
+      "romanization": "iṭuka",
+      "gloss": "a brick",
+      "script": "telugu",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:7e01c51ec4a96c45",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ఇటుక",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ఇటుక — iṭuka — \"a brick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: iṭuka. Look at its shape as you say it: the next lesson takes one piece of it, ఇ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭuka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭuka, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭuka*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a brick\"? (ఇటుక, iṭuka.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "TE-S135-letter-i",
       "sequence": 365,
       "title": "ఇ — one character, met inside words you already say",
@@ -170,7 +275,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:792ba5cef5dd9ef3",
+      "sourceHash": "fnv1a64:7315d2af34c3cc68",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -338,7 +443,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b53b54be95dd2659",
+      "sourceHash": "fnv1a64:5abd973d9712260e",
       "notice": {
         "modality": "sight",
         "needs": [

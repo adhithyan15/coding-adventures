@@ -1,11 +1,11 @@
 {
   "id": "TE-S170-script-dictation-courtesy-letters",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 72,
+  "pathOrder": 75,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 72
+      "order": 75
     }
   ]
 }
