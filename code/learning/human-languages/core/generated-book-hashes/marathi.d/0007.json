@@ -1,8 +1,11 @@
 {
   "language": "marathi",
   "chapter": 7,
-  "sourceHash": "fnv1a64:3c56c23ad8322c95",
+  "sourceHash": "fnv1a64:739efc89b7ce13ca",
   "lessonIds": [
+    "MR-C07-taali",
+    "MR-C07-thaam",
+    "MR-C07-daba",
     "MR-W07-tta",
     "MR-W07-ttha",
     "MR-W07-dda",

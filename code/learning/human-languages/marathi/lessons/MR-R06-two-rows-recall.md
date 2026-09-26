@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-R06-two-rows-recall
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 77
+sequence: 87
 chapter: 6
 type: review
 headword: two rows
 romanization: "don olī"
 gloss: cold retrieval of the velar and palatal rows by voice and breath
 concept_tag: REVIEW
-prerequisites: [MR-W06-jha, MR-R05-marks-recall]
+prerequisites: [MR-W06-jha, MR-R05-marks-recall, MR-C06-jhoka]
 sounds: []
 roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [MR-SCRIPT-KHA-01, MR-SCRIPT-GA-01, MR-SCRIPT-GHA-01, MR-SCRIPT-CA-01, MR-SCRIPT-CHA-01, MR-SCRIPT-JA-01, MR-SCRIPT-JHA-01, MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-RU-MATRA-01, MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-A-INDEPENDENT-01]
+  knowledge: [MR-SCRIPT-KHA-01, MR-SCRIPT-GA-01, MR-SCRIPT-GHA-01, MR-SCRIPT-CA-01, MR-SCRIPT-CHA-01, MR-SCRIPT-JA-01, MR-SCRIPT-JHA-01, MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-RU-MATRA-01, MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-A-INDEPENDENT-01, MR-LEX-ANCHOR-JHOKA]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-KHA-01, MR-SCRIPT-GA-01, MR-SCRIPT-GHA-01, MR-SCRIPT-CA-01, MR-SCRIPT-CHA-01, MR-SCRIPT-JA-01, MR-SCRIPT-JHA-01, MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-RU-MATRA-01, MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-A-INDEPENDENT-01]
+  knowledge: [MR-SCRIPT-KHA-01, MR-SCRIPT-GA-01, MR-SCRIPT-GHA-01, MR-SCRIPT-CA-01, MR-SCRIPT-CHA-01, MR-SCRIPT-JA-01, MR-SCRIPT-JHA-01, MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-RU-MATRA-01, MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-A-INDEPENDENT-01, MR-LEX-ANCHOR-JHOKA]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W06-kha, MR-W06-ga, MR-W06-gha, MR-W06-ca, MR-W06-cha, MR-W06-ja
 # Two rows, told apart by voice and breath
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-JHOKA] -->
 
 Two questions decide every letter in this chapter: is the voice on, and is the breath let out? Answer those and you have the row.
 

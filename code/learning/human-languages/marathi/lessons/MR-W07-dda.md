@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W07-dda
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 82
+sequence: 102
 delivery: script
 chapter: 7
 type: writing
 headword: ड
 romanization: "ḍa"
 gloss: retroflex da — the voiced member of the curled row
-prerequisites: [MR-W07-ttha]
+prerequisites: [MR-W07-ttha, MR-C07-thaam, MR-C07-daba]
 sounds: [retroflex-da]
 roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [MR-SCRIPT-TTHA-01, MR-SCRIPT-TTA-01]
+  knowledge: [MR-SCRIPT-TTHA-01, MR-SCRIPT-TTA-01, MR-LEX-ANCHOR-THAAM, MR-LEX-ANCHOR-DABA]
 introduces:
   knowledge: [MR-SCRIPT-DDA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-DDA-01, MR-SCRIPT-TTHA-01, MR-SCRIPT-TTA-01]
+  knowledge: [MR-SCRIPT-DDA-01, MR-SCRIPT-TTHA-01, MR-SCRIPT-TTA-01, MR-LEX-ANCHOR-THAAM, MR-LEX-ANCHOR-DABA]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W07-ttha, MR-W07-tta]
 # ड — the curl, with the voice on
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-THAAM, MR-LEX-ANCHOR-DABA] -->
 
 Fingers on the throat, tongue curled back. Say *ṭa*, then switch the voice on.
 

@@ -1,8 +1,11 @@
 {
   "language": "marathi",
   "chapter": 7,
-  "sourceHash": "fnv1a64:76dd92867a6ae0af",
+  "sourceHash": "fnv1a64:c7a85b4102881255",
   "lessonIds": [
+    "MR-C07-taali",
+    "MR-C07-thaam",
+    "MR-C07-daba",
     "MR-W07-tta",
     "MR-W07-ttha",
     "MR-W07-dda",
@@ -14,7 +17,7 @@
   "drivablePrefix": 0,
   "text": "marathi/narration/ch07.txt",
   "json": "marathi/narration/ch07.json",
-  "textHash": "fnv1a64:6aedf790fdecc03b",
-  "jsonHash": "fnv1a64:1ff2811576ea3902",
+  "textHash": "fnv1a64:3382d9753d93d08b",
+  "jsonHash": "fnv1a64:b82900c6ecb4ace5",
   "findings": []
 }

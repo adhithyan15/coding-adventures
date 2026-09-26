@@ -3,7 +3,7 @@
     "id": "MR-W07-dda",
     "language": "marathi",
     "chapter": 7,
-    "sequence": 82,
+    "sequence": 102,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -18,7 +18,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:d129cbf0a0fbd6f1",
+    "sourceHash": "fnv1a64:ae97d8b8e4e5bb4b",
     "detachableSegments": [
       "Script",
       "Writing — delayed copy"

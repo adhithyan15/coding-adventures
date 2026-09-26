@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W06-gha
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 72
+sequence: 82
 delivery: script
 chapter: 6
 type: writing
 headword: घ
 romanization: "gha"
 gloss: gha — voiced and breathy at once
-prerequisites: [MR-W06-ga]
+prerequisites: [MR-W06-ga, MR-C06-ghagar]
 sounds: [aspirated-gha]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-GA-01, MR-SCRIPT-KHA-01]
+  knowledge: [MR-SCRIPT-GA-01, MR-SCRIPT-KHA-01, MR-LEX-ANCHOR-GHAGAR]
 introduces:
   knowledge: [MR-SCRIPT-GHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-GHA-01, MR-SCRIPT-GA-01, MR-SCRIPT-KHA-01]
+  knowledge: [MR-SCRIPT-GHA-01, MR-SCRIPT-GA-01, MR-SCRIPT-KHA-01, MR-LEX-ANCHOR-GHAGAR]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W06-ga, MR-W06-kha]
 # घ — voice and breath together
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-GHAGAR] -->
 
 You have the puff, and you have the voice. Now do both in one sound.
 

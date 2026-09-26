@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W07-pa
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 84
+sequence: 104
 delivery: script
 chapter: 7
 type: writing
 headword: प
 romanization: "pa"
 gloss: pa — the lips' plain voiceless stop, partner to the ba you know
-prerequisites: [MR-W07-nna]
+prerequisites: [MR-W07-nna, MR-C05-tup]
 sounds: [unaspirated-p]
 roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [MR-SCRIPT-NNA-01, MR-SCRIPT-DDA-01]
+  knowledge: [MR-SCRIPT-NNA-01, MR-SCRIPT-DDA-01, MR-LEX-ANCHOR-TUP]
 introduces:
   knowledge: [MR-SCRIPT-PA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-PA-01, MR-SCRIPT-NNA-01, MR-SCRIPT-DDA-01]
+  knowledge: [MR-SCRIPT-PA-01, MR-SCRIPT-NNA-01, MR-SCRIPT-DDA-01, MR-LEX-ANCHOR-TUP]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W07-nna, MR-W03-ba]
 # प — the lips, with the voice off
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-TUP] -->
 
 Leave the tongue alone for this one. Close your lips, and let the voice stay off.
 

@@ -1,11 +1,11 @@
 {
   "id": "MR-R08-runway-recall",
   "pathSegment": "MR-PATH-031",
-  "pathOrder": 6,
+  "pathOrder": 10,
   "extensions": [
     {
       "id": "MR-EXT-034-SIBILANT-RUNWAY",
-      "order": 6
+      "order": 10
     }
   ]
 }

@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W02-aa-independent
 spine_node: SPINE-COURTESY-THANK
-sequence: 22
+sequence: 26
 delivery: script
 chapter: 2
 type: writing
 headword: आ
 romanization: "ā"
 gloss: independent long aa
-prerequisites: [MR-W02-visarga]
+prerequisites: [MR-W02-visarga, MR-C02-dukh, MR-C02-aabhaal]
 sounds: [long-aa]
 roots: []
 duration:
   max_seconds: 180
 requires:
-  knowledge: [MR-SCRIPT-VISARGA-01]
+  knowledge: [MR-SCRIPT-VISARGA-01, MR-LEX-ANCHOR-DUKH, MR-LEX-ANCHOR-AABHAAL]
 introduces:
   knowledge: [MR-SCRIPT-AA-INDEPENDENT-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-AA-INDEPENDENT-01]
+  knowledge: [MR-SCRIPT-AA-INDEPENDENT-01, MR-LEX-ANCHOR-DUKH, MR-LEX-ANCHOR-AABHAAL]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W02-visarga]
 # आ — long aa standing alone
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-DUKH, MR-LEX-ANCHOR-AABHAAL] -->
 
 Set one blank line aside for a single new vowel sign.
 

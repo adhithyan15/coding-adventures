@@ -1,0 +1,11 @@
+{
+  "id": "MR-C06-chatri",
+  "pathSegment": "MR-PATH-029",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-032-TWO-ROWS-RUNWAY",
+      "order": 2
+    }
+  ]
+}

@@ -1,8 +1,13 @@
 {
   "language": "marathi",
   "chapter": 6,
-  "sourceHash": "fnv1a64:edea67b3718cc7e8",
+  "sourceHash": "fnv1a64:8297a5c948b19392",
   "lessonIds": [
+    "MR-C06-ghagar",
+    "MR-C06-chav",
+    "MR-C06-chatri",
+    "MR-C06-jahaj",
+    "MR-C06-jhoka",
     "MR-W06-kha",
     "MR-W06-ga",
     "MR-W06-gha",

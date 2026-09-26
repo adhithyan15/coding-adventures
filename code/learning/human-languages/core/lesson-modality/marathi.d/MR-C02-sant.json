@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C02-sant",
+    "language": "marathi",
+    "chapter": 2,
+    "sequence": 23,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d22ec2738e53cd44"
+  },
+  "findings": []
+}

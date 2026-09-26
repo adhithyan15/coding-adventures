@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C06-jhoka",
+    "language": "marathi",
+    "chapter": 6,
+    "sequence": 79,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:96efd28614af5844"
+  },
+  "findings": []
+}

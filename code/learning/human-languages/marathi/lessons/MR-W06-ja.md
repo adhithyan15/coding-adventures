@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W06-ja
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 75
+sequence: 85
 delivery: script
 chapter: 6
 type: writing
 headword: ज
 romanization: "ja"
 gloss: ja — the voiced palatal, also said dz in Marathi
-prerequisites: [MR-W06-cha]
+prerequisites: [MR-W06-cha, MR-C06-chatri, MR-C06-jahaj]
 sounds: [ja-dza]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-CHA-01, MR-SCRIPT-CA-01]
+  knowledge: [MR-SCRIPT-CHA-01, MR-SCRIPT-CA-01, MR-LEX-ANCHOR-CHATRI, MR-LEX-ANCHOR-JAHAJ]
 introduces:
   knowledge: [MR-SCRIPT-JA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-JA-01, MR-SCRIPT-CHA-01, MR-SCRIPT-CA-01]
+  knowledge: [MR-SCRIPT-JA-01, MR-SCRIPT-CHA-01, MR-SCRIPT-CA-01, MR-LEX-ANCHOR-CHATRI, MR-LEX-ANCHOR-JAHAJ]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W06-cha, MR-W06-ca]
 # ज — voice at the palate
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-CHATRI, MR-LEX-ANCHOR-JAHAJ] -->
 
 Fingers on the throat again. Say *ca*, then *ja*. Same roof, voice on.
 

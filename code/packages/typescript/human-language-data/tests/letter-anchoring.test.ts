@@ -248,6 +248,12 @@ describe("the real corpus", () => {
   // the reader already knows. Punjabi's 3 left are real letter sets. Arabic's
   // builds-toward (5 -> 4) and Bengali's (12 -> 11) fell with the anchor words
   // of HL-C443's earlier passes.
+  //
+  // Marathi's cold fell 37 -> 6 when its opening runways began each chapter
+  // with short words (दुःख, आभाळ, अमृत, घागर, टाळी, उलट ...) read before the
+  // letters they hold. The six left: chapter 1's five (the chapter is at its
+  // twelve-atom budget, and हो is written in the lesson itself), and ँ, which
+  // no everyday Marathi word uses.
   const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
     arabic: [2, 4, 0],
     bengali: [0, 11, 0],
@@ -257,7 +263,7 @@ describe("the real corpus", () => {
     japanese: [2, 35, 0],
     kannada: [0, 0, 0],
     malayalam: [3, 12, 0],
-    marathi: [37, 4, 0],
+    marathi: [6, 4, 0],
     marwadi: [0, 49, 0],
     persian: [0, 4, 0],
     punjabi: [3, 2, 0],

@@ -2,7 +2,7 @@
 schema_version: 2
 id: MR-W06-kha
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 70
+sequence: 80
 delivery: script
 chapter: 6
 type: writing

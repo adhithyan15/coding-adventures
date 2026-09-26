@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C06-chav",
+    "language": "marathi",
+    "chapter": 6,
+    "sequence": 76,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e84baeaa4c80b931"
+  },
+  "findings": []
+}

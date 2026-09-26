@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C07-thaam",
+    "language": "marathi",
+    "chapter": 7,
+    "sequence": 98,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6db56909199c0ca4"
+  },
+  "findings": []
+}
