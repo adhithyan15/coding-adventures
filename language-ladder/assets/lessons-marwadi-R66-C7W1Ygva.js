@@ -1,0 +1,122 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R66-first-pass-the-body-family-and-verbs
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 4650
+chapter: 66
+type: review
+headword: (dialogue)
+gloss: first pass over chapters 44-54
+concept_tag: REVIEW
+prerequisites: [MW-C44-pag, MW-C44-matho, MW-C44-bal, MW-C44-dant, MW-C44-galo, MW-C45-pet, MW-C45-angli, MW-C45-hoth, MW-C45-mudo, MW-C45-godo, MW-C46-pith, MW-C46-jibh, MW-C46-akh, MW-C46-nak, MW-C46-dil, MW-C47-tav, MW-C47-bimar, MW-C47-darad, MW-C47-davai, MW-C47-bhukh, MW-C48-raji, MW-C48-udas, MW-C48-daktar, MW-C48-beto, MW-C48-beti, MW-C49-kako, MW-C49-mamo, MW-C49-chhoro, MW-C49-chhori, MW-C49-admi, MW-C50-lugai, MW-C50-parosi, MW-C50-pavno, MW-C50-mastar, MW-C50-khano, MW-C51-pino, MW-C51-jano, MW-C51-avno, MW-C51-dekhno, MW-C51-sunno, MW-C52-baithno, MW-C52-sovno, MW-C52-uthno, MW-C52-chalno, MW-C52-daurno, MW-C53-khelno, MW-C53-bechno, MW-C53-deno, MW-C53-leno, MW-C53-rakhno, MW-C54-kholno, MW-C54-hasno, MW-C54-rovno, MW-C54-gavno, MW-C54-nachno, MW-C66-javab, MW-C66-sabad]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C44-BODY44-01, MW-LEX-C44-BODY44-02, MW-LEX-C44-BODY44-03, MW-LEX-C44-BODY44-04, MW-LEX-C44-BODY44-05, MW-LEX-C45-BODY45-01, MW-LEX-C45-BODY45-02, MW-LEX-C45-BODY45-03, MW-LEX-C45-BODY45-04, MW-LEX-C45-BODY45-05, MW-LEX-C46-BODY46-01, MW-LEX-C46-BODY46-02, MW-LEX-C46-BODY46-03, MW-LEX-C46-BODY46-04, MW-LEX-C46-BODY46-05, MW-LEX-C47-HEALTH47-01, MW-LEX-C47-HEALTH47-02, MW-LEX-C47-HEALTH47-03, MW-LEX-C47-HEALTH47-04, MW-LEX-C47-HEALTH47-05, MW-LEX-C48-HEALTH48-01, MW-LEX-C48-HEALTH48-02, MW-LEX-C48-HEALTH48-03, MW-LEX-C48-HEALTH48-04, MW-LEX-C48-HEALTH48-05, MW-LEX-C49-FAMILY49-01, MW-LEX-C49-FAMILY49-02, MW-LEX-C49-FAMILY49-03, MW-LEX-C49-FAMILY49-04, MW-LEX-C49-FAMILY49-05, MW-LEX-C50-FAMILY50-01, MW-LEX-C50-FAMILY50-02, MW-LEX-C50-FAMILY50-03, MW-LEX-C50-FAMILY50-04, MW-LEX-C50-FAMILY50-05, MW-LEX-C51-VERBS51-01, MW-LEX-C51-VERBS51-02, MW-LEX-C51-VERBS51-03, MW-LEX-C51-VERBS51-04, MW-LEX-C51-VERBS51-05, MW-LEX-C52-VERBS52-01, MW-LEX-C52-VERBS52-02, MW-LEX-C52-VERBS52-03, MW-LEX-C52-VERBS52-04, MW-LEX-C52-VERBS52-05, MW-LEX-C53-VERBS53-01, MW-LEX-C53-VERBS53-02, MW-LEX-C53-VERBS53-03, MW-LEX-C53-VERBS53-04, MW-LEX-C53-VERBS53-05, MW-LEX-C54-VERBS54-01, MW-LEX-C54-VERBS54-02, MW-LEX-C54-VERBS54-03, MW-LEX-C54-VERBS54-04, MW-LEX-C54-VERBS54-05, MW-LEX-C66-SCHOOL66-04, MW-LEX-C66-SCHOOL66-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C44-BODY44-01, MW-LEX-C44-BODY44-02, MW-LEX-C44-BODY44-03, MW-LEX-C44-BODY44-04, MW-LEX-C44-BODY44-05, MW-LEX-C45-BODY45-01, MW-LEX-C45-BODY45-02, MW-LEX-C45-BODY45-03, MW-LEX-C45-BODY45-04, MW-LEX-C45-BODY45-05, MW-LEX-C46-BODY46-01, MW-LEX-C46-BODY46-02, MW-LEX-C46-BODY46-03, MW-LEX-C46-BODY46-04, MW-LEX-C46-BODY46-05, MW-LEX-C47-HEALTH47-01, MW-LEX-C47-HEALTH47-02, MW-LEX-C47-HEALTH47-03, MW-LEX-C47-HEALTH47-04, MW-LEX-C47-HEALTH47-05, MW-LEX-C48-HEALTH48-01, MW-LEX-C48-HEALTH48-02, MW-LEX-C48-HEALTH48-03, MW-LEX-C48-HEALTH48-04, MW-LEX-C48-HEALTH48-05, MW-LEX-C49-FAMILY49-01, MW-LEX-C49-FAMILY49-02, MW-LEX-C49-FAMILY49-03, MW-LEX-C49-FAMILY49-04, MW-LEX-C49-FAMILY49-05, MW-LEX-C50-FAMILY50-01, MW-LEX-C50-FAMILY50-02, MW-LEX-C50-FAMILY50-03, MW-LEX-C50-FAMILY50-04, MW-LEX-C50-FAMILY50-05, MW-LEX-C51-VERBS51-01, MW-LEX-C51-VERBS51-02, MW-LEX-C51-VERBS51-03, MW-LEX-C51-VERBS51-04, MW-LEX-C51-VERBS51-05, MW-LEX-C52-VERBS52-01, MW-LEX-C52-VERBS52-02, MW-LEX-C52-VERBS52-03, MW-LEX-C52-VERBS52-04, MW-LEX-C52-VERBS52-05, MW-LEX-C53-VERBS53-01, MW-LEX-C53-VERBS53-02, MW-LEX-C53-VERBS53-03, MW-LEX-C53-VERBS53-04, MW-LEX-C53-VERBS53-05, MW-LEX-C54-VERBS54-01, MW-LEX-C54-VERBS54-02, MW-LEX-C54-VERBS54-03, MW-LEX-C54-VERBS54-04, MW-LEX-C54-VERBS54-05, MW-LEX-C66-SCHOOL66-04, MW-LEX-C66-SCHOOL66-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C44-pag, MW-C44-matho, MW-C44-bal, MW-C44-dant, MW-C44-galo, MW-C45-pet, MW-C45-angli, MW-C45-hoth, MW-C45-mudo, MW-C45-godo, MW-C46-pith, MW-C46-jibh, MW-C46-akh, MW-C46-nak, MW-C46-dil, MW-C47-tav, MW-C47-bimar, MW-C47-darad, MW-C47-davai, MW-C47-bhukh, MW-C48-raji, MW-C48-udas, MW-C48-daktar, MW-C48-beto, MW-C48-beti, MW-C49-kako, MW-C49-mamo, MW-C49-chhoro, MW-C49-chhori, MW-C49-admi, MW-C50-lugai, MW-C50-parosi, MW-C50-pavno, MW-C50-mastar, MW-C50-khano, MW-C51-pino, MW-C51-jano, MW-C51-avno, MW-C51-dekhno, MW-C51-sunno, MW-C52-baithno, MW-C52-sovno, MW-C52-uthno, MW-C52-chalno, MW-C52-daurno, MW-C53-khelno, MW-C53-bechno, MW-C53-deno, MW-C53-leno, MW-C53-rakhno, MW-C54-kholno, MW-C54-hasno, MW-C54-rovno, MW-C54-gavno, MW-C54-nachno, MW-C66-javab, MW-C66-sabad]
+---
+
+# The body, family and verbs — a first pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C66-SCHOOL66-04, MW-LEX-C66-SCHOOL66-05] -->
+
+[PAUSE 3s] Say the words for an answer and a word.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C44-BODY44-01, MW-LEX-C44-BODY44-02, MW-LEX-C44-BODY44-03, MW-LEX-C44-BODY44-04, MW-LEX-C44-BODY44-05, MW-LEX-C45-BODY45-01, MW-LEX-C45-BODY45-02, MW-LEX-C45-BODY45-03, MW-LEX-C45-BODY45-04, MW-LEX-C45-BODY45-05, MW-LEX-C46-BODY46-01, MW-LEX-C46-BODY46-02, MW-LEX-C46-BODY46-03, MW-LEX-C46-BODY46-04, MW-LEX-C46-BODY46-05, MW-LEX-C47-HEALTH47-01, MW-LEX-C47-HEALTH47-02, MW-LEX-C47-HEALTH47-03, MW-LEX-C47-HEALTH47-04, MW-LEX-C47-HEALTH47-05, MW-LEX-C48-HEALTH48-01, MW-LEX-C48-HEALTH48-02, MW-LEX-C48-HEALTH48-03, MW-LEX-C48-HEALTH48-04, MW-LEX-C48-HEALTH48-05, MW-LEX-C49-FAMILY49-01, MW-LEX-C49-FAMILY49-02, MW-LEX-C49-FAMILY49-03, MW-LEX-C49-FAMILY49-04, MW-LEX-C49-FAMILY49-05, MW-LEX-C50-FAMILY50-01, MW-LEX-C50-FAMILY50-02, MW-LEX-C50-FAMILY50-03, MW-LEX-C50-FAMILY50-04, MW-LEX-C50-FAMILY50-05, MW-LEX-C51-VERBS51-01, MW-LEX-C51-VERBS51-02, MW-LEX-C51-VERBS51-03, MW-LEX-C51-VERBS51-04, MW-LEX-C51-VERBS51-05, MW-LEX-C52-VERBS52-01, MW-LEX-C52-VERBS52-02, MW-LEX-C52-VERBS52-03, MW-LEX-C52-VERBS52-04, MW-LEX-C52-VERBS52-05, MW-LEX-C53-VERBS53-01, MW-LEX-C53-VERBS53-02, MW-LEX-C53-VERBS53-03, MW-LEX-C53-VERBS53-04, MW-LEX-C53-VERBS53-05, MW-LEX-C54-VERBS54-01, MW-LEX-C54-VERBS54-02, MW-LEX-C54-VERBS54-03, MW-LEX-C54-VERBS54-04, MW-LEX-C54-VERBS54-05, MW-LEX-C66-SCHOOL66-04, MW-LEX-C66-SCHOOL66-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a foot, the head, hair, a tooth, the throat]
+- [YOU SAY: the stomach, a finger, a lip, the face, a knee]
+- [YOU SAY: the back, the tongue, an eye, the nose, the heart]
+- [YOU SAY: a fever, ill, pain, medicine, hunger]
+- [YOU SAY: happy, sad, a doctor, a son, a daughter]
+- [YOU SAY: an uncle, an uncle, a boy, a girl, a man]
+- [YOU SAY: a woman, a neighbour, a guest, a teacher, to eat]
+- [YOU SAY: to drink, to go, to come, to see, to hear]
+- [YOU SAY: to sit, to sleep, to get up, to walk, to run]
+- [YOU SAY: to play, to sell, to give, to take, to keep]
+- [YOU SAY: to open, to laugh, to cry, to sing, to dance]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C44-BODY44-01, MW-LEX-C44-BODY44-02, MW-LEX-C44-BODY44-03, MW-LEX-C44-BODY44-04, MW-LEX-C44-BODY44-05, MW-LEX-C45-BODY45-01, MW-LEX-C45-BODY45-02, MW-LEX-C45-BODY45-03, MW-LEX-C45-BODY45-04, MW-LEX-C45-BODY45-05, MW-LEX-C46-BODY46-01, MW-LEX-C46-BODY46-02, MW-LEX-C46-BODY46-03, MW-LEX-C46-BODY46-04, MW-LEX-C46-BODY46-05, MW-LEX-C47-HEALTH47-01, MW-LEX-C47-HEALTH47-02, MW-LEX-C47-HEALTH47-03, MW-LEX-C47-HEALTH47-04, MW-LEX-C47-HEALTH47-05, MW-LEX-C48-HEALTH48-01, MW-LEX-C48-HEALTH48-02, MW-LEX-C48-HEALTH48-03, MW-LEX-C48-HEALTH48-04, MW-LEX-C48-HEALTH48-05, MW-LEX-C49-FAMILY49-01, MW-LEX-C49-FAMILY49-02, MW-LEX-C49-FAMILY49-03, MW-LEX-C49-FAMILY49-04, MW-LEX-C49-FAMILY49-05, MW-LEX-C50-FAMILY50-01, MW-LEX-C50-FAMILY50-02, MW-LEX-C50-FAMILY50-03, MW-LEX-C50-FAMILY50-04, MW-LEX-C50-FAMILY50-05, MW-LEX-C51-VERBS51-01, MW-LEX-C51-VERBS51-02, MW-LEX-C51-VERBS51-03, MW-LEX-C51-VERBS51-04, MW-LEX-C51-VERBS51-05, MW-LEX-C52-VERBS52-01, MW-LEX-C52-VERBS52-02, MW-LEX-C52-VERBS52-03, MW-LEX-C52-VERBS52-04, MW-LEX-C52-VERBS52-05, MW-LEX-C53-VERBS53-01, MW-LEX-C53-VERBS53-02, MW-LEX-C53-VERBS53-03, MW-LEX-C53-VERBS53-04, MW-LEX-C53-VERBS53-05, MW-LEX-C54-VERBS54-01, MW-LEX-C54-VERBS54-02, MW-LEX-C54-VERBS54-03, MW-LEX-C54-VERBS54-04, MW-LEX-C54-VERBS54-05, MW-LEX-C66-SCHOOL66-04, MW-LEX-C66-SCHOOL66-05] -->
+<!-- hl-activity: {"id":"MW-R66-first-pass-the-body-family-and-verbs-type","kind":"text","assesses":["MW-LEX-C66-SCHOOL66-04"],"prompt":"Type the Marwadi for 'an answer'.","answer":"जवाब","accepted":["javāb"],"feedback":{"correct":"Right: जवाब (javāb) is 'an answer'.","incorrect":"'an answer' is जवाब (javāb)."},"response_seconds":10} -->
+
+[PAUSE 3s] A foot? (**पग**, *pag*.) The head? (**माथो**, *mātho*.) Hair? (**बाळ**, *bāḷ*.) A tooth? (**दांत**, *dānt*.) The throat? (**गळो**, *gaḷo*.) The stomach? (**पेट**, *peṭ*.) A finger? (**आंगळी**, *āṅgḷī*.) A lip? (**होठ**, *hoṭh*.) The face? (**मूंडो**, *mū̃ḍo*.) A knee? (**गोडो**, *goḍo*.) The back? (**पीठ**, *pīṭh*.) The tongue? (**जीभ**, *jībh*.) An eye? (**आंख**, *ā̃kh*.) The nose? (**नाक**, *nāk*.) The heart? (**दिल**, *dil*.) A fever? (**ताव**, *tāv*.) Ill? (**बीमार**, *bīmār*.) Pain? (**दरद**, *darad*.) Medicine? (**दवाई**, *davāī*.) Hunger? (**भूख**, *bhūkh*.) Happy? (**राजी**, *rājī*.) Sad? (**उदास**, *udās*.) A doctor? (**डाक्टर**, *ḍākṭar*.) A son? (**बेटो**, *beṭo*.) A daughter? (**बेटी**, *beṭī*.) An uncle? (**काको**, *kāko*.) An uncle? (**मामो**, *māmo*.) A boy? (**छोरो**, *chhoro*.) A girl? (**छोरी**, *chhorī*.) A man? (**आदमी**, *ādmī*.) A woman? (**लुगाई**, *lugāī*.) A neighbour? (**पाड़ोसी**, *pāṛosī*.) A guest? (**पावणो**, *pāvṇo*.) A teacher? (**मास्टर**, *māsṭar*.) To eat? (**खाणो**, *khāṇo*.) To drink? (**पीणो**, *pīṇo*.) To go? (**जाणो**, *jāṇo*.) To come? (**आवणो**, *āvṇo*.) To see? (**देखणो**, *dekhṇo*.) To hear? (**सुणणो**, *suṇṇo*.) To sit? (**बैठणो**, *baiṭhṇo*.) To sleep? (**सोवणो**, *sovṇo*.) To get up? (**उठणो**, *uṭhṇo*.) To walk? (**चालणो**, *chālṇo*.) To run? (**दौड़णो**, *dauṛṇo*.) To play? (**खेलणो**, *khelṇo*.) To sell? (**बेचणो**, *bechṇo*.) To give? (**देणो**, *deṇo*.) To take? (**लेणो**, *leṇo*.) To keep? (**राखणो**, *rākhṇo*.) To open? (**खोलणो**, *kholṇo*.) To laugh? (**हंसणो**, *hãsṇo*.) To cry? (**रोवणो**, *rovṇo*.) To sing? (**गावणो**, *gāvṇo*.) To dance? (**नाचणो**, *nāchṇo*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: MW-R66-second-pass-more-verbs-food-and-the-home
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 4660
+chapter: 66
+type: review
+headword: (dialogue)
+gloss: second pass over chapters 55-66
+concept_tag: REVIEW
+prerequisites: [MW-C55-milno, MW-C55-sikhno, MW-C55-bhulno, MW-C55-lavno, MW-C55-bhejno, MW-C56-ginno, MW-C56-pakarno, MW-C56-katno, MW-C56-rokno, MW-C56-batano, MW-C57-pairno, MW-C57-chhorno, MW-C57-bolno, MW-C57-likhno, MW-C57-sochno, MW-C58-puchhno, MW-C58-karno, MW-C58-mas, MW-C58-machhli, MW-C58-chaval, MW-C59-seb, MW-C59-kelo, MW-C59-alu, MW-C59-tamatar, MW-C59-gajar, MW-C60-khad, MW-C60-lun, MW-C60-mirach, MW-C60-dahi, MW-C60-tel, MW-C61-angur, MW-C61-nimbu, MW-C61-ato, MW-C61-kado, MW-C61-mithai, MW-C62-khirki, MW-C62-kursi, MW-C62-mej, MW-C62-bhit, MW-C62-chhat, MW-C63-khat, MW-C63-almari, MW-C63-diyo, MW-C63-pankho, MW-C63-chabi, MW-C64-pyalo, MW-C64-thali, MW-C64-chamcho, MW-C64-chhuri, MW-C64-botal, MW-C65-kivar, MW-C65-rasoi, MW-C65-kamro, MW-C65-kitab, MW-C65-kalam, MW-C66-akhbar, MW-C66-skul, MW-C66-saval, MW-C66-javab, MW-C66-sabad]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [MW-LEX-C55-VERBS55-01, MW-LEX-C55-VERBS55-02, MW-LEX-C55-VERBS55-03, MW-LEX-C55-VERBS55-04, MW-LEX-C55-VERBS55-05, MW-LEX-C56-VERBS56-01, MW-LEX-C56-VERBS56-02, MW-LEX-C56-VERBS56-03, MW-LEX-C56-VERBS56-04, MW-LEX-C56-VERBS56-05, MW-LEX-C57-VERBS57-01, MW-LEX-C57-VERBS57-02, MW-LEX-C57-VERBS57-03, MW-LEX-C57-VERBS57-04, MW-LEX-C57-VERBS57-05, MW-LEX-C58-VERBS58-01, MW-LEX-C58-VERBS58-02, MW-LEX-C58-VERBS58-03, MW-LEX-C58-VERBS58-04, MW-LEX-C58-VERBS58-05, MW-LEX-C59-VERBS59-01, MW-LEX-C59-VERBS59-02, MW-LEX-C59-VERBS59-03, MW-LEX-C59-VERBS59-04, MW-LEX-C59-VERBS59-05, MW-LEX-C60-VERBS60-01, MW-LEX-C60-VERBS60-02, MW-LEX-C60-VERBS60-03, MW-LEX-C60-VERBS60-04, MW-LEX-C60-VERBS60-05, MW-LEX-C61-VERBS61-01, MW-LEX-C61-VERBS61-02, MW-LEX-C61-VERBS61-03, MW-LEX-C61-VERBS61-04, MW-LEX-C61-VERBS61-05, MW-LEX-C62-HOME62-01, MW-LEX-C62-HOME62-02, MW-LEX-C62-HOME62-03, MW-LEX-C62-HOME62-04, MW-LEX-C62-HOME62-05, MW-LEX-C63-HOME63-01, MW-LEX-C63-HOME63-02, MW-LEX-C63-HOME63-03, MW-LEX-C63-HOME63-04, MW-LEX-C63-HOME63-05, MW-LEX-C64-HOME64-01, MW-LEX-C64-HOME64-02, MW-LEX-C64-HOME64-03, MW-LEX-C64-HOME64-04, MW-LEX-C64-HOME64-05, MW-LEX-C65-HOME65-01, MW-LEX-C65-HOME65-02, MW-LEX-C65-HOME65-03, MW-LEX-C65-HOME65-04, MW-LEX-C65-HOME65-05, MW-LEX-C66-SCHOOL66-01, MW-LEX-C66-SCHOOL66-02, MW-LEX-C66-SCHOOL66-03, MW-LEX-C66-SCHOOL66-04, MW-LEX-C66-SCHOOL66-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [MW-LEX-C55-VERBS55-01, MW-LEX-C55-VERBS55-02, MW-LEX-C55-VERBS55-03, MW-LEX-C55-VERBS55-04, MW-LEX-C55-VERBS55-05, MW-LEX-C56-VERBS56-01, MW-LEX-C56-VERBS56-02, MW-LEX-C56-VERBS56-03, MW-LEX-C56-VERBS56-04, MW-LEX-C56-VERBS56-05, MW-LEX-C57-VERBS57-01, MW-LEX-C57-VERBS57-02, MW-LEX-C57-VERBS57-03, MW-LEX-C57-VERBS57-04, MW-LEX-C57-VERBS57-05, MW-LEX-C58-VERBS58-01, MW-LEX-C58-VERBS58-02, MW-LEX-C58-VERBS58-03, MW-LEX-C58-VERBS58-04, MW-LEX-C58-VERBS58-05, MW-LEX-C59-VERBS59-01, MW-LEX-C59-VERBS59-02, MW-LEX-C59-VERBS59-03, MW-LEX-C59-VERBS59-04, MW-LEX-C59-VERBS59-05, MW-LEX-C60-VERBS60-01, MW-LEX-C60-VERBS60-02, MW-LEX-C60-VERBS60-03, MW-LEX-C60-VERBS60-04, MW-LEX-C60-VERBS60-05, MW-LEX-C61-VERBS61-01, MW-LEX-C61-VERBS61-02, MW-LEX-C61-VERBS61-03, MW-LEX-C61-VERBS61-04, MW-LEX-C61-VERBS61-05, MW-LEX-C62-HOME62-01, MW-LEX-C62-HOME62-02, MW-LEX-C62-HOME62-03, MW-LEX-C62-HOME62-04, MW-LEX-C62-HOME62-05, MW-LEX-C63-HOME63-01, MW-LEX-C63-HOME63-02, MW-LEX-C63-HOME63-03, MW-LEX-C63-HOME63-04, MW-LEX-C63-HOME63-05, MW-LEX-C64-HOME64-01, MW-LEX-C64-HOME64-02, MW-LEX-C64-HOME64-03, MW-LEX-C64-HOME64-04, MW-LEX-C64-HOME64-05, MW-LEX-C65-HOME65-01, MW-LEX-C65-HOME65-02, MW-LEX-C65-HOME65-03, MW-LEX-C65-HOME65-04, MW-LEX-C65-HOME65-05, MW-LEX-C66-SCHOOL66-01, MW-LEX-C66-SCHOOL66-02, MW-LEX-C66-SCHOOL66-03, MW-LEX-C66-SCHOOL66-04, MW-LEX-C66-SCHOOL66-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: central-marwari-devanagari
+reviews_of: [MW-C55-milno, MW-C55-sikhno, MW-C55-bhulno, MW-C55-lavno, MW-C55-bhejno, MW-C56-ginno, MW-C56-pakarno, MW-C56-katno, MW-C56-rokno, MW-C56-batano, MW-C57-pairno, MW-C57-chhorno, MW-C57-bolno, MW-C57-likhno, MW-C57-sochno, MW-C58-puchhno, MW-C58-karno, MW-C58-mas, MW-C58-machhli, MW-C58-chaval, MW-C59-seb, MW-C59-kelo, MW-C59-alu, MW-C59-tamatar, MW-C59-gajar, MW-C60-khad, MW-C60-lun, MW-C60-mirach, MW-C60-dahi, MW-C60-tel, MW-C61-angur, MW-C61-nimbu, MW-C61-ato, MW-C61-kado, MW-C61-mithai, MW-C62-khirki, MW-C62-kursi, MW-C62-mej, MW-C62-bhit, MW-C62-chhat, MW-C63-khat, MW-C63-almari, MW-C63-diyo, MW-C63-pankho, MW-C63-chabi, MW-C64-pyalo, MW-C64-thali, MW-C64-chamcho, MW-C64-chhuri, MW-C64-botal, MW-C65-kivar, MW-C65-rasoi, MW-C65-kamro, MW-C65-kitab, MW-C65-kalam, MW-C66-akhbar, MW-C66-skul, MW-C66-saval, MW-C66-javab, MW-C66-sabad]
+---
+
+# More verbs, food and the home — a second pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C55-VERBS55-01, MW-LEX-C55-VERBS55-02] -->
+
+[PAUSE 3s] Say the words for to meet and to learn.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C55-VERBS55-01, MW-LEX-C55-VERBS55-02, MW-LEX-C55-VERBS55-03, MW-LEX-C55-VERBS55-04, MW-LEX-C55-VERBS55-05, MW-LEX-C56-VERBS56-01, MW-LEX-C56-VERBS56-02, MW-LEX-C56-VERBS56-03, MW-LEX-C56-VERBS56-04, MW-LEX-C56-VERBS56-05, MW-LEX-C57-VERBS57-01, MW-LEX-C57-VERBS57-02, MW-LEX-C57-VERBS57-03, MW-LEX-C57-VERBS57-04, MW-LEX-C57-VERBS57-05, MW-LEX-C58-VERBS58-01, MW-LEX-C58-VERBS58-02, MW-LEX-C58-VERBS58-03, MW-LEX-C58-VERBS58-04, MW-LEX-C58-VERBS58-05, MW-LEX-C59-VERBS59-01, MW-LEX-C59-VERBS59-02, MW-LEX-C59-VERBS59-03, MW-LEX-C59-VERBS59-04, MW-LEX-C59-VERBS59-05, MW-LEX-C60-VERBS60-01, MW-LEX-C60-VERBS60-02, MW-LEX-C60-VERBS60-03, MW-LEX-C60-VERBS60-04, MW-LEX-C60-VERBS60-05, MW-LEX-C61-VERBS61-01, MW-LEX-C61-VERBS61-02, MW-LEX-C61-VERBS61-03, MW-LEX-C61-VERBS61-04, MW-LEX-C61-VERBS61-05, MW-LEX-C62-HOME62-01, MW-LEX-C62-HOME62-02, MW-LEX-C62-HOME62-03, MW-LEX-C62-HOME62-04, MW-LEX-C62-HOME62-05, MW-LEX-C63-HOME63-01, MW-LEX-C63-HOME63-02, MW-LEX-C63-HOME63-03, MW-LEX-C63-HOME63-04, MW-LEX-C63-HOME63-05, MW-LEX-C64-HOME64-01, MW-LEX-C64-HOME64-02, MW-LEX-C64-HOME64-03, MW-LEX-C64-HOME64-04, MW-LEX-C64-HOME64-05, MW-LEX-C65-HOME65-01, MW-LEX-C65-HOME65-02, MW-LEX-C65-HOME65-03, MW-LEX-C65-HOME65-04, MW-LEX-C65-HOME65-05, MW-LEX-C66-SCHOOL66-01, MW-LEX-C66-SCHOOL66-02, MW-LEX-C66-SCHOOL66-03, MW-LEX-C66-SCHOOL66-04, MW-LEX-C66-SCHOOL66-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to meet, to learn, to forget, to bring, to send]
+- [YOU SAY: to count, to catch, to cut, to stop, to tell]
+- [YOU SAY: to wear, to leave, to speak, to write, to think]
+- [YOU SAY: to ask, to do, meat, a fish, rice]
+- [YOU SAY: an apple, a banana, a potato, a tomato, a carrot]
+- [YOU SAY: sugar, salt, a chilli, yoghurt, oil]
+- [YOU SAY: grapes, a lemon, flour, an onion, sweets]
+- [YOU SAY: a window, a chair, a table, a wall, a roof]
+- [YOU SAY: a string bed, a cupboard, a lamp, a fan, a key]
+- [YOU SAY: a cup, a plate, a spoon, a knife, a bottle]
+- [YOU SAY: a door, a kitchen, a room, a book, a pen]
+- [YOU SAY: a newspaper, a school, a question, an answer, a word]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-C55-VERBS55-01, MW-LEX-C55-VERBS55-02, MW-LEX-C55-VERBS55-03, MW-LEX-C55-VERBS55-04, MW-LEX-C55-VERBS55-05, MW-LEX-C56-VERBS56-01, MW-LEX-C56-VERBS56-02, MW-LEX-C56-VERBS56-03, MW-LEX-C56-VERBS56-04, MW-LEX-C56-VERBS56-05, MW-LEX-C57-VERBS57-01, MW-LEX-C57-VERBS57-02, MW-LEX-C57-VERBS57-03, MW-LEX-C57-VERBS57-04, MW-LEX-C57-VERBS57-05, MW-LEX-C58-VERBS58-01, MW-LEX-C58-VERBS58-02, MW-LEX-C58-VERBS58-03, MW-LEX-C58-VERBS58-04, MW-LEX-C58-VERBS58-05, MW-LEX-C59-VERBS59-01, MW-LEX-C59-VERBS59-02, MW-LEX-C59-VERBS59-03, MW-LEX-C59-VERBS59-04, MW-LEX-C59-VERBS59-05, MW-LEX-C60-VERBS60-01, MW-LEX-C60-VERBS60-02, MW-LEX-C60-VERBS60-03, MW-LEX-C60-VERBS60-04, MW-LEX-C60-VERBS60-05, MW-LEX-C61-VERBS61-01, MW-LEX-C61-VERBS61-02, MW-LEX-C61-VERBS61-03, MW-LEX-C61-VERBS61-04, MW-LEX-C61-VERBS61-05, MW-LEX-C62-HOME62-01, MW-LEX-C62-HOME62-02, MW-LEX-C62-HOME62-03, MW-LEX-C62-HOME62-04, MW-LEX-C62-HOME62-05, MW-LEX-C63-HOME63-01, MW-LEX-C63-HOME63-02, MW-LEX-C63-HOME63-03, MW-LEX-C63-HOME63-04, MW-LEX-C63-HOME63-05, MW-LEX-C64-HOME64-01, MW-LEX-C64-HOME64-02, MW-LEX-C64-HOME64-03, MW-LEX-C64-HOME64-04, MW-LEX-C64-HOME64-05, MW-LEX-C65-HOME65-01, MW-LEX-C65-HOME65-02, MW-LEX-C65-HOME65-03, MW-LEX-C65-HOME65-04, MW-LEX-C65-HOME65-05, MW-LEX-C66-SCHOOL66-01, MW-LEX-C66-SCHOOL66-02, MW-LEX-C66-SCHOOL66-03, MW-LEX-C66-SCHOOL66-04, MW-LEX-C66-SCHOOL66-05] -->
+<!-- hl-activity: {"id":"MW-R66-second-pass-more-verbs-food-and-the-home-type","kind":"text","assesses":["MW-LEX-C55-VERBS55-01"],"prompt":"Type the Marwadi for 'to meet'.","answer":"मिलणो","accepted":["milṇo"],"feedback":{"correct":"Right: मिलणो (milṇo) is 'to meet'.","incorrect":"'to meet' is मिलणो (milṇo)."},"response_seconds":10} -->
+
+[PAUSE 3s] To meet? (**मिलणो**, *milṇo*.) To learn? (**सीखणो**, *sīkhṇo*.) To forget? (**भूलणो**, *bhūlṇo*.) To bring? (**लावणो**, *lāvṇo*.) To send? (**भेजणो**, *bhejṇo*.) To count? (**गिणणो**, *giṇṇo*.) To catch? (**पकड़णो**, *pakaṛṇo*.) To cut? (**काटणो**, *kāṭṇo*.) To stop? (**रोकणो**, *rokṇo*.) To tell? (**बताणो**, *batāṇo*.) To wear? (**पैरणो**, *pairṇo*.) To leave? (**छोड़णो**, *chhoṛṇo*.) To speak? (**बोलणो**, *bolṇo*.) To write? (**लिखणो**, *likhṇo*.) To think? (**सोचणो**, *sochṇo*.) To ask? (**पूछणो**, *pūchhṇo*.) To do? (**करणो**, *karṇo*.) Meat? (**मांस**, *mā̃s*.) A fish? (**माछली**, *māchhlī*.) Rice? (**चावळ**, *chāvaḷ*.) An apple? (**सेब**, *seb*.) A banana? (**केळो**, *keḷo*.) A potato? (**आलू**, *ālū*.) A tomato? (**टमाटर**, *ṭamāṭar*.) A carrot? (**गाजर**, *gājar*.) Sugar? (**खांड**, *khā̃ḍ*.) Salt? (**लूण**, *lūṇ*.) A chilli? (**मिरच**, *mirach*.) Yoghurt? (**दही**, *dahī*.) Oil? (**तेल**, *tel*.) Grapes? (**अंगूर**, *aṅgūr*.) A lemon? (**नींबू**, *nīmbū*.) Flour? (**आटो**, *āṭo*.) An onion? (**कांदो**, *kā̃do*.) Sweets? (**मिठाई**, *miṭhāī*.) A window? (**खिड़की**, *khiṛkī*.) A chair? (**कुरसी**, *kursī*.) A table? (**मेज**, *mej*.) A wall? (**भींत**, *bhī̃t*.) A roof? (**छात**, *chhāt*.) A string bed? (**खाट**, *khāṭ*.) A cupboard? (**अलमारी**, *almārī*.) A lamp? (**दीयो**, *dīyo*.) A fan? (**पंखो**, *paṅkho*.) A key? (**चाबी**, *chābī*.) A cup? (**प्यालो**, *pyālo*.) A plate? (**थाळी**, *thāḷī*.) A spoon? (**चमचो**, *chamcho*.) A knife? (**छुरी**, *chhurī*.) A bottle? (**बोतल**, *botal*.) A door? (**किवाड़**, *kivāṛ*.) A kitchen? (**रसोई**, *rasoī*.) A room? (**कमरो**, *kamro*.) A book? (**किताब**, *kitāb*.) A pen? (**कलम**, *kalam*.) A newspaper? (**अखबार**, *akhbār*.) A school? (**स्कूल**, *skūl*.) A question? (**सवाल**, *savāl*.) An answer? (**जवाब**, *javāb*.) A word? (**सबद**, *sabad*.)
+`;export{t as n,r as t};
