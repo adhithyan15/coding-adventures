@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:46defc1e5de12131",
+  "lessonIds": [
+    "BN-C55-bodlano",
+    "BN-C55-daka",
+    "BN-C55-paowa",
+    "BN-C55-mangsho",
+    "BN-C55-machh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch55.txt",
+  "json": "bengali/narration/ch55.json",
+  "textHash": "fnv1a64:fbce0725be819ea4",
+  "jsonHash": "fnv1a64:6d3ab58dcbe290ec",
+  "findings": []
+}

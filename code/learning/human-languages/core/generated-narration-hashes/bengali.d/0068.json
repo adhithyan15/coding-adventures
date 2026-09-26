@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:e04de8542d582265",
+  "lessonIds": [
+    "BN-C68-mati",
+    "BN-C68-batas",
+    "BN-C68-akash",
+    "BN-C68-kukur",
+    "BN-C68-biral"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch68.txt",
+  "json": "bengali/narration/ch68.json",
+  "textHash": "fnv1a64:70eb70bff0014758",
+  "jsonHash": "fnv1a64:9196f92fbe8e5892",
+  "findings": []
+}

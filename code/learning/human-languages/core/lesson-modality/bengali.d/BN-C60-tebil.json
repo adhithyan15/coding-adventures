@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C60-tebil",
+    "language": "bengali",
+    "chapter": 60,
+    "sequence": 3140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b906d6754a521155"
+  },
+  "findings": []
+}

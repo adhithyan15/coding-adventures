@@ -1,0 +1,11 @@
+{
+  "id": "BN-C77-badami",
+  "pathSegment": "BN-PATH-77-ADJ77",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-77-ADJ77",
+      "order": 2
+    }
+  ]
+}

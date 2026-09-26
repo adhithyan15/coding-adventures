@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C70-kak",
+    "language": "bengali",
+    "chapter": 70,
+    "sequence": 3690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04e80153b520c21c"
+  },
+  "findings": []
+}

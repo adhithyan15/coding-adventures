@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:adc0ac9dfcb84ab6",
+  "lessonIds": [
+    "BN-C56-dal",
+    "BN-C56-phol",
+    "BN-C56-apel",
+    "BN-C56-kola",
+    "BN-C56-alu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch56.txt",
+  "json": "bengali/narration/ch56.json",
+  "textHash": "fnv1a64:87e6e0d4c2168971",
+  "jsonHash": "fnv1a64:eaa55fd30887d965",
+  "findings": []
+}

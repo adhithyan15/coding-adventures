@@ -1,0 +1,11 @@
+{
+  "id": "BN-C56-kola",
+  "pathSegment": "BN-PATH-56-FOOD56",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-56-FOOD56",
+      "order": 3
+    }
+  ]
+}

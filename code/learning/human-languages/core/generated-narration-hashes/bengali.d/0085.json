@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:99be6eec80250098",
+  "lessonIds": [
+    "BN-C85-pnt",
+    "BN-C85-moja",
+    "BN-C85-poket",
+    "BN-C85-angti",
+    "BN-C85-tupi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch85.txt",
+  "json": "bengali/narration/ch85.json",
+  "textHash": "fnv1a64:bd4c340aa9bdc882",
+  "jsonHash": "fnv1a64:365e5d4675e490b6",
+  "findings": []
+}

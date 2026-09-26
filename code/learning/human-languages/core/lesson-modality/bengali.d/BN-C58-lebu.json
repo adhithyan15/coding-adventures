@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C58-lebu",
+    "language": "bengali",
+    "chapter": 58,
+    "sequence": 3040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76c0d5ef800d2a7a"
+  },
+  "findings": []
+}

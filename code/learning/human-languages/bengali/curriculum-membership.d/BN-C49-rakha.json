@@ -1,0 +1,11 @@
+{
+  "id": "BN-C49-rakha",
+  "pathSegment": "BN-PATH-49-VERBS49",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-49-VERBS49",
+      "order": 3
+    }
+  ]
+}

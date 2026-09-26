@@ -1,0 +1,11 @@
+{
+  "id": "BN-C66-pukur",
+  "pathSegment": "BN-PATH-66-NATURE66",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-66-NATURE66",
+      "order": 3
+    }
+  ]
+}

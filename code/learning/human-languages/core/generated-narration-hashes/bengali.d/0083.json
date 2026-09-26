@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:8e6b950cc8b11138",
+  "lessonIds": [
+    "BN-C83-gari",
+    "BN-C83-bas",
+    "BN-C83-setu",
+    "BN-C83-mondir",
+    "BN-C83-hotel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch83.txt",
+  "json": "bengali/narration/ch83.json",
+  "textHash": "fnv1a64:b70ba0f171a4310e",
+  "jsonHash": "fnv1a64:6f2a64a0f4b115db",
+  "findings": []
+}

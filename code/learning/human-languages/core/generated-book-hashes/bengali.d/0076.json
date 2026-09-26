@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:c05973622b85aaa1",
+  "lessonIds": [
+    "BN-C76-mota",
+    "BN-C76-roga",
+    "BN-C76-halka",
+    "BN-C76-bhari",
+    "BN-C76-sotti"
+  ],
+  "tex": "bengali/book/chapters/ch76-fat-thin-light-heavy-true.tex"
+}

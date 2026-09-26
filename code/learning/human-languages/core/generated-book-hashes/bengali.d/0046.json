@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:59c6282ecdd6b8f1",
+  "lessonIds": [
+    "BN-C46-dadu",
+    "BN-C46-didima",
+    "BN-C46-kaka",
+    "BN-C46-mama",
+    "BN-C46-mashi"
+  ],
+  "tex": "bengali/book/chapters/ch46-grandfather-grandmother-uncle-uncle-aunt.tex"
+}

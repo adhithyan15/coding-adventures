@@ -1,0 +1,11 @@
+{
+  "id": "BN-C70-hati",
+  "pathSegment": "BN-PATH-70-ANIMALS70",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-70-ANIMALS70",
+      "order": 1
+    }
+  ]
+}

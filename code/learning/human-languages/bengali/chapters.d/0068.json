@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Soil, Wind, Sky, Dog, Cat",
+  "label": "ch:bn-soil-wind-sky-dog-cat",
+  "canDo": "I can say soil, earth, wind, the sky, a dog and a cat.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C68-biral",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can say soil, earth, wind, the sky, a dog and a cat.",
+    "assesses": [
+      "BN-LEX-C68-NATURE68-03",
+      "BN-LEX-C68-NATURE68-04",
+      "BN-LEX-C68-NATURE68-05"
+    ]
+  }
+}

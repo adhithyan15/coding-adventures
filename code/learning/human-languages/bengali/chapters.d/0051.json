@@ -1,0 +1,19 @@
+{
+  "chapter": 51,
+  "title": "To learn, To forget, To want, To bring, To count",
+  "label": "ch:bn-to-learn-to-forget-to-want-to-bring-to-count",
+  "canDo": "I can say to learn, to forget, to want, to bring and to count.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C51-gona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 51: i can say to learn, to forget, to want, to bring and to count.",
+    "assesses": [
+      "BN-LEX-C51-VERBS51-03",
+      "BN-LEX-C51-VERBS51-04",
+      "BN-LEX-C51-VERBS51-05"
+    ]
+  }
+}

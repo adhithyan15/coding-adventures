@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:5a66a28dc5292d96",
+  "lessonIds": [
+    "BN-C87-kuri",
+    "BN-C87-tirish",
+    "BN-C87-chollish",
+    "BN-C87-ponchash",
+    "BN-C87-eksho"
+  ],
+  "tex": "bengali/book/chapters/ch87-twenty-thirty-forty-fifty-hundred.tex"
+}

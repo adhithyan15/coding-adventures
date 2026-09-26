@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:24128a106682e60e",
+  "lessonIds": [
+    "BN-C86-juto",
+    "BN-C86-chhoy",
+    "BN-C86-sat",
+    "BN-C86-at",
+    "BN-C86-dosh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch86.txt",
+  "json": "bengali/narration/ch86.json",
+  "textHash": "fnv1a64:106bbdaaecc2270b",
+  "jsonHash": "fnv1a64:62debcb2f600a5a8",
+  "findings": []
+}

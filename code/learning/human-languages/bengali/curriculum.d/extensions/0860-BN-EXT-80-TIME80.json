@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-80-TIME80",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say lateness, before, after, later, time and midday.",
+  "prerequisites": []
+}

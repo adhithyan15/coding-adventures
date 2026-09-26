@@ -1,0 +1,19 @@
+{
+  "chapter": 66,
+  "title": "Mountain, Forest, River, Pond, Stone",
+  "label": "ch:bn-mountain-forest-river-pond-stone",
+  "canDo": "I can say a mountain, a forest, a river, a pond and a stone.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C66-pathor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: i can say a mountain, a forest, a river, a pond and a stone.",
+    "assesses": [
+      "BN-LEX-C66-NATURE66-03",
+      "BN-LEX-C66-NATURE66-04",
+      "BN-LEX-C66-NATURE66-05"
+    ]
+  }
+}

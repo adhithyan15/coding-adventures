@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C76-mota",
+    "language": "bengali",
+    "chapter": 76,
+    "sequence": 3950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69876c0f385a7d6e"
+  },
+  "findings": []
+}

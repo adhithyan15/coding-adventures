@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "Carrot, Salt, Butter, Honey, Oil",
+  "label": "ch:bn-carrot-salt-butter-honey-oil",
+  "canDo": "I can say a carrot, salt, butter, honey and oil.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "BN-C57-tel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: i can say a carrot, salt, butter, honey and oil.",
+    "assesses": [
+      "BN-LEX-C57-FOOD57-03",
+      "BN-LEX-C57-FOOD57-04",
+      "BN-LEX-C57-FOOD57-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C68-akash",
+  "pathSegment": "BN-PATH-68-NATURE68",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-68-NATURE68",
+      "order": 2
+    }
+  ]
+}

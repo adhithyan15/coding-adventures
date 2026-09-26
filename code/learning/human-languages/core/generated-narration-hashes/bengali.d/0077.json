@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:49627872fc570f78",
+  "lessonIds": [
+    "BN-C77-mittha",
+    "BN-C77-holud",
+    "BN-C77-badami",
+    "BN-C77-sundor",
+    "BN-C77-din"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch77.txt",
+  "json": "bengali/narration/ch77.json",
+  "textHash": "fnv1a64:f6096178f5d9321f",
+  "jsonHash": "fnv1a64:6c71f5f0765283c5",
+  "findings": []
+}

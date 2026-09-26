@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:c5f4e86ce828b3ca",
+  "lessonIds": [
+    "BN-C45-khushi",
+    "BN-C45-daktar",
+    "BN-C45-baba",
+    "BN-C45-chhele",
+    "BN-C45-meye"
+  ],
+  "tex": "bengali/book/chapters/ch45-happy-doctor-father-son-daughter.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C87-kuri",
+    "language": "bengali",
+    "chapter": 87,
+    "sequence": 4500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fc8f01e0ebc2c49"
+  },
+  "findings": []
+}

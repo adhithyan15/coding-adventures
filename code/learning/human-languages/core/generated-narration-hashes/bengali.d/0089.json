@@ -1,0 +1,21 @@
+{
+  "language": "bengali",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:a784ecb44048a471",
+  "lessonIds": [
+    "BN-C89-songit",
+    "BN-C89-khobor",
+    "BN-C89-desh",
+    "BN-C89-golpo",
+    "BN-C89-khlna",
+    "BN-R89-first-pass-school-nature-animals-and-describing-wor",
+    "BN-R89-second-pass-time-places-the-town-clothes-and-numbers"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "bengali/narration/ch89.txt",
+  "json": "bengali/narration/ch89.json",
+  "textHash": "fnv1a64:1df3f3304d75b005",
+  "jsonHash": "fnv1a64:e193126efe8d90af",
+  "findings": []
+}

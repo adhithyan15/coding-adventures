@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C54-tola",
+    "language": "bengali",
+    "chapter": 54,
+    "sequence": 2840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:104fd1daccb5c978"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C76-halka",
+    "language": "bengali",
+    "chapter": 76,
+    "sequence": 3970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bab55390a30f0402"
+  },
+  "findings": []
+}

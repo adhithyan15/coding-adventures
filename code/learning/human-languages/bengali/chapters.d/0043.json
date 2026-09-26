@@ -1,0 +1,19 @@
+{
+  "chapter": 43,
+  "title": "Shoulder, Blood, Knee, Tongue, Head",
+  "label": "ch:bn-shoulder-blood-knee-tongue-head",
+  "canDo": "I can say a shoulder, blood, a knee, the tongue and the head.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "BN-C43-matha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 43: i can say a shoulder, blood, a knee, the tongue and the head.",
+    "assesses": [
+      "BN-LEX-C43-BODY43-03",
+      "BN-LEX-C43-BODY43-04",
+      "BN-LEX-C43-BODY43-05"
+    ]
+  }
+}

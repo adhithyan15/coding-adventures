@@ -1,0 +1,11 @@
+{
+  "id": "BN-C67-chad",
+  "pathSegment": "BN-PATH-67-NATURE67",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-67-NATURE67",
+      "order": 1
+    }
+  ]
+}

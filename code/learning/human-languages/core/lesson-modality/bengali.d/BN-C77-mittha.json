@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C77-mittha",
+    "language": "bengali",
+    "chapter": 77,
+    "sequence": 4000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e7d436897f50343"
+  },
+  "findings": []
+}

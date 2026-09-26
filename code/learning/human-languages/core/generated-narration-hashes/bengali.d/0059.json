@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:4a0a52aa06ce0907",
+  "lessonIds": [
+    "BN-C59-ruti",
+    "BN-C59-am",
+    "BN-C59-sobji",
+    "BN-C59-bari",
+    "BN-C59-janala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch59.txt",
+  "json": "bengali/narration/ch59.json",
+  "textHash": "fnv1a64:95e1b555c014c775",
+  "jsonHash": "fnv1a64:7c1b15a9d930a1a4",
+  "findings": []
+}

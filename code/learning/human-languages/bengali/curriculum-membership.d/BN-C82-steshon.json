@@ -1,0 +1,11 @@
+{
+  "id": "BN-C82-steshon",
+  "pathSegment": "BN-PATH-82-PLACE82",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-82-PLACE82",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C48-protibeshi",
+    "language": "bengali",
+    "chapter": 48,
+    "sequence": 2540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5306ecc8043ae7f"
+  },
+  "findings": []
+}

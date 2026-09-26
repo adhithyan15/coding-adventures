@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 48,
+  "sourceHash": "fnv1a64:3235b1baf76295b4",
+  "lessonIds": [
+    "BN-C48-mohila",
+    "BN-C48-protibeshi",
+    "BN-C48-shona",
+    "BN-C48-bosa",
+    "BN-C48-hata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch48.txt",
+  "json": "bengali/narration/ch48.json",
+  "textHash": "fnv1a64:8a80a8b0baad7e6e",
+  "jsonHash": "fnv1a64:595d54b708ef8c5e",
+  "findings": []
+}
