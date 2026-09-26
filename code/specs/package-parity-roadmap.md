@@ -14333,7 +14333,7 @@ decoder/cursor aliases, admits the exact first combined OID u64-plus-80
 boundary, and keeps OID work linear. Lua passes the complete 122-case suite and
 all 46 delegated framing cases plus private-registry, owner, transactional
 budget, exact two-limb u64/OID, tag, limit, equality, and redaction checks at
-98.01 percent production line coverage; LuaCheck, bytecode syntax, LuaRocks
+98.30 percent production line coverage; LuaCheck, bytecode syntax, LuaRocks
 installation and metadata, both build fronts, capability-schema validation,
 and the real Go build-tool dependency plan pass. All fifteen use empty capability
 manifests, structural limits, shared work budgets,
