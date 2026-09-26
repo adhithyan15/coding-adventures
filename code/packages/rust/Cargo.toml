@@ -195,6 +195,7 @@ members = [
     "engram-core-wasm",
     "engram-wasm",
     "photo-picker-mosaic-app",
+    "mosaic-ios-project",
     "html-lexer",
     "html-parser",
     "html-tree-builder",

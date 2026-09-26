@@ -1,0 +1,7 @@
+[package]
+name = "mosaic-ios-project"
+version = "0.1.0"
+edition = "2021"
+description = "Generate the Xcode project for a Mosaic app on iOS and iPadOS (UI89 §2.2)"
+
+[dependencies]
