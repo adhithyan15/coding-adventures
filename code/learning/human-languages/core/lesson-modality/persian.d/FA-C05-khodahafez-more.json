@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "FA-C08-gereftan",
+    "id": "FA-C05-khodahafez-more",
     "language": "persian",
-    "chapter": 8,
-    "sequence": 300,
+    "chapter": 5,
+    "sequence": 195,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:37522bd9024bd97c"
+    "sourceHash": "fnv1a64:80e8aa1a6457a9a6"
   },
   "findings": []
 }

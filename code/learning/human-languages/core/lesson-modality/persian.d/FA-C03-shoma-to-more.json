@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "FA-C08-gereftan",
+    "id": "FA-C03-shoma-to-more",
     "language": "persian",
-    "chapter": 8,
-    "sequence": 300,
+    "chapter": 3,
+    "sequence": 65,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:37522bd9024bd97c"
+    "sourceHash": "fnv1a64:3595a2d0cda6538c"
   },
   "findings": []
 }
