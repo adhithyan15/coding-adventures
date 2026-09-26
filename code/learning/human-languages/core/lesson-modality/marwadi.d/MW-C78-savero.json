@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C78-savero",
+    "language": "marwadi",
+    "chapter": 78,
+    "sequence": 5240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28fb610cd705a0ca"
+  },
+  "findings": []
+}

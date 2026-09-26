@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "Car, Bus, Bridge, Temple, Hotel",
+  "label": "ch:bn-car-bus-bridge-temple-hotel",
+  "canDo": "I can say a car, a bus, a bridge, a temple and a hotel.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "BN-C83-hotel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can say a car, a bus, a bridge, a temple and a hotel.",
+    "assesses": [
+      "BN-LEX-C83-TOWN83-03",
+      "BN-LEX-C83-TOWN83-04",
+      "BN-LEX-C83-TOWN83-05"
+    ]
+  }
+}

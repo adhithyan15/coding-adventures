@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:be53a186559086fb",
+  "lessonIds": [
+    "FA-C45-khane",
+    "FA-C45-otagh",
+    "FA-C45-panjere",
+    "FA-C45-sandali",
+    "FA-C45-miz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch45.txt",
+  "json": "persian/narration/ch45.json",
+  "textHash": "fnv1a64:c41a2d37f323d31b",
+  "jsonHash": "fnv1a64:fcfb7880919d1cf5",
+  "findings": []
+}

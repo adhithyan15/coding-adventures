@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C73-forudgah",
+    "language": "persian",
+    "chapter": 73,
+    "sequence": 3530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71ed28811a52e330"
+  },
+  "findings": []
+}

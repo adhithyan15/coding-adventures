@@ -1,0 +1,11 @@
+{
+  "id": "MW-C44-dant",
+  "pathSegment": "MW-PATH-44-BODY44",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-44-BODY44",
+      "order": 3
+    }
+  ]
+}

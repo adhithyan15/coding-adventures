@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Cup, Plate, Spoon, Knife, Bottle",
+  "label": "ch:mr-cup-plate-spoon-knife-bottle",
+  "canDo": "I can say a cup, a plate, a spoon, a knife and a bottle.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "MR-C92-batli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can say a cup, a plate, a spoon, a knife and a bottle.",
+    "assesses": [
+      "MR-LEX-C92-HOME92-03",
+      "MR-LEX-C92-HOME92-04",
+      "MR-LEX-C92-HOME92-05"
+    ]
+  }
+}

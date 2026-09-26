@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:9dc33b38ab6d13ed",
+  "lessonIds": [
+    "MR-C120-sutti",
+    "MR-C120-sangit",
+    "MR-C120-batmi",
+    "MR-C120-desh",
+    "MR-C120-gosta",
+    "MR-R120-first-pass-describing-words-and-time",
+    "MR-R120-second-pass-places-the-town-clothes-and-numbers"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch120.txt",
+  "json": "marathi/narration/ch120.json",
+  "textHash": "fnv1a64:1d8a809b655294dd",
+  "jsonHash": "fnv1a64:df2b50b2260f0ced",
+  "findings": []
+}

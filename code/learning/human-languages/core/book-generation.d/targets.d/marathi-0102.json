@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 102,
+  "output": "marathi/book/chapters/ch102-snake-peacock-bear-camel-butterfly.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

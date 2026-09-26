@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C74-thando",
+    "language": "marwadi",
+    "chapter": 74,
+    "sequence": 5030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d115d114ec1cc0f0"
+  },
+  "findings": []
+}

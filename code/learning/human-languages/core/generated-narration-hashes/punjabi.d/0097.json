@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:3638042cbeff18f3",
+  "lessonIds": [
+    "PA-C97-hazar",
+    "PA-C97-dunia",
+    "PA-C97-rang",
+    "PA-C97-git",
+    "PA-C97-safar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch97.txt",
+  "json": "punjabi/narration/ch97.json",
+  "textHash": "fnv1a64:25b439dad0ebf816",
+  "jsonHash": "fnv1a64:15915e5e88dee91a",
+  "findings": []
+}

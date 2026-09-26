@@ -285,6 +285,260 @@ full so omissions, duplicates, and ordering drift can be checked mechanically.
 | 276 | 48 | PA-R48-gurmukhi-met-once | four standing shapes, one mark, read inside whole words |
 | 277 | 48 | PA-R48-marks-above-and-below | a standing long-a, and the marks that ride above and below |
 | 278 | 48 | PA-R48-courtesy-and-parting | the courtesy words, the partings, and their registers |
+| 279 | 49 | PA-C49-hatth | a hand |
+| 280 | 49 | PA-C49-pair | a foot |
+| 281 | 49 | PA-C49-val | hair |
+| 282 | 49 | PA-C49-dand | a tooth |
+| 283 | 49 | PA-C49-gala | the throat |
+| 284 | 50 | PA-C50-ungal | a finger |
+| 285 | 50 | PA-C50-bullh | a lip |
+| 286 | 50 | PA-C50-dhaun | the neck |
+| 287 | 50 | PA-C50-chihra | the face |
+| 288 | 50 | PA-C50-khun | blood |
+| 289 | 51 | PA-C51-latt | a leg |
+| 290 | 51 | PA-C51-goda | a knee |
+| 291 | 51 | PA-C51-bukhar | a fever |
+| 292 | 51 | PA-C51-haspatal | a hospital |
+| 293 | 51 | PA-C51-bimar | ill, sick |
+| 294 | 52 | PA-C52-darad | pain |
+| 295 | 52 | PA-C52-davai | medicine |
+| 296 | 52 | PA-C52-pias | thirst |
+| 297 | 52 | PA-C52-bhukkh | hunger |
+| 298 | 52 | PA-C52-khush | happy |
+| 299 | 53 | PA-C53-udas | sad |
+| 300 | 53 | PA-C53-pita | a father |
+| 301 | 53 | PA-C53-mata | a mother |
+| 302 | 53 | PA-C53-puttar | a son |
+| 303 | 53 | PA-C53-dhi | a daughter |
+| 304 | 54 | PA-C54-dada | a grandfather (father's father) |
+| 305 | 54 | PA-C54-dadi | a grandmother (father's mother) |
+| 306 | 54 | PA-C54-nana | a grandfather (mother's father) |
+| 307 | 54 | PA-C54-nani | a grandmother (mother's mother) |
+| 308 | 54 | PA-C54-pati | a husband |
+| 309 | 55 | PA-C55-patni | a wife |
+| 310 | 55 | PA-C55-bachcha | a child |
+| 311 | 55 | PA-C55-munda | a boy |
+| 312 | 55 | PA-C55-kuri | a girl |
+| 313 | 55 | PA-C55-admi | a man |
+| 314 | 56 | PA-C56-mahiman | a guest |
+| 315 | 56 | PA-C56-pina | to drink |
+| 316 | 56 | PA-C56-sunna | to hear, to listen |
+| 317 | 56 | PA-C56-baithna | to sit |
+| 318 | 56 | PA-C56-sauna | to sleep |
+| 319 | 57 | PA-C57-utthna | to get up |
+| 320 | 57 | PA-C57-turna | to walk |
+| 321 | 57 | PA-C57-daurna | to run |
+| 322 | 57 | PA-C57-khedna | to play |
+| 323 | 57 | PA-C57-kharidna | to buy |
+| 324 | 58 | PA-C58-vechna | to sell |
+| 325 | 58 | PA-C58-dena | to give |
+| 326 | 58 | PA-C58-rakkhna | to put, to keep |
+| 327 | 58 | PA-C58-kholhna | to open |
+| 328 | 58 | PA-C58-pakauna | to cook |
+| 329 | 59 | PA-C59-dhona | to wash |
+| 330 | 59 | PA-C59-hassna | to laugh |
+| 331 | 59 | PA-C59-rona | to cry |
+| 332 | 59 | PA-C59-gauna | to sing |
+| 333 | 59 | PA-C59-nachchna | to dance |
+| 334 | 60 | PA-C60-sikkhna | to learn |
+| 335 | 60 | PA-C60-bhullna | to forget |
+| 336 | 60 | PA-C60-chahuna | to want |
+| 337 | 60 | PA-C60-liauna | to bring |
+| 338 | 60 | PA-C60-bhejna | to send |
+| 339 | 61 | PA-C61-ginna | to count |
+| 340 | 61 | PA-C61-pharna | to catch, to hold |
+| 341 | 61 | PA-C61-kattna | to cut |
+| 342 | 61 | PA-C61-rokna | to stop |
+| 343 | 61 | PA-C61-dassna | to tell |
+| 344 | 62 | PA-C62-guauna | to lose |
+| 345 | 62 | PA-C62-pahinna | to wear |
+| 346 | 62 | PA-C62-nahauna | to bathe |
+| 347 | 62 | PA-C62-chhaddna | to leave, to let go |
+| 348 | 62 | PA-C62-udikna | to wait for |
+| 349 | 63 | PA-C63-labbhna | to find, to look for |
+| 350 | 63 | PA-C63-suttna | to throw |
+| 351 | 63 | PA-C63-mit | meat |
+| 352 | 63 | PA-C63-machchhi | a fish |
+| 353 | 63 | PA-C63-chaul | rice |
+| 354 | 64 | PA-C64-dal | lentils |
+| 355 | 64 | PA-C64-phal | fruit |
+| 356 | 64 | PA-C64-seb | an apple |
+| 357 | 64 | PA-C64-kela | a banana |
+| 358 | 64 | PA-C64-alu | a potato |
+| 359 | 65 | PA-C65-tamatar | a tomato |
+| 360 | 65 | PA-C65-gajar | a carrot |
+| 361 | 65 | PA-C65-khand | sugar |
+| 362 | 65 | PA-C65-lun | salt |
+| 363 | 65 | PA-C65-makkhan | butter |
+| 364 | 66 | PA-C66-panir | cheese |
+| 365 | 66 | PA-C66-shahid | honey |
+| 366 | 66 | PA-C66-angur | grapes |
+| 367 | 66 | PA-C66-santra | an orange |
+| 368 | 66 | PA-C66-nimbu | a lemon |
+| 369 | 67 | PA-C67-nashta | breakfast |
+| 370 | 67 | PA-C67-anda | an egg |
+| 371 | 67 | PA-C67-ghar | a house, home |
+| 372 | 67 | PA-C67-khirki | a window |
+| 373 | 67 | PA-C67-kursi | a chair |
+| 374 | 68 | PA-C68-mez | a table |
+| 375 | 68 | PA-C68-kandh | a wall |
+| 376 | 68 | PA-C68-chhatt | a roof |
+| 377 | 68 | PA-C68-almari | a cupboard |
+| 378 | 68 | PA-C68-farsh | the floor |
+| 379 | 69 | PA-C69-pauri | stairs, a ladder |
+| 380 | 69 | PA-C69-shisha | a mirror |
+| 381 | 69 | PA-C69-batti | a light, a lamp |
+| 382 | 69 | PA-C69-chabi | a key |
+| 383 | 69 | PA-C69-thali | a plate |
+| 384 | 70 | PA-C70-chamcha | a spoon |
+| 385 | 70 | PA-C70-chaku | a knife |
+| 386 | 70 | PA-C70-botal | a bottle |
+| 387 | 70 | PA-C70-darvaza | a door |
+| 388 | 70 | PA-C70-rasoi | a kitchen |
+| 389 | 71 | PA-C71-kamra | a room |
+| 390 | 71 | PA-C71-kitab | a book |
+| 391 | 71 | PA-C71-kalam | a pen |
+| 392 | 71 | PA-C71-akhbar | a newspaper |
+| 393 | 71 | PA-C71-sakul | a school |
+| 394 | 72 | PA-C72-basta | a school bag |
+| 395 | 72 | PA-C72-paisa | money |
+| 396 | 72 | PA-C72-saval | a question |
+| 397 | 72 | PA-C72-javab | an answer |
+| 398 | 72 | PA-C72-shabad | a word |
+| 399 | 73 | PA-C73-khed | a game |
+| 400 | 73 | PA-C73-chitthi | a letter (post) |
+| 401 | 73 | PA-C73-rukkh | a tree |
+| 402 | 73 | PA-C73-phull | a flower |
+| 403 | 73 | PA-C73-patta | a leaf |
+| 404 | 73 | PA-R73-first-pass-the-body-family-verbs-and-food | first pass over chapters 49-60 |
+| 405 | 73 | PA-R73-second-pass-home-school-and-nature | second pass over chapters 61-73 |
+| 406 | 74 | PA-C74-pahar | a mountain |
+| 407 | 74 | PA-C74-jangal | a forest |
+| 408 | 74 | PA-C74-daria | a river |
+| 409 | 74 | PA-C74-jhil | a lake |
+| 410 | 74 | PA-C74-patthar | a stone |
+| 411 | 75 | PA-C75-ret | sand |
+| 412 | 75 | PA-C75-khet | a field |
+| 413 | 75 | PA-C75-baddal | a cloud |
+| 414 | 75 | PA-C75-suraj | the sun |
+| 415 | 75 | PA-C75-chann | the moon |
+| 416 | 76 | PA-C76-samundar | the sea |
+| 417 | 76 | PA-C76-agg | fire |
+| 418 | 76 | PA-C76-baraf | snow; ice |
+| 419 | 76 | PA-C76-mimh | rain |
+| 420 | 76 | PA-C76-hava | wind, air |
+| 421 | 77 | PA-C77-kutta | a dog |
+| 422 | 77 | PA-C77-billi | a cat |
+| 423 | 77 | PA-C77-gam | a cow |
+| 424 | 77 | PA-C77-bakkri | a goat |
+| 425 | 77 | PA-C77-bhed | a sheep |
+| 426 | 78 | PA-C78-panchhi | a bird |
+| 427 | 78 | PA-C78-chuha | a mouse |
+| 428 | 78 | PA-C78-sher | a lion, a tiger |
+| 429 | 78 | PA-C78-hathi | an elephant |
+| 430 | 78 | PA-C78-bandar | a monkey |
+| 431 | 79 | PA-C79-sapp | a snake |
+| 432 | 79 | PA-C79-vadda | big |
+| 433 | 79 | PA-C79-chhota | small |
+| 434 | 79 | PA-C79-navam | new |
+| 435 | 79 | PA-C79-purana | old |
+| 436 | 80 | PA-C80-bura | bad |
+| 437 | 80 | PA-C80-lamma | long, tall |
+| 438 | 80 | PA-C80-garam | hot |
+| 439 | 80 | PA-C80-hauli | slowly |
+| 440 | 80 | PA-C80-tez | fast |
+| 441 | 81 | PA-C81-saukha | easy |
+| 442 | 81 | PA-C81-mahinga | expensive |
+| 443 | 81 | PA-C81-sasta | cheap |
+| 444 | 81 | PA-C81-uchcha | high |
+| 445 | 81 | PA-C81-nivam | low |
+| 446 | 82 | PA-C82-bharia | full |
+| 447 | 82 | PA-C82-khali | empty |
+| 448 | 82 | PA-C82-saf | clean |
+| 449 | 82 | PA-C82-mittha | sweet |
+| 450 | 82 | PA-C82-mota | fat, thick |
+| 451 | 83 | PA-C83-patla | thin |
+| 452 | 83 | PA-C83-halka | light (in weight) |
+| 453 | 83 | PA-C83-bhari | heavy |
+| 454 | 83 | PA-C83-zaruri | important, necessary |
+| 455 | 83 | PA-C83-hara | green |
+| 456 | 84 | PA-C84-pila | yellow |
+| 457 | 84 | PA-C84-lal | red |
+| 458 | 84 | PA-C84-nila | blue |
+| 459 | 84 | PA-C84-kala | black |
+| 460 | 84 | PA-C84-chitta | white |
+| 461 | 85 | PA-C85-bhura | brown |
+| 462 | 85 | PA-C85-din | a day |
+| 463 | 85 | PA-C85-sham | evening |
+| 464 | 85 | PA-C85-saver | morning |
+| 465 | 85 | PA-C85-hafta | a week |
+| 466 | 86 | PA-C86-mahina | a month |
+| 467 | 86 | PA-C86-sal | a year |
+| 468 | 86 | PA-C86-ghanta | an hour |
+| 469 | 86 | PA-C86-mint | a minute |
+| 470 | 86 | PA-C86-ajj | today |
+| 471 | 87 | PA-C87-hun | now |
+| 472 | 87 | PA-C87-hamesha | always |
+| 473 | 87 | PA-C87-der | a delay; late |
+| 474 | 87 | PA-C87-pahilam | before, first |
+| 475 | 87 | PA-C87-dur | far |
+| 476 | 88 | PA-C88-nere | near |
+| 477 | 88 | PA-C88-andar | inside |
+| 478 | 88 | PA-C88-bahar | outside |
+| 479 | 88 | PA-C88-utte | on, above |
+| 480 | 88 | PA-C88-hetham | below |
+| 481 | 89 | PA-C89-sahmane | in front |
+| 482 | 89 | PA-C89-pichchhe | behind |
+| 483 | 89 | PA-C89-itthe | here |
+| 484 | 89 | PA-C89-utthe | there |
+| 485 | 89 | PA-C89-dukan | a shop |
+| 486 | 90 | PA-C90-sarak | a road |
+| 487 | 90 | PA-C90-gali | a lane |
+| 488 | 90 | PA-C90-baink | a bank |
+| 489 | 90 | PA-C90-sateshan | a station |
+| 490 | 90 | PA-C90-gaddi | a car; a train |
+| 491 | 91 | PA-C91-bass | a bus |
+| 492 | 91 | PA-C91-pul | a bridge |
+| 493 | 91 | PA-C91-gurduara | a gurdwara |
+| 494 | 91 | PA-C91-mandar | a temple |
+| 495 | 91 | PA-C91-hotal | a hotel |
+| 496 | 92 | PA-C92-pulis | the police |
+| 497 | 92 | PA-C92-kishti | a boat |
+| 498 | 92 | PA-C92-saikal | a bicycle |
+| 499 | 92 | PA-C92-bazar | a market |
+| 500 | 92 | PA-C92-kappre | clothes |
+| 501 | 93 | PA-C93-kurta | a kurta, a long shirt |
+| 502 | 93 | PA-C93-jurab | a sock |
+| 503 | 93 | PA-C93-jeb | a pocket |
+| 504 | 93 | PA-C93-mundri | a ring |
+| 505 | 93 | PA-C93-ghari | a watch, a clock |
+| 506 | 94 | PA-C94-pagg | a turban |
+| 507 | 94 | PA-C94-jutti | a shoe |
+| 508 | 94 | PA-C94-topi | a cap |
+| 509 | 94 | PA-C94-kamiz | a shirt |
+| 510 | 94 | PA-C94-chhe | six |
+| 511 | 95 | PA-C95-satt | seven |
+| 512 | 95 | PA-C95-atth | eight |
+| 513 | 95 | PA-C95-naum | nine |
+| 514 | 95 | PA-C95-das | ten |
+| 515 | 95 | PA-C95-giaram | eleven |
+| 516 | 96 | PA-C96-baram | twelve |
+| 517 | 96 | PA-C96-vih | twenty |
+| 518 | 96 | PA-C96-tih | thirty |
+| 519 | 96 | PA-C96-panjah | fifty |
+| 520 | 96 | PA-C96-sau | a hundred |
+| 521 | 97 | PA-C97-hazar | a thousand |
+| 522 | 97 | PA-C97-dunia | the world |
+| 523 | 97 | PA-C97-rang | a colour |
+| 524 | 97 | PA-C97-git | a song |
+| 525 | 97 | PA-C97-safar | a journey |
+| 526 | 98 | PA-C98-chhutti | a holiday, time off |
+| 527 | 98 | PA-C98-piar | love |
+| 528 | 98 | PA-C98-sangit | music |
+| 529 | 98 | PA-C98-rasta | a way, a route |
+| 530 | 98 | PA-C98-desh | a country |
+| 531 | 98 | PA-R98-first-pass-animals-describing-words-and-time | first pass over chapters 74-85 |
+| 532 | 98 | PA-R98-second-pass-places-the-town-clothes-and-numbers | second pass over chapters 86-98 |
 
-After session 278, the track continues through the dependency-linked backlog;
+After session 532, the track continues through the dependency-linked backlog;
 this map makes no claim that the current book is yet complete or exam-ready.

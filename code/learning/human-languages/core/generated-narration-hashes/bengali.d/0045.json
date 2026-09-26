@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:e69216a9a00ed1d7",
+  "lessonIds": [
+    "BN-C45-khushi",
+    "BN-C45-daktar",
+    "BN-C45-baba",
+    "BN-C45-chhele",
+    "BN-C45-meye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch45.txt",
+  "json": "bengali/narration/ch45.json",
+  "textHash": "fnv1a64:3ccc7686f83c5f9c",
+  "jsonHash": "fnv1a64:f505a35f40344040",
+  "findings": []
+}

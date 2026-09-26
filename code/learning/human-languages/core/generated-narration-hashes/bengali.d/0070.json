@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:11003d307dc58d46",
+  "lessonIds": [
+    "BN-C70-singho",
+    "BN-C70-hati",
+    "BN-C70-banor",
+    "BN-C70-sap",
+    "BN-C70-kak"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch70.txt",
+  "json": "bengali/narration/ch70.json",
+  "textHash": "fnv1a64:f42d51aa380b8ac6",
+  "jsonHash": "fnv1a64:9634cfa4c0e65964",
+  "findings": []
+}

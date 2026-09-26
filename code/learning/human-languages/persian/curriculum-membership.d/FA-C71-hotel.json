@@ -1,0 +1,11 @@
+{
+  "id": "FA-C71-hotel",
+  "pathSegment": "FA-PATH-71-TOWN71",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-71-TOWN71",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C50-chihra",
+    "language": "punjabi",
+    "chapter": 50,
+    "sequence": 2770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cae17ed167b6e5c4"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:6c757c07151016ba",
+  "lessonIds": [
+    "BN-C73-lomba",
+    "BN-C73-gorom",
+    "BN-C73-aste",
+    "BN-C73-taratari",
+    "BN-C73-sohoj"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch73.txt",
+  "json": "bengali/narration/ch73.json",
+  "textHash": "fnv1a64:f1a155935a5933c3",
+  "jsonHash": "fnv1a64:5dbbed5e1f39c3e2",
+  "findings": []
+}

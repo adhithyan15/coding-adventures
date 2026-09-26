@@ -1,0 +1,11 @@
+{
+  "id": "MR-C97-valu",
+  "pathSegment": "MR-PATH-97-NATURE97",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-97-NATURE97",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C57-modhu",
+  "pathSegment": "BN-PATH-57-FOOD57",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-57-FOOD57",
+      "order": 3
+    }
+  ]
+}

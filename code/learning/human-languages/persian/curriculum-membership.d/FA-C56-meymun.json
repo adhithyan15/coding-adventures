@@ -1,0 +1,11 @@
+{
+  "id": "FA-C56-meymun",
+  "pathSegment": "FA-PATH-56-ANIMALS56",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-56-ANIMALS56",
+      "order": 3
+    }
+  ]
+}

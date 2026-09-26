@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:ec1048855f43c4b2",
+  "lessonIds": [
+    "FA-C58-gorg",
+    "FA-C58-bozorg",
+    "FA-C58-kuchek",
+    "FA-C58-taze",
+    "FA-C58-ghadimi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch58.txt",
+  "json": "persian/narration/ch58.json",
+  "textHash": "fnv1a64:4f361a70cd1c1af3",
+  "jsonHash": "fnv1a64:4ef8e5cf32ca3941",
+  "findings": []
+}

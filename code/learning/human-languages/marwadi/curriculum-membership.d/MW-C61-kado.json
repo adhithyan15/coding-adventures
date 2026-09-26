@@ -1,0 +1,11 @@
+{
+  "id": "MW-C61-kado",
+  "pathSegment": "MW-PATH-61-VERBS61",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-61-VERBS61",
+      "order": 3
+    }
+  ]
+}

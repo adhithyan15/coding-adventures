@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:048e6c1caafe2255",
+  "lessonIds": [
+    "AR-C80-namir",
+    "AR-C80-fil",
+    "AR-C80-qird",
+    "AR-C80-thuban",
+    "AR-C80-dubb"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch80.txt",
+  "json": "arabic/narration/ch80.json",
+  "textHash": "fnv1a64:2f1ec6d99877f476",
+  "jsonHash": "fnv1a64:2e3a484a043fdf74",
+  "findings": []
+}

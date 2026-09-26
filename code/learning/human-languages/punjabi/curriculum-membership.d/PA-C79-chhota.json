@@ -1,0 +1,11 @@
+{
+  "id": "PA-C79-chhota",
+  "pathSegment": "PA-PATH-79-ANIMALS79",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-79-ANIMALS79",
+      "order": 2
+    }
+  ]
+}

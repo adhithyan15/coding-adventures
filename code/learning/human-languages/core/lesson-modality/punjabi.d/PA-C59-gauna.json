@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C59-gauna",
+    "language": "punjabi",
+    "chapter": 59,
+    "sequence": 3220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11ccf4529be201c4"
+  },
+  "findings": []
+}

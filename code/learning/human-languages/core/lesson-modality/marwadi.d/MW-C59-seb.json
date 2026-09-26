@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C59-seb",
+    "language": "marwadi",
+    "chapter": 59,
+    "sequence": 4250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f48feac0bb93d510"
+  },
+  "findings": []
+}

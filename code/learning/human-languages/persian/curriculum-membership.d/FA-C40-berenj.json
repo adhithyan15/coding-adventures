@@ -1,0 +1,11 @@
+{
+  "id": "FA-C40-berenj",
+  "pathSegment": "FA-PATH-40-VERBS40",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-40-VERBS40",
+      "order": 3
+    }
+  ]
+}

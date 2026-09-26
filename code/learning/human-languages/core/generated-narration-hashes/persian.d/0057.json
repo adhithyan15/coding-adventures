@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:22d9c7c137b3e979",
+  "lessonIds": [
+    "FA-C57-khers",
+    "FA-C57-shotor",
+    "FA-C57-khar",
+    "FA-C57-parvane",
+    "FA-C57-murche"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch57.txt",
+  "json": "persian/narration/ch57.json",
+  "textHash": "fnv1a64:a30dfe17c21808bd",
+  "jsonHash": "fnv1a64:f3484fa6ff7bc4ca",
+  "findings": []
+}

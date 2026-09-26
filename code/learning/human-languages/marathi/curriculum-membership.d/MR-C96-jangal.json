@@ -1,0 +1,11 @@
+{
+  "id": "MR-C96-jangal",
+  "pathSegment": "MR-PATH-96-NATURE96",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-96-NATURE96",
+      "order": 3
+    }
+  ]
+}

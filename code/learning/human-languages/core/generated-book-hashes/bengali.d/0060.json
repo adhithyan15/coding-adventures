@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:ab6bfe88ad7901c8",
+  "lessonIds": [
+    "BN-C60-cheyar",
+    "BN-C60-tebil",
+    "BN-C60-deyal",
+    "BN-C60-chhad",
+    "BN-C60-bichhana"
+  ],
+  "tex": "bengali/book/chapters/ch60-chair-table-wall-roof-bed.tex"
+}

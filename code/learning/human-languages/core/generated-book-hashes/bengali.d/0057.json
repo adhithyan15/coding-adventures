@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:cb31e880cde1f2c2",
+  "lessonIds": [
+    "BN-C57-gajor",
+    "BN-C57-nun",
+    "BN-C57-makhon",
+    "BN-C57-modhu",
+    "BN-C57-tel"
+  ],
+  "tex": "bengali/book/chapters/ch57-carrot-salt-butter-honey-oil.tex"
+}

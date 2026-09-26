@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C81-ghalne",
+    "language": "marathi",
+    "chapter": 81,
+    "sequence": 3440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3eda19e023d0a4a2"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C80-visarne",
+    "language": "marathi",
+    "chapter": 80,
+    "sequence": 3360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1a7d3fe90c69a8f"
+  },
+  "findings": []
+}

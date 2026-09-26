@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Black, White, Brown, Pink, Young",
+  "label": "ch:mr-black-white-brown-pink-young",
+  "canDo": "I can say black, white, brown, pink and young.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C108-tarun",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say black, white, brown, pink and young.",
+    "assesses": [
+      "MR-LEX-C108-ADJ108-03",
+      "MR-LEX-C108-ADJ108-04",
+      "MR-LEX-C108-ADJ108-05"
+    ]
+  }
+}

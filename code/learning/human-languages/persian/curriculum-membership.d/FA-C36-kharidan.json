@@ -1,0 +1,11 @@
+{
+  "id": "FA-C36-kharidan",
+  "pathSegment": "FA-PATH-36-VERBS36",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-36-VERBS36",
+      "order": 3
+    }
+  ]
+}

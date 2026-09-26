@@ -1,0 +1,11 @@
+{
+  "id": "PA-C78-hathi",
+  "pathSegment": "PA-PATH-78-ANIMALS78",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-78-ANIMALS78",
+      "order": 3
+    }
+  ]
+}

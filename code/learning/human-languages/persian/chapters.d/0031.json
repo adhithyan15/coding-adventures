@@ -1,0 +1,19 @@
+{
+  "chapter": 31,
+  "title": "Pain, Medicine, Thirsty, Hungry, Happy",
+  "label": "ch:fa-pain-medicine-thirsty-hungry-happy",
+  "canDo": "I can say pain, medicine, thirsty, hungry and happy.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C31-khoshhal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 31: i can say pain, medicine, thirsty, hungry and happy.",
+    "assesses": [
+      "FA-LEX-C31-HEALTH31-03",
+      "FA-LEX-C31-HEALTH31-04",
+      "FA-LEX-C31-HEALTH31-05"
+    ]
+  }
+}

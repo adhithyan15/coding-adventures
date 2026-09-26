@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C51-ruzname",
+    "language": "persian",
+    "chapter": 51,
+    "sequence": 2420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25b20edbf20c6941"
+  },
+  "findings": []
+}

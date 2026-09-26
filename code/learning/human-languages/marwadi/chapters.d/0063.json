@@ -1,0 +1,19 @@
+{
+  "chapter": 63,
+  "title": "String bed, Cupboard, Lamp, Fan, Key",
+  "label": "ch:mw-string-bed-cupboard-lamp-fan-key",
+  "canDo": "I can say a string bed, a cupboard, a lamp, a fan and a key.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "MW-C63-chabi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 63: i can say a string bed, a cupboard, a lamp, a fan and a key.",
+    "assesses": [
+      "MW-LEX-C63-HOME63-03",
+      "MW-LEX-C63-HOME63-04",
+      "MW-LEX-C63-HOME63-05"
+    ]
+  }
+}

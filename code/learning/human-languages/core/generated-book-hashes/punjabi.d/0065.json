@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:f15b3b77facdc102",
+  "lessonIds": [
+    "PA-C65-tamatar",
+    "PA-C65-gajar",
+    "PA-C65-khand",
+    "PA-C65-lun",
+    "PA-C65-makkhan"
+  ],
+  "tex": "punjabi/book/chapters/ch65-tomato-carrot-sugar-salt-butter.tex"
+}

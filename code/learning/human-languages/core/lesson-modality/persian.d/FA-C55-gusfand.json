@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C55-gusfand",
+    "language": "persian",
+    "chapter": 55,
+    "sequence": 2640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37756a18f347fc1b"
+  },
+  "findings": []
+}

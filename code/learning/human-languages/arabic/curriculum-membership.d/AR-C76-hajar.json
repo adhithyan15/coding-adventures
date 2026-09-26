@@ -1,0 +1,11 @@
+{
+  "id": "AR-C76-hajar",
+  "pathSegment": "AR-PATH-76-NATURE76",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-76-NATURE76",
+      "order": 2
+    }
+  ]
+}

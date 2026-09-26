@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:e3a2a356b3c9a7e4",
+  "lessonIds": [
+    "FA-C35-khordan",
+    "FA-C35-nushidan",
+    "FA-C35-didan",
+    "FA-C35-shenidan",
+    "FA-C35-neshastan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch35.txt",
+  "json": "persian/narration/ch35.json",
+  "textHash": "fnv1a64:0c10f2079c1a2a91",
+  "jsonHash": "fnv1a64:115b486e526320f5",
+  "findings": []
+}

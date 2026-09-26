@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C113-galli",
+    "language": "marathi",
+    "chapter": 113,
+    "sequence": 5070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8e0c53408cf26a5"
+  },
+  "findings": []
+}

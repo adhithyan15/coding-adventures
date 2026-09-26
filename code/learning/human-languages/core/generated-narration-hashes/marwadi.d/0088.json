@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:d126117bed8e3998",
+  "lessonIds": [
+    "MW-C88-rang",
+    "MW-C88-git",
+    "MW-C88-jatra",
+    "MW-C88-chhutti",
+    "MW-C88-prem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch88.txt",
+  "json": "marwadi/narration/ch88.json",
+  "textHash": "fnv1a64:8a46f77f3a333807",
+  "jsonHash": "fnv1a64:f5e8cbd8f5c92efb",
+  "findings": []
+}

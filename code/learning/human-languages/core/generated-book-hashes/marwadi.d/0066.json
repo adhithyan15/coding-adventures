@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:958745370337d309",
+  "lessonIds": [
+    "MW-C66-akhbar",
+    "MW-C66-skul",
+    "MW-C66-saval",
+    "MW-C66-javab",
+    "MW-C66-sabad",
+    "MW-R66-first-pass-the-body-family-and-verbs",
+    "MW-R66-second-pass-more-verbs-food-and-the-home"
+  ],
+  "tex": "marwadi/book/chapters/ch66-newspaper-school-question-answer-word.tex"
+}

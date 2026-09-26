@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Kurta, Sock, Pocket, Ring, Watch",
+  "label": "ch:pa-kurta-sock-pocket-ring-watch",
+  "canDo": "I can say a kurta, a long shirt, a sock, a pocket, a ring and a watch, a clock.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "PA-C93-ghari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say a kurta, a long shirt, a sock, a pocket, a ring and a watch, a clock.",
+    "assesses": [
+      "PA-LEX-C93-CLOTHES93-03",
+      "PA-LEX-C93-CLOTHES93-04",
+      "PA-LEX-C93-CLOTHES93-05"
+    ]
+  }
+}

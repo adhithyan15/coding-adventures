@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "Bear, Camel, Donkey, Butterfly, Ant",
+  "label": "ch:fa-bear-camel-donkey-butterfly-ant",
+  "canDo": "I can say a bear, a camel, a donkey, a butterfly and an ant.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C57-murche",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: i can say a bear, a camel, a donkey, a butterfly and an ant.",
+    "assesses": [
+      "FA-LEX-C57-ANIMALS57-03",
+      "FA-LEX-C57-ANIMALS57-04",
+      "FA-LEX-C57-ANIMALS57-05"
+    ]
+  }
+}

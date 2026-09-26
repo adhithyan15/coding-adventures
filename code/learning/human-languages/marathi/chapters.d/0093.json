@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Door, Kitchen, Book, Exercise book, Pen",
+  "label": "ch:mr-door-kitchen-book-exercise-book-pen",
+  "canDo": "I can say a door, a kitchen, a book, an exercise book and a pen.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "MR-C93-pen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say a door, a kitchen, a book, an exercise book and a pen.",
+    "assesses": [
+      "MR-LEX-C93-HOME93-03",
+      "MR-LEX-C93-HOME93-04",
+      "MR-LEX-C93-HOME93-05"
+    ]
+  }
+}

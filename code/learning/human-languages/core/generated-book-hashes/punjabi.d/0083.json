@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:21a371f9176381da",
+  "lessonIds": [
+    "PA-C83-patla",
+    "PA-C83-halka",
+    "PA-C83-bhari",
+    "PA-C83-zaruri",
+    "PA-C83-hara"
+  ],
+  "tex": "punjabi/book/chapters/ch83-thin-light-heavy-important-green.tex"
+}

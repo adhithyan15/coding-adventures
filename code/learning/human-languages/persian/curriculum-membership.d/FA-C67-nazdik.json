@@ -1,0 +1,11 @@
+{
+  "id": "FA-C67-nazdik",
+  "pathSegment": "FA-PATH-67-TIME67",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-67-TIME67",
+      "order": 4
+    }
+  ]
+}

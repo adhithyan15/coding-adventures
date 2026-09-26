@@ -1,0 +1,11 @@
+{
+  "id": "FA-C44-keyk",
+  "pathSegment": "FA-PATH-44-FOOD44",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-44-FOOD44",
+      "order": 2
+    }
+  ]
+}

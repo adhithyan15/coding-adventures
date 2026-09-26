@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Tomatoes, Carrots, Butter, Honey, Grapes",
+  "label": "ch:ar-tomatoes-carrots-butter-honey-grapes",
+  "canDo": "I can say tomatoes, carrots, butter, honey and grapes.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "AR-C67-inab",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can say tomatoes, carrots, butter, honey and grapes.",
+    "assesses": [
+      "AR-LEX-C67-FOOD67-03",
+      "AR-LEX-C67-FOOD67-04",
+      "AR-LEX-C67-FOOD67-05"
+    ]
+  }
+}

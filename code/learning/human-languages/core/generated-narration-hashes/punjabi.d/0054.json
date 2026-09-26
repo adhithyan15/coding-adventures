@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:fb0d0c9a5d2ed171",
+  "lessonIds": [
+    "PA-C54-dada",
+    "PA-C54-dadi",
+    "PA-C54-nana",
+    "PA-C54-nani",
+    "PA-C54-pati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch54.txt",
+  "json": "punjabi/narration/ch54.json",
+  "textHash": "fnv1a64:9091c48bd2832982",
+  "jsonHash": "fnv1a64:740243c346c52876",
+  "findings": []
+}

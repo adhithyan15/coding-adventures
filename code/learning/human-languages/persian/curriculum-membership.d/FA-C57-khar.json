@@ -1,0 +1,11 @@
+{
+  "id": "FA-C57-khar",
+  "pathSegment": "FA-PATH-57-ANIMALS57",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-57-ANIMALS57",
+      "order": 2
+    }
+  ]
+}

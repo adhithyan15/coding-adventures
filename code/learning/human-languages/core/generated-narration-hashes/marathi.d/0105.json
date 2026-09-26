@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:8e20849cfe6033f1",
+  "lessonIds": [
+    "MR-C105-svasta",
+    "MR-C105-rikama",
+    "MR-C105-shrimant",
+    "MR-C105-garib",
+    "MR-C105-ghan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch105.txt",
+  "json": "marathi/narration/ch105.json",
+  "textHash": "fnv1a64:0e3947a743282529",
+  "jsonHash": "fnv1a64:de864dfad4b974ee",
+  "findings": []
+}

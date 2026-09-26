@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:d98a03ecd9d8b7d8",
+  "lessonIds": [
+    "BN-C69-goru",
+    "BN-C69-chhagol",
+    "BN-C69-bhera",
+    "BN-C69-pakhi",
+    "BN-C69-idur"
+  ],
+  "tex": "bengali/book/chapters/ch69-cow-goat-sheep-bird-mouse.tex"
+}

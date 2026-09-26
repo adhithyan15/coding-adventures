@@ -1,0 +1,19 @@
+{
+  "chapter": 47,
+  "title": "Lock, Plate, Knife, Fork, Spoon",
+  "label": "ch:fa-lock-plate-knife-fork-spoon",
+  "canDo": "I can say a lock, a plate, a knife, a fork and a spoon.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FA-C47-ghashogh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 47: i can say a lock, a plate, a knife, a fork and a spoon.",
+    "assesses": [
+      "FA-LEX-C47-HOME47-03",
+      "FA-LEX-C47-HOME47-04",
+      "FA-LEX-C47-HOME47-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C92-bazar",
+  "pathSegment": "PA-PATH-92-TOWN92",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-92-TOWN92",
+      "order": 3
+    }
+  ]
+}

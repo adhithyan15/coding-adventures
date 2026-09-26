@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "To lose, To wear, To bathe, To leave, To wait for",
+  "label": "ch:pa-to-lose-to-wear-to-bathe-to-leave-to-wait-for",
+  "canDo": "I can say to lose, to wear, to bathe, to leave, to let go and to wait for.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C62-udikna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: i can say to lose, to wear, to bathe, to leave, to let go and to wait for.",
+    "assesses": [
+      "PA-LEX-C62-VERBS62-03",
+      "PA-LEX-C62-VERBS62-04",
+      "PA-LEX-C62-VERBS62-05"
+    ]
+  }
+}

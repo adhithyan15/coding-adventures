@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-64-ADJ64",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say blue, black, white, a week and a year.",
+  "prerequisites": []
+}

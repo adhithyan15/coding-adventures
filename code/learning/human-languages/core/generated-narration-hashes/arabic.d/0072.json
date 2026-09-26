@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:898ce542b46271f4",
+  "lessonIds": [
+    "AR-C72-shawka",
+    "AR-C72-zujaja",
+    "AR-C72-bab",
+    "AR-C72-matbakh",
+    "AR-C72-hadiqa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch72.txt",
+  "json": "arabic/narration/ch72.json",
+  "textHash": "fnv1a64:e2ad41428cb856ef",
+  "jsonHash": "fnv1a64:52e78654adbc1dcd",
+  "findings": []
+}

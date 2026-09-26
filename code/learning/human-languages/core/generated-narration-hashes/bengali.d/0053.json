@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:ba0ed150af2958c5",
+  "lessonIds": [
+    "BN-C53-pora",
+    "BN-C53-chhara",
+    "BN-C53-phla",
+    "BN-C53-ora",
+    "BN-C53-shekhano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch53.txt",
+  "json": "bengali/narration/ch53.json",
+  "textHash": "fnv1a64:a258ac98a9a33775",
+  "jsonHash": "fnv1a64:b550491e19466ce1",
+  "findings": []
+}

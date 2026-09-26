@@ -1,0 +1,11 @@
+{
+  "id": "FA-C70-ghatar",
+  "pathSegment": "FA-PATH-70-TOWN70",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-70-TOWN70",
+      "order": 4
+    }
+  ]
+}

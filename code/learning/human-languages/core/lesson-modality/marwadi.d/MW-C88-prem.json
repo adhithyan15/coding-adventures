@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C88-prem",
+    "language": "marwadi",
+    "chapter": 88,
+    "sequence": 5760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:022a8ca2035e06d4"
+  },
+  "findings": []
+}

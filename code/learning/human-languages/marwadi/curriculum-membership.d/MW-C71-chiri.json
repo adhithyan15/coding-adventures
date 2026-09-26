@@ -1,0 +1,11 @@
+{
+  "id": "MW-C71-chiri",
+  "pathSegment": "MW-PATH-71-ANIMALS71",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-71-ANIMALS71",
+      "order": 2
+    }
+  ]
+}

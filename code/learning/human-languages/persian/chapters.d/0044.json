@@ -1,0 +1,19 @@
+{
+  "chapter": 44,
+  "title": "Dinner, Juice, Cake, Cheese, Milk",
+  "label": "ch:fa-dinner-juice-cake-cheese-milk",
+  "canDo": "I can say dinner, juice, a cake, cheese and milk.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FA-R44-second-pass-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 44: i can say dinner, juice, a cake, cheese and milk.",
+    "assesses": [
+      "FA-LEX-C44-FOOD44-03",
+      "FA-LEX-C44-FOOD44-04",
+      "FA-LEX-C44-FOOD44-05"
+    ]
+  }
+}

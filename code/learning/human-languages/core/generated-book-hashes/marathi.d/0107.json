@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:7015a224fc04b460",
+  "lessonIds": [
+    "MR-C107-khare",
+    "MR-C107-hirva",
+    "MR-C107-pivla",
+    "MR-C107-lal",
+    "MR-C107-nila"
+  ],
+  "tex": "marathi/book/chapters/ch107-true-green-yellow-red-blue.tex"
+}

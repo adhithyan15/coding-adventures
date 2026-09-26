@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C62-labisa",
+    "language": "arabic",
+    "chapter": 62,
+    "sequence": 2070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f0bfc69c257e73c"
+  },
+  "findings": []
+}

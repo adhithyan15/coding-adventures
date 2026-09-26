@@ -1,0 +1,11 @@
+{
+  "id": "MR-C72-doke",
+  "pathSegment": "MR-PATH-72-BODY72",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-72-BODY72",
+      "order": 2
+    }
+  ]
+}

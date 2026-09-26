@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:b1c53e3bdac343dc",
+  "lessonIds": [
+    "FA-C41-miveh",
+    "FA-C41-sib",
+    "FA-C41-moz",
+    "FA-C41-gowje",
+    "FA-C41-havij"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch41.txt",
+  "json": "persian/narration/ch41.json",
+  "textHash": "fnv1a64:155d080e477c1e11",
+  "jsonHash": "fnv1a64:e6756b92ed2bafbd",
+  "findings": []
+}

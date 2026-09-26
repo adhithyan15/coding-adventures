@@ -1,0 +1,11 @@
+{
+  "id": "AR-C69-ghurfa",
+  "pathSegment": "AR-PATH-69-FOOD69",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-69-FOOD69",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C81-najik",
+  "pathSegment": "MW-PATH-81-PLACE81",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-81-PLACE81",
+      "order": 1
+    }
+  ]
+}

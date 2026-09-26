@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C67-nashta",
+    "language": "punjabi",
+    "chapter": 67,
+    "sequence": 3590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:668e0e97971a70da"
+  },
+  "findings": []
+}

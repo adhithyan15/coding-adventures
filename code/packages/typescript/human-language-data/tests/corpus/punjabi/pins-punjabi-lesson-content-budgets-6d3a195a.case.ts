@@ -64,7 +64,9 @@ it("pins Punjabi lesson-content budgets", () =>
     // across SEVENTEEN path segments -- no earlier chapter could reach them --
     // so the tranche is appended at the end rather than placed in among the
     // material it retrieves. None of the six introduces an atom or a headword.
-    lessons: 278,
+    // 278 -> 532: chapters 49-98, 250 word lessons and four reviews. None
+    // introduces an idiom, a sense or a culture claim.
+    lessons: 532,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

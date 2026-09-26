@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C77-nilo",
+    "language": "marwadi",
+    "chapter": 77,
+    "sequence": 5180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a49ea73a49147bc2"
+  },
+  "findings": []
+}

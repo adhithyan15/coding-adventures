@@ -1,0 +1,11 @@
+{
+  "id": "FA-C39-pushidan",
+  "pathSegment": "FA-PATH-39-VERBS39",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-39-VERBS39",
+      "order": 2
+    }
+  ]
+}

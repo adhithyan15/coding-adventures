@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C53-udas",
+    "language": "punjabi",
+    "chapter": 53,
+    "sequence": 2890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a67409e8c1e1764d"
+  },
+  "findings": []
+}

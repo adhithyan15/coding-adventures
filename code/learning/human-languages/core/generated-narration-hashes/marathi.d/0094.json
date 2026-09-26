@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:bc3a9bc5cb10fd2d",
+  "lessonIds": [
+    "MR-C94-shala",
+    "MR-C94-nakasha",
+    "MR-C94-dhada",
+    "MR-C94-prashna",
+    "MR-C94-uttar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch94.txt",
+  "json": "marathi/narration/ch94.json",
+  "textHash": "fnv1a64:df13682c41380868",
+  "jsonHash": "fnv1a64:4dfd3ca7f9912e38",
+  "findings": []
+}

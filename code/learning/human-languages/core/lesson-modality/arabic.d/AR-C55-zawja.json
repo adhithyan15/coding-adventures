@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C55-zawja",
+    "language": "arabic",
+    "chapter": 55,
+    "sequence": 1730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ecdc2eb7c230eb4"
+  },
+  "findings": []
+}

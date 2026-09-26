@@ -1,0 +1,11 @@
+{
+  "id": "PA-C65-makkhan",
+  "pathSegment": "PA-PATH-65-FOOD65",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-65-FOOD65",
+      "order": 4
+    }
+  ]
+}

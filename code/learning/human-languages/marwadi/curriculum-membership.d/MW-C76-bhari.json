@@ -1,0 +1,11 @@
+{
+  "id": "MW-C76-bhari",
+  "pathSegment": "MW-PATH-76-ADJ76",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-76-ADJ76",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C59-rona",
+  "pathSegment": "PA-PATH-59-VERBS59",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-59-VERBS59",
+      "order": 2
+    }
+  ]
+}

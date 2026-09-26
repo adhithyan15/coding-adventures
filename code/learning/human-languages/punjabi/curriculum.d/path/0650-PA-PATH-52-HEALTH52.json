@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-52-HEALTH52",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "PA-EXT-52-HEALTH52"
+  ],
+  "after": []
+}

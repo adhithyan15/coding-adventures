@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C98-sangit",
+    "language": "punjabi",
+    "chapter": 98,
+    "sequence": 5180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15c191dc0cbd38c7"
+  },
+  "findings": []
+}

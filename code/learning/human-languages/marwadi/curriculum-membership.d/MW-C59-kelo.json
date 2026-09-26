@@ -1,0 +1,11 @@
+{
+  "id": "MW-C59-kelo",
+  "pathSegment": "MW-PATH-59-VERBS59",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-59-VERBS59",
+      "order": 1
+    }
+  ]
+}

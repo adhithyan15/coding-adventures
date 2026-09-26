@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:235ffa3eb0a4554b",
+  "lessonIds": [
+    "MW-C59-seb",
+    "MW-C59-kelo",
+    "MW-C59-alu",
+    "MW-C59-tamatar",
+    "MW-C59-gajar"
+  ],
+  "tex": "marwadi/book/chapters/ch59-apple-banana-potato-tomato-carrot.tex"
+}

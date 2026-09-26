@@ -1,0 +1,11 @@
+{
+  "id": "AR-C86-jamil",
+  "pathSegment": "AR-PATH-86-ADJ86",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "AR-EXT-86-ADJ86",
+      "order": 0
+    }
+  ]
+}

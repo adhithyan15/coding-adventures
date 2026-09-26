@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-61-ADJ61",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "FA-EXT-61-ADJ61"
+  ],
+  "after": []
+}

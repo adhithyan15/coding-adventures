@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C71-bhaluk",
+    "language": "bengali",
+    "chapter": 71,
+    "sequence": 3700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5543105548cb74b0"
+  },
+  "findings": []
+}

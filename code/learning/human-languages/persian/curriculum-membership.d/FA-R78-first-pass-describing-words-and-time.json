@@ -1,0 +1,11 @@
+{
+  "id": "FA-R78-first-pass-describing-words-and-time",
+  "pathSegment": "FA-PATH-78-WORLD78",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FA-EXT-78-WORLD78",
+      "order": 5
+    }
+  ]
+}

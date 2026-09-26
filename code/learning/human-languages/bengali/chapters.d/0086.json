@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "Shoe, Six, Seven, Eight, Ten",
+  "label": "ch:bn-shoe-six-seven-eight-ten",
+  "canDo": "I can say a shoe, six, seven, eight and ten.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "BN-C86-dosh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can say a shoe, six, seven, eight and ten.",
+    "assesses": [
+      "BN-LEX-C86-CLOTHES86-03",
+      "BN-LEX-C86-CLOTHES86-04",
+      "BN-LEX-C86-CLOTHES86-05"
+    ]
+  }
+}

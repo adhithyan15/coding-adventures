@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Seven, Eight, Nine, Ten, Eleven",
+  "label": "ch:pa-seven-eight-nine-ten-eleven",
+  "canDo": "I can say seven, eight, nine, ten and eleven.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C95-giaram",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say seven, eight, nine, ten and eleven.",
+    "assesses": [
+      "PA-LEX-C95-NUMBERS95-03",
+      "PA-LEX-C95-NUMBERS95-04",
+      "PA-LEX-C95-NUMBERS95-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C78-dhavne",
+    "language": "marathi",
+    "chapter": 78,
+    "sequence": 3260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:850880c521c3bab3"
+  },
+  "findings": []
+}

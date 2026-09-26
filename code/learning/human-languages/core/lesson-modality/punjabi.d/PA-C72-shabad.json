@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C72-shabad",
+    "language": "punjabi",
+    "chapter": 72,
+    "sequence": 3880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a568f2c0f9c1c2d"
+  },
+  "findings": []
+}

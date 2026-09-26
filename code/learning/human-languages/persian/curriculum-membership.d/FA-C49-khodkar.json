@@ -1,0 +1,11 @@
+{
+  "id": "FA-C49-khodkar",
+  "pathSegment": "FA-PATH-49-SCHOOL49",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-49-SCHOOL49",
+      "order": 1
+    }
+  ]
+}

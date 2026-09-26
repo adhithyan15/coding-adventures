@@ -1,0 +1,11 @@
+{
+  "id": "MR-C101-makad",
+  "pathSegment": "MR-PATH-101-ANIMALS101",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-101-ANIMALS101",
+      "order": 4
+    }
+  ]
+}

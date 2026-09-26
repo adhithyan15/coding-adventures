@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:0ddec2668c014f0a",
+  "lessonIds": [
+    "PA-C64-dal",
+    "PA-C64-phal",
+    "PA-C64-seb",
+    "PA-C64-kela",
+    "PA-C64-alu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch64.txt",
+  "json": "punjabi/narration/ch64.json",
+  "textHash": "fnv1a64:ae3f1acfaf25b055",
+  "jsonHash": "fnv1a64:c4a39b5d8025e841",
+  "findings": []
+}

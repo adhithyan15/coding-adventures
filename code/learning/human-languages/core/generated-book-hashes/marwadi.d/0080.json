@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:4675ca6ac2b76c85",
+  "lessonIds": [
+    "MW-C80-hamesa",
+    "MW-C80-kadi",
+    "MW-C80-jaldi",
+    "MW-C80-der",
+    "MW-C80-paila"
+  ],
+  "tex": "marwadi/book/chapters/ch80-always-sometimes-quickly-delay-before.tex"
+}

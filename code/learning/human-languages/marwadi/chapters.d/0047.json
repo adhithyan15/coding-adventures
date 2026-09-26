@@ -1,0 +1,19 @@
+{
+  "chapter": 47,
+  "title": "Fever, Ill, Pain, Medicine, Hunger",
+  "label": "ch:mw-fever-ill-pain-medicine-hunger",
+  "canDo": "I can say a fever, ill, sick, pain, medicine and hunger.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C47-bhukh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 47: i can say a fever, ill, sick, pain, medicine and hunger.",
+    "assesses": [
+      "MW-LEX-C47-HEALTH47-03",
+      "MW-LEX-C47-HEALTH47-04",
+      "MW-LEX-C47-HEALTH47-05"
+    ]
+  }
+}

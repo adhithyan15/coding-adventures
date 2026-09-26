@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C79-bochhor",
+    "language": "bengali",
+    "chapter": 79,
+    "sequence": 4100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:54c5d84548480d4e"
+  },
+  "findings": []
+}

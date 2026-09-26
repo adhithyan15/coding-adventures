@@ -1,0 +1,19 @@
+{
+  "chapter": 36,
+  "title": "To sleep, To stand, To run, To buy, To sell",
+  "label": "ch:fa-to-sleep-to-stand-to-run-to-buy-to-sell",
+  "canDo": "I can say to sleep, to stand, to run, to buy and to sell.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C36-forukhtan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 36: i can say to sleep, to stand, to run, to buy and to sell.",
+    "assesses": [
+      "FA-LEX-C36-VERBS36-03",
+      "FA-LEX-C36-VERBS36-04",
+      "FA-LEX-C36-VERBS36-05"
+    ]
+  }
+}

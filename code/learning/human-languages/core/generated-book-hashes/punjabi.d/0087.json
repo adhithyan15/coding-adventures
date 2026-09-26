@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:b51576959b195d47",
+  "lessonIds": [
+    "PA-C87-hun",
+    "PA-C87-hamesha",
+    "PA-C87-der",
+    "PA-C87-pahilam",
+    "PA-C87-dur"
+  ],
+  "tex": "punjabi/book/chapters/ch87-now-always-delay-before-far.tex"
+}

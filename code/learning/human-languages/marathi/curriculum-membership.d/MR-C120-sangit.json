@@ -1,0 +1,11 @@
+{
+  "id": "MR-C120-sangit",
+  "pathSegment": "MR-PATH-120-WORLD120",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-120-WORLD120",
+      "order": 1
+    }
+  ]
+}

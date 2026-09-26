@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:6e746e1044e22dd6",
+  "lessonIds": [
+    "BN-C70-singho",
+    "BN-C70-hati",
+    "BN-C70-banor",
+    "BN-C70-sap",
+    "BN-C70-kak"
+  ],
+  "tex": "bengali/book/chapters/ch70-lion-elephant-monkey-snake-crow.tex"
+}

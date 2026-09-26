@@ -1,0 +1,11 @@
+{
+  "id": "BN-C48-hata",
+  "pathSegment": "BN-PATH-48-FAMILY48",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-48-FAMILY48",
+      "order": 4
+    }
+  ]
+}

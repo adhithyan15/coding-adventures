@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:dba3bce2e2079f92",
+  "lessonIds": [
+    "AR-C60-tabakha",
+    "AR-C60-ghasala",
+    "AR-C60-dahika",
+    "AR-C60-baka",
+    "AR-C60-raqasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch60.txt",
+  "json": "arabic/narration/ch60.json",
+  "textHash": "fnv1a64:4cdf52cfe1226418",
+  "jsonHash": "fnv1a64:c2b1b64478c4bb4d",
+  "findings": []
+}

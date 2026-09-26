@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C116-khisa",
+    "language": "marathi",
+    "chapter": 116,
+    "sequence": 5230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9e13c79c270b26b"
+  },
+  "findings": []
+}

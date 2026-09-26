@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:80a3ba5378b192ba",
+  "lessonIds": [
+    "BN-C50-dhoya",
+    "BN-C50-hasa",
+    "BN-C50-kada",
+    "BN-C50-gaowa",
+    "BN-C50-nacha"
+  ],
+  "tex": "bengali/book/chapters/ch50-to-wash-to-laugh-to-cry-to-sing-to-dance.tex"
+}

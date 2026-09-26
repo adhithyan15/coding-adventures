@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:76e49b391a18af10",
+  "lessonIds": [
+    "BN-C82-pichhone",
+    "BN-C82-dokan",
+    "BN-C82-rasta",
+    "BN-C82-goli",
+    "BN-C82-steshon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch82.txt",
+  "json": "bengali/narration/ch82.json",
+  "textHash": "fnv1a64:fac9d43823ad3135",
+  "jsonHash": "fnv1a64:6ac539a5b8ebdd3a",
+  "findings": []
+}

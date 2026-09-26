@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C105-garib",
+    "language": "marathi",
+    "chapter": 105,
+    "sequence": 4680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5689deec40626574"
+  },
+  "findings": []
+}

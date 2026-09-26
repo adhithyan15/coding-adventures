@@ -1,0 +1,11 @@
+{
+  "id": "AR-C89-tahta",
+  "pathSegment": "AR-PATH-89-PLACE89",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-89-PLACE89",
+      "order": 2
+    }
+  ]
+}

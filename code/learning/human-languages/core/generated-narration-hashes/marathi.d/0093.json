@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:5d146ea806712723",
+  "lessonIds": [
+    "MR-C93-dar",
+    "MR-C93-svayampakghar",
+    "MR-C93-pustak",
+    "MR-C93-vahi",
+    "MR-C93-pen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch93.txt",
+  "json": "marathi/narration/ch93.json",
+  "textHash": "fnv1a64:9158597311b7fa33",
+  "jsonHash": "fnv1a64:fe8294c58ea64875",
+  "findings": []
+}

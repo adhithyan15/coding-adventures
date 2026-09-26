@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Orange, Lemon, Breakfast, Egg, Yoghurt",
+  "label": "ch:mr-orange-lemon-breakfast-egg-yoghurt",
+  "canDo": "I can say an orange, a lemon, breakfast, an egg and yoghurt.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "MR-C88-dahi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can say an orange, a lemon, breakfast, an egg and yoghurt.",
+    "assesses": [
+      "MR-LEX-C88-FOOD88-03",
+      "MR-LEX-C88-FOOD88-04",
+      "MR-LEX-C88-FOOD88-05"
+    ]
+  }
+}

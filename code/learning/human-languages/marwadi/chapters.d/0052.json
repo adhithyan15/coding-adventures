@@ -1,0 +1,19 @@
+{
+  "chapter": 52,
+  "title": "To sit, To sleep, To get up, To walk, To run",
+  "label": "ch:mw-to-sit-to-sleep-to-get-up-to-walk-to-run",
+  "canDo": "I can say to sit, to sleep, to get up, to walk and to run.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C52-daurno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 52: i can say to sit, to sleep, to get up, to walk and to run.",
+    "assesses": [
+      "MW-LEX-C52-VERBS52-03",
+      "MW-LEX-C52-VERBS52-04",
+      "MW-LEX-C52-VERBS52-05"
+    ]
+  }
+}

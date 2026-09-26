@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Sea, Fire, Snow, Rain, Wind",
+  "label": "ch:pa-sea-fire-snow-rain-wind",
+  "canDo": "I can say the sea, fire, snow, rain and wind, air.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C76-hava",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can say the sea, fire, snow, rain and wind, air.",
+    "assesses": [
+      "PA-LEX-C76-NATURE76-03",
+      "PA-LEX-C76-NATURE76-04",
+      "PA-LEX-C76-NATURE76-05"
+    ]
+  }
+}

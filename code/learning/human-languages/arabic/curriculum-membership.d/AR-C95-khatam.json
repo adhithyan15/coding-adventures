@@ -1,0 +1,11 @@
+{
+  "id": "AR-C95-khatam",
+  "pathSegment": "AR-PATH-95-CLOTHES95",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-95-CLOTHES95",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:72827b8321bbea1f",
+  "lessonIds": [
+    "AR-C68-burtuqal",
+    "AR-C68-laymun",
+    "AR-C68-bayd",
+    "AR-C68-basal",
+    "AR-C68-futur"
+  ],
+  "tex": "arabic/book/chapters/ch68-oranges-lemons-eggs-onions-breakfast.tex"
+}

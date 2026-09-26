@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:3c655abeb171a344",
+  "lessonIds": [
+    "MW-C44-pag",
+    "MW-C44-matho",
+    "MW-C44-bal",
+    "MW-C44-dant",
+    "MW-C44-galo"
+  ],
+  "tex": "marwadi/book/chapters/ch44-foot-head-hair-tooth-throat.tex"
+}

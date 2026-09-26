@@ -1,0 +1,11 @@
+{
+  "id": "FA-C39-bordan",
+  "pathSegment": "FA-PATH-39-VERBS39",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-39-VERBS39",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:61ad893080fe33fe",
+  "lessonIds": [
+    "AR-C50-ayn",
+    "AR-C50-udhun",
+    "AR-C50-anf",
+    "AR-C50-fam",
+    "AR-C50-sinn"
+  ],
+  "tex": "arabic/book/chapters/ch50-eye-ear-nose-mouth-tooth.tex"
+}

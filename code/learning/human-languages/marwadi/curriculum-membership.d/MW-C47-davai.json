@@ -1,0 +1,11 @@
+{
+  "id": "MW-C47-davai",
+  "pathSegment": "MW-PATH-47-HEALTH47",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-47-HEALTH47",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C55-gav",
+    "language": "persian",
+    "chapter": 55,
+    "sequence": 2620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f0a1a8ed07c0939"
+  },
+  "findings": []
+}

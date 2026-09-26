@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C68-ret",
+    "language": "marwadi",
+    "chapter": 68,
+    "sequence": 4750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dac2f3937cc07fb9"
+  },
+  "findings": []
+}

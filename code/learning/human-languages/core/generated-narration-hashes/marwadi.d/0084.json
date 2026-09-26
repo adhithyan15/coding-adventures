@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:8a35865261366f4f",
+  "lessonIds": [
+    "MW-C84-gav",
+    "MW-C84-sahar",
+    "MW-C84-kurto",
+    "MW-C84-pajamo",
+    "MW-C84-juti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch84.txt",
+  "json": "marwadi/narration/ch84.json",
+  "textHash": "fnv1a64:12e4442a196c71b8",
+  "jsonHash": "fnv1a64:ec14200097703bb9",
+  "findings": []
+}

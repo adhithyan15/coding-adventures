@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C58-komla",
+    "language": "bengali",
+    "chapter": 58,
+    "sequence": 3030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09d9e57262ede1b3"
+  },
+  "findings": []
+}

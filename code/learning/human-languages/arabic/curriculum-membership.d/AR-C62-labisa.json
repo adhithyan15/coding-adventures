@@ -1,0 +1,11 @@
+{
+  "id": "AR-C62-labisa",
+  "pathSegment": "AR-PATH-62-VERBS62",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-62-VERBS62",
+      "order": 3
+    }
+  ]
+}

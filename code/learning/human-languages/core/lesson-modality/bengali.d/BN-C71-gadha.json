@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C71-gadha",
+    "language": "bengali",
+    "chapter": 71,
+    "sequence": 3710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90c236d6992c8a90"
+  },
+  "findings": []
+}

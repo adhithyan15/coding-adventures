@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C68-nadi",
+    "language": "marwadi",
+    "chapter": 68,
+    "sequence": 4730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:db51bca9c2c1c9e0"
+  },
+  "findings": []
+}

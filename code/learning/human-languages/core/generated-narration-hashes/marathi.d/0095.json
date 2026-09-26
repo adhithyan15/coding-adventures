@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:4ae0749f47b4e51f",
+  "lessonIds": [
+    "MR-C95-shabda",
+    "MR-C95-khel",
+    "MR-C95-patra",
+    "MR-C95-chitra",
+    "MR-C95-jhad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch95.txt",
+  "json": "marathi/narration/ch95.json",
+  "textHash": "fnv1a64:01f96690e3d90eb2",
+  "jsonHash": "fnv1a64:b54d73fea458a323",
+  "findings": []
+}

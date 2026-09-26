@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "To get up, To walk, To run, To play, To buy",
+  "label": "ch:pa-to-get-up-to-walk-to-run-to-play-to-buy",
+  "canDo": "I can say to get up, to walk, to run, to play and to buy.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C57-kharidna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: i can say to get up, to walk, to run, to play and to buy.",
+    "assesses": [
+      "PA-LEX-C57-VERBS57-03",
+      "PA-LEX-C57-VERBS57-04",
+      "PA-LEX-C57-VERBS57-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 69,
+  "title": "Cow, Goat, Sheep, Bird, Mouse",
+  "label": "ch:bn-cow-goat-sheep-bird-mouse",
+  "canDo": "I can say a cow, a goat, a sheep, a bird and a mouse.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C69-idur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 69: i can say a cow, a goat, a sheep, a bird and a mouse.",
+    "assesses": [
+      "BN-LEX-C69-ANIMALS69-03",
+      "BN-LEX-C69-ANIMALS69-04",
+      "BN-LEX-C69-ANIMALS69-05"
+    ]
+  }
+}

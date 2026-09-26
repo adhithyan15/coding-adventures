@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C102-mor",
+    "language": "marathi",
+    "chapter": 102,
+    "sequence": 4490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:021ec50965c6462d"
+  },
+  "findings": []
+}

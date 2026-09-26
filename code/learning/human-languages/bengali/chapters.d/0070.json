@@ -1,0 +1,19 @@
+{
+  "chapter": 70,
+  "title": "Lion, Elephant, Monkey, Snake, Crow",
+  "label": "ch:bn-lion-elephant-monkey-snake-crow",
+  "canDo": "I can say a lion, an elephant, a monkey, a snake and a crow.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C70-kak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 70: i can say a lion, an elephant, a monkey, a snake and a crow.",
+    "assesses": [
+      "BN-LEX-C70-ANIMALS70-03",
+      "BN-LEX-C70-ANIMALS70-04",
+      "BN-LEX-C70-ANIMALS70-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 66,
+  "title": "Cheese, Honey, Grapes, Orange, Lemon",
+  "label": "ch:pa-cheese-honey-grapes-orange-lemon",
+  "canDo": "I can say cheese, honey, grapes, an orange and a lemon.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "PA-C66-nimbu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: i can say cheese, honey, grapes, an orange and a lemon.",
+    "assesses": [
+      "PA-LEX-C66-FOOD66-03",
+      "PA-LEX-C66-FOOD66-04",
+      "PA-LEX-C66-FOOD66-05"
+    ]
+  }
+}

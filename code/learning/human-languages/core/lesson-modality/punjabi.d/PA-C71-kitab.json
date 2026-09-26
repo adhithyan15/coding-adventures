@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C71-kitab",
+    "language": "punjabi",
+    "chapter": 71,
+    "sequence": 3800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8f4457664bc482b"
+  },
+  "findings": []
+}

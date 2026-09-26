@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-46-BODY46",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "MW-EXT-46-BODY46"
+  ],
+  "after": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-58-VERBS58",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "MW-EXT-58-VERBS58"
+  ],
+  "after": []
+}

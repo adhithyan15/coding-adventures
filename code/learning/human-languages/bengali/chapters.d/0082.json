@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "Behind, Shop, Road, Lane, Station",
+  "label": "ch:bn-behind-shop-road-lane-station",
+  "canDo": "I can say behind, a shop, a road, a lane and a station.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "BN-C82-steshon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can say behind, a shop, a road, a lane and a station.",
+    "assesses": [
+      "BN-LEX-C82-PLACE82-03",
+      "BN-LEX-C82-PLACE82-04",
+      "BN-LEX-C82-PLACE82-05"
+    ]
+  }
+}

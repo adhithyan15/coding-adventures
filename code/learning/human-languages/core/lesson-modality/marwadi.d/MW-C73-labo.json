@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C73-labo",
+    "language": "marwadi",
+    "chapter": 73,
+    "sequence": 5010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7a1f2124ab43bc7"
+  },
+  "findings": []
+}

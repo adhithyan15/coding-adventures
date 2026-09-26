@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:ced1dee92d604a47",
+  "lessonIds": [
+    "FA-C51-name",
+    "FA-C51-ruzname",
+    "FA-C51-derakht",
+    "FA-C51-gol",
+    "FA-C51-barg"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch51.txt",
+  "json": "persian/narration/ch51.json",
+  "textHash": "fnv1a64:95de2c9cff8faa19",
+  "jsonHash": "fnv1a64:5b906436537bd30c",
+  "findings": []
+}

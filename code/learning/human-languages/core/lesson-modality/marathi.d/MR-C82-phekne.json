@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C82-phekne",
+    "language": "marathi",
+    "chapter": 82,
+    "sequence": 3460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6517cfa33d1b5def"
+  },
+  "findings": []
+}

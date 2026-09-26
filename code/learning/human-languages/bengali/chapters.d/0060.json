@@ -1,0 +1,19 @@
+{
+  "chapter": 60,
+  "title": "Chair, Table, Wall, Roof, Bed",
+  "label": "ch:bn-chair-table-wall-roof-bed",
+  "canDo": "I can say a chair, a table, a wall, a roof and a bed.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "BN-C60-bichhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 60: i can say a chair, a table, a wall, a roof and a bed.",
+    "assesses": [
+      "BN-LEX-C60-HOME60-03",
+      "BN-LEX-C60-HOME60-04",
+      "BN-LEX-C60-HOME60-05"
+    ]
+  }
+}

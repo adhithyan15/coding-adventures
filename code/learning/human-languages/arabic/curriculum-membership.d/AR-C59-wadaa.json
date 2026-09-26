@@ -1,0 +1,11 @@
+{
+  "id": "AR-C59-wadaa",
+  "pathSegment": "AR-PATH-59-VERBS59",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-59-VERBS59",
+      "order": 2
+    }
+  ]
+}

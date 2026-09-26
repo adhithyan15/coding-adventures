@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C85-bhura",
+    "language": "punjabi",
+    "chapter": 85,
+    "sequence": 4510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40b784bbe2053f58"
+  },
+  "findings": []
+}

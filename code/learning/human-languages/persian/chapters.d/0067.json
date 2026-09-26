@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Morning, Night, Day, Far, Near",
+  "label": "ch:fa-morning-night-day-far-near",
+  "canDo": "I can say morning, night, a day, far and near.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "FA-C67-nazdik",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can say morning, night, a day, far and near.",
+    "assesses": [
+      "FA-LEX-C67-TIME67-03",
+      "FA-LEX-C67-TIME67-04",
+      "FA-LEX-C67-TIME67-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:5e1a54b208589aba",
+  "lessonIds": [
+    "MR-C77-shejari",
+    "MR-C77-pahuna",
+    "MR-C77-shiksak",
+    "MR-C77-aikne",
+    "MR-C77-uthne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch77.txt",
+  "json": "marathi/narration/ch77.json",
+  "textHash": "fnv1a64:2549f1c5d98c2d43",
+  "jsonHash": "fnv1a64:8b241ef2ba726199",
+  "findings": []
+}

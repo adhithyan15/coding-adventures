@@ -1,0 +1,19 @@
+{
+  "chapter": 61,
+  "title": "Cupboard, Floor, Stairs, Mirror, Lamp",
+  "label": "ch:bn-cupboard-floor-stairs-mirror-lamp",
+  "canDo": "I can say a cupboard, the floor, stairs, a mirror and a lamp.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "BN-C61-bati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 61: i can say a cupboard, the floor, stairs, a mirror and a lamp.",
+    "assesses": [
+      "BN-LEX-C61-HOME61-03",
+      "BN-LEX-C61-HOME61-04",
+      "BN-LEX-C61-HOME61-05"
+    ]
+  }
+}

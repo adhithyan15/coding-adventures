@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C51-bukhar",
+    "language": "punjabi",
+    "chapter": 51,
+    "sequence": 2810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9395fed9d9df3f6"
+  },
+  "findings": []
+}

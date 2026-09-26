@@ -1,0 +1,11 @@
+{
+  "id": "AR-C98-ughniya",
+  "pathSegment": "AR-PATH-98-WORLD98",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-98-WORLD98",
+      "order": 1
+    }
+  ]
+}

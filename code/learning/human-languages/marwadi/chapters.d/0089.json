@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "Music, News, Country, Matter, Language",
+  "label": "ch:mw-music-news-country-matter-language",
+  "canDo": "I can say music, news, a country, a matter and a language.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "MW-R89-second-pass-time-places-the-town-clothes-and-numbers",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can say music, news, a country, a matter and a language.",
+    "assesses": [
+      "MW-LEX-C89-WORLD89-03",
+      "MW-LEX-C89-WORLD89-04",
+      "MW-LEX-C89-WORLD89-05"
+    ]
+  }
+}

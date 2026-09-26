@@ -1,0 +1,11 @@
+{
+  "id": "MW-C55-lavno",
+  "pathSegment": "MW-PATH-55-VERBS55",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-55-VERBS55",
+      "order": 3
+    }
+  ]
+}

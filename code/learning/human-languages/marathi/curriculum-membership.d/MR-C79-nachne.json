@@ -1,0 +1,11 @@
+{
+  "id": "MR-C79-nachne",
+  "pathSegment": "MR-PATH-79-VERBS79",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-79-VERBS79",
+      "order": 4
+    }
+  ]
+}

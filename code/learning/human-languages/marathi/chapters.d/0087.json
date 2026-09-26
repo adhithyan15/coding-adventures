@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Chilli, Butter, Honey, Oil, Grapes",
+  "label": "ch:mr-chilli-butter-honey-oil-grapes",
+  "canDo": "I can say a chilli, butter, honey, oil and grapes.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "MR-C87-drakse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can say a chilli, butter, honey, oil and grapes.",
+    "assesses": [
+      "MR-LEX-C87-FOOD87-03",
+      "MR-LEX-C87-FOOD87-04",
+      "MR-LEX-C87-FOOD87-05"
+    ]
+  }
+}

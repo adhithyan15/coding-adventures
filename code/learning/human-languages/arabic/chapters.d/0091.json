@@ -1,0 +1,19 @@
+{
+  "chapter": 91,
+  "title": "Road, Bank, Station, Car, Bus",
+  "label": "ch:ar-road-bank-station-car-bus",
+  "canDo": "I can say a road, a bank, a station, a car and a bus.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "AR-C91-hafila",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 91: i can say a road, a bank, a station, a car and a bus.",
+    "assesses": [
+      "AR-LEX-C91-TOWN91-03",
+      "AR-LEX-C91-TOWN91-04",
+      "AR-LEX-C91-TOWN91-05"
+    ]
+  }
+}

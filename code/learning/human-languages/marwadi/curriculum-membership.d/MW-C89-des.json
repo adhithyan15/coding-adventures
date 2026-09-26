@@ -1,0 +1,11 @@
+{
+  "id": "MW-C89-des",
+  "pathSegment": "MW-PATH-89-WORLD89",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-89-WORLD89",
+      "order": 2
+    }
+  ]
+}

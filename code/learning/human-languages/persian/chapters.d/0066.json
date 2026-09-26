@@ -1,0 +1,19 @@
+{
+  "chapter": 66,
+  "title": "Always, Sometimes, Early, Late, Before",
+  "label": "ch:fa-always-sometimes-early-late-before",
+  "canDo": "I can say always, sometimes, early, late and before.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "FA-C66-ghabl",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: i can say always, sometimes, early, late and before.",
+    "assesses": [
+      "FA-LEX-C66-TIME66-03",
+      "FA-LEX-C66-TIME66-04",
+      "FA-LEX-C66-TIME66-05"
+    ]
+  }
+}

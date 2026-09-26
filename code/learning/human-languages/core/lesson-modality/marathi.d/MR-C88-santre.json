@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C88-santre",
+    "language": "marathi",
+    "chapter": 88,
+    "sequence": 3780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e380a77d78e3e7b2"
+  },
+  "findings": []
+}

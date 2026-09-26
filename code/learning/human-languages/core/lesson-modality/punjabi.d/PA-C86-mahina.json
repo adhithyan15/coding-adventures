@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C86-mahina",
+    "language": "punjabi",
+    "chapter": 86,
+    "sequence": 4560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2db1aea8a8e10ea4"
+  },
+  "findings": []
+}

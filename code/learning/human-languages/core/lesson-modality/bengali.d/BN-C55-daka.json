@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C55-daka",
+    "language": "bengali",
+    "chapter": 55,
+    "sequence": 2890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:496b39e9ae2ac4b5"
+  },
+  "findings": []
+}

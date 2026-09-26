@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:65e3c3472a9d9c61",
+  "lessonIds": [
+    "FA-C61-por",
+    "FA-C61-khali",
+    "FA-C61-puldar",
+    "FA-C61-faghir",
+    "FA-C61-tamiz",
+    "FA-R61-first-pass-food-and-the-home",
+    "FA-R61-second-pass-school-nature-and-animals"
+  ],
+  "tex": "persian/book/chapters/ch61-full-empty-rich-poor-clean.tex"
+}

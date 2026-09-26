@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:645cefb7d87a16e3",
+  "lessonIds": [
+    "AR-C79-baqara",
+    "AR-C79-maiz",
+    "AR-C79-kharuf",
+    "AR-C79-far",
+    "AR-C79-asad"
+  ],
+  "tex": "arabic/book/chapters/ch79-cow-goat-sheep-mouse-lion.tex"
+}

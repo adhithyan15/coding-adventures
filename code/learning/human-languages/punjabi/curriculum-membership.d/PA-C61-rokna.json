@@ -1,0 +1,11 @@
+{
+  "id": "PA-C61-rokna",
+  "pathSegment": "PA-PATH-61-VERBS61",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-61-VERBS61",
+      "order": 3
+    }
+  ]
+}

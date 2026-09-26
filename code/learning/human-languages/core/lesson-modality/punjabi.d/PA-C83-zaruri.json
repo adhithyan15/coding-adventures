@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C83-zaruri",
+    "language": "punjabi",
+    "chapter": 83,
+    "sequence": 4440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a1be33410ef2073"
+  },
+  "findings": []
+}

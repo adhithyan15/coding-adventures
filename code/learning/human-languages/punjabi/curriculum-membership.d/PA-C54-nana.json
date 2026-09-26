@@ -1,0 +1,11 @@
+{
+  "id": "PA-C54-nana",
+  "pathSegment": "PA-PATH-54-FAMILY54",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-54-FAMILY54",
+      "order": 2
+    }
+  ]
+}

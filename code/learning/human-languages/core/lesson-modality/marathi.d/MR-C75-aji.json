@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C75-aji",
+    "language": "marathi",
+    "chapter": 75,
+    "sequence": 3120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:945bc33448d992ad"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C56-sunna",
+    "language": "punjabi",
+    "chapter": 56,
+    "sequence": 3060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41ff2bf85c21f3b2"
+  },
+  "findings": []
+}

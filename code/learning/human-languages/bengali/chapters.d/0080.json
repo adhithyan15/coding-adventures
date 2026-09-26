@@ -1,0 +1,19 @@
+{
+  "chapter": 80,
+  "title": "Lateness, Before, After, Time, Midday",
+  "label": "ch:bn-lateness-before-after-time-midday",
+  "canDo": "I can say lateness, before, after, later, time and midday.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "BN-C80-dupur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 80: i can say lateness, before, after, later, time and midday.",
+    "assesses": [
+      "BN-LEX-C80-TIME80-03",
+      "BN-LEX-C80-TIME80-04",
+      "BN-LEX-C80-TIME80-05"
+    ]
+  }
+}

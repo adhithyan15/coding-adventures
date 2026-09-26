@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:99c43c18f485c9ad",
+  "lessonIds": [
+    "MW-C52-baithno",
+    "MW-C52-sovno",
+    "MW-C52-uthno",
+    "MW-C52-chalno",
+    "MW-C52-daurno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch52.txt",
+  "json": "marwadi/narration/ch52.json",
+  "textHash": "fnv1a64:c51e0c7e7f7a4258",
+  "jsonHash": "fnv1a64:e4692c48ba12c272",
+  "findings": []
+}

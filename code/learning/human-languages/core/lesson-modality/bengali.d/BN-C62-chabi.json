@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C62-chabi",
+    "language": "bengali",
+    "chapter": 62,
+    "sequence": 3240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ace5a11e2b21a8f8"
+  },
+  "findings": []
+}

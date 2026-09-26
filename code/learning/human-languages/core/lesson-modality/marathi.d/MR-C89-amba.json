@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C89-amba",
+    "language": "marathi",
+    "chapter": 89,
+    "sequence": 3840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b375f6df6a585090"
+  },
+  "findings": []
+}

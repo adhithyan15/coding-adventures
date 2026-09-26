@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:1171546dc8409921",
+  "lessonIds": [
+    "PA-C50-ungal",
+    "PA-C50-bullh",
+    "PA-C50-dhaun",
+    "PA-C50-chihra",
+    "PA-C50-khun"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch50.txt",
+  "json": "punjabi/narration/ch50.json",
+  "textHash": "fnv1a64:cdd55f9ec3b0932d",
+  "jsonHash": "fnv1a64:9a4092f78cdafa50",
+  "findings": []
+}

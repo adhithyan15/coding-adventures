@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:28d37cff7a524bfb",
+  "lessonIds": [
+    "BN-C73-lomba",
+    "BN-C73-gorom",
+    "BN-C73-aste",
+    "BN-C73-taratari",
+    "BN-C73-sohoj"
+  ],
+  "tex": "bengali/book/chapters/ch73-long-hot-slowly-quickly-easy.tex"
+}

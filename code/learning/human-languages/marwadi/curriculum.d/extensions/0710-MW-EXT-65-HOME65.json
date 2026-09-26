@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-65-HOME65",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a door, a kitchen, a room, a book and a pen.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C60-asan",
+  "pathSegment": "FA-PATH-60-ADJ60",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-60-ADJ60",
+      "order": 1
+    }
+  ]
+}

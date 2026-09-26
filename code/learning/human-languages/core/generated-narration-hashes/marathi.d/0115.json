@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:acc370f77511a4ce",
+  "lessonIds": [
+    "MR-C115-hodi",
+    "MR-C115-saykal",
+    "MR-C115-bajar",
+    "MR-C115-gav",
+    "MR-C115-kapde"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch115.txt",
+  "json": "marathi/narration/ch115.json",
+  "textHash": "fnv1a64:f473ae2c5240f37e",
+  "jsonHash": "fnv1a64:8286a9c75a7ffe9a",
+  "findings": []
+}

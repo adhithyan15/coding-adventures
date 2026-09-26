@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:5c0709a55953b7cd",
+  "lessonIds": [
+    "MW-C55-milno",
+    "MW-C55-sikhno",
+    "MW-C55-bhulno",
+    "MW-C55-lavno",
+    "MW-C55-bhejno"
+  ],
+  "tex": "marwadi/book/chapters/ch55-to-meet-to-learn-to-forget-to-bring-to-send.tex"
+}

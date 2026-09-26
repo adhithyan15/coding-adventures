@@ -1,0 +1,9 @@
+{
+  "id": "AR-PATH-92-TOWN92",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "AR-EXT-92-TOWN92"
+  ],
+  "after": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:767e60c7368facc2",
+  "lessonIds": [
+    "MR-C110-minit",
+    "MR-C110-aj",
+    "MR-C110-ata",
+    "MR-C110-nehmi",
+    "MR-C110-kadhikadhi"
+  ],
+  "tex": "marathi/book/chapters/ch110-minute-today-now-always-sometimes.tex"
+}

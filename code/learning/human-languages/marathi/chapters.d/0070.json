@@ -1,0 +1,19 @@
+{
+  "chapter": 70,
+  "title": "Hand, Foot, Hair, Tooth, Throat",
+  "label": "ch:mr-hand-foot-hair-tooth-throat",
+  "canDo": "I can say a hand, a foot, a leg, hair, a tooth and the throat.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C70-gala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 70: i can say a hand, a foot, a leg, hair, a tooth and the throat.",
+    "assesses": [
+      "MR-LEX-C70-BODY70-03",
+      "MR-LEX-C70-BODY70-04",
+      "MR-LEX-C70-BODY70-05"
+    ]
+  }
+}

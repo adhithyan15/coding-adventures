@@ -1,0 +1,11 @@
+{
+  "id": "MW-C79-minat",
+  "pathSegment": "MW-PATH-79-TIME79",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-79-TIME79",
+      "order": 1
+    }
+  ]
+}

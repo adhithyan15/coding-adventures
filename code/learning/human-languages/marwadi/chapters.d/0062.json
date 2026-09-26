@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "Window, Chair, Table, Wall, Roof",
+  "label": "ch:mw-window-chair-table-wall-roof",
+  "canDo": "I can say a window, a chair, a table, a wall and a roof.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "MW-C62-chhat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: i can say a window, a chair, a table, a wall and a roof.",
+    "assesses": [
+      "MW-LEX-C62-HOME62-03",
+      "MW-LEX-C62-HOME62-04",
+      "MW-LEX-C62-HOME62-05"
+    ]
+  }
+}

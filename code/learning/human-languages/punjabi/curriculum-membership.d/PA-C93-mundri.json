@@ -1,0 +1,11 @@
+{
+  "id": "PA-C93-mundri",
+  "pathSegment": "PA-PATH-93-CLOTHES93",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-93-CLOTHES93",
+      "order": 3
+    }
+  ]
+}

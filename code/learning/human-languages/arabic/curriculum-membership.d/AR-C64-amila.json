@@ -1,0 +1,11 @@
+{
+  "id": "AR-C64-amila",
+  "pathSegment": "AR-PATH-64-VERBS64",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-64-VERBS64",
+      "order": 1
+    }
+  ]
+}

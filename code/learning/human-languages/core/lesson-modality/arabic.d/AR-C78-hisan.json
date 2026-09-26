@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C78-hisan",
+    "language": "arabic",
+    "chapter": 78,
+    "sequence": 2900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d495c697e1e3d54"
+  },
+  "findings": []
+}

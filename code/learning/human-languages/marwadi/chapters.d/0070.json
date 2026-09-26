@@ -1,0 +1,19 @@
+{
+  "chapter": 70,
+  "title": "Sky, Dog, Cat, Cow, Buffalo",
+  "label": "ch:mw-sky-dog-cat-cow-buffalo",
+  "canDo": "I can say the sky, a dog, a cat, a cow and a buffalo.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C70-bhais",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 70: i can say the sky, a dog, a cat, a cow and a buffalo.",
+    "assesses": [
+      "MW-LEX-C70-NATURE70-03",
+      "MW-LEX-C70-NATURE70-04",
+      "MW-LEX-C70-NATURE70-05"
+    ]
+  }
+}

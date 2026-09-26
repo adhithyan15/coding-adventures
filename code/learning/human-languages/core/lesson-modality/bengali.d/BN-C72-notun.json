@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C72-notun",
+    "language": "bengali",
+    "chapter": 72,
+    "sequence": 3770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:acc27f51636fa376"
+  },
+  "findings": []
+}

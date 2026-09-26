@@ -1,0 +1,11 @@
+{
+  "id": "MW-C56-pakarno",
+  "pathSegment": "MW-PATH-56-VERBS56",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-56-VERBS56",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C54-tabib",
+  "pathSegment": "AR-PATH-54-HEALTH54",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-54-HEALTH54",
+      "order": 3
+    }
+  ]
+}

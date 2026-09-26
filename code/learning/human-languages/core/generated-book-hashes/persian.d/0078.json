@@ -1,0 +1,15 @@
+{
+  "language": "persian",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:f74d5ff002d7038a",
+  "lessonIds": [
+    "FA-C78-safar",
+    "FA-C78-musighi",
+    "FA-C78-khabar",
+    "FA-C78-keshvar",
+    "FA-C78-dastan",
+    "FA-R78-first-pass-describing-words-and-time",
+    "FA-R78-second-pass-places-the-town-clothes-and-numbers"
+  ],
+  "tex": "persian/book/chapters/ch78-journey-music-news-country-story.tex"
+}

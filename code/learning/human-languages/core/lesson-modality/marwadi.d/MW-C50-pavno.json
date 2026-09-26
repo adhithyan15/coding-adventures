@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C50-pavno",
+    "language": "marwadi",
+    "chapter": 50,
+    "sequence": 3820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1af279a3d711014c"
+  },
+  "findings": []
+}

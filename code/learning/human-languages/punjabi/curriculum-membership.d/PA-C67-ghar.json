@@ -1,0 +1,11 @@
+{
+  "id": "PA-C67-ghar",
+  "pathSegment": "PA-PATH-67-FOOD67",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-67-FOOD67",
+      "order": 2
+    }
+  ]
+}

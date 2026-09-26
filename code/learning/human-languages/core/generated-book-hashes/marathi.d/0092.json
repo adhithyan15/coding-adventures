@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:c3296bbd1199ba17",
+  "lessonIds": [
+    "MR-C92-kap",
+    "MR-C92-tat",
+    "MR-C92-chamcha",
+    "MR-C92-suri",
+    "MR-C92-batli"
+  ],
+  "tex": "marathi/book/chapters/ch92-cup-plate-spoon-knife-bottle.tex"
+}

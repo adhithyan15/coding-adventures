@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:c9450161563d94d8",
+  "lessonIds": [
+    "AR-C58-qama",
+    "AR-C58-masha",
+    "AR-C58-rakada",
+    "AR-C58-laiba",
+    "AR-C58-ishtara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch58.txt",
+  "json": "arabic/narration/ch58.json",
+  "textHash": "fnv1a64:b1ad9c79e8231e2f",
+  "jsonHash": "fnv1a64:da9e622c5a508782",
+  "findings": []
+}

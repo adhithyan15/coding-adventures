@@ -1,0 +1,11 @@
+{
+  "id": "AR-C88-baid",
+  "pathSegment": "AR-PATH-88-TIME88",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-88-TIME88",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:2aec972530c8c091",
+  "lessonIds": [
+    "PA-C76-samundar",
+    "PA-C76-agg",
+    "PA-C76-baraf",
+    "PA-C76-mimh",
+    "PA-C76-hava"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch76.txt",
+  "json": "punjabi/narration/ch76.json",
+  "textHash": "fnv1a64:73cd2fa90ef0d0db",
+  "jsonHash": "fnv1a64:d2f9dc0057701bbf",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-101-ANIMALS101",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a mouse, a lion, a tiger, an elephant and a monkey.",
+  "prerequisites": []
+}

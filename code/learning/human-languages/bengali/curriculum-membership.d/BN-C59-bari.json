@@ -1,0 +1,11 @@
+{
+  "id": "BN-C59-bari",
+  "pathSegment": "BN-PATH-59-FOOD59",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-59-FOOD59",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:3c2f12338f4d63b4",
+  "lessonIds": [
+    "AR-C72-shawka",
+    "AR-C72-zujaja",
+    "AR-C72-bab",
+    "AR-C72-matbakh",
+    "AR-C72-hadiqa"
+  ],
+  "tex": "arabic/book/chapters/ch72-fork-bottle-door-kitchen-garden.tex"
+}

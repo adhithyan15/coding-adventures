@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C76-haro",
+    "language": "marwadi",
+    "chapter": 76,
+    "sequence": 5150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6865615f327d0f2d"
+  },
+  "findings": []
+}

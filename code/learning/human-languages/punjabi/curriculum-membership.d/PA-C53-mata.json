@@ -1,0 +1,11 @@
+{
+  "id": "PA-C53-mata",
+  "pathSegment": "PA-PATH-53-HEALTH53",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-53-HEALTH53",
+      "order": 2
+    }
+  ]
+}

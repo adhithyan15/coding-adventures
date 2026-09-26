@@ -1,0 +1,19 @@
+{
+  "chapter": 50,
+  "title": "To wash, To laugh, To cry, To sing, To dance",
+  "label": "ch:bn-to-wash-to-laugh-to-cry-to-sing-to-dance",
+  "canDo": "I can say to wash, to laugh, to cry, to sing and to dance.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C50-nacha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 50: i can say to wash, to laugh, to cry, to sing and to dance.",
+    "assesses": [
+      "BN-LEX-C50-VERBS50-03",
+      "BN-LEX-C50-VERBS50-04",
+      "BN-LEX-C50-VERBS50-05"
+    ]
+  }
+}

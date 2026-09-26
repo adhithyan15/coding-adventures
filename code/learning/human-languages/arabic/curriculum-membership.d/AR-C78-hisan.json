@@ -1,0 +1,11 @@
+{
+  "id": "AR-C78-hisan",
+  "pathSegment": "AR-PATH-78-NATURE78",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-78-NATURE78",
+      "order": 4
+    }
+  ]
+}

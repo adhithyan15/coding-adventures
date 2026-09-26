@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:4d08f1cbd61c445e",
+  "lessonIds": [
+    "AR-C92-qitar",
+    "AR-C92-jisr",
+    "AR-C92-masjid",
+    "AR-C92-funduq",
+    "AR-C92-maktab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch92.txt",
+  "json": "arabic/narration/ch92.json",
+  "textHash": "fnv1a64:60d8d23028fabdd5",
+  "jsonHash": "fnv1a64:70a31ab75f240899",
+  "findings": []
+}

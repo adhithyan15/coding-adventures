@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:3b14c337eac68b45",
+  "lessonIds": [
+    "PA-C50-ungal",
+    "PA-C50-bullh",
+    "PA-C50-dhaun",
+    "PA-C50-chihra",
+    "PA-C50-khun"
+  ],
+  "tex": "punjabi/book/chapters/ch50-finger-lip-neck-face-blood.tex"
+}

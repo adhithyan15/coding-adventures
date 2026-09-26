@@ -1,0 +1,15 @@
+{
+  "language": "arabic",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:283c05212aa71e49",
+  "lessonIds": [
+    "AR-C99-musiqa",
+    "AR-C99-akhbar",
+    "AR-C99-balad",
+    "AR-C99-lugha",
+    "AR-C99-qissa",
+    "AR-R99-first-pass-nature-animals-and-describing-words",
+    "AR-R99-second-pass-time-places-the-town-clothes-and-numbers"
+  ],
+  "tex": "arabic/book/chapters/ch99-music-news-country-language-story.tex"
+}

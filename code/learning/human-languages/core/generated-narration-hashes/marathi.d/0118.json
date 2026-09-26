@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:70ddd21f106dc3bc",
+  "lessonIds": [
+    "MR-C118-chalis",
+    "MR-C118-pannas",
+    "MR-C118-sath",
+    "MR-C118-sattar",
+    "MR-C118-navvad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch118.txt",
+  "json": "marathi/narration/ch118.json",
+  "textHash": "fnv1a64:9d271fc2555b167c",
+  "jsonHash": "fnv1a64:54aea46ceb3fa0fa",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:1535ca9df7bc9ac3",
+  "lessonIds": [
+    "AR-C73-kitab",
+    "AR-C73-daftar",
+    "AR-C73-qalam",
+    "AR-C73-waraqa",
+    "AR-C73-madrasa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch73.txt",
+  "json": "arabic/narration/ch73.json",
+  "textHash": "fnv1a64:3f8b9202cabcab2b",
+  "jsonHash": "fnv1a64:3223452697f858ee",
+  "findings": []
+}

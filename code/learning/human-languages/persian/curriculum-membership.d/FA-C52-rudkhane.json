@@ -1,0 +1,11 @@
+{
+  "id": "FA-C52-rudkhane",
+  "pathSegment": "FA-PATH-52-NATURE52",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-52-NATURE52",
+      "order": 2
+    }
+  ]
+}

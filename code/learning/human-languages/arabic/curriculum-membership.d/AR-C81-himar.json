@@ -1,0 +1,11 @@
+{
+  "id": "AR-C81-himar",
+  "pathSegment": "AR-PATH-81-ANIMALS81",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-81-ANIMALS81",
+      "order": 1
+    }
+  ]
+}

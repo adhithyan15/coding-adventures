@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:ca7761f3b58843af",
+  "lessonIds": [
+    "MW-C69-taro",
+    "MW-C69-suraj",
+    "MW-C69-chad",
+    "MW-C69-samandar",
+    "MW-C69-ag"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch69.txt",
+  "json": "marwadi/narration/ch69.json",
+  "textHash": "fnv1a64:5d4bc188879ff7a5",
+  "jsonHash": "fnv1a64:7d26b7a607664c20",
+  "findings": []
+}

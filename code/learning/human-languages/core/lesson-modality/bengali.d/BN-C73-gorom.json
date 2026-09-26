@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C73-gorom",
+    "language": "bengali",
+    "chapter": 73,
+    "sequence": 3810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc635a7b63baa42d"
+  },
+  "findings": []
+}

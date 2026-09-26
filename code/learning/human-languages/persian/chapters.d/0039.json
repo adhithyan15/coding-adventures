@@ -1,0 +1,19 @@
+{
+  "chapter": 39,
+  "title": "To cut, To look for, To wear, To come back, To take away",
+  "label": "ch:fa-to-cut-to-look-for-to-wear-to-come-back-to-take-away",
+  "canDo": "I can say to cut, to look for, to wear, to come back and to take away.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C39-bordan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 39: i can say to cut, to look for, to wear, to come back and to take away.",
+    "assesses": [
+      "FA-LEX-C39-VERBS39-03",
+      "FA-LEX-C39-VERBS39-04",
+      "FA-LEX-C39-VERBS39-05"
+    ]
+  }
+}

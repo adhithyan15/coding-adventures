@@ -1,0 +1,11 @@
+{
+  "id": "PA-C64-alu",
+  "pathSegment": "PA-PATH-64-FOOD64",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-64-FOOD64",
+      "order": 4
+    }
+  ]
+}

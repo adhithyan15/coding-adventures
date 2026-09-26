@@ -1,0 +1,11 @@
+{
+  "id": "FA-C33-bachche",
+  "pathSegment": "FA-PATH-33-FAMILY33",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FA-EXT-33-FAMILY33",
+      "order": 3
+    }
+  ]
+}

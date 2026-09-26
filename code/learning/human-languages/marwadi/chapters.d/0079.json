@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "Hour, Minute, Today, Yesterday, Now",
+  "label": "ch:mw-hour-minute-today-yesterday-now",
+  "canDo": "I can say an hour, a minute, today, yesterday and now.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "MW-C79-abar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can say an hour, a minute, today, yesterday and now.",
+    "assesses": [
+      "MW-LEX-C79-TIME79-03",
+      "MW-LEX-C79-TIME79-04",
+      "MW-LEX-C79-TIME79-05"
+    ]
+  }
+}

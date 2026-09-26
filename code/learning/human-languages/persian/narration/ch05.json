@@ -3,8 +3,8 @@
   "language": "persian",
   "chapter": 5,
   "title": "Take Leave",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:414c681517af67e2",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:92d845deb6aa8e83",
   "lessons": [
     {
       "id": "FA-C05-khoda",
@@ -281,7 +281,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f0c08dc92d0ca2f",
+      "sourceHash": "fnv1a64:1c0fa12a29bb3766",
       "notice": null,
       "blocks": [
         {
@@ -318,17 +318,6 @@
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens — a complete wish without a full sentence",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The expression carries the protective sense “God [be] guardian,” but everyday speakers use the whole formula simply as goodbye. No new verb is required for beginner production. It is a broadly polite, reliable way to end the short respectful interaction built in Chapters 1–4."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -362,7 +351,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -401,6 +390,110 @@
       ]
     },
     {
+      "id": "FA-C05-khodahafez-more",
+      "sequence": 195,
+      "title": "(خداحافظ, continued) ((khodâ hâfez, continued)) — Grammar Lens — a complete wish without a full sentence",
+      "headword": "(خداحافظ, continued)",
+      "romanization": "(khodâ hâfez, continued)",
+      "gloss": "Grammar Lens — a complete wish without a full sentence",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80e8aa1a6457a9a6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before going on: say خداحافظ (khodâ hâfez) again, and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens — a complete wish without a full sentence",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The expression carries the protective sense “God [be] guardian,” but everyday speakers use the whole formula simply as goodbye. No new verb is required for beginner production. It is a broadly polite, reliable way to end the short respectful interaction built in Chapters 1–4."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what this lesson added to خداحافظ (khodâ hâfez), in one sentence",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what this lesson added to **خداحافظ**, in one sentence]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did this lesson add to خداحافظ (khodâ hâfez)? Say it once more, without looking."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FA-C05-khodahafez-more-goodbye",
+              "prompt": "Type the everyday Persian way to say goodbye.",
+              "assesses": [
+                "FA-PRAGMATICS-STANDARD-FAREWELL"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "خداحافظ",
+                "khodâ hâfez",
+                "khodahafez"
+              ],
+              "feedback": {
+                "correct": "Right: خداحافظ closes the conversation.",
+                "incorrect": "Use خداحافظ — khodâ hâfez."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "FA-C05-practice",
       "sequence": 200,
       "title": "Practice — open, check, and close",
@@ -413,7 +506,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0dded6ab0b8160bc",
+      "sourceHash": "fnv1a64:8e2b56a5c13f0980",
       "notice": null,
       "blocks": [
         {

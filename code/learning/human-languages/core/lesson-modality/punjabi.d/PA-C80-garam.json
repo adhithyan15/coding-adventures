@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C80-garam",
+    "language": "punjabi",
+    "chapter": 80,
+    "sequence": 4280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e26ae9bbde670d5"
+  },
+  "findings": []
+}

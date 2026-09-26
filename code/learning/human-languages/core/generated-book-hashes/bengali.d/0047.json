@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:ece2297093e9d502",
+  "lessonIds": [
+    "BN-C47-pishi",
+    "BN-C47-shbami",
+    "BN-C47-stri",
+    "BN-C47-shishu",
+    "BN-C47-lok"
+  ],
+  "tex": "bengali/book/chapters/ch47-aunt-husband-wife-child-person.tex"
+}

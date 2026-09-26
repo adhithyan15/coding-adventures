@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:f8297af34cd0b86c",
+  "lessonIds": [
+    "MR-C98-surya",
+    "MR-C98-chandra",
+    "MR-C98-samudra",
+    "MR-C98-ag",
+    "MR-C98-barpha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch98.txt",
+  "json": "marathi/narration/ch98.json",
+  "textHash": "fnv1a64:5a6be01cd9051f1e",
+  "jsonHash": "fnv1a64:cef77ba643369501",
+  "findings": []
+}

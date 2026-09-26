@@ -1,0 +1,19 @@
+{
+  "chapter": 75,
+  "title": "Sand, Field, Cloud, Sun, Moon",
+  "label": "ch:pa-sand-field-cloud-sun-moon",
+  "canDo": "I can say sand, a field, a cloud, the sun and the moon.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C75-chann",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 75: i can say sand, a field, a cloud, the sun and the moon.",
+    "assesses": [
+      "PA-LEX-C75-NATURE75-03",
+      "PA-LEX-C75-NATURE75-04",
+      "PA-LEX-C75-NATURE75-05"
+    ]
+  }
+}

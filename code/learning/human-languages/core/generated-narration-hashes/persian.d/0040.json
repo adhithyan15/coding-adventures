@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:afa86341a38ea57d",
+  "lessonIds": [
+    "FA-C40-shodan",
+    "FA-C40-sakhtan",
+    "FA-C40-mahi",
+    "FA-C40-berenj",
+    "FA-C40-gusht"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch40.txt",
+  "json": "persian/narration/ch40.json",
+  "textHash": "fnv1a64:75d5618770ffc1bc",
+  "jsonHash": "fnv1a64:00c92835a88bb990",
+  "findings": []
+}

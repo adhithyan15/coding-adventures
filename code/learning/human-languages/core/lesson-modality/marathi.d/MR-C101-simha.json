@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C101-simha",
+    "language": "marathi",
+    "chapter": 101,
+    "sequence": 4440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea7de0827d72df98"
+  },
+  "findings": []
+}

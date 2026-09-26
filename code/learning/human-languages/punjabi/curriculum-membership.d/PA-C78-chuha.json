@@ -1,0 +1,11 @@
+{
+  "id": "PA-C78-chuha",
+  "pathSegment": "PA-PATH-78-ANIMALS78",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-78-ANIMALS78",
+      "order": 1
+    }
+  ]
+}

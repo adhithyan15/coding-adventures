@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:72f6d29481ac8173",
+  "lessonIds": [
+    "MW-C83-pul",
+    "MW-C83-hotal",
+    "MW-C83-pulis",
+    "MW-C83-nav",
+    "MW-C83-saikal"
+  ],
+  "tex": "marwadi/book/chapters/ch83-bridge-hotel-police-boat-bicycle.tex"
+}

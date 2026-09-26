@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C62-bhit",
+    "language": "marwadi",
+    "chapter": 62,
+    "sequence": 4430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e58bf58f60012fd"
+  },
+  "findings": []
+}

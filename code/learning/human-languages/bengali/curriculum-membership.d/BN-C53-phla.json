@@ -1,0 +1,11 @@
+{
+  "id": "BN-C53-phla",
+  "pathSegment": "BN-PATH-53-VERBS53",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-53-VERBS53",
+      "order": 2
+    }
+  ]
+}

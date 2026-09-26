@@ -1,0 +1,11 @@
+{
+  "id": "MR-C77-aikne",
+  "pathSegment": "MR-PATH-77-FAMILY77",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-77-FAMILY77",
+      "order": 3
+    }
+  ]
+}

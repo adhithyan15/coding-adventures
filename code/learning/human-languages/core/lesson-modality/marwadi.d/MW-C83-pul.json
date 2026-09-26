@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C83-pul",
+    "language": "marwadi",
+    "chapter": 83,
+    "sequence": 5470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7bdca570b1fa83c1"
+  },
+  "findings": []
+}

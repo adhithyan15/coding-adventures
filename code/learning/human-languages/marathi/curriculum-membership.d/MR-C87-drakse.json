@@ -1,0 +1,11 @@
+{
+  "id": "MR-C87-drakse",
+  "pathSegment": "MR-PATH-87-FOOD87",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-87-FOOD87",
+      "order": 4
+    }
+  ]
+}

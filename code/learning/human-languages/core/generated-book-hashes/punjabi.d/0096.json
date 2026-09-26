@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:fb5e6fa4d0307f77",
+  "lessonIds": [
+    "PA-C96-baram",
+    "PA-C96-vih",
+    "PA-C96-tih",
+    "PA-C96-panjah",
+    "PA-C96-sau"
+  ],
+  "tex": "punjabi/book/chapters/ch96-twelve-twenty-thirty-fifty-hundred.tex"
+}

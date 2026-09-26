@@ -1,0 +1,11 @@
+{
+  "id": "BN-C49-kena",
+  "pathSegment": "BN-PATH-49-VERBS49",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-49-VERBS49",
+      "order": 1
+    }
+  ]
+}

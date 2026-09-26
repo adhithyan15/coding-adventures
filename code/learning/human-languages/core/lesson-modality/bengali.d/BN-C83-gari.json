@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C83-gari",
+    "language": "bengali",
+    "chapter": 83,
+    "sequence": 4300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77b51cedc2b667e8"
+  },
+  "findings": []
+}

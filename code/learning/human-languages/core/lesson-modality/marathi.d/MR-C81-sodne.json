@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C81-sodne",
+    "language": "marathi",
+    "chapter": 81,
+    "sequence": 3450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49ffe918ad99b47a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:0dcb8e24ba2702dc",
+  "lessonIds": [
+    "PA-C66-panir",
+    "PA-C66-shahid",
+    "PA-C66-angur",
+    "PA-C66-santra",
+    "PA-C66-nimbu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch66.txt",
+  "json": "punjabi/narration/ch66.json",
+  "textHash": "fnv1a64:2276a274ee791d59",
+  "jsonHash": "fnv1a64:43dab4b84477f419",
+  "findings": []
+}

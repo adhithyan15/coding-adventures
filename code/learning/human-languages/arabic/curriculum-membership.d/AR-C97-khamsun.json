@@ -1,0 +1,11 @@
+{
+  "id": "AR-C97-khamsun",
+  "pathSegment": "AR-PATH-97-NUMBERS97",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-97-NUMBERS97",
+      "order": 3
+    }
+  ]
+}

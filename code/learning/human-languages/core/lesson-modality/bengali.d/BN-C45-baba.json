@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C45-baba",
+    "language": "bengali",
+    "chapter": 45,
+    "sequence": 2400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22f014cba8ca8fbb"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-R73-second-pass-home-school-and-nature",
+  "pathSegment": "PA-PATH-73-SCHOOL73",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PA-EXT-73-SCHOOL73",
+      "order": 6
+    }
+  ]
+}

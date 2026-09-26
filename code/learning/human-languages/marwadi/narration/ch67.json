@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 67,
+  "title": "Game, Letter, Tree, Leaf, Hill",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:143a2d3049bba18b",
+  "lessons": [
+    {
+      "id": "MW-C67-khel",
+      "sequence": 4670,
+      "title": "खेल (khel) — a game",
+      "headword": "खेल",
+      "romanization": "khel",
+      "gloss": "a game",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77ad2120140777ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for an answer, then the Marwadi for a word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खेल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खेल — khel — \"a game\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khel, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khel*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say khel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *khel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for an answer, then the Marwadi for a word, then say khel again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for an answer, then the Marwadi for a word, then say *khel* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खेल (khel) mean? (\"A game\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C67-khel-type",
+              "prompt": "Type the Marwadi for 'a game'.",
+              "assesses": [
+                "MW-LEX-C67-SCHOOL67-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "खेल",
+                "khel"
+              ],
+              "feedback": {
+                "correct": "Right: खेल (khel) is 'a game'.",
+                "incorrect": "'a game' is खेल (khel)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C67-chitthi",
+      "sequence": 4680,
+      "title": "चिट्ठी (chiṭṭhī) — a letter (post)",
+      "headword": "चिट्ठी",
+      "romanization": "chiṭṭhī",
+      "gloss": "a letter (post)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2a7fc6b70f60480",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a word, then the Marwadi for a game."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चिट्ठी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिट्ठी — chiṭṭhī — \"a letter (post)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiṭṭhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiṭṭhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chiṭṭhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chiṭṭhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chiṭṭhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chiṭṭhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a word, then the Marwadi for a game, then say chiṭṭhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a word, then the Marwadi for a game, then say *chiṭṭhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चिट्ठी (chiṭṭhī) mean? (\"A letter (post)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C67-chitthi-type",
+              "prompt": "Type the Marwadi for 'a letter (post)'.",
+              "assesses": [
+                "MW-LEX-C67-SCHOOL67-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "चिट्ठी",
+                "chiṭṭhī"
+              ],
+              "feedback": {
+                "correct": "Right: चिट्ठी (chiṭṭhī) is 'a letter (post)'.",
+                "incorrect": "'a letter (post)' is चिट्ठी (chiṭṭhī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C67-rukh",
+      "sequence": 4690,
+      "title": "रूंख (rū̃kh) — a tree",
+      "headword": "रूंख",
+      "romanization": "rū̃kh",
+      "gloss": "a tree",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3ed2d79ed479bb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a game, then the Marwadi for a letter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रूंख",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रूंख — rū̃kh — \"a tree\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rū̃kh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rū̃kh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rū̃kh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rū̃kh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say rū̃kh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *rū̃kh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a game, then the Marwadi for a letter, then say rū̃kh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a game, then the Marwadi for a letter, then say *rū̃kh* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रूंख (rū̃kh) mean? (\"A tree\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C67-rukh-type",
+              "prompt": "Type the Marwadi for 'a tree'.",
+              "assesses": [
+                "MW-LEX-C67-SCHOOL67-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "रूंख",
+                "rū̃kh"
+              ],
+              "feedback": {
+                "correct": "Right: रूंख (rū̃kh) is 'a tree'.",
+                "incorrect": "'a tree' is रूंख (rū̃kh)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C67-patto",
+      "sequence": 4700,
+      "title": "पत्तो (patto) — a leaf",
+      "headword": "पत्तो",
+      "romanization": "patto",
+      "gloss": "a leaf",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:093128d0ef080b5f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a letter, then the Marwadi for a tree."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पत्तो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पत्तो — patto — \"a leaf\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patto, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patto*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say patto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *patto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a letter, then the Marwadi for a tree, then say patto again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a letter, then the Marwadi for a tree, then say *patto* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पत्तो (patto) mean? (\"A leaf\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C67-patto-type",
+              "prompt": "Type the Marwadi for 'a leaf'.",
+              "assesses": [
+                "MW-LEX-C67-SCHOOL67-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पत्तो",
+                "patto"
+              ],
+              "feedback": {
+                "correct": "Right: पत्तो (patto) is 'a leaf'.",
+                "incorrect": "'a leaf' is पत्तो (patto)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C67-dugar",
+      "sequence": 4710,
+      "title": "डूंगर (ḍū̃gar) — a hill, a mountain",
+      "headword": "डूंगर",
+      "romanization": "ḍū̃gar",
+      "gloss": "a hill, a mountain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92244041b5591a7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a tree, then the Marwadi for a leaf."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: डूंगर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डूंगर — ḍū̃gar — \"a hill, a mountain\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍū̃gar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍū̃gar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍū̃gar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍū̃gar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ḍū̃gar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ḍū̃gar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a tree, then the Marwadi for a leaf, then say ḍū̃gar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a tree, then the Marwadi for a leaf, then say *ḍū̃gar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does डूंगर (ḍū̃gar) mean? (\"A hill, a mountain\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C67-dugar-type",
+              "prompt": "Type the Marwadi for 'a hill, a mountain'.",
+              "assesses": [
+                "MW-LEX-C67-SCHOOL67-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "डूंगर",
+                "ḍū̃gar"
+              ],
+              "feedback": {
+                "correct": "Right: डूंगर (ḍū̃gar) is 'a hill, a mountain'.",
+                "incorrect": "'a hill, a mountain' is डूंगर (ḍū̃gar)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

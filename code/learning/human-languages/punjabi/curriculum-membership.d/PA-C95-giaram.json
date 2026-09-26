@@ -1,0 +1,11 @@
+{
+  "id": "PA-C95-giaram",
+  "pathSegment": "PA-PATH-95-NUMBERS95",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-95-NUMBERS95",
+      "order": 4
+    }
+  ]
+}

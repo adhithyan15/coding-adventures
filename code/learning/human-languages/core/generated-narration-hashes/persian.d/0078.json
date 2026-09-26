@@ -1,0 +1,21 @@
+{
+  "language": "persian",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:f1826606413573f4",
+  "lessonIds": [
+    "FA-C78-safar",
+    "FA-C78-musighi",
+    "FA-C78-khabar",
+    "FA-C78-keshvar",
+    "FA-C78-dastan",
+    "FA-R78-first-pass-describing-words-and-time",
+    "FA-R78-second-pass-places-the-town-clothes-and-numbers"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "persian/narration/ch78.txt",
+  "json": "persian/narration/ch78.json",
+  "textHash": "fnv1a64:de6824b8bce6bcd5",
+  "jsonHash": "fnv1a64:c0e09437002701c5",
+  "findings": []
+}

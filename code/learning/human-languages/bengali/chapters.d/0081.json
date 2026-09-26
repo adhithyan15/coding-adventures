@@ -1,0 +1,19 @@
+{
+  "chapter": 81,
+  "title": "Near, Inside, Outside, Below, In front",
+  "label": "ch:bn-near-inside-outside-below-in-front",
+  "canDo": "I can say near, inside, outside, below and in front.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "BN-C81-samne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 81: i can say near, inside, outside, below and in front.",
+    "assesses": [
+      "BN-LEX-C81-PLACE81-03",
+      "BN-LEX-C81-PLACE81-04",
+      "BN-LEX-C81-PLACE81-05"
+    ]
+  }
+}

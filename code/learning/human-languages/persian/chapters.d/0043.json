@@ -1,0 +1,19 @@
+{
+  "chapter": 43,
+  "title": "Lemon, Yoghurt, Onion, Breakfast, Lunch",
+  "label": "ch:fa-lemon-yoghurt-onion-breakfast-lunch",
+  "canDo": "I can say a lemon, yoghurt, an onion, breakfast and lunch.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FA-C43-nahar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 43: i can say a lemon, yoghurt, an onion, breakfast and lunch.",
+    "assesses": [
+      "FA-LEX-C43-FOOD43-03",
+      "FA-LEX-C43-FOOD43-04",
+      "FA-LEX-C43-FOOD43-05"
+    ]
+  }
+}

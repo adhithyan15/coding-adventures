@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:bf5e5bad9fe9c9a4",
+  "lessonIds": [
+    "PA-C78-panchhi",
+    "PA-C78-chuha",
+    "PA-C78-sher",
+    "PA-C78-hathi",
+    "PA-C78-bandar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch78.txt",
+  "json": "punjabi/narration/ch78.json",
+  "textHash": "fnv1a64:0823e4b20bf4f42f",
+  "jsonHash": "fnv1a64:9cf05176e3a56478",
+  "findings": []
+}

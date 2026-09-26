@@ -1,0 +1,11 @@
+{
+  "id": "MR-C93-svayampakghar",
+  "pathSegment": "MR-PATH-93-HOME93",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-93-HOME93",
+      "order": 1
+    }
+  ]
+}

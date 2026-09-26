@@ -1,0 +1,19 @@
+{
+  "chapter": 74,
+  "title": "Expensive, Cheap, Low, Full, Empty",
+  "label": "ch:bn-expensive-cheap-low-full-empty",
+  "canDo": "I can say expensive, cheap, low, full and empty.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C74-khali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: i can say expensive, cheap, low, full and empty.",
+    "assesses": [
+      "BN-LEX-C74-ADJ74-03",
+      "BN-LEX-C74-ADJ74-04",
+      "BN-LEX-C74-ADJ74-05"
+    ]
+  }
+}

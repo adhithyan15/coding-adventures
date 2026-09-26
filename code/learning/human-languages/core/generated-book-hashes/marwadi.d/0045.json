@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:b7e5e617885e3fda",
+  "lessonIds": [
+    "MW-C45-pet",
+    "MW-C45-angli",
+    "MW-C45-hoth",
+    "MW-C45-mudo",
+    "MW-C45-godo"
+  ],
+  "tex": "marwadi/book/chapters/ch45-stomach-finger-lip-face-knee.tex"
+}

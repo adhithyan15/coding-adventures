@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:95828a136cd06876",
+  "lessonIds": [
+    "FA-C46-divar",
+    "FA-C46-takht",
+    "FA-C46-komod",
+    "FA-C46-zamin",
+    "FA-C46-ayene"
+  ],
+  "tex": "persian/book/chapters/ch46-wall-bed-cupboard-ground-mirror.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C68-batas",
+    "language": "bengali",
+    "chapter": 68,
+    "sequence": 3560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c113b94413b2737"
+  },
+  "findings": []
+}

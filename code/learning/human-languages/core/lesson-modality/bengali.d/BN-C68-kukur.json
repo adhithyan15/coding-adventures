@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C68-kukur",
+    "language": "bengali",
+    "chapter": 68,
+    "sequence": 3580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:438c37b58abb5767"
+  },
+  "findings": []
+}

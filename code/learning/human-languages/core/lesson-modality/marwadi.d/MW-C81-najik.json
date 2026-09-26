@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C81-najik",
+    "language": "marwadi",
+    "chapter": 81,
+    "sequence": 5380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3237330c23f87826"
+  },
+  "findings": []
+}

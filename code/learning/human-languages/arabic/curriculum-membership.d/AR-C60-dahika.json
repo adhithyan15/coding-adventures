@@ -1,0 +1,11 @@
+{
+  "id": "AR-C60-dahika",
+  "pathSegment": "AR-PATH-60-VERBS60",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-60-VERBS60",
+      "order": 2
+    }
+  ]
+}

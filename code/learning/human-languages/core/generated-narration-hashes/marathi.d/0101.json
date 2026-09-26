@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:6c2bd9deff4d0276",
+  "lessonIds": [
+    "MR-C101-undir",
+    "MR-C101-simha",
+    "MR-C101-vagh",
+    "MR-C101-hatti",
+    "MR-C101-makad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch101.txt",
+  "json": "marathi/narration/ch101.json",
+  "textHash": "fnv1a64:e88da7134f793cf8",
+  "jsonHash": "fnv1a64:bf1dc9420d2d0939",
+  "findings": []
+}
