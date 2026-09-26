@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "Deaf, False, Sure, Safe, Dangerous",
+  "label": "ch:la-deaf-false-sure-safe-dangerous",
+  "canDo": "I can say deaf, false, sure, safe and dangerous.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C147-periculosus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: i can say deaf, false, sure, safe and dangerous.",
+    "assesses": [
+      "LA-LEX-C147-QUAL147-03",
+      "LA-LEX-C147-QUAL147-04",
+      "LA-LEX-C147-QUAL147-05"
+    ]
+  }
+}

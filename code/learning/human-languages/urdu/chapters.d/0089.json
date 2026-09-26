@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "All, Every, Someone, Something, Both",
+  "label": "ch:ur-all-every-someone-something-both",
+  "canDo": "I can say all, every, someone, something and both.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C89-donon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can say all, every, someone, something and both.",
+    "assesses": [
+      "UR-LEX-C89-DEF89-03",
+      "UR-LEX-C89-DEF89-04",
+      "UR-LEX-C89-DEF89-05"
+    ]
+  }
+}

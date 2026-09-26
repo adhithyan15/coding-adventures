@@ -1,0 +1,11 @@
+{
+  "id": "UR-C136-pakka",
+  "pathSegment": "UR-PATH-136-QUAL136",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-136-QUAL136",
+      "order": 3
+    }
+  ]
+}

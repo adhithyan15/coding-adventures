@@ -1,0 +1,11 @@
+{
+  "id": "HI-C165-ginna",
+  "pathSegment": "HI-PATH-165-ACT165",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-165-ACT165",
+      "order": 4
+    }
+  ]
+}

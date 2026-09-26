@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:f4450598aaa66f26",
+  "lessonIds": [
+    "UR-C135-mashhur",
+    "UR-C135-bahadur",
+    "UR-C135-hoshiyar",
+    "UR-C135-thaka",
+    "UR-C135-bhuka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch135.txt",
+  "json": "urdu/narration/ch135.json",
+  "textHash": "fnv1a64:b3c9f6898f269248",
+  "jsonHash": "fnv1a64:8c2a3460cd310493",
+  "findings": []
+}

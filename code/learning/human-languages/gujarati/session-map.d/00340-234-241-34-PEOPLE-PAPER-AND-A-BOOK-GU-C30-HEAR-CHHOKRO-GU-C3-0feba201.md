@@ -1,0 +1,1 @@
+| 234-241 | 34 | People, Paper, and a Book | `GU-C30-hear-chhokro` -> `GU-C30-hear-chhokri` -> `GU-C30-hear-maanas` -> `GU-C30-hear-pustak` -> `GU-C30-hear-kaagal` -> `GU-C30-people-five` -> `GU-C30-kaagal` -> `GU-R30-people-five-r1` |

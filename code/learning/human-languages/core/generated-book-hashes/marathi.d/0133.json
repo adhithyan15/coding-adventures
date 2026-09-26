@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:def898f0052702ad",
+  "lessonIds": [
+    "MR-C133-saban",
+    "MR-C133-peti",
+    "MR-C133-pisvi",
+    "MR-C133-topli",
+    "MR-C133-menbatti"
+  ],
+  "tex": "marathi/book/chapters/ch133-soap-box-bag-basket-candle.tex"
+}

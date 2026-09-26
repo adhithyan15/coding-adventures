@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:b26b677deaf8779c",
+  "lessonIds": [
+    "UR-C105-shauq",
+    "UR-C105-irada",
+    "UR-C105-mez",
+    "UR-C105-qainchi",
+    "UR-C105-sui"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch105.txt",
+  "json": "urdu/narration/ch105.json",
+  "textHash": "fnv1a64:82240f60e7e5096e",
+  "jsonHash": "fnv1a64:d62cb31ac1e18a76",
+  "findings": []
+}

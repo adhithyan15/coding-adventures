@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C142-utarna",
+    "language": "urdu",
+    "chapter": 142,
+    "sequence": 7450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe010cb6851cc80a"
+  },
+  "findings": []
+}

@@ -300,5 +300,12 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
       String(70 + i),
       [86, 103, 120].includes(70 + i) ? 7 : 5,
     ]),
+    // Chapters 121-158: the A1 tranche, five word lessons each, in four runs
+    // (121-130, 131-140, 141-149, 150-158). The last chapter of each run also
+    // carries that run's two reviews.
+    ...Array.from({ length: 38 }, (_, i): [string, number] => [
+      String(121 + i),
+      [130, 140, 149, 158].includes(121 + i) ? 7 : 5,
+    ]),
   ]);
 });

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:c2a6d3da30106016",
+  "lessonIds": [
+    "UR-C95-khizan",
+    "UR-C95-tarikh",
+    "UR-C95-ajkal",
+    "UR-C95-pichhla",
+    "UR-C95-agla"
+  ],
+  "tex": "urdu/book/chapters/ch95-autumn-date-these-days-last-next.tex"
+}

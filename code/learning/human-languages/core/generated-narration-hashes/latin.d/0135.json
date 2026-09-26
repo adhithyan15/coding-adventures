@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:45a67759dd4d93c5",
+  "lessonIds": [
+    "LA-C135-balaena",
+    "LA-C135-gallus",
+    "LA-C135-labrum",
+    "LA-C135-mentum",
+    "LA-C135-dorsum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch135.txt",
+  "json": "latin/narration/ch135.json",
+  "textHash": "fnv1a64:d0907200b30ac8a5",
+  "jsonHash": "fnv1a64:0fa246a413fa5050",
+  "findings": []
+}

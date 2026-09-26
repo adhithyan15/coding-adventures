@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:f9efc2484e102c45",
+  "lessonIds": [
+    "UR-C125-andhi",
+    "UR-C125-zamin",
+    "UR-C125-sahil",
+    "UR-C125-jazira",
+    "UR-C125-chirya"
+  ],
+  "tex": "urdu/book/chapters/ch125-storm-ground-coast-island-sparrow.tex"
+}

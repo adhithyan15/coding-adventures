@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:deaf201e19679227",
+  "lessonIds": [
+    "MR-C156-dakhavne",
+    "MR-C156-vajavne",
+    "MR-C156-oradne",
+    "MR-C156-cavne",
+    "MR-C156-gilne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch156.txt",
+  "json": "marathi/narration/ch156.json",
+  "textHash": "fnv1a64:c851229181739f45",
+  "jsonHash": "fnv1a64:0c7bb2d93991ee2a",
+  "findings": []
+}

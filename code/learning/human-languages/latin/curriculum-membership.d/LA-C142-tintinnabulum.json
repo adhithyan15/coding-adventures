@@ -1,0 +1,11 @@
+{
+  "id": "LA-C142-tintinnabulum",
+  "pathSegment": "LA-PATH-142-THINGS142",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-142-THINGS142",
+      "order": 2
+    }
+  ]
+}

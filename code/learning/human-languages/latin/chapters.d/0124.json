@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Book, Ink, Reed pen, Wax, Picture",
+  "label": "ch:la-book-ink-reed-pen-wax-picture",
+  "canDo": "I can say a book, ink, a reed pen, wax and a picture.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C124-pictura",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say a book, ink, a reed pen, wax and a picture.",
+    "assesses": [
+      "LA-LEX-C124-THINGS124-03",
+      "LA-LEX-C124-THINGS124-04",
+      "LA-LEX-C124-THINGS124-05"
+    ]
+  }
+}

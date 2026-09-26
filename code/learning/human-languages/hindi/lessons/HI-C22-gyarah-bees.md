@@ -21,9 +21,9 @@ duration:
 requires:
   knowledge: [HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-01, HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-02, HI-CONCEPT-C21-SIX-NINE-TEN-HISTORY-03, HI-LEX-ANCHOR-OS]
 introduces:
-  knowledge: [HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-02, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04]
+  knowledge: [HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04]
 practises:
-  knowledge: [HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-02, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04, HI-LEX-ANCHOR-OS]
+  knowledge: [HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04, HI-LEX-ANCHOR-OS]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -58,7 +58,7 @@ irregularity is a real echo of something Latin does too.
 | 20 | **बीस** | *bīs* |
 
 ## The two words — Honest irregularity
-<!-- hl-knowledge: introduces=[HI-CONCEPT-C22-GYARAH-BEES-02]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C22-GYARAH-BEES-01] -->
 
 Unlike Spanish's transparent *dieciséis*-*diecinueve* or even the fused-but-
 regular *once*-*quince*, Hindi's 11-18 each descend from their own Sanskrit
@@ -95,7 +95,7 @@ nineteen.
 **बीस** (*bīs*, "twenty") continues Sanskrit **विंशति** (*viṃśati*, "twenty").
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-02, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "gyārah, bārah, terah" — 11, 12, 13, each individually memorized]
@@ -104,7 +104,7 @@ nineteen.
 - [YOU SAY: "bīs" — twenty]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-02, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04] -->
 
 [PAUSE 3s] Do Hindi's numbers 11-18 follow a predictable pattern the way
 Spanish's teens do? (**No** — each is individually eroded from its own

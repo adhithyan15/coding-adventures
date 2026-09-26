@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Courtyard, Door, Pillow, Bedsheet, Mattress",
+  "label": "ch:mr-courtyard-door-pillow-bedsheet-mattress",
+  "canDo": "I can say a courtyard, a door, a pillow, a bedsheet and a mattress.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MR-R130-second-pass-time-and-places",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say a courtyard, a door, a pillow, a bedsheet and a mattress.",
+    "assesses": [
+      "MR-LEX-C130-LOC130-03",
+      "MR-LEX-C130-LOC130-04",
+      "MR-LEX-C130-LOC130-05"
+    ]
+  }
+}

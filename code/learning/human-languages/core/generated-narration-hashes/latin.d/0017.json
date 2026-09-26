@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 17,
-  "sourceHash": "fnv1a64:3454098f63b0019e",
+  "sourceHash": "fnv1a64:297328037beaa054",
   "lessonIds": [
     "LA-C17-canis-feles-cattus"
   ],
@@ -10,6 +10,6 @@
   "text": "latin/narration/ch17.txt",
   "json": "latin/narration/ch17.json",
   "textHash": "fnv1a64:83541d41bceaf2ff",
-  "jsonHash": "fnv1a64:b88473c17f8cb028",
+  "jsonHash": "fnv1a64:6c4ca8a41082ff2a",
   "findings": []
 }

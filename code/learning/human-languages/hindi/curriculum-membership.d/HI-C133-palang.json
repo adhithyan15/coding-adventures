@@ -1,0 +1,11 @@
+{
+  "id": "HI-C133-palang",
+  "pathSegment": "HI-PATH-133-THINGS133",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-133-THINGS133",
+      "order": 3
+    }
+  ]
+}

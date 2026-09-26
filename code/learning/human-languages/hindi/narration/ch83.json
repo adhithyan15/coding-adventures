@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Sixth to Tenth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8aff1fd30ad5f2e4",
+  "sourceHash": "fnv1a64:7a9687dc111330c2",
   "lessons": [
     {
       "id": "HI-C76-sixth",
@@ -728,7 +728,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c14bc275410852a4",
+      "sourceHash": "fnv1a64:c7361ed8d5a0be42",
       "notice": null,
       "blocks": [
         {

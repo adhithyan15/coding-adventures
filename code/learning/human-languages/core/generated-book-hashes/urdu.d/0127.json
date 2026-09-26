@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:bb7fe4ea97302d57",
+  "lessonIds": [
+    "UR-C127-unt",
+    "UR-C127-lomri",
+    "UR-C127-machchhar",
+    "UR-C127-makkhi",
+    "UR-C127-khargosh"
+  ],
+  "tex": "urdu/book/chapters/ch127-camel-fox-mosquito-fly-rabbit.tex"
+}

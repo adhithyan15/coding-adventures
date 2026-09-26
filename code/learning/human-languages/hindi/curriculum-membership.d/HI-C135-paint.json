@@ -1,0 +1,11 @@
+{
+  "id": "HI-C135-paint",
+  "pathSegment": "HI-PATH-135-THINGS135",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-135-THINGS135",
+      "order": 4
+    }
+  ]
+}

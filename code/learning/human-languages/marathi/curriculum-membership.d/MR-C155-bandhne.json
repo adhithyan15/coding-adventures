@@ -1,0 +1,11 @@
+{
+  "id": "MR-C155-bandhne",
+  "pathSegment": "MR-PATH-155-ACT155",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-155-ACT155",
+      "order": 1
+    }
+  ]
+}

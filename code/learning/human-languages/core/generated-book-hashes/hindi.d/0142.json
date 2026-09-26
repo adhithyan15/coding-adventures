@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:3705e8ed3e25c538",
+  "lessonIds": [
+    "HI-C142-samosa",
+    "HI-C142-lassi",
+    "HI-C142-jus",
+    "HI-C142-pahar",
+    "HI-C142-nadi"
+  ],
+  "tex": "hindi/book/chapters/ch142-samosa-lassi-juice-mountain-river.tex"
+}

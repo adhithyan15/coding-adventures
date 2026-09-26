@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:9be09a53dde7d778",
+  "lessonIds": [
+    "LA-C129-ramus",
+    "LA-C129-truncus",
+    "LA-C129-semen",
+    "LA-C129-saxum",
+    "LA-C129-ripa"
+  ],
+  "tex": "latin/book/chapters/ch129-branch-tree-trunk-seed-rock-river-bank.tex"
+}

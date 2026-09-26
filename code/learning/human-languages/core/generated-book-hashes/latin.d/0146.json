@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:4264914c410b187d",
+  "lessonIds": [
+    "LA-C146-molestus",
+    "LA-C146-utilis",
+    "LA-C146-purus",
+    "LA-C146-sordidus",
+    "LA-C146-rectus"
+  ],
+  "tex": "latin/book/chapters/ch146-annoying-useful-clean-dirty-straight.tex"
+}

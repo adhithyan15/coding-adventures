@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:93122fe800599dc5",
+  "lessonIds": [
+    "LA-C118-pavimentum",
+    "LA-C118-puteus",
+    "LA-C118-pistrinum",
+    "LA-C118-officina",
+    "LA-C118-sepulcrum"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch118.txt",
+  "json": "latin/narration/ch118.json",
+  "textHash": "fnv1a64:ddb383a2a6520b51",
+  "jsonHash": "fnv1a64:a853710713cc9fb1",
+  "findings": []
+}

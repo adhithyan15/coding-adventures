@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:bf1b94488aec957c",
+  "lessonIds": [
+    "LA-C127-faba",
+    "LA-C127-pisum",
+    "LA-C127-cucumis",
+    "LA-C127-pullus",
+    "LA-C127-piper"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch127.txt",
+  "json": "latin/narration/ch127.json",
+  "textHash": "fnv1a64:e6326f5c5e83c902",
+  "jsonHash": "fnv1a64:1ff58ef78de0573c",
+  "findings": []
+}

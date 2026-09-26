@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C137-lasun",
+    "language": "marathi",
+    "chapter": 137,
+    "sequence": 6380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:123e25d4d54180ff"
+  },
+  "findings": []
+}

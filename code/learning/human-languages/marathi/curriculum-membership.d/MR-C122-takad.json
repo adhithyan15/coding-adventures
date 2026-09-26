@@ -1,0 +1,11 @@
+{
+  "id": "MR-C122-takad",
+  "pathSegment": "MR-PATH-122-CAN122",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-122-CAN122",
+      "order": 2
+    }
+  ]
+}

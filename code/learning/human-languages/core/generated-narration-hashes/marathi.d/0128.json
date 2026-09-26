@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:a08362a8d30f722f",
+  "lessonIds": [
+    "MR-C128-cauk",
+    "MR-C128-bag",
+    "MR-C128-udyan",
+    "MR-C128-vimantal",
+    "MR-C128-rugnalay"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch128.txt",
+  "json": "marathi/narration/ch128.json",
+  "textHash": "fnv1a64:c598bd00137a3099",
+  "jsonHash": "fnv1a64:3a05f136fe8922a8",
+  "findings": []
+}

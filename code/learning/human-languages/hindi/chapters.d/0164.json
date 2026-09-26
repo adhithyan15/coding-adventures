@@ -1,0 +1,19 @@
+{
+  "chapter": 164,
+  "title": "To call, To teach, To learn, To arrive, To come back",
+  "label": "ch:hi-to-call-to-teach-to-learn-to-arrive-to-come-back",
+  "canDo": "I can say to call, to teach, to learn, to arrive and to come back.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C164-lautna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 164: i can say to call, to teach, to learn, to arrive and to come back.",
+    "assesses": [
+      "HI-LEX-C164-ACT164-03",
+      "HI-LEX-C164-ACT164-04",
+      "HI-LEX-C164-ACT164-05"
+    ]
+  }
+}

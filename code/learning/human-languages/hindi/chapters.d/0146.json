@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "Bear, Elephant, Camel, Donkey, Sheep",
+  "label": "ch:hi-bear-elephant-camel-donkey-sheep",
+  "canDo": "I can say a bear, an elephant, a camel, a donkey and a sheep.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C146-bher",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: i can say a bear, an elephant, a camel, a donkey and a sheep.",
+    "assesses": [
+      "HI-LEX-C146-THINGS146-03",
+      "HI-LEX-C146-THINGS146-04",
+      "HI-LEX-C146-THINGS146-05"
+    ]
+  }
+}

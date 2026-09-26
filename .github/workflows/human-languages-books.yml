@@ -78,7 +78,9 @@ jobs:
             fi
             # Disable rename detection so moving a history shard is treated as
             # one deletion plus one addition and cannot hide removed history.
-            # This list must name one glob per entry in `DOC_SHARD_PLANS`.
+            # This list must name one glob per append-only entry in
+            # `DOC_SHARD_PLANS`. Mutable planning documents deliberately permit
+            # owner moves and removals while their aggregate guard stays strict.
             # `doc-shard.test.ts` pins that, because the list is hand-kept and
             # had already drifted: Hindi carried 72 committed shards and a plan
             # entry while no glob covered it, so a PR deleting its whole history
@@ -152,6 +154,30 @@ jobs:
             code/learning/human-languages/tamil/CHANGELOG.md \
             code/learning/human-languages/telugu/CHANGELOG.md \
             code/learning/human-languages/urdu/CHANGELOG.md \
+            code/learning/human-languages/bengali/roadmap.md \
+            code/learning/human-languages/bengali/session-map.md \
+            code/learning/human-languages/gujarati/roadmap.md \
+            code/learning/human-languages/gujarati/session-map.md \
+            code/learning/human-languages/hindi/roadmap.md \
+            code/learning/human-languages/hindi/session-map.md \
+            code/learning/human-languages/kannada/roadmap.md \
+            code/learning/human-languages/kannada/session-map.md \
+            code/learning/human-languages/malayalam/roadmap.md \
+            code/learning/human-languages/malayalam/session-map.md \
+            code/learning/human-languages/marathi/roadmap.md \
+            code/learning/human-languages/marathi/session-map.md \
+            code/learning/human-languages/marwadi/roadmap.md \
+            code/learning/human-languages/marwadi/session-map.md \
+            code/learning/human-languages/punjabi/roadmap.md \
+            code/learning/human-languages/punjabi/session-map.md \
+            code/learning/human-languages/sanskrit/roadmap.md \
+            code/learning/human-languages/sanskrit/session-map.md \
+            code/learning/human-languages/tamil/roadmap.md \
+            code/learning/human-languages/tamil/session-map.md \
+            code/learning/human-languages/telugu/roadmap.md \
+            code/learning/human-languages/telugu/session-map.md \
+            code/learning/human-languages/urdu/roadmap.md \
+            code/learning/human-languages/urdu/session-map.md \
             code/packages/typescript/human-language-data/CHANGELOG.md \
             code/packages/typescript/script-ductus/CHANGELOG.md \
             code/programs/typescript/language-ladder/CHANGELOG.md \

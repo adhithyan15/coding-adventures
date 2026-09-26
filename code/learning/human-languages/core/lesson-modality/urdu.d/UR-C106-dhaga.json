@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C106-dhaga",
+    "language": "urdu",
+    "chapter": 106,
+    "sequence": 5500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b389146264f00b5d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:d781555db324bf8c",
+  "lessonIds": [
+    "LA-C156-frango",
+    "LA-C156-iacio",
+    "LA-C156-veho",
+    "LA-C156-porto",
+    "LA-C156-solvo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch156.txt",
+  "json": "latin/narration/ch156.json",
+  "textHash": "fnv1a64:718699eeb54b639b",
+  "jsonHash": "fnv1a64:93f1fce84670abcf",
+  "findings": []
+}

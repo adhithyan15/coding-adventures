@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:82cf2f5279ab01d2",
+  "lessonIds": [
+    "LA-C115-huc",
+    "LA-C115-illuc",
+    "LA-C115-theatrum",
+    "LA-C115-balneum",
+    "LA-C115-castra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch115.txt",
+  "json": "latin/narration/ch115.json",
+  "textHash": "fnv1a64:fa8e9334dea33b2e",
+  "jsonHash": "fnv1a64:1b3936ee4d2e5b0b",
+  "findings": []
+}

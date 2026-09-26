@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:7d9b3bab245bac6c",
+  "lessonIds": [
+    "LA-C141-linteum",
+    "LA-C141-sapo",
+    "LA-C141-spongia",
+    "LA-C141-urna",
+    "LA-C141-calix"
+  ],
+  "tex": "latin/book/chapters/ch141-linen-cloth-soap-sponge-water-jar-cup.tex"
+}

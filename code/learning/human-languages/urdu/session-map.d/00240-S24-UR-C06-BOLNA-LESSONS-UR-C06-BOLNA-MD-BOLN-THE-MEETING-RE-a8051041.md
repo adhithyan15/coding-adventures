@@ -1,0 +1,1 @@
+| **S24** | [`UR-C06-bolna`](./lessons/UR-C06-bolna.md): **بولنا** *bolnā* | the meeting response *(N+15)*; *khudā* *(N+7)*; *honā* *(N+3)*; *ānā* *(N+1)* | count the dots: **ب** one below, **پ** three below |

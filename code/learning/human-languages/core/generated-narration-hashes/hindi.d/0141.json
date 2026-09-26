@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:10e0b901f878a847",
+  "lessonIds": [
+    "HI-C141-makkhan",
+    "HI-C141-panir",
+    "HI-C141-sahad",
+    "HI-C141-mirc",
+    "HI-C141-ata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch141.txt",
+  "json": "hindi/narration/ch141.json",
+  "textHash": "fnv1a64:f2bcdf4751351deb",
+  "jsonHash": "fnv1a64:ea37114b18720b5e",
+  "findings": []
+}

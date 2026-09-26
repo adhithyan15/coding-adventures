@@ -4062,15 +4062,19 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                     component,
                     host_effects,
                 );
-                let main_cpp = qt_main_with_initial_window_size(
-                    &qt_main_with_host_effects(&proj.main_cpp, host_effects)?,
-                    initial_window_size,
+                let main_cpp = qt_main_with_startup_states(
+                    &qt_main_with_initial_window_size(
+                        &qt_main_with_host_effects(&proj.main_cpp, host_effects)?,
+                        initial_window_size,
+                        component,
+                    )?,
+                    require_runtime,
                     component,
                 )?;
                 let runtime_binding =
                     mosaic_app_bindings::qt_runtime_binding_for_application(package_name);
                 let contract = if require_runtime {
-                    " In the native-complete profile the binding and Rust runtime are mandatory; startup validates required MIL props before constructing QML and exits explicitly if the contract is unavailable."
+                    " In the native-complete profile the binding and Rust runtime are mandatory; startup validates required MIL props before mounting the application while keeping load failures visible and retryable in the window."
                 } else {
                     ""
                 };
@@ -4081,13 +4085,21 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 } else {
                     "No Rust engine was bundled. For development, set `MOSAIC_APP_LIBRARY` to the Rust application library path, or place it beside the executable under Mosaic's conventional `mosaic_app` name. Strict installable builds should be regenerated with `--runtime-library <target cdylib>`.".to_string()
                 };
+                let shell_readme = if require_runtime {
+                    proj.readme.replace(
+                        "It validates every required MIL slot before QML construction and exits with an explicit error instead of showing sample state when the runtime contract is not satisfied.",
+                        "It opens on a system-theme-aware loading surface, validates every required MIL slot before mounting the generated QML, and keeps runtime or initial-props failures visible with diagnostic detail, saved-data reassurance, and an in-place retry.",
+                    )
+                } else {
+                    proj.readme.clone()
+                };
                 let readme = format!(
                     "{}\n## Rust application runtime\n\nThis project includes Mosaic's standard \
                      Qt binding. {} The generated host owns the application handle, event \
                      sequence, snapshots, returned buffers, and teardown. Explicit package \
                      host assets may replace `MosaicHost.h/.cpp` when specialized platform \
                      integration is required.{}\n",
-                    proj.readme, runtime_distribution, contract
+                    shell_readme, runtime_distribution, contract
                 );
                 // Qt's qmldir shell file would conflict with the
                 // step-5 qmldir (the module descriptor). The shell's
@@ -4375,6 +4387,234 @@ fn qt_main_with_initial_window_size(
         component,
         Backend::Qt,
     )
+}
+
+/// Turn the strict Qt entry point's process-only startup failure into a
+/// visible, retryable window state.
+///
+/// The Qt emitter deliberately keeps permissive projects small and synchronous.
+/// A packaged `native-complete` application has a stronger contract: its Rust
+/// runtime and persisted snapshot are mandatory, so the window must exist before
+/// that work begins and must remain useful when it fails.  Keep this packaging
+/// concern here, beside the Compose strict-shell transformation, rather than
+/// teaching every permissive Qt fixture about application startup policy.
+fn qt_main_with_startup_states(
+    generated: &str,
+    require_runtime: bool,
+    component: &str,
+) -> Result<String, BuildError> {
+    if !require_runtime {
+        return Ok(generated.to_string());
+    }
+
+    const INCLUDE_ANCHOR: &str = "#include <cstdlib>\n#include <stdexcept>\n";
+    const START_ANCHOR: &str = concat!(
+        "  try {\n",
+        "    MosaicHost::registerTypes();\n",
+        "    MosaicHost mosaicHost;\n"
+    );
+    const VIEW_ANCHOR: &str = "    QQuickView view;\n";
+    const END_ANCHOR: &str = concat!(
+        "    mosaicHost.attach(view.rootObject());\n",
+        "    view.show();\n",
+        "    return app.exec();\n",
+        "  } catch (const std::exception &exception) {\n",
+        "    qCritical().noquote() << exception.what();\n",
+        "    return EXIT_FAILURE;\n",
+        "  }\n",
+        "}\n"
+    );
+
+    for (anchor, description) in [
+        (INCLUDE_ANCHOR, "standard include block"),
+        (START_ANCHOR, "strict runtime startup"),
+        (VIEW_ANCHOR, "strict QQuickView declaration"),
+        (END_ANCHOR, "strict runtime completion"),
+    ] {
+        if generated.matches(anchor).count() != 1 {
+            return Err(initial_window_anchor_error(
+                component,
+                Backend::Qt,
+                format!(
+                    "expected one {description} anchor while installing startup states, found {}",
+                    generated.matches(anchor).count()
+                ),
+            ));
+        }
+    }
+
+    let includes = concat!(
+        "#include <cstdlib>\n",
+        "#include <functional>\n",
+        "#include <memory>\n",
+        "#include <stdexcept>\n",
+        "#include <QTimer>\n"
+    );
+    let startup_qml = format!(
+        r###"  MosaicHost::registerTypes();
+
+  const char startupQml[] = R"MOSAIC_STARTUP(
+import QtQuick
+import QtQuick.Controls
+
+Item {{
+  id: root
+  objectName: "mosaic-startup-root"
+  property bool startupFailed: false
+  property string failureDetail: ""
+  property int retryNonce: 0
+
+  SystemPalette {{ id: systemPalette }}
+  Rectangle {{
+    anchors.fill: parent
+    color: systemPalette.window
+  }}
+  Column {{
+    anchors.centerIn: parent
+    width: Math.min(Math.max(root.width - 64, 240), 560)
+    spacing: 16
+
+    BusyIndicator {{
+      objectName: "mosaic-startup-loading"
+      anchors.horizontalCenter: parent.horizontalCenter
+      running: !root.startupFailed
+      visible: !root.startupFailed
+    }}
+    Text {{
+      visible: !root.startupFailed
+      width: parent.width
+      horizontalAlignment: Text.AlignHCenter
+      wrapMode: Text.Wrap
+      color: systemPalette.windowText
+      text: "Starting {component}…"
+    }}
+    Column {{
+      objectName: "mosaic-startup-failure"
+      visible: root.startupFailed
+      width: parent.width
+      spacing: 12
+      Text {{
+        width: parent.width
+        horizontalAlignment: Text.AlignHCenter
+        wrapMode: Text.Wrap
+        color: systemPalette.windowText
+        font.bold: true
+        text: "{component} could not start"
+      }}
+      Text {{
+        width: parent.width
+        horizontalAlignment: Text.AlignHCenter
+        wrapMode: Text.Wrap
+        color: systemPalette.windowText
+        text: root.failureDetail
+      }}
+      Text {{
+        width: parent.width
+        horizontalAlignment: Text.AlignHCenter
+        wrapMode: Text.Wrap
+        color: systemPalette.windowText
+        text: "Your saved data has not been changed. Retrying is safe."
+      }}
+      Button {{
+        objectName: "mosaic-startup-retry"
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: "Try again"
+        onClicked: root.retryNonce += 1
+      }}
+    }}
+  }}
+}}
+)MOSAIC_STARTUP";
+  const QUrl startupUrl(
+      QStringLiteral("data:text/plain;charset=utf-8,")
+      + QString::fromLatin1(QUrl::toPercentEncoding(QString::fromUtf8(startupQml))));
+
+  QQuickView view;
+  view.setResizeMode(QQuickView::SizeRootObjectToView);
+  view.setTitle(QStringLiteral("{component}"));
+  view.resize(1100, 800);
+
+  auto showStartup = [&](bool failed, const QString &detail) {{
+    view.setInitialProperties({{}});
+    view.setSource(startupUrl);
+    if (view.status() != QQuickView::Ready || view.rootObject() == nullptr) {{
+      qFatal("Mosaic could not instantiate its generated Qt startup surface");
+    }}
+    view.rootObject()->setProperty("startupFailed", failed);
+    view.rootObject()->setProperty("failureDetail", detail);
+  }};
+
+  std::unique_ptr<MosaicHost> activeHost;
+  std::function<void()> attemptStartup;
+  int observedRetryNonce = 0;
+  QTimer retryTimer;
+  retryTimer.setInterval(50);
+  QObject::connect(&retryTimer, &QTimer::timeout, &view, [&]() {{
+    auto *root = view.rootObject();
+    if (root == nullptr || root->objectName() != QStringLiteral("mosaic-startup-root")) return;
+    const int retryNonce = root->property("retryNonce").toInt();
+    if (retryNonce == observedRetryNonce) return;
+    observedRetryNonce = retryNonce;
+    attemptStartup();
+  }});
+  retryTimer.start();
+
+  attemptStartup = [&]() {{
+    observedRetryNonce = 0;
+    showStartup(false, QString());
+    activeHost.reset();
+    QTimer::singleShot(50, &view, [&]() {{
+      try {{
+        auto candidate = std::make_unique<MosaicHost>();
+        MosaicHost &mosaicHost = *candidate;
+"###,
+        component = component
+    );
+    let completion = concat!(
+        "    mosaicHost.attach(view.rootObject());\n",
+        "        activeHost = std::move(candidate);\n",
+        "      } catch (const std::exception &exception) {\n",
+        "        activeHost.reset();\n",
+        "        showStartup(true, QString::fromUtf8(exception.what()));\n",
+        "#ifdef MOSAIC_STARTUP_CONFORMANCE\n",
+        "        static int conformanceFailures = 0;\n",
+        "        ++conformanceFailures;\n",
+        "        if (conformanceFailures == 1) {\n",
+        "          QTimer::singleShot(0, &view, [&]() {\n",
+        "            auto *retry = view.rootObject()->findChild<QObject *>(QStringLiteral(\"mosaic-startup-retry\"));\n",
+        "            if (retry == nullptr || !QMetaObject::invokeMethod(retry, \"clicked\", Qt::DirectConnection)) {\n",
+        "              qCritical() << \"Qt startup conformance could not drive retry\";\n",
+        "              app.exit(EXIT_FAILURE);\n",
+        "            }\n",
+        "          });\n",
+        "        } else {\n",
+        "          qInfo().noquote() << \"Qt startup failure/retry conformance passed\";\n",
+        "          app.exit(EXIT_SUCCESS);\n",
+        "        }\n",
+        "#endif\n",
+        "      }\n",
+        "    });\n",
+        "  };\n",
+        "\n",
+        "  showStartup(false, QString());\n",
+        "  view.show();\n",
+        "  attemptStartup();\n",
+        "  return app.exec();\n",
+        "}\n"
+    );
+
+    let mut out = generated.replacen(INCLUDE_ANCHOR, includes, 1);
+    out = out.replacen(START_ANCHOR, &startup_qml, 1);
+    out = out.replacen(VIEW_ANCHOR, "", 1);
+    out = out.replacen(END_ANCHOR, completion, 1);
+    // A failed load can happen after native table models were allocated. Tie
+    // those models to the candidate host, not the process-long view, so every
+    // failed attempt and every future retry releases the whole partial graph.
+    out = out.replace(
+        "new MosaicTableModel(&view)",
+        "new MosaicTableModel(candidate.get())",
+    );
+    Ok(out)
 }
 
 fn xaml_main_with_initial_window_size(
@@ -11180,6 +11420,19 @@ layout NativeEvents {
         assert!(main.contains("mosaicHost.configureRequiredProps"));
         assert!(main.contains("{QStringLiteral(\"app-title\"), QStringLiteral(\"appTitle\")}"));
         assert!(main.contains("view.setInitialProperties(initialProperties);"));
+        assert!(main.contains("objectName: \"mosaic-startup-loading\""));
+        assert!(main.contains("objectName: \"mosaic-startup-failure\""));
+        assert!(main.contains("Your saved data has not been changed. Retrying is safe."));
+        assert!(main.contains("objectName: \"mosaic-startup-retry\""));
+        assert!(main.contains("auto candidate = std::make_unique<MosaicHost>();"));
+        assert!(main.contains("activeHost.reset();"));
+        assert!(main.contains("QTimer::singleShot(50, &view"));
+        let show = main.find("view.show();").unwrap();
+        let initialize = main.rfind("attemptStartup();").unwrap();
+        assert!(
+            show < initialize,
+            "loading window must precede runtime startup"
+        );
         assert!(!main.contains("__has_include"));
         assert!(!main.contains("root->setProperty"));
 
@@ -11205,6 +11458,9 @@ layout NativeEvents {
         let readme = fs::read_to_string(out.path().join("qt/README.md")).unwrap();
         assert!(readme.contains("Native-complete runtime contract"));
         assert!(readme.contains("runtime are mandatory"));
+        assert!(readme.contains("system-theme-aware loading surface"));
+        assert!(readme.contains("saved-data reassurance"));
+        assert!(!readme.contains("exits with an explicit error"));
         assert!(readme.contains("copied to `runtime/libmosaic_app.so`"));
         assert!(readme.contains("includes it in the install tree"));
         assert!(readme.contains("no environment variable or global library install is required"));

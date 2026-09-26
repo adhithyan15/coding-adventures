@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:a50a075739855cc5",
+  "lessonIds": [
+    "UR-C117-badam",
+    "UR-C117-mungphali",
+    "UR-C117-dahi",
+    "UR-C117-tel",
+    "UR-C117-ata"
+  ],
+  "tex": "urdu/book/chapters/ch117-almond-peanut-yoghurt-oil-flour.tex"
+}

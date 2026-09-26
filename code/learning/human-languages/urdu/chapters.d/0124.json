@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Branch, Rock, Waterfall, Pond, Well",
+  "label": "ch:ur-branch-rock-waterfall-pond-well",
+  "canDo": "I can say a branch, a rock, a waterfall, a pond and a well.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C124-kuan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say a branch, a rock, a waterfall, a pond and a well.",
+    "assesses": [
+      "UR-LEX-C124-THINGS124-03",
+      "UR-LEX-C124-THINGS124-04",
+      "UR-LEX-C124-THINGS124-05"
+    ]
+  }
+}

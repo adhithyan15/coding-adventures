@@ -1,0 +1,1 @@
+| **S17** | [`UR-C05-khuda`](./lessons/UR-C05-khuda.md): **خدا** *khudā* | *shukriyā* *(N+15)*; Chapter 3 practice *(N+7)*; *ṭhīk* *(N+3)*; Chapter 4 practice *(N+1)* | read the Persian-borrowed half of the farewell |

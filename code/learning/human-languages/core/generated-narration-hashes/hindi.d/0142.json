@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:cdd5e225ab507b6a",
+  "lessonIds": [
+    "HI-C142-samosa",
+    "HI-C142-lassi",
+    "HI-C142-jus",
+    "HI-C142-pahar",
+    "HI-C142-nadi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch142.txt",
+  "json": "hindi/narration/ch142.json",
+  "textHash": "fnv1a64:98ad186fb5425b99",
+  "jsonHash": "fnv1a64:d997032d8a89fdce",
+  "findings": []
+}

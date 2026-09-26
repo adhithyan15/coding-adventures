@@ -1,0 +1,11 @@
+{
+  "id": "UR-C95-ajkal",
+  "pathSegment": "UR-PATH-95-TIME95",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-95-TIME95",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:f245477e1b4cefa3",
+  "lessonIds": [
+    "HI-C144-patthar",
+    "HI-C144-ret",
+    "HI-C144-lahar",
+    "HI-C144-kinara",
+    "HI-C144-bijli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch144.txt",
+  "json": "hindi/narration/ch144.json",
+  "textHash": "fnv1a64:0044f3b4644ff31a",
+  "jsonHash": "fnv1a64:ab97d55fa7575de4",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-131-THINGS131",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a curtain, a lock, a bucket, a rope and a nail.",
+  "prerequisites": []
+}

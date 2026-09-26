@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "To make, To carry, To put on, To take off, To clean",
+  "label": "ch:la-to-make-to-carry-to-put-on-to-take-off-to-clean",
+  "canDo": "I can say to make, to carry, to put on, to take off and to clean.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C155-purgo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: i can say to make, to carry, to put on, to take off and to clean.",
+    "assesses": [
+      "LA-LEX-C155-ACT155-03",
+      "LA-LEX-C155-ACT155-04",
+      "LA-LEX-C155-ACT155-05"
+    ]
+  }
+}

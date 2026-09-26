@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:77dcb594f5f310de",
+  "lessonIds": [
+    "UR-C111-batua",
+    "UR-C111-chhatri",
+    "UR-C111-thaila",
+    "UR-C111-tokri",
+    "UR-C111-mombatti"
+  ],
+  "tex": "urdu/book/chapters/ch111-wallet-umbrella-bag-basket-candle.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C139-jhara",
+    "language": "marathi",
+    "chapter": 139,
+    "sequence": 6460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:534695885fd72c93"
+  },
+  "findings": []
+}

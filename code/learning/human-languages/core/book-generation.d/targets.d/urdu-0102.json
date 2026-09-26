@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 102,
+  "output": "urdu/book/chapters/ch102-kitchen-bathroom-ticket-office-library.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

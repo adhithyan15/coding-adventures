@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R149-first-pass-school-clothes-and-food",
+    "language": "marathi",
+    "chapter": 149,
+    "sequence": 7050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:912e230fb89a7c2b"
+  },
+  "findings": []
+}

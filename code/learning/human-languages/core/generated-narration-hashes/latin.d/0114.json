@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:8667f2067cba7c49",
+  "lessonIds": [
+    "LA-C114-ratio",
+    "LA-C114-propterea",
+    "LA-C114-locus",
+    "LA-C114-dexter",
+    "LA-C114-sinister"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch114.txt",
+  "json": "latin/narration/ch114.json",
+  "textHash": "fnv1a64:d736a30e1542cd51",
+  "jsonHash": "fnv1a64:8e9e182e62f69d33",
+  "findings": []
+}

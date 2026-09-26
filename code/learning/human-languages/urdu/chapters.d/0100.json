@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Crossroads, Around, With, Market, Police station",
+  "label": "ch:ur-crossroads-around-with-market-police-station",
+  "canDo": "I can say a crossroads, around, with, a market and a police station.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-C100-thana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can say a crossroads, around, with, a market and a police station.",
+    "assesses": [
+      "UR-LEX-C100-LOC100-03",
+      "UR-LEX-C100-LOC100-04",
+      "UR-LEX-C100-LOC100-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Vessel, Two-handled jar, Flask, Purse, Coin",
+  "label": "ch:la-vessel-two-handled-jar-flask-purse-coin",
+  "canDo": "I can say a vessel, a two-handled jar, a flask, a purse and a coin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C123-nummus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say a vessel, a two-handled jar, a flask, a purse and a coin.",
+    "assesses": [
+      "LA-LEX-C123-THINGS123-03",
+      "LA-LEX-C123-THINGS123-04",
+      "LA-LEX-C123-THINGS123-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C129-ramus",
+    "language": "latin",
+    "chapter": 129,
+    "sequence": 5150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0ba259dc4082a08f"
+  },
+  "findings": []
+}

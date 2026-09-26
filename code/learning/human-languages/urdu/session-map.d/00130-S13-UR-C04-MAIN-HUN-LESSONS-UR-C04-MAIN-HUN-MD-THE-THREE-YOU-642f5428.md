@@ -1,0 +1,1 @@
+| **S13** | [`UR-C04-main-hun`](./lessons/UR-C04-main-hun.md): **میں ... ہوں** | the three “you” forms *(N+7)*; Chapter 3 practice *(N+3)*; the wellbeing question *(N+1)* | open with *maiṅ* and close with *hūṅ* |

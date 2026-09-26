@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Autumn, Date, These days, Last, Next",
+  "label": "ch:ur-autumn-date-these-days-last-next",
+  "canDo": "I can say autumn, a date, these days, last and next.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "UR-C95-agla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say autumn, a date, these days, last and next.",
+    "assesses": [
+      "UR-LEX-C95-TIME95-03",
+      "UR-LEX-C95-TIME95-04",
+      "UR-LEX-C95-TIME95-05"
+    ]
+  }
+}

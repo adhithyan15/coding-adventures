@@ -1,0 +1,1 @@
+| 171-178 | 27 | Village and Shop Complete Ten | `GU-C23-hear-gaam` -> `GU-R23-route-three-r1` -> `GU-C23-gaam` -> `GU-C23-hear-dukaan` -> `GU-C23-dukaan` -> `GU-R23-map-ten` -> `GU-C23-map-ten` -> `GU-R23-shaalaa-rasto-r2` |

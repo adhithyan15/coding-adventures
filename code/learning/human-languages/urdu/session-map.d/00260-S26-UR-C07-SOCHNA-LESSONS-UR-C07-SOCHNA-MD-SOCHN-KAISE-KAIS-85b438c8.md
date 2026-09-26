@@ -1,0 +1,1 @@
+| **S26** | [`UR-C07-sochna`](./lessons/UR-C07-sochna.md): **سوچنا** *sochnā* | *kaise / kaisī* *(N+15)*; *khudā hāfiz* *(N+7)*; *ānā* *(N+3)*; *jānnā* *(N+1)* | count the dots: **ج** one below, **چ** three below |

@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Dog and Cat",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3a531f4c8b4bd18b",
+  "sourceHash": "fnv1a64:a80300d29783f26d",
   "lessons": [
     {
       "id": "HI-C23-kutta-billi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8a2ddf7172b105e",
+      "sourceHash": "fnv1a64:8b4bd1cdb0c24ee6",
       "notice": null,
       "blocks": [
         {

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C141-vadal",
+  "pathSegment": "MR-PATH-141-THINGS141",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-141-THINGS141",
+      "order": 3
+    }
+  ]
+}

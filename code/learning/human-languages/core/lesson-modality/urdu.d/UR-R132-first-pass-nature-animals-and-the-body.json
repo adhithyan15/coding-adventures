@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R132-first-pass-nature-animals-and-the-body",
+    "language": "urdu",
+    "chapter": 132,
+    "sequence": 6950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63554b8eb91e8d6f"
+  },
+  "findings": []
+}

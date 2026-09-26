@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:066fd63d7c6127d7",
+  "lessonIds": [
+    "UR-C110-tivi",
+    "UR-C110-kampyutar",
+    "UR-C110-mobail",
+    "UR-C110-fon",
+    "UR-C110-chashma",
+    "UR-R110-first-pass-places-can-and-want",
+    "UR-R110-second-pass-things-in-the-house"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch110.txt",
+  "json": "urdu/narration/ch110.json",
+  "textHash": "fnv1a64:adf34b5a4430efc3",
+  "jsonHash": "fnv1a64:f9f2cc383ca23223",
+  "findings": []
+}

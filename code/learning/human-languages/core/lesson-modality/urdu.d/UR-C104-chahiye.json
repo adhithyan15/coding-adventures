@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C104-chahiye",
+    "language": "urdu",
+    "chapter": 104,
+    "sequence": 5420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52980f7ea1816aab"
+  },
+  "findings": []
+}

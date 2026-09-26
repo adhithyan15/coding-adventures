@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 142,
+  "sourceHash": "fnv1a64:edd1c8b3d7e6065d",
+  "lessonIds": [
+    "LA-C142-furca",
+    "LA-C142-aratrum",
+    "LA-C142-tintinnabulum",
+    "LA-C142-tibia",
+    "LA-C142-lyra"
+  ],
+  "tex": "latin/book/chapters/ch142-fork-plough-bell-flute-lyre.tex"
+}

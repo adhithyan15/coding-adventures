@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-152-QUAL152",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say safe, dangerous, false, purple and orange.",
+  "prerequisites": []
+}

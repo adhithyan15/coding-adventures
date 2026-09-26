@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C94-mausam",
+    "language": "urdu",
+    "chapter": 94,
+    "sequence": 4810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89c6052f3c51b5fa"
+  },
+  "findings": []
+}

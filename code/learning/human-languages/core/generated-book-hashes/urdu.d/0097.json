@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:02ffa1d42af1f40f",
+  "lessonIds": [
+    "UR-C97-sidha",
+    "UR-C97-samne",
+    "UR-C97-pichhe",
+    "UR-C97-bich",
+    "UR-C97-kinara"
+  ],
+  "tex": "urdu/book/chapters/ch97-straight-in-front-behind-middle-edge.tex"
+}

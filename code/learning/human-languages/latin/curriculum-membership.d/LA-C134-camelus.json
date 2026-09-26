@@ -1,0 +1,11 @@
+{
+  "id": "LA-C134-camelus",
+  "pathSegment": "LA-PATH-134-THINGS134",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-134-THINGS134",
+      "order": 2
+    }
+  ]
+}

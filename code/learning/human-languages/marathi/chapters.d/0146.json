@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "Thumb, Fingernail, Back, Waist, Chest",
+  "label": "ch:mr-thumb-fingernail-back-waist-chest",
+  "canDo": "I can say a thumb, a fingernail, the back, the waist and the chest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C146-chati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: i can say a thumb, a fingernail, the back, the waist and the chest.",
+    "assesses": [
+      "MR-LEX-C146-THINGS146-03",
+      "MR-LEX-C146-THINGS146-04",
+      "MR-LEX-C146-THINGS146-05"
+    ]
+  }
+}

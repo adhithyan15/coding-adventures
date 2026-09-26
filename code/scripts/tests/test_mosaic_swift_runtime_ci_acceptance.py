@@ -117,7 +117,7 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("= dev.codingadventures.trestle", block)
         self.assertIn("xcrun simctl install", block)
         self.assertIn("xcrun simctl launch", block)
-        self.assertIn("launchctl list | grep -q 'dev.codingadventures.trestle'", block)
+        self.assertIn("launchctl list | grep 'dev.codingadventures.trestle' > /dev/null", block)
 
     def test_ios_project_generator_requires_acceptance(self) -> None:
         self.assertIn("rust/mosaic-ios-project", MODULE.ACCEPTANCE_PACKAGES)

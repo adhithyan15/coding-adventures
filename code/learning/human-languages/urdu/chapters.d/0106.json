@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Thread, Towel, Comb, Glass, Pillow",
+  "label": "ch:ur-thread-towel-comb-glass-pillow",
+  "canDo": "I can say thread, a towel, a comb, glass and a pillow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C106-takiya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can say thread, a towel, a comb, glass and a pillow.",
+    "assesses": [
+      "UR-LEX-C106-THINGS106-03",
+      "UR-LEX-C106-THINGS106-04",
+      "UR-LEX-C106-THINGS106-05"
+    ]
+  }
+}

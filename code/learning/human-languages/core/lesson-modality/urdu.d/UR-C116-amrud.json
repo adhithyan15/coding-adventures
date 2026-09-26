@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C116-amrud",
+    "language": "urdu",
+    "chapter": 116,
+    "sequence": 6070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2cfe902cbd962e36"
+  },
+  "findings": []
+}

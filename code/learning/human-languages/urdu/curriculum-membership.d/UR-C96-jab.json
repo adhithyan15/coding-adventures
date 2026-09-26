@@ -1,0 +1,11 @@
+{
+  "id": "UR-C96-jab",
+  "pathSegment": "UR-PATH-96-TIME96",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-96-TIME96",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C119-iuxta",
+  "pathSegment": "LA-PATH-119-LOC119",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-119-LOC119",
+      "order": 3
+    }
+  ]
+}

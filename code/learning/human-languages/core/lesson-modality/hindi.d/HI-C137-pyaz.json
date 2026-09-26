@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C137-pyaz",
+    "language": "hindi",
+    "chapter": 137,
+    "sequence": 6240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c40b7dddb131b9b"
+  },
+  "findings": []
+}

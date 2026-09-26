@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:53fea615cf3a9950",
+  "lessonIds": [
+    "HI-C149-macchar",
+    "HI-C149-cinti",
+    "HI-C149-mendhak",
+    "HI-C149-kachua",
+    "HI-C149-cuha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch149.txt",
+  "json": "hindi/narration/ch149.json",
+  "textHash": "fnv1a64:84a39b2aca6a03fb",
+  "jsonHash": "fnv1a64:1945049f407fe19e",
+  "findings": []
+}

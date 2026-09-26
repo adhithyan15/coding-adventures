@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:43d0ab2a1bac4978",
+  "lessonIds": [
+    "UR-C104-hunar",
+    "UR-C104-qabil",
+    "UR-C104-chahiye",
+    "UR-C104-khvahish",
+    "UR-C104-zarurat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch104.txt",
+  "json": "urdu/narration/ch104.json",
+  "textHash": "fnv1a64:b8dd2c404ca17ae8",
+  "jsonHash": "fnv1a64:5d442250871a6f68",
+  "findings": []
+}

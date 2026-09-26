@@ -1,0 +1,19 @@
+{
+  "chapter": 105,
+  "title": "Keen interest, Intention, Table, Scissors, Needle",
+  "label": "ch:ur-keen-interest-intention-table-scissors-needle",
+  "canDo": "I can say a keen interest, an intention, a table, scissors and a needle.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "UR-C105-sui",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 105: i can say a keen interest, an intention, a table, scissors and a needle.",
+    "assesses": [
+      "UR-LEX-C105-WANT105-03",
+      "UR-LEX-C105-WANT105-04",
+      "UR-LEX-C105-WANT105-05"
+    ]
+  }
+}

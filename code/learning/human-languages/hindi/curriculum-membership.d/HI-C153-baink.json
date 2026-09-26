@@ -1,0 +1,11 @@
+{
+  "id": "HI-C153-baink",
+  "pathSegment": "HI-PATH-153-THINGS153",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-153-THINGS153",
+      "order": 4
+    }
+  ]
+}

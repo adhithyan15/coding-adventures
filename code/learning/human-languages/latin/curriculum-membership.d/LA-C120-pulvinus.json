@@ -1,0 +1,11 @@
+{
+  "id": "LA-C120-pulvinus",
+  "pathSegment": "LA-PATH-120-THINGS120",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-120-THINGS120",
+      "order": 2
+    }
+  ]
+}

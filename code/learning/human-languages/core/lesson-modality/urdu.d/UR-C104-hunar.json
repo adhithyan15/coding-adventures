@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C104-hunar",
+    "language": "urdu",
+    "chapter": 104,
+    "sequence": 5400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:334306ef04590eda"
+  },
+  "findings": []
+}

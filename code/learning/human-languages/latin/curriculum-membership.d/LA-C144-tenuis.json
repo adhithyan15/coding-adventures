@@ -1,0 +1,11 @@
+{
+  "id": "LA-C144-tenuis",
+  "pathSegment": "LA-PATH-144-QUAL144",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-144-QUAL144",
+      "order": 2
+    }
+  ]
+}

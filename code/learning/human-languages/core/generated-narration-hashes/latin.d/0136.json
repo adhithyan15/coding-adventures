@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:90af7460e4b02232",
+  "lessonIds": [
+    "LA-C136-cubitum",
+    "LA-C136-pollex",
+    "LA-C136-cutis",
+    "LA-C136-os",
+    "LA-C136-stomachus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch136.txt",
+  "json": "latin/narration/ch136.json",
+  "textHash": "fnv1a64:50c1391f782c88d6",
+  "jsonHash": "fnv1a64:7d12cb7fc4fc5408",
+  "findings": []
+}

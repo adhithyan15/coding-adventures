@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R142-first-pass-describing-words",
+    "language": "urdu",
+    "chapter": 142,
+    "sequence": 7500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39de3a141ffd4357"
+  },
+  "findings": []
+}

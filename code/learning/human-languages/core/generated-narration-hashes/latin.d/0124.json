@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:5d90d1cbe5c38d66",
+  "lessonIds": [
+    "LA-C124-codex",
+    "LA-C124-atramentum",
+    "LA-C124-calamus",
+    "LA-C124-cera",
+    "LA-C124-pictura"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch124.txt",
+  "json": "latin/narration/ch124.json",
+  "textHash": "fnv1a64:bdad3c84d5da1913",
+  "jsonHash": "fnv1a64:6059212442119437",
+  "findings": []
+}

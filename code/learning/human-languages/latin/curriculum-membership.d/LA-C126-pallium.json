@@ -1,0 +1,11 @@
+{
+  "id": "LA-C126-pallium",
+  "pathSegment": "LA-PATH-126-THINGS126",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-126-THINGS126",
+      "order": 0
+    }
+  ]
+}

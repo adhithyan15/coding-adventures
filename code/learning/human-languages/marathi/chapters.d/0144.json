@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "Fox, Donkey, Ox, Mosquito, Forehead",
+  "label": "ch:mr-fox-donkey-ox-mosquito-forehead",
+  "canDo": "I can say a fox, a donkey, an ox, a mosquito and the forehead.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C144-kapal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: i can say a fox, a donkey, an ox, a mosquito and the forehead.",
+    "assesses": [
+      "MR-LEX-C144-THINGS144-03",
+      "MR-LEX-C144-THINGS144-04",
+      "MR-LEX-C144-THINGS144-05"
+    ]
+  }
+}

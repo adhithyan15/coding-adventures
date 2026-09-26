@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C133-sakht",
+    "language": "urdu",
+    "chapter": 133,
+    "sequence": 7040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8ccd562590c13d71"
+  },
+  "findings": []
+}

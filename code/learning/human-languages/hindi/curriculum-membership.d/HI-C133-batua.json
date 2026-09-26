@@ -1,0 +1,11 @@
+{
+  "id": "HI-C133-batua",
+  "pathSegment": "HI-PATH-133-THINGS133",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-133-THINGS133",
+      "order": 2
+    }
+  ]
+}

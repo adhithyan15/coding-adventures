@@ -1,0 +1,11 @@
+{
+  "id": "UR-C135-bhuka",
+  "pathSegment": "UR-PATH-135-QUAL135",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-135-QUAL135",
+      "order": 4
+    }
+  ]
+}

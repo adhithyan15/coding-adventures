@@ -1,0 +1,11 @@
+{
+  "id": "LA-C157-vinco",
+  "pathSegment": "LA-PATH-157-ACT157",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-157-ACT157",
+      "order": 4
+    }
+  ]
+}

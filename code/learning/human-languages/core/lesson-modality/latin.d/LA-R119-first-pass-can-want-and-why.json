@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R119-first-pass-can-want-and-why",
+    "language": "latin",
+    "chapter": 119,
+    "sequence": 4650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7043719b6d2af4b4"
+  },
+  "findings": []
+}

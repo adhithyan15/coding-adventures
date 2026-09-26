@@ -1,0 +1,11 @@
+{
+  "id": "MR-C152-jambhala",
+  "pathSegment": "MR-PATH-152-QUAL152",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-152-QUAL152",
+      "order": 3
+    }
+  ]
+}

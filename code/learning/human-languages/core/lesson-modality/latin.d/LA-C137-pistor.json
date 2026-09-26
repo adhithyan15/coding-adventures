@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C137-pistor",
+    "language": "latin",
+    "chapter": 137,
+    "sequence": 5610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f05d6468923c927"
+  },
+  "findings": []
+}

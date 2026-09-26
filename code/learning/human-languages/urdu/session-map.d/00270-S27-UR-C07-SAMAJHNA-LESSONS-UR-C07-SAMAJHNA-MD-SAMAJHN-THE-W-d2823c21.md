@@ -1,0 +1,1 @@
+| **S27** | [`UR-C07-samajhna`](./lessons/UR-C07-samajhna.md): **سمجھنا** *samajhnā* | the wellbeing question *(N+15)*; Chapter 5 practice *(N+7)*; *bolnā* *(N+3)*; *sochnā* *(N+1)* | hear the same **ھ** breath in *ṭhīk* and *samajh-* |

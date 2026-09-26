@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C136-os",
+    "language": "latin",
+    "chapter": 136,
+    "sequence": 5580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:542b9566ad3b9ecc"
+  },
+  "findings": []
+}

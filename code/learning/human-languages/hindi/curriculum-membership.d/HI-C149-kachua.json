@@ -1,0 +1,11 @@
+{
+  "id": "HI-C149-kachua",
+  "pathSegment": "HI-PATH-149-THINGS149",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-149-THINGS149",
+      "order": 3
+    }
+  ]
+}

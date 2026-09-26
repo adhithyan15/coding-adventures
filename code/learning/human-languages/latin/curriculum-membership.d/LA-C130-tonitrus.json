@@ -1,0 +1,11 @@
+{
+  "id": "LA-C130-tonitrus",
+  "pathSegment": "LA-PATH-130-THINGS130",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-130-THINGS130",
+      "order": 3
+    }
+  ]
+}

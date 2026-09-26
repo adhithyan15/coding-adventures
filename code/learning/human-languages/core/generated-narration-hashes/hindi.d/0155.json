@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:a3c1f2500b7ff1d8",
+  "lessonIds": [
+    "HI-C155-naram",
+    "HI-C155-sakht",
+    "HI-C155-saf",
+    "HI-C155-ganda",
+    "HI-C155-tez"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch155.txt",
+  "json": "hindi/narration/ch155.json",
+  "textHash": "fnv1a64:306ae1d5c09dbd84",
+  "jsonHash": "fnv1a64:23d41f1fd468e157",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C102-kutubkhana",
+  "pathSegment": "UR-PATH-102-LOC102",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-102-LOC102",
+      "order": 4
+    }
+  ]
+}

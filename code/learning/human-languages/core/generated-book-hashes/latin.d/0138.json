@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:3db437233f44a95b",
+  "lessonIds": [
+    "LA-C138-piscator",
+    "LA-C138-servus",
+    "LA-C138-domina",
+    "LA-C138-amica",
+    "LA-C138-armarium"
+  ],
+  "tex": "latin/book/chapters/ch138-fisherman-slave-mistress-friend-cupboard.tex"
+}

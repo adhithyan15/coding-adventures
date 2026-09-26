@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:8cb859fcf0835bdb",
+  "lessonIds": [
+    "UR-C98-kona",
+    "UR-C98-taraf",
+    "UR-C98-rasta",
+    "UR-C98-gali",
+    "UR-C98-mor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch98.txt",
+  "json": "urdu/narration/ch98.json",
+  "textHash": "fnv1a64:3423d6c1367d1158",
+  "jsonHash": "fnv1a64:0a990d49b141ab65",
+  "findings": []
+}

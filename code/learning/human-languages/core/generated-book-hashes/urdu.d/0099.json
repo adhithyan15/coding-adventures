@@ -1,0 +1,12 @@
+{
+  "language": "urdu",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:2c742397f5e7259e",
+  "lessonIds": [
+    "UR-W99-ze",
+    "UR-W99-toe",
+    "UR-R99-letters-first-pass",
+    "UR-R99-letters-second-pass"
+  ],
+  "tex": "urdu/book/chapters/ch99-the-letters-ze-and-toe.tex"
+}

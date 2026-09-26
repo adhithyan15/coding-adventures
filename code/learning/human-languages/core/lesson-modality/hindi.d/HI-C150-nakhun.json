@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C150-nakhun",
+    "language": "hindi",
+    "chapter": 150,
+    "sequence": 6980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e942f0329fd2f3b"
+  },
+  "findings": []
+}

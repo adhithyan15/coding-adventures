@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:438021d4906cc5f7",
+  "lessonIds": [
+    "MR-C138-matar",
+    "MR-C138-dalimb",
+    "MR-C138-kalingad",
+    "MR-C138-naral",
+    "MR-C138-pith"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch138.txt",
+  "json": "marathi/narration/ch138.json",
+  "textHash": "fnv1a64:e733e67bb0abe9cd",
+  "jsonHash": "fnv1a64:c5950a2745a5bf2d",
+  "findings": []
+}

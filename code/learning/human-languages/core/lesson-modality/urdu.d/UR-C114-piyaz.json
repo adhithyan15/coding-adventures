@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C114-piyaz",
+    "language": "urdu",
+    "chapter": 114,
+    "sequence": 5980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1bdca1d1e028c1a"
+  },
+  "findings": []
+}

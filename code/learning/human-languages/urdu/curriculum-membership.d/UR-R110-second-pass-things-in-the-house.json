@@ -1,0 +1,11 @@
+{
+  "id": "UR-R110-second-pass-things-in-the-house",
+  "pathSegment": "UR-PATH-110-THINGS110",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "UR-EXT-110-THINGS110",
+      "order": 6
+    }
+  ]
+}

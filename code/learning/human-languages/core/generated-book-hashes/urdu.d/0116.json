@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:fd7783e5a486f434",
+  "lessonIds": [
+    "UR-C116-kharbuza",
+    "UR-C116-anar",
+    "UR-C116-amrud",
+    "UR-C116-nashpati",
+    "UR-C116-khajur"
+  ],
+  "tex": "urdu/book/chapters/ch116-melon-pomegranate-guava-pear-date.tex"
+}

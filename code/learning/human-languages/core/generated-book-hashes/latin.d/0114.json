@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:ff7833d3fb26197c",
+  "lessonIds": [
+    "LA-C114-ratio",
+    "LA-C114-propterea",
+    "LA-C114-locus",
+    "LA-C114-dexter",
+    "LA-C114-sinister"
+  ],
+  "tex": "latin/book/chapters/ch114-reason-because-of-that-place-right-left.tex"
+}

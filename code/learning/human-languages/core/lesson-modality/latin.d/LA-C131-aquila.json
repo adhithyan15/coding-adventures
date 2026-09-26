@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C131-aquila",
+    "language": "latin",
+    "chapter": 131,
+    "sequence": 5310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85c814505463e92f"
+  },
+  "findings": []
+}

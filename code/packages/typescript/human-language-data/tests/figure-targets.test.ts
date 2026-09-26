@@ -216,7 +216,7 @@ describe("the real corpus", () => {
       SA: 39,
       TA: 30,
       TE: 9,
-      UR: 27,
+      UR: 29, // +2: chapter 99 writes ز and ط
       ZH: 58,
     });
   });

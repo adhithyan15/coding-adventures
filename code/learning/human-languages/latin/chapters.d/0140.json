@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "Comb, Scissors, Needle, Thread, Wool",
+  "label": "ch:la-comb-scissors-needle-thread-wool",
+  "canDo": "I can say a comb, scissors, a needle, a thread and wool.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-R140-second-pass-animals-and-the-body",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: i can say a comb, scissors, a needle, a thread and wool.",
+    "assesses": [
+      "LA-LEX-C140-THINGS140-03",
+      "LA-LEX-C140-THINGS140-04",
+      "LA-LEX-C140-THINGS140-05"
+    ]
+  }
+}

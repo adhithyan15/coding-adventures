@@ -1,0 +1,11 @@
+{
+  "id": "LA-C152-gelidus",
+  "pathSegment": "LA-PATH-152-QUAL152",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-152-QUAL152",
+      "order": 3
+    }
+  ]
+}

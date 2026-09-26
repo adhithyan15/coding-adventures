@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:7c7f8e1446fc8368",
+  "lessonIds": [
+    "LA-C157-reddo",
+    "LA-C157-ostendo",
+    "LA-C157-luceo",
+    "LA-C157-perdo",
+    "LA-C157-vinco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch157.txt",
+  "json": "latin/narration/ch157.json",
+  "textHash": "fnv1a64:b494ca9c0dbf9b00",
+  "jsonHash": "fnv1a64:749b72162467e3f2",
+  "findings": []
+}

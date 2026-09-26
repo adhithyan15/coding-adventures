@@ -1,0 +1,11 @@
+{
+  "id": "LA-C148-iratus",
+  "pathSegment": "LA-PATH-148-QUAL148",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-148-QUAL148",
+      "order": 2
+    }
+  ]
+}

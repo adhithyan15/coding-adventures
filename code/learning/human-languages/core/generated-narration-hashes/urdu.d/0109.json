@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:ba3013d9cdb8dd13",
+  "lessonIds": [
+    "UR-C109-chulha",
+    "UR-C109-bartan",
+    "UR-C109-thali",
+    "UR-C109-glas",
+    "UR-C109-friij"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch109.txt",
+  "json": "urdu/narration/ch109.json",
+  "textHash": "fnv1a64:774da4d6a31f2dc3",
+  "jsonHash": "fnv1a64:e76dd2073b32419d",
+  "findings": []
+}

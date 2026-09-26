@@ -1,0 +1,1 @@
+| 149-156 | 24 | A First Three-Place Map | `GU-C20-hear-bajar` -> `GU-C20-bajar` -> `GU-C20-hear-ghar` -> `GU-W20-gha` -> `GU-C20-ghar` -> `GU-C20-hear-mandir` -> `GU-C20-mandir` -> `GU-C20-places-three` |

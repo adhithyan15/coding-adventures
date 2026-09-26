@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C155-kadhne",
+    "language": "marathi",
+    "chapter": 155,
+    "sequence": 7390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1cb56b367c621a5c"
+  },
+  "findings": []
+}

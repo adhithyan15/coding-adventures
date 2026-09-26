@@ -1,0 +1,11 @@
+{
+  "id": "MR-R140-first-pass-places-and-the-house",
+  "pathSegment": "MR-PATH-140-THINGS140",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MR-EXT-140-THINGS140",
+      "order": 5
+    }
+  ]
+}

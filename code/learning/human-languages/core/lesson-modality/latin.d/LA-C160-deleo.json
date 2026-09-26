@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C160-deleo",
+    "language": "latin",
+    "chapter": 160,
+    "sequence": 6860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:498e48110f55cb04"
+  },
+  "findings": []
+}

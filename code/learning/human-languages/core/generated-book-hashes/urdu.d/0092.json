@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:92a00abc2a50075f",
+  "lessonIds": [
+    "UR-C92-mangal",
+    "UR-C92-budh",
+    "UR-C92-baje",
+    "UR-C92-sarhe",
+    "UR-C92-sava"
+  ],
+  "tex": "urdu/book/chapters/ch92-tuesday-wednesday-o-clock-half-past-quarter-past.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:52ddbfe965c0a720",
+  "lessonIds": [
+    "MR-C137-pohe",
+    "MR-C137-ladu",
+    "MR-C137-kakdi",
+    "MR-C137-lasun",
+    "MR-C137-ale"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch137.txt",
+  "json": "marathi/narration/ch137.json",
+  "textHash": "fnv1a64:4bb2c1eb9f19271a",
+  "jsonHash": "fnv1a64:bfccf955ec44f730",
+  "findings": []
+}

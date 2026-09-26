@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:96b392dca3028082",
+  "lessonIds": [
+    "MR-C131-padda",
+    "MR-C131-kulup",
+    "MR-C131-badli",
+    "MR-C131-dori",
+    "MR-C131-khila"
+  ],
+  "tex": "marathi/book/chapters/ch131-curtain-lock-bucket-rope-nail.tex"
+}

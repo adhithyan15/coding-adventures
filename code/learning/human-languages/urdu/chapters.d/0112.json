@@ -1,0 +1,19 @@
+{
+  "chapter": 112,
+  "title": "Matches, Toy, Ball, Kite, Bed frame",
+  "label": "ch:ur-matches-toy-ball-kite-bed-frame",
+  "canDo": "I can say matches, a toy, a ball, a kite and a bed frame.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C112-palang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 112: i can say matches, a toy, a ball, a kite and a bed frame.",
+    "assesses": [
+      "UR-LEX-C112-THINGS112-03",
+      "UR-LEX-C112-THINGS112-04",
+      "UR-LEX-C112-THINGS112-05"
+    ]
+  }
+}

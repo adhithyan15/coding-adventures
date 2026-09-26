@@ -103,6 +103,14 @@ in the repo nests children in a `HostButton`, so no package gate changes.
 rebuilds them, so their "silently fixed" gates fail on it. The same removal is
 in #15926, and the identical hunks merge cleanly.
 
+### Fixed — Qt native startup failures are visible and recoverable (#15818)
+
+Strict packaged Qt shells now paint a system-theme-aware loading surface before
+initializing the standard Rust host. A runtime, snapshot, props, or generated-QML
+failure becomes an in-window diagnostic with saved-data reassurance and a retry
+control; retry destroys any partial host and reruns initialization with a fresh
+one. A compile-time-only acceptance seam drives that real emitted control in CI.
+
 ### Fixed — Compose native startup failures are visible and recoverable (#15786)
 
 Strict generated Compose Desktop shells now open their window before loading the

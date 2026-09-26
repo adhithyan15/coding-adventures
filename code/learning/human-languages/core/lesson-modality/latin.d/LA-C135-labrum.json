@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C135-labrum",
+    "language": "latin",
+    "chapter": 135,
+    "sequence": 5520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14ff244f6e5d6717"
+  },
+  "findings": []
+}

@@ -1,0 +1,1 @@
+| 201-209 | 30 | Fifth Return: The Core Verbs | `GU-R26-numbers-r4` -> `GU-R26-hovun-javun-r4` -> `GU-R26-aavvun-khaavun-r4` -> `GU-R26-jovun-jaanvun-r4` -> `GU-R26-vicharvun-samajvun-r4` -> `GU-R26-vanchvun-lakhvun-r4` -> `GU-R26-levun-puchhvun-r4` -> `GU-R26-time-written-r2` -> `GU-R26-madad-gamvun-paani-r4` |

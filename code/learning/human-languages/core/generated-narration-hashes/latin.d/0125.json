@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:2fabfade9c715cb8",
+  "lessonIds": [
+    "LA-C125-statua",
+    "LA-C125-signum",
+    "LA-C125-velum",
+    "LA-C125-plaustrum",
+    "LA-C125-stola"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch125.txt",
+  "json": "latin/narration/ch125.json",
+  "textHash": "fnv1a64:0121705728025afe",
+  "jsonHash": "fnv1a64:0db84e9df2242ab3",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:d28c916bf4ab8c37",
+  "lessonIds": [
+    "UR-C115-adrak",
+    "UR-C115-gobhi",
+    "UR-C115-matar",
+    "UR-C115-khira",
+    "UR-C115-tarbuz"
+  ],
+  "tex": "urdu/book/chapters/ch115-ginger-cauliflower-peas-cucumber-watermelon.tex"
+}

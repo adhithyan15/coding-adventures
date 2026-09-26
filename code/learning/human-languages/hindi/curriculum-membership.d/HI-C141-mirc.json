@@ -1,0 +1,11 @@
+{
+  "id": "HI-C141-mirc",
+  "pathSegment": "HI-PATH-141-THINGS141",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-141-THINGS141",
+      "order": 3
+    }
+  ]
+}

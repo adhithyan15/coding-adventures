@@ -1,0 +1,1 @@
+| **S15** | [`UR-C04-main-thik-hun`](./lessons/UR-C04-main-thik-hun.md): **میں ٹھیک ہوں، شکریہ** | the name question *(N+7)*; the wellbeing question *(N+3)*; *ṭhīk* *(N+1)* | keep *hūṅ* final, then add known thanks |

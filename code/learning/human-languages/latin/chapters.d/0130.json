@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Wave, Ice, Hail, Thunder, Lightning",
+  "label": "ch:la-wave-ice-hail-thunder-lightning",
+  "canDo": "I can say a wave, ice, hail, thunder and lightning.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-R130-second-pass-things-you-use",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say a wave, ice, hail, thunder and lightning.",
+    "assesses": [
+      "LA-LEX-C130-THINGS130-03",
+      "LA-LEX-C130-THINGS130-04",
+      "LA-LEX-C130-THINGS130-05"
+    ]
+  }
+}

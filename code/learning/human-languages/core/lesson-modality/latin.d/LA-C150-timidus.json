@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C150-timidus",
+    "language": "latin",
+    "chapter": 150,
+    "sequence": 6330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17d6df6ee61b7638"
+  },
+  "findings": []
+}

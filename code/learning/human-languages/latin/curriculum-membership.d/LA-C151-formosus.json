@@ -1,0 +1,11 @@
+{
+  "id": "LA-C151-formosus",
+  "pathSegment": "LA-PATH-151-QUAL151",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-151-QUAL151",
+      "order": 4
+    }
+  ]
+}

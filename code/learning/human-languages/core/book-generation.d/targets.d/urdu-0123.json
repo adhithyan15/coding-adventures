@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 123,
+  "output": "urdu/book/chapters/ch123-stream-earth-grass-seed-root.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:0cb1988358643bdc",
+  "lessonIds": [
+    "UR-C112-machis",
+    "UR-C112-khilauna",
+    "UR-C112-gend",
+    "UR-C112-patang",
+    "UR-C112-palang"
+  ],
+  "tex": "urdu/book/chapters/ch112-matches-toy-ball-kite-bed-frame.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C157-garib",
+  "pathSegment": "HI-PATH-157-QUAL157",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-157-QUAL157",
+      "order": 2
+    }
+  ]
+}

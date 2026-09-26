@@ -1,0 +1,11 @@
+{
+  "id": "LA-C127-faba",
+  "pathSegment": "LA-PATH-127-THINGS127",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "LA-EXT-127-THINGS127",
+      "order": 0
+    }
+  ]
+}

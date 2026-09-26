@@ -15,14 +15,14 @@ etymology_hook: "Marathi don's final n is an innovation copied from tin, while H
 duration:
   max_seconds: 240
 requires:
-  knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA]
+  knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SOUND-CHA-TSAA]
 introduces:
   knowledge: [MR-ETYMON-DON-ANALOGY, MR-ETYMON-PAACH-NASAL-RETENTION, MR-HISTORY-SELECTIVE-RETENTION]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA, MR-ETYMON-DON-ANALOGY, MR-ETYMON-PAACH-NASAL-RETENTION, MR-HISTORY-SELECTIVE-RETENTION]
+  knowledge: [MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SOUND-CHA-TSAA, MR-ETYMON-DON-ANALOGY, MR-ETYMON-PAACH-NASAL-RETENTION, MR-HISTORY-SELECTIVE-RETENTION]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -75,7 +75,7 @@ Both write **चार**, but Marathi pronounces **च** before *ā* nearer **ts
 *tsār*. The letters stayed aligned while the sound moved.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA, MR-ETYMON-DON-ANALOGY, MR-ETYMON-PAACH-NASAL-RETENTION, MR-HISTORY-SELECTIVE-RETENTION] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SOUND-CHA-TSAA, MR-ETYMON-DON-ANALOGY, MR-ETYMON-PAACH-NASAL-RETENTION, MR-HISTORY-SELECTIVE-RETENTION] -->
 
 [PAUSE 1s]
 - [YOU SAY: the borrowed rhyme — *tiṇṇi … doṇṇi*]
@@ -84,7 +84,7 @@ Both write **चार**, but Marathi pronounces **च** before *ā* nearer **ts
 - [YOU SAY: same spelling, shifted sound — *chār / tsār*]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SCRIPT-PAACH-NONNASAL, MR-SOUND-CHA-TSAA, MR-ETYMON-DON-ANALOGY, MR-ETYMON-PAACH-NASAL-RETENTION, MR-HISTORY-SELECTIVE-RETENTION] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-NUMBERS-ONE-TO-FIVE, MR-SCRIPT-DON-FINAL-N, MR-SOUND-CHA-TSAA, MR-ETYMON-DON-ANALOGY, MR-ETYMON-PAACH-NASAL-RETENTION, MR-HISTORY-SELECTIVE-RETENTION] -->
 <!-- hl-activity: {"id":"MR-C06-number-differences-don-ending","kind":"text","assesses":["MR-ETYMON-DON-ANALOGY"],"prompt":"Did Marathi don preserve an ancient final n?","answer":"no","accepted":["no it copied three","it copied the pattern of three"],"feedback":{"correct":"Correct: don's final n arose by analogy with the word for three.","incorrect":"No. Marathi two copied the pattern of three; the final n is not an ancient ending."},"response_seconds":8} -->
 
 [PAUSE 3s] Did Marathi *don* preserve an ancient ending? (No: *two* copied

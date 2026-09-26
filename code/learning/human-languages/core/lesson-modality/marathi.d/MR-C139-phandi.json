@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C139-phandi",
+    "language": "marathi",
+    "chapter": 139,
+    "sequence": 6490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e71b8373586c034"
+  },
+  "findings": []
+}

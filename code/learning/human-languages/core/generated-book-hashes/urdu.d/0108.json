@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:cd40ff3b5ce70525",
+  "lessonIds": [
+    "UR-C108-kil",
+    "UR-C108-hathaura",
+    "UR-C108-tala",
+    "UR-C108-pankha",
+    "UR-C108-bijli"
+  ],
+  "tex": "urdu/book/chapters/ch108-nail-hammer-lock-fan-electricity.tex"
+}

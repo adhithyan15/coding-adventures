@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3454098f63b0019e",
+  "sourceHash": "fnv1a64:297328037beaa054",
   "lessons": [
     {
       "id": "LA-C17-canis-feles-cattus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d68948574001385",
+      "sourceHash": "fnv1a64:1c79d47d9d3feb8b",
       "notice": null,
       "blocks": [
         {

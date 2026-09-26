@@ -798,6 +798,8 @@ struct EmitContext<'a> {
     needs_navigation_split_support: bool,
     needs_font_size_support: bool,
     table_font_size: Option<LayoutPropValue>,
+    /// Flow of repeated siblings in the immediate layout container.
+    horizontal_repeater: bool,
 }
 
 impl<'a> EmitContext<'a> {
@@ -848,6 +850,7 @@ impl<'a> EmitContext<'a> {
             needs_navigation_split_support: false,
             needs_font_size_support: false,
             table_font_size: None,
+            horizontal_repeater: false,
         }
     }
 
@@ -3114,6 +3117,12 @@ fn emit_xaml_node(
     part_styles: &PartStyleMap,
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
+    let previous_flow = ctx.horizontal_repeater;
+    ctx.horizontal_repeater = match node.tag.as_str() {
+        "Row" => true,
+        "For" | "If" | "Else" => previous_flow,
+        _ => false,
+    };
     let previous = ctx.table_font_size.clone();
     // Container-authored text styles shadow an outer table's inherited size.
     // Let the existing native resource styles retain that inheritance boundary.
@@ -3124,6 +3133,7 @@ fn emit_xaml_node(
     }
     let result = emit_xaml_node_contents(node, indent, part_styles, ctx);
     ctx.table_font_size = previous;
+    ctx.horizontal_repeater = previous_flow;
     result
 }
 
@@ -3674,12 +3684,16 @@ fn emit_stack_panel(
     } else {
         indent + 8
     };
-    out.push_str(&emit_xaml_children(
+    let previous_flow = ctx.horizontal_repeater;
+    ctx.horizontal_repeater = orientation == "Horizontal";
+    let children = emit_xaml_children(
         &node.children,
         child_indent,
         part_styles,
         ctx,
-    )?);
+    );
+    ctx.horizontal_repeater = previous_flow;
+    out.push_str(&children?);
     if container_attrs.is_empty() && text_setters.is_empty() {
         writeln!(out, "{pad}</StackPanel>").unwrap();
     } else {
@@ -6187,6 +6201,7 @@ fn emit_for(
     part_styles: &PartStyleMap,
     ctx: &mut EmitContext<'_>,
 ) -> Result<String, PipelineEmitError> {
+    let horizontal = ctx.horizontal_repeater;
     // -- 1. Extract and validate the For-required props --
     let as_name = find_prop_keyword(node, "as").ok_or_else(|| {
         PipelineEmitError::UnsupportedPrimitive("For block missing required prop 'as:'".to_string())
@@ -6468,8 +6483,10 @@ fn emit_for(
         }
     }
     ctx.template_visual_state_groups.push(Vec::new());
+    ctx.horizontal_repeater = false;
     let body_result =
         emit_xaml_single_content_children(&node.children, indent + 12, part_styles, ctx);
+    ctx.horizontal_repeater = horizontal;
     let template_visual_state_groups = ctx
         .template_visual_state_groups
         .pop()
@@ -6556,6 +6573,11 @@ fn emit_for(
         "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_source}, Mode=OneWay}}\"{style}>"
     )
     .unwrap();
+    if horizontal {
+        writeln!(out, "{pad2}<ItemsRepeater.Layout>").unwrap();
+        writeln!(out, "{pad3}<StackLayout Orientation=\"Horizontal\"/>").unwrap();
+        writeln!(out, "{pad2}</ItemsRepeater.Layout>").unwrap();
+    }
     writeln!(out, "{pad2}<ItemsRepeater.ItemTemplate>").unwrap();
     writeln!(out, "{pad3}<DataTemplate x:DataType=\"local:{vm_class}\">").unwrap();
     out.push_str(&body);
@@ -17008,6 +17030,75 @@ mod tests {
         );
         // Inner Text binds to the for-bound name.
         assert!(r.xaml.contains("Text=\"{x:Bind Row, Mode=OneWay}\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn repeaters_follow_rows_without_leaking_into_nested_containers() {
+        let c = component(
+            "Grid",
+            vec![slot(
+                "items",
+                SlotType::List(Box::new(ListInnerType::Text)),
+                true,
+            )],
+            vec![],
+        );
+        let repeated = || {
+            for_node(
+                LayoutPropValue::SlotRef("items".into()),
+                "item",
+                None,
+                vec![LayoutNode {
+                    tag: "Text".into(),
+                    part_name: None,
+                    props: vec![LayoutProp {
+                        name: "content".into(),
+                        value: LayoutPropValue::Keyword("item".into()),
+                    }],
+                    children: vec![],
+                }],
+            )
+        };
+        let container = |tag: &str, children| LayoutNode {
+            tag: tag.into(),
+            part_name: None,
+            props: vec![],
+            children,
+        };
+        for root in [
+            container(
+                "Row",
+                vec![
+                    repeated(),
+                    container("Column", vec![repeated()]),
+                    container("Box", vec![repeated()]),
+                ],
+            ),
+            container(
+                "HostTable",
+                vec![
+                    container("HostTableHead", vec![container("Row", vec![repeated()])]),
+                    container(
+                        "HostTableBody",
+                        vec![container(
+                            "Row",
+                            vec![container("Column", vec![repeated()])],
+                        )],
+                    ),
+                ],
+            ),
+        ] {
+            let r = compile(&c, &layout_with_root("Grid", root), &empty_style("Grid"));
+            assert_eq!(
+                r.xaml
+                    .matches("<StackLayout Orientation=\"Horizontal\"/>")
+                    .count(),
+                1,
+                "{}",
+                r.xaml
+            );
+            assert!(r.xaml.matches("<ItemsRepeater ItemsSource=").count() >= 2);
+        }
     }
 
     #[test]

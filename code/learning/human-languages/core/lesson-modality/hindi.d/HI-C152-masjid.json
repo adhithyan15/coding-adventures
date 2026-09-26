@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C152-masjid",
+    "language": "hindi",
+    "chapter": 152,
+    "sequence": 7090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f74fa6f421b23dca"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C162-tairna",
+  "pathSegment": "HI-PATH-162-ACT162",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-162-ACT162",
+      "order": 0
+    }
+  ]
+}

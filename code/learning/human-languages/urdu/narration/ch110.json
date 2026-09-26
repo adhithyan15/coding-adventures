@@ -1,0 +1,855 @@
+{
+  "version": 1,
+  "language": "urdu",
+  "chapter": 110,
+  "title": "Television, Computer, Mobile phone, Phone, Glasses",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:066fd63d7c6127d7",
+  "lessons": [
+    {
+      "id": "UR-C110-tivi",
+      "sequence": 5700,
+      "title": "ٹی وی (ṭīvī) — a television",
+      "headword": "ٹی وی",
+      "romanization": "ṭīvī",
+      "gloss": "a television",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3349c11b352e42f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a drinking glass, then the Urdu for a fridge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ٹی وی",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ٹی وی — ṭīvī — \"a television\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭīvī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭīvī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭīvī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭīvī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ṭīvī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ṭīvī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a drinking glass, then the Urdu for a fridge, then say ṭīvī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a drinking glass, then the Urdu for a fridge, then say *ṭīvī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ٹی وی (ṭīvī) mean? (\"A television\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C110-kampyutar",
+      "sequence": 5710,
+      "title": "کمپیوٹر (kampyūṭar) — a computer",
+      "headword": "کمپیوٹر",
+      "romanization": "kampyūṭar",
+      "gloss": "a computer",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5f6b2baf1d691ec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a fridge, then the Urdu for a television."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: کمپیوٹر",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کمپیوٹر — kampyūṭar — \"a computer\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampyūṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampyūṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kampyūṭar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kampyūṭar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kampyūṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kampyūṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a fridge, then the Urdu for a television, then say kampyūṭar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a fridge, then the Urdu for a television, then say *kampyūṭar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does کمپیوٹر (kampyūṭar) mean? (\"A computer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C110-mobail",
+      "sequence": 5720,
+      "title": "موبائل (mobāil) — a mobile phone",
+      "headword": "موبائل",
+      "romanization": "mobāil",
+      "gloss": "a mobile phone",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6577ff0bab10c972",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a television, then the Urdu for a computer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: موبائل",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "موبائل — mobāil — \"a mobile phone\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mobāil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mobāil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mobāil, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mobāil*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mobāil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mobāil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a television, then the Urdu for a computer, then say mobāil again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a television, then the Urdu for a computer, then say *mobāil* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does موبائل (mobāil) mean? (\"A mobile phone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C110-fon",
+      "sequence": 5730,
+      "title": "فون (fon) — a phone",
+      "headword": "فون",
+      "romanization": "fon",
+      "gloss": "a phone",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77fb942c7f83382f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a computer, then the Urdu for a mobile phone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: فون",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "فون — fon — \"a phone\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fon, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fon*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say fon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *fon*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a computer, then the Urdu for a mobile phone, then say fon again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a computer, then the Urdu for a mobile phone, then say *fon* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does فون (fon) mean? (\"A phone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C110-chashma",
+      "sequence": 5740,
+      "title": "چشمہ (chashmā) — glasses, spectacles",
+      "headword": "چشمہ",
+      "romanization": "chashmā",
+      "gloss": "glasses, spectacles",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dd16b88a14435a0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Urdu for a mobile phone, then the Urdu for a phone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: چشمہ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "چشمہ — chashmā — \"glasses, spectacles\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chashmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chashmā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chashmā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chashmā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chashmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chashmā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Urdu for a mobile phone, then the Urdu for a phone, then say chashmā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Urdu for a mobile phone, then the Urdu for a phone, then say *chashmā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does چشمہ (chashmā) mean? (\"Glasses, spectacles\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R110-first-pass-places-can-and-want",
+      "sequence": 5750,
+      "title": "Places, can and want — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 100-104",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8129628069a5bfc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a phone and glasses."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a crossroads, around, with, a market, a police station",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a crossroads, around, with, a market, a police station]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a palace, a park, a cinema, a field, a door",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a palace, a park, a cinema, a field, a door]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a kitchen, a bathroom, a ticket, an office, a library",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a kitchen, a bathroom, a ticket, an office, a library]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an aeroplane, a train, near; with, to be able to, to manage to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an aeroplane, a train, near; with, to be able to, to manage to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a skill, able, is needed, a wish, a need",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a skill, able, is needed, a wish, a need]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A crossroads? (چوراہا, chaurāhā.) Around? (آس پاس, ās pās.) With? (ساتھ, sāth.) A market? (بازار, bāzār.) A police station? (تھانہ, thānā.) A palace? (محل, mahal.) A park? (پارک, pārk.) A cinema? (سینما, sinemā.) A field? (میدان, maidān.) A door? (دروازہ, darvāzā.) A kitchen? (باورچی خانہ, bāvarchīkhānā.) A bathroom? (باتھ روم, bāthrūm.) A ticket? (ٹکٹ, ṭikaṭ.) An office? (دفتر, daftar.) A library? (کتب خانہ, kutubkhānā.) An aeroplane? (ہوائی جہاز, hawāī jahāz.) A train? (ریل گاڑی, rel gāṛī.) Near; with? (پاس, pās.) To be able to? (سکنا, saknā.) To manage to? (پانا, pānā.) A skill? (ہنر, hunar.) Able? (قابل, qābil.) Is needed? (چاہیے, chāhiye.) A wish? (خواہش, khvāhish.) A need? (ضرورت, zarūrat.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-R110-second-pass-things-in-the-house",
+      "sequence": 5760,
+      "title": "Things in the house — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 105-110",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:294fc9a4998cc579",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a keen interest and an intention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a keen interest, an intention, a table, scissors, a needle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a keen interest, an intention, a table, scissors, a needle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thread, a towel, a comb, glass, a pillow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thread, a towel, a comb, glass, a pillow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a blanket, a curtain, a sheet, a bucket, a rope",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a blanket, a curtain, a sheet, a bucket, a rope]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a nail, a hammer, a lock, a fan, electricity; lightning",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a nail, a hammer, a lock, a fan, electricity; lightning]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stove, a pot, a plate, a drinking glass, a fridge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stove, a pot, a plate, a drinking glass, a fridge]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a television, a computer, a mobile phone, a phone, glasses",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a television, a computer, a mobile phone, a phone, glasses]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A keen interest? (شوق, shauq.) An intention? (ارادہ, irādā.) A table? (میز, mez.) Scissors? (قینچی, qainchī.) A needle? (سوئی, sūī.) Thread? (دھاگا, dhāgā.) A towel? (تولیہ, tauliyā.) A comb? (کنگھی, kaṅghī.) Glass? (شیشہ, shīshā.) A pillow? (تکیہ, takiyā.) A blanket? (کمبل, kambal.) A curtain? (پردہ, pardā.) A sheet? (چادر, chādar.) A bucket? (بالٹی, baltī.) A rope? (رسی, rassī.) A nail? (کیل, kīl.) A hammer? (ہتھوڑا, hathauṛā.) A lock? (تالا, tālā.) A fan? (پنکھا, pankhā.) Electricity; lightning? (بجلی, bijlī.) A stove? (چولہا, chūlhā.) A pot? (برتن, bartan.) A plate? (تھالی, thālī.) A drinking glass? (گلاس, glās.) A fridge? (فریج, friij.) A television? (ٹی وی, ṭīvī.) A computer? (کمپیوٹر, kampyūṭar.) A mobile phone? (موبائل, mobāil.) A phone? (فون, fon.) Glasses? (چشمہ, chashmā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

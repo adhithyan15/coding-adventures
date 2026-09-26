@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Young, Old, Lovely, Soft, Hard",
+  "label": "ch:ur-young-old-lovely-soft-hard",
+  "canDo": "I can say young, old, lovely, soft and hard.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C133-sakht",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say young, old, lovely, soft and hard.",
+    "assesses": [
+      "UR-LEX-C133-QUAL133-03",
+      "UR-LEX-C133-QUAL133-04",
+      "UR-LEX-C133-QUAL133-05"
+    ]
+  }
+}

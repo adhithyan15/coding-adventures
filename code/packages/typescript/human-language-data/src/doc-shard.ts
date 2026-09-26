@@ -197,7 +197,14 @@ export interface DocShardPlan {
    */
   readonly newestFirst: boolean;
   /**
-   * What starts an entry: an ATX heading (the default) or a top-level bullet.
+   * Whether committed owners are immutable history. Changelogs and the backlog
+   * are append-only; planning documents are mutable and permit one owner to be
+   * moved or removed without weakening their filename and aggregate guards.
+   */
+  readonly appendOnly?: boolean;
+  /**
+   * What starts an entry: an ATX heading (the default), a top-level bullet, or
+   * a numbered Markdown table row.
    *
    * Some append-only documents are not a list of headings at all. The worst
    * example measured in this repo, `code/specs/data/adj-facts-stdlib/
@@ -224,16 +231,23 @@ export interface DocShardPlan {
    * nothing — measured at 0 renames, 324 -> 325 shards, on the real file. A
    * rename costs one merge conflict on one shard, where the shared-file layout
    * this replaces cost one on every concurrent pair.
+   *
+   * `"table-row"` applies the same boundary to session maps. A row is an owner
+   * when its first cell contains a digit (`1`, `6–13`, `S1`); the table header
+   * and alignment line remain in the preamble. Session identities are stable,
+   * so a move changes only the rank prefix while the digest identity survives.
    */
-  readonly entryShape?: "heading" | "bullet";
+  readonly entryShape?: "heading" | "bullet" | "table-row";
 }
 
-/** What a plan splits on: an ATX level, or top-level bullets. */
-export type DocSplitAt = 2 | 3 | "bullet";
+/** What a plan splits on: an ATX level, top-level bullets, or table data rows. */
+export type DocSplitAt = 2 | 3 | "bullet" | "table-row";
 
 /** The split rule for a plan, resolved once so callers cannot disagree. */
 export function docSplitAt(plan: DocShardPlan): DocSplitAt {
-  return plan.entryShape === "bullet" ? "bullet" : plan.headingLevel;
+  if (plan.entryShape === "bullet") return "bullet";
+  if (plan.entryShape === "table-row") return "table-row";
+  return plan.headingLevel;
 }
 
 /** One section of a document, as an exact slice of the original bytes. */
@@ -524,7 +538,13 @@ function headingPattern(level: 2 | 3): RegExp {
 function entryStartPattern(at: DocSplitAt): RegExp {
   // `^- ` only, anchored at column 0: an indented `  - ` is a nested item of the
   // entry above it, not a new entry.
-  return at === "bullet" ? /^- / : headingPattern(at);
+  if (at === "bullet") return /^- /;
+  // A data row begins with a pipe and has a digit in its first cell. This deliberately
+  // leaves each table header and alignment row in the preamble or preceding
+  // prose section. Human-language session maps number every independently
+  // authored session in their first column, including ranges such as `6–13`.
+  if (at === "table-row") return /^\| (?=[^|]*[0-9])/;
+  return headingPattern(at);
 }
 
 /**
@@ -705,7 +725,7 @@ export function docShardContents(text: string, plan: DocShardPlan): Map<string, 
   const { preamble, sections } = splitDocument(text, at);
   if (sections.length === 0) {
     throw new Error(
-      `${plan.path}: no ${at === "bullet" ? "top-level bullets" : `level-${at} headings`} ` +
+      `${plan.path}: no ${at === "bullet" ? "top-level bullets" : at === "table-row" ? "numbered table rows" : `level-${at} headings`} ` +
         `to shard on — the whole document would become '${DOC_META_SHARD}'`,
     );
   }

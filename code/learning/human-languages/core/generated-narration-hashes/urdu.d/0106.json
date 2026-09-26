@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:9a69d68cc9c56f2b",
+  "lessonIds": [
+    "UR-C106-dhaga",
+    "UR-C106-tauliya",
+    "UR-C106-kanghi",
+    "UR-C106-shisha",
+    "UR-C106-takiya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch106.txt",
+  "json": "urdu/narration/ch106.json",
+  "textHash": "fnv1a64:0fe0052e332375a7",
+  "jsonHash": "fnv1a64:d7ee9294b431c554",
+  "findings": []
+}

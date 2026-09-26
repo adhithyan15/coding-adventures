@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C165-bajana",
+    "language": "hindi",
+    "chapter": 165,
+    "sequence": 7780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62fa2e4f5a84ae06"
+  },
+  "findings": []
+}

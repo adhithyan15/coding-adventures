@@ -1,0 +1,11 @@
+{
+  "id": "LA-C133-rana",
+  "pathSegment": "LA-PATH-133-THINGS133",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-133-THINGS133",
+      "order": 1
+    }
+  ]
+}

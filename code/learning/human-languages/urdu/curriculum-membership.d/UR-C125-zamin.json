@@ -1,0 +1,11 @@
+{
+  "id": "UR-C125-zamin",
+  "pathSegment": "UR-PATH-125-THINGS125",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-125-THINGS125",
+      "order": 1
+    }
+  ]
+}

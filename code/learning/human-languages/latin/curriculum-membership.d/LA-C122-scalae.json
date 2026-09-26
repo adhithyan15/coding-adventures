@@ -1,0 +1,11 @@
+{
+  "id": "LA-C122-scalae",
+  "pathSegment": "LA-PATH-122-THINGS122",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-122-THINGS122",
+      "order": 4
+    }
+  ]
+}

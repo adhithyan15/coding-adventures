@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C157-thakne",
+    "language": "marathi",
+    "chapter": 157,
+    "sequence": 7480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:45d8ecfb8d02ba2b"
+  },
+  "findings": []
+}

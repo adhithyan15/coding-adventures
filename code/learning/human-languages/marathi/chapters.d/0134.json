@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Bowl, Cooking pot, Blackboard, Pencil, Eraser",
+  "label": "ch:mr-bowl-cooking-pot-blackboard-pencil-eraser",
+  "canDo": "I can say a bowl, a cooking pot, a blackboard, a pencil and an eraser.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C134-rabar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can say a bowl, a cooking pot, a blackboard, a pencil and an eraser.",
+    "assesses": [
+      "MR-LEX-C134-THINGS134-03",
+      "MR-LEX-C134-THINGS134-04",
+      "MR-LEX-C134-THINGS134-05"
+    ]
+  }
+}

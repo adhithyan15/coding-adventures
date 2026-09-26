@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 22,
-  "sourceHash": "fnv1a64:f4b56c5d9695aecb",
+  "sourceHash": "fnv1a64:3017c22aa85b06ba",
   "lessonIds": [
     "HI-S127-letter-u",
     "HI-C22-uun",
@@ -15,6 +15,6 @@
   "text": "hindi/narration/ch22.txt",
   "json": "hindi/narration/ch22.json",
   "textHash": "fnv1a64:98fb1f3e9c153fbc",
-  "jsonHash": "fnv1a64:372763968f8ff6a5",
+  "jsonHash": "fnv1a64:7711ce11d8dcb99b",
   "findings": []
 }

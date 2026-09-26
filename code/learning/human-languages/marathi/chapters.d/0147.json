@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "Skin, Bone, Wide, Narrow, Thin",
+  "label": "ch:mr-skin-bone-wide-narrow-thin",
+  "canDo": "I can say the skin, a bone, wide, narrow and thin.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C147-patal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: i can say the skin, a bone, wide, narrow and thin.",
+    "assesses": [
+      "MR-LEX-C147-THINGS147-03",
+      "MR-LEX-C147-THINGS147-04",
+      "MR-LEX-C147-THINGS147-05"
+    ]
+  }
+}

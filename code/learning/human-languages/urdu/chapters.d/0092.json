@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Tuesday, Wednesday, O'clock, Half past, Quarter past",
+  "label": "ch:ur-tuesday-wednesday-o-clock-half-past-quarter-past",
+  "canDo": "I can say Tuesday, Wednesday, o'clock, half past and a quarter past.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "UR-C92-sava",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can say Tuesday, Wednesday, o'clock, half past and a quarter past.",
+    "assesses": [
+      "UR-LEX-C92-TIME92-03",
+      "UR-LEX-C92-TIME92-04",
+      "UR-LEX-C92-TIME92-05"
+    ]
+  }
+}

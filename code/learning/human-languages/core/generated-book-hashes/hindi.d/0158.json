@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:ed337bca73976860",
+  "lessonIds": [
+    "HI-C158-caura",
+    "HI-C158-gahra",
+    "HI-C158-uca",
+    "HI-C158-nica",
+    "HI-C158-khali"
+  ],
+  "tex": "hindi/book/chapters/ch158-wide-deep-high-low-empty.tex"
+}

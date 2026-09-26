@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:a7536ceac3748621",
+  "lessonIds": [
+    "HI-C130-hathaura",
+    "HI-C130-kil",
+    "HI-C130-kaici",
+    "HI-C130-dhaga",
+    "HI-C130-kanghi"
+  ],
+  "tex": "hindi/book/chapters/ch130-hammer-nail-scissors-thread-comb.tex"
+}

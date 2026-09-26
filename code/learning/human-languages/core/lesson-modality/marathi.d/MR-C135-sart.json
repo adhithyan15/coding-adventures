@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C135-sart",
+    "language": "marathi",
+    "chapter": 135,
+    "sequence": 6290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f262f94ab951e2ba"
+  },
+  "findings": []
+}

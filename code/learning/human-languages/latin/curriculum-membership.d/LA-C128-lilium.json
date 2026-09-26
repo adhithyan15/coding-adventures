@@ -1,0 +1,11 @@
+{
+  "id": "LA-C128-lilium",
+  "pathSegment": "LA-PATH-128-THINGS128",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-128-THINGS128",
+      "order": 4
+    }
+  ]
+}

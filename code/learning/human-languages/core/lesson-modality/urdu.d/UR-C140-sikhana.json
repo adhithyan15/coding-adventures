@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C140-sikhana",
+    "language": "urdu",
+    "chapter": 140,
+    "sequence": 7370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:030c2a888d39a328"
+  },
+  "findings": []
+}

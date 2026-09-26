@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C126-ravivar",
+    "language": "marathi",
+    "chapter": 126,
+    "sequence": 5750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c8ae6e13b04db0f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:674d569a2cbd49dc",
+  "lessonIds": [
+    "LA-C141-linteum",
+    "LA-C141-sapo",
+    "LA-C141-spongia",
+    "LA-C141-urna",
+    "LA-C141-calix"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch141.txt",
+  "json": "latin/narration/ch141.json",
+  "textHash": "fnv1a64:ede33526dfa21f87",
+  "jsonHash": "fnv1a64:3faafdcea0c1152a",
+  "findings": []
+}

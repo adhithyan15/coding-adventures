@@ -1,0 +1,19 @@
+{
+  "chapter": 165,
+  "title": "To catch, To touch, To explain, To play, To count",
+  "label": "ch:hi-to-catch-to-touch-to-explain-to-play-to-count",
+  "canDo": "I can say to catch, to touch, to explain, to play and to count.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-R165-second-pass-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 165: i can say to catch, to touch, to explain, to play and to count.",
+    "assesses": [
+      "HI-LEX-C165-ACT165-03",
+      "HI-LEX-C165-ACT165-04",
+      "HI-LEX-C165-ACT165-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C129-tala",
+    "language": "hindi",
+    "chapter": 129,
+    "sequence": 5800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d52b79392589bc2"
+  },
+  "findings": []
+}

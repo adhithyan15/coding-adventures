@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C130-fulgur",
+    "language": "latin",
+    "chapter": 130,
+    "sequence": 5240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:efbe086195ec0c48"
+  },
+  "findings": []
+}

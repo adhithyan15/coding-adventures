@@ -5,8 +5,7 @@
   "probe": [
     "MR-SCRIPT-ANUSVARA-01",
     "MR-SCRIPT-CANDRABINDU-01",
-    "MR-SCRIPT-DON-FINAL-N",
-    "MR-SCRIPT-PAACH-NONNASAL"
+    "MR-SCRIPT-DON-FINAL-N"
   ],
   "anchorIds": [
     "ca-marathi-assessment"

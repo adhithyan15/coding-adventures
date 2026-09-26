@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C159-rakhna",
+    "language": "hindi",
+    "chapter": 159,
+    "sequence": 7490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28b33400520fed8a"
+  },
+  "findings": []
+}

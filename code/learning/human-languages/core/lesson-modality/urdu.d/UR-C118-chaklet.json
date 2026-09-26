@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C118-chaklet",
+    "language": "urdu",
+    "chapter": 118,
+    "sequence": 6160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67c534e84dfc0f3e"
+  },
+  "findings": []
+}

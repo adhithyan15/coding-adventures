@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C148-titli",
+    "language": "hindi",
+    "chapter": 148,
+    "sequence": 6880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aafcc24b46641541"
+  },
+  "findings": []
+}

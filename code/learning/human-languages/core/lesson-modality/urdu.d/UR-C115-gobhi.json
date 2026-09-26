@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C115-gobhi",
+    "language": "urdu",
+    "chapter": 115,
+    "sequence": 6010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a38a9d4a4da12d6d"
+  },
+  "findings": []
+}

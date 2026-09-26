@@ -1,0 +1,11 @@
+{
+  "id": "LA-C146-sordidus",
+  "pathSegment": "LA-PATH-146-QUAL146",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-146-QUAL146",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C138-bajana",
+    "language": "urdu",
+    "chapter": 138,
+    "sequence": 7280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00993aa5ab8e8936"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C141-nikalna",
+  "pathSegment": "UR-PATH-141-ACT141",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-141-ACT141",
+      "order": 3
+    }
+  ]
+}

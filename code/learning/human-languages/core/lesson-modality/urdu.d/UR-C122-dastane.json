@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C122-dastane",
+    "language": "urdu",
+    "chapter": 122,
+    "sequence": 6430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63053ac0f2a13e0a"
+  },
+  "findings": []
+}

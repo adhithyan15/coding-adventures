@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C97-kinara",
+    "language": "urdu",
+    "chapter": 97,
+    "sequence": 4990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49a029c45c2cb69d"
+  },
+  "findings": []
+}

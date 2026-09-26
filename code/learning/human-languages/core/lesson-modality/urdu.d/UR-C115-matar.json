@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C115-matar",
+    "language": "urdu",
+    "chapter": 115,
+    "sequence": 6020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92adc29d42d63c33"
+  },
+  "findings": []
+}

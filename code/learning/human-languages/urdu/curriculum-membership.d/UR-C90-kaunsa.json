@@ -1,0 +1,11 @@
+{
+  "id": "UR-C90-kaunsa",
+  "pathSegment": "UR-PATH-90-DEF90",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-90-DEF90",
+      "order": 2
+    }
+  ]
+}

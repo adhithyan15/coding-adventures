@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:d0b92c99586f3282",
+  "lessonIds": [
+    "MR-C135-daptar",
+    "MR-C135-pariksa",
+    "MR-C135-varg",
+    "MR-C135-abhyas",
+    "MR-C135-sart"
+  ],
+  "tex": "marathi/book/chapters/ch135-school-bag-exam-class-study-shirt.tex"
+}

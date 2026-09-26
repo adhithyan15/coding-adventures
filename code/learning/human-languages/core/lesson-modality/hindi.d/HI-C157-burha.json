@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C157-burha",
+    "language": "hindi",
+    "chapter": 157,
+    "sequence": 7390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae4a9f916795c54e"
+  },
+  "findings": []
+}

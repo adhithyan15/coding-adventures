@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C130-kanghi",
+    "language": "hindi",
+    "chapter": 130,
+    "sequence": 5890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7bff7e25d6917a11"
+  },
+  "findings": []
+}

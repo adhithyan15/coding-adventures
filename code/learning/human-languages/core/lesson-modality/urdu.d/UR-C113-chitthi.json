@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C113-chitthi",
+    "language": "urdu",
+    "chapter": 113,
+    "sequence": 5910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f71892e80674273"
+  },
+  "findings": []
+}

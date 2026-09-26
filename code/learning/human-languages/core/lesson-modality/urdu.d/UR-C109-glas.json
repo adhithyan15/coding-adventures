@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C109-glas",
+    "language": "urdu",
+    "chapter": 109,
+    "sequence": 5680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7015e19d132e209"
+  },
+  "findings": []
+}

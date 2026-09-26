@@ -1,0 +1,9 @@
+{
+  "id": "UR-PATH-88-DEF88",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "before": [],
+  "inline": [
+    "UR-EXT-88-DEF88"
+  ],
+  "after": []
+}

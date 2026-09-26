@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "To be able to, To manage to, Skill, Ability, Right",
+  "label": "ch:mr-to-be-able-to-to-manage-to-skill-ability-right",
+  "canDo": "I can say to be able to, to manage to, a skill, ability and a right.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "MR-C121-adhikar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say to be able to, to manage to, a skill, ability and a right.",
+    "assesses": [
+      "MR-LEX-C121-CAN121-03",
+      "MR-LEX-C121-CAN121-04",
+      "MR-LEX-C121-CAN121-05"
+    ]
+  }
+}

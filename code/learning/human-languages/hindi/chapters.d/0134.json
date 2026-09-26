@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Bottle, Pencil, Picture, Mirror, Ring",
+  "label": "ch:hi-bottle-pencil-picture-mirror-ring",
+  "canDo": "I can say a bottle, a pencil, a picture, a mirror and a ring.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C134-anguthi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can say a bottle, a pencil, a picture, a mirror and a ring.",
+    "assesses": [
+      "HI-LEX-C134-THINGS134-03",
+      "HI-LEX-C134-THINGS134-04",
+      "HI-LEX-C134-THINGS134-05"
+    ]
+  }
+}

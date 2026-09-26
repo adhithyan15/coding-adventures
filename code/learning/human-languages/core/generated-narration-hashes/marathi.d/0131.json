@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:5ded6b921976bd5c",
+  "lessonIds": [
+    "MR-C131-padda",
+    "MR-C131-kulup",
+    "MR-C131-badli",
+    "MR-C131-dori",
+    "MR-C131-khila"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch131.txt",
+  "json": "marathi/narration/ch131.json",
+  "textHash": "fnv1a64:e9749f9fe26fa0ac",
+  "jsonHash": "fnv1a64:f76c09ae06e610c5",
+  "findings": []
+}

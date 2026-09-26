@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:e4312fedd861348c",
+  "lessonIds": [
+    "LA-C145-acerbus",
+    "LA-C145-vivus",
+    "LA-C145-mitis",
+    "LA-C145-ferox",
+    "LA-C145-iucundus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch145.txt",
+  "json": "latin/narration/ch145.json",
+  "textHash": "fnv1a64:cb45fc2d841f13e6",
+  "jsonHash": "fnv1a64:01f29e4b4965305f",
+  "findings": []
+}

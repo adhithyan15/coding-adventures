@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:d2d8caec851955be",
+  "lessonIds": [
+    "MR-C151-pramanik",
+    "MR-C151-dhadsi",
+    "MR-C151-bhitra",
+    "MR-C151-murkh",
+    "MR-C151-prasiddh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch151.txt",
+  "json": "marathi/narration/ch151.json",
+  "textHash": "fnv1a64:20c3a48404254076",
+  "jsonHash": "fnv1a64:540d273a620bf8a1",
+  "findings": []
+}

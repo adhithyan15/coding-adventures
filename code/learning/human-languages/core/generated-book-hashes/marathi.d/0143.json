@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:fed2b200375e91f5",
+  "lessonIds": [
+    "MR-C143-kasav",
+    "MR-C143-magar",
+    "MR-C143-harin",
+    "MR-C143-sasa",
+    "MR-C143-landga"
+  ],
+  "tex": "marathi/book/chapters/ch143-tortoise-crocodile-deer-rabbit-wolf.tex"
+}

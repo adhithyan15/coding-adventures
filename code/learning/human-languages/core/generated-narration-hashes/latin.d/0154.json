@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:4f7ce31f40309221",
+  "lessonIds": [
+    "LA-C154-iungo",
+    "LA-C154-visito",
+    "LA-C154-canto",
+    "LA-C154-pingo",
+    "LA-C154-duco"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch154.txt",
+  "json": "latin/narration/ch154.json",
+  "textHash": "fnv1a64:757d494c42b674ab",
+  "jsonHash": "fnv1a64:542e8a1bbaa7291d",
+  "findings": []
+}

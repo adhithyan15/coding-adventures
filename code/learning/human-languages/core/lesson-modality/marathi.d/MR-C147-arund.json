@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C147-arund",
+    "language": "marathi",
+    "chapter": 147,
+    "sequence": 6930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13863bf039b6eeb9"
+  },
+  "findings": []
+}

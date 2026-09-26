@@ -1,0 +1,11 @@
+{
+  "id": "LA-C110-nolo",
+  "pathSegment": "LA-PATH-110-CAN110",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-110-CAN110",
+      "order": 4
+    }
+  ]
+}

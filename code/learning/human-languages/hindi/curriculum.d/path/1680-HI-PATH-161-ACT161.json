@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-161-ACT161",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "HI-EXT-161-ACT161"
+  ],
+  "after": []
+}

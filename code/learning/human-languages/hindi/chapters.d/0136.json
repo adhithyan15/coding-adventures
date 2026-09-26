@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Kurta, Sari, Scarf, Cap, Coat",
+  "label": "ch:hi-kurta-sari-scarf-cap-coat",
+  "canDo": "I can say a kurta, a sari, a scarf, a cap and a coat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C136-kot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: i can say a kurta, a sari, a scarf, a cap and a coat.",
+    "assesses": [
+      "HI-LEX-C136-THINGS136-03",
+      "HI-LEX-C136-THINGS136-04",
+      "HI-LEX-C136-THINGS136-05"
+    ]
+  }
+}

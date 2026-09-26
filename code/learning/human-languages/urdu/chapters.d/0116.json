@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Melon, Pomegranate, Guava, Pear, Date",
+  "label": "ch:ur-melon-pomegranate-guava-pear-date",
+  "canDo": "I can say a melon, a pomegranate, a guava, a pear and a date.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C116-khajur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say a melon, a pomegranate, a guava, a pear and a date.",
+    "assesses": [
+      "UR-LEX-C116-THINGS116-03",
+      "UR-LEX-C116-THINGS116-04",
+      "UR-LEX-C116-THINGS116-05"
+    ]
+  }
+}

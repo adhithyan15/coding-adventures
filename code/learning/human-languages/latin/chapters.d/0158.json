@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "To grow, To hurry, To stay awake, To dine, To taste",
+  "label": "ch:la-to-grow-to-hurry-to-stay-awake-to-dine-to-taste",
+  "canDo": "I can say to grow, to hurry, to stay awake, to dine and to taste.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C158-gusto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: i can say to grow, to hurry, to stay awake, to dine and to taste.",
+    "assesses": [
+      "LA-LEX-C158-ACT158-03",
+      "LA-LEX-C158-ACT158-04",
+      "LA-LEX-C158-ACT158-05"
+    ]
+  }
+}

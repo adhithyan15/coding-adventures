@@ -3011,6 +3011,20 @@
       "sourceHash": "fnv1a64:2edea3435e005206",
       "svgHash": "fnv1a64:ce0e5305b2fee0e5",
       "svg": "urdu/book/figures/UR-W37-zuad-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "UR-W99-toe",
+      "sourceHash": "fnv1a64:91d0668c190a6638",
+      "svgHash": "fnv1a64:f0f9b92bc703f136",
+      "svg": "urdu/book/figures/UR-W99-toe-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "UR-W99-ze",
+      "sourceHash": "fnv1a64:cca43a7e905c90a4",
+      "svgHash": "fnv1a64:156410934f14687e",
+      "svg": "urdu/book/figures/UR-W99-ze-filmstrip.svg"
     }
   ]
 }

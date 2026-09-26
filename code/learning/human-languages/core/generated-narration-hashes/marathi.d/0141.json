@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:dab31dddb827acc3",
+  "lessonIds": [
+    "MR-C141-kinara",
+    "MR-C141-bet",
+    "MR-C141-vij",
+    "MR-C141-vadal",
+    "MR-C141-kavla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch141.txt",
+  "json": "marathi/narration/ch141.json",
+  "textHash": "fnv1a64:100ecc0e088fe668",
+  "jsonHash": "fnv1a64:5a2f6154b571ee13",
+  "findings": []
+}

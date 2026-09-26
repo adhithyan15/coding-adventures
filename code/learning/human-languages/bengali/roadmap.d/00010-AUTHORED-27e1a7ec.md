@@ -1,0 +1,191 @@
+## Authored
+
+- **Ch. 1 — Greetings**: nômoshkar → dhônyobad → hyã/nā → āchchhā → āshi →
+  practice. Bengali script introduced through the words; the sound-fingerprint
+  foregrounded.
+
+- **Ch. 2 — Introducing Yourself**: nām → āmār → **āmār nām …** ("my name is,"
+  zero copula) → tumi/āpni (+ tui: the three-way "you") → ki → **tomār nām ki?**
+  → ālāp kore bhālo lāglo (pleased to meet) → practice. Every atom traced; the
+  **zero copula**; and Bengali's **lack of grammatical gender** first flagged.
+- **Ch. 3 — How Are You**: kemon (how) → tumi kemon āchho? (the verb *āchhā* —
+  the copula returns for state) → āmi (I ← *asmi* → *am*) → bhālo (well ←
+  *bhadra*) → kono bæpār nā (you're welcome = "no matter") → practice.
+- **Ch. 4 — Farewells**: ābār (again) → dækhā hôbe (the impersonal "a seeing will
+  happen") → ābār dækhā hôbe (we'll meet again) → kāl dækhā hôbe (see you
+  tomorrow; *kāl* = tomorrow *and* yesterday ← *kāla*) → practice. Deepens Ch.1's
+  *āshi*.
+- **Ch. 5 — First Verbs**: bôlā (to speak) → āmi bānglā bôli (I speak Bengali;
+  *bôngo* → the Ganges delta) → thākā (to live ← *sthā* → *stand/stay*) → kāj
+  kôrā (to work; ← √kṛ) → practice. **The verb changes for person but never for
+  gender** — Bengali's great simplification.
+- **Ch. 6 — Numbers 1–5** (`BN-C06-numbers-1-5`): *ek, dui, tin, chār, pā̃ch* —
+  where **দুই** *dui* keeps a trace of the vowel following the old cluster that
+  Hindi and Marathi flattened into *do*/*don*, which is why it has two syllables
+  where its neighbours have one — its *dui* continuing the **disyllabic Prakrit
+  *duve***, not the *dváu* behind Hindi *do*. Scoped honestly: **Assamese, Odia
+  and Nepali** have *dui* too, so Bengali stands alone only among the four
+  compared here; and the *dv-* cluster is gone from the everyday **numeral**
+  everywhere, though alive in Sanskrit re-borrowings (Bengali **দ্বার** *dvār*
+  "door"). Notes that Ch. 1's
+  o-leaning inherent vowel is **not** demonstrable in these five, since **এক**
+  opens with an independent vowel. **Authored.**
+
+- **Ch. 7 — The Core Verbs** (`BN-C07-*`): হওয়া *hôwā* (two be-verbs, and আছ-
+  is unfinished — no future of its own, so *hôbe* or Ch. 5's থাকা carries it;
+  √bhū → English **be**, **been**, **future**) → যাওয়া *jāwā* (the honorific
+  ladder lives in the ending: *jāsh* / *jāo* / *jān*, and *se jāy* against
+  *tini jān*; PIE *\*yeh₂-* has **no** English descendant, said plainly) → আসা
+  *āsā* (**no grammatical gender anywhere** — one *āmi āsi* where Hindi splits
+  *ātā/ātī* and Marathi *yeto/yete*) → খাওয়া *khāwā* (Bengali eats its drinks:
+  *jôl khāwā*; √khād has no secure pedigree past Indo-Aryan, also said plainly)
+  → দেখা *dækhā* (vowel harmony: *dekhi* closed against *dækhe* open, with দে
+  spelled identically; √dṛś → **dragon**) → জানা *jānā* (জানা for facts, চেনা
+  for people — the *savoir*/*connaître* line; √jñā → **know**). The track's
+  first canonical spine verbs. **Authored.**
+
+- **Ch. 8 — The Mind and the Page** (`BN-C08-*`): ভাবা *bhābā* (Sanskrit
+  *bhāvayati*, the **causative** of √bhū — so "think" is Ch. 7's হওয়া with a
+  gear changed; and the gear is still live, দেখা → দেখানো "show," খাওয়া →
+  খাওয়ানো "feed") → বোঝা *bojhā* (√budh "to wake" → the **Buddha**, and PIE
+  *\*bʰewdʰ-* → English **bid**, **forbid**; vowel harmony returns, and this
+  time the spelling moves: বুঝি against বোঝে) → পড়া *pôṛā* (√paṭh "recite
+  aloud"; a single intervocalic retroflex softens into **ড়**, the letter
+  Sanskrit had no use for — and the same softening brought √pat "fall" onto the
+  identical spelling, so it is the *falling* twin that owns the English cousins
+  **feather**, **petition**, **pterodactyl**; √paṭh's own trail past Sanskrit is
+  said plainly to be cold) → লেখা *lekhā* (√likh "to scratch" beside Latin
+  *scrībere* and Germanic *wrītan*, three unrelated roots with one idea, named
+  as **convergence, not kinship**; and every **-া** form is also a **noun**,
+  which is what Ch. 4's *dækhā hôbe* was doing — লেখাপড়া, "writing-reading," is
+  *education*). **Authored.**
+
+- **Ch. 9 — Taking, Asking, Helping, Liking** (`BN-C09-*`): নেওয়া *neowā* (√nī
+  "to lead"; **no English descendant**, said plainly — its working life is as
+  the verb that **ends a compound**: লিখে নেওয়া "write it down," নিয়ে আসা
+  "bring," নিয়ে যাওয়া "take away") → জিজ্ঞাসা করা *jijñāsā kôrā* (the Sanskrit
+  **desiderative** of √jñā — asking is জানা with an appetite — and **noun +
+  করা**, the pattern that makes a verb out of any noun the language borrows)
+  → সাহায্য করা *sāhājjo kôrā* (*sahāya* = **সহ-** "together" + **√i** "to go,"
+  both cousins secure: PIE *\*sem-* → **same**, *homo-*; PIE *\*h₁ey-* → **exit**,
+  **transit**; and the doubled **য্য** finally shows the word-final inherent
+  **o** that Ch. 6's five numerals could not) → ভালো লাগা *bhālo lāgā* (√lag "to
+  stick" — *āmār bhālo lāge*, "good sticks to me": **the liker is not the
+  subject**, the same inversion as Spanish *gustar* — set against ভালোবাসা,
+  where you are; the *bāsā* half's origin is **disputed** and reported as such).
+  **Authored.**
+
+- **Ch. 10 — Tea, Water, Milk, and Rice** (`BN-C10-*`): চা *chā* (a loanword,
+  Chinese *chá* through Persian *čā*, the overland route beside the
+  Hokkien-via-Dutch sea route behind English *tea*) → জল *jôl* (prised out of
+  Ch. 7's *jôl khāwā*; genuinely disputed root, beside the Bangladesh-register
+  পানি, which traces cleanly to Ch. 7's √pā) → দুধ *dudh* (√duh, PIE
+  *\*dʰewgʰ-*; the secure English cousin is **doughty**, not the look-alike
+  **dough**, a different PIE root) → ভাত *bhāt* (√bhaj "to divide, to share,"
+  PIE *\*bʰeh₂g-* — a root Ch. 11 picks back up). Realizes
+  `SPINE-POLITE-REQUEST-REPAIR` by reusing Ch. 7's respectful খান as a
+  polite-offer pattern (চা খান, জল খান, দুধ খান, ভাত খান) rather than a
+  dedicated "please" word. **Authored.**
+
+- **Ch. 11 — Friend, Family, Brother, and Sister** (`BN-C11-*`): বন্ধু
+  *bôndhu* (a tatsama, kept whole from Sanskrit; √bandh, PIE *\*bʰendʰ-* —
+  English **bind**/**bond**/**band**, undisguised) → পরিবার *pôribār* (a
+  second tatsama, *pari-* "around" + √vṛ "to cover" — "what surrounds you";
+  *pari-*'s cousin is English's own borrowed *peri-*, but √vṛ's secure
+  cousins are Latin and Lithuanian, not English) → ভাই *bhāi* (a tadbhava —
+  worn down through Prakrit, not kept whole — and simply *is* English
+  "brother," PIE *\*bʰréh₂tēr*, not a cousin of it) → বোন *bon* (not built
+  on PIE *swésōr* at all: Sanskrit *bhaginī* ← *bhaga*, "a share," the same
+  √bhaj that named Ch. 10's ভাত). States and demonstrates Bengali's lack of
+  grammatical gender on nouns, first flagged in Ch. 2. **Authored.**
+
+- **Ch. 12 — Eye, Mouth, Nose, and Heart** (`BN-C12-*`): চোখ *chokh* (an
+  ardhatatsama, half-worn through Old Bengali চখু and Middle Bengali চউখ;
+  √cakṣ, PIE *\*kʷeḱ-* "to see," no secure English cousin) → মুখ *mukh* (a
+  full tatsama with a tadbhava twin, মু, alive only in compounds; its own
+  deepest root is a genuine, unresolved Dravidian-vs-Indo-European dispute
+  among Sanskritists) → নাক *nāk* (a tadbhava, PIE *\*néh₂s-*, the direct
+  ancestor of English **nose** and Latin *nāsus*) → হৃদয় *hridoy* (a tatsama
+  with a poetic tadbhava twin, হিয়া; root হৃদ্, PIE *\*ḱérd-*, the widest
+  confirmed cousin family in the track — **heart**, *kardía*, *cor*).
+  **Authored.**
+
+- **Ch. 16 — Hanging From the Head-Line, One Piece at a Time** (`BN-W01-*`):
+  the first nine pieces — **ন**, **া**, **আ**, **হ**, **ম**, **স**, **ক**,
+  **্**, **র** — taught one per lesson, then **নমস্কার** read back from them,
+  conjunct included. The inherent vowel is **ô**, not *a*; **স** is written
+  *s* and said *sh*. **Authored.**
+
+- **Chs. 17–19 — the script strand continued** (`BN-W02-*`, `BN-W03-*`,
+  `BN-W04-*`): seventeen more pieces, eighteen words handed back to the eye,
+  and no chapter that is a block of alphabet. The shape is the owner's own:
+  a word is glossed and spoken chapters earlier, a later lesson teaches one
+  piece of it, something else intervenes, and then the word is read.
+
+  - **Ch. 17 — Five More Pieces, Six More Words**: **ি** (written left, heard
+    right) → **আমি** → **ল** (one l where the south keeps three) → **লাল** →
+    **ত** (dental, and *not* the English *t*) → **তিন** → **ু** (the first
+    mark below the line) → **তুমি** → **ে** → **কেমন**. Three of the five
+    additions are vowel signs, because a sign **multiplies** — every consonant
+    already held can take it — where a consonant only adds.
+  - **Ch. 18 — The Breath That Is a Letter**: **ো** (not a new shape at all:
+    **ে** in front and **া** behind, at once) → **কালো** → **ব** (the letter
+    that swallowed Sanskrit's *v*, which is the whole sound-fingerprint) →
+    **আবার** → **ভ** → **ভালো** (কালো's near-twin, one letter apart) → **খ**
+    → **মুখ** → **দ** → **সাদা** → **ধ** → **দুধ**, where the plain dental and
+    its breathy partner finally stand in one three-piece word. The
+    plain/breathy square is the unit the whole Indian consonant order is
+    built from.
+  - **Ch. 19 — Both Bodies of a Vowel**: **চ** → **চা** → **প** (the lips, and
+    the last place of articulation — the map of the mouth is complete) →
+    **পরিবার**, six pieces, where a bare consonant carries the inherent **ô**
+    mid-word → **জ** → **জল**, two letters and **no signs**, the cleanest
+    picture of an abugida the book can show → **ী** (a second i-sign for a
+    length Bengali no longer says) → **নীল** → **ই** → **ভাই** ("nothing to
+    lean on" is not "start of word") → **এ** → **এক**, whose independent
+    opening vowel is exactly why Ch. 6 said its five numerals could not
+    demonstrate the inherent vowel.
+
+  `taughtGlyphs` 9 → 26, `neverTaughtGlyphs` **39 → 22**. **Authored.**
+
+- **Ch. 27 — Three Ways to Say No**: না after the verb (আমি জানি না) → নয় / নই,
+  the denial of a sentence that never had a verb → নেই, the fused denial of the
+  আছ- stem, which is also how Bengali says *I have no* → the yes-or-no question
+  made by pitch alone → review. **Authored.** Closes the negation column of the
+  A1 inventory outright (1/5 → 5/5) and empties SPINE-NEGATE-AND-ASK's omission
+  ledger.
+- **Ch. 28 — Two Things at Once**: আর (*and*) → -ও, the one-vowel clitic that
+  marks rather than joins → বা (*or*), which is what an offer needs → না … না,
+  the one construction where the negator goes first → review. **Authored.**
+- **Ch. 29 — Agreeing, Differing, and Saying Why**: কিন্তু (*but*, taken apart
+  into Sanskrit *kim-tu* so chapter three's কি is visible inside it) → একমত,
+  agreeing and — with নই — disagreeing → কেননা (*because*), which has
+  chapter twenty-seven's না inside it → review. **Authored.** Empties
+  SPINE-SAY-WHY's omission ledger.
+- **Ch. 30 — When You Are Lost**: যে, the complementiser ভাবা had been waiting
+  sixteen chapters for → যখন … তখন, the correlative pair Bengali completes
+  and English does not → আবার বলবেন (*say it again*), assembled out of three
+  things already in the book → ধীরে (*slowly*) → review. **Authored.**
+- **Ch. 31 — The Letter in the Way**: ট, the fourth corner of the dental /
+  retroflex square → টা, the classifier Bengali has instead of an article →
+  একটা, the only way a number may touch a noun → আরেকটা → review.
+  **Authored.** Empties SPINE-DEFINITE-REFERENCE's omission ledger.
+- **Ch. 32 — Pointing at Things**: এই → ওই → the stacking rule, pointer at the
+  front and classifier at the back → এটা, which with chapter three's কী makes
+  *what is this?* sayable → review. **Authored.**
+- **Ch. 33 — More Than One**: the জীব / জিনিস split, taught first because it
+  governs the two lessons after it → রা → গুলো → the adjective stands in front
+  and never agrees → review. **Authored.**
+- **Ch. 34 — Somebody Else**: সে → তিনি, the third-person rung of the ladder
+  আপনি stands on → ও, the third job of a syllable that has been a joiner and a
+  pointer → তার → review. **Authored.**
+- **Ch. 35 — All of Us**: আমরা → তোমরা → তারা, every one of them its singular
+  plus chapter thirty-three's রা → আমাদের, where the back slot proves to hold
+  one suffix at a time → review. **Authored.**
+- **Ch. 36 — The One It Happens To**: -কে on living nouns only → আমাকে, which
+  fills the dative frame of chapter sixteen → তোমাকে → কে? standing alone,
+  told from the ending only by where it sits → review. **Authored.**
+- **Ch. 37 — Here, There, and Where**: থ → এখানে → ওখানে, predictable before it
+  is shown → কোথায়, the ninth cell of the grid → review. **Authored.**
+  Empties SPINE-ASK-LOCATION's omission ledger.
+
