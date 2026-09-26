@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "Peas, Cucumber, Mango, Banana, Apple",
+  "label": "ch:hi-peas-cucumber-mango-banana-apple",
+  "canDo": "I can say peas, a cucumber, a mango, a banana and an apple.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C139-seb",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: i can say peas, a cucumber, a mango, a banana and an apple.",
+    "assesses": [
+      "HI-LEX-C139-THINGS139-03",
+      "HI-LEX-C139-THINGS139-04",
+      "HI-LEX-C139-THINGS139-05"
+    ]
+  }
+}

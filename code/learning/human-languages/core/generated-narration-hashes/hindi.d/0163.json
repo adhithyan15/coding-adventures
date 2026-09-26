@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:cd9c146b0272afe1",
+  "lessonIds": [
+    "HI-C163-jitna",
+    "HI-C163-harna",
+    "HI-C163-becna",
+    "HI-C163-dhudhna",
+    "HI-C163-pahanna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch163.txt",
+  "json": "hindi/narration/ch163.json",
+  "textHash": "fnv1a64:f4dc0c58ce9b7c46",
+  "jsonHash": "fnv1a64:161699f461d6f10a",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C130-kaici",
+    "language": "hindi",
+    "chapter": 130,
+    "sequence": 5870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7708af7c69f5b5ca"
+  },
+  "findings": []
+}

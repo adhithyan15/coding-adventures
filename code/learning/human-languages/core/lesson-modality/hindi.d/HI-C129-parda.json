@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C129-parda",
+    "language": "hindi",
+    "chapter": 129,
+    "sequence": 5830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92dab583a34c79a9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C134-sisa",
+    "language": "hindi",
+    "chapter": 134,
+    "sequence": 6080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9fc1d8279a0f0c8d"
+  },
+  "findings": []
+}

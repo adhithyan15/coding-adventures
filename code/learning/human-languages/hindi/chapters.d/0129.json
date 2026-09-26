@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Lock, Pillow, Blanket, Curtain, Bucket",
+  "label": "ch:hi-lock-pillow-blanket-curtain-bucket",
+  "canDo": "I can say a lock, a pillow, a blanket, a curtain and a bucket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C129-balti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say a lock, a pillow, a blanket, a curtain and a bucket.",
+    "assesses": [
+      "HI-LEX-C129-THINGS129-03",
+      "HI-LEX-C129-THINGS129-04",
+      "HI-LEX-C129-THINGS129-05"
+    ]
+  }
+}

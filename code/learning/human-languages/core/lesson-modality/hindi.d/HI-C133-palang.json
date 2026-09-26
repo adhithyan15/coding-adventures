@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C133-palang",
+    "language": "hindi",
+    "chapter": 133,
+    "sequence": 6030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd0397eed444fb85"
+  },
+  "findings": []
+}

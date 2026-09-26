@@ -1,0 +1,11 @@
+{
+  "id": "HI-C158-caura",
+  "pathSegment": "HI-PATH-158-QUAL158",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-158-QUAL158",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C140-santara",
+    "language": "hindi",
+    "chapter": 140,
+    "sequence": 6410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08f9d9997396b9d6"
+  },
+  "findings": []
+}

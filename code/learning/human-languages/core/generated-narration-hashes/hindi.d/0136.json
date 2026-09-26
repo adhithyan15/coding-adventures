@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:2c00ab784de3c475",
+  "lessonIds": [
+    "HI-C136-kurta",
+    "HI-C136-sari",
+    "HI-C136-dupatta",
+    "HI-C136-topi",
+    "HI-C136-kot"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch136.txt",
+  "json": "hindi/narration/ch136.json",
+  "textHash": "fnv1a64:256184d38b920709",
+  "jsonHash": "fnv1a64:00c86fe646f0d817",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C150-nakhun",
+  "pathSegment": "HI-PATH-150-THINGS150",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-150-THINGS150",
+      "order": 3
+    }
+  ]
+}

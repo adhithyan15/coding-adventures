@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 153,
+  "sourceHash": "fnv1a64:c6c5232c660d0447",
+  "lessonIds": [
+    "HI-C153-bagica",
+    "HI-C153-maidan",
+    "HI-C153-pul",
+    "HI-C153-daftar",
+    "HI-C153-baink"
+  ],
+  "tex": "hindi/book/chapters/ch153-garden-field-bridge-office-bank.tex"
+}

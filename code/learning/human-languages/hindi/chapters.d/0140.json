@@ -1,0 +1,19 @@
+{
+  "chapter": 140,
+  "title": "Grapes, Orange, Watermelon, Coconut, Yoghurt",
+  "label": "ch:hi-grapes-orange-watermelon-coconut-yoghurt",
+  "canDo": "I can say grapes, an orange, a watermelon, a coconut and yoghurt.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C140-dahi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 140: i can say grapes, an orange, a watermelon, a coconut and yoghurt.",
+    "assesses": [
+      "HI-LEX-C140-THINGS140-03",
+      "HI-LEX-C140-THINGS140-04",
+      "HI-LEX-C140-THINGS140-05"
+    ]
+  }
+}

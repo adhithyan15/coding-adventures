@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:bce8001e29557a2a",
+  "lessonIds": [
+    "HI-C134-botal",
+    "HI-C134-pensil",
+    "HI-C134-tasvir",
+    "HI-C134-sisa",
+    "HI-C134-anguthi"
+  ],
+  "tex": "hindi/book/chapters/ch134-bottle-pencil-picture-mirror-ring.tex"
+}

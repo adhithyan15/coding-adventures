@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:f616d71dd7fea1d7",
+  "lessonIds": [
+    "HI-C155-naram",
+    "HI-C155-sakht",
+    "HI-C155-saf",
+    "HI-C155-ganda",
+    "HI-C155-tez"
+  ],
+  "tex": "hindi/book/chapters/ch155-soft-hard-clean-dirty-fast.tex"
+}

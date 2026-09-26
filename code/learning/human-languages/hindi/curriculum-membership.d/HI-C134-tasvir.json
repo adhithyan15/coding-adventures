@@ -1,0 +1,11 @@
+{
+  "id": "HI-C134-tasvir",
+  "pathSegment": "HI-PATH-134-THINGS134",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-134-THINGS134",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C150-angutha",
+    "language": "hindi",
+    "chapter": 150,
+    "sequence": 6970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0875a1cbba33c1bd"
+  },
+  "findings": []
+}

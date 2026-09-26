@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:881b1de711fd927e",
+  "lessonIds": [
+    "HI-C165-pakarna",
+    "HI-C165-chuna",
+    "HI-C165-samjhana",
+    "HI-C165-bajana",
+    "HI-C165-ginna",
+    "HI-R165-first-pass-places-and-describing-words",
+    "HI-R165-second-pass-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch165.txt",
+  "json": "hindi/narration/ch165.json",
+  "textHash": "fnv1a64:3c7db8f26fff418f",
+  "jsonHash": "fnv1a64:ff8371dbaac74b00",
+  "findings": []
+}

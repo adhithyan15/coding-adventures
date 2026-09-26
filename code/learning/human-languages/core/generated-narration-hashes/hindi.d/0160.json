@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:908095dc27603b79",
+  "lessonIds": [
+    "HI-C160-bhejna",
+    "HI-C160-lana",
+    "HI-C160-kholna",
+    "HI-C160-dhona",
+    "HI-C160-nahana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch160.txt",
+  "json": "hindi/narration/ch160.json",
+  "textHash": "fnv1a64:4d31abacfd9b41a8",
+  "jsonHash": "fnv1a64:018f25392d28a7c1",
+  "findings": []
+}

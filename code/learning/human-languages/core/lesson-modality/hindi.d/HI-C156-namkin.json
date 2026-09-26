@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C156-namkin",
+    "language": "hindi",
+    "chapter": 156,
+    "sequence": 7280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84927618715ca08a"
+  },
+  "findings": []
+}

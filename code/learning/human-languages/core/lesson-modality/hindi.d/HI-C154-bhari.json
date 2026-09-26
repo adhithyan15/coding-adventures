@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C154-bhari",
+    "language": "hindi",
+    "chapter": 154,
+    "sequence": 7180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96e2d64c755c8da5"
+  },
+  "findings": []
+}

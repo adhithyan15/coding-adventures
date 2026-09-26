@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C142-lassi",
+    "language": "hindi",
+    "chapter": 142,
+    "sequence": 6510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0148eb32024b893e"
+  },
+  "findings": []
+}

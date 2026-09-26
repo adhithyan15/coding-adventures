@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:fc399a68bd36faff",
+  "lessonIds": [
+    "HI-C152-khun",
+    "HI-C152-dakghar",
+    "HI-C152-pustakalay",
+    "HI-C152-mandir",
+    "HI-C152-masjid"
+  ],
+  "tex": "hindi/book/chapters/ch152-blood-post-office-library-temple-mosque.tex"
+}

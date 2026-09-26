@@ -1,0 +1,11 @@
+{
+  "id": "HI-C135-kamiz",
+  "pathSegment": "HI-PATH-135-THINGS135",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-135-THINGS135",
+      "order": 3
+    }
+  ]
+}

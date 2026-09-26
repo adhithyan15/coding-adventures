@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "Garden, Field, Bridge, Office, Bank",
+  "label": "ch:hi-garden-field-bridge-office-bank",
+  "canDo": "I can say a garden, a field, a bridge, an office and a bank.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C153-baink",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: i can say a garden, a field, a bridge, an office and a bank.",
+    "assesses": [
+      "HI-LEX-C153-THINGS153-03",
+      "HI-LEX-C153-THINGS153-04",
+      "HI-LEX-C153-THINGS153-05"
+    ]
+  }
+}

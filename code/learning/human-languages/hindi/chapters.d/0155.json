@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "Soft, Hard, Clean, Dirty, Fast",
+  "label": "ch:hi-soft-hard-clean-dirty-fast",
+  "canDo": "I can say soft, hard, clean, dirty and fast.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-C155-tez",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: i can say soft, hard, clean, dirty and fast.",
+    "assesses": [
+      "HI-LEX-C155-QUAL155-03",
+      "HI-LEX-C155-QUAL155-04",
+      "HI-LEX-C155-QUAL155-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "Hot, Wet, Dry, Heavy, Light",
+  "label": "ch:hi-hot-wet-dry-heavy-light",
+  "canDo": "I can say hot, wet, dry, heavy and light.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-C154-halka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: i can say hot, wet, dry, heavy and light.",
+    "assesses": [
+      "HI-LEX-C154-QUAL154-03",
+      "HI-LEX-C154-QUAL154-04",
+      "HI-LEX-C154-QUAL154-05"
+    ]
+  }
+}

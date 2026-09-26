@@ -1,0 +1,11 @@
+{
+  "id": "HI-C152-masjid",
+  "pathSegment": "HI-PATH-152-THINGS152",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-152-THINGS152",
+      "order": 4
+    }
+  ]
+}

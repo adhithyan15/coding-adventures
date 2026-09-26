@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:be08172515b8199c",
+  "lessonIds": [
+    "HI-C150-kohni",
+    "HI-C150-kalai",
+    "HI-C150-angutha",
+    "HI-C150-nakhun",
+    "HI-C150-gal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch150.txt",
+  "json": "hindi/narration/ch150.json",
+  "textHash": "fnv1a64:78b1152e88652086",
+  "jsonHash": "fnv1a64:4751d47e01ed7b70",
+  "findings": []
+}

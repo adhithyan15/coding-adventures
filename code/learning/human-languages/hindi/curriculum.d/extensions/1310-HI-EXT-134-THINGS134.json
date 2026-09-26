@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-134-THINGS134",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a bottle, a pencil, a picture, a mirror and a ring.",
+  "prerequisites": []
+}
