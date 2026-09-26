@@ -1,0 +1,5 @@
+Push-Location ../der-tlv; npm ci --quiet; Pop-Location
+Push-Location ../der-asn1; npm ci --quiet; Pop-Location
+npm ci --quiet
+npm run build
+npm run test:coverage
