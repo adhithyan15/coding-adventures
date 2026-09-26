@@ -88,6 +88,13 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed — drag and drop goes through platform functions (UI89 §3.4)
+
+Components no longer touch AWT: they call `mosaicDragText`,
+`mosaicDragPosition` and `mosaicDragTransfer`, which each platform defines in
+its `MosaicPlatform.kt`. `DESKTOP_PLATFORM_KT` is the desktop one (the same AWT
+code as before); Android supplies its own.
+
 ### Added — `HostNavigationSplit` lowers to Material 3 adaptive navigation (UI29-6, #15481)
 
 Compose now emits `NavigationSuiteScaffoldLayout` for the pane/detail primitive.
