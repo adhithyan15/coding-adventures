@@ -1,0 +1,125 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: FR-R105-first-pass-nature-animals-and-describing-words
+spine_node: SPINE-COURTESY-THANK
+sequence: 4680
+chapter: 105
+type: review
+headword: (dialogue)
+gloss: first pass over chapters 78-91
+concept_tag: REVIEW
+prerequisites: [FR-C78-stylo, FR-C78-papier, FR-C78-cahier, FR-C78-crayon, FR-C78-sac, FR-C79-telephone, FR-C79-parapluie, FR-C79-argent, FR-C79-cadeau, FR-C79-lunettes, FR-C80-boite, FR-C80-valise, FR-C80-billet, FR-C80-carte, FR-C80-photo, FR-C81-arbre, FR-C81-fleur, FR-C81-feuille, FR-C81-montagne, FR-C81-riviere, FR-C82-mer, FR-C82-pierre, FR-C82-sable, FR-C82-plage, FR-C82-ile, FR-C83-soleil, FR-C83-etoile, FR-C83-nuage, FR-C83-pluie, FR-C83-neige, FR-C84-vent, FR-C84-feu, FR-C84-colline, FR-C84-desert, FR-C84-vague, FR-C85-vache, FR-C85-cochon, FR-C85-oiseau, FR-C85-souris, FR-C85-loup, FR-C86-ours, FR-C86-renard, FR-C86-serpent, FR-C86-poule, FR-C86-canard, FR-C87-mouton, FR-C87-chevre, FR-C87-lion, FR-C87-singe, FR-C87-abeille, FR-C88-fourmi, FR-C88-elephant, FR-C88-lapin, FR-C88-grenouille, FR-C88-tigre, FR-C89-tortue, FR-C89-nouveau, FR-C89-vieux, FR-C89-rapide, FR-C89-facile, FR-C90-difficile, FR-C90-cher, FR-C90-haut, FR-C90-plein, FR-C90-vide, FR-C91-fort, FR-C91-faible, FR-C91-riche, FR-C91-pauvre, FR-C91-gris, FR-C105-cinquante, FR-C105-cent]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FR-LEX-C78-CHOSES30-01, FR-LEX-C78-CHOSES30-02, FR-LEX-C78-CHOSES30-03, FR-LEX-C78-CHOSES30-04, FR-LEX-C78-CHOSES30-05, FR-LEX-C79-CHOSES31-01, FR-LEX-C79-CHOSES31-02, FR-LEX-C79-CHOSES31-03, FR-LEX-C79-CHOSES31-04, FR-LEX-C79-CHOSES31-05, FR-LEX-C80-CHOSES32-01, FR-LEX-C80-CHOSES32-02, FR-LEX-C80-CHOSES32-03, FR-LEX-C80-CHOSES32-04, FR-LEX-C80-CHOSES32-05, FR-LEX-C81-NATURE33-01, FR-LEX-C81-NATURE33-02, FR-LEX-C81-NATURE33-03, FR-LEX-C81-NATURE33-04, FR-LEX-C81-NATURE33-05, FR-LEX-C82-NATURE34-01, FR-LEX-C82-NATURE34-02, FR-LEX-C82-NATURE34-03, FR-LEX-C82-NATURE34-04, FR-LEX-C82-NATURE34-05, FR-LEX-C83-NATURE35-01, FR-LEX-C83-NATURE35-02, FR-LEX-C83-NATURE35-03, FR-LEX-C83-NATURE35-04, FR-LEX-C83-NATURE35-05, FR-LEX-C84-NATURE36-01, FR-LEX-C84-NATURE36-02, FR-LEX-C84-NATURE36-03, FR-LEX-C84-NATURE36-04, FR-LEX-C84-NATURE36-05, FR-LEX-C85-ANIMAUX37-01, FR-LEX-C85-ANIMAUX37-02, FR-LEX-C85-ANIMAUX37-03, FR-LEX-C85-ANIMAUX37-04, FR-LEX-C85-ANIMAUX37-05, FR-LEX-C86-ANIMAUX38-01, FR-LEX-C86-ANIMAUX38-02, FR-LEX-C86-ANIMAUX38-03, FR-LEX-C86-ANIMAUX38-04, FR-LEX-C86-ANIMAUX38-05, FR-LEX-C87-ANIMAUX39-01, FR-LEX-C87-ANIMAUX39-02, FR-LEX-C87-ANIMAUX39-03, FR-LEX-C87-ANIMAUX39-04, FR-LEX-C87-ANIMAUX39-05, FR-LEX-C88-ANIMAUX40-01, FR-LEX-C88-ANIMAUX40-02, FR-LEX-C88-ANIMAUX40-03, FR-LEX-C88-ANIMAUX40-04, FR-LEX-C88-ANIMAUX40-05, FR-LEX-C89-ANIMAUX41-01, FR-LEX-C89-ANIMAUX41-02, FR-LEX-C89-ANIMAUX41-03, FR-LEX-C89-ANIMAUX41-04, FR-LEX-C89-ANIMAUX41-05, FR-LEX-C90-ADJ42-01, FR-LEX-C90-ADJ42-02, FR-LEX-C90-ADJ42-03, FR-LEX-C90-ADJ42-04, FR-LEX-C90-ADJ42-05, FR-LEX-C91-ADJ43-01, FR-LEX-C91-ADJ43-02, FR-LEX-C91-ADJ43-03, FR-LEX-C91-ADJ43-04, FR-LEX-C91-ADJ43-05, FR-LEX-C105-HABITS57-04, FR-LEX-C105-HABITS57-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [FR-LEX-C78-CHOSES30-01, FR-LEX-C78-CHOSES30-02, FR-LEX-C78-CHOSES30-03, FR-LEX-C78-CHOSES30-04, FR-LEX-C78-CHOSES30-05, FR-LEX-C79-CHOSES31-01, FR-LEX-C79-CHOSES31-02, FR-LEX-C79-CHOSES31-03, FR-LEX-C79-CHOSES31-04, FR-LEX-C79-CHOSES31-05, FR-LEX-C80-CHOSES32-01, FR-LEX-C80-CHOSES32-02, FR-LEX-C80-CHOSES32-03, FR-LEX-C80-CHOSES32-04, FR-LEX-C80-CHOSES32-05, FR-LEX-C81-NATURE33-01, FR-LEX-C81-NATURE33-02, FR-LEX-C81-NATURE33-03, FR-LEX-C81-NATURE33-04, FR-LEX-C81-NATURE33-05, FR-LEX-C82-NATURE34-01, FR-LEX-C82-NATURE34-02, FR-LEX-C82-NATURE34-03, FR-LEX-C82-NATURE34-04, FR-LEX-C82-NATURE34-05, FR-LEX-C83-NATURE35-01, FR-LEX-C83-NATURE35-02, FR-LEX-C83-NATURE35-03, FR-LEX-C83-NATURE35-04, FR-LEX-C83-NATURE35-05, FR-LEX-C84-NATURE36-01, FR-LEX-C84-NATURE36-02, FR-LEX-C84-NATURE36-03, FR-LEX-C84-NATURE36-04, FR-LEX-C84-NATURE36-05, FR-LEX-C85-ANIMAUX37-01, FR-LEX-C85-ANIMAUX37-02, FR-LEX-C85-ANIMAUX37-03, FR-LEX-C85-ANIMAUX37-04, FR-LEX-C85-ANIMAUX37-05, FR-LEX-C86-ANIMAUX38-01, FR-LEX-C86-ANIMAUX38-02, FR-LEX-C86-ANIMAUX38-03, FR-LEX-C86-ANIMAUX38-04, FR-LEX-C86-ANIMAUX38-05, FR-LEX-C87-ANIMAUX39-01, FR-LEX-C87-ANIMAUX39-02, FR-LEX-C87-ANIMAUX39-03, FR-LEX-C87-ANIMAUX39-04, FR-LEX-C87-ANIMAUX39-05, FR-LEX-C88-ANIMAUX40-01, FR-LEX-C88-ANIMAUX40-02, FR-LEX-C88-ANIMAUX40-03, FR-LEX-C88-ANIMAUX40-04, FR-LEX-C88-ANIMAUX40-05, FR-LEX-C89-ANIMAUX41-01, FR-LEX-C89-ANIMAUX41-02, FR-LEX-C89-ANIMAUX41-03, FR-LEX-C89-ANIMAUX41-04, FR-LEX-C89-ANIMAUX41-05, FR-LEX-C90-ADJ42-01, FR-LEX-C90-ADJ42-02, FR-LEX-C90-ADJ42-03, FR-LEX-C90-ADJ42-04, FR-LEX-C90-ADJ42-05, FR-LEX-C91-ADJ43-01, FR-LEX-C91-ADJ43-02, FR-LEX-C91-ADJ43-03, FR-LEX-C91-ADJ43-04, FR-LEX-C91-ADJ43-05, FR-LEX-C105-HABITS57-04, FR-LEX-C105-HABITS57-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [FR-C78-stylo, FR-C78-papier, FR-C78-cahier, FR-C78-crayon, FR-C78-sac, FR-C79-telephone, FR-C79-parapluie, FR-C79-argent, FR-C79-cadeau, FR-C79-lunettes, FR-C80-boite, FR-C80-valise, FR-C80-billet, FR-C80-carte, FR-C80-photo, FR-C81-arbre, FR-C81-fleur, FR-C81-feuille, FR-C81-montagne, FR-C81-riviere, FR-C82-mer, FR-C82-pierre, FR-C82-sable, FR-C82-plage, FR-C82-ile, FR-C83-soleil, FR-C83-etoile, FR-C83-nuage, FR-C83-pluie, FR-C83-neige, FR-C84-vent, FR-C84-feu, FR-C84-colline, FR-C84-desert, FR-C84-vague, FR-C85-vache, FR-C85-cochon, FR-C85-oiseau, FR-C85-souris, FR-C85-loup, FR-C86-ours, FR-C86-renard, FR-C86-serpent, FR-C86-poule, FR-C86-canard, FR-C87-mouton, FR-C87-chevre, FR-C87-lion, FR-C87-singe, FR-C87-abeille, FR-C88-fourmi, FR-C88-elephant, FR-C88-lapin, FR-C88-grenouille, FR-C88-tigre, FR-C89-tortue, FR-C89-nouveau, FR-C89-vieux, FR-C89-rapide, FR-C89-facile, FR-C90-difficile, FR-C90-cher, FR-C90-haut, FR-C90-plein, FR-C90-vide, FR-C91-fort, FR-C91-faible, FR-C91-riche, FR-C91-pauvre, FR-C91-gris, FR-C105-cinquante, FR-C105-cent]
+---
+
+# Nature, animals and describing words — a first pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-C105-HABITS57-04, FR-LEX-C105-HABITS57-05] -->
+
+[PAUSE 3s] Say the words for fifty and a hundred.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-C78-CHOSES30-01, FR-LEX-C78-CHOSES30-02, FR-LEX-C78-CHOSES30-03, FR-LEX-C78-CHOSES30-04, FR-LEX-C78-CHOSES30-05, FR-LEX-C79-CHOSES31-01, FR-LEX-C79-CHOSES31-02, FR-LEX-C79-CHOSES31-03, FR-LEX-C79-CHOSES31-04, FR-LEX-C79-CHOSES31-05, FR-LEX-C80-CHOSES32-01, FR-LEX-C80-CHOSES32-02, FR-LEX-C80-CHOSES32-03, FR-LEX-C80-CHOSES32-04, FR-LEX-C80-CHOSES32-05, FR-LEX-C81-NATURE33-01, FR-LEX-C81-NATURE33-02, FR-LEX-C81-NATURE33-03, FR-LEX-C81-NATURE33-04, FR-LEX-C81-NATURE33-05, FR-LEX-C82-NATURE34-01, FR-LEX-C82-NATURE34-02, FR-LEX-C82-NATURE34-03, FR-LEX-C82-NATURE34-04, FR-LEX-C82-NATURE34-05, FR-LEX-C83-NATURE35-01, FR-LEX-C83-NATURE35-02, FR-LEX-C83-NATURE35-03, FR-LEX-C83-NATURE35-04, FR-LEX-C83-NATURE35-05, FR-LEX-C84-NATURE36-01, FR-LEX-C84-NATURE36-02, FR-LEX-C84-NATURE36-03, FR-LEX-C84-NATURE36-04, FR-LEX-C84-NATURE36-05, FR-LEX-C85-ANIMAUX37-01, FR-LEX-C85-ANIMAUX37-02, FR-LEX-C85-ANIMAUX37-03, FR-LEX-C85-ANIMAUX37-04, FR-LEX-C85-ANIMAUX37-05, FR-LEX-C86-ANIMAUX38-01, FR-LEX-C86-ANIMAUX38-02, FR-LEX-C86-ANIMAUX38-03, FR-LEX-C86-ANIMAUX38-04, FR-LEX-C86-ANIMAUX38-05, FR-LEX-C87-ANIMAUX39-01, FR-LEX-C87-ANIMAUX39-02, FR-LEX-C87-ANIMAUX39-03, FR-LEX-C87-ANIMAUX39-04, FR-LEX-C87-ANIMAUX39-05, FR-LEX-C88-ANIMAUX40-01, FR-LEX-C88-ANIMAUX40-02, FR-LEX-C88-ANIMAUX40-03, FR-LEX-C88-ANIMAUX40-04, FR-LEX-C88-ANIMAUX40-05, FR-LEX-C89-ANIMAUX41-01, FR-LEX-C89-ANIMAUX41-02, FR-LEX-C89-ANIMAUX41-03, FR-LEX-C89-ANIMAUX41-04, FR-LEX-C89-ANIMAUX41-05, FR-LEX-C90-ADJ42-01, FR-LEX-C90-ADJ42-02, FR-LEX-C90-ADJ42-03, FR-LEX-C90-ADJ42-04, FR-LEX-C90-ADJ42-05, FR-LEX-C91-ADJ43-01, FR-LEX-C91-ADJ43-02, FR-LEX-C91-ADJ43-03, FR-LEX-C91-ADJ43-04, FR-LEX-C91-ADJ43-05, FR-LEX-C105-HABITS57-04, FR-LEX-C105-HABITS57-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a pen, paper, a notebook, a pencil, a bag]
+- [YOU SAY: a phone, an umbrella, money; silver, a present, glasses]
+- [YOU SAY: a box, a suitcase, a ticket; a banknote, a map; a card, a photo]
+- [YOU SAY: a tree, a flower, a leaf; a sheet of paper, a mountain, a river]
+- [YOU SAY: the sea, a stone, sand, a beach, an island]
+- [YOU SAY: the sun, a star, a cloud, rain, snow]
+- [YOU SAY: the wind, fire, a hill, a desert, a wave]
+- [YOU SAY: a cow, a pig, a bird, a mouse, a wolf]
+- [YOU SAY: a bear, a fox, a snake, a hen, a duck]
+- [YOU SAY: a sheep, a goat, a lion, a monkey, a bee]
+- [YOU SAY: an ant, an elephant, a rabbit, a frog, a tiger]
+- [YOU SAY: a tortoise, new, old, fast, easy]
+- [YOU SAY: difficult, dear; expensive, high, full, empty]
+- [YOU SAY: strong, weak, rich, poor, grey]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-C78-CHOSES30-01, FR-LEX-C78-CHOSES30-02, FR-LEX-C78-CHOSES30-03, FR-LEX-C78-CHOSES30-04, FR-LEX-C78-CHOSES30-05, FR-LEX-C79-CHOSES31-01, FR-LEX-C79-CHOSES31-02, FR-LEX-C79-CHOSES31-03, FR-LEX-C79-CHOSES31-04, FR-LEX-C79-CHOSES31-05, FR-LEX-C80-CHOSES32-01, FR-LEX-C80-CHOSES32-02, FR-LEX-C80-CHOSES32-03, FR-LEX-C80-CHOSES32-04, FR-LEX-C80-CHOSES32-05, FR-LEX-C81-NATURE33-01, FR-LEX-C81-NATURE33-02, FR-LEX-C81-NATURE33-03, FR-LEX-C81-NATURE33-04, FR-LEX-C81-NATURE33-05, FR-LEX-C82-NATURE34-01, FR-LEX-C82-NATURE34-02, FR-LEX-C82-NATURE34-03, FR-LEX-C82-NATURE34-04, FR-LEX-C82-NATURE34-05, FR-LEX-C83-NATURE35-01, FR-LEX-C83-NATURE35-02, FR-LEX-C83-NATURE35-03, FR-LEX-C83-NATURE35-04, FR-LEX-C83-NATURE35-05, FR-LEX-C84-NATURE36-01, FR-LEX-C84-NATURE36-02, FR-LEX-C84-NATURE36-03, FR-LEX-C84-NATURE36-04, FR-LEX-C84-NATURE36-05, FR-LEX-C85-ANIMAUX37-01, FR-LEX-C85-ANIMAUX37-02, FR-LEX-C85-ANIMAUX37-03, FR-LEX-C85-ANIMAUX37-04, FR-LEX-C85-ANIMAUX37-05, FR-LEX-C86-ANIMAUX38-01, FR-LEX-C86-ANIMAUX38-02, FR-LEX-C86-ANIMAUX38-03, FR-LEX-C86-ANIMAUX38-04, FR-LEX-C86-ANIMAUX38-05, FR-LEX-C87-ANIMAUX39-01, FR-LEX-C87-ANIMAUX39-02, FR-LEX-C87-ANIMAUX39-03, FR-LEX-C87-ANIMAUX39-04, FR-LEX-C87-ANIMAUX39-05, FR-LEX-C88-ANIMAUX40-01, FR-LEX-C88-ANIMAUX40-02, FR-LEX-C88-ANIMAUX40-03, FR-LEX-C88-ANIMAUX40-04, FR-LEX-C88-ANIMAUX40-05, FR-LEX-C89-ANIMAUX41-01, FR-LEX-C89-ANIMAUX41-02, FR-LEX-C89-ANIMAUX41-03, FR-LEX-C89-ANIMAUX41-04, FR-LEX-C89-ANIMAUX41-05, FR-LEX-C90-ADJ42-01, FR-LEX-C90-ADJ42-02, FR-LEX-C90-ADJ42-03, FR-LEX-C90-ADJ42-04, FR-LEX-C90-ADJ42-05, FR-LEX-C91-ADJ43-01, FR-LEX-C91-ADJ43-02, FR-LEX-C91-ADJ43-03, FR-LEX-C91-ADJ43-04, FR-LEX-C91-ADJ43-05, FR-LEX-C105-HABITS57-04, FR-LEX-C105-HABITS57-05] -->
+
+[PAUSE 3s] A pen? (**le stylo**.) Paper? (**le papier**.) A notebook? (**le cahier**.) A pencil? (**le crayon**.) A bag? (**le sac**.) A phone? (**le téléphone**.) An umbrella? (**le parapluie**.) Money; silver? (**l'argent**.) A present? (**le cadeau**.) Glasses? (**les lunettes**.) A box? (**la boîte**.) A suitcase? (**la valise**.) A ticket; a banknote? (**le billet**.) A map; a card? (**la carte**.) A photo? (**la photo**.) A tree? (**l'arbre**.) A flower? (**la fleur**.) A leaf; a sheet of paper? (**la feuille**.) A mountain? (**la montagne**.) A river? (**la rivière**.) The sea? (**la mer**.) A stone? (**la pierre**.) Sand? (**le sable**.) A beach? (**la plage**.) An island? (**l'île**.) The sun? (**le soleil**.) A star? (**l'étoile**.) A cloud? (**le nuage**.) Rain? (**la pluie**.) Snow? (**la neige**.) The wind? (**le vent**.) Fire? (**le feu**.) A hill? (**la colline**.) A desert? (**le désert**.) A wave? (**la vague**.) A cow? (**la vache**.) A pig? (**le cochon**.) A bird? (**l'oiseau**.) A mouse? (**la souris**.) A wolf? (**le loup**.) A bear? (**l'ours**.) A fox? (**le renard**.) A snake? (**le serpent**.) A hen? (**la poule**.) A duck? (**le canard**.) A sheep? (**le mouton**.) A goat? (**la chèvre**.) A lion? (**le lion**.) A monkey? (**le singe**.) A bee? (**l'abeille**.) An ant? (**la fourmi**.) An elephant? (**l'éléphant**.) A rabbit? (**le lapin**.) A frog? (**la grenouille**.) A tiger? (**le tigre**.) A tortoise? (**la tortue**.) New? (**nouveau**.) Old? (**vieux**.) Fast? (**rapide**.) Easy? (**facile**.) Difficult? (**difficile**.) Dear; expensive? (**cher**.) High? (**haut**.) Full? (**plein**.) Empty? (**vide**.) Strong? (**fort**.) Weak? (**faible**.) Rich? (**riche**.) Poor? (**pauvre**.) Grey? (**gris**.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: FR-R105-second-pass-time-the-town-clothes-and-numbers
+spine_node: SPINE-COURTESY-THANK
+sequence: 4690
+chapter: 105
+type: review
+headword: (dialogue)
+gloss: second pass over chapters 92-105
+concept_tag: REVIEW
+prerequisites: [FR-C92-doux, FR-C92-sale, FR-C92-jeune, FR-C92-gentil, FR-C92-etroit, FR-C93-mince, FR-C93-gros, FR-C93-lourd, FR-C93-leger, FR-C93-sucre, FR-C94-sale, FR-C94-amer, FR-C94-rond, FR-C94-carre, FR-C94-sec, FR-C95-mouille, FR-C95-semaine, FR-C95-mois, FR-C95-matin, FR-C95-toujours, FR-C96-jamais, FR-C96-maintenant, FR-C96-puis, FR-C96-loin, FR-C96-pres, FR-C97-dessus, FR-C97-dessous, FR-C97-dedans, FR-C97-dehors, FR-C97-hui, FR-C98-hier, FR-C98-souvent, FR-C98-parfois, FR-C98-ville, FR-C98-rue, FR-C99-magasin, FR-C99-ecole, FR-C99-banque, FR-C99-train, FR-C99-avion, FR-C100-voiture, FR-C100-pont, FR-C100-parc, FR-C100-eglise, FR-C100-musee, FR-C101-restaurant, FR-C101-hotel, FR-C101-pharmacie, FR-C101-village, FR-C101-poste, FR-C102-police, FR-C102-theatre, FR-C102-bibliotheque, FR-C102-boulangerie, FR-C102-mairie, FR-C103-quartier, FR-C103-aeroport, FR-C103-vetements, FR-C103-chemise, FR-C103-robe, FR-C104-pantalon, FR-C104-chaussures, FR-C104-chapeau, FR-C104-manteau, FR-C104-jupe, FR-C105-chaussettes, FR-C105-trente, FR-C105-quarante, FR-C105-cinquante, FR-C105-cent]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [FR-LEX-C92-ADJ44-01, FR-LEX-C92-ADJ44-02, FR-LEX-C92-ADJ44-03, FR-LEX-C92-ADJ44-04, FR-LEX-C92-ADJ44-05, FR-LEX-C93-ADJ45-01, FR-LEX-C93-ADJ45-02, FR-LEX-C93-ADJ45-03, FR-LEX-C93-ADJ45-04, FR-LEX-C93-ADJ45-05, FR-LEX-C94-ADJ46-01, FR-LEX-C94-ADJ46-02, FR-LEX-C94-ADJ46-03, FR-LEX-C94-ADJ46-04, FR-LEX-C94-ADJ46-05, FR-LEX-C95-ADJ47-01, FR-LEX-C95-ADJ47-02, FR-LEX-C95-ADJ47-03, FR-LEX-C95-ADJ47-04, FR-LEX-C95-ADJ47-05, FR-LEX-C96-TEMPS48-01, FR-LEX-C96-TEMPS48-02, FR-LEX-C96-TEMPS48-03, FR-LEX-C96-TEMPS48-04, FR-LEX-C96-TEMPS48-05, FR-LEX-C97-TEMPS49-01, FR-LEX-C97-TEMPS49-02, FR-LEX-C97-TEMPS49-03, FR-LEX-C97-TEMPS49-04, FR-LEX-C97-TEMPS49-05, FR-LEX-C98-TEMPS50-01, FR-LEX-C98-TEMPS50-02, FR-LEX-C98-TEMPS50-03, FR-LEX-C98-TEMPS50-04, FR-LEX-C98-TEMPS50-05, FR-LEX-C99-VILLE51-01, FR-LEX-C99-VILLE51-02, FR-LEX-C99-VILLE51-03, FR-LEX-C99-VILLE51-04, FR-LEX-C99-VILLE51-05, FR-LEX-C100-VILLE52-01, FR-LEX-C100-VILLE52-02, FR-LEX-C100-VILLE52-03, FR-LEX-C100-VILLE52-04, FR-LEX-C100-VILLE52-05, FR-LEX-C101-VILLE53-01, FR-LEX-C101-VILLE53-02, FR-LEX-C101-VILLE53-03, FR-LEX-C101-VILLE53-04, FR-LEX-C101-VILLE53-05, FR-LEX-C102-VILLE54-01, FR-LEX-C102-VILLE54-02, FR-LEX-C102-VILLE54-03, FR-LEX-C102-VILLE54-04, FR-LEX-C102-VILLE54-05, FR-LEX-C103-VILLE55-01, FR-LEX-C103-VILLE55-02, FR-LEX-C103-VILLE55-03, FR-LEX-C103-VILLE55-04, FR-LEX-C103-VILLE55-05, FR-LEX-C104-HABITS56-01, FR-LEX-C104-HABITS56-02, FR-LEX-C104-HABITS56-03, FR-LEX-C104-HABITS56-04, FR-LEX-C104-HABITS56-05, FR-LEX-C105-HABITS57-01, FR-LEX-C105-HABITS57-02, FR-LEX-C105-HABITS57-03, FR-LEX-C105-HABITS57-04, FR-LEX-C105-HABITS57-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [FR-LEX-C92-ADJ44-01, FR-LEX-C92-ADJ44-02, FR-LEX-C92-ADJ44-03, FR-LEX-C92-ADJ44-04, FR-LEX-C92-ADJ44-05, FR-LEX-C93-ADJ45-01, FR-LEX-C93-ADJ45-02, FR-LEX-C93-ADJ45-03, FR-LEX-C93-ADJ45-04, FR-LEX-C93-ADJ45-05, FR-LEX-C94-ADJ46-01, FR-LEX-C94-ADJ46-02, FR-LEX-C94-ADJ46-03, FR-LEX-C94-ADJ46-04, FR-LEX-C94-ADJ46-05, FR-LEX-C95-ADJ47-01, FR-LEX-C95-ADJ47-02, FR-LEX-C95-ADJ47-03, FR-LEX-C95-ADJ47-04, FR-LEX-C95-ADJ47-05, FR-LEX-C96-TEMPS48-01, FR-LEX-C96-TEMPS48-02, FR-LEX-C96-TEMPS48-03, FR-LEX-C96-TEMPS48-04, FR-LEX-C96-TEMPS48-05, FR-LEX-C97-TEMPS49-01, FR-LEX-C97-TEMPS49-02, FR-LEX-C97-TEMPS49-03, FR-LEX-C97-TEMPS49-04, FR-LEX-C97-TEMPS49-05, FR-LEX-C98-TEMPS50-01, FR-LEX-C98-TEMPS50-02, FR-LEX-C98-TEMPS50-03, FR-LEX-C98-TEMPS50-04, FR-LEX-C98-TEMPS50-05, FR-LEX-C99-VILLE51-01, FR-LEX-C99-VILLE51-02, FR-LEX-C99-VILLE51-03, FR-LEX-C99-VILLE51-04, FR-LEX-C99-VILLE51-05, FR-LEX-C100-VILLE52-01, FR-LEX-C100-VILLE52-02, FR-LEX-C100-VILLE52-03, FR-LEX-C100-VILLE52-04, FR-LEX-C100-VILLE52-05, FR-LEX-C101-VILLE53-01, FR-LEX-C101-VILLE53-02, FR-LEX-C101-VILLE53-03, FR-LEX-C101-VILLE53-04, FR-LEX-C101-VILLE53-05, FR-LEX-C102-VILLE54-01, FR-LEX-C102-VILLE54-02, FR-LEX-C102-VILLE54-03, FR-LEX-C102-VILLE54-04, FR-LEX-C102-VILLE54-05, FR-LEX-C103-VILLE55-01, FR-LEX-C103-VILLE55-02, FR-LEX-C103-VILLE55-03, FR-LEX-C103-VILLE55-04, FR-LEX-C103-VILLE55-05, FR-LEX-C104-HABITS56-01, FR-LEX-C104-HABITS56-02, FR-LEX-C104-HABITS56-03, FR-LEX-C104-HABITS56-04, FR-LEX-C104-HABITS56-05, FR-LEX-C105-HABITS57-01, FR-LEX-C105-HABITS57-02, FR-LEX-C105-HABITS57-03, FR-LEX-C105-HABITS57-04, FR-LEX-C105-HABITS57-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
+reviews_of: [FR-C92-doux, FR-C92-sale, FR-C92-jeune, FR-C92-gentil, FR-C92-etroit, FR-C93-mince, FR-C93-gros, FR-C93-lourd, FR-C93-leger, FR-C93-sucre, FR-C94-sale, FR-C94-amer, FR-C94-rond, FR-C94-carre, FR-C94-sec, FR-C95-mouille, FR-C95-semaine, FR-C95-mois, FR-C95-matin, FR-C95-toujours, FR-C96-jamais, FR-C96-maintenant, FR-C96-puis, FR-C96-loin, FR-C96-pres, FR-C97-dessus, FR-C97-dessous, FR-C97-dedans, FR-C97-dehors, FR-C97-hui, FR-C98-hier, FR-C98-souvent, FR-C98-parfois, FR-C98-ville, FR-C98-rue, FR-C99-magasin, FR-C99-ecole, FR-C99-banque, FR-C99-train, FR-C99-avion, FR-C100-voiture, FR-C100-pont, FR-C100-parc, FR-C100-eglise, FR-C100-musee, FR-C101-restaurant, FR-C101-hotel, FR-C101-pharmacie, FR-C101-village, FR-C101-poste, FR-C102-police, FR-C102-theatre, FR-C102-bibliotheque, FR-C102-boulangerie, FR-C102-mairie, FR-C103-quartier, FR-C103-aeroport, FR-C103-vetements, FR-C103-chemise, FR-C103-robe, FR-C104-pantalon, FR-C104-chaussures, FR-C104-chapeau, FR-C104-manteau, FR-C104-jupe, FR-C105-chaussettes, FR-C105-trente, FR-C105-quarante, FR-C105-cinquante, FR-C105-cent]
+---
+
+# Time, the town, clothes and numbers — a second pass
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-C92-ADJ44-01, FR-LEX-C92-ADJ44-02] -->
+
+[PAUSE 3s] Say the words for soft; mild; sweet and dirty.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-C92-ADJ44-01, FR-LEX-C92-ADJ44-02, FR-LEX-C92-ADJ44-03, FR-LEX-C92-ADJ44-04, FR-LEX-C92-ADJ44-05, FR-LEX-C93-ADJ45-01, FR-LEX-C93-ADJ45-02, FR-LEX-C93-ADJ45-03, FR-LEX-C93-ADJ45-04, FR-LEX-C93-ADJ45-05, FR-LEX-C94-ADJ46-01, FR-LEX-C94-ADJ46-02, FR-LEX-C94-ADJ46-03, FR-LEX-C94-ADJ46-04, FR-LEX-C94-ADJ46-05, FR-LEX-C95-ADJ47-01, FR-LEX-C95-ADJ47-02, FR-LEX-C95-ADJ47-03, FR-LEX-C95-ADJ47-04, FR-LEX-C95-ADJ47-05, FR-LEX-C96-TEMPS48-01, FR-LEX-C96-TEMPS48-02, FR-LEX-C96-TEMPS48-03, FR-LEX-C96-TEMPS48-04, FR-LEX-C96-TEMPS48-05, FR-LEX-C97-TEMPS49-01, FR-LEX-C97-TEMPS49-02, FR-LEX-C97-TEMPS49-03, FR-LEX-C97-TEMPS49-04, FR-LEX-C97-TEMPS49-05, FR-LEX-C98-TEMPS50-01, FR-LEX-C98-TEMPS50-02, FR-LEX-C98-TEMPS50-03, FR-LEX-C98-TEMPS50-04, FR-LEX-C98-TEMPS50-05, FR-LEX-C99-VILLE51-01, FR-LEX-C99-VILLE51-02, FR-LEX-C99-VILLE51-03, FR-LEX-C99-VILLE51-04, FR-LEX-C99-VILLE51-05, FR-LEX-C100-VILLE52-01, FR-LEX-C100-VILLE52-02, FR-LEX-C100-VILLE52-03, FR-LEX-C100-VILLE52-04, FR-LEX-C100-VILLE52-05, FR-LEX-C101-VILLE53-01, FR-LEX-C101-VILLE53-02, FR-LEX-C101-VILLE53-03, FR-LEX-C101-VILLE53-04, FR-LEX-C101-VILLE53-05, FR-LEX-C102-VILLE54-01, FR-LEX-C102-VILLE54-02, FR-LEX-C102-VILLE54-03, FR-LEX-C102-VILLE54-04, FR-LEX-C102-VILLE54-05, FR-LEX-C103-VILLE55-01, FR-LEX-C103-VILLE55-02, FR-LEX-C103-VILLE55-03, FR-LEX-C103-VILLE55-04, FR-LEX-C103-VILLE55-05, FR-LEX-C104-HABITS56-01, FR-LEX-C104-HABITS56-02, FR-LEX-C104-HABITS56-03, FR-LEX-C104-HABITS56-04, FR-LEX-C104-HABITS56-05, FR-LEX-C105-HABITS57-01, FR-LEX-C105-HABITS57-02, FR-LEX-C105-HABITS57-03, FR-LEX-C105-HABITS57-04, FR-LEX-C105-HABITS57-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: soft; mild; sweet, dirty, young, kind, narrow]
+- [YOU SAY: thin, big, heavy, light, sweet]
+- [YOU SAY: salty, bitter, round, square, dry]
+- [YOU SAY: wet, a week, a month, the morning, always; still]
+- [YOU SAY: never; ever, now, then, far, near]
+- [YOU SAY: on top, underneath, inside, outside, today]
+- [YOU SAY: yesterday, often, sometimes, a town, a street]
+- [YOU SAY: a shop, a school, a bank, a train, an aeroplane]
+- [YOU SAY: a car, a bridge, a park, a church, a museum]
+- [YOU SAY: a restaurant, a hotel, a pharmacy, a village, the post office]
+- [YOU SAY: the police, a theatre, a library, a bakery, the town hall]
+- [YOU SAY: a district, an airport, clothes, a shirt, a dress]
+- [YOU SAY: trousers, shoes, a hat, a coat, a skirt]
+- [YOU SAY: socks, thirty, forty, fifty, a hundred]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-C92-ADJ44-01, FR-LEX-C92-ADJ44-02, FR-LEX-C92-ADJ44-03, FR-LEX-C92-ADJ44-04, FR-LEX-C92-ADJ44-05, FR-LEX-C93-ADJ45-01, FR-LEX-C93-ADJ45-02, FR-LEX-C93-ADJ45-03, FR-LEX-C93-ADJ45-04, FR-LEX-C93-ADJ45-05, FR-LEX-C94-ADJ46-01, FR-LEX-C94-ADJ46-02, FR-LEX-C94-ADJ46-03, FR-LEX-C94-ADJ46-04, FR-LEX-C94-ADJ46-05, FR-LEX-C95-ADJ47-01, FR-LEX-C95-ADJ47-02, FR-LEX-C95-ADJ47-03, FR-LEX-C95-ADJ47-04, FR-LEX-C95-ADJ47-05, FR-LEX-C96-TEMPS48-01, FR-LEX-C96-TEMPS48-02, FR-LEX-C96-TEMPS48-03, FR-LEX-C96-TEMPS48-04, FR-LEX-C96-TEMPS48-05, FR-LEX-C97-TEMPS49-01, FR-LEX-C97-TEMPS49-02, FR-LEX-C97-TEMPS49-03, FR-LEX-C97-TEMPS49-04, FR-LEX-C97-TEMPS49-05, FR-LEX-C98-TEMPS50-01, FR-LEX-C98-TEMPS50-02, FR-LEX-C98-TEMPS50-03, FR-LEX-C98-TEMPS50-04, FR-LEX-C98-TEMPS50-05, FR-LEX-C99-VILLE51-01, FR-LEX-C99-VILLE51-02, FR-LEX-C99-VILLE51-03, FR-LEX-C99-VILLE51-04, FR-LEX-C99-VILLE51-05, FR-LEX-C100-VILLE52-01, FR-LEX-C100-VILLE52-02, FR-LEX-C100-VILLE52-03, FR-LEX-C100-VILLE52-04, FR-LEX-C100-VILLE52-05, FR-LEX-C101-VILLE53-01, FR-LEX-C101-VILLE53-02, FR-LEX-C101-VILLE53-03, FR-LEX-C101-VILLE53-04, FR-LEX-C101-VILLE53-05, FR-LEX-C102-VILLE54-01, FR-LEX-C102-VILLE54-02, FR-LEX-C102-VILLE54-03, FR-LEX-C102-VILLE54-04, FR-LEX-C102-VILLE54-05, FR-LEX-C103-VILLE55-01, FR-LEX-C103-VILLE55-02, FR-LEX-C103-VILLE55-03, FR-LEX-C103-VILLE55-04, FR-LEX-C103-VILLE55-05, FR-LEX-C104-HABITS56-01, FR-LEX-C104-HABITS56-02, FR-LEX-C104-HABITS56-03, FR-LEX-C104-HABITS56-04, FR-LEX-C104-HABITS56-05, FR-LEX-C105-HABITS57-01, FR-LEX-C105-HABITS57-02, FR-LEX-C105-HABITS57-03, FR-LEX-C105-HABITS57-04, FR-LEX-C105-HABITS57-05] -->
+
+[PAUSE 3s] Soft; mild; sweet? (**doux**.) Dirty? (**sale**.) Young? (**jeune**.) Kind? (**gentil**.) Narrow? (**étroit**.) Thin? (**mince**.) Big? (**gros**.) Heavy? (**lourd**.) Light? (**léger**.) Sweet? (**sucré**.) Salty? (**salé**.) Bitter? (**amer**.) Round? (**rond**.) Square? (**carré**.) Dry? (**sec**.) Wet? (**mouillé**.) A week? (**la semaine**.) A month? (**le mois**.) The morning? (**le matin**.) Always; still? (**toujours**.) Never; ever? (**jamais**.) Now? (**maintenant**.) Then? (**puis**.) Far? (**loin**.) Near? (**près**.) On top? (**dessus**.) Underneath? (**dessous**.) Inside? (**dedans**.) Outside? (**dehors**.) Today? (**aujourd'hui**.) Yesterday? (**hier**.) Often? (**souvent**.) Sometimes? (**parfois**.) A town? (**la ville**.) A street? (**la rue**.) A shop? (**le magasin**.) A school? (**l'école**.) A bank? (**la banque**.) A train? (**le train**.) An aeroplane? (**l'avion**.) A car? (**la voiture**.) A bridge? (**le pont**.) A park? (**le parc**.) A church? (**l'église**.) A museum? (**le musée**.) A restaurant? (**le restaurant**.) A hotel? (**l'hôtel**.) A pharmacy? (**la pharmacie**.) A village? (**le village**.) The post office? (**la poste**.) The police? (**la police**.) A theatre? (**le théâtre**.) A library? (**la bibliothèque**.) A bakery? (**la boulangerie**.) The town hall? (**la mairie**.) A district? (**le quartier**.) An airport? (**l'aéroport**.) Clothes? (**les vêtements**.) A shirt? (**la chemise**.) A dress? (**la robe**.) Trousers? (**le pantalon**.) Shoes? (**les chaussures**.) A hat? (**le chapeau**.) A coat? (**le manteau**.) A skirt? (**la jupe**.) Socks? (**les chaussettes**.) Thirty? (**trente**.) Forty? (**quarante**.) Fifty? (**cinquante**.) A hundred? (**cent**.)
+`;export{t as n,r as t};
