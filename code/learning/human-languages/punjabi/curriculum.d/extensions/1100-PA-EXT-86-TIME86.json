@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-86-TIME86",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a month, a year, an hour, a minute and today.",
+  "prerequisites": []
+}

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 39,
-  "sourceHash": "fnv1a64:467aa880848e21c1",
+  "sourceHash": "fnv1a64:f42b98bea6464efa",
   "lessonIds": [
     "GE-C26-sitzen",
     "GE-C26-stehen",
@@ -13,6 +13,6 @@
   "text": "german/narration/ch39.txt",
   "json": "german/narration/ch39.json",
   "textHash": "fnv1a64:6400b244dc34f55c",
-  "jsonHash": "fnv1a64:fa76d828492c3e57",
+  "jsonHash": "fnv1a64:a82e1ef5bf9b551a",
   "findings": []
 }

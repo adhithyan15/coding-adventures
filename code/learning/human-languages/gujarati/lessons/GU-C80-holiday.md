@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C80-holiday
 spine_node: SPINE-TAKE-LEAVE
-sequence: 4080
+sequence: 4093
 chapter: 80
 type: word
 headword: "રજા"

@@ -1,0 +1,19 @@
+{
+  "chapter": 70,
+  "title": "Chair, Table, Wall, Bed, Floor",
+  "label": "ch:ar-chair-table-wall-bed-floor",
+  "canDo": "I can say a chair, a table, a wall, a bed and the floor.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "AR-C70-ard",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 70: i can say a chair, a table, a wall, a bed and the floor.",
+    "assesses": [
+      "AR-LEX-C70-HOME70-03",
+      "AR-LEX-C70-HOME70-04",
+      "AR-LEX-C70-HOME70-05"
+    ]
+  }
+}

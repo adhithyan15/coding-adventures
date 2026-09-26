@@ -1,0 +1,11 @@
+{
+  "id": "IT-C77-sporco",
+  "pathSegment": "IT-PATH-77-AGG6",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-77-AGG6",
+      "order": 3
+    }
+  ]
+}

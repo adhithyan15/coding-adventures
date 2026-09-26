@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:4b6f1161a1e31884",
+  "lessonIds": [
+    "IT-C94-tappeto",
+    "IT-C94-televisore",
+    "IT-C94-computer",
+    "IT-C94-frigorifero",
+    "IT-C94-forno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch94.txt",
+  "json": "italian/narration/ch94.json",
+  "textHash": "fnv1a64:b5be6064d01b660f",
+  "jsonHash": "fnv1a64:6b073e66ca2ea070",
+  "findings": []
+}

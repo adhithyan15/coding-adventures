@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:ccab96599dec1583",
+  "lessonIds": [
+    "PT-C103-camisola",
+    "PT-C103-gravata",
+    "PT-C103-luvas",
+    "PT-C103-cachecol",
+    "PT-C103-botas",
+    "PT-R103-first-pass-the-house-and-things-you-carry",
+    "PT-R103-second-pass-clothes-and-food"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch103.txt",
+  "json": "portuguese/narration/ch103.json",
+  "textHash": "fnv1a64:e09f0e87694955f4",
+  "jsonHash": "fnv1a64:7bfb7800a955b260",
+  "findings": []
+}

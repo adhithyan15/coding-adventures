@@ -36,7 +36,9 @@ it("services the exact Punjabi body-word R4 debt exposed by the R1-R3 bridge", (
   const bridge = bridgeIds.map((id) =>
     ordered.find((lesson) => lesson.realization.lessonId === id)!,
   );
-  expect(bridge.map((lesson) => ordered.indexOf(lesson))).toEqual([170, 171]);
+  // HL-C443: +1, from ਮੌਸਮ (mausam), the anchor word placed before the
+  // chapter-20 ੌ lesson. Every bridge lesson sits after it.
+  expect(bridge.map((lesson) => ordered.indexOf(lesson))).toEqual([171, 172]);
   expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 210)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter.skills?.includes("listening"))).toBe(true);
@@ -76,7 +78,10 @@ it("services the exact Punjabi body-word R4 debt exposed by the R1-R3 bridge", (
   // not because reinforcement got worse. The serviced-debt assertions above still hold
   // exactly. The residue -- Chapter 4 and 5 atoms with no later lesson putting them
   // back in front of the reader -- is named in BACKLOG.d as the next tranche's work.
-  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 88, R3: 150, R4: 97 });
+  // {37, 88, 150, 97} -> {37, 89, 151, 98}: ਮੌਸਮ (mausam), HL-C443's anchor
+  // word before the chapter-20 ੌ lesson, has R2-R4 windows that start out
+  // missed in this prefix.
+  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 89, R3: 151, R4: 98 });
 
   const before = measureContinuity(
     ordered.filter((lesson) => !bridgeIds.includes(lesson.realization.lessonId)),
@@ -94,8 +99,9 @@ it("services the exact Punjabi body-word R4 debt exposed by the R1-R3 bridge", (
   expect([...afterPairs].filter((pair) => !beforePairs.has(pair)).sort()).toEqual([
     "R3|PA-FORM-THREE-SUPPORTED-01",
     "R3|PA-FORM-THREE-TWO-LINE-SUPPORTED-01",
-    "R4|PA-ETYMON-SIR-HORN",
-    "R4|PA-LEX-SIR",
+    // HL-C443: ਮੌਸਮ (mausam) shifts every later lesson by one. ਸਿਰ's R4 window
+    // now opens before this bridge rather than with it, and ੀ's opens with it.
+    "R4|PA-SCRIPT-II-MATRA-01",
     "R4|PA-SCRIPT-NA-01",
   ]);
 });

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C40-sakhtan",
+    "language": "persian",
+    "chapter": 40,
+    "sequence": 1850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb491421c0ca20e1"
+  },
+  "findings": []
+}

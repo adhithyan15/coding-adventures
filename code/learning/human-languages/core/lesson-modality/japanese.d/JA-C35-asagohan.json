@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C35-asagohan",
+    "language": "japanese",
+    "chapter": 35,
+    "sequence": 2390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9da151a6ab6c6ccf"
+  },
+  "findings": []
+}

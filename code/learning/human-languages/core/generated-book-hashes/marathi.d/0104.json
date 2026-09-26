@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:e7800016c591727c",
+  "lessonIds": [
+    "MR-C104-garam",
+    "MR-C104-thand",
+    "MR-C104-halu",
+    "MR-C104-jalad",
+    "MR-C104-mahag"
+  ],
+  "tex": "marathi/book/chapters/ch104-hot-cold-slowly-fast-expensive.tex"
+}

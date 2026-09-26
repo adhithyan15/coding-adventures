@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Bee, Ant, Elephant, To fetch, To wish",
+  "label": "ch:ge-bee-ant-elephant-to-fetch-to-wish",
+  "canDo": "I can say a bee, an ant, an elephant, to fetch and to wish.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GE-C88-wuenschen",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can say a bee, an ant, an elephant, to fetch and to wish.",
+    "assesses": [
+      "GE-LEX-C88-TIERE3-03",
+      "GE-LEX-C88-TIERE3-04",
+      "GE-LEX-C88-TIERE3-05"
+    ]
+  }
+}

@@ -3,7 +3,7 @@
     "id": "GU-C37-kyaan-write",
     "language": "gujarati",
     "chapter": 41,
-    "sequence": 2100,
+    "sequence": 2113,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:46c96a593e8d31ed",
+    "sourceHash": "fnv1a64:216a007cf2e182fd",
     "detachableSegments": [
       "Script — four parts, none of them new",
       "Writing — guided copy, model in view"

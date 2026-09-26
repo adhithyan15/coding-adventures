@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C121-balena",
+    "language": "italian",
+    "chapter": 121,
+    "sequence": 5930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c33bbf7b2e6ace34"
+  },
+  "findings": []
+}

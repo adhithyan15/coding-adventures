@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:e7f73c55b6b4b395",
+  "lessonIds": [
+    "FR-C119-boeuf",
+    "FR-C119-legumes",
+    "FR-C119-champignon",
+    "FR-C119-haricots",
+    "FR-C119-concombre"
+  ],
+  "tex": "french/book/chapters/ch119-beef-vegetables-mushroom-beans-cucumber.tex"
+}

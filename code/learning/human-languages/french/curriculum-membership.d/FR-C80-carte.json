@@ -1,0 +1,11 @@
+{
+  "id": "FR-C80-carte",
+  "pathSegment": "FR-PATH-80-CHOSES32",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-80-CHOSES32",
+      "order": 3
+    }
+  ]
+}

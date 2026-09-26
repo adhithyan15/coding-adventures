@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C109-firefighter",
+    "language": "russian",
+    "chapter": 109,
+    "sequence": 5620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5062c12fc438be69"
+  },
+  "findings": []
+}

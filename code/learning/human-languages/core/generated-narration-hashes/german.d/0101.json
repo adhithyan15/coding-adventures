@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:432855cad838b435",
+  "lessonIds": [
+    "GE-C101-dreissig",
+    "GE-C101-vierzig",
+    "GE-C101-fuenfzig",
+    "GE-C101-hundert",
+    "GE-C101-tausend"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch101.txt",
+  "json": "german/narration/ch101.json",
+  "textHash": "fnv1a64:fd123caa5b7f5263",
+  "jsonHash": "fnv1a64:5938cdfab07361d5",
+  "findings": []
+}

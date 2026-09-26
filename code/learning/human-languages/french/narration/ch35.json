@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Eyes, Nose, Mouth, Stomach",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:8461320dbb6910dd",
+  "sourceHash": "fnv1a64:d02fad1a6c9bfaa3",
   "lessons": [
     {
       "id": "FR-C31-oeil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38cff63391b2bba5",
+      "sourceHash": "fnv1a64:94072ab2b8a1122a",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +415,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd3c456eeea0e095",
+      "sourceHash": "fnv1a64:470b3f0d809880a9",
       "notice": null,
       "blocks": [
         {

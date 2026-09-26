@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:06ced87c30803e8c",
+  "lessonIds": [
+    "MR-C111-lavkar",
+    "MR-C111-ushir",
+    "MR-C111-adhi",
+    "MR-C111-nantar",
+    "MR-C111-vel"
+  ],
+  "tex": "marathi/book/chapters/ch111-early-lateness-before-after-time.tex"
+}

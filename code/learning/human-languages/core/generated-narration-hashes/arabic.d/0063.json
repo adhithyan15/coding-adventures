@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:2f50a0ed1a612ced",
+  "lessonIds": [
+    "AR-C63-rama",
+    "AR-C63-tara",
+    "AR-C63-sabaha",
+    "AR-C63-sanaa",
+    "AR-C63-dakhala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch63.txt",
+  "json": "arabic/narration/ch63.json",
+  "textHash": "fnv1a64:2a3a26873083c5d5",
+  "jsonHash": "fnv1a64:06ce1ea8bce373a0",
+  "findings": []
+}

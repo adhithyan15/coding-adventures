@@ -1,0 +1,19 @@
+{
+  "chapter": 64,
+  "title": "Look at, Listen to, Wait for, Buy, Know",
+  "label": "ch:fr-look-at-listen-to-wait-for-buy-know",
+  "canDo": "I can say to look at, to listen to, to wait for, to buy, to know (a fact).",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C64-savoir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 64: i can say to look at, to listen to, to wait for, to buy, to know (a fact).",
+    "assesses": [
+      "FR-LEX-C64-VERBES16-03",
+      "FR-LEX-C64-VERBES16-04",
+      "FR-LEX-C64-VERBES16-05"
+    ]
+  }
+}

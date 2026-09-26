@@ -1,0 +1,11 @@
+{
+  "id": "UR-C67-ghora",
+  "pathSegment": "UR-PATH-67-NATURE67",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-67-NATURE67",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C90-pastelaria",
+    "language": "portuguese",
+    "chapter": 90,
+    "sequence": 4220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13a886064fa6cf3f"
+  },
+  "findings": []
+}

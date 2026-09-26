@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C50-genou",
+    "language": "french",
+    "chapter": 50,
+    "sequence": 1880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6c7acf8a59e5df8"
+  },
+  "findings": []
+}

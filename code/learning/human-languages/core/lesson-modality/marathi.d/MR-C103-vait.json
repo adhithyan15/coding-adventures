@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C103-vait",
+    "language": "marathi",
+    "chapter": 103,
+    "sequence": 4570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c3fb45c0f89d3a2"
+  },
+  "findings": []
+}

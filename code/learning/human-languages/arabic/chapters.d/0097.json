@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "Ten, Thirty, Forty, Fifty, Thousand",
+  "label": "ch:ar-ten-thirty-forty-fifty-thousand",
+  "canDo": "I can say ten, thirty, forty, fifty and a thousand.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C97-alf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can say ten, thirty, forty, fifty and a thousand.",
+    "assesses": [
+      "AR-LEX-C97-NUMBERS97-03",
+      "AR-LEX-C97-NUMBERS97-04",
+      "AR-LEX-C97-NUMBERS97-05"
+    ]
+  }
+}

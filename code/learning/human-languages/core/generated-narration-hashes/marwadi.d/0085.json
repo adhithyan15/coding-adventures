@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:1f8dc870d8865cd6",
+  "lessonIds": [
+    "MW-C85-mojo",
+    "MW-C85-jeb",
+    "MW-C85-anguthi",
+    "MW-C85-ghari",
+    "MW-C85-topi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch85.txt",
+  "json": "marwadi/narration/ch85.json",
+  "textHash": "fnv1a64:c2ee8fa9ba408c7c",
+  "jsonHash": "fnv1a64:31b09fb3a3b5f9aa",
+  "findings": []
+}

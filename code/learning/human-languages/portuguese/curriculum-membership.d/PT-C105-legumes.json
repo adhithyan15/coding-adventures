@@ -1,0 +1,11 @@
+{
+  "id": "PT-C105-legumes",
+  "pathSegment": "PT-PATH-105-COMIDA105",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-105-COMIDA105",
+      "order": 1
+    }
+  ]
+}

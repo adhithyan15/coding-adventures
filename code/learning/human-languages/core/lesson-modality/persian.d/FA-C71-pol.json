@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C71-pol",
+    "language": "persian",
+    "chapter": 71,
+    "sequence": 3430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:279754a7dfe7f97c"
+  },
+  "findings": []
+}

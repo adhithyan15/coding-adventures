@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:73f9a61d02b94050",
+  "lessonIds": [
+    "PT-C113-palavra",
+    "PT-C113-quadro",
+    "PT-C113-borracha",
+    "PT-C113-trabalhos-de-casa",
+    "PT-C113-problema",
+    "PT-R113-first-pass-food-work-and-school",
+    "PT-R113-second-pass-free-time-and-nature"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch113.txt",
+  "json": "portuguese/narration/ch113.json",
+  "textHash": "fnv1a64:d39fcd36307ccc3d",
+  "jsonHash": "fnv1a64:cf39932116c7f1f4",
+  "findings": []
+}

@@ -9,17 +9,17 @@ type: writing
 headword: "ಥ"
 gloss: the single character ಥ — the breathed partner of ತ, the last gap in the pattern
 romanization: "tha"
-prerequisites: [KA-S128-letter-jha]
+prerequisites: [KA-S128-letter-jha, KA-C23-kathe]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-128]
+  knowledge: [KA-SCRIPT-RECOG-128, KA-LEX-ANCHOR-KATHE]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-129]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-128, KA-SCRIPT-RECOG-129]
+  knowledge: [KA-SCRIPT-RECOG-128, KA-SCRIPT-RECOG-129, KA-LEX-ANCHOR-KATHE]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [KA-S128-letter-jha]
 # ಥ — one character, and the gap it fills
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-128] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-128, KA-LEX-ANCHOR-KATHE] -->
 
 [PAUSE 1s] Before the new one: ಝ — which plain letter is it built on, and what
 does the extra stroke stand for?

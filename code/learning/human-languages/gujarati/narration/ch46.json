@@ -4,11 +4,11 @@
   "chapter": 46,
   "title": "Head to Foot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5be46c2f5e5adcab",
+  "sourceHash": "fnv1a64:d7cd87d457e67847",
   "lessons": [
     {
       "id": "GU-C46-head",
-      "sequence": 2340,
+      "sequence": 2353,
       "title": "માથું (māthũ) — the head",
       "headword": "માથું",
       "romanization": "māthũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a92093c9e010277",
+      "sourceHash": "fnv1a64:c2914fce7161bd9b",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C46-leg",
-      "sequence": 2350,
+      "sequence": 2363,
       "title": "પગ (pag) — a leg, a foot",
       "headword": "પગ",
       "romanization": "pag",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ceaa7f5499501f2e",
+      "sourceHash": "fnv1a64:62523c126238ba68",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C46-belly",
-      "sequence": 2360,
+      "sequence": 2373,
       "title": "પેટ (peṭ) — the belly",
       "headword": "પેટ",
       "romanization": "peṭ",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86a7119b52044d94",
+      "sourceHash": "fnv1a64:08dd745a8b8ce3d0",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C46-tooth",
-      "sequence": 2370,
+      "sequence": 2383,
       "title": "દાંત (dā̃t) — a tooth, teeth",
       "headword": "દાંત",
       "romanization": "dā̃t",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09f25f42832d4d6c",
+      "sourceHash": "fnv1a64:993b06a1064862ca",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C46-hair",
-      "sequence": 2380,
+      "sequence": 2393,
       "title": "વાળ (vāḷ) — hair",
       "headword": "વાળ",
       "romanization": "vāḷ",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6078fc25331b99d5",
+      "sourceHash": "fnv1a64:bde572d688d75e49",
       "notice": null,
       "blocks": [
         {

@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-98-WORLD98",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "PA-EXT-98-WORLD98"
+  ],
+  "after": []
+}

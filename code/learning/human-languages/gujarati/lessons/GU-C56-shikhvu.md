@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C56-shikhvu
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2880
+sequence: 2893
 chapter: 56
 type: word
 headword: "શીખવું"

@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:a9b491634c6b4740",
+  "lessonIds": [
+    "PA-C73-khed",
+    "PA-C73-chitthi",
+    "PA-C73-rukkh",
+    "PA-C73-phull",
+    "PA-C73-patta",
+    "PA-R73-first-pass-the-body-family-verbs-and-food",
+    "PA-R73-second-pass-home-school-and-nature"
+  ],
+  "tex": "punjabi/book/chapters/ch73-game-letter-tree-flower-leaf.tex"
+}

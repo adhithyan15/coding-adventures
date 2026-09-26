@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W04-independent-a
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 73
+sequence: 79
 delivery: script
 chapter: 4
 type: writing
 headword: અ
 romanization: "a"
 gloss: "the independent short-a vowel"
-prerequisites: [GU-W04-tha]
+prerequisites: [GU-W04-tha, GU-C04-athaanun]
 sounds: []
 roots: []
 etymology_hook: "Gujarati consonants carry short a by default; this is the separate letter used when short a stands on its own."
 duration:
   max_seconds: 230
 requires:
-  knowledge: [GU-SCRIPT-THA-01]
+  knowledge: [GU-SCRIPT-THA-01, GU-LEX-ANCHOR-ATHAANUN]
 introduces:
   knowledge: [GU-SCRIPT-INDEPENDENT-A-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-THA-01, GU-SCRIPT-INDEPENDENT-A-01]
+  knowledge: [GU-SCRIPT-THA-01, GU-SCRIPT-INDEPENDENT-A-01, GU-LEX-ANCHOR-ATHAANUN]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W04-tha]
 # અ — short a standing alone
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-THA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-THA-01, GU-LEX-ANCHOR-ATHAANUN] -->
 
 Write *tha* once from memory. Then say the vowel already carried by a bare
 Gujarati consonant: short *a*.

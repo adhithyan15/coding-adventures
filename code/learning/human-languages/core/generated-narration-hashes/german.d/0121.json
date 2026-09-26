@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:6edda2c197fcc338",
+  "lessonIds": [
+    "GE-C121-bohnen",
+    "GE-C121-gurke",
+    "GE-C121-erdbeere",
+    "GE-C121-kirsche",
+    "GE-C121-melone"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch121.txt",
+  "json": "german/narration/ch121.json",
+  "textHash": "fnv1a64:3961c552d453c4d2",
+  "jsonHash": "fnv1a64:46b7b7276feda7c5",
+  "findings": []
+}

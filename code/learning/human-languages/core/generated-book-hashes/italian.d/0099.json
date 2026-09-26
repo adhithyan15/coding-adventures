@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:ffc976820f1a2e0a",
+  "lessonIds": [
+    "IT-C99-secchio",
+    "IT-C99-corda",
+    "IT-C99-chiodo",
+    "IT-C99-martello",
+    "IT-C99-colla"
+  ],
+  "tex": "italian/book/chapters/ch99-bucket-rope-nail-hammer-glue.tex"
+}

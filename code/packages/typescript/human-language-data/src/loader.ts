@@ -591,6 +591,11 @@ export function loadBookCorpus(root = defaultCurriculumRoot()): BookCorpus {
         tex,
       });
     }
+    // Directory order is string order, so `ch100-...` lands between `ch10-...`
+    // and `ch11-...` once a track passes ninety-nine chapters. Consumers read
+    // this list as the book's chapter order, which is numeric -- the same rule
+    // `chapterInputsFor` applies when it writes book.tex.
+    chapters.sort((left, right) => left.chapter - right.chapter);
     books.push({
       language: track.name,
       entrypoint: `${track.name}/book/book.tex`,

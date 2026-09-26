@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-123-COLORI123",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "IT-EXT-123-COLORI123"
+  ],
+  "after": []
+}

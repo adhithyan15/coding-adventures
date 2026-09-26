@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:5a3932d9d29ad0ae",
+  "lessonIds": [
+    "AR-C79-baqara",
+    "AR-C79-maiz",
+    "AR-C79-kharuf",
+    "AR-C79-far",
+    "AR-C79-asad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch79.txt",
+  "json": "arabic/narration/ch79.json",
+  "textHash": "fnv1a64:208c4a67b32d4dae",
+  "jsonHash": "fnv1a64:9405a71917e207c4",
+  "findings": []
+}

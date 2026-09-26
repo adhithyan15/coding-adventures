@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C96-tisa",
+    "language": "arabic",
+    "chapter": 96,
+    "sequence": 3800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0defc5dde7257e0"
+  },
+  "findings": []
+}

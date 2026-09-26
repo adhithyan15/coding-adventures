@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C99-hose",
+    "language": "german",
+    "chapter": 99,
+    "sequence": 3720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d053a903b74e1480"
+  },
+  "findings": []
+}

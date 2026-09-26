@@ -1,0 +1,19 @@
+{
+  "chapter": 53,
+  "title": "Sad, Father, Mother, Son, Daughter",
+  "label": "ch:pa-sad-father-mother-son-daughter",
+  "canDo": "I can say sad, a father, a mother, a son and a daughter.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C53-dhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 53: i can say sad, a father, a mother, a son and a daughter.",
+    "assesses": [
+      "PA-LEX-C53-HEALTH53-03",
+      "PA-LEX-C53-HEALTH53-04",
+      "PA-LEX-C53-HEALTH53-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:bba61df76e891790",
+  "lessonIds": [
+    "PA-C83-patla",
+    "PA-C83-halka",
+    "PA-C83-bhari",
+    "PA-C83-zaruri",
+    "PA-C83-hara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch83.txt",
+  "json": "punjabi/narration/ch83.json",
+  "textHash": "fnv1a64:b296dd0c2c1f3757",
+  "jsonHash": "fnv1a64:d90ff8d3316d7efe",
+  "findings": []
+}

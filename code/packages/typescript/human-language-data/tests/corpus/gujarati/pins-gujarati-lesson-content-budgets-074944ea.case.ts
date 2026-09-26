@@ -44,7 +44,10 @@ it("pins Gujarati lesson-content budgets", () =>
     // 285 -> 519: the pre-A1 vocabulary tranche, chapters 46-91. 230 word
     // lessons (nineteen verbs) and four reviews; each word lesson introduces one
     // lexical atom and no idiom, sense or culture claim. Re-measured.
-    lessons: 519,
+    // 519 -> 532: HL-C443, thirteen anchor words opening the runway chapters
+    // (1 and 3-7). Each introduces one lexical atom and no idiom, sense or
+    // culture claim.
+    lessons: 532,
     idioms: 12,
     senses: 6,
     cultureClaims: 16,

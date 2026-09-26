@@ -4,11 +4,11 @@
   "chapter": 12,
   "title": "Numbers One to Five",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1e5519ae780a0662",
+  "sourceHash": "fnv1a64:647e17ed1e45526c",
   "lessons": [
     {
       "id": "GU-C06-numbers-1-5",
-      "sequence": 360,
+      "sequence": 373,
       "title": "એક, બે, ત્રણ, ચાર, પાંચ — one to five",
       "headword": "એક બે ત્રણ ચાર પાંચ",
       "romanization": "ek be traṇ chār pā̃ch",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26b3837831443ac7",
+      "sourceHash": "fnv1a64:310b09fba1ed2f23",
       "notice": null,
       "blocks": [
         {
@@ -143,7 +143,7 @@
     },
     {
       "id": "GU-C06-number-histories",
-      "sequence": 370,
+      "sequence": 383,
       "title": "Two number histories: be and traṇ",
       "headword": "બે · ત્રણ",
       "romanization": "be · traṇ",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ae7c7f3b1647468",
+      "sourceHash": "fnv1a64:45798a77085155be",
       "notice": null,
       "blocks": [
         {

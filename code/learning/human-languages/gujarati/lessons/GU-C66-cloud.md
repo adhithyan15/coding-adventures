@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C66-cloud
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 3350
+sequence: 3363
 chapter: 66
 type: word
 headword: "વાદળ"

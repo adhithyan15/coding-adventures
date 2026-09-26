@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:162b164fadc4568b",
+  "lessonIds": [
+    "MR-C71-pot",
+    "MR-C71-khanda",
+    "MR-C71-bot",
+    "MR-C71-man",
+    "MR-C71-chehra"
+  ],
+  "tex": "marathi/book/chapters/ch71-stomach-shoulder-finger-neck-face.tex"
+}

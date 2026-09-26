@@ -1,0 +1,19 @@
+{
+  "chapter": 48,
+  "title": "Bottle, Kitchen, Bathroom, Glass, Notebook",
+  "label": "ch:fa-bottle-kitchen-bathroom-glass-notebook",
+  "canDo": "I can say a bottle, a kitchen, a bathroom, a glass and a notebook.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FA-C48-daftar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 48: i can say a bottle, a kitchen, a bathroom, a glass and a notebook.",
+    "assesses": [
+      "FA-LEX-C48-HOME48-03",
+      "FA-LEX-C48-HOME48-04",
+      "FA-LEX-C48-HOME48-05"
+    ]
+  }
+}

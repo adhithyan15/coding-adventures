@@ -1,0 +1,11 @@
+{
+  "id": "BN-C89-desh",
+  "pathSegment": "BN-PATH-89-WORLD89",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-89-WORLD89",
+      "order": 2
+    }
+  ]
+}

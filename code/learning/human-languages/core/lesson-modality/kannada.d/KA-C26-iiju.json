@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C26-iiju",
+    "language": "kannada",
+    "chapter": 26,
+    "sequence": 554,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:28d5b573f11348f1"
+  },
+  "findings": []
+}

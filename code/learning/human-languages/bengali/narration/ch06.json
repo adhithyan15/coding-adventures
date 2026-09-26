@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "A Sign Made of Two Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c3d841e3e45ae650",
+  "sourceHash": "fnv1a64:6ca62e28720459a8",
   "lessons": [
     {
       "id": "BN-W02-ami-read",
@@ -435,6 +435,111 @@
       ]
     },
     {
+      "id": "BN-C06-eka",
+      "sequence": 429,
+      "title": "একা (ekā) — alone",
+      "headword": "একা",
+      "romanization": "ekā",
+      "gloss": "alone",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:c0510357d79345d8",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: একা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "একা — ekā — \"alone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ekā. Look at its shape as you say it: the next lesson takes one piece of it, এ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekā, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekā*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"alone\"? (একা, ekā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "BN-W04-e-indep",
       "sequence": 430,
       "title": "এ — the independent e",
@@ -448,7 +553,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8fa5aaa68ba7e5cd",
+      "sourceHash": "fnv1a64:07a86c6e8336993f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -590,7 +695,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:669165fdc238b4be",
+      "sourceHash": "fnv1a64:0c2ba896db041508",
       "notice": {
         "modality": "pen",
         "needs": [

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C97-ashara",
+    "language": "arabic",
+    "chapter": 97,
+    "sequence": 3810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f4364f7d2e1e8fe"
+  },
+  "findings": []
+}

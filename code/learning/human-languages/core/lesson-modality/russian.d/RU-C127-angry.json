@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C127-angry",
+    "language": "russian",
+    "chapter": 127,
+    "sequence": 6670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6d7fd3c92aacf94"
+  },
+  "findings": []
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C32-athava
 spine_node: SPINE-DESCRIBE-QUALITIES
-sequence: 1860
+sequence: 1873
 chapter: 36
 type: word
 headword: અથવા

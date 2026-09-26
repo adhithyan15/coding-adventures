@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:238cd7dbffa3c132",
+  "lessonIds": [
+    "PT-C118-coelho",
+    "PT-C118-tigre",
+    "PT-C118-borboleta",
+    "PT-C118-ra",
+    "PT-C118-tartaruga"
+  ],
+  "tex": "portuguese/book/chapters/ch118-rabbit-tiger-butterfly-frog-tortoise.tex"
+}

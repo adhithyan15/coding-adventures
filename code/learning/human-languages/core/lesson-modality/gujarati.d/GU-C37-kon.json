@@ -3,7 +3,7 @@
     "id": "GU-C37-kon",
     "language": "gujarati",
     "chapter": 41,
-    "sequence": 2080,
+    "sequence": 2093,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:6dff3dbeb514ceec"
+    "sourceHash": "fnv1a64:e4cc0237fa722f3c"
   },
   "findings": []
 }

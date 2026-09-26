@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-R03-doorway-three-r1
 spine_node: SPINE-MEET-GREET
-sequence: 70
+sequence: 74
 delivery: script
 chapter: 3
 type: writing
 headword: ક — ણ — શ
 romanization: ka — retroflex nna — sha
 gloss: retrieve the last three doorway consonants
-prerequisites: [GU-W03-sha]
+prerequisites: [GU-W03-sha, GU-C03-shak]
 sounds: []
 roots: []
 etymology_hook: Three neighbouring forms return before the name exchange, with no new shape to learn.
 duration:
   max_seconds: 180
 requires:
-  knowledge: [GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01]
+  knowledge: [GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01, GU-LEX-ANCHOR-SHAK]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01]
+  knowledge: [GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01, GU-LEX-ANCHOR-SHAK]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -35,7 +35,7 @@ reviews_of: [GU-W03-ka, GU-W03-nna, GU-W03-sha]
 # ક — ણ — શ: the last three return
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01, GU-LEX-ANCHOR-SHAK] -->
 
 Keep the three cards visible. Point to **ક**, **ણ**, and **શ** as you say *ka*,
 retroflex *nna*, and *sha*. Notice only one contrast at a time: open bowl,

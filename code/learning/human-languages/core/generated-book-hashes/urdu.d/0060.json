@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:69ba045c226eaf3a",
+  "lessonIds": [
+    "UR-C60-chabi",
+    "UR-C60-pyali",
+    "UR-C60-chammach",
+    "UR-C60-chhuri",
+    "UR-C60-kata"
+  ],
+  "tex": "urdu/book/chapters/ch60-key-cup-spoon-knife-fork.tex"
+}

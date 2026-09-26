@@ -1,0 +1,19 @@
+{
+  "chapter": 46,
+  "title": "Grandfather, Grandmother, Uncle, Uncle, Aunt",
+  "label": "ch:bn-grandfather-grandmother-uncle-uncle-aunt",
+  "canDo": "I can say a grandfather, a grandmother, an uncle, an uncle and an aunt.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "BN-C46-mashi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 46: i can say a grandfather, a grandmother, an uncle, an uncle and an aunt.",
+    "assesses": [
+      "BN-LEX-C46-FAMILY46-03",
+      "BN-LEX-C46-FAMILY46-04",
+      "BN-LEX-C46-FAMILY46-05"
+    ]
+  }
+}

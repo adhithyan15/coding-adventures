@@ -1,0 +1,11 @@
+{
+  "id": "MW-C62-kursi",
+  "pathSegment": "MW-PATH-62-HOME62",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-62-HOME62",
+      "order": 1
+    }
+  ]
+}

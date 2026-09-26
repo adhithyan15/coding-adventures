@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:5a0a3aa8c7ab1f40",
+  "lessonIds": [
+    "JA-C61-ito",
+    "JA-C61-hari",
+    "JA-C61-kushi",
+    "JA-C61-himo",
+    "JA-C61-tsuna"
+  ],
+  "tex": "japanese/book/chapters/ch61-thread-needle-comb-string-rope.tex"
+}

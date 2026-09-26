@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Shop, Market, Railway station, Aeroplane, Car",
+  "label": "ch:ge-shop-market-railway-station-aeroplane-car",
+  "canDo": "I can say a shop, a market, a railway station, an aeroplane and a car.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "GE-C96-auto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: i can say a shop, a market, a railway station, an aeroplane and a car.",
+    "assesses": [
+      "GE-LEX-C96-STADT1-03",
+      "GE-LEX-C96-STADT1-04",
+      "GE-LEX-C96-STADT1-05"
+    ]
+  }
+}

@@ -4,11 +4,11 @@
   "chapter": 54,
   "title": "Sit, Walk, Get Up, Sleep, Play",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4ce0b3783e742804",
+  "sourceHash": "fnv1a64:04a34d26a549cee8",
   "lessons": [
     {
       "id": "GU-C54-besvu",
-      "sequence": 2740,
+      "sequence": 2753,
       "title": "બેસવું (besvũ) — to sit",
       "headword": "બેસવું",
       "romanization": "besvũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61146408f88a788c",
+      "sourceHash": "fnv1a64:462e27f56e96a438",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C54-chalvu",
-      "sequence": 2750,
+      "sequence": 2763,
       "title": "ચાલવું (cālvũ) — to walk",
       "headword": "ચાલવું",
       "romanization": "cālvũ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23087e3d208c6706",
+      "sourceHash": "fnv1a64:ce516c33abbaee50",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C54-uthvu",
-      "sequence": 2760,
+      "sequence": 2773,
       "title": "ઉઠવું (uṭhvũ) — to get up",
       "headword": "ઉઠવું",
       "romanization": "uṭhvũ",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f800bc0a2a88df4",
+      "sourceHash": "fnv1a64:9eca3a58e517e7a4",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C54-suvu",
-      "sequence": 2770,
+      "sequence": 2783,
       "title": "સૂવું (sūvũ) — to sleep, to lie down",
       "headword": "સૂવું",
       "romanization": "sūvũ",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:829942be98848bb3",
+      "sourceHash": "fnv1a64:18e7fdd266446da1",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C54-ramvu",
-      "sequence": 2780,
+      "sequence": 2793,
       "title": "રમવું (ramvũ) — to play",
       "headword": "રમવું",
       "romanization": "ramvũ",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06f920adc79bcad9",
+      "sourceHash": "fnv1a64:bf7993198ba1ad6d",
       "notice": null,
       "blocks": [
         {

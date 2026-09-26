@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C67-billi",
+    "language": "urdu",
+    "chapter": 67,
+    "sequence": 3420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5acb743403033f6"
+  },
+  "findings": []
+}

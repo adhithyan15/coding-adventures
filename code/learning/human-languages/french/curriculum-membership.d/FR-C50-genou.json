@@ -1,0 +1,11 @@
+{
+  "id": "FR-C50-genou",
+  "pathSegment": "FR-PATH-50-CORPS2",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-50-CORPS2",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Ant, Elephant, Rabbit, Frog, Tiger",
+  "label": "ch:fr-ant-elephant-rabbit-frog-tiger",
+  "canDo": "I can name an ant, an elephant, a rabbit, a frog, a tiger.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C88-tigre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can name an ant, an elephant, a rabbit, a frog, a tiger.",
+    "assesses": [
+      "FR-LEX-C88-ANIMAUX40-03",
+      "FR-LEX-C88-ANIMAUX40-04",
+      "FR-LEX-C88-ANIMAUX40-05"
+    ]
+  }
+}

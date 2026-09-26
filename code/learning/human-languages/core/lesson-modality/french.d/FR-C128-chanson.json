@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C128-chanson",
+    "language": "french",
+    "chapter": 128,
+    "sequence": 5940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44f1df02bf15b216"
+  },
+  "findings": []
+}

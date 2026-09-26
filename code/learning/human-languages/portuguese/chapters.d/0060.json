@@ -1,0 +1,19 @@
+{
+  "chapter": 60,
+  "title": "Dog, Cat, Horse, Cow, Pig",
+  "label": "ch:pt-dog-cat-horse-cow-pig",
+  "canDo": "I can name a dog, a cat, a horse, a cow and a pig.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PT-C60-porco",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 60: i can name a dog, a cat, a horse, a cow and a pig.",
+    "assesses": [
+      "PT-LEX-C60-ANIMAIS1-03",
+      "PT-LEX-C60-ANIMAIS1-04",
+      "PT-LEX-C60-ANIMAIS1-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:54f28ddb83b23908",
+  "lessonIds": [
+    "GE-C124-joghurt",
+    "GE-C124-krankenschwester",
+    "GE-C124-koch",
+    "GE-C124-polizist",
+    "GE-C124-verkaeufer"
+  ],
+  "tex": "german/book/chapters/ch124-yoghurt-nurse-cook-police-officer-shop-assistant.tex"
+}

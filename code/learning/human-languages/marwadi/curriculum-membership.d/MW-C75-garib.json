@@ -1,0 +1,11 @@
+{
+  "id": "MW-C75-garib",
+  "pathSegment": "MW-PATH-75-ADJ75",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-75-ADJ75",
+      "order": 2
+    }
+  ]
+}

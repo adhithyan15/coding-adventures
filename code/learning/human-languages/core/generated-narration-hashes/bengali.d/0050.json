@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:2b13de87bce45010",
+  "lessonIds": [
+    "BN-C50-dhoya",
+    "BN-C50-hasa",
+    "BN-C50-kada",
+    "BN-C50-gaowa",
+    "BN-C50-nacha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch50.txt",
+  "json": "bengali/narration/ch50.json",
+  "textHash": "fnv1a64:66c30bbe6c5400de",
+  "jsonHash": "fnv1a64:7a61642fcf6c8348",
+  "findings": []
+}

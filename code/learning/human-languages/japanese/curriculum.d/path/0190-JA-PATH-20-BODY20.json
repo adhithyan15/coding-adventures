@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-20-BODY20",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "JA-EXT-20-BODY20"
+  ],
+  "after": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 50,
+  "title": "Eye, Ear, Nose, Mouth, Tooth",
+  "label": "ch:ar-eye-ear-nose-mouth-tooth",
+  "canDo": "I can say an eye, an ear, a nose, a mouth and a tooth.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C50-sinn",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 50: i can say an eye, an ear, a nose, a mouth and a tooth.",
+    "assesses": [
+      "AR-LEX-C50-BODY50-03",
+      "AR-LEX-C50-BODY50-04",
+      "AR-LEX-C50-BODY50-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C74-facile",
+  "pathSegment": "IT-PATH-74-AGG3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-74-AGG3",
+      "order": 2
+    }
+  ]
+}

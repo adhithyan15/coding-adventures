@@ -1,0 +1,19 @@
+{
+  "chapter": 38,
+  "title": "To dance, To want, To bring, To send, To count",
+  "label": "ch:fa-to-dance-to-want-to-bring-to-send-to-count",
+  "canDo": "I can say to dance, to want, to bring, to send and to count.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C38-shemordan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 38: i can say to dance, to want, to bring, to send and to count.",
+    "assesses": [
+      "FA-LEX-C38-VERBS38-03",
+      "FA-LEX-C38-VERBS38-04",
+      "FA-LEX-C38-VERBS38-05"
+    ]
+  }
+}

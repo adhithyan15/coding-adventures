@@ -1,0 +1,11 @@
+{
+  "id": "RU-C115-wave",
+  "pathSegment": "RU-PATH-115-THINGS115",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-115-THINGS115",
+      "order": 4
+    }
+  ]
+}

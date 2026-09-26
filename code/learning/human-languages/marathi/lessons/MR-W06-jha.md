@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W06-jha
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 76
+sequence: 86
 delivery: script
 chapter: 6
 type: writing
 headword: झ
 romanization: "jha"
 gloss: jha — voiced and breathy at the palate; the letter inside majhe
-prerequisites: [MR-W06-ja]
+prerequisites: [MR-W06-ja, MR-C06-jahaj, MR-C06-jhoka]
 sounds: [aspirated-jha]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-JA-01, MR-SCRIPT-CHA-01]
+  knowledge: [MR-SCRIPT-JA-01, MR-SCRIPT-CHA-01, MR-LEX-ANCHOR-JAHAJ, MR-LEX-ANCHOR-JHOKA]
 introduces:
   knowledge: [MR-SCRIPT-JHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-JHA-01, MR-SCRIPT-JA-01, MR-SCRIPT-CHA-01]
+  knowledge: [MR-SCRIPT-JHA-01, MR-SCRIPT-JA-01, MR-SCRIPT-CHA-01, MR-LEX-ANCHOR-JAHAJ, MR-LEX-ANCHOR-JHOKA]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W06-ja, MR-W06-cha]
 # झ — the letter inside *mājhe*
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-JAHAJ, MR-LEX-ANCHOR-JHOKA] -->
 
 One more of the four-way sets, and this one closes a word you have been saying since your first introduction.
 

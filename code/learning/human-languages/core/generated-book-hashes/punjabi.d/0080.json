@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:d32acf8b6b52d15e",
+  "lessonIds": [
+    "PA-C80-bura",
+    "PA-C80-lamma",
+    "PA-C80-garam",
+    "PA-C80-hauli",
+    "PA-C80-tez"
+  ],
+  "tex": "punjabi/book/chapters/ch80-bad-long-hot-slowly-fast.tex"
+}

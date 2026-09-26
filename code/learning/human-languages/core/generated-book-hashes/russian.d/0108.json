@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:ef6063dc50a97895",
+  "lessonIds": [
+    "RU-C108-police-officer",
+    "RU-C108-shop-assistant",
+    "RU-C108-farmer",
+    "RU-C108-baker",
+    "RU-C108-driver"
+  ],
+  "tex": "russian/book/chapters/ch108-police-officer-shop-assistant-farmer-baker-driver.tex"
+}

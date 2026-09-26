@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C93-kurta",
+    "language": "punjabi",
+    "chapter": 93,
+    "sequence": 4910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:412da968c9dcd8c7"
+  },
+  "findings": []
+}

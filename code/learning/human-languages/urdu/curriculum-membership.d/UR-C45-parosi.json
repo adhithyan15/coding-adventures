@@ -1,0 +1,11 @@
+{
+  "id": "UR-C45-parosi",
+  "pathSegment": "UR-PATH-45-FAMILY45",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-45-FAMILY45",
+      "order": 3
+    }
+  ]
+}

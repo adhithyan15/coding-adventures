@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C86-sattar",
+    "language": "urdu",
+    "chapter": 86,
+    "sequence": 4350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebd98c99792fe820"
+  },
+  "findings": []
+}

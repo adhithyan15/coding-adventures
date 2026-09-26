@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:9fac988a366cdc63",
+  "lessonIds": [
+    "GE-C92-sauber",
+    "GE-C92-schmutzig",
+    "GE-C92-dick",
+    "GE-C92-duenn",
+    "GE-C92-leise"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch92.txt",
+  "json": "german/narration/ch92.json",
+  "textHash": "fnv1a64:d981383ef7de165c",
+  "jsonHash": "fnv1a64:8b1fb8421855752e",
+  "findings": []
+}

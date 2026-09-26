@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C64-albero",
+    "language": "italian",
+    "chapter": 64,
+    "sequence": 2780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ae6ce9a22845600"
+  },
+  "findings": []
+}

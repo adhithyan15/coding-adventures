@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "To want, I would like, To prefer, To hope, To wish",
+  "label": "ch:it-to-want-i-would-like-to-prefer-to-hope-to-wish",
+  "canDo": "I can say to want, I would like, to prefer, to hope and to wish.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "IT-C86-desiderare",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can say to want, I would like, to prefer, to hope and to wish.",
+    "assesses": [
+      "IT-LEX-C86-VOLERE86-03",
+      "IT-LEX-C86-VOLERE86-04",
+      "IT-LEX-C86-VOLERE86-05"
+    ]
+  }
+}

@@ -18,12 +18,12 @@ duration:
 requires:
   knowledge: [FA-LEX-ESM-E-MAN-AST]
 introduces:
-  knowledge: [FA-LEX-SHOMA-TO, FA-SCRIPT-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER, FA-ETYMON-TO-THOU]
+  knowledge: [FA-LEX-SHOMA-TO, FA-SCRIPT-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [FA-CULTURE-SHOMA-TO-REGISTER-01]
 practises:
-  knowledge: [FA-LEX-ESM-E-MAN-AST, FA-LEX-SHOMA-TO, FA-SCRIPT-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER, FA-ETYMON-TO-THOU]
+  knowledge: [FA-LEX-ESM-E-MAN-AST, FA-LEX-SHOMA-TO, FA-SCRIPT-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,22 +60,15 @@ uses *vy* and French uses *vous*. Use **shomâ** with an unfamiliar adult or in
 a first meeting. Use **to** after the relationship is familiar. English once
 made a similar distinction but now uses *you* for both.
 
-## The word, taken apart
-<!-- hl-knowledge: introduces=[FA-ETYMON-TO-THOU]; assesses=[] -->
-
-Persian **to** belongs to the ancient Indo-European familiar-“you” family:
-English **thou**, Latin *tū*, and Sanskrit *tvam* are relatives. The word is
-old; the social choice carried by it is current.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SHOMA-TO, FA-SCRIPT-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER, FA-ETYMON-TO-THOU] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SHOMA-TO, FA-SCRIPT-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER] -->
 
 - [YOU SAY: a new adult — **shomâ**]
 - [YOU SAY: a close friend — **to**]
 - [YOU SAY: the old family — **to, thou, tū, tvam**]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SHOMA-TO, FA-SCRIPT-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER, FA-ETYMON-TO-THOU] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SHOMA-TO, FA-SCRIPT-SHOMA-TO, FA-PRAGMATICS-SHOMA-REGISTER] -->
 <!-- hl-activity: {"id":"FA-C03-shoma-to-first-meeting","kind":"text","assesses":["FA-PRAGMATICS-SHOMA-REGISTER"],"prompt":"Type the Persian 'you' safest in a first meeting.","answer":"شما","accepted":["shoma","shomâ","shomā"],"feedback":{"correct":"Right: شما shomâ is the respectful first-meeting choice.","incorrect":"Use شما shomâ with an unfamiliar adult or in a first meeting."},"response_seconds":8} -->
 
 Which form is safest when the relationship is new? (**Shomâ**.) Which is the

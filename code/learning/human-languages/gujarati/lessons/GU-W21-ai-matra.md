@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W21-ai-matra
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 980
+sequence: 993
 delivery: script
 chapter: 25
 type: writing

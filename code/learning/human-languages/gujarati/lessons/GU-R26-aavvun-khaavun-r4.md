@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R26-aavvun-khaavun-r4
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1400
+sequence: 1413
 chapter: 30
 type: practice
 headword: આવવું — ખાવું

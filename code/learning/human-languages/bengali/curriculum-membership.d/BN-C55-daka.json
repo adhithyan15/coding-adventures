@@ -1,0 +1,11 @@
+{
+  "id": "BN-C55-daka",
+  "pathSegment": "BN-PATH-55-VERBS55",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-55-VERBS55",
+      "order": 1
+    }
+  ]
+}

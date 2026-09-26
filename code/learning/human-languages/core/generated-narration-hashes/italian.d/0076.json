@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:44e9ed8c3b132924",
+  "lessonIds": [
+    "IT-C76-forte",
+    "IT-C76-debole",
+    "IT-C76-ricco",
+    "IT-C76-povero",
+    "IT-C76-giallo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch76.txt",
+  "json": "italian/narration/ch76.json",
+  "textHash": "fnv1a64:be9ad50aaedbd15e",
+  "jsonHash": "fnv1a64:1ef38b479ed85ae7",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:7a320f873cab5c32",
+  "lessonIds": [
+    "GE-C139-beginnen",
+    "GE-C139-besuchen",
+    "GE-C139-antworten",
+    "GE-C139-legen",
+    "GE-C139-stellen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch139.txt",
+  "json": "german/narration/ch139.json",
+  "textHash": "fnv1a64:3e4c12bc4ea98912",
+  "jsonHash": "fnv1a64:53a8afc487a85cc9",
+  "findings": []
+}

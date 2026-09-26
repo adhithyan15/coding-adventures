@@ -9,7 +9,7 @@ headword: لال
 romanization: lāl
 gloss: red — Persian, and an adjective that never changes its ending
 concept_tag: UR-RED
-prerequisites: [UR-C12-roti, UR-C09-bhai, UR-C09-bahan]
+prerequisites: [UR-C12-roti, UR-C09-bhai, UR-C09-bahan, UR-C05-khuda-hafiz-more]
 sounds: [rtl, long-a]
 roots: [persian-lal]
 etymology_hook: lāl is borrowed from Classical Persian لَال, "red." No further ancestor is documented for the Persian word itself, so the trail stops there — an honest Persian-side dead end, the mirror image of the Indo-Aryan dead ends this book has already met.

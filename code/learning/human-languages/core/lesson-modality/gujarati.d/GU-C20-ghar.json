@@ -3,7 +3,7 @@
     "id": "GU-C20-ghar",
     "language": "gujarati",
     "chapter": 24,
-    "sequence": 910,
+    "sequence": 923,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:5019b2387a064ceb",
+    "sourceHash": "fnv1a64:694e60140579655d",
     "delivery": "script",
     "authored": "pen",
     "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."

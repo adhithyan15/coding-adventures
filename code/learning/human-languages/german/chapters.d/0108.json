@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "North, South, East, West, Straight on",
+  "label": "ch:ge-north-south-east-west-straight-on",
+  "canDo": "I can say the north, the south, the east, the west and straight on.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "GE-C108-geradeaus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say the north, the south, the east, the west and straight on.",
+    "assesses": [
+      "GE-LEX-C108-RICHTUNG108-03",
+      "GE-LEX-C108-RICHTUNG108-04",
+      "GE-LEX-C108-RICHTUNG108-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C58-scala",
+  "pathSegment": "IT-PATH-58-CASA3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-58-CASA3",
+      "order": 2
+    }
+  ]
+}

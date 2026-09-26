@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C81-samne",
+    "language": "bengali",
+    "chapter": 81,
+    "sequence": 4240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00fff7a194875a9f"
+  },
+  "findings": []
+}

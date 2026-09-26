@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C68-bakri",
+    "language": "urdu",
+    "chapter": 68,
+    "sequence": 3450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52ae65811ffd9fb1"
+  },
+  "findings": []
+}

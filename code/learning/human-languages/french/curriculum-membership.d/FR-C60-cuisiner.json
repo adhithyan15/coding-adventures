@@ -1,0 +1,11 @@
+{
+  "id": "FR-C60-cuisiner",
+  "pathSegment": "FR-PATH-60-VERBES12",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-60-VERBES12",
+      "order": 2
+    }
+  ]
+}

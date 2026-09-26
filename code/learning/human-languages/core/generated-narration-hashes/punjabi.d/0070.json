@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:b3424d7aad11a45e",
+  "lessonIds": [
+    "PA-C70-chamcha",
+    "PA-C70-chaku",
+    "PA-C70-botal",
+    "PA-C70-darvaza",
+    "PA-C70-rasoi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch70.txt",
+  "json": "punjabi/narration/ch70.json",
+  "textHash": "fnv1a64:21ae2cb73f0c7467",
+  "jsonHash": "fnv1a64:68055be22d47696b",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C81-negozio",
+    "language": "italian",
+    "chapter": 81,
+    "sequence": 3640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c20ed299fbd97f4"
+  },
+  "findings": []
+}

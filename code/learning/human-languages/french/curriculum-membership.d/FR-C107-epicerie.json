@@ -1,0 +1,11 @@
+{
+  "id": "FR-C107-epicerie",
+  "pathSegment": "FR-PATH-107-VILLE59",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-107-VILLE59",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:8b5ff95cd8180fc2",
+  "lessonIds": [
+    "GE-C138-sechzig",
+    "GE-C138-siebzig",
+    "GE-C138-achtzig",
+    "GE-C138-neunzig",
+    "GE-C138-million"
+  ],
+  "tex": "german/book/chapters/ch138-sixty-seventy-eighty-ninety-million.tex"
+}

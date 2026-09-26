@@ -1,0 +1,19 @@
+{
+  "chapter": 21,
+  "title": "Bone, Chin, Cheek, Eyebrow, Skin",
+  "label": "ch:ja-bone-chin-cheek-eyebrow-skin",
+  "canDo": "I can say a bone, the chin, a cheek, an eyebrow and skin.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "JA-C21-hada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 21: i can say a bone, the chin, a cheek, an eyebrow and skin.",
+    "assesses": [
+      "JA-LEX-C21-BODY21-03",
+      "JA-LEX-C21-BODY21-04",
+      "JA-LEX-C21-BODY21-05"
+    ]
+  }
+}

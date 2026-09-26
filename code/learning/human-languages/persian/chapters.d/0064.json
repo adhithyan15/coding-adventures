@@ -1,0 +1,19 @@
+{
+  "chapter": 64,
+  "title": "Blue, Black, White, Week, Year",
+  "label": "ch:fa-blue-black-white-week-year",
+  "canDo": "I can say blue, black, white, a week and a year.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C64-sal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 64: i can say blue, black, white, a week and a year.",
+    "assesses": [
+      "FA-LEX-C64-ADJ64-03",
+      "FA-LEX-C64-ADJ64-04",
+      "FA-LEX-C64-ADJ64-05"
+    ]
+  }
+}

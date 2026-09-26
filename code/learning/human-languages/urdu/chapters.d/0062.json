@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "School bag, Money, Map, Lesson, Question",
+  "label": "ch:ur-school-bag-money-map-lesson-question",
+  "canDo": "I can say a school bag, money, a map, a lesson and a question.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "UR-R62-second-pass-home-school-and-nature",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: i can say a school bag, money, a map, a lesson and a question.",
+    "assesses": [
+      "UR-LEX-C62-SCHOOL62-03",
+      "UR-LEX-C62-SCHOOL62-04",
+      "UR-LEX-C62-SCHOOL62-05"
+    ]
+  }
+}

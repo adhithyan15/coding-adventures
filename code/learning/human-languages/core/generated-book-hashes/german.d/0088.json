@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:31cfb13edbe8ea13",
+  "lessonIds": [
+    "GE-C88-biene",
+    "GE-C88-ameise",
+    "GE-C88-elefant",
+    "GE-C88-holen",
+    "GE-C88-wuenschen"
+  ],
+  "tex": "german/book/chapters/ch88-bee-ant-elephant-to-fetch-to-wish.tex"
+}

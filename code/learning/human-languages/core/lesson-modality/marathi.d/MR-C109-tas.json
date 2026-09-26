@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C109-tas",
+    "language": "marathi",
+    "chapter": 109,
+    "sequence": 4890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d1431a88464f42e0"
+  },
+  "findings": []
+}

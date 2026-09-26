@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R26-vicharvun-samajvun-r4
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1420
+sequence: 1433
 chapter: 30
 type: practice
 headword: વિચારવું — સમજવું

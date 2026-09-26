@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C20-hiza",
+    "language": "japanese",
+    "chapter": 20,
+    "sequence": 1630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62e23d9981f6b2bd"
+  },
+  "findings": []
+}

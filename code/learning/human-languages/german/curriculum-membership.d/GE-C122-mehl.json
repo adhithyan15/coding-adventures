@@ -1,0 +1,11 @@
+{
+  "id": "GE-C122-mehl",
+  "pathSegment": "GE-PATH-122-ESSEN122",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-122-ESSEN122",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-54-PASTI",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a cake, a soup, honey, oil, lunch.",
+  "prerequisites": []
+}

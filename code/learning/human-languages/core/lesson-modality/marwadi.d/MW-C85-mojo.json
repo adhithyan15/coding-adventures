@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C85-mojo",
+    "language": "marwadi",
+    "chapter": 85,
+    "sequence": 5570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aedeab318cacc048"
+  },
+  "findings": []
+}

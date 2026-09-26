@@ -23,15 +23,18 @@
 // Three kinds of letter lesson
 // ---------------------------------------------------------------------------
 //
-// Walking a track in reading order, each letter lesson is exactly one of:
+// Walking a track in reading order, each letter lesson is exactly one of
+// (plus `unmeasured`, for Han components, below):
 //
 //   anchored        every glyph of the letter appeared in an EARLIER word
 //                   headword.  This is the rule.
 //   builds-toward   not anchored, but a word LATER IN THE SAME CHAPTER holds
 //                   it.  Marwadi opens this way: र, then ा, then the word राम.
 //                   The word is close, but the letter still comes first.
-//   cold            neither.  No word the reader knows, or is about to meet in
-//                   this chapter, holds the letter.
+//   numeral         not anchored, but every missing glyph is a digit, whose
+//                   anchor is the quantity it stands for (see below).
+//   cold            none of these.  No word the reader knows, or is about to
+//                   meet in this chapter, holds the letter.
 //
 // "builds-toward" is split from "cold" because the two need different fixes.
 // Builds-toward is usually a resequencing inside one chapter. Cold needs a
@@ -48,6 +51,28 @@
 // does not hold. So a letter lesson whose unanchored glyphs are all Han is
 // counted as `unmeasured`, never as cold. Reporting it as cold would blame the
 // tracks for a gap in the measure itself.
+//
+// ---------------------------------------------------------------------------
+// Numerals are anchored in a quantity, not a word
+// ---------------------------------------------------------------------------
+//
+// A track's own digits (Telugu ౧, Kannada ೨, Gurmukhi ੫) are written shapes
+// too, and they get stroke-order filmstrips like any letter. But no word holds
+// them: ఒకటి "one" is spelled with letters, never with ౧. So "a word the
+// reader knows holds this shape" can never come true for a digit, however the
+// track is ordered, and a numeral lesson would stay cold forever.
+//
+// That is not a digit with nothing to hang it on. A numeral stands for an
+// amount, and the reader arrives knowing every amount from 0 to 9 and a digit
+// for each. ౧ is taught as "one, written this way": a new shape for something
+// already known. That is the anchoring the rule asks for. The anchor is a
+// quantity, not a word.
+//
+// So a letter lesson whose unanchored glyphs are all decimal digits (Unicode
+// category Nd) is counted as `numeral`, never as cold. A digit that DOES appear
+// in an earlier word headword ("೧ನೇ", "first") is simply anchored. A digit in
+// a set with a real letter is judged with that letter, so a cold letter cannot
+// hide behind a numeral.
 //
 // ---------------------------------------------------------------------------
 // What counts as a word and as a letter lesson
@@ -71,7 +96,9 @@
 //
 // A voiced kana (が, ぽ) is a combination of a letter and a mark, so it is
 // measured by its parts: it counts as written once its base kana and the mark
-// have each been written.
+// have each been written. A capital and its small letter (Я and я) are one
+// letter in two forms, so a word holding either form anchors a lesson for the
+// other.
 //
 // letter-ledger.ts asks a neighbouring question: does a script's AUTHORED
 // letter order (data/scripts/<script>-ledger.json) still match the corpus? This
@@ -89,7 +116,7 @@ import { hasOwn } from "./constants.js";
 import type { ParsedLesson } from "./parse.js";
 import { SCRIPT_SYSTEMS, belongsToAny, readingOrder, systemOf } from "./ramp.js";
 
-export type LetterAnchoring = "anchored" | "builds-toward" | "cold" | "unmeasured";
+export type LetterAnchoring = "anchored" | "builds-toward" | "numeral" | "cold" | "unmeasured";
 
 /** One letter lesson and what, if anything, it was anchored in. */
 export interface LetterLessonAnchor {
@@ -108,6 +135,8 @@ export interface TrackLetterAnchoring {
   letterLessons: LetterLessonAnchor[];
   anchored: number;
   buildsToward: number;
+  /** Digit lessons: anchored in a known quantity, not a word. */
+  numeral: number;
   cold: number;
   unmeasured: number;
   /** Distinct glyphs any word headword shows. */
@@ -129,6 +158,7 @@ export interface LetterAnchoringReport {
     letterLessons: number;
     anchored: number;
     buildsToward: number;
+    numeral: number;
     cold: number;
     unmeasured: number;
     unwritten: number;
@@ -192,6 +222,27 @@ function combinationParts(ch: string): string[] {
   return mark === undefined ? [ch] : [parts[0]!, mark];
 }
 
+/** A decimal digit in any script: ౧, ೨, ੫, ٣. See "Numerals" above. */
+const DIGIT = /^\p{Nd}$/u;
+
+/**
+ * A CASE PAIR is one letter in two forms. Russian teaches the capital Я early,
+ * and the small я that spells the word "I" much later. The reader who already
+ * says я has met the letter, and the capital is its other shape, so the capital
+ * is anchored by the word, the same way が is anchored by か and ゛. This is
+ * one-to-one only: a letter whose other case is not a single code point, or
+ * that has no case at all (every Indic, Arabic and kana letter), is itself.
+ *
+ * Only anchoring reads case pairs. The completeness count (`unwritten`) still
+ * asks for each form that a word shows.
+ */
+function otherCase(ch: string): string {
+  const lower = ch.toLowerCase();
+  if (lower !== ch) return [...lower].length === 1 ? lower : ch;
+  const upper = ch.toUpperCase();
+  return [...upper].length === 1 ? upper : ch;
+}
+
 /** The target-script glyphs in a string, in order, deduplicated. */
 function glyphsIn(text: string, target: ReadonlySet<string>): string[] {
   return [
@@ -241,12 +292,13 @@ export function measureLetterAnchoring(lessons: readonly ParsedLesson[]): Letter
       if (letters !== undefined) {
         const letter = letters.join(" ");
         const glyphs = glyphsIn(letters.join(""), target);
-        const missing = glyphs.filter((ch) => !read.has(ch));
+        const missing = glyphs.filter((ch) => !read.has(ch) && !read.has(otherCase(ch)));
         const chapter = chapterOf(lesson);
         const sameChapter = wordGlyphsByChapter.get(chapter) ?? new Set<string>();
         let anchoring: LetterAnchoring;
         if (missing.length === 0) anchoring = "anchored";
         else if (missing.every((ch) => sameChapter.has(ch))) anchoring = "builds-toward";
+        else if (missing.every((ch) => DIGIT.test(ch))) anchoring = "numeral";
         else if (missing.every((ch) => systemOf(ch) === "Han")) anchoring = "unmeasured";
         else anchoring = "cold";
         letterLessons.push({ lessonId: lesson.realization.lessonId, letter, chapter, anchoring });
@@ -265,6 +317,7 @@ export function measureLetterAnchoring(lessons: readonly ParsedLesson[]): Letter
       letterLessons,
       anchored: count("anchored"),
       buildsToward: count("builds-toward"),
+      numeral: count("numeral"),
       cold: count("cold"),
       unmeasured: count("unmeasured"),
       lettersRead: read.size,
@@ -282,6 +335,7 @@ export function measureLetterAnchoring(lessons: readonly ParsedLesson[]): Letter
       letterLessons: total((track) => track.letterLessons.length),
       anchored: total((track) => track.anchored),
       buildsToward: total((track) => track.buildsToward),
+      numeral: total((track) => track.numeral),
       cold: total((track) => track.cold),
       unmeasured: total((track) => track.unmeasured),
       unwritten: total((track) => track.unwritten.length),

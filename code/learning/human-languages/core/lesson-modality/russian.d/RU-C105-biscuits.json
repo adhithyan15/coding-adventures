@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C105-biscuits",
+    "language": "russian",
+    "chapter": 105,
+    "sequence": 5420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:abfcf654b5945b18"
+  },
+  "findings": []
+}

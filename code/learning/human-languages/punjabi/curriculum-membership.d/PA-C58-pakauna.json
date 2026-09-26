@@ -1,0 +1,11 @@
+{
+  "id": "PA-C58-pakauna",
+  "pathSegment": "PA-PATH-58-VERBS58",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-58-VERBS58",
+      "order": 4
+    }
+  ]
+}

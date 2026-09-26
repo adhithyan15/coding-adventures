@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C18-uurugoolu",
+    "language": "kannada",
+    "chapter": 18,
+    "sequence": 464,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5af16d751088fd75"
+  },
+  "findings": []
+}

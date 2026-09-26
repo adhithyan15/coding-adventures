@@ -8,7 +8,7 @@ type: word
 headword: sondern
 gloss: but rather — the second "but", reserved for correcting a negative, which is the same job doch does for a question
 concept_tag: GE-CONNECT-SONDERN
-prerequisites: [GE-C35-aber, GE-C32-kein-oder-nicht, GE-C18-ja, GE-C13-schwarz, GE-C13-weiss]
+prerequisites: [GE-C35-aber, GE-C32-kein-oder-nicht, GE-C18-ja, GE-C13-schwarz, GE-C13-weiss, GE-C18-ja-more]
 sounds: []
 roots: [germanic-sundr]
 etymology_hook: "sondern is the verb sondern, 'to separate' — English sunder and asunder, the same word — so the joiner that corrects a negative is literally the one that keeps two things apart"

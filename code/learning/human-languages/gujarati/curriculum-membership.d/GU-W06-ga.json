@@ -1,11 +1,11 @@
 {
   "id": "GU-W06-ga",
   "pathSegment": "GU-PATH-FINAL-SCRIPT-CLOSURE-A",
-  "pathOrder": 0,
+  "pathOrder": 2,
   "extensions": [
     {
       "id": "GU-EXT-033-FINAL-SCRIPT-CLOSURE-A",
-      "order": 0
+      "order": 2
     }
   ]
 }

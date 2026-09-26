@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:a7aad54923709039",
+  "lessonIds": [
+    "GE-C94-grau",
+    "GE-C94-lila",
+    "GE-C94-sekunde",
+    "GE-C94-immer",
+    "GE-C94-sofort"
+  ],
+  "tex": "german/book/chapters/ch94-grey-purple-second-always-immediately.tex"
+}

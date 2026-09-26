@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C67-brauchen",
+    "language": "german",
+    "chapter": 67,
+    "sequence": 2110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:46f27e1a29e5ebb7"
+  },
+  "findings": []
+}

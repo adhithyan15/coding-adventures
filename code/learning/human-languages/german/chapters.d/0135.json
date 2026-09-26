@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Dangerous, Wet, Dry, Cool, Soft",
+  "label": "ch:ge-dangerous-wet-dry-cool-soft",
+  "canDo": "I can say dangerous, wet, dry, cool and soft.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C135-weich",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say dangerous, wet, dry, cool and soft.",
+    "assesses": [
+      "GE-LEX-C135-EIGEN135-03",
+      "GE-LEX-C135-EIGEN135-04",
+      "GE-LEX-C135-EIGEN135-05"
+    ]
+  }
+}

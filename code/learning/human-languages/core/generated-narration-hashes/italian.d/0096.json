@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:b981ee296a698516",
+  "lessonIds": [
+    "IT-C96-coperta",
+    "IT-C96-asciugamano",
+    "IT-C96-sapone",
+    "IT-C96-spazzolino",
+    "IT-C96-dentifricio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch96.txt",
+  "json": "italian/narration/ch96.json",
+  "textHash": "fnv1a64:d1d28babf821dd3b",
+  "jsonHash": "fnv1a64:016522585e646a81",
+  "findings": []
+}

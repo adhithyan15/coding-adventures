@@ -8,20 +8,20 @@ type: writing
 headword: "ك و — السلام عليكم"
 gloss: add kaf and waw, then copy the greeting and its reply cue
 romanization: kāf, wāw — as-salāmu ʿalaykum
-prerequisites: [AR-W00-ayn-ya]
+prerequisites: [AR-W00-ayn-ya, AR-C01-iid, AR-C01-kukh]
 sounds: [arabic-kaf, arabic-waw]
 roots: [phoenician-kaph, phoenician-waw, semitic-s-l-m]
 duration:
   max_seconds: 299
 requires:
-  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-SALAM-03]
+  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-SALAM-03, AR-LEX-ANCHOR-IID, AR-LEX-ANCHOR-KUKH]
 introduces:
   knowledge: [AR-SCRIPT-WRITE-FULL-GREETING-13]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-WRITE-FULL-GREETING-13]
+  knowledge: [AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-SALAM-03, AR-SCRIPT-WRITE-FULL-GREETING-13, AR-LEX-ANCHOR-IID, AR-LEX-ANCHOR-KUKH]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -33,7 +33,7 @@ reviews_of: [AR-W00-ayn-ya, AR-C01-as-salamu-alaykum, AR-W00-alif-mim-salam]
 # ك and و — complete the greeting after the sound
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-SALAM-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-SALAM-03, AR-LEX-ANCHOR-IID, AR-LEX-ANCHOR-KUKH] -->
 
 [PAUSE 2s] You can speak the greeting and recognize **ع** and **ي**. Add just two
 shapes, then copy the complete line.

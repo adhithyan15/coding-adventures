@@ -1,12 +1,13 @@
 {
   "language": "japanese",
   "chapter": 2,
-  "sourceHash": "fnv1a64:3ea6a6cad1cc95e9",
+  "sourceHash": "fnv1a64:89422aceb2b0b30d",
   "lessonIds": [
     "JA-W01-ko",
     "JA-W01-n",
     "JA-W01-ni",
     "JA-W01-chi",
+    "JA-C02-wani",
     "JA-W01-wa",
     "JA-W01-konnichiwa-read",
     "JA-C01-konnichiwa"

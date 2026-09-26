@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-123-METIERS75",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a nurse, a cook, a police officer, a shop assistant, a farmer.",
+  "prerequisites": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:ff6dffde9367664b",
+  "lessonIds": [
+    "BN-C67-bali",
+    "BN-C67-chad",
+    "BN-C67-somudro",
+    "BN-C67-agun",
+    "BN-C67-boroph"
+  ],
+  "tex": "bengali/book/chapters/ch67-sand-moon-sea-fire-ice.tex"
+}

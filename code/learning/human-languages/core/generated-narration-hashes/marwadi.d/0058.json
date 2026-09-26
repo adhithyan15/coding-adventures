@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:a132bbd648ccbf24",
+  "lessonIds": [
+    "MW-C58-puchhno",
+    "MW-C58-karno",
+    "MW-C58-mas",
+    "MW-C58-machhli",
+    "MW-C58-chaval"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch58.txt",
+  "json": "marwadi/narration/ch58.json",
+  "textHash": "fnv1a64:72913c9f1203ba01",
+  "jsonHash": "fnv1a64:05dbf81711a516d6",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C116-ceinture",
+  "pathSegment": "FR-PATH-116-HABITS68",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-116-HABITS68",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "Cow, Goat, Sheep, Mouse, Lion",
+  "label": "ch:ar-cow-goat-sheep-mouse-lion",
+  "canDo": "I can say a cow, a goat, a sheep, a mouse and a lion.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C79-asad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can say a cow, a goat, a sheep, a mouse and a lion.",
+    "assesses": [
+      "AR-LEX-C79-ANIMALS79-03",
+      "AR-LEX-C79-ANIMALS79-04",
+      "AR-LEX-C79-ANIMALS79-05"
+    ]
+  }
+}

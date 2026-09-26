@@ -8,7 +8,7 @@ type: practice
 headword: beaucoup, un peu, très, assez
 gloss: "four measures, one bare de, and the question they were all waiting for"
 concept_tag: FR-REVIEW-QUANTITY
-prerequisites: [FR-C40-monsieur]
+prerequisites: [FR-C40-monsieur, FR-C23-vert-jaune-more]
 sounds: []
 roots: []
 duration:

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C84-stern",
+    "language": "german",
+    "chapter": 84,
+    "sequence": 2960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d20a3aa99314c4d9"
+  },
+  "findings": []
+}

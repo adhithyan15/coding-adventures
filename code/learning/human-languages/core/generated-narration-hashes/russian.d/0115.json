@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:a2c51ec61e0abec3",
+  "lessonIds": [
+    "RU-C115-thunderstorm",
+    "RU-C115-ice",
+    "RU-C115-hill",
+    "RU-C115-rock",
+    "RU-C115-wave",
+    "RU-R115-first-pass-food-work-and-school",
+    "RU-R115-second-pass-free-time-and-nature"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch115.txt",
+  "json": "russian/narration/ch115.json",
+  "textHash": "fnv1a64:b9ad49e15559232b",
+  "jsonHash": "fnv1a64:e84be4cbd15085d9",
+  "findings": []
+}

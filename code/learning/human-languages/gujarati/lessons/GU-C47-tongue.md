@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C47-tongue
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2430
+sequence: 2443
 chapter: 47
 type: word
 headword: "જીભ"

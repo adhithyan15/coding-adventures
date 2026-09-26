@@ -1,0 +1,19 @@
+{
+  "chapter": 47,
+  "title": "Cake, Honey, Lunch, Dinner, Lemon",
+  "label": "ch:pt-cake-honey-lunch-dinner-lemon",
+  "canDo": "I can name cake and honey, lunch and dinner, and a lemon.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "PT-C47-limao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 47: i can name cake and honey, lunch and dinner, and a lemon.",
+    "assesses": [
+      "PT-LEX-C47-REFEICOES-03",
+      "PT-LEX-C47-REFEICOES-04",
+      "PT-LEX-C47-REFEICOES-05"
+    ]
+  }
+}

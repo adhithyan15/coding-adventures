@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C129-round",
+    "language": "russian",
+    "chapter": 129,
+    "sequence": 6770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3c61dcbb6eb1a4c"
+  },
+  "findings": []
+}

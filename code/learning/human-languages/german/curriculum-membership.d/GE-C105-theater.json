@@ -1,0 +1,11 @@
+{
+  "id": "GE-C105-theater",
+  "pathSegment": "GE-PATH-105-ORT105",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-105-ORT105",
+      "order": 3
+    }
+  ]
+}

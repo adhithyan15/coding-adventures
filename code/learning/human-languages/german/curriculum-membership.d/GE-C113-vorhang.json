@@ -1,0 +1,11 @@
+{
+  "id": "GE-C113-vorhang",
+  "pathSegment": "GE-PATH-113-HAUS113",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-113-HAUS113",
+      "order": 3
+    }
+  ]
+}

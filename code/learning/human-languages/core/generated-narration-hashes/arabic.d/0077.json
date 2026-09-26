@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:42bca8034806e55b",
+  "lessonIds": [
+    "AR-C77-najm",
+    "AR-C77-sahaba",
+    "AR-C77-shams",
+    "AR-C77-qamar",
+    "AR-C77-bahr"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch77.txt",
+  "json": "arabic/narration/ch77.json",
+  "textHash": "fnv1a64:5679209746a8d511",
+  "jsonHash": "fnv1a64:b3eb37203c6ab148",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C70-zwiebel",
+    "language": "german",
+    "chapter": 70,
+    "sequence": 2270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15c1ca25f91621d4"
+  },
+  "findings": []
+}

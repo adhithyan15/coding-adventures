@@ -1,0 +1,11 @@
+{
+  "id": "PA-C56-sunna",
+  "pathSegment": "PA-PATH-56-FAMILY56",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-56-FAMILY56",
+      "order": 2
+    }
+  ]
+}

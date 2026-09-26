@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Added — the Compose host knows Android (UI89 §3.4)
+
+`mosaicPlatform()` reports `android` on Android's runtime, and
+`MosaicRuntimeHost.stateDirectory` lets the platform say where state lives
+(the Android activity sets its `filesDir`); without it, Android keeps no
+state rather than guessing a path. Desktop is unchanged.
+
 ### Added — a statically linked runtime for iOS and iPadOS (UI89 §2.1)
 
 - `CMosaicRuntime.c` gains a `MOSAIC_RUNTIME_STATIC` path: the runtime's C

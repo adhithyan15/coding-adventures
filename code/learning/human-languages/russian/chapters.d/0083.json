@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "Midday, Midnight, Early, Late, In the morning",
+  "label": "ch:ru-midday-midnight-early-late-in-the-morning",
+  "canDo": "I can say midday, midnight, early, late and in the morning.",
+  "spineNodes": [
+    "SPINE-TIME-OF-DAY"
+  ],
+  "payoff": {
+    "lesson": "RU-C83-in-the-morning",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can say midday, midnight, early, late and in the morning.",
+    "assesses": [
+      "RU-LEX-C83-TIME83-03",
+      "RU-LEX-C83-TIME83-04",
+      "RU-LEX-C83-TIME83-05"
+    ]
+  }
+}

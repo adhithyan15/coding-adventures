@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "Factory, Office, Corner, Crossroads, Traffic lights",
+  "label": "ch:it-factory-office-corner-crossroads-traffic-lights",
+  "canDo": "I can say a factory, an office, a corner, a crossroads and traffic lights.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "IT-C89-semaforo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can say a factory, an office, a corner, a crossroads and traffic lights.",
+    "assesses": [
+      "IT-LEX-C89-LUOGHI89-03",
+      "IT-LEX-C89-LUOGHI89-04",
+      "IT-LEX-C89-LUOGHI89-05"
+    ]
+  }
+}

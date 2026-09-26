@@ -1,11 +1,11 @@
 {
   "id": "MR-W64-ddha",
   "pathSegment": "MR-PATH-066",
-  "pathOrder": 0,
+  "pathOrder": 1,
   "extensions": [
     {
       "id": "MR-EXT-079-ROWS-CLOSED",
-      "order": 0
+      "order": 1
     }
   ]
 }

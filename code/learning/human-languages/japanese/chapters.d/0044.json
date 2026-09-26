@@ -1,0 +1,19 @@
+{
+  "chapter": 44,
+  "title": "Island, Wave, Soil, Seed, Rain",
+  "label": "ch:ja-island-wave-soil-seed-rain",
+  "canDo": "I can say an island, a wave, soil, a seed and rain.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "JA-C44-ame",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 44: i can say an island, a wave, soil, a seed and rain.",
+    "assesses": [
+      "JA-LEX-C44-NATURE44-03",
+      "JA-LEX-C44-NATURE44-04",
+      "JA-LEX-C44-NATURE44-05"
+    ]
+  }
+}

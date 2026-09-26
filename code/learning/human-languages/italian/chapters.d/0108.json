@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Chocolate, Biscuit, Sandwich, Sauce, Vinegar",
+  "label": "ch:it-chocolate-biscuit-sandwich-sauce-vinegar",
+  "canDo": "I can say chocolate, a biscuit, a sandwich, a sauce and vinegar.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C108-aceto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say chocolate, a biscuit, a sandwich, a sauce and vinegar.",
+    "assesses": [
+      "IT-LEX-C108-CIBO108-03",
+      "IT-LEX-C108-CIBO108-04",
+      "IT-LEX-C108-CIBO108-05"
+    ]
+  }
+}

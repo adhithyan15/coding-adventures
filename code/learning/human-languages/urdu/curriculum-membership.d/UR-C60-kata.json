@@ -1,0 +1,11 @@
+{
+  "id": "UR-C60-kata",
+  "pathSegment": "UR-PATH-60-HOME60",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-60-HOME60",
+      "order": 4
+    }
+  ]
+}

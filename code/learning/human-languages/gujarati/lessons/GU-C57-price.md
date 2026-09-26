@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C57-price
 spine_node: SPINE-COURTESY-THANK
-sequence: 2910
+sequence: 2923
 chapter: 57
 type: word
 headword: "કિંમત"

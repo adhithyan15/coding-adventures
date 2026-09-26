@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:dd729795a1fcd4d0",
+  "lessonIds": [
+    "UR-C63-javab",
+    "UR-C63-lafz",
+    "UR-C63-khel",
+    "UR-C63-darakht",
+    "UR-C63-phul"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch63.txt",
+  "json": "urdu/narration/ch63.json",
+  "textHash": "fnv1a64:c14a1cbf05a29b53",
+  "jsonHash": "fnv1a64:60010d2628adc7a7",
+  "findings": []
+}

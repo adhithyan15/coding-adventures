@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:f2f9261f4b854769",
+  "lessonIds": [
+    "JA-C47-kani",
+    "JA-C47-tako",
+    "JA-C47-ika",
+    "JA-C47-kame",
+    "JA-C47-ookami"
+  ],
+  "tex": "japanese/book/chapters/ch47-crab-octopus-squid-turtle-wolf.tex"
+}

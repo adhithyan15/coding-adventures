@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W01-ha
 spine_node: SPINE-MEET-GREET
-sequence: 2
+sequence: 3
 delivery: script
 chapter: 1
 type: writing
 headword: હ
 romanization: "ha"
 gloss: "the consonant ha — and the vowel you get for free with it"
-prerequisites: [GU-C01-namaste]
+prerequisites: [GU-C01-namaste, GU-C01-aahaar]
 sounds: []
 roots: []
 etymology_hook: "Gujarati is Devanagari with the head-line erased; the letters float free, which is the one difference visible at a glance."
 duration:
   max_seconds: 180
 requires:
-  knowledge: []
+  knowledge: [GU-LEX-ANCHOR-AAHAAR]
 introduces:
   knowledge: [GU-SCRIPT-HA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-HA-01]
+  knowledge: [GU-SCRIPT-HA-01, GU-LEX-ANCHOR-AAHAAR]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -34,7 +34,7 @@ reviews_of: [GU-C01-namaste]
 # હ — the consonant ha
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-ANCHOR-AAHAAR] -->
 
 [PAUSE 2s] Say the greeting from the previous lesson once. Now let speech rest:
 today your hand meets only one reusable Gujarati consonant.

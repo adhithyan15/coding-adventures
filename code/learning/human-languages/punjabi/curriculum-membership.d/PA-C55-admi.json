@@ -1,0 +1,11 @@
+{
+  "id": "PA-C55-admi",
+  "pathSegment": "PA-PATH-55-FAMILY55",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-55-FAMILY55",
+      "order": 4
+    }
+  ]
+}

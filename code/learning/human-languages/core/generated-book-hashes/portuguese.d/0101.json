@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:fbfb9f0b8382e36e",
+  "lessonIds": [
+    "PT-C101-colar",
+    "PT-C101-fotografia",
+    "PT-C101-vela",
+    "PT-C101-calendario",
+    "PT-C101-mensagem"
+  ],
+  "tex": "portuguese/book/chapters/ch101-necklace-photograph-candle-calendar-message.tex"
+}

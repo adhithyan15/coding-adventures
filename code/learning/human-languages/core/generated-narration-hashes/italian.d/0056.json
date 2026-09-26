@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:8ca45b05643369f0",
+  "lessonIds": [
+    "IT-C56-cucina",
+    "IT-C56-finestra",
+    "IT-C56-tavolo",
+    "IT-C56-sedia",
+    "IT-C56-chiave"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch56.txt",
+  "json": "italian/narration/ch56.json",
+  "textHash": "fnv1a64:9d5d5882b80a41f0",
+  "jsonHash": "fnv1a64:8fd281749ff1759d",
+  "findings": []
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C09-puchhvun
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 490
+sequence: 503
 chapter: 15
 type: word
 headword: પૂછવું

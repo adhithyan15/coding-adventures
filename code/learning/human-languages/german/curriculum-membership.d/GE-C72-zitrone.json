@@ -1,0 +1,11 @@
+{
+  "id": "GE-C72-zitrone",
+  "pathSegment": "GE-PATH-72-ESSEN4",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-72-ESSEN4",
+      "order": 4
+    }
+  ]
+}

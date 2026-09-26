@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:7edc9878444398e3",
+  "lessonIds": [
+    "IT-C136-raccontare",
+    "IT-C136-camminare",
+    "IT-C136-pulire",
+    "IT-C136-trovare",
+    "IT-C136-cercare",
+    "IT-R136-first-pass-time-numbers-and-verbs",
+    "IT-R136-second-pass-more-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch136.txt",
+  "json": "italian/narration/ch136.json",
+  "textHash": "fnv1a64:05f3c994580ec081",
+  "jsonHash": "fnv1a64:cfad737e58f91c14",
+  "findings": []
+}

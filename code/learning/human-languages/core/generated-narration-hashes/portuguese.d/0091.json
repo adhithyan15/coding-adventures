@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:81fe0369908ea4d3",
+  "lessonIds": [
+    "PT-C91-metro",
+    "PT-C91-eletrico",
+    "PT-C91-viagem",
+    "PT-C91-ferias",
+    "PT-C91-bicicleta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch91.txt",
+  "json": "portuguese/narration/ch91.json",
+  "textHash": "fnv1a64:7bca111314d2dfbd",
+  "jsonHash": "fnv1a64:9e04b9a5864ee460",
+  "findings": []
+}

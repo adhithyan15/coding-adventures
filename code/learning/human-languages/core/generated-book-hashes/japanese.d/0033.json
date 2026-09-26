@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 33,
+  "sourceHash": "fnv1a64:4a2f15b8a3ce5103",
+  "lessonIds": [
+    "JA-C33-ringo",
+    "JA-C33-mikan",
+    "JA-C33-ichigo",
+    "JA-C33-momo",
+    "JA-C33-nashi"
+  ],
+  "tex": "japanese/book/chapters/ch33-apple-mandarin-orange-strawberry-peach-pear.tex"
+}

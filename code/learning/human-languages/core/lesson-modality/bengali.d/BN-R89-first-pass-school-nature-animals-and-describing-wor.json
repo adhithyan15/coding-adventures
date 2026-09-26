@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R89-first-pass-school-nature-animals-and-describing-wor",
+    "language": "bengali",
+    "chapter": 89,
+    "sequence": 4650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:512ea903ba774cde"
+  },
+  "findings": []
+}

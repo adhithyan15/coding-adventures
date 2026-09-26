@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W03-ii-matra
 spine_node: SPINE-MEET-GREET
-sequence: 64
+sequence: 68
 delivery: script
 chapter: 3
 type: writing
 headword: ી
 romanization: "-ī"
 gloss: "the attached long-i vowel sign"
-prerequisites: [GU-W03-anusvara]
+prerequisites: [GU-W03-anusvara, GU-C03-chhip]
 sounds: []
 roots: []
 etymology_hook: "Gujarati keeps the related Devanagari sound system while dropping the continuous headline."
 duration:
   max_seconds: 220
 requires:
-  knowledge: [GU-SCRIPT-ANUSVARA-01]
+  knowledge: [GU-SCRIPT-ANUSVARA-01, GU-LEX-ANCHOR-CHHIP]
 introduces:
   knowledge: [GU-SCRIPT-II-MATRA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-ANUSVARA-01, GU-SCRIPT-II-MATRA-01]
+  knowledge: [GU-SCRIPT-ANUSVARA-01, GU-SCRIPT-II-MATRA-01, GU-LEX-ANCHOR-CHHIP]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W03-anusvara]
 # ી — the attached long-i vowel sign
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-ANUSVARA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-ANUSVARA-01, GU-LEX-ANCHOR-CHHIP] -->
 
 Place the nasal dot once from memory. Keep it above the writing line.
 

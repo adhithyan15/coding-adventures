@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C77-der",
+    "language": "urdu",
+    "chapter": 77,
+    "sequence": 3930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6633916c08ffe2e3"
+  },
+  "findings": []
+}

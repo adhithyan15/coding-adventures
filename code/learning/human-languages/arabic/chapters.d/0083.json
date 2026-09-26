@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "Slow, Fast, Easy, Difficult, Cheap",
+  "label": "ch:ar-slow-fast-easy-difficult-cheap",
+  "canDo": "I can say slow, fast, easy, difficult and cheap.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C83-rakhis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can say slow, fast, easy, difficult and cheap.",
+    "assesses": [
+      "AR-LEX-C83-ADJ83-03",
+      "AR-LEX-C83-ADJ83-04",
+      "AR-LEX-C83-ADJ83-05"
+    ]
+  }
+}

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C72-small
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3670
+sequence: 3683
 chapter: 72
 type: word
 headword: "નાનું"

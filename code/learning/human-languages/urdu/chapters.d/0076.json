@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Minute, Today, Yesterday, Right now, Then",
+  "label": "ch:ur-minute-today-yesterday-right-now-then",
+  "canDo": "I can say a minute, today, yesterday, right now and then, again.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "UR-C76-phir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can say a minute, today, yesterday, right now and then, again.",
+    "assesses": [
+      "UR-LEX-C76-TIME76-03",
+      "UR-LEX-C76-TIME76-04",
+      "UR-LEX-C76-TIME76-05"
+    ]
+  }
+}

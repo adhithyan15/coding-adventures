@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:d7b30687c963824b",
+  "lessonIds": [
+    "PT-C62-cobra",
+    "PT-C62-galinha",
+    "PT-C62-pato",
+    "PT-C62-ovelha",
+    "PT-C62-cabra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch62.txt",
+  "json": "portuguese/narration/ch62.json",
+  "textHash": "fnv1a64:f1c59861091e8ad6",
+  "jsonHash": "fnv1a64:545c12187b3b26a4",
+  "findings": []
+}

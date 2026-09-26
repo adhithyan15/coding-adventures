@@ -4,11 +4,11 @@
   "chapter": 80,
   "title": "Hours, Minutes and Holidays",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bfadd8b774059bd6",
+  "sourceHash": "fnv1a64:8ad7456a7d40362c",
   "lessons": [
     {
       "id": "GU-C80-hour",
-      "sequence": 4060,
+      "sequence": 4073,
       "title": "કલાક (kalāk) — an hour",
       "headword": "કલાક",
       "romanization": "kalāk",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b06e2e8960499bb",
+      "sourceHash": "fnv1a64:8fc79aca3fafb10b",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C80-minute",
-      "sequence": 4070,
+      "sequence": 4083,
       "title": "મિનિટ (miniṭ) — a minute",
       "headword": "મિનિટ",
       "romanization": "miniṭ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:573dff2e0440e822",
+      "sourceHash": "fnv1a64:ef0e84ceb8ef7cb0",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C80-holiday",
-      "sequence": 4080,
+      "sequence": 4093,
       "title": "રજા (rajā) — a holiday, leave",
       "headword": "રજા",
       "romanization": "rajā",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f37ab41e60fb8492",
+      "sourceHash": "fnv1a64:817386d14e8fec42",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C80-festival",
-      "sequence": 4090,
+      "sequence": 4103,
       "title": "તહેવાર (tahevār) — a festival",
       "headword": "તહેવાર",
       "romanization": "tahevār",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:904399da41f75ef9",
+      "sourceHash": "fnv1a64:00c78c9d5bb20cec",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C80-holi",
-      "sequence": 4100,
+      "sequence": 4113,
       "title": "હોળી (hoḷī) — Holi, the festival of colours",
       "headword": "હોળી",
       "romanization": "hoḷī",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a9e498a142254af",
+      "sourceHash": "fnv1a64:58de5a9fd555a423",
       "notice": null,
       "blocks": [
         {

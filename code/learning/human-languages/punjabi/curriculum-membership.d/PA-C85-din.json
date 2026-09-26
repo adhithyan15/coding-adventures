@@ -1,0 +1,11 @@
+{
+  "id": "PA-C85-din",
+  "pathSegment": "PA-PATH-85-ADJ85",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-85-ADJ85",
+      "order": 1
+    }
+  ]
+}

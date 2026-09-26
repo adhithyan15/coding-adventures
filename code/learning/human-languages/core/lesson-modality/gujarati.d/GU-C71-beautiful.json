@@ -3,7 +3,7 @@
     "id": "GU-C71-beautiful",
     "language": "gujarati",
     "chapter": 71,
-    "sequence": 3640,
+    "sequence": 3653,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e1b88d6a06e262bd"
+    "sourceHash": "fnv1a64:a2d1b7f8ac33794d"
   },
   "findings": []
 }

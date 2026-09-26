@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C63-wall
 spine_node: SPINE-MEET-GREET
-sequence: 3200
+sequence: 3213
 chapter: 63
 type: word
 headword: "દીવાલ"

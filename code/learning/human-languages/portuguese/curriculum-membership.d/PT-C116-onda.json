@@ -1,0 +1,11 @@
+{
+  "id": "PT-C116-onda",
+  "pathSegment": "PT-PATH-116-NATUREZA116",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-116-NATUREZA116",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C64-goma",
+    "language": "japanese",
+    "chapter": 64,
+    "sequence": 3860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a61c682f60c105f"
+  },
+  "findings": []
+}

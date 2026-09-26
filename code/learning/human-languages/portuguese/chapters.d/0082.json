@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "To be able to, To have to, Need, Trade, To take",
+  "label": "ch:pt-to-be-able-to-to-have-to-need-trade-to-take",
+  "canDo": "I can say to be able to, to have to, a need, a trade and to take.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "PT-C82-levar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can say to be able to, to have to, a need, a trade and to take.",
+    "assesses": [
+      "PT-LEX-C82-PODER82-03",
+      "PT-LEX-C82-PODER82-04",
+      "PT-LEX-C82-PODER82-05"
+    ]
+  }
+}

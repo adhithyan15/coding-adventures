@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:b1f419b6af7e8547",
+  "lessonIds": [
+    "MW-C76-patlo",
+    "MW-C76-bhari",
+    "MW-C76-sacho",
+    "MW-C76-haro",
+    "MW-C76-pilo"
+  ],
+  "tex": "marwadi/book/chapters/ch76-thin-heavy-true-green-yellow.tex"
+}

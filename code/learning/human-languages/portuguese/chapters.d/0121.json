@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Lilac, Purple, Brown, Busy, Free",
+  "label": "ch:pt-lilac-purple-brown-busy-free",
+  "canDo": "I can say lilac, purple, brown, busy and free.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PT-C121-livre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say lilac, purple, brown, busy and free.",
+    "assesses": [
+      "PT-LEX-C121-CORES121-03",
+      "PT-LEX-C121-CORES121-04",
+      "PT-LEX-C121-CORES121-05"
+    ]
+  }
+}

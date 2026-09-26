@@ -1,0 +1,11 @@
+{
+  "id": "BN-C68-batas",
+  "pathSegment": "BN-PATH-68-NATURE68",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-68-NATURE68",
+      "order": 1
+    }
+  ]
+}

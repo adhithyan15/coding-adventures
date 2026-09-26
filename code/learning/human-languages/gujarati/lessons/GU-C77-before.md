@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C77-before
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3950
+sequence: 3963
 chapter: 77
 type: word
 headword: "પહેલાં"

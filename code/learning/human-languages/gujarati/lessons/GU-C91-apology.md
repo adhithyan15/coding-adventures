@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C91-apology
 spine_node: SPINE-COURTESY-THANK
-sequence: 4640
+sequence: 4653
 chapter: 91
 type: word
 headword: "માફી"

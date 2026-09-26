@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C59-banana
 spine_node: SPINE-COURTESY-THANK
-sequence: 3000
+sequence: 3013
 chapter: 59
 type: word
 headword: "કેળું"

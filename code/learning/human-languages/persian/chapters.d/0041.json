@@ -1,0 +1,19 @@
+{
+  "chapter": 41,
+  "title": "Fruit, Apple, Banana, Tomato, Carrot",
+  "label": "ch:fa-fruit-apple-banana-tomato-carrot",
+  "canDo": "I can say fruit, an apple, a banana, a tomato and a carrot.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FA-C41-havij",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 41: i can say fruit, an apple, a banana, a tomato and a carrot.",
+    "assesses": [
+      "FA-LEX-C41-FOOD41-03",
+      "FA-LEX-C41-FOOD41-04",
+      "FA-LEX-C41-FOOD41-05"
+    ]
+  }
+}

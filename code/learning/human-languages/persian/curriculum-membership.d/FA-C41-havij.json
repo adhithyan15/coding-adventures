@@ -1,0 +1,11 @@
+{
+  "id": "FA-C41-havij",
+  "pathSegment": "FA-PATH-41-FOOD41",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-41-FOOD41",
+      "order": 4
+    }
+  ]
+}

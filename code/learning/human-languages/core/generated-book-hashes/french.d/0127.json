@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:5b98e7be55891d58",
+  "lessonIds": [
+    "FR-C127-gomme",
+    "FR-C127-devoirs",
+    "FR-C127-reponse",
+    "FR-C127-idee",
+    "FR-C127-probleme",
+    "FR-R127-first-pass-clothes-and-things-you-carry",
+    "FR-R127-second-pass-food-and-work"
+  ],
+  "tex": "french/book/chapters/ch127-rubber-homework-answer-idea-problem.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C73-daftar",
+  "pathSegment": "AR-PATH-73-SCHOOL73",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-73-SCHOOL73",
+      "order": 1
+    }
+  ]
+}

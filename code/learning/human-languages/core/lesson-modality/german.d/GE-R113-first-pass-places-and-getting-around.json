@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R113-first-pass-places-and-getting-around",
+    "language": "german",
+    "chapter": 113,
+    "sequence": 4500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6be52d00ab92297d"
+  },
+  "findings": []
+}

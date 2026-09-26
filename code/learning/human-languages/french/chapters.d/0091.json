@@ -1,0 +1,19 @@
+{
+  "chapter": 91,
+  "title": "Strong, Weak, Rich, Poor, Grey",
+  "label": "ch:fr-strong-weak-rich-poor-grey",
+  "canDo": "I can name strong, weak, rich, poor, grey.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C91-gris",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 91: i can name strong, weak, rich, poor, grey.",
+    "assesses": [
+      "FR-LEX-C91-ADJ43-03",
+      "FR-LEX-C91-ADJ43-04",
+      "FR-LEX-C91-ADJ43-05"
+    ]
+  }
+}

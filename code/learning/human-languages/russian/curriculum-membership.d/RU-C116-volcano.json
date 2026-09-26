@@ -1,0 +1,11 @@
+{
+  "id": "RU-C116-volcano",
+  "pathSegment": "RU-PATH-116-THINGS116",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-116-THINGS116",
+      "order": 1
+    }
+  ]
+}

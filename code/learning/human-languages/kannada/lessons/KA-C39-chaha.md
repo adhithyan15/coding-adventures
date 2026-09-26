@@ -9,7 +9,7 @@ headword: ಚಹಾ
 gloss: tea — a word that travelled overland from China through Persia before it ever reached Kannada, the same road Chapter 20's weather-word took
 romanization: cahā
 concept_tag: KA-TEA
-prerequisites: [KA-C38-hrudaya, KA-C20-havamana, KA-C35-snehita]
+prerequisites: [KA-C38-hrudaya, KA-C20-havamana, KA-C35-snehita, KA-C38-namah]
 sounds: [ca-sound, long-aa]
 roots: [chinese-cha, persian-chay]
 etymology_hook: "ಚಹಾ traces to Northern Chinese chá, carried overland along Central Asian trade routes into Persian چای chāy, and from Persian into Kannada and most of North and South India alike — the same land route, through the same language, that Chapter 20's ಹವಾಮಾನ took for its first half, hava; tea that reached Europe by SEA instead kept the Southern Chinese form, which is why English says tea and not chai"
@@ -17,11 +17,11 @@ reviews_of: [KA-C38-hrudaya, KA-C20-havamana]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02, KA-ETYMON-C20-HAVAMANA-01]
+  knowledge: [KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02, KA-ETYMON-C20-HAVAMANA-01, KA-LEX-ANCHOR-NAMAH]
 introduces:
   knowledge: [KA-LEX-C39-CHAHA-01, KA-ETYMON-C39-CHAHA-02]
 practises:
-  knowledge: [KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02, KA-ETYMON-C20-HAVAMANA-01, KA-LEX-C39-CHAHA-01, KA-ETYMON-C39-CHAHA-02, KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02]
+  knowledge: [KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02, KA-ETYMON-C20-HAVAMANA-01, KA-LEX-C39-CHAHA-01, KA-ETYMON-C39-CHAHA-02, KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02, KA-LEX-ANCHOR-NAMAH]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ variety: standard-colloquial
 # ಚಹಾ (cahā) — "tea," which walked to Kannada rather than sailed
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C38-HRUDAYA-01, KA-ETYMON-C38-HRUDAYA-02, KA-LEX-ANCHOR-NAMAH] -->
 
 [PAUSE 2s] Seven body words done. Now the drink you would politely ask for
 first, in any Karnataka home.

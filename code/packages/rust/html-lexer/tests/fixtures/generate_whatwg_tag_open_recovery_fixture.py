@@ -274,7 +274,7 @@ def eof_recovery_cases() -> list[dict[str, object]]:
             "description": "EOF in end-tag attributes drops the partial end tag",
             "input": "</section class=x",
             "tokens": ["EOF"],
-            "diagnostics": ["end-tag-with-attributes", "eof-in-end-tag-name-state"],
+            "diagnostics": ["end-tag-with-attributes", "eof-in-tag"],
         },
     ]
 

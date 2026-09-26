@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C126-chef",
+    "language": "german",
+    "chapter": 126,
+    "sequence": 5240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4b6bf7818a1c52d"
+  },
+  "findings": []
+}

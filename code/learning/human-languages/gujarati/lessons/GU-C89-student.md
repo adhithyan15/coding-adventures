@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C89-student
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 4510
+sequence: 4523
 chapter: 89
 type: word
 headword: "વિદ્યાર્થી"

@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Alarm clock, Mobile phone, Stamp, Wallet, Ring",
+  "label": "ch:pt-alarm-clock-mobile-phone-stamp-wallet-ring",
+  "canDo": "I can say an alarm clock, a mobile phone, a stamp, a wallet and a ring.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C100-anel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can say an alarm clock, a mobile phone, a stamp, a wallet and a ring.",
+    "assesses": [
+      "PT-LEX-C100-COISAS100-03",
+      "PT-LEX-C100-COISAS100-04",
+      "PT-LEX-C100-COISAS100-05"
+    ]
+  }
+}

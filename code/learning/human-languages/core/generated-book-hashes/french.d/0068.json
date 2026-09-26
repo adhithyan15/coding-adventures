@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:13199b703149777f",
+  "lessonIds": [
+    "FR-C68-banane",
+    "FR-C68-orange",
+    "FR-C68-terre",
+    "FR-C68-tomate",
+    "FR-C68-oignon"
+  ],
+  "tex": "french/book/chapters/ch68-banana-orange-potato-tomato-onion.tex"
+}

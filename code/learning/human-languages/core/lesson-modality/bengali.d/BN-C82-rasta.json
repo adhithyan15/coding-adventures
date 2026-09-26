@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C82-rasta",
+    "language": "bengali",
+    "chapter": 82,
+    "sequence": 4270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9225670f375ee93"
+  },
+  "findings": []
+}

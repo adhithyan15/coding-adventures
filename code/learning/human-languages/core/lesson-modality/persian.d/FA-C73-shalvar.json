@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C73-shalvar",
+    "language": "persian",
+    "chapter": 73,
+    "sequence": 3570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fb3a8f43a577f5ec"
+  },
+  "findings": []
+}

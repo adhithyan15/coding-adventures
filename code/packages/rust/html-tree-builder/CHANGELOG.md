@@ -5,6 +5,26 @@ documented in this file.
 
 ## Unreleased
 
+- `tests/raw_text_end_tags.rs` pins that hidden-`<img>` payloads around
+  raw-text end tags (`</</style>`, quoted `>` in end-tag attributes) produce
+  no element.
+- **Script-data end tags.** With `html-lexer` deciding appropriate end tags
+  at whitespace or `/`, 31 listed corpus cases (`tests16.dat`,
+  `domjs-unsafe.dat:145/146`, `scriptdata01.dat:411`)
+  pass and leave `tests/fixtures/expected-failures.txt`.
+
+- **BR03 step 4: fragment parsing (§13.4).** `parse_fragment(source,
+  &FragmentContext, options)` parses as the children of a context element,
+  HTML or foreign (`FragmentContext::html("td")`): the tokenizer starts in the
+  context's text state with no appropriate end tag, a `template` context
+  pushes "in template", the insertion mode is reset through the context, and
+  `</html>` and `</frameset>` take their fragment-case rules. The form rules
+  now follow the specification's "parsing template contents" (a template open
+  *or* a template context). **2,614 of 2,655** corpus cases pass (199 more),
+  including `template.dat:124`, which `html-parser` fails. The 41 that fail:
+  31 wait on the html-lexer script-data fix, 6 need a script engine, 4 are
+  `<selectedcontent>`.
+
 - **BR03 step 3: foreign content.** The tree construction dispatcher now
   sends tokens to the foreign-content rules (§13.2.6.5) when the adjusted
   current node is SVG or MathML, except at MathML text integration points,

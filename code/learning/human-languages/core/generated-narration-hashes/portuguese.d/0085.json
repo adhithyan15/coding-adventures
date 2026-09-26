@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:6d3cf5a90095b7aa",
+  "lessonIds": [
+    "PT-C85-aeroporto",
+    "PT-C85-paragem",
+    "PT-C85-correios",
+    "PT-C85-cinema",
+    "PT-C85-camara-municipal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch85.txt",
+  "json": "portuguese/narration/ch85.json",
+  "textHash": "fnv1a64:2c7accb1ea5aec98",
+  "jsonHash": "fnv1a64:5857fd5b6a98949d",
+  "findings": []
+}

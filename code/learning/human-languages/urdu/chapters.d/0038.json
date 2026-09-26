@@ -1,0 +1,19 @@
+{
+  "chapter": 38,
+  "title": "Hand, Head, Hair, Tooth, Throat",
+  "label": "ch:ur-hand-head-hair-tooth-throat",
+  "canDo": "I can say a hand, the head, hair, a tooth and the throat.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C38-gala",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 38: i can say a hand, the head, hair, a tooth and the throat.",
+    "assesses": [
+      "UR-LEX-C38-BODY38-03",
+      "UR-LEX-C38-BODY38-04",
+      "UR-LEX-C38-BODY38-05"
+    ]
+  }
+}

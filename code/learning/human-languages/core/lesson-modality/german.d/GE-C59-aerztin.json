@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C59-aerztin",
+    "language": "german",
+    "chapter": 59,
+    "sequence": 1710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:368948d569b6605b"
+  },
+  "findings": []
+}

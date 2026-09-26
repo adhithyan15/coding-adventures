@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C03-haajj",
+    "language": "arabic",
+    "chapter": 3,
+    "sequence": 269,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:046ef017657d11e9"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-88-LUGARES88",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "PT-EXT-88-LUGARES88"
+  ],
+  "after": []
+}

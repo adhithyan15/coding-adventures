@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "To stop, To look for, To find, To wear, To leave",
+  "label": "ch:ar-to-stop-to-look-for-to-find-to-wear-to-leave",
+  "canDo": "I can say to stop, to look for, to find, to wear and to leave.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C62-taraka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: i can say to stop, to look for, to find, to wear and to leave.",
+    "assesses": [
+      "AR-LEX-C62-VERBS62-03",
+      "AR-LEX-C62-VERBS62-04",
+      "AR-LEX-C62-VERBS62-05"
+    ]
+  }
+}

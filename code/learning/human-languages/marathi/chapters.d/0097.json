@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "Lake, Stone, Sand, Field, Star",
+  "label": "ch:mr-lake-stone-sand-field-star",
+  "canDo": "I can say a lake, a stone, sand, a field and a star.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C97-tara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can say a lake, a stone, sand, a field and a star.",
+    "assesses": [
+      "MR-LEX-C97-NATURE97-03",
+      "MR-LEX-C97-NATURE97-04",
+      "MR-LEX-C97-NATURE97-05"
+    ]
+  }
+}

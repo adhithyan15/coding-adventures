@@ -1,0 +1,19 @@
+{
+  "chapter": 64,
+  "title": "To go out, To work, To live, To wait, To come back",
+  "label": "ch:ar-to-go-out-to-work-to-live-to-wait-to-come-back",
+  "canDo": "I can say to go out, to work, to live, to wait and to come back.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "AR-C64-rajaa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 64: i can say to go out, to work, to live, to wait and to come back.",
+    "assesses": [
+      "AR-LEX-C64-VERBS64-03",
+      "AR-LEX-C64-VERBS64-04",
+      "AR-LEX-C64-VERBS64-05"
+    ]
+  }
+}

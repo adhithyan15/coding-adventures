@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W02-anusvara
 spine_node: SPINE-COURTESY-THANK
-sequence: 25
+sequence: 29
 delivery: script
 chapter: 2
 type: writing
 headword: ं
 romanization: "ṃ"
 gloss: anusvara — one nasal dot above the headline
-prerequisites: [MR-W02-e-matra]
+prerequisites: [MR-W02-e-matra, MR-C02-sant]
 sounds: [nasal]
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [MR-SCRIPT-E-MATRA-01]
+  knowledge: [MR-SCRIPT-E-MATRA-01, MR-LEX-ANCHOR-SANT]
 introduces:
   knowledge: [MR-SCRIPT-ANUSVARA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-ANUSVARA-01]
+  knowledge: [MR-SCRIPT-ANUSVARA-01, MR-LEX-ANCHOR-SANT]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W02-e-matra]
 # ं — one nasal dot
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-SANT] -->
 
 Prepare to place one mark above a headline.
 

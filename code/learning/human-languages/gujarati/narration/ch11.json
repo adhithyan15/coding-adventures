@@ -4,11 +4,11 @@
   "chapter": 11,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6db7dcb6b2e752cd",
+  "sourceHash": "fnv1a64:f6f790b69039de20",
   "lessons": [
     {
       "id": "GU-C05-bolvun",
-      "sequence": 290,
+      "sequence": 303,
       "title": "બોલવું (bolvũ) — \"to speak,\" your first full verb",
       "headword": "બોલવું",
       "romanization": "bolvũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1aed8d621c978f0c",
+      "sourceHash": "fnv1a64:e4f5239b8128fd87",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -162,7 +162,7 @@
     },
     {
       "id": "GU-C05-hun-gujarati-bolun-chhun",
-      "sequence": 300,
+      "sequence": 313,
       "title": "હું ગુજરાતી બોલું છું (hũ gujarātī bolũ chhũ) — \"I speak Gujarati\"",
       "headword": "હું ગુજરાતી બોલું છું",
       "romanization": "hũ gujarātī bolũ chhũ",
@@ -173,7 +173,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f4520a9106a02ed3",
+      "sourceHash": "fnv1a64:84918ea1eb5fdc3f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -296,7 +296,7 @@
     },
     {
       "id": "GU-C05-kaam-karvun",
-      "sequence": 310,
+      "sequence": 323,
       "title": "કામ કરવું (kām karvũ) — \"to work\"",
       "headword": "કામ કરવું",
       "romanization": "kām karvũ",
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cfb85864c46a1bb7",
+      "sourceHash": "fnv1a64:1a2f7599c6899391",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -431,7 +431,7 @@
     },
     {
       "id": "GU-C05-rahevun",
-      "sequence": 320,
+      "sequence": 333,
       "title": "રહેવું (rahevũ) — \"to live, to stay\"",
       "headword": "રહેવું",
       "romanization": "rahevũ",
@@ -442,7 +442,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0ca947cff8f80227",
+      "sourceHash": "fnv1a64:4609bc8e479bf75b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -565,7 +565,7 @@
     },
     {
       "id": "GU-C05-practice",
-      "sequence": 330,
+      "sequence": 343,
       "title": "Chapter 7 — The first verbs",
       "headword": "(dialogue)",
       "romanization": "",
@@ -576,7 +576,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ced5acb306cb061f",
+      "sourceHash": "fnv1a64:14f3273cede98df5",
       "notice": null,
       "blocks": [
         {

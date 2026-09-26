@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:e18b372484ba9991",
+  "lessonIds": [
+    "PT-C126-fresco",
+    "PT-C126-macio",
+    "PT-C126-duro",
+    "PT-C126-redondo",
+    "PT-C126-largo"
+  ],
+  "tex": "portuguese/book/chapters/ch126-cool-soft-hard-round-wide.tex"
+}

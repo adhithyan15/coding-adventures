@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:bbc2c3b493b926cb",
+  "lessonIds": [
+    "FA-C64-abi",
+    "FA-C64-siyah",
+    "FA-C64-sefid",
+    "FA-C64-hafte",
+    "FA-C64-sal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch64.txt",
+  "json": "persian/narration/ch64.json",
+  "textHash": "fnv1a64:5476326299149a86",
+  "jsonHash": "fnv1a64:98147431186b5acc",
+  "findings": []
+}

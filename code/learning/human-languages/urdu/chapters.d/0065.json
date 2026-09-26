@@ -1,0 +1,19 @@
+{
+  "chapter": 65,
+  "title": "Stone, Sand, Field, Star, Cloud",
+  "label": "ch:ur-stone-sand-field-star-cloud",
+  "canDo": "I can say a stone, sand, a field, a star and a cloud.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C65-badal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: i can say a stone, sand, a field, a star and a cloud.",
+    "assesses": [
+      "UR-LEX-C65-NATURE65-03",
+      "UR-LEX-C65-NATURE65-04",
+      "UR-LEX-C65-NATURE65-05"
+    ]
+  }
+}

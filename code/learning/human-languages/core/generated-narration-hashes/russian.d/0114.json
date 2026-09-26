@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:6805a59ea6ee6803",
+  "lessonIds": [
+    "RU-C114-price",
+    "RU-C114-football",
+    "RU-C114-concert",
+    "RU-C114-holiday",
+    "RU-C114-fog"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch114.txt",
+  "json": "russian/narration/ch114.json",
+  "textHash": "fnv1a64:6e678abf6510db35",
+  "jsonHash": "fnv1a64:33edfa5e3227ba5d",
+  "findings": []
+}

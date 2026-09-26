@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C65-aivaj",
+    "language": "marathi",
+    "chapter": 65,
+    "sequence": 2659,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5c77bf431d7220da"
+  },
+  "findings": []
+}

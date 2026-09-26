@@ -1,0 +1,11 @@
+{
+  "id": "GE-R103-first-pass-nature-animals-and-describing-words",
+  "pathSegment": "GE-PATH-103-FREIZEIT",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "GE-EXT-103-FREIZEIT",
+      "order": 5
+    }
+  ]
+}

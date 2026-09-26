@@ -1,0 +1,11 @@
+{
+  "id": "GE-C108-osten",
+  "pathSegment": "GE-PATH-108-RICHTUNG108",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-108-RICHTUNG108",
+      "order": 2
+    }
+  ]
+}

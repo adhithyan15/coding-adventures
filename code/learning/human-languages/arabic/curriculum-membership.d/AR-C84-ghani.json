@@ -1,0 +1,11 @@
+{
+  "id": "AR-C84-ghani",
+  "pathSegment": "AR-PATH-84-ADJ84",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-84-ADJ84",
+      "order": 1
+    }
+  ]
+}

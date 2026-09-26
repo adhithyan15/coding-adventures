@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C63-boi",
+    "language": "bengali",
+    "chapter": 63,
+    "sequence": 3310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e33e0e83b27d5d54"
+  },
+  "findings": []
+}

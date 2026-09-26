@@ -4,11 +4,11 @@
   "chapter": 20,
   "title": "Fourth Return: The Introduction",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4809d62940353d25",
+  "sourceHash": "fnv1a64:f175b5e1ffa95496",
   "lessons": [
     {
       "id": "GU-R16-naam-r4",
-      "sequence": 700,
+      "sequence": 713,
       "title": "Nām returns at R4",
       "headword": "નામ",
       "romanization": "nām",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d0b8bf1c3fbaccfc",
+      "sourceHash": "fnv1a64:4749e418b40783ac",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -130,7 +130,7 @@
     },
     {
       "id": "GU-R16-maarun-r4",
-      "sequence": 710,
+      "sequence": 723,
       "title": "Mārũ returns with nām",
       "headword": "મારું",
       "romanization": "mārũ",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:ade5b3fe0a1c9779",
+      "sourceHash": "fnv1a64:d4d62462b8d7ee67",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-R16-chhe-r4",
-      "sequence": 720,
+      "sequence": 733,
       "title": "Chhe returns to the final slot",
       "headword": "છે",
       "romanization": "chhe",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:9f2b4ec29f551ad0",
+      "sourceHash": "fnv1a64:ff698b2313ada5e0",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -378,7 +378,7 @@
     },
     {
       "id": "GU-R16-my-name-is-r4",
-      "sequence": 730,
+      "sequence": 743,
       "title": "The whole name frame returns at R4",
       "headword": "મારું નામ … છે",
       "romanization": "mārũ nām … chhe",
@@ -389,7 +389,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:77de755d6a454e26",
+      "sourceHash": "fnv1a64:4ad151f2729e5b54",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -506,7 +506,7 @@
     },
     {
       "id": "GU-R16-anand-r4",
-      "sequence": 740,
+      "sequence": 753,
       "title": "Ānand returns to close the introduction",
       "headword": "તમને મળીને આનંદ થયો",
       "romanization": "tamne maḷīne ānand thayo",
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:9f4fa5a43c7c2060",
+      "sourceHash": "fnv1a64:57ad6b72fa86ca10",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -630,7 +630,7 @@
     },
     {
       "id": "GU-R16-wellbeing-r3",
-      "sequence": 750,
+      "sequence": 763,
       "title": "After names, the wellbeing exchange returns",
       "headword": "તમે કેમ છો? હું મજામાં છું। વાંધો નહીં।",
       "romanization": "tame kem chho? hũ majāmā chhũ. vāndho nahĩ.",
@@ -641,7 +641,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:215e9e6249845f9e",
+      "sourceHash": "fnv1a64:9ba309eb97883140",
       "notice": {
         "modality": "pen",
         "needs": [],

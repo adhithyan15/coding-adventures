@@ -4,11 +4,11 @@
   "chapter": 45,
   "title": "Letters From Home and Money",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b4eb65460ecc436e",
+  "sourceHash": "fnv1a64:f4d3bb7bfe929aee",
   "lessons": [
     {
       "id": "GU-W45-gha",
-      "sequence": 2300,
+      "sequence": 2313,
       "title": "ઘ (gha) — the letter that opens ઘર",
       "headword": "ઘ",
       "romanization": "gha",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:babbcd97cfaea232",
+      "sourceHash": "fnv1a64:6c21582f44320e76",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -170,7 +170,7 @@
     },
     {
       "id": "GU-W45-ai-sign",
-      "sequence": 2310,
+      "sequence": 2323,
       "title": "ૈ (ai sign) — the ai sign in પૈસા",
       "headword": "ૈ",
       "romanization": "ai sign",
@@ -183,7 +183,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0f93695259810862",
+      "sourceHash": "fnv1a64:4679f99b8d363288",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -324,7 +324,7 @@
     },
     {
       "id": "GU-R45-letters-first-pass",
-      "sequence": 2320,
+      "sequence": 2333,
       "title": "(two letters) (be akshar) — From the letter to the word — a first pass",
       "headword": "(two letters)",
       "romanization": "be akshar",
@@ -335,7 +335,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:e5ade33c97c2ff85",
+      "sourceHash": "fnv1a64:f991add6430054b1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -439,7 +439,7 @@
     },
     {
       "id": "GU-R45-letters-second-pass",
-      "sequence": 2330,
+      "sequence": 2343,
       "title": "(two letters) (be akshar) — From the word back to the letter — a second pass",
       "headword": "(two letters)",
       "romanization": "be akshar",
@@ -450,7 +450,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b17cd7eecd44b7f6",
+      "sourceHash": "fnv1a64:f3f5f332d3811728",
       "notice": {
         "modality": "sight",
         "needs": [

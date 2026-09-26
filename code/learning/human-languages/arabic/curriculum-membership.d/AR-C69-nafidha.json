@@ -1,0 +1,11 @@
+{
+  "id": "AR-C69-nafidha",
+  "pathSegment": "AR-PATH-69-FOOD69",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "AR-EXT-69-FOOD69",
+      "order": 4
+    }
+  ]
+}

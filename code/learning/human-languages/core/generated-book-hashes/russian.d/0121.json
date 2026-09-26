@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:306727f89c4122e8",
+  "lessonIds": [
+    "RU-C121-shark",
+    "RU-C121-nail-2",
+    "RU-C121-skin",
+    "RU-C121-stomach",
+    "RU-C121-throat"
+  ],
+  "tex": "russian/book/chapters/ch121-shark-nail-skin-stomach-throat.tex"
+}

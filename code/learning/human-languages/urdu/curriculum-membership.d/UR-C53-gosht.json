@@ -1,0 +1,11 @@
+{
+  "id": "UR-C53-gosht",
+  "pathSegment": "UR-PATH-53-VERBS53",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-53-VERBS53",
+      "order": 3
+    }
+  ]
+}

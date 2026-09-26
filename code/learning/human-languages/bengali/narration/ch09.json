@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "The Roof, the Teeth, and the Grid Closed",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2e3b59cf196620dd",
+  "sourceHash": "fnv1a64:aed4f2afb1e39d92",
   "lessons": [
     {
       "id": "BN-W04-pa",
@@ -879,6 +879,111 @@
       ]
     },
     {
+      "id": "BN-C09-jal",
+      "sequence": 629,
+      "title": "জাল (jāl) — a net",
+      "headword": "জাল",
+      "romanization": "jāl",
+      "gloss": "a net",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:e465c5e5ebc821b4",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জাল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জাল — jāl — \"a net\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: jāl. Look at its shape as you say it: the next lesson takes one piece of it, জ (jô), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāl, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāl*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a net\"? (জাল, jāl.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "BN-W04-ja",
       "sequence": 630,
       "title": "জ (jô) — the consonant ja, and the grid closed",
@@ -892,7 +997,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ab8904d85a21c62b",
+      "sourceHash": "fnv1a64:a3c23709ef797f52",
       "notice": {
         "modality": "pen",
         "needs": [

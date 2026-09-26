@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C85-station
 spine_node: SPINE-MEET-GREET
-sequence: 4330
+sequence: 4343
 chapter: 85
 type: word
 headword: "સ્ટેશન"

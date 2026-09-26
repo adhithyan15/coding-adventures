@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:da1805fd28b534af",
+  "lessonIds": [
+    "BN-C67-bali",
+    "BN-C67-chad",
+    "BN-C67-somudro",
+    "BN-C67-agun",
+    "BN-C67-boroph"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch67.txt",
+  "json": "bengali/narration/ch67.json",
+  "textHash": "fnv1a64:986e7e81f99ee5cf",
+  "jsonHash": "fnv1a64:244dd5c2394da6d3",
+  "findings": []
+}

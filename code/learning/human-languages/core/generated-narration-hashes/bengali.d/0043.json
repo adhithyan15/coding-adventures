@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:eb6f15fd8470d648",
+  "lessonIds": [
+    "BN-C43-kadh",
+    "BN-C43-rokto",
+    "BN-C43-hatu",
+    "BN-C43-jibh",
+    "BN-C43-matha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch43.txt",
+  "json": "bengali/narration/ch43.json",
+  "textHash": "fnv1a64:70a24eeaf08f9e6e",
+  "jsonHash": "fnv1a64:fe41ae0d1525002e",
+  "findings": []
+}

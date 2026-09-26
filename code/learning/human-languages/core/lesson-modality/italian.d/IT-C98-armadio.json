@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C98-armadio",
+    "language": "italian",
+    "chapter": 98,
+    "sequence": 4600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3548687836de43e"
+  },
+  "findings": []
+}

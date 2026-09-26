@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "This, This, That, That, Such",
+  "label": "ch:ru-this-this-that-that-such",
+  "canDo": "I can say this, this, that, that and such.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "RU-C82-such",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can say this, this, that, that and such.",
+    "assesses": [
+      "RU-LEX-C82-DEF82-03",
+      "RU-LEX-C82-DEF82-04",
+      "RU-LEX-C82-DEF82-05"
+    ]
+  }
+}

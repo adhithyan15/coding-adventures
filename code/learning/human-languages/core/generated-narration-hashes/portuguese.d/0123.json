@@ -1,0 +1,21 @@
+{
+  "language": "portuguese",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:5135b03935e6b27e",
+  "lessonIds": [
+    "PT-C123-famoso",
+    "PT-C123-importante",
+    "PT-C123-interessante",
+    "PT-C123-aborrecido",
+    "PT-C123-divertido",
+    "PT-R123-first-pass-animals-the-body-and-colours",
+    "PT-R123-second-pass-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "portuguese/narration/ch123.txt",
+  "json": "portuguese/narration/ch123.json",
+  "textHash": "fnv1a64:03b93494b1cfad30",
+  "jsonHash": "fnv1a64:a67ec9d16bec5fa2",
+  "findings": []
+}

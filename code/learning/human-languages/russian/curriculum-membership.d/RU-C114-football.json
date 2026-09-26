@@ -1,0 +1,11 @@
+{
+  "id": "RU-C114-football",
+  "pathSegment": "RU-PATH-114-THINGS114",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-114-THINGS114",
+      "order": 1
+    }
+  ]
+}

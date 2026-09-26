@@ -1,0 +1,19 @@
+{
+  "chapter": 70,
+  "title": "Week, Month, Morning, Minute, Always",
+  "label": "ch:pt-week-month-morning-minute-always",
+  "canDo": "I can name a week, a month, the morning and a minute, and say always.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "PT-C70-sempre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 70: i can name a week, a month, the morning and a minute, and say always.",
+    "assesses": [
+      "PT-LEX-C70-QUANDO1-03",
+      "PT-LEX-C70-QUANDO1-04",
+      "PT-LEX-C70-QUANDO1-05"
+    ]
+  }
+}

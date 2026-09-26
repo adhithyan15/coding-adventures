@@ -1,0 +1,11 @@
+{
+  "id": "GE-C95-manchmal",
+  "pathSegment": "GE-PATH-95-WO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-95-WO",
+      "order": 1
+    }
+  ]
+}

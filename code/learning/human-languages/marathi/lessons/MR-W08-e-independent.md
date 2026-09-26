@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W08-e-independent
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 95
+sequence: 125
 delivery: script
 chapter: 8
 type: writing
 headword: ए
 romanization: "e"
 gloss: independent long e — the vowel that opens ek, one
-prerequisites: [MR-W08-uu-independent]
+prerequisites: [MR-W08-uu-independent, MR-C08-uub, MR-C08-ekda]
 sounds: [long-e]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-UU-INDEPENDENT-01, MR-SCRIPT-E-MATRA-01]
+  knowledge: [MR-SCRIPT-UU-INDEPENDENT-01, MR-SCRIPT-E-MATRA-01, MR-LEX-ANCHOR-UUB, MR-LEX-ANCHOR-EKDA]
 introduces:
   knowledge: [MR-SCRIPT-E-INDEPENDENT-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-E-INDEPENDENT-01, MR-SCRIPT-UU-INDEPENDENT-01, MR-SCRIPT-E-MATRA-01]
+  knowledge: [MR-SCRIPT-E-INDEPENDENT-01, MR-SCRIPT-UU-INDEPENDENT-01, MR-SCRIPT-E-MATRA-01, MR-LEX-ANCHOR-UUB, MR-LEX-ANCHOR-EKDA]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W08-uu-independent, MR-W02-e-matra]
 # ए — the vowel that opens *ek*
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-UUB, MR-LEX-ANCHOR-EKDA] -->
 
 One vowel left, and you have been reading it since the chapter where you learned to count.
 

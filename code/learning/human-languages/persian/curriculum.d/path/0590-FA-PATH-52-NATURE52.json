@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-52-NATURE52",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "FA-EXT-52-NATURE52"
+  ],
+  "after": []
+}

@@ -1,11 +1,11 @@
 {
   "id": "KA-S133-letter-nya",
   "pathSegment": "KA-PATH-100",
-  "pathOrder": 34,
+  "pathOrder": 43,
   "extensions": [
     {
       "id": "KA-EXT-100-SCRIPT-RECOGNITION",
-      "order": 34
+      "order": 43
     }
   ]
 }

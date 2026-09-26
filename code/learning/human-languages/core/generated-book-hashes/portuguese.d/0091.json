@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:7977bf7db4e4bef4",
+  "lessonIds": [
+    "PT-C91-metro",
+    "PT-C91-eletrico",
+    "PT-C91-viagem",
+    "PT-C91-ferias",
+    "PT-C91-bicicleta"
+  ],
+  "tex": "portuguese/book/chapters/ch91-underground-tram-journey-holidays-bicycle.tex"
+}

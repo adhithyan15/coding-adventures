@@ -1,0 +1,7 @@
+{
+  "language": "punjabi",
+  "chapter": 86,
+  "output": "punjabi/book/chapters/ch86-month-year-hour-minute-today.tex",
+  "unicodeScript": "Gurmukhi",
+  "scriptCommand": "pa"
+}

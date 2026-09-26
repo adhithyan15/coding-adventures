@@ -1,0 +1,11 @@
+{
+  "id": "IT-C100-telefonino",
+  "pathSegment": "IT-PATH-100-OGGETTI100",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-100-OGGETTI100",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C51-bimar",
+  "pathSegment": "PA-PATH-51-BODY51",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-51-BODY51",
+      "order": 4
+    }
+  ]
+}

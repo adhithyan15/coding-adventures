@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:9c6e3df61afd55ed",
+  "lessonIds": [
+    "PT-C43-fechar",
+    "PT-C43-beber",
+    "PT-C43-comer",
+    "PT-C43-dar",
+    "PT-C43-viver"
+  ],
+  "tex": "portuguese/book/chapters/ch43-close-drink-eat-give-live.tex"
+}

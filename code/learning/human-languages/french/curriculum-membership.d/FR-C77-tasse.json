@@ -1,0 +1,11 @@
+{
+  "id": "FR-C77-tasse",
+  "pathSegment": "FR-PATH-77-TABLE29",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-77-TABLE29",
+      "order": 4
+    }
+  ]
+}

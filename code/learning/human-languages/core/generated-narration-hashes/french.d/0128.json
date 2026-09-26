@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:87d6c8dff0e7fa09",
+  "lessonIds": [
+    "FR-C128-musique",
+    "FR-C128-sport",
+    "FR-C128-jeu",
+    "FR-C128-film",
+    "FR-C128-chanson"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch128.txt",
+  "json": "french/narration/ch128.json",
+  "textHash": "fnv1a64:c906f67caaea7268",
+  "jsonHash": "fnv1a64:db510a34fed76e24",
+  "findings": []
+}

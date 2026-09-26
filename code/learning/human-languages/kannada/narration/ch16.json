@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Traditional Months",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bbe59189b4377be2",
+  "sourceHash": "fnv1a64:a597f77e1771747c",
   "lessons": [
     {
       "id": "KA-C16-tingalugalu",
@@ -130,6 +130,111 @@
       ]
     },
     {
+      "id": "KA-C16-uttara",
+      "sequence": 444,
+      "title": "ಉತ್ತರ (uttara) — an answer; north",
+      "headword": "ಉತ್ತರ",
+      "romanization": "uttara",
+      "gloss": "an answer; north",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:7a1d0ed6f2b870d2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಉತ್ತರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಉತ್ತರ — uttara — \"an answer; north\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: uttara. Look at its shape as you say it: the next lesson takes one piece of it, ಉ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uttara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uttara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uttara, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uttara*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"an answer; north\"? (ಉತ್ತರ, uttara.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-S126-letter-u",
       "sequence": 445,
       "title": "ಉ — one character, the standing half of a sign you already read",
@@ -145,7 +250,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4da49975832e6e36",
+      "sourceHash": "fnv1a64:c7a31e6885a94ac9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -331,7 +436,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1430fab2a3d7ac5e",
+      "sourceHash": "fnv1a64:8308ac0d0789108d",
       "notice": {
         "modality": "pen",
         "needs": [

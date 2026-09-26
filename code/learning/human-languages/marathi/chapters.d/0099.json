@@ -1,0 +1,19 @@
+{
+  "chapter": 99,
+  "title": "Rain, Wind, Sky, Dog, Cat",
+  "label": "ch:mr-rain-wind-sky-dog-cat",
+  "canDo": "I can say rain, wind, the sky, a dog and a cat.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C99-manjar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: i can say rain, wind, the sky, a dog and a cat.",
+    "assesses": [
+      "MR-LEX-C99-NATURE99-03",
+      "MR-LEX-C99-NATURE99-04",
+      "MR-LEX-C99-NATURE99-05"
+    ]
+  }
+}

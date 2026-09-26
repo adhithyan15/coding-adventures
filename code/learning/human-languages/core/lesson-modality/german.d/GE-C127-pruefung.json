@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C127-pruefung",
+    "language": "german",
+    "chapter": 127,
+    "sequence": 5270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24325e87db113c0d"
+  },
+  "findings": []
+}

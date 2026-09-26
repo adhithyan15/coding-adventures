@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C122-chin",
+    "language": "russian",
+    "chapter": 122,
+    "sequence": 6300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37724edec7aaa0f4"
+  },
+  "findings": []
+}

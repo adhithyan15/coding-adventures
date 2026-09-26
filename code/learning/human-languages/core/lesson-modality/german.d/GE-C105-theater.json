@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C105-theater",
+    "language": "german",
+    "chapter": 105,
+    "sequence": 4080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8e9b3fc40e030b5"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "IT-C66-luna",
+  "pathSegment": "IT-PATH-66-NATURA3",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-66-NATURA3",
+      "order": 4
+    }
+  ]
+}

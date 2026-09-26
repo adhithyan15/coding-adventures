@@ -1,0 +1,11 @@
+{
+  "id": "AR-C88-qarib",
+  "pathSegment": "AR-PATH-88-TIME88",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "AR-EXT-88-TIME88",
+      "order": 3
+    }
+  ]
+}

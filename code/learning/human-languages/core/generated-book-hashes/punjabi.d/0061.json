@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:32fd45fe2038a61e",
+  "lessonIds": [
+    "PA-C61-ginna",
+    "PA-C61-pharna",
+    "PA-C61-kattna",
+    "PA-C61-rokna",
+    "PA-C61-dassna"
+  ],
+  "tex": "punjabi/book/chapters/ch61-to-count-to-catch-to-cut-to-stop-to-tell.tex"
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C39-nav
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 2230
+sequence: 2243
 chapter: 43
 type: word
 headword: નવ

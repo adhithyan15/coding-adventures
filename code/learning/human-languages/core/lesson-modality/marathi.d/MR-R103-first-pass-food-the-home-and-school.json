@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-R103-first-pass-food-the-home-and-school",
+    "language": "marathi",
+    "chapter": 103,
+    "sequence": 4580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4278afe630d98b05"
+  },
+  "findings": []
+}

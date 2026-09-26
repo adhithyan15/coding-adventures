@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:4cf85b729c46aba5",
+  "lessonIds": [
+    "PT-C115-desenho",
+    "PT-C115-vida",
+    "PT-C115-concerto",
+    "PT-C115-festa",
+    "PT-C115-relva"
+  ],
+  "tex": "portuguese/book/chapters/ch115-drawing-life-concert-party-grass.tex"
+}

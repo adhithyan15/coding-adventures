@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:de57039369c83ad3",
+  "lessonIds": [
+    "RU-C132-to-get-dressed",
+    "RU-C132-to-wash",
+    "RU-C132-to-get-up",
+    "RU-C132-to-sit-down",
+    "RU-C132-to-fall"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch132.txt",
+  "json": "russian/narration/ch132.json",
+  "textHash": "fnv1a64:561171709d207a57",
+  "jsonHash": "fnv1a64:a5750dccbf4494c0",
+  "findings": []
+}

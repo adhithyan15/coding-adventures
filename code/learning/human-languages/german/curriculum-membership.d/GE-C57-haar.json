@@ -1,0 +1,11 @@
+{
+  "id": "GE-C57-haar",
+  "pathSegment": "GE-PATH-57-KOERPER2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-57-KOERPER2",
+      "order": 3
+    }
+  ]
+}

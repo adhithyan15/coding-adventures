@@ -1,0 +1,19 @@
+{
+  "chapter": 77,
+  "title": "Star, Cloud, Sun, Moon, Sea",
+  "label": "ch:ar-star-cloud-sun-moon-sea",
+  "canDo": "I can say a star, a cloud, the sun, the moon and the sea.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C77-bahr",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 77: i can say a star, a cloud, the sun, the moon and the sea.",
+    "assesses": [
+      "AR-LEX-C77-NATURE77-03",
+      "AR-LEX-C77-NATURE77-04",
+      "AR-LEX-C77-NATURE77-05"
+    ]
+  }
+}

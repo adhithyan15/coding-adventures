@@ -1,0 +1,11 @@
+{
+  "id": "FR-C127-reponse",
+  "pathSegment": "FR-PATH-127-ECOLE79",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-127-ECOLE79",
+      "order": 2
+    }
+  ]
+}

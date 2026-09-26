@@ -1,0 +1,11 @@
+{
+  "id": "FA-C56-fil",
+  "pathSegment": "FA-PATH-56-ANIMALS56",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-56-ANIMALS56",
+      "order": 2
+    }
+  ]
+}

@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Lexer definitions may use `switch_to_if_appropriate_end_tag(yes, no)` (two
+  non-empty state arguments).
 - Extended serializer/deserializer round-trip tests to reconstruct executable
   DFA, NFA, and PDA machines from parsed `StateMachineDefinition` values.
 - Added phase 1 transducer validation for `$any`, `$end`, transition actions,

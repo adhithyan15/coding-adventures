@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Twenty, Thirty, Forty, Fifty, Hundred",
+  "label": "ch:bn-twenty-thirty-forty-fifty-hundred",
+  "canDo": "I can say twenty, thirty, forty, fifty and a hundred.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "BN-C87-eksho",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can say twenty, thirty, forty, fifty and a hundred.",
+    "assesses": [
+      "BN-LEX-C87-NUMBERS87-03",
+      "BN-LEX-C87-NUMBERS87-04",
+      "BN-LEX-C87-NUMBERS87-05"
+    ]
+  }
+}

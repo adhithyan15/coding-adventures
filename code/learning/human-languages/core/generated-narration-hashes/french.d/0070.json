@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:c4978ea040c35095",
+  "lessonIds": [
+    "FR-C70-dejeuner",
+    "FR-C70-diner",
+    "FR-C70-petit-dejeuner",
+    "FR-C70-riz",
+    "FR-C70-poire"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch70.txt",
+  "json": "french/narration/ch70.json",
+  "textHash": "fnv1a64:79d43df6b4d2bc9b",
+  "jsonHash": "fnv1a64:576e957a17826f16",
+  "findings": []
+}

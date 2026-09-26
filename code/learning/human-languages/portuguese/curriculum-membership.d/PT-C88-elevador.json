@@ -1,0 +1,11 @@
+{
+  "id": "PT-C88-elevador",
+  "pathSegment": "PT-PATH-88-LUGARES88",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-88-LUGARES88",
+      "order": 0
+    }
+  ]
+}

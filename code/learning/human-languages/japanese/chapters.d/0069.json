@@ -1,0 +1,19 @@
+{
+  "chapter": 69,
+  "title": "Rainbow, Thunder, Frost, Ice, Summer holidays",
+  "label": "ch:ja-rainbow-thunder-frost-ice-summer-holidays",
+  "canDo": "I can say a rainbow, thunder, frost, ice and the summer holidays.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "JA-C69-natsuyasumi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 69: i can say a rainbow, thunder, frost, ice and the summer holidays.",
+    "assesses": [
+      "JA-LEX-C69-THINGS69-03",
+      "JA-LEX-C69-THINGS69-04",
+      "JA-LEX-C69-THINGS69-05"
+    ]
+  }
+}

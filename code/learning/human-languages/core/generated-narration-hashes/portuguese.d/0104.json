@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:d43345db8a136187",
+  "lessonIds": [
+    "PT-C104-blusa",
+    "PT-C104-fato",
+    "PT-C104-tubarao",
+    "PT-C104-trovao",
+    "PT-C104-relampago"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch104.txt",
+  "json": "portuguese/narration/ch104.json",
+  "textHash": "fnv1a64:a875f772de636eae",
+  "jsonHash": "fnv1a64:40066a15b24307cb",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C52-cheville",
+  "pathSegment": "FR-PATH-52-CORPS4",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-52-CORPS4",
+      "order": 2
+    }
+  ]
+}

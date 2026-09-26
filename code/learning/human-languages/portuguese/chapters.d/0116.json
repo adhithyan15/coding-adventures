@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Fog, Storm, Ice, Rock, Wave",
+  "label": "ch:pt-fog-storm-ice-rock-wave",
+  "canDo": "I can say fog, a storm, ice, a rock and a wave.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C116-onda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say fog, a storm, ice, a rock and a wave.",
+    "assesses": [
+      "PT-LEX-C116-NATUREZA116-03",
+      "PT-LEX-C116-NATUREZA116-04",
+      "PT-LEX-C116-NATUREZA116-05"
+    ]
+  }
+}

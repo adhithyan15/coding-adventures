@@ -1,9 +1,10 @@
 # BR03 — A tree builder built the way the HTML specification is written
 
-**Status:** in progress (2026-09-25): steps 1 to 3 done (every insertion
-mode, and foreign content); 2,415 of 2,655 corpus cases pass, and every
-remaining failure is a fragment case or listed in §5's closing notes. This is
-BR02 phase P2.
+**Status:** in progress (2026-09-26): steps 1 to 4 done (every insertion
+mode, foreign content, fragments), and `html-lexer` ends raw-text elements
+where WHATWG does; 2,645 of 2,655 corpus cases pass, including
+`template.dat:124`. The 10 failures are all outside the crate: 6 scripted
+cases and 4 `<selectedcontent>` (§5's closing notes). This is BR02 phase P2.
 
 **Builds on:** [BR02 — Venture completion roadmap](BR02-venture-completion-roadmap.md)
 §2 and §4 P2. It depends on the P1 work: the scripted-case fakes are gone
@@ -130,11 +131,13 @@ by side.
 
 Work outside this crate that the corpus exposes:
 
-- **Script-data tokenization.** `html-lexer` does not end a script at
-  `</script ` followed by end of file, at `</script/ >`, or at `</script>`
-  after `<!--</scrip `. `html-parser` compensates by rescanning script text in
-  its tree builder (`rfind_script_end_marker`); this crate does not, so those
-  31 cases stay listed until the lexer is fixed.
+- **Script-data tokenization** (fixed). `html-lexer` used to decide whether
+  `</script` was a real end tag only at `>`, so `</script ` followed by end of
+  file, `</script/ >`, and `</script>` after `<!--</scrip ` came out as text.
+  It now decides at the first whitespace or `/`, as the specification does
+  (F08, conditional state switches), and those 31 cases pass. `html-parser`
+  still rescans script text in its tree builder (`rfind_script_end_marker`),
+  which step 6 deletes.
 - **`<selectedcontent>`** mirrors the selected `<option>` through DOM
   insertion steps, not tree construction. It arrives with BR02 P4 (a real
   DOM).

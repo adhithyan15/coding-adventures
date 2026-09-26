@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:6b52fa3dc17e2efa",
+  "lessonIds": [
+    "PA-C78-panchhi",
+    "PA-C78-chuha",
+    "PA-C78-sher",
+    "PA-C78-hathi",
+    "PA-C78-bandar"
+  ],
+  "tex": "punjabi/book/chapters/ch78-bird-mouse-lion-elephant-monkey.tex"
+}

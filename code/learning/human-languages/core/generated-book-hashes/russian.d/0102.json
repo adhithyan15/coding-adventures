@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:ab2e98ba5b5ea249",
+  "lessonIds": [
+    "RU-C102-boots",
+    "RU-C102-skirt",
+    "RU-C102-coat",
+    "RU-C102-shoes",
+    "RU-C102-socks"
+  ],
+  "tex": "russian/book/chapters/ch102-boots-skirt-coat-shoes-socks.tex"
+}

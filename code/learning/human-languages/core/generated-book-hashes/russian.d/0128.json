@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:9dc8e64d52f3d28d",
+  "lessonIds": [
+    "RU-C128-wrong",
+    "RU-C128-ready",
+    "RU-C128-dangerous",
+    "RU-C128-wet",
+    "RU-C128-dry"
+  ],
+  "tex": "russian/book/chapters/ch128-wrong-ready-dangerous-wet-dry.tex"
+}

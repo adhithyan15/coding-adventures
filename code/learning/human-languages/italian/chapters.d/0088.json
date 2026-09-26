@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Town hall, Supermarket, Petrol station, Swimming pool, Stadium",
+  "label": "ch:it-town-hall-supermarket-petrol-station-swimming-pool-stadium",
+  "canDo": "I can say a town hall, a supermarket, a petrol station, a swimming pool and a stadium.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "IT-C88-stadio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can say a town hall, a supermarket, a petrol station, a swimming pool and a stadium.",
+    "assesses": [
+      "IT-LEX-C88-LUOGHI88-03",
+      "IT-LEX-C88-LUOGHI88-04",
+      "IT-LEX-C88-LUOGHI88-05"
+    ]
+  }
+}

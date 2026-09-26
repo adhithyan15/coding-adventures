@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:258f651fa7968777",
+  "lessonIds": [
+    "FR-C129-dessin",
+    "FR-C129-vie",
+    "FR-C129-fois",
+    "FR-C129-couleur",
+    "FR-C129-prix"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch129.txt",
+  "json": "french/narration/ch129.json",
+  "textHash": "fnv1a64:5bfea07be56a26be",
+  "jsonHash": "fnv1a64:18beb7ce6dd60e6b",
+  "findings": []
+}

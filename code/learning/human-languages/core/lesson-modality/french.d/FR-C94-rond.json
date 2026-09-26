@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C94-rond",
+    "language": "french",
+    "chapter": 94,
+    "sequence": 4100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f75b37f57c5b356"
+  },
+  "findings": []
+}

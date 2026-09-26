@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:3b91a2a02ccf89ab",
+  "lessonIds": [
+    "BN-C44-kan",
+    "BN-C44-jbor",
+    "BN-C44-haspatal",
+    "BN-C44-btha",
+    "BN-C44-khide"
+  ],
+  "tex": "bengali/book/chapters/ch44-ear-fever-hospital-pain-hunger.tex"
+}

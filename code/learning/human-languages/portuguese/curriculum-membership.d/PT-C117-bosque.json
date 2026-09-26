@@ -1,0 +1,11 @@
+{
+  "id": "PT-C117-bosque",
+  "pathSegment": "PT-PATH-117-NATUREZA117",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-117-NATUREZA117",
+      "order": 3
+    }
+  ]
+}

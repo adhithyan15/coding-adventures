@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C60-jalebi
 spine_node: SPINE-COURTESY-THANK
-sequence: 3070
+sequence: 3083
 chapter: 60
 type: word
 headword: "જલેબી"

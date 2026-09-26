@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:58c2a6c4241dfd25",
+  "lessonIds": [
+    "FR-C104-pantalon",
+    "FR-C104-chaussures",
+    "FR-C104-chapeau",
+    "FR-C104-manteau",
+    "FR-C104-jupe"
+  ],
+  "tex": "french/book/chapters/ch104-trousers-shoes-hat-coat-skirt.tex"
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C02-chhe
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 110
+sequence: 123
 chapter: 8
 type: word
 headword: છે

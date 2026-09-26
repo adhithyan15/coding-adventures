@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:68a11b0adb9a4242",
+  "lessonIds": [
+    "GE-C63-nachbar",
+    "GE-C63-gast",
+    "GE-C63-enkel",
+    "GE-C63-schueler",
+    "GE-C63-schuelerin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch63.txt",
+  "json": "german/narration/ch63.json",
+  "textHash": "fnv1a64:35d3158ec6ba27dd",
+  "jsonHash": "fnv1a64:42d08c94c0269261",
+  "findings": []
+}

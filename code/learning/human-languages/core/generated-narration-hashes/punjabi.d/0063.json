@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:aed04900b5035040",
+  "lessonIds": [
+    "PA-C63-labbhna",
+    "PA-C63-suttna",
+    "PA-C63-mit",
+    "PA-C63-machchhi",
+    "PA-C63-chaul"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch63.txt",
+  "json": "punjabi/narration/ch63.json",
+  "textHash": "fnv1a64:38cff8abaf480129",
+  "jsonHash": "fnv1a64:e337a423e50cbdad",
+  "findings": []
+}

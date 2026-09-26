@@ -1,0 +1,11 @@
+{
+  "id": "PT-C32-barriga",
+  "pathSegment": "PT-PATH-32-CORPO3",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-32-CORPO3",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Seventeen, Eighteen, Nineteen, Thirty, Forty",
+  "label": "ch:fa-seventeen-eighteen-nineteen-thirty-forty",
+  "canDo": "I can say seventeen, eighteen, nineteen, thirty and forty.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C76-chehel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can say seventeen, eighteen, nineteen, thirty and forty.",
+    "assesses": [
+      "FA-LEX-C76-NUMBERS76-03",
+      "FA-LEX-C76-NUMBERS76-04",
+      "FA-LEX-C76-NUMBERS76-05"
+    ]
+  }
+}

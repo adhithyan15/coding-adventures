@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Cherry, Melon, Garlic, Chocolate, Biscuit",
+  "label": "ch:pt-cherry-melon-garlic-chocolate-biscuit",
+  "canDo": "I can say a cherry, a melon, garlic, chocolate and a biscuit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C106-bolacha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can say a cherry, a melon, garlic, chocolate and a biscuit.",
+    "assesses": [
+      "PT-LEX-C106-COMIDA106-03",
+      "PT-LEX-C106-COMIDA106-04",
+      "PT-LEX-C106-COMIDA106-05"
+    ]
+  }
+}

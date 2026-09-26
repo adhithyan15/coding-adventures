@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C10-ojon",
+    "language": "bengali",
+    "chapter": 10,
+    "sequence": 639,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bd6dbcd1c17651e4"
+  },
+  "findings": []
+}

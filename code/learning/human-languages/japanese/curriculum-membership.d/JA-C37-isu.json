@@ -1,0 +1,11 @@
+{
+  "id": "JA-C37-isu",
+  "pathSegment": "JA-PATH-37-HOME37",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-37-HOME37",
+      "order": 2
+    }
+  ]
+}

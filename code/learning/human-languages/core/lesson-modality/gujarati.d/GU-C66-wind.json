@@ -3,7 +3,7 @@
     "id": "GU-C66-wind",
     "language": "gujarati",
     "chapter": 66,
-    "sequence": 3340,
+    "sequence": 3353,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3e491237141e386c"
+    "sourceHash": "fnv1a64:90e63e2fa9f06fe8"
   },
   "findings": []
 }

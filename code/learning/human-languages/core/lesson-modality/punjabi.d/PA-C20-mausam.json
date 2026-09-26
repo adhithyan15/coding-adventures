@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C20-mausam",
+    "language": "punjabi",
+    "chapter": 20,
+    "sequence": 1289,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:409772e59e826088"
+  },
+  "findings": []
+}

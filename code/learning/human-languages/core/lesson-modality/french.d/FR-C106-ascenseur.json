@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C106-ascenseur",
+    "language": "french",
+    "chapter": 106,
+    "sequence": 4740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6bb98f828a33354"
+  },
+  "findings": []
+}

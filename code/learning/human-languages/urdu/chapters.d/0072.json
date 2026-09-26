@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "High, Low, Full, Empty, Sweet",
+  "label": "ch:ur-high-low-full-empty-sweet",
+  "canDo": "I can say high, low, full, empty and sweet.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C72-mitha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can say high, low, full, empty and sweet.",
+    "assesses": [
+      "UR-LEX-C72-ADJ72-03",
+      "UR-LEX-C72-ADJ72-04",
+      "UR-LEX-C72-ADJ72-05"
+    ]
+  }
+}

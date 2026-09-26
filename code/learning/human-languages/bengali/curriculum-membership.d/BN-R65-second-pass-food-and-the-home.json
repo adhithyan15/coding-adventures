@@ -1,0 +1,11 @@
+{
+  "id": "BN-R65-second-pass-food-and-the-home",
+  "pathSegment": "BN-PATH-65-SCHOOL65",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "BN-EXT-65-SCHOOL65",
+      "order": 6
+    }
+  ]
+}

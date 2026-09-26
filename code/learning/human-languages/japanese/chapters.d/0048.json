@@ -1,0 +1,19 @@
+{
+  "chapter": 48,
+  "title": "Chicken, Small, Good, Long, Short",
+  "label": "ch:ja-chicken-small-good-long-short",
+  "canDo": "I can say a chicken, small, good, long and short.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "JA-C48-mijikai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 48: i can say a chicken, small, good, long and short.",
+    "assesses": [
+      "JA-LEX-C48-ANIMALS48-03",
+      "JA-LEX-C48-ANIMALS48-04",
+      "JA-LEX-C48-ANIMALS48-05"
+    ]
+  }
+}

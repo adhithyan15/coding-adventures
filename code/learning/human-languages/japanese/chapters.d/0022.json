@@ -1,0 +1,19 @@
+{
+  "chapter": 22,
+  "title": "Sweat, Tears, Voice, Fever, Painful",
+  "label": "ch:ja-sweat-tears-voice-fever-painful",
+  "canDo": "I can say sweat, tears, a voice, a fever and painful, it hurts.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "JA-C22-itai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 22: i can say sweat, tears, a voice, a fever and painful, it hurts.",
+    "assesses": [
+      "JA-LEX-C22-BODY22-03",
+      "JA-LEX-C22-BODY22-04",
+      "JA-LEX-C22-BODY22-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:7847cc48b870e111",
+  "lessonIds": [
+    "PT-C106-cereja",
+    "PT-C106-melao",
+    "PT-C106-alho",
+    "PT-C106-chocolate",
+    "PT-C106-bolacha"
+  ],
+  "tex": "portuguese/book/chapters/ch106-cherry-melon-garlic-chocolate-biscuit.tex"
+}

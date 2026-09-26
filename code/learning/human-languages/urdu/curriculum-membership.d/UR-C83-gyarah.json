@@ -1,0 +1,11 @@
+{
+  "id": "UR-C83-gyarah",
+  "pathSegment": "UR-PATH-83-CLOTHES83",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-83-CLOTHES83",
+      "order": 2
+    }
+  ]
+}

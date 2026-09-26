@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:44b772c483520762",
+  "lessonIds": [
+    "AR-C90-huna",
+    "AR-C90-hunaka",
+    "AR-C90-yamin",
+    "AR-C90-matjar",
+    "AR-C90-shari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch90.txt",
+  "json": "arabic/narration/ch90.json",
+  "textHash": "fnv1a64:675b94f296bc0cf3",
+  "jsonHash": "fnv1a64:c253f4b9b0a5712f",
+  "findings": []
+}

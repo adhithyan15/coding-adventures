@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:5b04d323461d3150",
+  "lessonIds": [
+    "IT-C75-economico",
+    "IT-C75-alto",
+    "IT-C75-basso",
+    "IT-C75-pieno",
+    "IT-C75-vuoto"
+  ],
+  "tex": "italian/book/chapters/ch75-cheap-tall-low-full-empty.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C131-ouvert",
+  "pathSegment": "FR-PATH-131-QUALITES83",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-131-QUALITES83",
+      "order": 2
+    }
+  ]
+}

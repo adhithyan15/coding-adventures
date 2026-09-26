@@ -1,0 +1,11 @@
+{
+  "id": "MW-C66-javab",
+  "pathSegment": "MW-PATH-66-SCHOOL66",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-66-SCHOOL66",
+      "order": 3
+    }
+  ]
+}

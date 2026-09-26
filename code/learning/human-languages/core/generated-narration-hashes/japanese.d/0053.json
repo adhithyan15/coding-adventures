@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 53,
+  "sourceHash": "fnv1a64:da303c359c65b108",
+  "lessonIds": [
+    "JA-C53-tsumetai",
+    "JA-C53-oishii",
+    "JA-C53-atsui",
+    "JA-C53-samui",
+    "JA-C53-asa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch53.txt",
+  "json": "japanese/narration/ch53.json",
+  "textHash": "fnv1a64:99630f73fdc75f7d",
+  "jsonHash": "fnv1a64:a9ad984ccea1e467",
+  "findings": []
+}

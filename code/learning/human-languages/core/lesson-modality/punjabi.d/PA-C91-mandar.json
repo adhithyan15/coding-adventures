@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C91-mandar",
+    "language": "punjabi",
+    "chapter": 91,
+    "sequence": 4840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55d588c006d4a33a"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C104-jalad",
+  "pathSegment": "MR-PATH-104-ADJ104",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-104-ADJ104",
+      "order": 3
+    }
+  ]
+}

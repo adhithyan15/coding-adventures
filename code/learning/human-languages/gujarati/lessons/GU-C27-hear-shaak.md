@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C27-hear-shaak
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1480
+sequence: 1493
 chapter: 31
 type: word
 headword: શાક

@@ -1,0 +1,7 @@
+{
+  "language": "urdu",
+  "chapter": 70,
+  "output": "urdu/book/chapters/ch70-small-new-good-bad-long.tex",
+  "unicodeScript": "Arabic",
+  "scriptCommand": "ur"
+}

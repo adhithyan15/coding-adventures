@@ -1,0 +1,11 @@
+{
+  "id": "PT-C133-contar",
+  "pathSegment": "PT-PATH-133-VERBOS133",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-133-VERBOS133",
+      "order": 3
+    }
+  ]
+}

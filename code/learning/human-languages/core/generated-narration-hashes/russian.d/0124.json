@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:5d89ac5d4dd1ea1d",
+  "lessonIds": [
+    "RU-C124-purple",
+    "RU-C124-brown",
+    "RU-C124-grey",
+    "RU-C124-orange",
+    "RU-C124-busy"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch124.txt",
+  "json": "russian/narration/ch124.json",
+  "textHash": "fnv1a64:11ea21a4d5c2426e",
+  "jsonHash": "fnv1a64:bc0e1e8975d407c4",
+  "findings": []
+}

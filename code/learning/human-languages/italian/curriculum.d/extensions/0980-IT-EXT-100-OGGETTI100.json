@@ -1,0 +1,8 @@
+{
+  "id": "IT-EXT-100-OGGETTI100",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say scissors, an alarm clock, a mobile phone, a camera and a ring.",
+  "prerequisites": []
+}

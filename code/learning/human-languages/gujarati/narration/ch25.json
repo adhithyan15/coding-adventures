@@ -4,11 +4,11 @@
   "chapter": 25,
   "title": "Hand and Money Join the Map",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a84502cbea15a30b",
+  "sourceHash": "fnv1a64:b1a42de9ce06f669",
   "lessons": [
     {
       "id": "GU-C21-hear-haath",
-      "sequence": 950,
+      "sequence": 963,
       "title": "હાથ (hāth) — hear hand first",
       "headword": "હાથ",
       "romanization": "hāth",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2172fb483d616454",
+      "sourceHash": "fnv1a64:33e2bbf5b166f6fa",
       "notice": null,
       "blocks": [
         {
@@ -77,7 +77,7 @@
     },
     {
       "id": "GU-C21-haath",
-      "sequence": 960,
+      "sequence": 973,
       "title": "હાથ (hāth) — hand on the page",
       "headword": "હાથ",
       "romanization": "hāth",
@@ -88,7 +88,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:be76f02c6dac8fb4",
+      "sourceHash": "fnv1a64:0ca4101e838d7c64",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -157,7 +157,7 @@
     },
     {
       "id": "GU-C21-hear-paisa",
-      "sequence": 970,
+      "sequence": 983,
       "title": "પૈસા (paisā) — hear money first",
       "headword": "પૈસા",
       "romanization": "paisā",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:009c3e0b1fe138fd",
+      "sourceHash": "fnv1a64:3e7277ae2a87c413",
       "notice": null,
       "blocks": [
         {
@@ -225,7 +225,7 @@
     },
     {
       "id": "GU-W21-ai-matra",
-      "sequence": 980,
+      "sequence": 993,
       "title": "ૈ (ai vowel sign) — one sign for ai",
       "headword": "ૈ",
       "romanization": "ai vowel sign",
@@ -236,7 +236,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:41e03737643db407",
+      "sourceHash": "fnv1a64:68dc7a134b72c31b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -300,7 +300,7 @@
     },
     {
       "id": "GU-C21-paisa",
-      "sequence": 990,
+      "sequence": 1003,
       "title": "પૈસા (paisā) — money on the page",
       "headword": "પૈસા",
       "romanization": "paisā",
@@ -311,7 +311,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:fffcf3eaf4cb4805",
+      "sourceHash": "fnv1a64:ca1a2f6b24f3e405",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -380,7 +380,7 @@
     },
     {
       "id": "GU-R21-travel-five",
-      "sequence": 1000,
+      "sequence": 1013,
       "title": "Retrieve five concrete words",
       "headword": "બજાર — ઘર — મંદિર — હાથ — પૈસા",
       "romanization": "bajār — ghar — mandir — hāth — paisā",
@@ -391,7 +391,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:ed9fc8412bc8c018",
+      "sourceHash": "fnv1a64:c4e303e1a324e728",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -466,7 +466,7 @@
     },
     {
       "id": "GU-C21-travel-five",
-      "sequence": 1010,
+      "sequence": 1023,
       "title": "Payoff — five words in four skills",
       "headword": "બજાર — ઘર — મંદિર — હાથ — પૈસા",
       "romanization": "bajār — ghar — mandir — hāth — paisā",
@@ -477,7 +477,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:cb9cdc535ea14107",
+      "sourceHash": "fnv1a64:1131e937928349bd",
       "notice": {
         "modality": "pen",
         "needs": [

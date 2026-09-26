@@ -3,7 +3,7 @@
     "id": "GU-R07-second-four-r1",
     "language": "gujarati",
     "chapter": 7,
-    "sequence": 90,
+    "sequence": 103,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:f95ba9119f715c02",
+    "sourceHash": "fnv1a64:7828d25476b03d06",
     "detachableSegments": [
       "Writing — from sound or role"
     ],

@@ -1,0 +1,15 @@
+{
+  "language": "portuguese",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:644a6645856b5812",
+  "lessonIds": [
+    "PT-C103-camisola",
+    "PT-C103-gravata",
+    "PT-C103-luvas",
+    "PT-C103-cachecol",
+    "PT-C103-botas",
+    "PT-R103-first-pass-the-house-and-things-you-carry",
+    "PT-R103-second-pass-clothes-and-food"
+  ],
+  "tex": "portuguese/book/chapters/ch103-jumper-tie-gloves-scarf-boots.tex"
+}

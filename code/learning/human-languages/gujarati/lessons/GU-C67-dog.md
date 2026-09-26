@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C67-dog
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3420
+sequence: 3433
 chapter: 67
 type: word
 headword: "કૂતરો"

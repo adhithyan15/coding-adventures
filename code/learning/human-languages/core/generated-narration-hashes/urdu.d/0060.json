@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:af3466acdc59045e",
+  "lessonIds": [
+    "UR-C60-chabi",
+    "UR-C60-pyali",
+    "UR-C60-chammach",
+    "UR-C60-chhuri",
+    "UR-C60-kata"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch60.txt",
+  "json": "urdu/narration/ch60.json",
+  "textHash": "fnv1a64:f1a4ed31d0041345",
+  "jsonHash": "fnv1a64:b4f276118545b7cb",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C120-pilz",
+  "pathSegment": "GE-PATH-120-KLEIDUNG120",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-120-KLEIDUNG120",
+      "order": 4
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     "id": "MR-W07-ttha",
     "language": "marathi",
     "chapter": 7,
-    "sequence": 81,
+    "sequence": 101,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:d0604b7f4368a793",
+    "sourceHash": "fnv1a64:8f3098e276cb87ea",
     "detachableSegments": [
       "Script",
       "Writing — guided copy"

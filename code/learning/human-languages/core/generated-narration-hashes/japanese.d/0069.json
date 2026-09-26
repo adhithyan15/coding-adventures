@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:78d951208216c170",
+  "lessonIds": [
+    "JA-C69-niji",
+    "JA-C69-kaminari",
+    "JA-C69-shimo",
+    "JA-C69-koori",
+    "JA-C69-natsuyasumi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch69.txt",
+  "json": "japanese/narration/ch69.json",
+  "textHash": "fnv1a64:423fc42dd70295b3",
+  "jsonHash": "fnv1a64:9a4ccdc059d345a6",
+  "findings": []
+}

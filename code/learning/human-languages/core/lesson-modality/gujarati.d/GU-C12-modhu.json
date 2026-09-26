@@ -3,7 +3,7 @@
     "id": "GU-C12-modhu",
     "language": "gujarati",
     "chapter": 18,
-    "sequence": 620,
+    "sequence": 633,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b60605faa65e64b1",
+    "sourceHash": "fnv1a64:48249b7092164f9d",
     "detachableSegments": [
       "The letters in this word"
     ]

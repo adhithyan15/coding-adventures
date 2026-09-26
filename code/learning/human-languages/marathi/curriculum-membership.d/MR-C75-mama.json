@@ -1,0 +1,11 @@
+{
+  "id": "MR-C75-mama",
+  "pathSegment": "MR-PATH-75-FAMILY75",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-75-FAMILY75",
+      "order": 4
+    }
+  ]
+}

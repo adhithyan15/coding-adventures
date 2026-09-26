@@ -3,7 +3,7 @@
     "id": "GU-C29-hear-nadi",
     "language": "gujarati",
     "chapter": 33,
-    "sequence": 1660,
+    "sequence": 1673,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e344a78a2b63de72"
+    "sourceHash": "fnv1a64:107f3e83a668bdb6"
   },
   "findings": []
 }

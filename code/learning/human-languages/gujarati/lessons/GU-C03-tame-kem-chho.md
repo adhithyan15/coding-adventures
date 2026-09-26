@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C03-tame-kem-chho
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 200
+sequence: 213
 chapter: 9
 type: phrase
 headword: તમે કેમ છો?

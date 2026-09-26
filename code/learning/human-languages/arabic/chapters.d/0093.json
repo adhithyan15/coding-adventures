@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Police, Market, Village, City, Restaurant",
+  "label": "ch:ar-police-market-village-city-restaurant",
+  "canDo": "I can say the police, a market, a village, a city and a restaurant.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "AR-C93-matam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say the police, a market, a village, a city and a restaurant.",
+    "assesses": [
+      "AR-LEX-C93-TOWN93-03",
+      "AR-LEX-C93-TOWN93-04",
+      "AR-LEX-C93-TOWN93-05"
+    ]
+  }
+}

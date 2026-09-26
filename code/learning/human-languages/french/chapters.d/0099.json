@@ -1,0 +1,19 @@
+{
+  "chapter": 99,
+  "title": "Shop, School, Bank, Train, Aeroplane",
+  "label": "ch:fr-shop-school-bank-train-aeroplane",
+  "canDo": "I can name a shop, a school, a bank, a train, an aeroplane.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FR-C99-avion",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: i can name a shop, a school, a bank, a train, an aeroplane.",
+    "assesses": [
+      "FR-LEX-C99-VILLE51-03",
+      "FR-LEX-C99-VILLE51-04",
+      "FR-LEX-C99-VILLE51-05"
+    ]
+  }
+}

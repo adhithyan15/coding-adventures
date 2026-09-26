@@ -18,12 +18,12 @@ duration:
 requires:
   knowledge: [FA-LEX-KHODA, FA-SCRIPT-KHODA, FA-LEX-HAFEZ, FA-SCRIPT-HAFEZ, FA-ETYMON-KHODA, FA-ETYMON-HAFEZ]
 introduces:
-  knowledge: [FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED, FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS, FA-PRAGMATICS-STANDARD-FAREWELL]
+  knowledge: [FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED]
 introduces_idioms: [FA-IDIOM-KHODAHAFEZ-FAREWELL-01]
 introduces_senses: []
 introduces_culture_claims: [FA-CULTURE-KHODAHAFEZ-BROADLY-POLITE-01]
 practises:
-  knowledge: [FA-LEX-KHODA, FA-SCRIPT-KHODA, FA-LEX-HAFEZ, FA-SCRIPT-HAFEZ, FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED, FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS, FA-PRAGMATICS-STANDARD-FAREWELL]
+  knowledge: [FA-LEX-KHODA, FA-SCRIPT-KHODA, FA-LEX-HAFEZ, FA-SCRIPT-HAFEZ, FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -49,23 +49,15 @@ Persian normally writes the two spoken pieces together. Start with **خدا**, a
 **حافظ**, and read the joined spelling **خداحافظ** from the right edge. Keep the
 two meaning layers available underneath the complete form.
 
-## Grammar Lens — a complete wish without a full sentence
-<!-- hl-knowledge: introduces=[FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS, FA-PRAGMATICS-STANDARD-FAREWELL]; assesses=[] -->
-
-The expression carries the protective sense “God [be] guardian,” but everyday
-speakers use the whole formula simply as **goodbye**. No new verb is required
-for beginner production. It is a broadly polite, reliable way to end the short
-respectful interaction built in Chapters 1–4.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED, FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS, FA-PRAGMATICS-STANDARD-FAREWELL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED] -->
 
 - [YOU BUILD: **khodâ** + **hâfez**]
 - [YOU READ: joined **خداحافظ**]
 - [YOU USE: say it only when the interaction ends]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED, FA-GRAMMAR-KHODAHAFEZ-ELLIPSIS, FA-PRAGMATICS-STANDARD-FAREWELL] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KHODAHAFEZ, FA-SCRIPT-KHODAHAFEZ-JOINED] -->
 <!-- hl-activity: {"id":"FA-C05-khodahafez-goodbye","kind":"text","assesses":["FA-LEX-KHODAHAFEZ"],"prompt":"Type the standard Persian expression for 'goodbye'.","answer":"خداحافظ","accepted":["khodahafez","khoda hafez","khodâ hâfez","khodā hāfez","xodāhāfez"],"feedback":{"correct":"Right: خداحافظ khodâ hâfez ends the interaction.","incorrect":"Use خداحافظ — khodâ hâfez."},"response_seconds":9} -->
 
 When do you use **khodâ hâfez**? (At parting, not at the opening.)

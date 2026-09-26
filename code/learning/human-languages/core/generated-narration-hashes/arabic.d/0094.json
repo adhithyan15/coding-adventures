@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:f939de2b2724dfa3",
+  "lessonIds": [
+    "AR-C94-malabis",
+    "AR-C94-qamis",
+    "AR-C94-fustan",
+    "AR-C94-sirwal",
+    "AR-C94-jawrab"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch94.txt",
+  "json": "arabic/narration/ch94.json",
+  "textHash": "fnv1a64:de264b0169b4e965",
+  "jsonHash": "fnv1a64:5da2234e68559162",
+  "findings": []
+}

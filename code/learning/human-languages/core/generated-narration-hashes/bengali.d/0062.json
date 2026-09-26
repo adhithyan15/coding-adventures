@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:69fd0edbaf13d962",
+  "lessonIds": [
+    "BN-C62-pakha",
+    "BN-C62-chabi",
+    "BN-C62-tala",
+    "BN-C62-thala",
+    "BN-C62-chamoch"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch62.txt",
+  "json": "bengali/narration/ch62.json",
+  "textHash": "fnv1a64:1b0b284949d7be07",
+  "jsonHash": "fnv1a64:69aecfb189e15bb9",
+  "findings": []
+}

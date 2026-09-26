@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:089b001d87f13c15",
+  "lessonIds": [
+    "PT-C129-seculo",
+    "PT-C129-muitas-vezes",
+    "PT-C129-as-vezes",
+    "PT-C129-escutar",
+    "PT-C129-olhar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch129.txt",
+  "json": "portuguese/narration/ch129.json",
+  "textHash": "fnv1a64:40f1f507c7555628",
+  "jsonHash": "fnv1a64:d48bb8119913fc27",
+  "findings": []
+}

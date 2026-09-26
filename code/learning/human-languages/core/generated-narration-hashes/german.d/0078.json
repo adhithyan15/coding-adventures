@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:d54e6a9e11bdfc83",
+  "lessonIds": [
+    "GE-C78-schrank",
+    "GE-C78-boden",
+    "GE-C78-treppe",
+    "GE-C78-spiegel",
+    "GE-C78-wohnung"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch78.txt",
+  "json": "german/narration/ch78.json",
+  "textHash": "fnv1a64:4cb58e0d499f49cf",
+  "jsonHash": "fnv1a64:90aaffb2ce85de93",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C75-schneiden",
+  "pathSegment": "GE-PATH-75-ESSEN7",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-75-ESSEN7",
+      "order": 4
+    }
+  ]
+}

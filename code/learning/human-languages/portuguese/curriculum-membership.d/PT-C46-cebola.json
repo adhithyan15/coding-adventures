@@ -1,0 +1,11 @@
+{
+  "id": "PT-C46-cebola",
+  "pathSegment": "PT-PATH-46-LEGUMES",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-46-LEGUMES",
+      "order": 2
+    }
+  ]
+}

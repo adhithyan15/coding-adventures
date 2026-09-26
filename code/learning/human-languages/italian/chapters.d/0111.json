@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "Nurse, Cook, Police officer, Shop assistant, Farmer",
+  "label": "ch:it-nurse-cook-police-officer-shop-assistant-farmer",
+  "canDo": "I can say a nurse, a cook, a police officer, a shop assistant and a farmer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C111-contadino",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can say a nurse, a cook, a police officer, a shop assistant and a farmer.",
+    "assesses": [
+      "IT-LEX-C111-LAVORO111-03",
+      "IT-LEX-C111-LAVORO111-04",
+      "IT-LEX-C111-LAVORO111-05"
+    ]
+  }
+}

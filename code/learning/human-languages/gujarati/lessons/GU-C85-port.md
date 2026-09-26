@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C85-port
 spine_node: SPINE-MEET-GREET
-sequence: 4350
+sequence: 4363
 chapter: 85
 type: word
 headword: "બંદર"

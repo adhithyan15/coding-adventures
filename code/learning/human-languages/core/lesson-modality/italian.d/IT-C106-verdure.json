@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C106-verdure",
+    "language": "italian",
+    "chapter": 106,
+    "sequence": 5010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad4b6ec1880c5bdf"
+  },
+  "findings": []
+}

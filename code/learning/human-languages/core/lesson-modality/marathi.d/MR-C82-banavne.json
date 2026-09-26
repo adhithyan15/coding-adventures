@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C82-banavne",
+    "language": "marathi",
+    "chapter": 82,
+    "sequence": 3500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9bb2ff868808f87"
+  },
+  "findings": []
+}

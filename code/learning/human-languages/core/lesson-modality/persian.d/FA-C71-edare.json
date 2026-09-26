@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C71-edare",
+    "language": "persian",
+    "chapter": 71,
+    "sequence": 3460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:391a90b60422dd69"
+  },
+  "findings": []
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C01-practice
 spine_node: SPINE-RESPOND-BASIC
-sequence: 60
+sequence: 61
 chapter: 2
 type: practice
 headword: (recap)

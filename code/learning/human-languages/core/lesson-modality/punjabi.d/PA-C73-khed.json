@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C73-khed",
+    "language": "punjabi",
+    "chapter": 73,
+    "sequence": 3890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18f9047d1bdd7c62"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C51-ongle",
+    "language": "french",
+    "chapter": 51,
+    "sequence": 1920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0021c0c7bb80d93"
+  },
+  "findings": []
+}

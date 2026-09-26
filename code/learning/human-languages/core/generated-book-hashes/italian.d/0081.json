@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:fb430048f2b97b58",
+  "lessonIds": [
+    "IT-C81-citta",
+    "IT-C81-negozio",
+    "IT-C81-mercato",
+    "IT-C81-scuola",
+    "IT-C81-banca"
+  ],
+  "tex": "italian/book/chapters/ch81-city-shop-market-school-bank.tex"
+}

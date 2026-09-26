@@ -4,11 +4,11 @@
   "chapter": 81,
   "title": "Eleven to Sixteen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6accc2a997726309",
+  "sourceHash": "fnv1a64:ede3cd2e427621f3",
   "lessons": [
     {
       "id": "GU-C81-eleven",
-      "sequence": 4110,
+      "sequence": 4123,
       "title": "અગિયાર (agiyār) — eleven",
       "headword": "અગિયાર",
       "romanization": "agiyār",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f934eb5a556272f3",
+      "sourceHash": "fnv1a64:f9e138a3f93c8ecd",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C81-twelve",
-      "sequence": 4120,
+      "sequence": 4133,
       "title": "બાર (bār) — twelve",
       "headword": "બાર",
       "romanization": "bār",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2892b620aee368a0",
+      "sourceHash": "fnv1a64:ce861c9c90024690",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C81-thirteen",
-      "sequence": 4130,
+      "sequence": 4143,
       "title": "તેર (ter) — thirteen",
       "headword": "તેર",
       "romanization": "ter",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54f219a9d2f637a7",
+      "sourceHash": "fnv1a64:eb3d467227ff3d45",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C81-fifteen",
-      "sequence": 4140,
+      "sequence": 4153,
       "title": "પંદર (pandar) — fifteen",
       "headword": "પંદર",
       "romanization": "pandar",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:275b4f907c3bb7fb",
+      "sourceHash": "fnv1a64:4039b175ad07c04b",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C81-sixteen",
-      "sequence": 4150,
+      "sequence": 4163,
       "title": "સોળ (soḷ) — sixteen",
       "headword": "સોળ",
       "romanization": "soḷ",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d89fd6ec499562ec",
+      "sourceHash": "fnv1a64:801e3e9ea19ebe0e",
       "notice": null,
       "blocks": [
         {

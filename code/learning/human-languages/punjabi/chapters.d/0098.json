@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "Holiday, Love, Music, Way, Country",
+  "label": "ch:pa-holiday-love-music-way-country",
+  "canDo": "I can say a holiday, time off, love, music, a way, a route and a country.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "PA-R98-second-pass-places-the-town-clothes-and-numbers",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 98: i can say a holiday, time off, love, music, a way, a route and a country.",
+    "assesses": [
+      "PA-LEX-C98-WORLD98-03",
+      "PA-LEX-C98-WORLD98-04",
+      "PA-LEX-C98-WORLD98-05"
+    ]
+  }
+}

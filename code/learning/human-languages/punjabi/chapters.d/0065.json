@@ -1,0 +1,19 @@
+{
+  "chapter": 65,
+  "title": "Tomato, Carrot, Sugar, Salt, Butter",
+  "label": "ch:pa-tomato-carrot-sugar-salt-butter",
+  "canDo": "I can say a tomato, a carrot, sugar, salt and butter.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "PA-C65-makkhan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: i can say a tomato, a carrot, sugar, salt and butter.",
+    "assesses": [
+      "PA-LEX-C65-FOOD65-03",
+      "PA-LEX-C65-FOOD65-04",
+      "PA-LEX-C65-FOOD65-05"
+    ]
+  }
+}

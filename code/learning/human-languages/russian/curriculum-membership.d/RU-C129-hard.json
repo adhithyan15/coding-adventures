@@ -1,0 +1,11 @@
+{
+  "id": "RU-C129-hard",
+  "pathSegment": "RU-PATH-129-QUAL129",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-129-QUAL129",
+      "order": 1
+    }
+  ]
+}

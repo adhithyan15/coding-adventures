@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C34-agha",
+    "language": "persian",
+    "chapter": 34,
+    "sequence": 1570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6becb043f01660f"
+  },
+  "findings": []
+}

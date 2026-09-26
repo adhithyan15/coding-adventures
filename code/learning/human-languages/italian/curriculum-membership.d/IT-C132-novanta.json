@@ -1,0 +1,11 @@
+{
+  "id": "IT-C132-novanta",
+  "pathSegment": "IT-PATH-132-NUMERI132",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-132-NUMERI132",
+      "order": 4
+    }
+  ]
+}

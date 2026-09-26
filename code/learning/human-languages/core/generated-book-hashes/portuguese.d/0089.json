@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:71dccf0018e7132f",
+  "lessonIds": [
+    "PT-C89-em-frente",
+    "PT-C89-atras",
+    "PT-C89-ao-lado",
+    "PT-C89-entre",
+    "PT-C89-bairro"
+  ],
+  "tex": "portuguese/book/chapters/ch89-straight-ahead-behind-next-to-between-neighbourhood.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C53-pora",
+    "language": "bengali",
+    "chapter": 53,
+    "sequence": 2780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d202381f2096c13e"
+  },
+  "findings": []
+}

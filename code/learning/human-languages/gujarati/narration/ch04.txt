@@ -1,8 +1,62 @@
 Gujarati, chapter 4: Four Forms Before Your Name.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 7.
+અથાણું (athāṇũ) — pickle.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before the new word: say the last thing you learned, once, out loud.
+[pause 2 seconds]
+From memory, write ર, દ and છ once each. Then say chīp and what it means.
+
+You'll want to know: અથાણું.
+અથાણું — athāṇũ — "pickle".
+Say it: athāṇũ. Look at its shape as you say it: the lessons that follow take pieces of it, અ and થ, and write each one on its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: athāṇũ]
+[pause 8 seconds for the answer]
+[your turn — say: athāṇũ, and what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "pickle"? (અથાણું, athāṇũ.)
+
+
+Lesson 2 of 7.
+દિવાળી (divāḷī) — Diwali, the festival of lights.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before the new word: say the last thing you learned, once, out loud.
+[pause 2 seconds]
+From memory, write વ, ય and ક once each. Then say kaṇ and śak, and what each means.
+
+You'll want to know: દિવાળી.
+દિવાળી — divāḷī — "Diwali, the festival of lights".
+Say it: divāḷī. Look at its shape as you say it: the lessons that follow take pieces of it, ળ (ḷa) and િ (-i), and write each one on its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: divāḷī]
+[pause 8 seconds for the answer]
+[your turn — say: divāḷī, and what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "Diwali, the festival of lights"? (દિવાળી, divāḷī.)
+
+
+Lesson 3 of 7.
 ળ (ḷa) — one new shape, retroflex lla.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -30,7 +84,7 @@ Name the sound, the two main landmarks, and the pen-lift count.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 2 of 5.
+Lesson 4 of 7.
 થ — the consonant tha.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -58,7 +112,7 @@ Say tha with its puff, then name the pen-lift count.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 3 of 5.
+Lesson 5 of 7.
 અ — short a standing alone.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -86,7 +140,7 @@ When does short a need અ instead of arriving free on a consonant? (When it sta
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 4 of 5.
+Lesson 6 of 7.
 િ (-i) — short i sits before, sounds after.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -114,7 +168,7 @@ Is િ (-i) seen before or after its consonant? (Before.) Is it pronounced befor
 Source: Unicode Gujarati chart; placement and example follow data/scripts/gujarati.json.
 
 
-Lesson 5 of 5.
+Lesson 7 of 7.
 ળ (ḷa) — થ — અ — િ (-i) (retroflex lla — tha — independent a — attached i): four forms return.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.

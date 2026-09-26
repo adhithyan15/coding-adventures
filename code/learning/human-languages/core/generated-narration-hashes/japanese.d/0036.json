@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:6cf4f2a52e0971e6",
+  "lessonIds": [
+    "JA-C36-nori",
+    "JA-C36-ume",
+    "JA-C36-kuri",
+    "JA-C36-mame",
+    "JA-C36-kome"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch36.txt",
+  "json": "japanese/narration/ch36.json",
+  "textHash": "fnv1a64:97b84ac1a1815d12",
+  "jsonHash": "fnv1a64:e81a7650bbea9a90",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-123-THINGS123",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say space, a bottle, a mirror, stairs and pink.",
+  "prerequisites": []
+}

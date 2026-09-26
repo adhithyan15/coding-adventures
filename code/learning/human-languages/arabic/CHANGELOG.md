@@ -1,5 +1,82 @@
 # Changelog
 
+## HL-C443: the two mark sets get a word first
+
+Arabic headwords are written without short-vowel marks. So when chapter 2
+taught the marks, no word the reader knew showed them. Each mark set now
+follows a short, romanized word lesson written with its marks:
+
+| mark set | word placed just before it |
+|---|---|
+| ـَ ـِ ـُ | **مُدَرِّس** (*mudarris*, a teacher), which also shows the shadda ـّ |
+| ـْ ـّ ـً | **أَهْلًا** (*ahlan*, welcome) |
+
+Each word is revisited by the mark lessons after it, and again by name in the
+warm-up of كيف (*kayfa*), inside its R2 window. No older atom loses a window.
+The fatha set and the ya lesson both reach their R1 for the first time.
+
+    arabic cold letter lessons   2  ->  0 (ceiling ratcheted)
+    arabic lessons             419  ->  421
+
+## HL-C443: five letter sets get a word first
+
+Gentle writing asks for every letter to be taken from a word the reader
+already says. Five of Arabic's opening letter-set lessons came before any word
+holding all of their letters. Each now follows a short, romanized word lesson
+that holds the letters it still needed:
+
+| letter set | word placed just before it |
+|---|---|
+| ب ت ث | **ثابت** (*thābit*, steady) |
+| ع ي | **عيد** (*ʿīd*, a feast day) |
+| ك و | **كوخ** (*kūkh*, a hut) |
+| ن ت ث | **ثمن** (*thaman*, a price) |
+| ح خ ج | **حاج** (*ḥājj*, a pilgrim; خ comes from كوخ) |
+
+Each word is revisited by its letter lesson and by the next lesson in the same
+path segment.
+
+The two diacritic sets, the short vowels َ ِ ُ and ْ ّ ً, stay cold. A word
+that anchors them has to be printed with its vowel marks, and the opening
+chapters print none.
+
+    arabic cold letter lessons   7  ->  2 (ceiling ratcheted)
+
+## Chapters 50-99: 250 headwords, forty-three verbs, and Arabic attains pre-A1
+
+Arabic had two pre-A1 gaps: 247 headwords and 5 verbs.
+
+**The vocabulary.** Fifty chapters of five words each, and four reviews: two
+after chapter 74 and two after chapter 99. Every word is chained into the next
+two lessons. Verbs are taught in the past-tense "he" form, the dictionary
+citation form the track already uses for **ذهب** and **كتب**.
+
+- **50-74**:
+  - the body and health
+  - the family on both sides
+  - forty-three verbs
+  - food, the home and school
+- **75-99**:
+  - nature and animals
+  - describing words
+  - time and place
+  - the town
+  - clothes
+  - six to ten, and the tens to a thousand
+
+Every headword is written only with letters the reader has already written,
+so words that need **ئ** or **ؤ** wait, including **عائلة**, **سؤال**,
+**دائما** and **مئة**. Some candidates were held back because earlier lesson
+text already uses them:
+
+- **مطر**, **حار** and **بارد** appear in the weather lesson.
+- **خضار** appears in the colour lesson, next to **أخضر**.
+- **حلو** and **سنة** also appear earlier.
+
+Arabic's forward-reference count stays at 13.
+
+    arabic pre-A1 blockers   vocabulary 247 + verb-vocabulary 5  ->  none (attained)
+
 ## Chapters 46-49: fourteen letters taken from words the reader already says (HL-C443)
 
 HL-C443's rule for gentle writing: teach each letter from a word the reader

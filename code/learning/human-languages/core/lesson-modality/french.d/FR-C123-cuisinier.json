@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C123-cuisinier",
+    "language": "french",
+    "chapter": 123,
+    "sequence": 5610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18e5ad40567f30ba"
+  },
+  "findings": []
+}

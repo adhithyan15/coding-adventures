@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:d8e1f8f29668c0ef",
+  "lessonIds": [
+    "BN-C51-shekha",
+    "BN-C51-bhola",
+    "BN-C51-chaowa",
+    "BN-C51-ana",
+    "BN-C51-gona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch51.txt",
+  "json": "bengali/narration/ch51.json",
+  "textHash": "fnv1a64:aef40285d32eaf6f",
+  "jsonHash": "fnv1a64:35ad30ff0b621874",
+  "findings": []
+}

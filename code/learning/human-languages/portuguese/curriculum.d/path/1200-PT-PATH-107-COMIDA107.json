@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-107-COMIDA107",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "PT-EXT-107-COMIDA107"
+  ],
+  "after": []
+}

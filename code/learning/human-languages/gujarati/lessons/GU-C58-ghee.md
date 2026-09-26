@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C58-ghee
 spine_node: SPINE-COURTESY-THANK
-sequence: 2960
+sequence: 2973
 chapter: 58
 type: word
 headword: "ઘી"

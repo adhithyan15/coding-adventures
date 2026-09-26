@@ -1,0 +1,11 @@
+{
+  "id": "RU-C118-whale",
+  "pathSegment": "RU-PATH-118-THINGS118",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-118-THINGS118",
+      "order": 2
+    }
+  ]
+}

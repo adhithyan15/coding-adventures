@@ -1,0 +1,11 @@
+{
+  "id": "GE-C79-tasse",
+  "pathSegment": "GE-PATH-79-GESCHIRR",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "GE-EXT-79-GESCHIRR",
+      "order": 0
+    }
+  ]
+}

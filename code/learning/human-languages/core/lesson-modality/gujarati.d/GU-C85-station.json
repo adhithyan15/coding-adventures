@@ -3,7 +3,7 @@
     "id": "GU-C85-station",
     "language": "gujarati",
     "chapter": 85,
-    "sequence": 4330,
+    "sequence": 4343,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c977a1d7b06110a0"
+    "sourceHash": "fnv1a64:c4acfc3b7d73622e"
   },
   "findings": []
 }

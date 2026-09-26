@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C71-ape",
+    "language": "italian",
+    "chapter": 71,
+    "sequence": 3150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7be8219ceafdd61f"
+  },
+  "findings": []
+}

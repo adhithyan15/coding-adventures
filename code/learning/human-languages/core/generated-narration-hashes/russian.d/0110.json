@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:79720dc7681ae3d5",
+  "lessonIds": [
+    "RU-C110-customer",
+    "RU-C110-till",
+    "RU-C110-boss",
+    "RU-C110-profession",
+    "RU-C110-class"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch110.txt",
+  "json": "russian/narration/ch110.json",
+  "textHash": "fnv1a64:8a27960b6eb02396",
+  "jsonHash": "fnv1a64:aec1668a4fb9e211",
+  "findings": []
+}

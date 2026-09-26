@@ -1,0 +1,11 @@
+{
+  "id": "GE-C88-ameise",
+  "pathSegment": "GE-PATH-88-TIERE3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-88-TIERE3",
+      "order": 1
+    }
+  ]
+}

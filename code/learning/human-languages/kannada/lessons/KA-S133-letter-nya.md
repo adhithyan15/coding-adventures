@@ -9,17 +9,17 @@ type: writing
 headword: "ಞ"
 gloss: the single character ಞ — a nasal you will nearly always meet stacked, never standing
 romanization: "ña"
-prerequisites: [KA-S132-sign-visarga]
+prerequisites: [KA-S132-sign-visarga, KA-C42-jnaana]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-132]
+  knowledge: [KA-SCRIPT-RECOG-132, KA-LEX-ANCHOR-JNAANA]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-133]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-132, KA-SCRIPT-RECOG-133]
+  knowledge: [KA-SCRIPT-RECOG-132, KA-SCRIPT-RECOG-133, KA-LEX-ANCHOR-JNAANA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [KA-S132-sign-visarga]
 # ಞ — one character, and the stack it hides in
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-132] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-132, KA-LEX-ANCHOR-JNAANA] -->
 
 [PAUSE 1s] Before the new one: ◌ಃ — what does it add, and which mark is its
 partner?

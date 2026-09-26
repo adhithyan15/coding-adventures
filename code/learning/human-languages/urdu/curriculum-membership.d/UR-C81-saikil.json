@@ -1,0 +1,11 @@
+{
+  "id": "UR-C81-saikil",
+  "pathSegment": "UR-PATH-81-TOWN81",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-81-TOWN81",
+      "order": 4
+    }
+  ]
+}

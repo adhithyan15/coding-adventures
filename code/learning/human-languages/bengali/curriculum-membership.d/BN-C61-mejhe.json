@@ -1,0 +1,11 @@
+{
+  "id": "BN-C61-mejhe",
+  "pathSegment": "BN-PATH-61-HOME61",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-61-HOME61",
+      "order": 1
+    }
+  ]
+}

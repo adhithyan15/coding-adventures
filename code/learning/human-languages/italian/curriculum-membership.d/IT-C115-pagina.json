@@ -1,0 +1,11 @@
+{
+  "id": "IT-C115-pagina",
+  "pathSegment": "IT-PATH-115-SCUOLA115",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-115-SCUOLA115",
+      "order": 4
+    }
+  ]
+}

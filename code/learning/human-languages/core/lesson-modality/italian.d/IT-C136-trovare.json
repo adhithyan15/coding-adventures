@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C136-trovare",
+    "language": "italian",
+    "chapter": 136,
+    "sequence": 6780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3e95f3f326bcd4f"
+  },
+  "findings": []
+}

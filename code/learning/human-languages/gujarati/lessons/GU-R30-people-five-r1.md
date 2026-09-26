@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R30-people-five-r1
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1770
+sequence: 1783
 chapter: 34
 type: practice
 headword: છોકરો — છોકરી — માણસ — પુસ્તક — કાગળ

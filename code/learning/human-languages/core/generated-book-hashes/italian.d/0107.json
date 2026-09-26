@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:194d31eaf3ab72cd",
+  "lessonIds": [
+    "IT-C107-fragola",
+    "IT-C107-ciliegia",
+    "IT-C107-melone",
+    "IT-C107-aglio",
+    "IT-C107-farina"
+  ],
+  "tex": "italian/book/chapters/ch107-strawberry-cherry-melon-garlic-flour.tex"
+}

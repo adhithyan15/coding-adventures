@@ -1,0 +1,11 @@
+{
+  "id": "IT-C116-canzone",
+  "pathSegment": "IT-PATH-116-TEMPOLIBERO116",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-116-TEMPOLIBERO116",
+      "order": 2
+    }
+  ]
+}

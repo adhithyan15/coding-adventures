@@ -3,7 +3,7 @@
     "id": "GU-R04-doorway-nine-r2",
     "language": "gujarati",
     "chapter": 8,
-    "sequence": 165,
+    "sequence": 178,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:24e96bac2110a0d5",
+    "sourceHash": "fnv1a64:d32391fa352bc537",
     "detachableSegments": [
       "Writing — from sound"
     ],

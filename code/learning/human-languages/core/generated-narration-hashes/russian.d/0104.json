@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:b90d4de29d3ea55d",
+  "lessonIds": [
+    "RU-C104-beef",
+    "RU-C104-vegetables",
+    "RU-C104-strawberries",
+    "RU-C104-melon",
+    "RU-C104-garlic",
+    "RU-R104-first-pass-the-house-and-things-you-carry",
+    "RU-R104-second-pass-clothes-and-food"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch104.txt",
+  "json": "russian/narration/ch104.json",
+  "textHash": "fnv1a64:38114c088476b1e6",
+  "jsonHash": "fnv1a64:700e607bde8db070",
+  "findings": []
+}

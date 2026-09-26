@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C77-uthne",
+    "language": "marathi",
+    "chapter": 77,
+    "sequence": 3250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec0b260b6c5c44b6"
+  },
+  "findings": []
+}

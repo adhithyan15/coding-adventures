@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C87-ziege",
+    "language": "german",
+    "chapter": 87,
+    "sequence": 3130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:34342d89a44c2e2c"
+  },
+  "findings": []
+}

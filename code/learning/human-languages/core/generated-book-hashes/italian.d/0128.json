@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:0693fadf92d49d04",
+  "lessonIds": [
+    "IT-C128-pericoloso",
+    "IT-C128-bagnato",
+    "IT-C128-asciutto",
+    "IT-C128-fresco",
+    "IT-C128-morbido"
+  ],
+  "tex": "italian/book/chapters/ch128-dangerous-wet-dry-cool-soft.tex"
+}

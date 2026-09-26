@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:43d0469b67a3a697",
+  "lessonIds": [
+    "IT-C58-camera",
+    "IT-C58-pavimento",
+    "IT-C58-scala",
+    "IT-C58-specchio",
+    "IT-C58-tazza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch58.txt",
+  "json": "italian/narration/ch58.json",
+  "textHash": "fnv1a64:39397b0c278254d0",
+  "jsonHash": "fnv1a64:6d4eee3fb22f0844",
+  "findings": []
+}

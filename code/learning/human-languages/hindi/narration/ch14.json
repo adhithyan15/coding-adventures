@@ -3,9 +3,114 @@
   "language": "hindi",
   "chapter": 14,
   "title": "Seasons",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:88a4782da2ec5095",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:90fba4ccfab6ead6",
   "lessons": [
+    {
+      "id": "HI-C14-ghee",
+      "sequence": 609,
+      "title": "घी (ghī) — ghee, clarified butter",
+      "headword": "घी",
+      "romanization": "ghī",
+      "gloss": "ghee, clarified butter",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:3cd39f4867b67077",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घी — ghī — \"ghee, clarified butter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ghī. Look at its shape as you say it: the next lesson takes one piece of it, घ (gha), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghī, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghī*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"ghee, clarified butter\"? (घी, ghī.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "HI-C14-ritu",
       "sequence": 610,
@@ -321,7 +426,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2085a439e58b35c2",
+      "sourceHash": "fnv1a64:9ba9e4fe818ac58e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -514,7 +619,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:004c5ebd46dc107d",
+      "sourceHash": "fnv1a64:4f2a9e500aa891e7",
       "notice": {
         "modality": "pen",
         "needs": [

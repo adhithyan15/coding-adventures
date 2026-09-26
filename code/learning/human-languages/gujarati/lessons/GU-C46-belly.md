@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C46-belly
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2360
+sequence: 2373
 chapter: 46
 type: word
 headword: "પેટ"

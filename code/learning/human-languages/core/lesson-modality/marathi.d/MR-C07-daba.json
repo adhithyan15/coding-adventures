@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C07-daba",
+    "language": "marathi",
+    "chapter": 7,
+    "sequence": 99,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:65feb3f36eea6c43"
+  },
+  "findings": []
+}

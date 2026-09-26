@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C88-supermarket",
+    "language": "russian",
+    "chapter": 88,
+    "sequence": 4420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0be7e1473024198f"
+  },
+  "findings": []
+}

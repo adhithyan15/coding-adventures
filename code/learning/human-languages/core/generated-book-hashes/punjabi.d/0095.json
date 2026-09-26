@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:5328e66f59e61139",
+  "lessonIds": [
+    "PA-C95-satt",
+    "PA-C95-atth",
+    "PA-C95-naum",
+    "PA-C95-das",
+    "PA-C95-giaram"
+  ],
+  "tex": "punjabi/book/chapters/ch95-seven-eight-nine-ten-eleven.tex"
+}

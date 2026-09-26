@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R93-letters-second-pass",
+    "language": "russian",
+    "chapter": 93,
+    "sequence": 4730,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b831811ad4fd03fc"
+  },
+  "findings": []
+}

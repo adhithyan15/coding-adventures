@@ -1,0 +1,11 @@
+{
+  "id": "AR-C81-dajaja",
+  "pathSegment": "AR-PATH-81-ANIMALS81",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-81-ANIMALS81",
+      "order": 2
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     "id": "GU-C49-thirst",
     "language": "gujarati",
     "chapter": 49,
-    "sequence": 2530,
+    "sequence": 2543,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ba6722d8feab4059"
+    "sourceHash": "fnv1a64:af7410c2781a3827"
   },
   "findings": []
 }

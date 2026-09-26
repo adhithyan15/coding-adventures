@@ -1,0 +1,11 @@
+{
+  "id": "BN-C54-lukano",
+  "pathSegment": "BN-PATH-54-VERBS54",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-54-VERBS54",
+      "order": 3
+    }
+  ]
+}

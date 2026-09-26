@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C67-goat
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3410
+sequence: 3423
 chapter: 67
 type: word
 headword: "બકરી"

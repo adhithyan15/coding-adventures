@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:c3265218d92af4ab",
+  "lessonIds": [
+    "BN-C42-hat",
+    "BN-C42-chul",
+    "BN-C42-dat",
+    "BN-C42-gola",
+    "BN-C42-pet"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch42.txt",
+  "json": "bengali/narration/ch42.json",
+  "textHash": "fnv1a64:9fe12cc94967e9c7",
+  "jsonHash": "fnv1a64:a456d9c911793d0d",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C47-tav",
+    "language": "marwadi",
+    "chapter": 47,
+    "sequence": 3650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6b7e4a532425eea5"
+  },
+  "findings": []
+}

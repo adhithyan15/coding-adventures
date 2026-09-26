@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:9edd98748e914801",
+  "lessonIds": [
+    "IT-C118-nebbia",
+    "IT-C118-temporale",
+    "IT-C118-ghiaccio",
+    "IT-C118-collina",
+    "IT-C118-roccia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch118.txt",
+  "json": "italian/narration/ch118.json",
+  "textHash": "fnv1a64:13801c761d47f47c",
+  "jsonHash": "fnv1a64:7ab7ab513c342d12",
+  "findings": []
+}

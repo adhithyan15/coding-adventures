@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C68-tiger
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3440
+sequence: 3453
 chapter: 68
 type: word
 headword: "વાઘ"

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:f71af89075a6ecb4",
+  "lessonIds": [
+    "IT-C115-compiti",
+    "IT-C115-risposta",
+    "IT-C115-problema",
+    "IT-C115-frase",
+    "IT-C115-pagina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch115.txt",
+  "json": "italian/narration/ch115.json",
+  "textHash": "fnv1a64:b0530639c50c29be",
+  "jsonHash": "fnv1a64:747fad86be8c4e07",
+  "findings": []
+}

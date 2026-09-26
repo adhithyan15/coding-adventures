@@ -1,0 +1,11 @@
+{
+  "id": "JA-C53-samui",
+  "pathSegment": "JA-PATH-53-ADJ53",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-53-ADJ53",
+      "order": 3
+    }
+  ]
+}

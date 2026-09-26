@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:ac9eae99758f35cb",
+  "lessonIds": [
+    "IT-C106-manzo",
+    "IT-C106-verdure",
+    "IT-C106-fungo",
+    "IT-C106-fagioli",
+    "IT-C106-cetriolo",
+    "IT-R106-first-pass-things-clothes-and-tools",
+    "IT-R106-second-pass-food-and-drink"
+  ],
+  "tex": "italian/book/chapters/ch106-beef-vegetables-mushroom-beans-cucumber.tex"
+}

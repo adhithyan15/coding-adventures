@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Vacuum cleaner, Laundry, Washing powder, Iron, Pocket",
+  "label": "ch:fr-vacuum-cleaner-laundry-washing-powder-iron-pocket",
+  "canDo": "I can name a vacuum cleaner, laundry, washing powder, iron, a pocket.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C115-poche",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: i can name a vacuum cleaner, laundry, washing powder, iron, a pocket.",
+    "assesses": [
+      "FR-LEX-C115-MAISON67-03",
+      "FR-LEX-C115-MAISON67-04",
+      "FR-LEX-C115-MAISON67-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 92,
+  "title": "Motorbike, Ship, Boat, Bus, Train",
+  "label": "ch:pt-motorbike-ship-boat-bus-train",
+  "canDo": "I can say a motorbike, a ship, a boat, a bus and a train.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PT-R92-second-pass-getting-around-and-the-house",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 92: i can say a motorbike, a ship, a boat, a bus and a train.",
+    "assesses": [
+      "PT-LEX-C92-VIAGEM92-03",
+      "PT-LEX-C92-VIAGEM92-04",
+      "PT-LEX-C92-VIAGEM92-05"
+    ]
+  }
+}

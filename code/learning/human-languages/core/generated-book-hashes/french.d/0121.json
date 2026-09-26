@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:12dd4308998a6bc6",
+  "lessonIds": [
+    "FR-C121-biere",
+    "FR-C121-jus",
+    "FR-C121-glace",
+    "FR-C121-chocolat",
+    "FR-C121-biscuit"
+  ],
+  "tex": "french/book/chapters/ch121-beer-juice-ice-cream-chocolate-biscuit.tex"
+}

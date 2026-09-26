@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C70-green
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3580
+sequence: 3593
 chapter: 70
 type: word
 headword: "લીલો"

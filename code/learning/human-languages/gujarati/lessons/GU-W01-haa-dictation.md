@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W01-haa-dictation
 spine_node: SPINE-RESPOND-BASIC
-sequence: 45
+sequence: 46
 delivery: script
 chapter: 2
 type: writing

@@ -1,0 +1,19 @@
+{
+  "chapter": 53,
+  "title": "Fever, Hospital, Ill, Pain, Medicine",
+  "label": "ch:ar-fever-hospital-ill-pain-medicine",
+  "canDo": "I can say a fever, a hospital, ill, sick, pain and medicine.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C53-dawa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 53: i can say a fever, a hospital, ill, sick, pain and medicine.",
+    "assesses": [
+      "AR-LEX-C53-HEALTH53-03",
+      "AR-LEX-C53-HEALTH53-04",
+      "AR-LEX-C53-HEALTH53-05"
+    ]
+  }
+}

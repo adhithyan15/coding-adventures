@@ -1,0 +1,11 @@
+{
+  "id": "FR-C125-serveur",
+  "pathSegment": "FR-PATH-125-METIERS77",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-125-METIERS77",
+      "order": 2
+    }
+  ]
+}

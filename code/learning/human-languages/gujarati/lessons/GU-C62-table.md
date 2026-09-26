@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C62-table
 spine_node: SPINE-MEET-GREET
-sequence: 3160
+sequence: 3173
 chapter: 62
 type: word
 headword: "ટેબલ"

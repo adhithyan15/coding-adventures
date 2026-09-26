@@ -1,0 +1,11 @@
+{
+  "id": "IT-C89-incrocio",
+  "pathSegment": "IT-PATH-89-LUOGHI89",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-89-LUOGHI89",
+      "order": 3
+    }
+  ]
+}

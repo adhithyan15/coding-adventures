@@ -1,0 +1,11 @@
+{
+  "id": "GE-C65-weinen",
+  "pathSegment": "GE-PATH-65-VERBEN2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-65-VERBEN2",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "AR-C67-zubda",
+  "pathSegment": "AR-PATH-67-FOOD67",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-67-FOOD67",
+      "order": 2
+    }
+  ]
+}

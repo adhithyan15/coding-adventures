@@ -1,0 +1,19 @@
+{
+  "chapter": 62,
+  "title": "Luggage, Ship, Sound, Colour, Shape",
+  "label": "ch:ja-luggage-ship-sound-colour-shape",
+  "canDo": "I can say luggage, a ship, a sound, a colour and a shape.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "JA-C62-katachi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 62: i can say luggage, a ship, a sound, a colour and a shape.",
+    "assesses": [
+      "JA-LEX-C62-WORLD62-03",
+      "JA-LEX-C62-WORLD62-04",
+      "JA-LEX-C62-WORLD62-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:44b0e3629b562f2d",
+  "lessonIds": [
+    "IT-C92-di-fronte",
+    "IT-C92-metropolitana",
+    "IT-C92-taxi",
+    "IT-C92-traghetto",
+    "IT-C92-viaggio"
+  ],
+  "tex": "italian/book/chapters/ch92-opposite-underground-taxi-ferry-journey.tex"
+}

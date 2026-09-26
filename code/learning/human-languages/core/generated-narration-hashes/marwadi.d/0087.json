@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:cebf0e93f6fb73b0",
+  "lessonIds": [
+    "MW-C87-assi",
+    "MW-C87-nabbai",
+    "MW-C87-hajar",
+    "MW-C87-lakh",
+    "MW-C87-duniya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch87.txt",
+  "json": "marwadi/narration/ch87.json",
+  "textHash": "fnv1a64:e8b795c4c822e4f3",
+  "jsonHash": "fnv1a64:821e065bdf8d0443",
+  "findings": []
+}

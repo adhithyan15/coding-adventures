@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C65-sea
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3290
+sequence: 3303
 chapter: 65
 type: word
 headword: "દરિયો"

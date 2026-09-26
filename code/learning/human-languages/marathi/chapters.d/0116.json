@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Shirt, Sari, Sock, Pocket, Ring",
+  "label": "ch:mr-shirt-sari-sock-pocket-ring",
+  "canDo": "I can say a shirt, a sari, a sock, a pocket and a ring.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "MR-C116-angthi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say a shirt, a sari, a sock, a pocket and a ring.",
+    "assesses": [
+      "MR-LEX-C116-CLOTHES116-03",
+      "MR-LEX-C116-CLOTHES116-04",
+      "MR-LEX-C116-CLOTHES116-05"
+    ]
+  }
+}

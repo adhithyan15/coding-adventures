@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Hard, Round, Wide, Narrow, Angry",
+  "label": "ch:it-hard-round-wide-narrow-angry",
+  "canDo": "I can say hard, round, wide, narrow and angry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "IT-C129-arrabbiato",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say hard, round, wide, narrow and angry.",
+    "assesses": [
+      "IT-LEX-C129-QUALITA129-03",
+      "IT-LEX-C129-QUALITA129-04",
+      "IT-LEX-C129-QUALITA129-05"
+    ]
+  }
+}

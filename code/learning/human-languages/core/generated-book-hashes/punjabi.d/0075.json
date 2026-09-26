@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:1282ea9b264afa45",
+  "lessonIds": [
+    "PA-C75-ret",
+    "PA-C75-khet",
+    "PA-C75-baddal",
+    "PA-C75-suraj",
+    "PA-C75-chann"
+  ],
+  "tex": "punjabi/book/chapters/ch75-sand-field-cloud-sun-moon.tex"
+}

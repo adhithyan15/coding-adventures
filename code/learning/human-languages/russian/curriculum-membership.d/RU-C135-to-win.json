@@ -1,0 +1,11 @@
+{
+  "id": "RU-C135-to-win",
+  "pathSegment": "RU-PATH-135-ACT135",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-135-ACT135",
+      "order": 1
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C25-time-written
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1360
+sequence: 1373
 chapter: 29
 type: practice
 headword: સવાર — બપોર — સાંજ — દિવસ — મહિનો — અત્યારે

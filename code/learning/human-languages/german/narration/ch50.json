@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "The One It Happens To",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:cac8e3ae08de0c1d",
+  "sourceHash": "fnv1a64:a3af7c643e5a506f",
   "lessons": [
     {
       "id": "GE-C37-dich",
@@ -184,7 +184,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5bcdb3fe991af65",
+      "sourceHash": "fnv1a64:e1c4db500deddfcf",
       "notice": null,
       "blocks": [
         {
@@ -812,7 +812,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7114a49e1ab4365",
+      "sourceHash": "fnv1a64:ffa38fdeb127db9b",
       "notice": null,
       "blocks": [
         {

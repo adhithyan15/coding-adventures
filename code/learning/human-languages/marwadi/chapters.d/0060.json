@@ -1,0 +1,19 @@
+{
+  "chapter": 60,
+  "title": "Sugar, Salt, Chilli, Yoghurt, Oil",
+  "label": "ch:mw-sugar-salt-chilli-yoghurt-oil",
+  "canDo": "I can say sugar, salt, a chilli, yoghurt and oil.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C60-tel",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 60: i can say sugar, salt, a chilli, yoghurt and oil.",
+    "assesses": [
+      "MW-LEX-C60-VERBS60-03",
+      "MW-LEX-C60-VERBS60-04",
+      "MW-LEX-C60-VERBS60-05"
+    ]
+  }
+}

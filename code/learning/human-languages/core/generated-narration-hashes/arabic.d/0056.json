@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:6e943521a5d01cba",
+  "lessonIds": [
+    "AR-C56-tifl",
+    "AR-C56-walad",
+    "AR-C56-rajul",
+    "AR-C56-imraa",
+    "AR-C56-dayf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch56.txt",
+  "json": "arabic/narration/ch56.json",
+  "textHash": "fnv1a64:94a8624af5302c66",
+  "jsonHash": "fnv1a64:f6f08885ce5a4950",
+  "findings": []
+}

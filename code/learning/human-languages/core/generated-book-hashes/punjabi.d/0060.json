@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:8ada3fffcc64d32e",
+  "lessonIds": [
+    "PA-C60-sikkhna",
+    "PA-C60-bhullna",
+    "PA-C60-chahuna",
+    "PA-C60-liauna",
+    "PA-C60-bhejna"
+  ],
+  "tex": "punjabi/book/chapters/ch60-to-learn-to-forget-to-want-to-bring-to-send.tex"
+}

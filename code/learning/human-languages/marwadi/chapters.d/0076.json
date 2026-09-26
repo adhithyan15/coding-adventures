@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Thin, Heavy, True, Green, Yellow",
+  "label": "ch:mw-thin-heavy-true-green-yellow",
+  "canDo": "I can say thin, heavy, true, green and yellow.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C76-pilo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can say thin, heavy, true, green and yellow.",
+    "assesses": [
+      "MW-LEX-C76-ADJ76-03",
+      "MW-LEX-C76-ADJ76-04",
+      "MW-LEX-C76-ADJ76-05"
+    ]
+  }
+}

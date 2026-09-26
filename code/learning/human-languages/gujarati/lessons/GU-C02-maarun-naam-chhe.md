@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C02-maarun-naam-chhe
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 120
+sequence: 133
 chapter: 8
 type: phrase
 headword: મારું નામ … છે

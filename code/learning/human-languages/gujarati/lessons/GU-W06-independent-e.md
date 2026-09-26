@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W06-independent-e
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 82
+sequence: 92
 delivery: script
 chapter: 6
 type: writing
 headword: એ
 romanization: "e"
 gloss: "the independent vowel e"
-prerequisites: [GU-W06-ga]
+prerequisites: [GU-W06-ga, GU-C06-eklun]
 sounds: []
 roots: []
 etymology_hook: "The number one begins with this standing-alone e; one form arrives before the number does."
 duration:
   max_seconds: 235
 requires:
-  knowledge: [GU-SCRIPT-GA-01, GU-SCRIPT-INDEPENDENT-A-01]
+  knowledge: [GU-SCRIPT-GA-01, GU-SCRIPT-INDEPENDENT-A-01, GU-LEX-ANCHOR-EKLUN]
 introduces:
   knowledge: [GU-SCRIPT-INDEPENDENT-E-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-GA-01, GU-SCRIPT-INDEPENDENT-A-01, GU-SCRIPT-INDEPENDENT-E-01]
+  knowledge: [GU-SCRIPT-GA-01, GU-SCRIPT-INDEPENDENT-A-01, GU-SCRIPT-INDEPENDENT-E-01, GU-LEX-ANCHOR-EKLUN]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W06-ga, GU-W04-independent-a]
 # એ — independent e
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-GA-01, GU-SCRIPT-INDEPENDENT-A-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-GA-01, GU-SCRIPT-INDEPENDENT-A-01, GU-LEX-ANCHOR-EKLUN] -->
 
 Read **ગ** once, then write independent **અ** once from memory. Say “standing
 alone,” then put both away. The next independent vowel has its own whole-letter

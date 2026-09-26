@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Duck, Sheep, Goat, Lion, Monkey",
+  "label": "ch:ge-duck-sheep-goat-lion-monkey",
+  "canDo": "I can say a duck, a sheep, a goat, a lion and a monkey.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GE-C87-affe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can say a duck, a sheep, a goat, a lion and a monkey.",
+    "assesses": [
+      "GE-LEX-C87-TIERE2-03",
+      "GE-LEX-C87-TIERE2-04",
+      "GE-LEX-C87-TIERE2-05"
+    ]
+  }
+}

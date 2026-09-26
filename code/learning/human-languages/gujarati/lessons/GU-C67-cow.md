@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C67-cow
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3390
+sequence: 3403
 chapter: 67
 type: word
 headword: "ગાય"

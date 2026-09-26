@@ -1,0 +1,11 @@
+{
+  "id": "IT-C70-gallina",
+  "pathSegment": "IT-PATH-70-ANIMALI3",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-70-ANIMALI3",
+      "order": 1
+    }
+  ]
+}

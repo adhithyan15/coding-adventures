@@ -1,0 +1,11 @@
+{
+  "id": "PA-C49-gala",
+  "pathSegment": "PA-PATH-49-BODY49",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-49-BODY49",
+      "order": 4
+    }
+  ]
+}

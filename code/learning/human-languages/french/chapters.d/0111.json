@@ -1,0 +1,19 @@
+{
+  "chapter": 111,
+  "title": "Rug, Television, Computer, Fridge, Radio",
+  "label": "ch:fr-rug-television-computer-fridge-radio",
+  "canDo": "I can name a rug, a television, a computer, a fridge, a radio.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C111-radio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 111: i can name a rug, a television, a computer, a fridge, a radio.",
+    "assesses": [
+      "FR-LEX-C111-MAISON63-03",
+      "FR-LEX-C111-MAISON63-04",
+      "FR-LEX-C111-MAISON63-05"
+    ]
+  }
+}

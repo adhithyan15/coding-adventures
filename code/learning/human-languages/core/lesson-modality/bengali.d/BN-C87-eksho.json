@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C87-eksho",
+    "language": "bengali",
+    "chapter": 87,
+    "sequence": 4540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c2e8b6f4a2769a96"
+  },
+  "findings": []
+}

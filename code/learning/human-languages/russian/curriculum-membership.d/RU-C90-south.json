@@ -1,0 +1,11 @@
+{
+  "id": "RU-C90-south",
+  "pathSegment": "RU-PATH-90-LOC90",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-90-LOC90",
+      "order": 3
+    }
+  ]
+}

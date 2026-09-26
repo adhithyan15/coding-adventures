@@ -1,0 +1,21 @@
+{
+  "language": "italian",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:12c337d1ba9930e3",
+  "lessonIds": [
+    "IT-C95-doccia",
+    "IT-C95-vasca",
+    "IT-C95-scaffale",
+    "IT-C95-tenda",
+    "IT-C95-cuscino",
+    "IT-R95-first-pass-can-want-and-places",
+    "IT-R95-second-pass-getting-around-and-the-house"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "italian/narration/ch95.txt",
+  "json": "italian/narration/ch95.json",
+  "textHash": "fnv1a64:4617fa7cf7c6c51d",
+  "jsonHash": "fnv1a64:fe8ae5e8114ee80f",
+  "findings": []
+}

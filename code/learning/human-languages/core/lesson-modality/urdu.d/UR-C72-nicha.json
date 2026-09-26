@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C72-nicha",
+    "language": "urdu",
+    "chapter": 72,
+    "sequence": 3660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:152a3efc8c98f2b9"
+  },
+  "findings": []
+}

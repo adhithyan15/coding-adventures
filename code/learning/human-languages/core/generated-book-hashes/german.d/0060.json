@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:66abc6c8fa3a7432",
+  "lessonIds": [
+    "GE-C60-gesund",
+    "GE-C60-durst",
+    "GE-C60-hunger",
+    "GE-C60-traurig",
+    "GE-C60-gluecklich"
+  ],
+  "tex": "german/book/chapters/ch60-healthy-thirst-hunger-sad-happy.tex"
+}

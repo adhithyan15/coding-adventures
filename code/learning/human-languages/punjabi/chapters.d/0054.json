@@ -1,0 +1,19 @@
+{
+  "chapter": 54,
+  "title": "Grandfather, Grandmother, Grandfather, Grandmother, Husband",
+  "label": "ch:pa-grandfather-grandmother-grandfather-grandmother-husband",
+  "canDo": "I can say a grandfather, a grandmother, a grandfather, a grandmother and a husband.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-C54-pati",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 54: i can say a grandfather, a grandmother, a grandfather, a grandmother and a husband.",
+    "assesses": [
+      "PA-LEX-C54-FAMILY54-03",
+      "PA-LEX-C54-FAMILY54-04",
+      "PA-LEX-C54-FAMILY54-05"
+    ]
+  }
+}

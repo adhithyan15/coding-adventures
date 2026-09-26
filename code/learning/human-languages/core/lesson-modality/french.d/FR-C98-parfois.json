@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C98-parfois",
+    "language": "french",
+    "chapter": 98,
+    "sequence": 4300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba99d9e3f25d8aa8"
+  },
+  "findings": []
+}

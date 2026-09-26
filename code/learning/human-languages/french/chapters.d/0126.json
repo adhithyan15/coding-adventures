@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Class, Lesson, Exam, Word, Board",
+  "label": "ch:fr-class-lesson-exam-word-board",
+  "canDo": "I can name a class, a lesson, an exam, a word, a board.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C126-tableau",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can name a class, a lesson, an exam, a word, a board.",
+    "assesses": [
+      "FR-LEX-C126-ECOLE78-03",
+      "FR-LEX-C126-ECOLE78-04",
+      "FR-LEX-C126-ECOLE78-05"
+    ]
+  }
+}

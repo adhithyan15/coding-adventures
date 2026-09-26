@@ -1,11 +1,11 @@
 {
   "id": "HI-S148-sign-anusvara",
   "pathSegment": "HI-PATH-100",
-  "pathOrder": 56,
+  "pathOrder": 60,
   "extensions": [
     {
       "id": "HI-EXT-100-SCRIPT-RECOGNITION",
-      "order": 45
+      "order": 49
     }
   ]
 }

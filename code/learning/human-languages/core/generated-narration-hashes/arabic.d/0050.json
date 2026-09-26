@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:14524231c710fc11",
+  "lessonIds": [
+    "AR-C50-ayn",
+    "AR-C50-udhun",
+    "AR-C50-anf",
+    "AR-C50-fam",
+    "AR-C50-sinn"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch50.txt",
+  "json": "arabic/narration/ch50.json",
+  "textHash": "fnv1a64:cfb13bc783f5a95f",
+  "jsonHash": "fnv1a64:191346e7afd3565c",
+  "findings": []
+}

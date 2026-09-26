@@ -1,0 +1,11 @@
+{
+  "id": "PT-C126-largo",
+  "pathSegment": "PT-PATH-126-QUALIDADES126",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-126-QUALIDADES126",
+      "order": 4
+    }
+  ]
+}

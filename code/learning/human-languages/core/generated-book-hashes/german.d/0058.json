@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 58,
+  "sourceHash": "fnv1a64:689ae6656fdf7822",
+  "lessonIds": [
+    "GE-C58-ruecken",
+    "GE-C58-zunge",
+    "GE-C58-lippe",
+    "GE-C58-zehe",
+    "GE-C58-magen"
+  ],
+  "tex": "german/book/chapters/ch58-back-tongue-lip-toe-stomach.tex"
+}

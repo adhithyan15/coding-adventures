@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:42836663c1abcc95",
+  "lessonIds": [
+    "IT-C118-nebbia",
+    "IT-C118-temporale",
+    "IT-C118-ghiaccio",
+    "IT-C118-collina",
+    "IT-C118-roccia"
+  ],
+  "tex": "italian/book/chapters/ch118-fog-storm-ice-hill-rock.tex"
+}

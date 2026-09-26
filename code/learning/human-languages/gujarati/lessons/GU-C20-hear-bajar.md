@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C20-hear-bajar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 880
+sequence: 893
 chapter: 24
 type: word
 headword: બજાર

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:346545b205e3ab2c",
+  "lessonIds": [
+    "MW-C60-khad",
+    "MW-C60-lun",
+    "MW-C60-mirach",
+    "MW-C60-dahi",
+    "MW-C60-tel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch60.txt",
+  "json": "marwadi/narration/ch60.json",
+  "textHash": "fnv1a64:3f0aae47928d9c42",
+  "jsonHash": "fnv1a64:18a3927adeb64486",
+  "findings": []
+}

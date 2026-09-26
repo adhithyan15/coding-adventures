@@ -3,7 +3,7 @@
     "id": "GU-C03-hun",
     "language": "gujarati",
     "chapter": 9,
-    "sequence": 180,
+    "sequence": 193,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b3dbe95d11a1f24f",
+    "sourceHash": "fnv1a64:7a95e743b29ba3df",
     "detachableSegments": [
       "The letters in this word",
       "Script retrieval"

@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Office, Street corner, Crossroads, Traffic lights, Car park",
+  "label": "ch:pt-office-street-corner-crossroads-traffic-lights-car-park",
+  "canDo": "I can say an office, a street corner, a crossroads, traffic lights and a car park.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PT-C87-estacionamento",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can say an office, a street corner, a crossroads, traffic lights and a car park.",
+    "assesses": [
+      "PT-LEX-C87-LUGARES87-03",
+      "PT-LEX-C87-LUGARES87-04",
+      "PT-LEX-C87-LUGARES87-05"
+    ]
+  }
+}

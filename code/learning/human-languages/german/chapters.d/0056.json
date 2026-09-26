@@ -1,0 +1,19 @@
+{
+  "chapter": 56,
+  "title": "Leg, Tooth, Neck, Shoulder, Knee",
+  "label": "ch:ge-leg-tooth-neck-shoulder-knee",
+  "canDo": "I can say a leg, a tooth, the neck, a shoulder and a knee.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "GE-C56-knie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 56: i can say a leg, a tooth, the neck, a shoulder and a knee.",
+    "assesses": [
+      "GE-LEX-C56-KOERPER1-03",
+      "GE-LEX-C56-KOERPER1-04",
+      "GE-LEX-C56-KOERPER1-05"
+    ]
+  }
+}

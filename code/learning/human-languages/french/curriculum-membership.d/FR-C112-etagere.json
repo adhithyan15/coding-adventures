@@ -1,0 +1,11 @@
+{
+  "id": "FR-C112-etagere",
+  "pathSegment": "FR-PATH-112-MAISON64",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-112-MAISON64",
+      "order": 3
+    }
+  ]
+}

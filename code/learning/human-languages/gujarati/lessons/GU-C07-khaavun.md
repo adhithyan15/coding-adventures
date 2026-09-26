@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C07-khaavun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 410
+sequence: 423
 chapter: 13
 type: word
 headword: ખાવું

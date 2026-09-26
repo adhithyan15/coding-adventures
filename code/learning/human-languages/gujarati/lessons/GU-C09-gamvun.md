@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C09-gamvun
 spine_node: SPINE-SAY-WHAT-I-LIKE
-sequence: 510
+sequence: 523
 chapter: 15
 type: word
 headword: ગમવું

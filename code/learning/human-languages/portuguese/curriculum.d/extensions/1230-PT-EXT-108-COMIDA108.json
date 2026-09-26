@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-108-COMIDA108",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a yoghurt, ice cream, a steak, ham and juice.",
+  "prerequisites": []
+}

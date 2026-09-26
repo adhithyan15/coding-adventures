@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C40-gakkou",
+    "language": "japanese",
+    "chapter": 40,
+    "sequence": 2640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69a290b8ec00d685"
+  },
+  "findings": []
+}

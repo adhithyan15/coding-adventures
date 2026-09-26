@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Next to, Between, Behind, Underground, Tram",
+  "label": "ch:ge-next-to-between-behind-underground-tram",
+  "canDo": "I can say next to, between, behind, the underground and a tram.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "GE-C110-strassenbahn",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say next to, between, behind, the underground and a tram.",
+    "assesses": [
+      "GE-LEX-C110-RICHTUNG110-03",
+      "GE-LEX-C110-RICHTUNG110-04",
+      "GE-LEX-C110-RICHTUNG110-05"
+    ]
+  }
+}

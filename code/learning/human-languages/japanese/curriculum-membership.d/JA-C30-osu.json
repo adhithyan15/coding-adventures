@@ -1,0 +1,11 @@
+{
+  "id": "JA-C30-osu",
+  "pathSegment": "JA-PATH-30-VERBS30",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "JA-EXT-30-VERBS30",
+      "order": 0
+    }
+  ]
+}

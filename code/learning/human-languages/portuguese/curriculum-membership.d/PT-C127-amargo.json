@@ -1,0 +1,11 @@
+{
+  "id": "PT-C127-amargo",
+  "pathSegment": "PT-PATH-127-QUALIDADES127",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-127-QUALIDADES127",
+      "order": 2
+    }
+  ]
+}

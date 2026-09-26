@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:58f641b5c681bc55",
+  "lessonIds": [
+    "UR-C51-bhulna",
+    "UR-C51-chahna",
+    "UR-C51-lana",
+    "UR-C51-bhejna",
+    "UR-C51-ginna"
+  ],
+  "tex": "urdu/book/chapters/ch51-to-forget-to-want-to-bring-to-send-to-count.tex"
+}

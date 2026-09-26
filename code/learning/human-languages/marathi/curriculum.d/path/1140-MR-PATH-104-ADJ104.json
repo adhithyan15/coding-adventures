@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-104-ADJ104",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "MR-EXT-104-ADJ104"
+  ],
+  "after": []
+}

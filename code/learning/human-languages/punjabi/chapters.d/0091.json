@@ -1,0 +1,19 @@
+{
+  "chapter": 91,
+  "title": "Bus, Bridge, Gurdwara, Temple, Hotel",
+  "label": "ch:pa-bus-bridge-gurdwara-temple-hotel",
+  "canDo": "I can say a bus, a bridge, a gurdwara, a temple and a hotel.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "PA-C91-hotal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 91: i can say a bus, a bridge, a gurdwara, a temple and a hotel.",
+    "assesses": [
+      "PA-LEX-C91-TOWN91-03",
+      "PA-LEX-C91-TOWN91-04",
+      "PA-LEX-C91-TOWN91-05"
+    ]
+  }
+}

@@ -3,7 +3,7 @@
     "id": "GU-C33-ke",
     "language": "gujarati",
     "chapter": 37,
-    "sequence": 1880,
+    "sequence": 1893,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:338d813acc6ba285"
+    "sourceHash": "fnv1a64:cfc8d1b80bcf1935"
   },
   "findings": []
 }

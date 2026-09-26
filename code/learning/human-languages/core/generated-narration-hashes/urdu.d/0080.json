@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:ad5328c860b4a6b8",
+  "lessonIds": [
+    "UR-C80-isteshan",
+    "UR-C80-gari",
+    "UR-C80-bas",
+    "UR-C80-pul",
+    "UR-C80-masjid"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch80.txt",
+  "json": "urdu/narration/ch80.json",
+  "textHash": "fnv1a64:90f62fc03273d108",
+  "jsonHash": "fnv1a64:978da69e29edd588",
+  "findings": []
+}

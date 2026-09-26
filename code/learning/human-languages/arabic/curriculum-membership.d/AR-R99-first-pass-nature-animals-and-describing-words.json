@@ -1,0 +1,11 @@
+{
+  "id": "AR-R99-first-pass-nature-animals-and-describing-words",
+  "pathSegment": "AR-PATH-99-WORLD99",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "AR-EXT-99-WORLD99",
+      "order": 5
+    }
+  ]
+}

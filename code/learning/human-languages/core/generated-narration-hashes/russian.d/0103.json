@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:e170f44076736218",
+  "lessonIds": [
+    "RU-C103-hat",
+    "RU-C103-jacket",
+    "RU-C103-shirt",
+    "RU-C103-trousers",
+    "RU-C103-dress"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch103.txt",
+  "json": "russian/narration/ch103.json",
+  "textHash": "fnv1a64:78976b5dea2e20d6",
+  "jsonHash": "fnv1a64:7428094b0845baa3",
+  "findings": []
+}

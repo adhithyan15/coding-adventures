@@ -1,0 +1,11 @@
+{
+  "id": "IT-C106-verdure",
+  "pathSegment": "IT-PATH-106-CIBO106",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-106-CIBO106",
+      "order": 1
+    }
+  ]
+}

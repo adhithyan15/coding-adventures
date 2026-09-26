@@ -1,0 +1,19 @@
+{
+  "chapter": 52,
+  "title": "To catch, To cut, To stop, To tell, To lose",
+  "label": "ch:ur-to-catch-to-cut-to-stop-to-tell-to-lose",
+  "canDo": "I can say to catch, to hold, to cut, to stop, to tell and to lose.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C52-khona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 52: i can say to catch, to hold, to cut, to stop, to tell and to lose.",
+    "assesses": [
+      "UR-LEX-C52-VERBS52-03",
+      "UR-LEX-C52-VERBS52-04",
+      "UR-LEX-C52-VERBS52-05"
+    ]
+  }
+}

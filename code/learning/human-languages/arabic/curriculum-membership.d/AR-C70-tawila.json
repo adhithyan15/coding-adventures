@@ -1,0 +1,11 @@
+{
+  "id": "AR-C70-tawila",
+  "pathSegment": "AR-PATH-70-HOME70",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "AR-EXT-70-HOME70",
+      "order": 1
+    }
+  ]
+}

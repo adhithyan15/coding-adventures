@@ -1,0 +1,19 @@
+{
+  "chapter": 75,
+  "title": "Evening, Week, Month, Year, Hour",
+  "label": "ch:ur-evening-week-month-year-hour",
+  "canDo": "I can say evening, a week, a month, a year and an hour.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "UR-C75-ghanta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 75: i can say evening, a week, a month, a year and an hour.",
+    "assesses": [
+      "UR-LEX-C75-TIME75-03",
+      "UR-LEX-C75-TIME75-04",
+      "UR-LEX-C75-TIME75-05"
+    ]
+  }
+}

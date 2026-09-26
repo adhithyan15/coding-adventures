@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Soft, Hard, Round, Wide, Narrow",
+  "label": "ch:ru-soft-hard-round-wide-narrow",
+  "canDo": "I can say soft, hard, round, wide and narrow.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C129-narrow",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say soft, hard, round, wide and narrow.",
+    "assesses": [
+      "RU-LEX-C129-QUAL129-03",
+      "RU-LEX-C129-QUAL129-04",
+      "RU-LEX-C129-QUAL129-05"
+    ]
+  }
+}

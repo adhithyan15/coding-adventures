@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:58106395186dd5fa",
+  "lessonIds": [
+    "GE-C108-norden",
+    "GE-C108-sueden",
+    "GE-C108-osten",
+    "GE-C108-westen",
+    "GE-C108-geradeaus"
+  ],
+  "tex": "german/book/chapters/ch108-north-south-east-west-straight-on.tex"
+}

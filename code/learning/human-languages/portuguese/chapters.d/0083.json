@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "To want, I would like, To prefer, To wish, Wish",
+  "label": "ch:pt-to-want-i-would-like-to-prefer-to-wish-wish",
+  "canDo": "I can say to want, I would like, to prefer, to wish and a wish.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "PT-C83-desejo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can say to want, I would like, to prefer, to wish and a wish.",
+    "assesses": [
+      "PT-LEX-C83-QUERER83-03",
+      "PT-LEX-C83-QUERER83-04",
+      "PT-LEX-C83-QUERER83-05"
+    ]
+  }
+}

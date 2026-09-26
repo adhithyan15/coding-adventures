@@ -1,0 +1,11 @@
+{
+  "id": "MR-C120-desh",
+  "pathSegment": "MR-PATH-120-WORLD120",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-120-WORLD120",
+      "order": 3
+    }
+  ]
+}

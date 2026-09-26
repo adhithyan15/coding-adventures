@@ -1,10 +1,10 @@
 {
   "id": "FR-C06-deux",
-  "pathSegment": "FR-PATH-015",
+  "pathSegment": "FR-PATH-015-COUNT",
   "pathOrder": 1,
   "extensions": [
     {
-      "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
+      "id": "FR-EXT-015-COUNT-LANGUAGE-SPECIFIC",
       "order": 1
     }
   ]

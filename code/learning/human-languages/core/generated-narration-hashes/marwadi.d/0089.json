@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:ca2b21f8ae8036d3",
+  "lessonIds": [
+    "MW-C89-sangit",
+    "MW-C89-khabar",
+    "MW-C89-des",
+    "MW-C89-bat",
+    "MW-C89-bhasa",
+    "MW-R89-first-pass-school-nature-animals-and-describing-wor",
+    "MW-R89-second-pass-time-places-the-town-clothes-and-numbers"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch89.txt",
+  "json": "marwadi/narration/ch89.json",
+  "textHash": "fnv1a64:1b381cc864f69e47",
+  "jsonHash": "fnv1a64:42d0e2446d03ac52",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:eb9f267b5e827aab",
+  "lessonIds": [
+    "FR-C126-classe",
+    "FR-C126-lecon",
+    "FR-C126-examen",
+    "FR-C126-mot",
+    "FR-C126-tableau"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch126.txt",
+  "json": "french/narration/ch126.json",
+  "textHash": "fnv1a64:44e4ac7159b86d6f",
+  "jsonHash": "fnv1a64:cbd8b49e288f13df",
+  "findings": []
+}

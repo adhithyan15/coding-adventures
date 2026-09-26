@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:afd4996057076755",
+  "lessonIds": [
+    "JA-C46-mushi",
+    "JA-C46-ari",
+    "JA-C46-hato",
+    "JA-C46-hitsuji",
+    "JA-C46-shika"
+  ],
+  "tex": "japanese/book/chapters/ch46-insect-ant-pigeon-sheep-deer.tex"
+}

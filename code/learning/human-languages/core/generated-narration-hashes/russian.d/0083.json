@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:d6e912dc7ecd6a71",
+  "lessonIds": [
+    "RU-C83-midday",
+    "RU-C83-midnight",
+    "RU-C83-early",
+    "RU-C83-late",
+    "RU-C83-in-the-morning"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch83.txt",
+  "json": "russian/narration/ch83.json",
+  "textHash": "fnv1a64:3b3fce2e6879de02",
+  "jsonHash": "fnv1a64:07e147a5d293b82f",
+  "findings": []
+}

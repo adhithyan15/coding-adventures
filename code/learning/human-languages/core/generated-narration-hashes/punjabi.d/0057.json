@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:a544ddf4033f1cb2",
+  "lessonIds": [
+    "PA-C57-utthna",
+    "PA-C57-turna",
+    "PA-C57-daurna",
+    "PA-C57-khedna",
+    "PA-C57-kharidna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch57.txt",
+  "json": "punjabi/narration/ch57.json",
+  "textHash": "fnv1a64:835f99c81ad4e594",
+  "jsonHash": "fnv1a64:9a24df8549973c07",
+  "findings": []
+}

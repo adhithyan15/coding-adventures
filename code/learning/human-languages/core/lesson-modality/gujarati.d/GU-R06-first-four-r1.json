@@ -3,7 +3,7 @@
     "id": "GU-R06-first-four-r1",
     "language": "gujarati",
     "chapter": 6,
-    "sequence": 85,
+    "sequence": 95,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:2e445c37db9733ab",
+    "sourceHash": "fnv1a64:d782d23974f8d85a",
     "detachableSegments": [
       "Writing — from sound or role"
     ],

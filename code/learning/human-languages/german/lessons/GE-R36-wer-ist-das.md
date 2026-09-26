@@ -8,7 +8,7 @@ type: practice
 headword: Wer ist das?
 gloss: four possessives, one introduction, and the ending set that six words share
 concept_tag: GE-REVIEW-POSSESSIV
-prerequisites: [GE-C36-das-ist]
+prerequisites: [GE-C36-das-ist, GE-C22-hund-katze-more, GE-C17-kopf-more]
 sounds: []
 roots: []
 duration:

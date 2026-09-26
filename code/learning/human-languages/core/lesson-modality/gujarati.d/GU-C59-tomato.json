@@ -3,7 +3,7 @@
     "id": "GU-C59-tomato",
     "language": "gujarati",
     "chapter": 59,
-    "sequence": 3030,
+    "sequence": 3043,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5186e78f156b72ff"
+    "sourceHash": "fnv1a64:be23e85129354705"
   },
   "findings": []
 }

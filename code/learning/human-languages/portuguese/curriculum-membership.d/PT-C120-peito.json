@@ -1,0 +1,11 @@
+{
+  "id": "PT-C120-peito",
+  "pathSegment": "PT-PATH-120-CORPO120",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-120-CORPO120",
+      "order": 4
+    }
+  ]
+}

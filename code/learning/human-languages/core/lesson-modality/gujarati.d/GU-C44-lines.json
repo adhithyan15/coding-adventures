@@ -3,7 +3,7 @@
     "id": "GU-C44-lines",
     "language": "gujarati",
     "chapter": 44,
-    "sequence": 2280,
+    "sequence": 2293,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3385d611b8917cf5"
+    "sourceHash": "fnv1a64:70570505cf9a3691"
   },
   "findings": []
 }

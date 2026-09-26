@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:19aa1aac858067f2",
+  "lessonIds": [
+    "RU-C114-price",
+    "RU-C114-football",
+    "RU-C114-concert",
+    "RU-C114-holiday",
+    "RU-C114-fog"
+  ],
+  "tex": "russian/book/chapters/ch114-price-football-concert-holiday-fog.tex"
+}

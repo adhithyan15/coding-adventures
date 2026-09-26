@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:e63778ce9099b436",
+  "lessonIds": [
+    "UR-C42-bhuk",
+    "UR-C42-khush",
+    "UR-C42-udas",
+    "UR-C42-bap",
+    "UR-C42-abbu"
+  ],
+  "tex": "urdu/book/chapters/ch42-hunger-happy-sad-father-dad.tex"
+}

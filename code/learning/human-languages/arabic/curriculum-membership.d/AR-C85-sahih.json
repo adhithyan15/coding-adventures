@@ -1,0 +1,11 @@
+{
+  "id": "AR-C85-sahih",
+  "pathSegment": "AR-PATH-85-ADJ85",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-85-ADJ85",
+      "order": 2
+    }
+  ]
+}

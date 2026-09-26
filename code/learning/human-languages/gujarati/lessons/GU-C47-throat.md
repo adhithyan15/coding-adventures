@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C47-throat
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2400
+sequence: 2413
 chapter: 47
 type: word
 headword: "ગળું"

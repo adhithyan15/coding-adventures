@@ -3,7 +3,7 @@
     "id": "GU-C27-plate-five",
     "language": "gujarati",
     "chapter": 31,
-    "sequence": 1510,
+    "sequence": 1523,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:adb9aaa6a6ba83c6"
+    "sourceHash": "fnv1a64:3f293e669ddf0b74"
   },
   "findings": []
 }

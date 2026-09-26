@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:cb9bafb9cb97c552",
+  "lessonIds": [
+    "IT-C82-stazione",
+    "IT-C82-autobus",
+    "IT-C82-treno",
+    "IT-C82-aereo",
+    "IT-C82-macchina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch82.txt",
+  "json": "italian/narration/ch82.json",
+  "textHash": "fnv1a64:4b0c4a966e57faad",
+  "jsonHash": "fnv1a64:3f9d143c40e97389",
+  "findings": []
+}

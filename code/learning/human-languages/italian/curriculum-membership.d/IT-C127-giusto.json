@@ -1,0 +1,11 @@
+{
+  "id": "IT-C127-giusto",
+  "pathSegment": "IT-PATH-127-QUALITA127",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-127-QUALITA127",
+      "order": 1
+    }
+  ]
+}

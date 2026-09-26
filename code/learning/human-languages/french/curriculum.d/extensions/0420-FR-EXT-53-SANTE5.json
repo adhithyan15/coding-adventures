@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-53-SANTE5",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name pain, a fever, a cough, a medicine, a doctor.",
+  "prerequisites": []
+}

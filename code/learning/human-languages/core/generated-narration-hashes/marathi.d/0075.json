@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:3f3abdfa0c68befc",
+  "lessonIds": [
+    "MR-C75-ajoba",
+    "MR-C75-aji",
+    "MR-C75-kaka",
+    "MR-C75-mavshi",
+    "MR-C75-mama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch75.txt",
+  "json": "marathi/narration/ch75.json",
+  "textHash": "fnv1a64:6453932ac7881ec4",
+  "jsonHash": "fnv1a64:a691e1020845b717",
+  "findings": []
+}

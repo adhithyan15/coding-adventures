@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C28-hear-baarnun
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1540
+sequence: 1553
 chapter: 32
 type: word
 headword: બારણું

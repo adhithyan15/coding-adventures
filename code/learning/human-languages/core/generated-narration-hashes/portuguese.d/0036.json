@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:7ad70a2373cca4d2",
+  "lessonIds": [
+    "PT-C36-medo",
+    "PT-C36-raiva",
+    "PT-C36-tristeza",
+    "PT-C36-feliz",
+    "PT-C36-triste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch36.txt",
+  "json": "portuguese/narration/ch36.json",
+  "textHash": "fnv1a64:4e95115a5effce85",
+  "jsonHash": "fnv1a64:a3c0e5d8b619b7b1",
+  "findings": []
+}

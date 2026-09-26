@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:972fd94ee1ed9691",
+  "lessonIds": [
+    "FR-C115-aspirateur",
+    "FR-C115-linge",
+    "FR-C115-lessive",
+    "FR-C115-fer",
+    "FR-C115-poche"
+  ],
+  "tex": "french/book/chapters/ch115-vacuum-cleaner-laundry-washing-powder-iron-pocket.tex"
+}

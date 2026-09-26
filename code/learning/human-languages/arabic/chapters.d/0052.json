@@ -1,0 +1,19 @@
+{
+  "chapter": 52,
+  "title": "Face, Blood, Knee, Back, Heart",
+  "label": "ch:ar-face-blood-knee-back-heart",
+  "canDo": "I can say a face, blood, a knee, the back and the heart.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C52-qalb",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 52: i can say a face, blood, a knee, the back and the heart.",
+    "assesses": [
+      "AR-LEX-C52-BODY52-03",
+      "AR-LEX-C52-BODY52-04",
+      "AR-LEX-C52-BODY52-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C130-fat",
+    "language": "russian",
+    "chapter": 130,
+    "sequence": 6840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eac1b4f47f7c134f"
+  },
+  "findings": []
+}

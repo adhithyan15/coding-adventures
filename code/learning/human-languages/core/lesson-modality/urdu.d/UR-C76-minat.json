@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C76-minat",
+    "language": "urdu",
+    "chapter": 76,
+    "sequence": 3850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd08f44044d9d231"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C29-oota",
+    "language": "kannada",
+    "chapter": 29,
+    "sequence": 584,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ce9962ef14c7aa4d"
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Arm, Finger, Foot, Heart",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:94f39af4733bb63e",
+  "sourceHash": "fnv1a64:9f7078a0a39a5892",
   "lessons": [
     {
       "id": "GE-C31-arm",
@@ -583,7 +583,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:205415ae780b045d",
+      "sourceHash": "fnv1a64:98e4da50b5294d3b",
       "notice": null,
       "blocks": [
         {

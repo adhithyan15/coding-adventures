@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C52-midori",
+    "language": "japanese",
+    "chapter": 52,
+    "sequence": 3250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:284f3fbf4a2e0326"
+  },
+  "findings": []
+}

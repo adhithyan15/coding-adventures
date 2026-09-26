@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C50-worry
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2570
+sequence: 2583
 chapter: 50
 type: word
 headword: "ચિંતા"

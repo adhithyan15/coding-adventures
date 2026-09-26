@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Busy, Free, Closed, Quiet, Narrow",
+  "label": "ch:ge-busy-free-closed-quiet-narrow",
+  "canDo": "I can say busy, free, closed, quiet and narrow.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C131-eng",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: i can say busy, free, closed, quiet and narrow.",
+    "assesses": [
+      "GE-LEX-C131-EIGEN131-03",
+      "GE-LEX-C131-EIGEN131-04",
+      "GE-LEX-C131-EIGEN131-05"
+    ]
+  }
+}

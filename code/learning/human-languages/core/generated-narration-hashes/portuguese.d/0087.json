@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:2074527150b7cc42",
+  "lessonIds": [
+    "PT-C87-escritorio",
+    "PT-C87-esquina",
+    "PT-C87-cruzamento",
+    "PT-C87-semaforo",
+    "PT-C87-estacionamento"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch87.txt",
+  "json": "portuguese/narration/ch87.json",
+  "textHash": "fnv1a64:b12d4fda513cda63",
+  "jsonHash": "fnv1a64:cce68789ec3cdc91",
+  "findings": []
+}

@@ -3,7 +3,7 @@
     "id": "GU-C56-hasvu",
     "language": "gujarati",
     "chapter": 56,
-    "sequence": 2860,
+    "sequence": 2873,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f4b0ab22a796558c"
+    "sourceHash": "fnv1a64:736e363af56bce58"
   },
   "findings": []
 }

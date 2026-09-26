@@ -1,0 +1,19 @@
+{
+  "chapter": 25,
+  "title": "Friend, Adult, Man, Woman, Teacher",
+  "label": "ch:ja-friend-adult-man-woman-teacher",
+  "canDo": "I can say a friend, an adult, a man, a woman and a teacher.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "JA-C25-sensei",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 25: i can say a friend, an adult, a man, a woman and a teacher.",
+    "assesses": [
+      "JA-LEX-C25-FAMILY25-03",
+      "JA-LEX-C25-FAMILY25-04",
+      "JA-LEX-C25-FAMILY25-05"
+    ]
+  }
+}

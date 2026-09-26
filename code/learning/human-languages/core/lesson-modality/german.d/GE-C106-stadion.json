@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C106-stadion",
+    "language": "german",
+    "chapter": 106,
+    "sequence": 4130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:11a993cccb2e8f06"
+  },
+  "findings": []
+}

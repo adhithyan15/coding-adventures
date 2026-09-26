@@ -1,0 +1,15 @@
+{
+  "language": "german",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:8b1521618e45a2df",
+  "lessonIds": [
+    "GE-C103-lied",
+    "GE-C103-spiel",
+    "GE-C103-farbe",
+    "GE-C103-reise",
+    "GE-C103-urlaub",
+    "GE-R103-first-pass-nature-animals-and-describing-words",
+    "GE-R103-second-pass-town-clothes-numbers-and-more"
+  ],
+  "tex": "german/book/chapters/ch103-song-game-colour-journey-holiday.tex"
+}

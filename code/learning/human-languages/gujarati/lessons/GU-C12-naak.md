@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C12-naak
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 630
+sequence: 643
 chapter: 18
 type: word
 headword: નાક

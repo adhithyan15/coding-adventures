@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-82-DEF82",
+  "spine_node": "SPINE-DEFINITE-REFERENCE",
+  "before": [],
+  "inline": [
+    "RU-EXT-82-DEF82"
+  ],
+  "after": []
+}

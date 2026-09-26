@@ -1,0 +1,19 @@
+{
+  "chapter": 73,
+  "title": "Game, Letter, Tree, Flower, Leaf",
+  "label": "ch:pa-game-letter-tree-flower-leaf",
+  "canDo": "I can say a game, a letter, a tree, a flower and a leaf.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PA-R73-second-pass-home-school-and-nature",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 73: i can say a game, a letter, a tree, a flower and a leaf.",
+    "assesses": [
+      "PA-LEX-C73-SCHOOL73-03",
+      "PA-LEX-C73-SCHOOL73-04",
+      "PA-LEX-C73-SCHOOL73-05"
+    ]
+  }
+}

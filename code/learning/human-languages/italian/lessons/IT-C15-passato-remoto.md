@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: [IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03]
 introduces:
-  knowledge: [IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04, IT-NOTICE-PASSATO-REMOTO-05]
+  knowledge: [IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [IT-CULTURE-PASSATO-REMOTO-REGIONAL-01]
 practises:
-  knowledge: [IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03, IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04, IT-NOTICE-PASSATO-REMOTO-05]
+  knowledge: [IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03, IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -81,34 +81,17 @@ So the "correct" answer changes as you travel. In the north the *passato remoto*
 has retreated to books, exactly as French's *passé simple* and German's
 *Präteritum* did. In the south it never left.
 
-## What you've built: three retreats and two holdouts
-<!-- hl-knowledge: introduces=[IT-NOTICE-PASSATO-REMOTO-05]; assesses=[] -->
-
-| language | simple past | status in speech |
-|---|---|---|
-| French | *passé simple* | **gone** — books only |
-| German | *Präteritum* | **retreating**, especially in the south |
-| **Italian** | *passato remoto* | **split by region** |
-| Spanish | *habló* | **alive** (though Spain is drifting toward *he hablado*) |
-| Portuguese | *falou* | **alive** |
-
-Three languages let a "have" compound push the inherited past out of
-conversation; Italian is the one caught **mid-process**, with the old tense still
-holding half the country.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03, IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04, IT-NOTICE-PASSATO-REMOTO-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03, IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: the pair — "parl**ò** … **ha** parlato"]
-- [YOU SAY: the sisters — "parlò · habló · falou · il parla"]
+- [YOU SAY: the sisters — "parlò · habló · falou"]
 - [YOU SAY: the geography — "in **Palermo** ordinary; in **Milano** literary"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03, IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04, IT-NOTICE-PASSATO-REMOTO-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[IT-GRAMMAR-PASSATO-PROSSIMO-02, IT-ETYMON-PASSATO-PROSSIMO-03, IT-LEX-PASSATO-REMOTO-02, IT-ETYMON-PASSATO-REMOTO-03, IT-PRAGMATICS-PASSATO-REMOTO-04] -->
 
 [PAUSE 3s] What is the ancestor of *parlò*? (**\*parabolāvit**.) What decides
 whether it sounds normal or bookish? (**Where in Italy you are** — everyday in the
-south, literary in the north.) Which languages kept this tense fully alive?
-(**Spanish** and **Portuguese**.) Which lost it entirely from speech?
-(**French**.) Next chapter: the verbs that take *essere* instead of *avere*.
+south, literary in the north.)

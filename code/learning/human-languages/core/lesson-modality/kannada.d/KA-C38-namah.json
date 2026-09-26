@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "KA-C38-namah",
+    "language": "kannada",
+    "chapter": 38,
+    "sequence": 844,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5c01b6a34e6360c0"
+  },
+  "findings": []
+}

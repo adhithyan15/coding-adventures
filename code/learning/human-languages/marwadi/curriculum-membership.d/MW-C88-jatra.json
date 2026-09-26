@@ -1,0 +1,11 @@
+{
+  "id": "MW-C88-jatra",
+  "pathSegment": "MW-PATH-88-WORLD88",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-88-WORLD88",
+      "order": 2
+    }
+  ]
+}

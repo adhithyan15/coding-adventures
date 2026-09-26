@@ -1,0 +1,19 @@
+{
+  "chapter": 48,
+  "title": "House, Kitchen, Window, Table, Chair",
+  "label": "ch:pt-house-kitchen-window-table-chair",
+  "canDo": "I can name a house, a kitchen, a window, a table and a chair.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "PT-C48-cadeira",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 48: i can name a house, a kitchen, a window, a table and a chair.",
+    "assesses": [
+      "PT-LEX-C48-CASA1-03",
+      "PT-LEX-C48-CASA1-04",
+      "PT-LEX-C48-CASA1-05"
+    ]
+  }
+}

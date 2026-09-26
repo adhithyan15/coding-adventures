@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 5,
-  "sourceHash": "fnv1a64:c6e1307d6279f470",
+  "sourceHash": "fnv1a64:89df17ddc6babed1",
   "lessonIds": [
     "TE-S01-letter-ta",
     "TE-S01-copy-in-a-word",
@@ -13,6 +13,7 @@
     "TE-S111-letter-sa",
     "TE-S158-letter-ssa",
     "TE-C05-undu",
+    "TE-C05-hamsa",
     "TE-S125-letter-ha",
     "TE-C05-pani-ceyu",
     "TE-S148-digit-9",

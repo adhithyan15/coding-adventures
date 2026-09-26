@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W03-nna
 spine_node: SPINE-MEET-GREET
-sequence: 68
+sequence: 72
 delivery: script
 chapter: 3
 type: writing
 headword: ણ
 romanization: "ṇa"
 gloss: "the retroflex consonant nna"
-prerequisites: [GU-W03-ka]
+prerequisites: [GU-W03-ka, GU-C03-kan]
 sounds: []
 roots: []
 etymology_hook: "Gujarati keeps the related Devanagari sound system while dropping the continuous headline."
 duration:
   max_seconds: 220
 requires:
-  knowledge: [GU-SCRIPT-KA-01]
+  knowledge: [GU-SCRIPT-KA-01, GU-LEX-ANCHOR-KAN]
 introduces:
   knowledge: [GU-SCRIPT-NNA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01]
+  knowledge: [GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-LEX-ANCHOR-KAN]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W03-ka]
 # ણ — the retroflex consonant nna
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-KA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-KA-01, GU-LEX-ANCHOR-KAN] -->
 
 Write ka once from memory: body first, then the separate rising cross-stroke.
 

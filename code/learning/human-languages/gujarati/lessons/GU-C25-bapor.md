@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C25-bapor
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1310
+sequence: 1323
 chapter: 29
 type: practice
 headword: બપોર

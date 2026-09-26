@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C70-gala",
+    "language": "marathi",
+    "chapter": 70,
+    "sequence": 2900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a114d7e6a5ef9625"
+  },
+  "findings": []
+}

@@ -1,9 +1,13 @@
 {
   "language": "marathi",
   "chapter": 2,
-  "sourceHash": "fnv1a64:19e54b2179c7431f",
+  "sourceHash": "fnv1a64:1a94dddc6b1ca585",
   "lessonIds": [
     "MR-C01-dhanyavad",
+    "MR-C02-dukh",
+    "MR-C02-aabhaal",
+    "MR-C02-sant",
+    "MR-C02-bet",
     "MR-W02-visarga",
     "MR-W02-aa-independent",
     "MR-W02-bha",

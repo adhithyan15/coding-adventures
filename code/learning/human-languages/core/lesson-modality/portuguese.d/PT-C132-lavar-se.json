@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C132-lavar-se",
+    "language": "portuguese",
+    "chapter": 132,
+    "sequence": 6600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28dbf687a706c011"
+  },
+  "findings": []
+}

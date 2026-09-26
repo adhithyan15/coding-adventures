@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:96d8a06abdfebe14",
+  "lessonIds": [
+    "FR-C105-chaussettes",
+    "FR-C105-trente",
+    "FR-C105-quarante",
+    "FR-C105-cinquante",
+    "FR-C105-cent",
+    "FR-R105-first-pass-nature-animals-and-describing-words",
+    "FR-R105-second-pass-time-the-town-clothes-and-numbers"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch105.txt",
+  "json": "french/narration/ch105.json",
+  "textHash": "fnv1a64:5d54904af810dc6d",
+  "jsonHash": "fnv1a64:6abe2b7dafa0bdcb",
+  "findings": []
+}

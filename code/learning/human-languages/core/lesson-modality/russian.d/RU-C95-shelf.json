@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C95-shelf",
+    "language": "russian",
+    "chapter": 95,
+    "sequence": 4860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0ac24269b959b5b"
+  },
+  "findings": []
+}

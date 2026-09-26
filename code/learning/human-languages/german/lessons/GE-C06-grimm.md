@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: GE-C06-grimm
-spine_node: SPINE-TIME-OF-DAY
+spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 214
 chapter: 6
 type: grammar

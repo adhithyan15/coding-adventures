@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C94-sofort",
+    "language": "german",
+    "chapter": 94,
+    "sequence": 3500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09e6eb9aeb223e99"
+  },
+  "findings": []
+}

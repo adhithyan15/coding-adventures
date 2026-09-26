@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:25b11cc69e5a707f",
+  "lessonIds": [
+    "PT-C30-braco",
+    "PT-C30-perna",
+    "PT-C30-pe",
+    "PT-C30-dedo",
+    "PT-C30-dente"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch30.txt",
+  "json": "portuguese/narration/ch30.json",
+  "textHash": "fnv1a64:83cdcf74387cb74e",
+  "jsonHash": "fnv1a64:69ae93aad57f6826",
+  "findings": []
+}

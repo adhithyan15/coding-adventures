@@ -3,7 +3,7 @@
     "id": "GU-C50-anger",
     "language": "gujarati",
     "chapter": 50,
-    "sequence": 2550,
+    "sequence": 2563,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c4534ab98e378ab0"
+    "sourceHash": "fnv1a64:f37fb82914b8065a"
   },
   "findings": []
 }

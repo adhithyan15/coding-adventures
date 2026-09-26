@@ -1,0 +1,981 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 98,
+  "title": "Holiday, Love, Music, Way, Country",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:48e7b6b874734554",
+  "lessons": [
+    {
+      "id": "PA-C98-chhutti",
+      "sequence": 5160,
+      "title": "ਛੁੱਟੀ (chhuṭṭī) — a holiday, time off",
+      "headword": "ਛੁੱਟੀ",
+      "romanization": "chhuṭṭī",
+      "gloss": "a holiday, time off",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd294bd87f80f55f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a song, then the Punjabi for a journey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਛੁੱਟੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛੁੱਟੀ — chhuṭṭī — \"a holiday, time off\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhuṭṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhuṭṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhuṭṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhuṭṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say chhuṭṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *chhuṭṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a song, then the Punjabi for a journey, then say chhuṭṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a song, then the Punjabi for a journey, then say *chhuṭṭī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਛੁੱਟੀ (chhuṭṭī) mean? (\"A holiday, time off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C98-piar",
+      "sequence": 5170,
+      "title": "ਪਿਆਰ (piār) — love",
+      "headword": "ਪਿਆਰ",
+      "romanization": "piār",
+      "gloss": "love",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0284980d44354e1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a journey, then the Punjabi for a holiday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਿਆਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਿਆਰ — piār — \"love\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say piār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *piār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a journey, then the Punjabi for a holiday, then say piār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a journey, then the Punjabi for a holiday, then say *piār* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਿਆਰ (piār) mean? (\"Love\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C98-sangit",
+      "sequence": 5180,
+      "title": "ਸੰਗੀਤ (saṅgīt) — music",
+      "headword": "ਸੰਗੀਤ",
+      "romanization": "saṅgīt",
+      "gloss": "music",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15c191dc0cbd38c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a holiday, then the Punjabi for love."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸੰਗੀਤ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੰਗੀਤ — saṅgīt — \"music\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgīt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgīt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṅgīt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṅgīt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say saṅgīt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *saṅgīt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a holiday, then the Punjabi for love, then say saṅgīt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a holiday, then the Punjabi for love, then say *saṅgīt* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸੰਗੀਤ (saṅgīt) mean? (\"Music\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C98-rasta",
+      "sequence": 5190,
+      "title": "ਰਸਤਾ (rastā) — a way, a route",
+      "headword": "ਰਸਤਾ",
+      "romanization": "rastā",
+      "gloss": "a way, a route",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc25fce21a399daf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for love, then the Punjabi for music."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਰਸਤਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰਸਤਾ — rastā — \"a way, a route\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rastā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rastā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rastā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rastā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say rastā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *rastā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for love, then the Punjabi for music, then say rastā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for love, then the Punjabi for music, then say *rastā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਰਸਤਾ (rastā) mean? (\"A way, a route\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C98-desh",
+      "sequence": 5200,
+      "title": "ਦੇਸ਼ (desh) — a country",
+      "headword": "ਦੇਸ਼",
+      "romanization": "desh",
+      "gloss": "a country",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:461b09cc5461f975",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for music, then the Punjabi for a way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਦੇਸ਼",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦੇਸ਼ — desh — \"a country\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "desh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *desh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "desh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *desh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say desh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *desh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for music, then the Punjabi for a way, then say desh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for music, then the Punjabi for a way, then say *desh* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਦੇਸ਼ (desh) mean? (\"A country\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R98-first-pass-animals-describing-words-and-time",
+      "sequence": 5210,
+      "title": "Animals, describing words and time — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 74-85",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3b75526a1278b25",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a way and a country."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mountain, a forest, a river, a lake, a stone",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mountain, a forest, a river, a lake, a stone]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sand, a field, a cloud, the sun, the moon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sand, a field, a cloud, the sun, the moon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sea, fire, snow; ice, rain, wind",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sea, fire, snow; ice, rain, wind]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a dog, a cat, a cow, a goat, a sheep",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a dog, a cat, a cow, a goat, a sheep]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bird, a mouse, a lion, an elephant, a monkey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bird, a mouse, a lion, an elephant, a monkey]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a snake, big, small, new, old",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a snake, big, small, new, old]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bad, long, hot, slowly, fast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bad, long, hot, slowly, fast]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "easy, expensive, cheap, high, low",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: easy, expensive, cheap, high, low]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "full, empty, clean, sweet, fat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: full, empty, clean, sweet, fat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thin, light, heavy, important, green",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: thin, light, heavy, important, green]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yellow, red, blue, black, white",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: yellow, red, blue, black, white]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "brown, a day, evening, morning, a week",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: brown, a day, evening, morning, a week]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A mountain? (ਪਹਾੜ, pahāṛ.) A forest? (ਜੰਗਲ, jaṅgal.) A river? (ਦਰਿਆ, dariā.) A lake? (ਝੀਲ, jhīl.) A stone? (ਪੱਥਰ, patthar.) Sand? (ਰੇਤ, ret.) A field? (ਖੇਤ, khet.) A cloud? (ਬੱਦਲ, baddal.) The sun? (ਸੂਰਜ, sūraj.) The moon? (ਚੰਨ, chann.) The sea? (ਸਮੁੰਦਰ, samundar.) Fire? (ਅੱਗ, agg.) Snow; ice? (ਬਰਫ਼, baraf.) Rain? (ਮੀਂਹ, mīṁh.) Wind? (ਹਵਾ, havā.) A dog? (ਕੁੱਤਾ, kuttā.) A cat? (ਬਿੱਲੀ, billī.) A cow? (ਗਾਂ, gāṁ.) A goat? (ਬੱਕਰੀ, bakkrī.) A sheep? (ਭੇਡ, bheḍ.) A bird? (ਪੰਛੀ, panchhī.) A mouse? (ਚੂਹਾ, chūhā.) A lion? (ਸ਼ੇਰ, sher.) An elephant? (ਹਾਥੀ, hāthī.) A monkey? (ਬਾਂਦਰ, bāndar.) A snake? (ਸੱਪ, sapp.) Big? (ਵੱਡਾ, vaḍḍā.) Small? (ਛੋਟਾ, chhoṭā.) New? (ਨਵਾਂ, navāṁ.) Old? (ਪੁਰਾਣਾ, purāṇā.) Bad? (ਬੁਰਾ, burā.) Long? (ਲੰਮਾ, lammā.) Hot? (ਗਰਮ, garam.) Slowly? (ਹੌਲੀ, haulī.) Fast? (ਤੇਜ਼, tez.) Easy? (ਸੌਖਾ, saukhā.) Expensive? (ਮਹਿੰਗਾ, mahiṅgā.) Cheap? (ਸਸਤਾ, sastā.) High? (ਉੱਚਾ, uchchā.) Low? (ਨੀਵਾਂ, nīvāṁ.) Full? (ਭਰਿਆ, bhariā.) Empty? (ਖ਼ਾਲੀ, khālī.) Clean? (ਸਾਫ਼, sāf.) Sweet? (ਮਿੱਠਾ, miṭṭhā.) Fat? (ਮੋਟਾ, moṭā.) Thin? (ਪਤਲਾ, patlā.) Light? (ਹਲਕਾ, halkā.) Heavy? (ਭਾਰੀ, bhārī.) Important? (ਜ਼ਰੂਰੀ, zarūrī.) Green? (ਹਰਾ, harā.) Yellow? (ਪੀਲਾ, pīlā.) Red? (ਲਾਲ, lāl.) Blue? (ਨੀਲਾ, nīlā.) Black? (ਕਾਲਾ, kālā.) White? (ਚਿੱਟਾ, chiṭṭā.) Brown? (ਭੂਰਾ, bhūrā.) A day? (ਦਿਨ, din.) Evening? (ਸ਼ਾਮ, shām.) Morning? (ਸਵੇਰ, saver.) A week? (ਹਫ਼ਤਾ, haftā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R98-second-pass-places-the-town-clothes-and-numbers",
+      "sequence": 5220,
+      "title": "Places, the town, clothes and numbers — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 86-98",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:141a2d50bcac77c2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a month and a year."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a month, a year, an hour, a minute, today",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a month, a year, an hour, a minute, today]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "now, always, a delay; late, before, far",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: now, always, a delay; late, before, far]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "near, inside, outside, on, below",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: near, inside, outside, on, below]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "in front, behind, here, there, a shop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: in front, behind, here, there, a shop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a road, a lane, a bank, a station, a car; a train",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a road, a lane, a bank, a station, a car; a train]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bus, a bridge, a gurdwara, a temple, a hotel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bus, a bridge, a gurdwara, a temple, a hotel]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the police, a boat, a bicycle, a market, clothes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the police, a boat, a bicycle, a market, clothes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a kurta, a sock, a pocket, a ring, a watch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a kurta, a sock, a pocket, a ring, a watch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a turban, a shoe, a cap, a shirt, six",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a turban, a shoe, a cap, a shirt, six]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seven, eight, nine, ten, eleven",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: seven, eight, nine, ten, eleven]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "twelve, twenty, thirty, fifty, a hundred",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: twelve, twenty, thirty, fifty, a hundred]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a thousand, the world, a colour, a song, a journey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a thousand, the world, a colour, a song, a journey]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a holiday, love, music, a way, a country",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a holiday, love, music, a way, a country]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A month? (ਮਹੀਨਾ, mahīnā.) A year? (ਸਾਲ, sāl.) An hour? (ਘੰਟਾ, ghaṇṭā.) A minute? (ਮਿੰਟ, minṭ.) Today? (ਅੱਜ, ajj.) Now? (ਹੁਣ, huṇ.) Always? (ਹਮੇਸ਼ਾ, hameshā.) A delay; late? (ਦੇਰ, der.) Before? (ਪਹਿਲਾਂ, pahilāṁ.) Far? (ਦੂਰ, dūr.) Near? (ਨੇੜੇ, neṛe.) Inside? (ਅੰਦਰ, andar.) Outside? (ਬਾਹਰ, bāhar.) On? (ਉੱਤੇ, utte.) Below? (ਹੇਠਾਂ, heṭhāṁ.) In front? (ਸਾਹਮਣੇ, sāhmaṇe.) Behind? (ਪਿੱਛੇ, pichchhe.) Here? (ਇੱਥੇ, itthe.) There? (ਉੱਥੇ, utthe.) A shop? (ਦੁਕਾਨ, dukān.) A road? (ਸੜਕ, saṛak.) A lane? (ਗਲੀ, galī.) A bank? (ਬੈਂਕ, baiṅk.) A station? (ਸਟੇਸ਼ਨ, saṭeshan.) A car; a train? (ਗੱਡੀ, gaḍḍī.) A bus? (ਬੱਸ, bass.) A bridge? (ਪੁਲ, pul.) A gurdwara? (ਗੁਰਦੁਆਰਾ, gurduārā.) A temple? (ਮੰਦਰ, mandar.) A hotel? (ਹੋਟਲ, hoṭal.) The police? (ਪੁਲਿਸ, pulis.) A boat? (ਕਿਸ਼ਤੀ, kishtī.) A bicycle? (ਸਾਈਕਲ, sāīkal.) A market? (ਬਾਜ਼ਾਰ, bāzār.) Clothes? (ਕੱਪੜੇ, kappṛe.) A kurta? (ਕੁੜਤਾ, kuṛtā.) A sock? (ਜੁਰਾਬ, jurāb.) A pocket? (ਜੇਬ, jeb.) A ring? (ਮੁੰਦਰੀ, mundrī.) A watch? (ਘੜੀ, ghaṛī.) A turban? (ਪੱਗ, pagg.) A shoe? (ਜੁੱਤੀ, juttī.) A cap? (ਟੋਪੀ, ṭopī.) A shirt? (ਕਮੀਜ਼, kamīz.) Six? (ਛੇ, chhe.) Seven? (ਸੱਤ, satt.) Eight? (ਅੱਠ, aṭṭh.) Nine? (ਨੌਂ, nauṁ.) Ten? (ਦਸ, das.) Eleven? (ਗਿਆਰਾਂ, giārāṁ.) Twelve? (ਬਾਰਾਂ, bārāṁ.) Twenty? (ਵੀਹ, vīh.) Thirty? (ਤੀਹ, tīh.) Fifty? (ਪੰਜਾਹ, panjāh.) A hundred? (ਸੌ, sau.) A thousand? (ਹਜ਼ਾਰ, hazār.) The world? (ਦੁਨੀਆ, dunīā.) A colour? (ਰੰਗ, raṅg.) A song? (ਗੀਤ, gīt.) A journey? (ਸਫ਼ਰ, safar.) A holiday? (ਛੁੱਟੀ, chhuṭṭī.) Love? (ਪਿਆਰ, piār.) Music? (ਸੰਗੀਤ, saṅgīt.) A way? (ਰਸਤਾ, rastā.) A country? (ਦੇਸ਼, desh.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

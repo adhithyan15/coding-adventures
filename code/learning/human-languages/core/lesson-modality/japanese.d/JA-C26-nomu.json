@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C26-nomu",
+    "language": "japanese",
+    "chapter": 26,
+    "sequence": 1950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82da46212eb3cbfd"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:2013323ba4cfa4e4",
+  "lessonIds": [
+    "GE-C62-grossmutter",
+    "GE-C62-frau",
+    "GE-C62-maedchen",
+    "GE-C62-onkel",
+    "GE-C62-tante"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch62.txt",
+  "json": "german/narration/ch62.json",
+  "textHash": "fnv1a64:954115f851b95375",
+  "jsonHash": "fnv1a64:342b358faa2ec5a7",
+  "findings": []
+}

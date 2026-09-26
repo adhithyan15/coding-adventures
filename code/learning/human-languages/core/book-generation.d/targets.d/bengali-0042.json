@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 42,
+  "output": "bengali/book/chapters/ch42-hand-hair-tooth-throat-stomach.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

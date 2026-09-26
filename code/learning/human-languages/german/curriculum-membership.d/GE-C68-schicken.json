@@ -1,0 +1,11 @@
+{
+  "id": "GE-C68-schicken",
+  "pathSegment": "GE-PATH-68-VERBEN5",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "GE-EXT-68-VERBEN5",
+      "order": 1
+    }
+  ]
+}

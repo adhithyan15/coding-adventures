@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:c9a54eb16570c7f3",
+  "lessonIds": [
+    "FR-C128-musique",
+    "FR-C128-sport",
+    "FR-C128-jeu",
+    "FR-C128-film",
+    "FR-C128-chanson"
+  ],
+  "tex": "french/book/chapters/ch128-music-sport-game-film-song.tex"
+}

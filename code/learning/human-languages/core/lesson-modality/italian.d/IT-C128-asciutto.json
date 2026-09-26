@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C128-asciutto",
+    "language": "italian",
+    "chapter": 128,
+    "sequence": 6370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:59f6feaf4cb1874e"
+  },
+  "findings": []
+}

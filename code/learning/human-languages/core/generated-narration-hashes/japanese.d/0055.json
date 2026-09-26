@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:7ad8e80b4296a699",
+  "lessonIds": [
+    "JA-C55-fun",
+    "JA-C55-natsu",
+    "JA-C55-fuyu",
+    "JA-C55-itsumo",
+    "JA-C55-mada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch55.txt",
+  "json": "japanese/narration/ch55.json",
+  "textHash": "fnv1a64:2d54edb95bc199da",
+  "jsonHash": "fnv1a64:d71788f4a1321ef7",
+  "findings": []
+}

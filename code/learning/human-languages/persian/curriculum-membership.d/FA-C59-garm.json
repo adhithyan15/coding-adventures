@@ -1,0 +1,11 @@
+{
+  "id": "FA-C59-garm",
+  "pathSegment": "FA-PATH-59-ADJ59",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FA-EXT-59-ADJ59",
+      "order": 2
+    }
+  ]
+}

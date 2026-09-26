@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R79-first-pass-the-body-people-and-food",
+    "language": "german",
+    "chapter": 79,
+    "sequence": 2740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6261e3c90ab850b5"
+  },
+  "findings": []
+}

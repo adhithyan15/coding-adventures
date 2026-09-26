@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:b3bee8d04cefef16",
+  "lessonIds": [
+    "IT-C114-lezione",
+    "IT-C114-esame",
+    "IT-C114-parola",
+    "IT-C114-lavagna",
+    "IT-C114-gomma"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch114.txt",
+  "json": "italian/narration/ch114.json",
+  "textHash": "fnv1a64:a3b22e4347b04987",
+  "jsonHash": "fnv1a64:4324866976856088",
+  "findings": []
+}

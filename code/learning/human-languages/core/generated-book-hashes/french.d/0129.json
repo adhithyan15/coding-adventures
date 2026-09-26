@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:089cfcb373f54d0d",
+  "lessonIds": [
+    "FR-C129-dessin",
+    "FR-C129-vie",
+    "FR-C129-fois",
+    "FR-C129-couleur",
+    "FR-C129-prix"
+  ],
+  "tex": "french/book/chapters/ch129-drawing-life-time-colour-price.tex"
+}

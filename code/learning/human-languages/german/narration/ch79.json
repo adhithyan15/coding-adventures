@@ -1,0 +1,972 @@
+{
+  "version": 1,
+  "language": "german",
+  "chapter": 79,
+  "title": "Cup, Plate, Glass, Fork, Knife",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:6966944e4385cb3e",
+  "lessons": [
+    {
+      "id": "GE-C79-tasse",
+      "sequence": 2690,
+      "title": "die Tasse — a cup",
+      "headword": "die Tasse",
+      "romanization": "die Tasse",
+      "gloss": "a cup",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:549750ca45c5c17f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for a mirror, then the German for a flat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Tasse",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Tasse — \"a cup\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Tasse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Tasse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Tasse, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Tasse*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say die Tasse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *die Tasse*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for a mirror, then the German for a flat, then say die Tasse again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for a mirror, then the German for a flat, then say *die Tasse* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Tasse mean? (\"A cup\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C79-teller",
+      "sequence": 2700,
+      "title": "der Teller — a plate",
+      "headword": "der Teller",
+      "romanization": "der Teller",
+      "gloss": "a plate",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f8bb645f3daf65b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for a flat, then the German for a cup."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: der Teller",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Teller — \"a plate\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Teller",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Teller*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "der Teller, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *der Teller*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say der Teller",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *der Teller*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for a flat, then the German for a cup, then say der Teller again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for a flat, then the German for a cup, then say *der Teller* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does der Teller mean? (\"A plate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C79-glas",
+      "sequence": 2710,
+      "title": "das Glas — a glass",
+      "headword": "das Glas",
+      "romanization": "das Glas",
+      "gloss": "a glass",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35de1b063e87f091",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for a cup, then the German for a plate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Glas",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Glas — \"a glass\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Glas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Glas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Glas, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Glas*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say das Glas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *das Glas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for a cup, then the German for a plate, then say das Glas again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for a cup, then the German for a plate, then say *das Glas* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Glas mean? (\"A glass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C79-gabel",
+      "sequence": 2720,
+      "title": "die Gabel — a fork",
+      "headword": "die Gabel",
+      "romanization": "die Gabel",
+      "gloss": "a fork",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7925fe43da108b3e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for a plate, then the German for a glass."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: die Gabel",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "die Gabel — \"a fork\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Gabel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Gabel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "die Gabel, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *die Gabel*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say die Gabel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *die Gabel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for a plate, then the German for a glass, then say die Gabel again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for a plate, then the German for a glass, then say *die Gabel* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does die Gabel mean? (\"A fork\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C79-messer",
+      "sequence": 2730,
+      "title": "das Messer — a knife",
+      "headword": "das Messer",
+      "romanization": "das Messer",
+      "gloss": "a knife",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6e3c89b5e3c26c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the German for a glass, then the German for a fork."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: das Messer",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "das Messer — \"a knife\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Messer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Messer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "das Messer, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *das Messer*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say das Messer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *das Messer*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the German for a glass, then the German for a fork, then say das Messer again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the German for a glass, then the German for a fork, then say *das Messer* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does das Messer mean? (\"A knife\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R79-first-pass-the-body-people-and-food",
+      "sequence": 2740,
+      "title": "The body, people and food — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 56-67",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6261e3c90ab850b5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a fork and a knife."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a leg, a tooth, the neck; the throat, a shoulder, a knee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a leg, a tooth, the neck; the throat, a shoulder, a knee]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the face, blood, skin, a hair; hair, the belly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the face, blood, skin, a hair; hair, the belly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the back, the tongue, a lip, a toe, the stomach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the back, the tongue, a lip, a toe, the stomach]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fever, a doctor, a doctor, a hospital, ill",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fever, a doctor, a doctor, a hospital, ill]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "healthy, thirst, hunger, sad, happy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: healthy, thirst, hunger, sad, happy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fear, joy, a son, a daughter, a grandfather",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fear, joy, a son, a daughter, a grandfather]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a grandmother, a woman; a wife, a girl, an uncle, an aunt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a grandmother, a woman; a wife, a girl, an uncle, an aunt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a neighbour, a guest, a grandson, a pupil, a pupil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a neighbour, a guest, a grandson, a pupil, a pupil]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to buy, to play, to know, to find, to look for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to buy, to play, to know, to find, to look for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wait, to pay, to cook, to laugh, to cry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wait, to pay, to cook, to laugh, to cry]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sing, to travel, to show, to bring, to forget",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sing, to travel, to show, to bring, to forget]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to lose, to believe, to need, to live, to call",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to lose, to believe, to need, to live, to call]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A leg? (das Bein.) A tooth? (der Zahn.) The neck; the throat? (der Hals.) A shoulder? (die Schulter.) A knee? (das Knie.) The face? (das Gesicht.) Blood? (das Blut.) Skin? (die Haut.) A hair; hair? (das Haar.) The belly? (der Bauch.) The back? (der Rücken.) The tongue? (die Zunge.) A lip? (die Lippe.) A toe? (die Zehe.) The stomach? (der Magen.) A fever? (das Fieber.) A doctor? (der Arzt.) A doctor? (die Ärztin.) A hospital? (das Krankenhaus.) Ill? (krank.) Healthy? (gesund.) Thirst? (der Durst.) Hunger? (der Hunger.) Sad? (traurig.) Happy? (glücklich.) Fear? (die Angst.) Joy? (die Freude.) A son? (der Sohn.) A daughter? (die Tochter.) A grandfather? (der Großvater.) A grandmother? (die Großmutter.) A woman; a wife? (die Frau.) A girl? (das Mädchen.) An uncle? (der Onkel.) An aunt? (die Tante.) A neighbour? (der Nachbar.) A guest? (der Gast.) A grandson? (der Enkel.) A pupil? (der Schüler.) A pupil? (die Schülerin.) To buy? (kaufen.) To play? (spielen.) To know? (wissen.) To find? (finden.) To look for? (suchen.) To wait? (warten.) To pay? (bezahlen.) To cook? (kochen.) To laugh? (lachen.) To cry? (weinen.) To sing? (singen.) To travel? (reisen.) To show? (zeigen.) To bring? (bringen.) To forget? (vergessen.) To lose? (verlieren.) To believe? (glauben.) To need? (brauchen.) To live? (leben.) To call? (rufen.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-R79-second-pass-the-house-school-things-and-nature",
+      "sequence": 2750,
+      "title": "The house, school things and nature — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 68-79",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:789c849e4d262852",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to carry; to wear and to send."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to carry; to wear, to send, to count, to paint, to clean",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to carry; to wear, to send, to count, to paint, to clean]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fish, meat, a chicken, fruit, an apple",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fish, meat, a chicken, fruit, an apple]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a banana, a potato, a tomato, an onion, a carrot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a banana, a potato, a tomato, an onion, a carrot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cake, a soup, honey, oil, lunch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cake, a soup, honey, oil, lunch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dinner, breakfast, rice, a pear, a lemon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: dinner, breakfast, rice, a pear, a lemon]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a grape, jam, cheese, salt, sugar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a grape, jam, cheese, salt, sugar]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "juice, a sausage, ham, a salad; lettuce, noodles",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: juice, a sausage, ham, a salad; lettuce, noodles]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cream, pepper, a nut, beer, to cut",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cream, pepper, a nut, beer, to cut]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a window, a chair, a table, a wall, a roof",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a window, a chair, a table, a wall, a roof]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a garden, a lamp, a bath; a bathroom, a room, a bed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a garden, a lamp, a bath; a bathroom, a room, a bed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cupboard, the floor; the ground, the stairs, a mirror, a flat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cupboard, the floor; the ground, the stairs, a mirror, a flat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cup, a plate, a glass, a fork, a knife",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cup, a plate, a glass, a fork, a knife]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To carry; to wear? (tragen.) To send? (schicken.) To count? (zählen.) To paint? (malen.) To clean? (putzen.) A fish? (der Fisch.) Meat? (das Fleisch.) A chicken? (das Huhn.) Fruit? (das Obst.) An apple? (der Apfel.) A banana? (die Banane.) A potato? (die Kartoffel.) A tomato? (die Tomate.) An onion? (die Zwiebel.) A carrot? (die Möhre.) A cake? (der Kuchen.) A soup? (die Suppe.) Honey? (der Honig.) Oil? (das Öl.) Lunch? (das Mittagessen.) Dinner? (das Abendessen.) Breakfast? (das Frühstück.) Rice? (der Reis.) A pear? (die Birne.) A lemon? (die Zitrone.) A grape? (die Traube.) Jam? (die Marmelade.) Cheese? (der Käse.) Salt? (das Salz.) Sugar? (der Zucker.) Juice? (der Saft.) A sausage? (die Wurst.) Ham? (der Schinken.) A salad; lettuce? (der Salat.) Noodles? (die Nudeln.) Cream? (die Sahne.) Pepper? (der Pfeffer.) A nut? (die Nuss.) Beer? (das Bier.) To cut? (schneiden.) A window? (das Fenster.) A chair? (der Stuhl.) A table? (der Tisch.) A wall? (die Wand.) A roof? (das Dach.) A garden? (der Garten.) A lamp? (die Lampe.) A bath; a bathroom? (das Bad.) A room? (das Zimmer.) A bed? (das Bett.) A cupboard? (der Schrank.) The floor; the ground? (der Boden.) The stairs? (die Treppe.) A mirror? (der Spiegel.) A flat? (die Wohnung.) A cup? (die Tasse.) A plate? (der Teller.) A glass? (das Glas.) A fork? (die Gabel.) A knife? (das Messer.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

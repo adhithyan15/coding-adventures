@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:dfb0d8eb0a6354c2",
+  "lessonIds": [
+    "JA-C60-man",
+    "JA-C60-juuni",
+    "JA-C60-nasu",
+    "JA-C60-uta",
+    "JA-C60-eda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch60.txt",
+  "json": "japanese/narration/ch60.json",
+  "textHash": "fnv1a64:e57d02a88aa0b12b",
+  "jsonHash": "fnv1a64:6678c220e00c74ca",
+  "findings": []
+}

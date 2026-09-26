@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C86-post
 spine_node: SPINE-MEET-GREET
-sequence: 4400
+sequence: 4413
 chapter: 86
 type: word
 headword: "ટપાલ"

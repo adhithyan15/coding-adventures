@@ -3,7 +3,7 @@
     "id": "GU-C73-hot",
     "language": "gujarati",
     "chapter": 73,
-    "sequence": 3740,
+    "sequence": 3753,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2f28807982c08bff"
+    "sourceHash": "fnv1a64:8305cdd547ede093"
   },
   "findings": []
 }

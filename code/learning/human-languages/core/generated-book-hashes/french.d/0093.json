@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:8966d72155d1b6ba",
+  "lessonIds": [
+    "FR-C93-mince",
+    "FR-C93-gros",
+    "FR-C93-lourd",
+    "FR-C93-leger",
+    "FR-C93-sucre"
+  ],
+  "tex": "french/book/chapters/ch93-thin-big-heavy-light-sweet.tex"
+}

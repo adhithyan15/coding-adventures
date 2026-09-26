@@ -1,0 +1,11 @@
+{
+  "id": "MW-C85-ghari",
+  "pathSegment": "MW-PATH-85-CLOTHES85",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-85-CLOTHES85",
+      "order": 3
+    }
+  ]
+}

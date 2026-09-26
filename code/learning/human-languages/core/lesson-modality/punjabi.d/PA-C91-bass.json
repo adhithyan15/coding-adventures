@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C91-bass",
+    "language": "punjabi",
+    "chapter": 91,
+    "sequence": 4810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc353405662ab478"
+  },
+  "findings": []
+}

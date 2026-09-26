@@ -1,0 +1,19 @@
+{
+  "chapter": 93,
+  "title": "Rug, Television, Computer, Fridge, Oven",
+  "label": "ch:pt-rug-television-computer-fridge-oven",
+  "canDo": "I can say a rug, a television, a computer, a fridge and an oven.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C93-forno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 93: i can say a rug, a television, a computer, a fridge and an oven.",
+    "assesses": [
+      "PT-LEX-C93-CASA93-03",
+      "PT-LEX-C93-CASA93-04",
+      "PT-LEX-C93-CASA93-05"
+    ]
+  }
+}

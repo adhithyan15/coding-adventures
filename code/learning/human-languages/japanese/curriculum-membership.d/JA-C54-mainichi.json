@@ -1,0 +1,11 @@
+{
+  "id": "JA-C54-mainichi",
+  "pathSegment": "JA-PATH-54-TIME54",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-54-TIME54",
+      "order": 3
+    }
+  ]
+}

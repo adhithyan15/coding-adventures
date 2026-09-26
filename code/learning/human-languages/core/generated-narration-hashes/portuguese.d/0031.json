@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:32ddc1e7e2f2dd00",
+  "lessonIds": [
+    "PT-C31-lingua",
+    "PT-C31-nariz",
+    "PT-C31-pescoco",
+    "PT-C31-ombro",
+    "PT-C31-joelho"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch31.txt",
+  "json": "portuguese/narration/ch31.json",
+  "textHash": "fnv1a64:f3567448a5043fd1",
+  "jsonHash": "fnv1a64:f6c12d4da6ecbd0d",
+  "findings": []
+}

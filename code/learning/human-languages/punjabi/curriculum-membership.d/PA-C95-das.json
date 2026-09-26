@@ -1,0 +1,11 @@
+{
+  "id": "PA-C95-das",
+  "pathSegment": "PA-PATH-95-NUMBERS95",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-95-NUMBERS95",
+      "order": 3
+    }
+  ]
+}

@@ -9,17 +9,17 @@ type: writing
 headword: "ച"
 gloss: the single character ച — recognised inside words you already say
 romanization: "ca"
-prerequisites: [ML-S143-vowel-sign-o]
+prerequisites: [ML-S143-vowel-sign-o, ML-C05-kodi]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [ML-SCRIPT-RECOG-143]
+  knowledge: [ML-SCRIPT-RECOG-143, ML-LEX-ANCHOR-KODI]
 introduces:
   knowledge: [ML-SCRIPT-RECOG-111]
 practises:
-  knowledge: [ML-SCRIPT-RECOG-143, ML-SCRIPT-RECOG-111]
+  knowledge: [ML-SCRIPT-RECOG-143, ML-SCRIPT-RECOG-111, ML-LEX-ANCHOR-KODI]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [ML-S143-vowel-sign-o]
 # ച — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-143] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-RECOG-143, ML-LEX-ANCHOR-KODI] -->
 
 [PAUSE 1s] Before the new one: ◌ൊ — what does it do?
 

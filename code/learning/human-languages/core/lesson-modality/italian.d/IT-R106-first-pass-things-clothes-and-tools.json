@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R106-first-pass-things-clothes-and-tools",
+    "language": "italian",
+    "chapter": 106,
+    "sequence": 5050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:197e8d08c95ebb0a"
+  },
+  "findings": []
+}

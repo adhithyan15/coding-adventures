@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 32,
+  "sourceHash": "fnv1a64:cc61106d3f07031d",
+  "lessonIds": [
+    "FA-C32-narahat",
+    "FA-C32-pezeshk",
+    "FA-C32-pedarbozorg",
+    "FA-C32-madarbozorg",
+    "FA-C32-dayi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch32.txt",
+  "json": "persian/narration/ch32.json",
+  "textHash": "fnv1a64:4b03e233e7733f9f",
+  "jsonHash": "fnv1a64:b8573ba9ec5033f8",
+  "findings": []
+}

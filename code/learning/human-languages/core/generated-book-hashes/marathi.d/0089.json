@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:f719a363030f30a2",
+  "lessonIds": [
+    "MR-C89-kanda",
+    "MR-C89-amba",
+    "MR-C89-khidki",
+    "MR-C89-khurchi",
+    "MR-C89-tebal"
+  ],
+  "tex": "marathi/book/chapters/ch89-onion-mango-window-chair-table.tex"
+}

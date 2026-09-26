@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:8ebef9c6681df52e",
+  "lessonIds": [
+    "GE-C69-fisch",
+    "GE-C69-fleisch",
+    "GE-C69-huhn",
+    "GE-C69-obst",
+    "GE-C69-apfel"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch69.txt",
+  "json": "german/narration/ch69.json",
+  "textHash": "fnv1a64:246d1e93662332e9",
+  "jsonHash": "fnv1a64:74256dcb0527a963",
+  "findings": []
+}

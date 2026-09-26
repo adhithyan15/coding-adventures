@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:57e005e820fb94a5",
+  "lessonIds": [
+    "PT-C90-passeio",
+    "PT-C90-quiosque",
+    "PT-C90-pastelaria",
+    "PT-C90-padaria",
+    "PT-C90-talho"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch90.txt",
+  "json": "portuguese/narration/ch90.json",
+  "textHash": "fnv1a64:ec17e7a766d4ca0f",
+  "jsonHash": "fnv1a64:08ca8c7d4cf447fb",
+  "findings": []
+}

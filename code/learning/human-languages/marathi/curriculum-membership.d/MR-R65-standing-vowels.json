@@ -1,11 +1,11 @@
 {
   "id": "MR-R65-standing-vowels",
   "pathSegment": "MR-PATH-067",
-  "pathOrder": 4,
+  "pathOrder": 7,
   "extensions": [
     {
       "id": "MR-EXT-080-STANDING-VOWELS",
-      "order": 4
+      "order": 7
     }
   ]
 }

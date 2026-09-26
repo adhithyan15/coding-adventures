@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:9a214f98e01f370b",
+  "lessonIds": [
+    "PT-C79-quarenta",
+    "PT-C79-cinquenta",
+    "PT-C79-cem",
+    "PT-C79-mil",
+    "PT-C79-zero"
+  ],
+  "tex": "portuguese/book/chapters/ch79-forty-to-a-thousand-and-zero.tex"
+}

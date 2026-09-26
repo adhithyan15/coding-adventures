@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R26-numbers-r4
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1380
+sequence: 1393
 chapter: 30
 type: practice
 headword: એક બે ત્રણ ચાર પાંચ

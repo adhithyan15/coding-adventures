@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C60-uta",
+    "language": "japanese",
+    "chapter": 60,
+    "sequence": 3680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5bd62ad6dd491730"
+  },
+  "findings": []
+}

@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Not One, Not a Scrap",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:2aab1881e505aa09",
+  "sourceHash": "fnv1a64:aa10db5a790d016d",
   "lessons": [
     {
       "id": "GE-C32-kein",
@@ -210,7 +210,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f57243d6a0c06167",
+      "sourceHash": "fnv1a64:87d7051c8a4b8a17",
       "notice": null,
       "blocks": [
         {
@@ -920,7 +920,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e953bff65d37a8f",
+      "sourceHash": "fnv1a64:84652a925887717f",
       "notice": null,
       "blocks": [
         {

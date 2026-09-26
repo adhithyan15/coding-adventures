@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C135-nass",
+    "language": "german",
+    "chapter": 135,
+    "sequence": 5710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa535146e4c7a119"
+  },
+  "findings": []
+}

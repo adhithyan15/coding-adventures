@@ -1,0 +1,11 @@
+{
+  "id": "IT-C105-vestito",
+  "pathSegment": "IT-PATH-105-VESTITI105",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-105-VESTITI105",
+      "order": 4
+    }
+  ]
+}

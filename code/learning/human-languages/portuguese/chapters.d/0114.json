@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Sentence, Page, Music, Film, Song",
+  "label": "ch:pt-sentence-page-music-film-song",
+  "canDo": "I can say a sentence, a page, music, a film and a song.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C114-cancao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say a sentence, a page, music, a film and a song.",
+    "assesses": [
+      "PT-LEX-C114-LAZER114-03",
+      "PT-LEX-C114-LAZER114-04",
+      "PT-LEX-C114-LAZER114-05"
+    ]
+  }
+}

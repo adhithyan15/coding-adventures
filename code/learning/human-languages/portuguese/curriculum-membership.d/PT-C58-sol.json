@@ -1,0 +1,11 @@
+{
+  "id": "PT-C58-sol",
+  "pathSegment": "PT-PATH-58-CEU",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-58-CEU",
+      "order": 2
+    }
+  ]
+}

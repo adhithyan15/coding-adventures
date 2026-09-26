@@ -89,8 +89,7 @@ fn positioned_tokens_report_proven_emission_points() {
 
 #[test]
 fn default_html_lexer_emits_and_recovers_processing_instructions() {
-    let tokens = lex_html("<?xml-model href=\"schema.rng\"?><?target><?xml data><?1bad>")
-        .unwrap();
+    let tokens = lex_html("<?xml-model href=\"schema.rng\"?><?target><?xml data><?1bad>").unwrap();
 
     assert_eq!(
         tokens,
@@ -135,7 +134,7 @@ fn default_html_lexer_drops_partial_end_tag_at_eof() {
     assert!(lexer
         .diagnostics()
         .iter()
-        .any(|diagnostic| diagnostic.code == "eof-in-end-tag-name-state"));
+        .any(|diagnostic| diagnostic.code == "eof-in-tag"));
 }
 
 #[test]
@@ -6352,66 +6351,58 @@ fn parser_facing_end_tag_continuation_contexts_recover_seeded_text_and_diagnosti
 
 #[test]
 fn script_end_tag_continuations_report_eof_in_tag() {
-    for (state, temporary_buffer, input, expected_text) in [
+    // An appropriate end tag cut off by the end of input is dropped (WHATWG
+    // "EOF in tag"): what came before it stays text, the tag itself does not.
+    for (state, temporary_buffer, input) in [
         (
             HtmlTokenizerState::ScriptDataEndTagWhitespace,
             "script ",
             "",
-            "</script ",
         ),
         (
             HtmlTokenizerState::ScriptDataEndTagAttributes,
             "script class=x",
             "",
-            "</script class=x",
         ),
         (
             HtmlTokenizerState::ScriptDataEndTagAttributes,
             "script class=",
             "\"x",
-            "</script class=\"x",
         ),
         (
             HtmlTokenizerState::ScriptDataEndTagAttributes,
             "script class=",
             "'x",
-            "</script class='x",
         ),
         (
             HtmlTokenizerState::ScriptDataSelfClosingEndTag,
             "script",
             "",
-            "</script/",
         ),
         (
             HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace,
             "script ",
             "",
-            "</script ",
         ),
         (
             HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
             "script class=x",
             "",
-            "</script class=x",
         ),
         (
             HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
             "script class=",
             "\"x",
-            "</script class=\"x",
         ),
         (
             HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
             "script class=",
             "'x",
-            "</script class='x",
         ),
         (
             HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
             "script",
             "",
-            "</script/",
         ),
     ] {
         let context =
@@ -6422,11 +6413,7 @@ fn script_end_tag_continuations_report_eof_in_tag() {
         lexer.push(input).unwrap();
         lexer.finish().unwrap();
 
-        assert_eq!(
-            lexer.drain_tokens(),
-            vec![Token::Text(expected_text.to_string()), Token::Eof],
-            "context {state:?}"
-        );
+        assert_eq!(lexer.drain_tokens(), vec![Token::Eof], "context {state:?}");
         assert_eq!(
             lexer
                 .diagnostics()

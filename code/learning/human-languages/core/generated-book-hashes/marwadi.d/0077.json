@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:6ac524fbe22befb6",
+  "lessonIds": [
+    "MW-C77-lal",
+    "MW-C77-nilo",
+    "MW-C77-kalo",
+    "MW-C77-bhuro",
+    "MW-C77-mitho"
+  ],
+  "tex": "marwadi/book/chapters/ch77-red-blue-black-brown-sweet.tex"
+}

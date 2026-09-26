@@ -1,0 +1,11 @@
+{
+  "id": "IT-R95-second-pass-getting-around-and-the-house",
+  "pathSegment": "IT-PATH-95-CASA95",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "IT-EXT-95-CASA95",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C61-ito",
+    "language": "japanese",
+    "chapter": 61,
+    "sequence": 3700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6941188525d812b0"
+  },
+  "findings": []
+}

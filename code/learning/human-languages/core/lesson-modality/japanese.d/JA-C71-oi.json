@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C71-oi",
+    "language": "japanese",
+    "chapter": 71,
+    "sequence": 4230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc7b648b3823b748"
+  },
+  "findings": []
+}

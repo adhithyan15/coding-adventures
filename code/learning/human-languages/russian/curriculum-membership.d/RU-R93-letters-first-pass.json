@@ -1,0 +1,11 @@
+{
+  "id": "RU-R93-letters-first-pass",
+  "pathSegment": "RU-PATH-093-LETTERS-SHCH-E",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-093-LETTERS-SHCH-E",
+      "order": 2
+    }
+  ]
+}

@@ -3,7 +3,7 @@
     "id": "GU-C39-saat",
     "language": "gujarati",
     "chapter": 43,
-    "sequence": 2200,
+    "sequence": 2213,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d80e204ff924fbdf"
+    "sourceHash": "fnv1a64:ee67059b5492d12f"
   },
   "findings": []
 }

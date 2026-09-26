@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:49142a16886dca2b",
+  "lessonIds": [
+    "FR-C108-bureau",
+    "FR-C108-usine",
+    "FR-C108-trottoir",
+    "FR-C108-carrefour",
+    "FR-C108-feu-rouge"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch108.txt",
+  "json": "french/narration/ch108.json",
+  "textHash": "fnv1a64:bc36ff9ed444d5d8",
+  "jsonHash": "fnv1a64:67c09f8972ae4a68",
+  "findings": []
+}

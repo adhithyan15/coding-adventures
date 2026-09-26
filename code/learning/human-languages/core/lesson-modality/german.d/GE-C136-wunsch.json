@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C136-wunsch",
+    "language": "german",
+    "chapter": 136,
+    "sequence": 5760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80f5e07754bc612c"
+  },
+  "findings": []
+}

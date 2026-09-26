@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Four Things You Wear",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8df88f1dc1538204",
+  "sourceHash": "fnv1a64:4c5a98f7aafaf4e2",
   "lessons": [
     {
       "id": "UR-C14-qamiz",
@@ -325,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4d1169f145ba83a",
+      "sourceHash": "fnv1a64:e7687304c272ed15",
       "notice": null,
       "blocks": [
         {
@@ -467,7 +467,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:707c90ae5ee71964",
+      "sourceHash": "fnv1a64:d8dc662517b3e321",
       "notice": null,
       "blocks": [
         {

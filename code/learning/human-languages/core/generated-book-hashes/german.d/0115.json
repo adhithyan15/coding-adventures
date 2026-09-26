@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:84c9b69585158f5b",
+  "lessonIds": [
+    "GE-C115-kamm",
+    "GE-C115-muelleimer",
+    "GE-C115-besen",
+    "GE-C115-waschmaschine",
+    "GE-C115-sessel"
+  ],
+  "tex": "german/book/chapters/ch115-comb-bin-broom-washing-machine-armchair.tex"
+}

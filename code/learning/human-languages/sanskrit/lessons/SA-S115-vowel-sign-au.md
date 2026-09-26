@@ -12,17 +12,17 @@ type: writing
 headword: "ौ"
 gloss: the single character ◌ौ — recognised inside words you already say
 romanization: "au"
-prerequisites: [SA-S118-letter-ssa]
+prerequisites: [SA-S118-letter-ssa, SA-C15-mauna]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [SA-SCRIPT-RECOG-118]
+  knowledge: [SA-SCRIPT-RECOG-118, SA-LEX-ANCHOR-MAUNA]
 introduces:
   knowledge: [SA-SCRIPT-RECOG-115]
 practises:
-  knowledge: [SA-SCRIPT-RECOG-216, SA-SCRIPT-RECOG-121, SA-SCRIPT-RECOG-118, SA-SCRIPT-RECOG-115]
+  knowledge: [SA-SCRIPT-RECOG-216, SA-SCRIPT-RECOG-121, SA-SCRIPT-RECOG-118, SA-SCRIPT-RECOG-115, SA-LEX-ANCHOR-MAUNA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [SA-S216-letter-ba, SA-S121-letter-u, SA-S118-letter-ssa]
 # ◌ौ — one character, met inside words you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-216, SA-SCRIPT-RECOG-121, SA-SCRIPT-RECOG-118] -->
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-216, SA-SCRIPT-RECOG-121, SA-SCRIPT-RECOG-118, SA-LEX-ANCHOR-MAUNA] -->
 
 [PAUSE 1s] Before the new one, the ones you have already met: ब · उ · ष. Say what each of them does.
 

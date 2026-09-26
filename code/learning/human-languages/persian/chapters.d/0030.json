@@ -1,0 +1,19 @@
+{
+  "chapter": 30,
+  "title": "Heart, Arm, Fever, Hospital, Ill",
+  "label": "ch:fa-heart-arm-fever-hospital-ill",
+  "canDo": "I can say the heart, an arm, a fever, a hospital and ill, sick.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C30-bimar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 30: i can say the heart, an arm, a fever, a hospital and ill, sick.",
+    "assesses": [
+      "FA-LEX-C30-BODY30-03",
+      "FA-LEX-C30-BODY30-04",
+      "FA-LEX-C30-BODY30-05"
+    ]
+  }
+}

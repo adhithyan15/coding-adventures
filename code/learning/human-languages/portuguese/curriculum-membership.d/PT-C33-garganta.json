@@ -1,0 +1,11 @@
+{
+  "id": "PT-C33-garganta",
+  "pathSegment": "PT-PATH-33-CORPO4",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-33-CORPO4",
+      "order": 3
+    }
+  ]
+}

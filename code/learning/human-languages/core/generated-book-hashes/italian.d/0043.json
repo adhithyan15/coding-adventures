@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:c7882c4de9a7f4b2",
+  "lessonIds": [
+    "IT-C43-paura",
+    "IT-C43-rabbia",
+    "IT-C43-tristezza",
+    "IT-C43-felice",
+    "IT-C43-triste"
+  ],
+  "tex": "italian/book/chapters/ch43-fear-anger-sadness-happy-sad.tex"
+}

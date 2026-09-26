@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C108-biscotto",
+    "language": "italian",
+    "chapter": 108,
+    "sequence": 5160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e7880f45f5aaa86"
+  },
+  "findings": []
+}

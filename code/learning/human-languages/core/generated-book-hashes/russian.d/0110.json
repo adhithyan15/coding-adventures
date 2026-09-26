@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:89e0cc9cc64c192b",
+  "lessonIds": [
+    "RU-C110-customer",
+    "RU-C110-till",
+    "RU-C110-boss",
+    "RU-C110-profession",
+    "RU-C110-class"
+  ],
+  "tex": "russian/book/chapters/ch110-customer-till-boss-profession-class.tex"
+}

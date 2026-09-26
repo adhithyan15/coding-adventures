@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C28-hear-chaavi
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1570
+sequence: 1583
 chapter: 32
 type: word
 headword: ચાવી

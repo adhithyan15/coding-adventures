@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "To tell, To go for a walk, To tidy up, To find, To look for",
+  "label": "ch:ru-to-tell-to-go-for-a-walk-to-tidy-up-to-find-to-look-for",
+  "canDo": "I can say to tell, to go for a walk, to tidy up, to find and to look for.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C134-to-look-for",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can say to tell, to go for a walk, to tidy up, to find and to look for.",
+    "assesses": [
+      "RU-LEX-C134-ACT134-03",
+      "RU-LEX-C134-ACT134-04",
+      "RU-LEX-C134-ACT134-05"
+    ]
+  }
+}

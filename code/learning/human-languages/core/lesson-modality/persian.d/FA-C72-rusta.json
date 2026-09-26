@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C72-rusta",
+    "language": "persian",
+    "chapter": 72,
+    "sequence": 3510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:654102f3947ff576"
+  },
+  "findings": []
+}

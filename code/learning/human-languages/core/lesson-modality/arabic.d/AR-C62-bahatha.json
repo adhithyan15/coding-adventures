@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C62-bahatha",
+    "language": "arabic",
+    "chapter": 62,
+    "sequence": 2050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:407ac20485d79e98"
+  },
+  "findings": []
+}

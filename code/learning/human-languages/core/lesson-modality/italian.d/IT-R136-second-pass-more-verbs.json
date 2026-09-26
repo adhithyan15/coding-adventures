@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-R136-second-pass-more-verbs",
+    "language": "italian",
+    "chapter": 136,
+    "sequence": 6810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa058659120721d9"
+  },
+  "findings": []
+}

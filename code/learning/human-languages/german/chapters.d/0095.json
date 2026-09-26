@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Today, Sometimes, There, Far, On the right",
+  "label": "ch:ge-today-sometimes-there-far-on-the-right",
+  "canDo": "I can say today, sometimes, there, far and on the right.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "GE-C95-rechts",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say today, sometimes, there, far and on the right.",
+    "assesses": [
+      "GE-LEX-C95-WO-03",
+      "GE-LEX-C95-WO-04",
+      "GE-LEX-C95-WO-05"
+    ]
+  }
+}

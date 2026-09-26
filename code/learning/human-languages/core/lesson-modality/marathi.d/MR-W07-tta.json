@@ -3,7 +3,7 @@
     "id": "MR-W07-tta",
     "language": "marathi",
     "chapter": 7,
-    "sequence": 80,
+    "sequence": 100,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -17,7 +17,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:a261a0ff2c2bd175",
+    "sourceHash": "fnv1a64:76a124daf7463dd2",
     "detachableSegments": [
       "Script",
       "Writing — observe and trace"

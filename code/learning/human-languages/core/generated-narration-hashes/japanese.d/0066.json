@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:cf8dd4056a1cbf7c",
+  "lessonIds": [
+    "JA-C66-kago",
+    "JA-C66-koma",
+    "JA-C66-ikada",
+    "JA-C66-fue",
+    "JA-C66-taiko"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch66.txt",
+  "json": "japanese/narration/ch66.json",
+  "textHash": "fnv1a64:134e797631cd02d4",
+  "jsonHash": "fnv1a64:7bf98f6f7370cb00",
+  "findings": []
+}

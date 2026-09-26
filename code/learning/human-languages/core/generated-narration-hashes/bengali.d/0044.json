@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:93f8bd3a07574d1a",
+  "lessonIds": [
+    "BN-C44-kan",
+    "BN-C44-jbor",
+    "BN-C44-haspatal",
+    "BN-C44-btha",
+    "BN-C44-khide"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch44.txt",
+  "json": "bengali/narration/ch44.json",
+  "textHash": "fnv1a64:0a67b0347bc23ef6",
+  "jsonHash": "fnv1a64:affefc3a28b348f2",
+  "findings": []
+}

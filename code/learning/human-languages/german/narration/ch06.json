@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "One, Two, Three",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:94f0803076fc1318",
+  "sourceHash": "fnv1a64:fedc29916531bd14",
   "lessons": [
     {
       "id": "GE-C06-eins",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:163b5b7f0c58faf7",
+      "sourceHash": "fnv1a64:1532a9d1357089b8",
       "notice": null,
       "blocks": [
         {
@@ -156,7 +156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cecdbbf3f7f1de8e",
+      "sourceHash": "fnv1a64:a97c779e3021e3b9",
       "notice": null,
       "blocks": [
         {
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e634533738b62ec",
+      "sourceHash": "fnv1a64:f9fdabcaccadf659",
       "notice": null,
       "blocks": [
         {
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c65044e88bbe428f",
+      "sourceHash": "fnv1a64:be39c557cd366cfc",
       "notice": null,
       "blocks": [
         {

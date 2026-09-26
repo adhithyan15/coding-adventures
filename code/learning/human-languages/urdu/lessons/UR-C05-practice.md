@@ -9,7 +9,7 @@ headword: سلام ... خدا حافظ
 romanization: salām ... khudā hāfiz
 gloss: open and close a short Urdu interaction
 concept_tag: UR-C05-PRACTICE
-prerequisites: [UR-C05-khuda-hafiz]
+prerequisites: [UR-C05-khuda-hafiz, UR-C05-khuda-hafiz-more]
 sounds: [rtl, kh, long-a]
 roots: []
 etymology_hook: The dialogue contrasts Arabic-rooted salām at the opening with Persian-plus-Arabic khudā hāfiz at the close, placing etymology inside communicative sequence.

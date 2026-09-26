@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C64-wissen",
+    "language": "german",
+    "chapter": 64,
+    "sequence": 1960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aeb3cb2389bf5e6f"
+  },
+  "findings": []
+}

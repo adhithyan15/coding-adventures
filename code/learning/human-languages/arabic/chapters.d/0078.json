@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Fire, Snow, Wind, Sky, Horse",
+  "label": "ch:ar-fire-snow-wind-sky-horse",
+  "canDo": "I can say fire, snow, wind, the sky and a horse.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "AR-C78-hisan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can say fire, snow, wind, the sky and a horse.",
+    "assesses": [
+      "AR-LEX-C78-NATURE78-03",
+      "AR-LEX-C78-NATURE78-04",
+      "AR-LEX-C78-NATURE78-05"
+    ]
+  }
+}

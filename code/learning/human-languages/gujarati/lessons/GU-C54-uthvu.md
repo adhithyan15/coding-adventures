@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C54-uthvu
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2760
+sequence: 2773
 chapter: 54
 type: word
 headword: "ઉઠવું"

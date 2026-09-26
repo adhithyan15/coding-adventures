@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C66-pahar",
+    "language": "bengali",
+    "chapter": 66,
+    "sequence": 3450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c7ff6035367851fa"
+  },
+  "findings": []
+}

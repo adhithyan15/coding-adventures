@@ -1,0 +1,19 @@
+{
+  "chapter": 84,
+  "title": "Reason, Reason, So, That is why, Cause",
+  "label": "ch:pt-reason-reason-so-that-is-why-cause",
+  "canDo": "I can say a reason, a reason, so, that is why and a cause.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "PT-C84-causa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 84: i can say a reason, a reason, so, that is why and a cause.",
+    "assesses": [
+      "PT-LEX-C84-PORQUE84-03",
+      "PT-LEX-C84-PORQUE84-04",
+      "PT-LEX-C84-PORQUE84-05"
+    ]
+  }
+}

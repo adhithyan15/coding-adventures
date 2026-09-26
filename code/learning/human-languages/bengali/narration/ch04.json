@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "In Front, Underneath, and On Its Own",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b7ce9a6b5871f5d8",
+  "sourceHash": "fnv1a64:ec3c7e925aa0bc2e",
   "lessons": [
     {
       "id": "BN-W02-naam-read",
@@ -287,6 +287,111 @@
       ]
     },
     {
+      "id": "BN-C04-it",
+      "sequence": 269,
+      "title": "ইট (iṭ) — a brick",
+      "headword": "ইট",
+      "romanization": "iṭ",
+      "gloss": "a brick",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9348d2765d0c72ac",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ইট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ইট — iṭ — \"a brick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: iṭ. Look at its shape as you say it: the next lesson takes one piece of it, ই, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a brick\"? (ইট, iṭ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "BN-W04-i-indep",
       "sequence": 270,
       "title": "ই — the independent i",
@@ -300,7 +405,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:282bda3b6ffa199b",
+      "sourceHash": "fnv1a64:bd73dca2d5b35893",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -433,7 +538,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ab5b8cf2575614f7",
+      "sourceHash": "fnv1a64:cca52a282528515f",
       "notice": {
         "modality": "pen",
         "needs": [

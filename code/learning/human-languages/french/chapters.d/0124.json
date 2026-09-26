@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Baker, Student, Driver, Lawyer, Engineer",
+  "label": "ch:fr-baker-student-driver-lawyer-engineer",
+  "canDo": "I can name a baker, a student, a driver, a lawyer, an engineer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C124-ingenieur",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can name a baker, a student, a driver, a lawyer, an engineer.",
+    "assesses": [
+      "FR-LEX-C124-METIERS76-03",
+      "FR-LEX-C124-METIERS76-04",
+      "FR-LEX-C124-METIERS76-05"
+    ]
+  }
+}

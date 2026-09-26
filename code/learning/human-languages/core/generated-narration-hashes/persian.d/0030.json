@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:5e4220aa32852f79",
+  "lessonIds": [
+    "FA-C30-ghalb",
+    "FA-C30-bazu",
+    "FA-C30-tab",
+    "FA-C30-bimarestan",
+    "FA-C30-bimar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch30.txt",
+  "json": "persian/narration/ch30.json",
+  "textHash": "fnv1a64:d22c37123a3b23b2",
+  "jsonHash": "fnv1a64:f2a0209c3200c850",
+  "findings": []
+}

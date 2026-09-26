@@ -1,0 +1,11 @@
+{
+  "id": "FR-C97-dehors",
+  "pathSegment": "FR-PATH-97-TEMPS49",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-97-TEMPS49",
+      "order": 3
+    }
+  ]
+}

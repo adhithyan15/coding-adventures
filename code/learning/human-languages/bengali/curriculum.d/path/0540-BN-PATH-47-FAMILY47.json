@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-47-FAMILY47",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "BN-EXT-47-FAMILY47"
+  ],
+  "after": []
+}

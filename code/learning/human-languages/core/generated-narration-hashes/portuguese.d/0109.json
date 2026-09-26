@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:5e9f96e4ec80fdaf",
+  "lessonIds": [
+    "PT-C109-pessego",
+    "PT-C109-compota",
+    "PT-C109-noz",
+    "PT-C109-pimenta",
+    "PT-C109-planeta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch109.txt",
+  "json": "portuguese/narration/ch109.json",
+  "textHash": "fnv1a64:9c2c452dfb9ea777",
+  "jsonHash": "fnv1a64:4c8b4a9c4292aa3e",
+  "findings": []
+}

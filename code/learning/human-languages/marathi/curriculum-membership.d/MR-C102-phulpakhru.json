@@ -1,0 +1,11 @@
+{
+  "id": "MR-C102-phulpakhru",
+  "pathSegment": "MR-PATH-102-ANIMALS102",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-102-ANIMALS102",
+      "order": 4
+    }
+  ]
+}

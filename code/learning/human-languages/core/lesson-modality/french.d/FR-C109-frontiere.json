@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C109-frontiere",
+    "language": "french",
+    "chapter": 109,
+    "sequence": 4850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38931b05f9e83e65"
+  },
+  "findings": []
+}

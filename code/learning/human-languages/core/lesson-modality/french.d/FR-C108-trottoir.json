@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C108-trottoir",
+    "language": "french",
+    "chapter": 108,
+    "sequence": 4820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7323c94ca28a132"
+  },
+  "findings": []
+}

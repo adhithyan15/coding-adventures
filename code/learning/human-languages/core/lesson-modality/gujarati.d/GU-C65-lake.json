@@ -3,7 +3,7 @@
     "id": "GU-C65-lake",
     "language": "gujarati",
     "chapter": 65,
-    "sequence": 3300,
+    "sequence": 3313,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:50d50279cc96b3d6"
+    "sourceHash": "fnv1a64:96083e3619dce846"
   },
   "findings": []
 }

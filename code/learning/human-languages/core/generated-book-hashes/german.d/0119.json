@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:670b28abfae3d53f",
+  "lessonIds": [
+    "GE-C119-schal",
+    "GE-C119-stiefel",
+    "GE-C119-rock",
+    "GE-C119-mantel",
+    "GE-C119-schuhe"
+  ],
+  "tex": "german/book/chapters/ch119-scarf-boots-skirt-coat-shoes.tex"
+}

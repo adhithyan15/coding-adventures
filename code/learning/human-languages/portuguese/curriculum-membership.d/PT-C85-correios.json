@@ -1,0 +1,11 @@
+{
+  "id": "PT-C85-correios",
+  "pathSegment": "PT-PATH-85-LUGARES85",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-85-LUGARES85",
+      "order": 2
+    }
+  ]
+}

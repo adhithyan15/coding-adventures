@@ -1,0 +1,11 @@
+{
+  "id": "FR-C123-agriculteur",
+  "pathSegment": "FR-PATH-123-METIERS75",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-123-METIERS75",
+      "order": 4
+    }
+  ]
+}

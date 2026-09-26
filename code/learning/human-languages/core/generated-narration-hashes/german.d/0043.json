@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 43,
-  "sourceHash": "fnv1a64:250f0fc1ece4d8df",
+  "sourceHash": "fnv1a64:586efc4838222f13",
   "lessonIds": [
     "GE-C30-auge",
     "GE-C30-ohr",
@@ -14,6 +14,6 @@
   "text": "german/narration/ch43.txt",
   "json": "german/narration/ch43.json",
   "textHash": "fnv1a64:a56c5bdd74797e6b",
-  "jsonHash": "fnv1a64:c72f657029b497b7",
+  "jsonHash": "fnv1a64:2ab30c7fea603a19",
   "findings": []
 }

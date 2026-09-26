@@ -1,0 +1,11 @@
+{
+  "id": "GE-C76-wand",
+  "pathSegment": "GE-PATH-76-HAUS1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-76-HAUS1",
+      "order": 3
+    }
+  ]
+}

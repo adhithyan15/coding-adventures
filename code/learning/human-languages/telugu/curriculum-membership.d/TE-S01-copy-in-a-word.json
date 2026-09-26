@@ -1,11 +1,11 @@
 {
   "id": "TE-S01-copy-in-a-word",
   "pathSegment": "TE-PATH-100",
-  "pathOrder": 20,
+  "pathOrder": 21,
   "extensions": [
     {
       "id": "TE-EXT-100-SCRIPT-RECOGNITION",
-      "order": 20
+      "order": 21
     }
   ]
 }

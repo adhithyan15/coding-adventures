@@ -1,0 +1,11 @@
+{
+  "id": "FR-C71-raisin",
+  "pathSegment": "FR-PATH-71-CUISINE23",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-71-CUISINE23",
+      "order": 1
+    }
+  ]
+}

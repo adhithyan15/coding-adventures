@@ -1,0 +1,11 @@
+{
+  "id": "PA-C68-almari",
+  "pathSegment": "PA-PATH-68-HOME68",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-68-HOME68",
+      "order": 3
+    }
+  ]
+}

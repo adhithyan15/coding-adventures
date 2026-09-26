@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Night, Evening, Morning, Week, Month",
+  "label": "ch:bn-night-evening-morning-week-month",
+  "canDo": "I can say night, evening, morning, a week and a month.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "BN-C78-mash",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can say night, evening, morning, a week and a month.",
+    "assesses": [
+      "BN-LEX-C78-TIME78-03",
+      "BN-LEX-C78-TIME78-04",
+      "BN-LEX-C78-TIME78-05"
+    ]
+  }
+}

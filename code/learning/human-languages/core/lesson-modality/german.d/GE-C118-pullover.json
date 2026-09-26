@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C118-pullover",
+    "language": "german",
+    "chapter": 118,
+    "sequence": 4770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63aca3007c8eb70a"
+  },
+  "findings": []
+}

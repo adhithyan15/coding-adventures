@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C114-zahnbuerste",
+    "language": "german",
+    "chapter": 114,
+    "sequence": 4580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce2bc93f43b02414"
+  },
+  "findings": []
+}

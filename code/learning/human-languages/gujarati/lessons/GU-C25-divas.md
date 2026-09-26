@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C25-divas
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1330
+sequence: 1343
 chapter: 29
 type: practice
 headword: દિવસ

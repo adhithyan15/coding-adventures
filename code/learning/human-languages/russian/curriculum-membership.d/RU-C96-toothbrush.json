@@ -1,0 +1,11 @@
+{
+  "id": "RU-C96-toothbrush",
+  "pathSegment": "RU-PATH-96-THINGS96",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-96-THINGS96",
+      "order": 2
+    }
+  ]
+}

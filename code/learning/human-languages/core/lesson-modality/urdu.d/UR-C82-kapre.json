@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C82-kapre",
+    "language": "urdu",
+    "chapter": 82,
+    "sequence": 4150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f6e1e8c862f3d5be"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:85d5d54be4e7f27b",
+  "lessonIds": [
+    "MW-C74-garam",
+    "MW-C74-thando",
+    "MW-C74-tej",
+    "MW-C74-soro",
+    "MW-C74-doro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch74.txt",
+  "json": "marwadi/narration/ch74.json",
+  "textHash": "fnv1a64:9573366786eb79bc",
+  "jsonHash": "fnv1a64:cd724138b1e6ce25",
+  "findings": []
+}

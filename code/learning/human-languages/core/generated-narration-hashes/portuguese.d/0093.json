@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:f2820666c6bd880b",
+  "lessonIds": [
+    "PT-C93-tapete",
+    "PT-C93-televisao",
+    "PT-C93-computador",
+    "PT-C93-frigorifico",
+    "PT-C93-forno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch93.txt",
+  "json": "portuguese/narration/ch93.json",
+  "textHash": "fnv1a64:fb0b148032b0ea29",
+  "jsonHash": "fnv1a64:56a78485cf21185a",
+  "findings": []
+}

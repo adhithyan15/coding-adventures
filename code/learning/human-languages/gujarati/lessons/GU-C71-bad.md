@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C71-bad
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3650
+sequence: 3663
 chapter: 71
 type: word
 headword: "ખરાબ"

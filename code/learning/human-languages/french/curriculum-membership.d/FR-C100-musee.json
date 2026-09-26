@@ -1,0 +1,11 @@
+{
+  "id": "FR-C100-musee",
+  "pathSegment": "FR-PATH-100-VILLE52",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-100-VILLE52",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C71-agora",
+  "pathSegment": "PT-PATH-71-QUANDO2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-71-QUANDO2",
+      "order": 1
+    }
+  ]
+}

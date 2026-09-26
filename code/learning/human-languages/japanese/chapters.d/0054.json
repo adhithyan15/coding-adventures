@@ -1,0 +1,19 @@
+{
+  "chapter": 54,
+  "title": "Evening, Tomorrow, Now, Every day, Year",
+  "label": "ch:ja-evening-tomorrow-now-every-day-year",
+  "canDo": "I can say evening, tomorrow, now, every day and a year.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "JA-R54-second-pass-school-nature-and-animals",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 54: i can say evening, tomorrow, now, every day and a year.",
+    "assesses": [
+      "JA-LEX-C54-TIME54-03",
+      "JA-LEX-C54-TIME54-04",
+      "JA-LEX-C54-TIME54-05"
+    ]
+  }
+}

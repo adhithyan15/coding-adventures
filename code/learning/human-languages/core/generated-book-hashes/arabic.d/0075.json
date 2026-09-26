@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:e811b8559197c104",
+  "lessonIds": [
+    "AR-C75-kalima",
+    "AR-C75-sura",
+    "AR-C75-shajara",
+    "AR-C75-zahra",
+    "AR-C75-jabal"
+  ],
+  "tex": "arabic/book/chapters/ch75-word-picture-tree-flower-mountain.tex"
+}

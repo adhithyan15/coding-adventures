@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C122-caviglia",
+    "language": "italian",
+    "chapter": 122,
+    "sequence": 5960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6915943d13b81433"
+  },
+  "findings": []
+}

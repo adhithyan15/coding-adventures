@@ -1,0 +1,19 @@
+{
+  "chapter": 60,
+  "title": "Ten thousand, Twelve, Aubergine, Song, Branch",
+  "label": "ch:ja-ten-thousand-twelve-aubergine-song-branch",
+  "canDo": "I can say ten thousand, twelve, an aubergine, a song and a branch.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "JA-C60-eda",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 60: i can say ten thousand, twelve, an aubergine, a song and a branch.",
+    "assesses": [
+      "JA-LEX-C60-NUMBERS60-03",
+      "JA-LEX-C60-NUMBERS60-04",
+      "JA-LEX-C60-NUMBERS60-05"
+    ]
+  }
+}

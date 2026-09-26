@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C38-yuka",
+    "language": "japanese",
+    "chapter": 38,
+    "sequence": 2530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:53902a1c41d38be6"
+  },
+  "findings": []
+}

@@ -9,7 +9,7 @@ headword: سلام ... خداحافظ
 romanization: salâm ... khodâ hâfez
 gloss: open and close a short Persian interaction
 concept_tag: FA-C05-PRACTICE
-prerequisites: [FA-C05-khodahafez]
+prerequisites: [FA-C05-khodahafez, FA-C05-khodahafez-more]
 sounds: [rtl, kh, long-a]
 roots: []
 etymology_hook: The mini-dialogue contrasts known Arabic-rooted salâm at the opening with the mixed Persian-Arabic khodâ hâfez at the close, keeping history attached to communicative position.

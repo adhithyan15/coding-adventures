@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:018cd157a8807203",
+  "lessonIds": [
+    "PT-C41-cozinhar",
+    "PT-C41-vender",
+    "PT-C41-chamar",
+    "PT-C41-dormir",
+    "PT-C41-sentar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch41.txt",
+  "json": "portuguese/narration/ch41.json",
+  "textHash": "fnv1a64:daa46c7787583450",
+  "jsonHash": "fnv1a64:12c31f6ad092ad0f",
+  "findings": []
+}

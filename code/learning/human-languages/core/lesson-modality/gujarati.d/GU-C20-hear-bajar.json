@@ -3,7 +3,7 @@
     "id": "GU-C20-hear-bajar",
     "language": "gujarati",
     "chapter": 24,
-    "sequence": 880,
+    "sequence": 893,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8a6e55dce23081a8"
+    "sourceHash": "fnv1a64:711a746e24729f8c"
   },
   "findings": []
 }

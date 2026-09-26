@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:d6e821a1071928e2",
+  "lessonIds": [
+    "BN-C61-almari",
+    "BN-C61-mejhe",
+    "BN-C61-siri",
+    "BN-C61-ayna",
+    "BN-C61-bati"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch61.txt",
+  "json": "bengali/narration/ch61.json",
+  "textHash": "fnv1a64:652dab216ef0de72",
+  "jsonHash": "fnv1a64:2cbbb5693d8eb3cb",
+  "findings": []
+}

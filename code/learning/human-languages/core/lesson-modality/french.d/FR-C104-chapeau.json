@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C104-chapeau",
+    "language": "french",
+    "chapter": 104,
+    "sequence": 4600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e2be70c6e62bf52"
+  },
+  "findings": []
+}

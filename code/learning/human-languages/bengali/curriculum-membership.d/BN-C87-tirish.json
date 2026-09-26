@@ -1,0 +1,11 @@
+{
+  "id": "BN-C87-tirish",
+  "pathSegment": "BN-PATH-87-NUMBERS87",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-87-NUMBERS87",
+      "order": 1
+    }
+  ]
+}

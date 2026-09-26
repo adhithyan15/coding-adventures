@@ -1,0 +1,11 @@
+{
+  "id": "RU-C114-holiday",
+  "pathSegment": "RU-PATH-114-THINGS114",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-114-THINGS114",
+      "order": 3
+    }
+  ]
+}

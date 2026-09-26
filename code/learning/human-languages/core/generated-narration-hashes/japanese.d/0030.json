@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:e3d047ef9edf3c93",
+  "lessonIds": [
+    "JA-C30-osu",
+    "JA-C30-hiku",
+    "JA-C30-sagasu",
+    "JA-C30-kasu",
+    "JA-C30-kaesu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch30.txt",
+  "json": "japanese/narration/ch30.json",
+  "textHash": "fnv1a64:8bf52620ebe50457",
+  "jsonHash": "fnv1a64:369c0a81c492ad80",
+  "findings": []
+}

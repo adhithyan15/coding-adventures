@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:7b958635c7885f42",
+  "lessonIds": [
+    "FA-C65-daghighe",
+    "FA-C65-emruz",
+    "FA-C65-diruz",
+    "FA-C65-farda",
+    "FA-C65-hala"
+  ],
+  "tex": "persian/book/chapters/ch65-minute-today-yesterday-tomorrow-now.tex"
+}

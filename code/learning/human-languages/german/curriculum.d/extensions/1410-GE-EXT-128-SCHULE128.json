@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-128-SCHULE128",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say homework, an idea, a sentence, a page and a drawing.",
+  "prerequisites": []
+}

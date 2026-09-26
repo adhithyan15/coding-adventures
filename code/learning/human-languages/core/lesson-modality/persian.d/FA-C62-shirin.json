@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C62-shirin",
+    "language": "persian",
+    "chapter": 62,
+    "sequence": 2980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:441ed5886a7bfed6"
+  },
+  "findings": []
+}

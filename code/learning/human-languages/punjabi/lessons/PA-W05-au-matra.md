@@ -9,20 +9,20 @@ type: writing
 headword: "ੌ"
 romanization: "au-matra"
 gloss: "trace the Gurmukhi au vowel sign"
-prerequisites: [PA-W05-farming]
+prerequisites: [PA-W05-farming, PA-C20-mausam]
 sounds: []
 roots: []
 duration:
   max_seconds: 165
 requires:
-  knowledge: [PA-SCRIPT-NA-01]
+  knowledge: [PA-SCRIPT-NA-01, PA-LEX-ANCHOR-MAUSAM]
 introduces:
   knowledge: [PA-SCRIPT-AU-MATRA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-NA-01, PA-SCRIPT-AU-MATRA-01]
+  knowledge: [PA-SCRIPT-NA-01, PA-SCRIPT-AU-MATRA-01, PA-LEX-ANCHOR-MAUSAM]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -34,7 +34,7 @@ reviews_of: [PA-W01-na, PA-W05-farming]
 # ੌ — one new vowel sign
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-NA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-NA-01, PA-LEX-ANCHOR-MAUSAM] -->
 
 Write the familiar base **ਨ** once. Keep the top line clear.
 

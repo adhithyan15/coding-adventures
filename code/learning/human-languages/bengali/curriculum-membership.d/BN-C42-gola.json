@@ -1,0 +1,11 @@
+{
+  "id": "BN-C42-gola",
+  "pathSegment": "BN-PATH-42-BODY42",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-42-BODY42",
+      "order": 3
+    }
+  ]
+}

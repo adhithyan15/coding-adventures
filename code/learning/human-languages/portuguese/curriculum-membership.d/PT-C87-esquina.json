@@ -1,0 +1,11 @@
+{
+  "id": "PT-C87-esquina",
+  "pathSegment": "PT-PATH-87-LUGARES87",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-87-LUGARES87",
+      "order": 1
+    }
+  ]
+}

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C87-cap
 spine_node: SPINE-COURTESY-THANK
-sequence: 4440
+sequence: 4453
 chapter: 87
 type: word
 headword: "ટોપી"

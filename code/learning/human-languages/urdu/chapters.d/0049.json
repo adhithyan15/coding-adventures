@@ -1,0 +1,19 @@
+{
+  "chapter": 49,
+  "title": "To open, To cook, To wash, To laugh, To cry",
+  "label": "ch:ur-to-open-to-cook-to-wash-to-laugh-to-cry",
+  "canDo": "I can say to open, to cook, to wash, to laugh and to cry.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C49-rona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 49: i can say to open, to cook, to wash, to laugh and to cry.",
+    "assesses": [
+      "UR-LEX-C49-VERBS49-03",
+      "UR-LEX-C49-VERBS49-04",
+      "UR-LEX-C49-VERBS49-05"
+    ]
+  }
+}

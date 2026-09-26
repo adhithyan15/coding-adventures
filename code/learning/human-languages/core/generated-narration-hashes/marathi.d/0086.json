@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:fd8d5dc53dd522eb",
+  "lessonIds": [
+    "MR-C86-kele",
+    "MR-C86-batata",
+    "MR-C86-gajar",
+    "MR-C86-sakhar",
+    "MR-C86-mith",
+    "MR-R86-first-pass-the-body-health-and-family",
+    "MR-R86-second-pass-verbs-and-the-first-foods"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch86.txt",
+  "json": "marathi/narration/ch86.json",
+  "textHash": "fnv1a64:4495491aeabdc8e2",
+  "jsonHash": "fnv1a64:9a85b29272a0fd29",
+  "findings": []
+}

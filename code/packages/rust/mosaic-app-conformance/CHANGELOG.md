@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed -- the fixture names the environment axes (UI48 ENV1)
+
+The literal start context in the tests sets `environment` to the defaults.
+
 ### Changed -- the fixture names the new start-context field
 
 - The fixture's full `StartContext` literal names the new optional

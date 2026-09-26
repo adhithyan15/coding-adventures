@@ -1,0 +1,19 @@
+{
+  "chapter": 37,
+  "title": "Home, Window, Chair, Desk, Roof",
+  "label": "ch:ja-home-window-chair-desk-roof",
+  "canDo": "I can say home, a window, a chair, a desk and a roof.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "JA-R37-second-pass-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 37: i can say home, a window, a chair, a desk and a roof.",
+    "assesses": [
+      "JA-LEX-C37-HOME37-03",
+      "JA-LEX-C37-HOME37-04",
+      "JA-LEX-C37-HOME37-05"
+    ]
+  }
+}

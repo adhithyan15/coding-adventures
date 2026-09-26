@@ -1,0 +1,11 @@
+{
+  "id": "IT-C88-municipio",
+  "pathSegment": "IT-PATH-88-LUOGHI88",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "IT-EXT-88-LUOGHI88",
+      "order": 0
+    }
+  ]
+}

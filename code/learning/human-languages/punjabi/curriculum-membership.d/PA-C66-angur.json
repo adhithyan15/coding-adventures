@@ -1,0 +1,11 @@
+{
+  "id": "PA-C66-angur",
+  "pathSegment": "PA-PATH-66-FOOD66",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-66-FOOD66",
+      "order": 2
+    }
+  ]
+}

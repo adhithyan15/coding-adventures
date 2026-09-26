@@ -3,7 +3,7 @@
     "id": "GU-C79-saturday",
     "language": "gujarati",
     "chapter": 79,
-    "sequence": 4010,
+    "sequence": 4023,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ef8fc2bc12a3dfcb"
+    "sourceHash": "fnv1a64:9bc6b651e8648125"
   },
   "findings": []
 }

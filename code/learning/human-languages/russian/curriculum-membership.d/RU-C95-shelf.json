@@ -1,0 +1,11 @@
+{
+  "id": "RU-C95-shelf",
+  "pathSegment": "RU-PATH-95-THINGS95",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-95-THINGS95",
+      "order": 1
+    }
+  ]
+}

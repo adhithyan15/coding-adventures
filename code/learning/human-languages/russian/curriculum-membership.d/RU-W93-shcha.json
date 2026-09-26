@@ -1,0 +1,11 @@
+{
+  "id": "RU-W93-shcha",
+  "pathSegment": "RU-PATH-093-LETTERS-SHCH-E",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-093-LETTERS-SHCH-E",
+      "order": 1
+    }
+  ]
+}

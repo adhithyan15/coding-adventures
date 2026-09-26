@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C97-frigideira",
+    "language": "portuguese",
+    "chapter": 97,
+    "sequence": 4610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9854153c9ad1400e"
+  },
+  "findings": []
+}

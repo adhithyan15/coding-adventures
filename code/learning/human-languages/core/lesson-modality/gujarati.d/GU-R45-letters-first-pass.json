@@ -3,7 +3,7 @@
     "id": "GU-R45-letters-first-pass",
     "language": "gujarati",
     "chapter": 45,
-    "sequence": 2320,
+    "sequence": 2333,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "sight-cue"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:e5ade33c97c2ff85"
+    "sourceHash": "fnv1a64:f991add6430054b1"
   },
   "findings": []
 }

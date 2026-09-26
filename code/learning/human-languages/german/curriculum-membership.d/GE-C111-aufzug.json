@@ -1,0 +1,11 @@
+{
+  "id": "GE-C111-aufzug",
+  "pathSegment": "GE-PATH-111-FAHRT111",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-111-FAHRT111",
+      "order": 3
+    }
+  ]
+}

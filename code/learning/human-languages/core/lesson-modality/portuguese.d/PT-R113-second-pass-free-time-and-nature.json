@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R113-second-pass-free-time-and-nature",
+    "language": "portuguese",
+    "chapter": 113,
+    "sequence": 5510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0e3e2ec934c170a"
+  },
+  "findings": []
+}

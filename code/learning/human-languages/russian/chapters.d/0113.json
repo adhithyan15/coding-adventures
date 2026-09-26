@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Game, Film, Song, Drawing, Life",
+  "label": "ch:ru-game-film-song-drawing-life",
+  "canDo": "I can say a game, a film, a song, a drawing and life.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C113-life",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say a game, a film, a song, a drawing and life.",
+    "assesses": [
+      "RU-LEX-C113-THINGS113-03",
+      "RU-LEX-C113-THINGS113-04",
+      "RU-LEX-C113-THINGS113-05"
+    ]
+  }
+}

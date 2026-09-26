@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C37-kyaan
 spine_node: SPINE-ASK-LOCATION
-sequence: 2090
+sequence: 2103
 chapter: 41
 type: word
 headword: ક્યાં

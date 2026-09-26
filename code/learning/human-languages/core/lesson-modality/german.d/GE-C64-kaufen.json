@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C64-kaufen",
+    "language": "german",
+    "chapter": 64,
+    "sequence": 1940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27dd04e084f9a327"
+  },
+  "findings": []
+}

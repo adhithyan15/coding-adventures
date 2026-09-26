@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 37,
+  "sourceHash": "fnv1a64:e7dcba1268b81ca1",
+  "lessonIds": [
+    "PT-C37-filha",
+    "PT-C37-avo-m",
+    "PT-C37-avo-f",
+    "PT-C37-marido",
+    "PT-C37-esposa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch37.txt",
+  "json": "portuguese/narration/ch37.json",
+  "textHash": "fnv1a64:97ed633370006e07",
+  "jsonHash": "fnv1a64:118c012d374d25fa",
+  "findings": []
+}

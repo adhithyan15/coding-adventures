@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-67-CIELO",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "IT-EXT-67-CIELO"
+  ],
+  "after": []
+}

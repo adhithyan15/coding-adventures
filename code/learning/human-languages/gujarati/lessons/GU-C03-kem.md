@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C03-kem
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 190
+sequence: 203
 chapter: 9
 type: word
 headword: કેમ

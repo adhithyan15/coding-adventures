@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C37-kon
 spine_node: SPINE-ASK-LOCATION
-sequence: 2080
+sequence: 2093
 chapter: 41
 type: word
 headword: કોણ

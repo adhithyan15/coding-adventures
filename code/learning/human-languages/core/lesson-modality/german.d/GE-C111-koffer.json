@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C111-koffer",
+    "language": "german",
+    "chapter": 111,
+    "sequence": 4370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9e08f8a55db26d3"
+  },
+  "findings": []
+}

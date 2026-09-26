@@ -3,7 +3,7 @@
     "id": "GU-C01-saarun",
     "language": "gujarati",
     "chapter": 2,
-    "sequence": 50,
+    "sequence": 51,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9fea9ef8b9f51fb5",
+    "sourceHash": "fnv1a64:e8a2c9935cde0c08",
     "detachableSegments": [
       "The letters in this word"
     ]

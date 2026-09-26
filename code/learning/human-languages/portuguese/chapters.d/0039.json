@@ -1,0 +1,19 @@
+{
+  "chapter": 39,
+  "title": "Child, Neighbour, Guest, Boy, Girl",
+  "label": "ch:pt-child-neighbour-guest-boy-girl",
+  "canDo": "I can name a child, a neighbour, a guest, a boy and a girl.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PT-C39-menina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 39: i can name a child, a neighbour, a guest, a boy and a girl.",
+    "assesses": [
+      "PT-LEX-C39-PESSOAS-03",
+      "PT-LEX-C39-PESSOAS-04",
+      "PT-LEX-C39-PESSOAS-05"
+    ]
+  }
+}

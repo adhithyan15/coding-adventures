@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C02-aabhaal",
+    "language": "marathi",
+    "chapter": 2,
+    "sequence": 22,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bdb8f0f933e3520b"
+  },
+  "findings": []
+}

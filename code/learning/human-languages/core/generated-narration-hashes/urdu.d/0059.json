@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:71bf5af288ca9a44",
+  "lessonIds": [
+    "UR-C59-almari",
+    "UR-C59-farsh",
+    "UR-C59-sirhi",
+    "UR-C59-aina",
+    "UR-C59-batti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch59.txt",
+  "json": "urdu/narration/ch59.json",
+  "textHash": "fnv1a64:4920e9c8e53b5e40",
+  "jsonHash": "fnv1a64:dfbe1c2e46364438",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C84-at-night",
+    "language": "russian",
+    "chapter": 84,
+    "sequence": 4220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4eca2e1a862c82a0"
+  },
+  "findings": []
+}

@@ -3,7 +3,7 @@
     "id": "GU-C79-time",
     "language": "gujarati",
     "chapter": 79,
-    "sequence": 4050,
+    "sequence": 4063,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5f29c0674df61804"
+    "sourceHash": "fnv1a64:2474648addfe0bbe"
   },
   "findings": []
 }

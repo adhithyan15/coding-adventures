@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:f16a1af06649c453",
+  "lessonIds": [
+    "FR-C71-citron",
+    "FR-C71-raisin",
+    "FR-C71-confiture",
+    "FR-C71-yaourt",
+    "FR-C71-jambon"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch71.txt",
+  "json": "french/narration/ch71.json",
+  "textHash": "fnv1a64:e54186b720c831e9",
+  "jsonHash": "fnv1a64:3f5e49f2471a3c68",
+  "findings": []
+}

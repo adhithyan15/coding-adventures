@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:32f4d0b4c5c56af5",
+  "lessonIds": [
+    "RU-C135-to-lose",
+    "RU-C135-to-win",
+    "RU-C135-to-look",
+    "RU-C135-to-draw",
+    "RU-C135-to-travel",
+    "RU-R135-first-pass-describing-words",
+    "RU-R135-second-pass-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch135.txt",
+  "json": "russian/narration/ch135.json",
+  "textHash": "fnv1a64:745304ae524ffd57",
+  "jsonHash": "fnv1a64:e627565e462e4dae",
+  "findings": []
+}

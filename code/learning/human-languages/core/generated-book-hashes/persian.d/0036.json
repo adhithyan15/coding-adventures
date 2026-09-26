@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 36,
+  "sourceHash": "fnv1a64:28e9f7f54bd3eacb",
+  "lessonIds": [
+    "FA-C36-khabidan",
+    "FA-C36-istadan",
+    "FA-C36-davidan",
+    "FA-C36-kharidan",
+    "FA-C36-forukhtan"
+  ],
+  "tex": "persian/book/chapters/ch36-to-sleep-to-stand-to-run-to-buy-to-sell.tex"
+}

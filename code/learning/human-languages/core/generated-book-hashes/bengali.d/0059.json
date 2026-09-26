@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:ef1b6e74bc2e6213",
+  "lessonIds": [
+    "BN-C59-ruti",
+    "BN-C59-am",
+    "BN-C59-sobji",
+    "BN-C59-bari",
+    "BN-C59-janala"
+  ],
+  "tex": "bengali/book/chapters/ch59-bread-mango-vegetables-house-window.tex"
+}

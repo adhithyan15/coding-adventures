@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:b93d5bce36157063",
+  "lessonIds": [
+    "PT-C115-desenho",
+    "PT-C115-vida",
+    "PT-C115-concerto",
+    "PT-C115-festa",
+    "PT-C115-relva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch115.txt",
+  "json": "portuguese/narration/ch115.json",
+  "textHash": "fnv1a64:a3537e09e5fd1e21",
+  "jsonHash": "fnv1a64:e1c562dffbbe9113",
+  "findings": []
+}

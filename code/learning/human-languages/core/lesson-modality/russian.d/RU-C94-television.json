@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C94-television",
+    "language": "russian",
+    "chapter": 94,
+    "sequence": 4800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a4a0d7698a3fd78"
+  },
+  "findings": []
+}

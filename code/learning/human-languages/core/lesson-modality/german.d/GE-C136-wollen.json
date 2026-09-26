@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C136-wollen",
+    "language": "german",
+    "chapter": 136,
+    "sequence": 5750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a0b898c57852c494"
+  },
+  "findings": []
+}

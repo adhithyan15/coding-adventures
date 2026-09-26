@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C43-hatu",
+    "language": "bengali",
+    "chapter": 43,
+    "sequence": 2300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1d043a4da74fe808"
+  },
+  "findings": []
+}

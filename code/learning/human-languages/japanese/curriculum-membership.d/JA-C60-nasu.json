@@ -1,0 +1,11 @@
+{
+  "id": "JA-C60-nasu",
+  "pathSegment": "JA-PATH-60-NUMBERS60",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-60-NUMBERS60",
+      "order": 2
+    }
+  ]
+}

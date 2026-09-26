@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-60-VERBS60",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say sugar, salt, a chilli, yoghurt and oil.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C71-kamra",
+  "pathSegment": "PA-PATH-71-HOME71",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-71-HOME71",
+      "order": 0
+    }
+  ]
+}

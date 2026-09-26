@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C84-ghani",
+    "language": "arabic",
+    "chapter": 84,
+    "sequence": 3170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25d74916b38c8fe8"
+  },
+  "findings": []
+}

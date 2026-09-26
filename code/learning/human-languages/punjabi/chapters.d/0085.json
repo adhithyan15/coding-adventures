@@ -1,0 +1,19 @@
+{
+  "chapter": 85,
+  "title": "Brown, Day, Evening, Morning, Week",
+  "label": "ch:pa-brown-day-evening-morning-week",
+  "canDo": "I can say brown, a day, evening, morning and a week.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "PA-C85-hafta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 85: i can say brown, a day, evening, morning and a week.",
+    "assesses": [
+      "PA-LEX-C85-ADJ85-03",
+      "PA-LEX-C85-ADJ85-04",
+      "PA-LEX-C85-ADJ85-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C40-bukhar",
+  "pathSegment": "UR-PATH-40-BODY40",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-40-BODY40",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 68,
+  "sourceHash": "fnv1a64:d69120ae77f54b5b",
+  "lessonIds": [
+    "FA-C68-dakhel",
+    "FA-C68-birun",
+    "FA-C68-bala",
+    "FA-C68-payin",
+    "FA-C68-jolow"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch68.txt",
+  "json": "persian/narration/ch68.json",
+  "textHash": "fnv1a64:ec5343d6638d9554",
+  "jsonHash": "fnv1a64:2010e4e0a5c53d9f",
+  "findings": []
+}

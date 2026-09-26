@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C58-ghadimi",
+    "language": "persian",
+    "chapter": 58,
+    "sequence": 2800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3af2752f6fadda45"
+  },
+  "findings": []
+}

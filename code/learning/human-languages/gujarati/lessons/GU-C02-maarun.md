@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C02-maarun
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 100
+sequence: 113
 chapter: 8
 type: word
 headword: મારું

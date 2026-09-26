@@ -1,0 +1,19 @@
+{
+  "chapter": 49,
+  "title": "Bed, Key, Wall, Roof, Garden",
+  "label": "ch:pt-bed-key-wall-roof-garden",
+  "canDo": "I can name a bed, a key, a wall, a roof and a garden.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "PT-C49-jardim",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 49: i can name a bed, a key, a wall, a roof and a garden.",
+    "assesses": [
+      "PT-LEX-C49-CASA2-03",
+      "PT-LEX-C49-CASA2-04",
+      "PT-LEX-C49-CASA2-05"
+    ]
+  }
+}

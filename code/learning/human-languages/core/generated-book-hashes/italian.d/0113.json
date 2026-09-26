@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:dd8a0607bac43f96",
+  "lessonIds": [
+    "IT-C113-postino",
+    "IT-C113-cameriere",
+    "IT-C113-cliente",
+    "IT-C113-cassa",
+    "IT-C113-classe"
+  ],
+  "tex": "italian/book/chapters/ch113-postman-waiter-customer-till-class.tex"
+}

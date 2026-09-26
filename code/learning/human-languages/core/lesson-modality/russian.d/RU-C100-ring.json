@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C100-ring",
+    "language": "russian",
+    "chapter": 100,
+    "sequence": 5100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab3ecb69de2f47f6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C97-poltrona",
+    "language": "italian",
+    "chapter": 97,
+    "sequence": 4590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16b61a59811bad71"
+  },
+  "findings": []
+}

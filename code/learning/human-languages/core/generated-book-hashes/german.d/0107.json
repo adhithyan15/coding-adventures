@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:fef05e0139a5c4fd",
+  "lessonIds": [
+    "GE-C107-buero",
+    "GE-C107-ecke",
+    "GE-C107-kreuzung",
+    "GE-C107-ampel",
+    "GE-C107-parkplatz"
+  ],
+  "tex": "german/book/chapters/ch107-office-corner-crossroads-traffic-lights-car-park.tex"
+}

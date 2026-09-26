@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C61-cup
 spine_node: SPINE-COURTESY-THANK
-sequence: 3120
+sequence: 3133
 chapter: 61
 type: word
 headword: "પ્યાલો"

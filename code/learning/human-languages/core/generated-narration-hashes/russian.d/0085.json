@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:536846fb1fd1765a",
+  "lessonIds": [
+    "RU-C85-second",
+    "RU-C85-weekend",
+    "RU-C85-date",
+    "RU-C85-century",
+    "RU-C85-often"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch85.txt",
+  "json": "russian/narration/ch85.json",
+  "textHash": "fnv1a64:3eeb1ef94c86ae85",
+  "jsonHash": "fnv1a64:c8e3565cf694a481",
+  "findings": []
+}

@@ -9,17 +9,17 @@ type: writing
 headword: "ೃ"
 gloss: the single character ೃ — the riding half of ಋ, the pair learned the other way round
 romanization: "vowel sign ṛ"
-prerequisites: [KA-S125-letter-oo]
+prerequisites: [KA-S125-letter-oo, KA-C31-krushi]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-125]
+  knowledge: [KA-SCRIPT-RECOG-125, KA-LEX-ANCHOR-KRUSHI]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-131]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-125, KA-SCRIPT-RECOG-131]
+  knowledge: [KA-SCRIPT-RECOG-125, KA-SCRIPT-RECOG-131, KA-LEX-ANCHOR-KRUSHI]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [KA-S125-letter-oo]
 # ◌ೃ — one character, and the pair met the other way round
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-125] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-125, KA-LEX-ANCHOR-KRUSHI] -->
 
 [PAUSE 1s] Before the new one: ಓ — does it stand alone or ride on a consonant,
 and what is its other shape?

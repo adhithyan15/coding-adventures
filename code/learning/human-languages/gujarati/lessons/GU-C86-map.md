@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C86-map
 spine_node: SPINE-MEET-GREET
-sequence: 4380
+sequence: 4393
 chapter: 86
 type: word
 headword: "નકશો"

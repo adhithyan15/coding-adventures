@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R18-farewell-r4
 spine_node: SPINE-TAKE-LEAVE
-sequence: 860
+sequence: 873
 chapter: 22
 type: practice
 headword: પાછા મળીશું। કાલે મળીશું।

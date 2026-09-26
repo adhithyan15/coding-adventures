@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:821a8a1d55b96e24",
+  "lessonIds": [
+    "RU-C120-lion",
+    "RU-C120-monkey",
+    "RU-C120-elephant",
+    "RU-C120-bee",
+    "RU-C120-ant"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch120.txt",
+  "json": "russian/narration/ch120.json",
+  "textHash": "fnv1a64:4cd1ab88f7861daa",
+  "jsonHash": "fnv1a64:712878a1ce9e6c77",
+  "findings": []
+}

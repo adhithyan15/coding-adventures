@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R39-one-to-ten
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 2260
+sequence: 2273
 chapter: 43
 type: practice
 headword: એક · બે · ત્રણ · ચાર · પાંચ · છ · સાત · આઠ · નવ · દસ

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C88-wallet
 spine_node: SPINE-COURTESY-THANK
-sequence: 4480
+sequence: 4493
 chapter: 88
 type: word
 headword: "પાકીટ"

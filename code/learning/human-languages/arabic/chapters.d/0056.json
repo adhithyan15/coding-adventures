@@ -1,0 +1,19 @@
+{
+  "chapter": 56,
+  "title": "Child, Boy, Man, Woman, Guest",
+  "label": "ch:ar-child-boy-man-woman-guest",
+  "canDo": "I can say a child, a boy, a man, a woman and a guest.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "AR-C56-dayf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 56: i can say a child, a boy, a man, a woman and a guest.",
+    "assesses": [
+      "AR-LEX-C56-FAMILY56-03",
+      "AR-LEX-C56-FAMILY56-04",
+      "AR-LEX-C56-FAMILY56-05"
+    ]
+  }
+}

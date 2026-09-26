@@ -1,0 +1,11 @@
+{
+  "id": "FA-C42-porteghal",
+  "pathSegment": "FA-PATH-42-FOOD42",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-42-FOOD42",
+      "order": 4
+    }
+  ]
+}

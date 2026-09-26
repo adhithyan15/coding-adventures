@@ -1,0 +1,11 @@
+{
+  "id": "PT-C115-festa",
+  "pathSegment": "PT-PATH-115-LAZER115",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-115-LAZER115",
+      "order": 3
+    }
+  ]
+}

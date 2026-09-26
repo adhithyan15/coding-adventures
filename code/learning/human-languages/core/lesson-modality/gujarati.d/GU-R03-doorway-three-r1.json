@@ -3,7 +3,7 @@
     "id": "GU-R03-doorway-three-r1",
     "language": "gujarati",
     "chapter": 3,
-    "sequence": 70,
+    "sequence": 74,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:4a2fcfa3d9aedc1c",
+    "sourceHash": "fnv1a64:fd476c7a10185f0b",
     "detachableSegments": [
       "Writing — from sound"
     ],

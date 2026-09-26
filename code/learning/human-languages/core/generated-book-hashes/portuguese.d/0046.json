@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:23da5fa589629db3",
+  "lessonIds": [
+    "PT-C46-batata",
+    "PT-C46-tomate",
+    "PT-C46-cebola",
+    "PT-C46-cenoura",
+    "PT-C46-feijao"
+  ],
+  "tex": "portuguese/book/chapters/ch46-potato-tomato-onion-carrot-beans.tex"
+}

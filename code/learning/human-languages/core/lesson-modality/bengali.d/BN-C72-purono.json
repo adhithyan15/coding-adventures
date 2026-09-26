@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C72-purono",
+    "language": "bengali",
+    "chapter": 72,
+    "sequence": 3780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3f9255bf376ce98"
+  },
+  "findings": []
+}

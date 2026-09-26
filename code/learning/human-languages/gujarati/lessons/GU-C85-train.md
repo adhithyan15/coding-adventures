@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C85-train
 spine_node: SPINE-MEET-GREET
-sequence: 4320
+sequence: 4333
 chapter: 85
 type: word
 headword: "ટ્રેન"

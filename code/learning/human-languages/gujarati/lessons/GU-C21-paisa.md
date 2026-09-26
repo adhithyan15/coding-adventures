@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C21-paisa
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 990
+sequence: 1003
 delivery: script
 modality: pen
 modality_reason: The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.

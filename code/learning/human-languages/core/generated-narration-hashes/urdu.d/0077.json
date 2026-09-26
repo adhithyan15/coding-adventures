@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:3a60c0e9cdfcd7e0",
+  "lessonIds": [
+    "UR-C77-hamesha",
+    "UR-C77-kabhi",
+    "UR-C77-jaldi",
+    "UR-C77-der",
+    "UR-C77-pehle"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch77.txt",
+  "json": "urdu/narration/ch77.json",
+  "textHash": "fnv1a64:fc9625f760906426",
+  "jsonHash": "fnv1a64:aec39d02f1fd0955",
+  "findings": []
+}

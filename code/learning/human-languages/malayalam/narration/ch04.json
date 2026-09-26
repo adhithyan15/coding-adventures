@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:af06d4cc08176bab",
+  "sourceHash": "fnv1a64:73931c2a8cc0beb6",
   "lessons": [
     {
       "id": "ML-S110-letter-va",
@@ -168,8 +168,113 @@
       ]
     },
     {
-      "id": "ML-S116-letter-u",
+      "id": "ML-C04-uduppu",
       "sequence": 217,
+      "title": "ഉടുപ്പ് (uṭuppŭ) — a dress",
+      "headword": "ഉടുപ്പ്",
+      "romanization": "uṭuppŭ",
+      "gloss": "a dress",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:87c1c5d1ac490fb6",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉടുപ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉടുപ്പ് — uṭuppŭ — \"a dress\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: uṭuppŭ. Look at its shape as you say it: the lessons that follow take pieces of it, ഉ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭuppŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭuppŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭuppŭ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭuppŭ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a dress\"? (ഉടുപ്പ്, uṭuppŭ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-S116-letter-u",
+      "sequence": 218,
       "title": "ഉ — one character, met inside words you already say",
       "headword": "ഉ",
       "romanization": "u",
@@ -182,7 +287,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:86997430be82fe9b",
+      "sourceHash": "fnv1a64:3ffd72a1370341c7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -452,6 +557,111 @@
       ]
     },
     {
+      "id": "ML-C04-koodu",
+      "sequence": 225,
+      "title": "കൂട് (kūṭŭ) — a nest",
+      "headword": "കൂട്",
+      "romanization": "kūṭŭ",
+      "gloss": "a nest",
+      "script": "malayalam",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:c10974d16eb1fc01",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൂട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൂട് — kūṭŭ — \"a nest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: kūṭŭ. Look at its shape as you say it: the next lesson takes one piece of it, ൂ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūṭŭ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūṭŭ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a nest\"? (കൂട്, kūṭŭ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-S141-vowel-sign-uu",
       "sequence": 226,
       "title": "◌ൂ (ū) — one character, met inside words you already say",
@@ -466,7 +676,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:05d87ff7d464740f",
+      "sourceHash": "fnv1a64:887aa574031d255b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -621,7 +831,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b01c11d85f2d02d2",
+      "sourceHash": "fnv1a64:60154e639da91782",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1009,7 +1219,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c696b3ce86a3303f",
+      "sourceHash": "fnv1a64:4094a0cf59e5b390",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1035,6 +1245,16 @@
             {
               "kind": "speech",
               "text": "No new words. Three ways to part — none of them a blunt \"goodbye.\""
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "And one word from the start of the chapter: say uṭuppŭ and what it means."
             }
           ]
         },

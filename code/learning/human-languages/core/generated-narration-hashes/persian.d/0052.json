@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:c0fea665cba55bd0",
+  "lessonIds": [
+    "FA-C52-kuh",
+    "FA-C52-jangal",
+    "FA-C52-rudkhane",
+    "FA-C52-daryache",
+    "FA-C52-sang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch52.txt",
+  "json": "persian/narration/ch52.json",
+  "textHash": "fnv1a64:ed39eeceadb00eca",
+  "jsonHash": "fnv1a64:2f8a72e4bc9ccc34",
+  "findings": []
+}

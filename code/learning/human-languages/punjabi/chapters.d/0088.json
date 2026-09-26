@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Near, Inside, Outside, On, Below",
+  "label": "ch:pa-near-inside-outside-on-below",
+  "canDo": "I can say near, inside, outside, on, above and below.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "PA-C88-hetham",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can say near, inside, outside, on, above and below.",
+    "assesses": [
+      "PA-LEX-C88-PLACE88-03",
+      "PA-LEX-C88-PLACE88-04",
+      "PA-LEX-C88-PLACE88-05"
+    ]
+  }
+}

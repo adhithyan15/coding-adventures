@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-42-VERBOS3",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "PT-EXT-42-VERBOS3"
+  ],
+  "after": []
+}

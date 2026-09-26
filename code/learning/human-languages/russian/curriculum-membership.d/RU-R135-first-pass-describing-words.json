@@ -1,0 +1,11 @@
+{
+  "id": "RU-R135-first-pass-describing-words",
+  "pathSegment": "RU-PATH-135-ACT135",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-135-ACT135",
+      "order": 5
+    }
+  ]
+}

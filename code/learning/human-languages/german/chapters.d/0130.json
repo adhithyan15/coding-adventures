@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Pink, Orange, Pretty, Round, Wide",
+  "label": "ch:ge-pink-orange-pretty-round-wide",
+  "canDo": "I can say pink, orange, pretty, round and wide.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "GE-C130-breit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say pink, orange, pretty, round and wide.",
+    "assesses": [
+      "GE-LEX-C130-FARBE130-03",
+      "GE-LEX-C130-FARBE130-04",
+      "GE-LEX-C130-FARBE130-05"
+    ]
+  }
+}

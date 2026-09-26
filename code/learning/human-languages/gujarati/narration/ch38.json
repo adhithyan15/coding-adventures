@@ -4,11 +4,11 @@
   "chapter": 38,
   "title": "Because, and Therefore",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2c01623c7aa407c3",
+  "sourceHash": "fnv1a64:361623d0e28b523d",
   "lessons": [
     {
       "id": "GU-C34-kemke",
-      "sequence": 1930,
+      "sequence": 1943,
       "title": "કેમકે (kemke) — because",
       "headword": "કેમકે",
       "romanization": "kemke",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9312438188a28772",
+      "sourceHash": "fnv1a64:0e833626d0c40e20",
       "notice": null,
       "blocks": [
         {
@@ -136,7 +136,7 @@
     },
     {
       "id": "GU-C34-kem-kemke",
-      "sequence": 1940,
+      "sequence": 1953,
       "title": "કેમ? … કેમકે … (kem? … kemke …) — asking why, and answering it",
       "headword": "કેમ? … કેમકે …",
       "romanization": "kem? … kemke …",
@@ -147,7 +147,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f370c899bcc5b98",
+      "sourceHash": "fnv1a64:f725e7889e112408",
       "notice": null,
       "blocks": [
         {
@@ -264,7 +264,7 @@
     },
     {
       "id": "GU-C34-kemke-write",
-      "sequence": 1950,
+      "sequence": 1963,
       "title": "કેમકે (kemke) reaches the page",
       "headword": "કેમકે",
       "romanization": "kemke",
@@ -277,7 +277,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:95b2f3dc8c75a15f",
+      "sourceHash": "fnv1a64:ab568738e03b413d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -358,7 +358,7 @@
     },
     {
       "id": "GU-C34-maate",
-      "sequence": 1960,
+      "sequence": 1973,
       "title": "માટે (māṭe) — for, in order to",
       "headword": "માટે",
       "romanization": "māṭe",
@@ -369,7 +369,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64caa97e66b65b9e",
+      "sourceHash": "fnv1a64:7e267968c6a794b2",
       "notice": null,
       "blocks": [
         {
@@ -482,7 +482,7 @@
     },
     {
       "id": "GU-C34-tethi",
-      "sequence": 1970,
+      "sequence": 1983,
       "title": "તેથી (tethī) — therefore",
       "headword": "તેથી",
       "romanization": "tethī",
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19695a51260027ba",
+      "sourceHash": "fnv1a64:4f1accaa93d3c044",
       "notice": null,
       "blocks": [
         {

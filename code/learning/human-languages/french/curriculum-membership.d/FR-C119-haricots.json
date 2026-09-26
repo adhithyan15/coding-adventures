@@ -1,0 +1,11 @@
+{
+  "id": "FR-C119-haricots",
+  "pathSegment": "FR-PATH-119-REPAS71",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-119-REPAS71",
+      "order": 3
+    }
+  ]
+}

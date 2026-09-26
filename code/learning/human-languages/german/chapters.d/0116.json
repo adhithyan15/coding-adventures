@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Alarm clock, Mobile phone, Camera, Glasses, Umbrella",
+  "label": "ch:ge-alarm-clock-mobile-phone-camera-glasses-umbrella",
+  "canDo": "I can say an alarm clock, a mobile phone, a camera, glasses and an umbrella.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C116-regenschirm",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say an alarm clock, a mobile phone, a camera, glasses and an umbrella.",
+    "assesses": [
+      "GE-LEX-C116-DINGE116-03",
+      "GE-LEX-C116-DINGE116-04",
+      "GE-LEX-C116-DINGE116-05"
+    ]
+  }
+}

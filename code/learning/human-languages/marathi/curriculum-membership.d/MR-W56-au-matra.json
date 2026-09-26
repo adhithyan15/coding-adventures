@@ -1,11 +1,11 @@
 {
   "id": "MR-W56-au-matra",
   "pathSegment": "MR-PATH-059",
-  "pathOrder": 3,
+  "pathOrder": 4,
   "extensions": [
     {
       "id": "MR-EXT-072-TEN-TO-TWELVE",
-      "order": 3
+      "order": 4
     }
   ]
 }

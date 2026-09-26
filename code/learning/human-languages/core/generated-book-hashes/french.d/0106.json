@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:880b0472599f2eda",
+  "lessonIds": [
+    "FR-C106-velo",
+    "FR-C106-metro",
+    "FR-C106-taxi",
+    "FR-C106-parking",
+    "FR-C106-ascenseur"
+  ],
+  "tex": "french/book/chapters/ch106-bicycle-underground-taxi-car-park-lift.tex"
+}

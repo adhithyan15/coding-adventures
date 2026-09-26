@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:63292bdeeb974b65",
+  "lessonIds": [
+    "PT-C124-simpatico",
+    "PT-C124-gentil",
+    "PT-C124-serio",
+    "PT-C124-certo",
+    "PT-C124-errado"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch124.txt",
+  "json": "portuguese/narration/ch124.json",
+  "textHash": "fnv1a64:66e24e5020f34176",
+  "jsonHash": "fnv1a64:90585a27ec7a326b",
+  "findings": []
+}

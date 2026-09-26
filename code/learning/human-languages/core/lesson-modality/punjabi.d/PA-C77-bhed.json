@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C77-bhed",
+    "language": "punjabi",
+    "chapter": 77,
+    "sequence": 4150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:09198c109c6d41d3"
+  },
+  "findings": []
+}

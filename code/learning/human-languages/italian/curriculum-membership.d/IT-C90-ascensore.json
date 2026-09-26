@@ -1,0 +1,11 @@
+{
+  "id": "IT-C90-ascensore",
+  "pathSegment": "IT-PATH-90-LUOGHI90",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-90-LUOGHI90",
+      "order": 1
+    }
+  ]
+}

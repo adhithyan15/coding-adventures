@@ -1,0 +1,11 @@
+{
+  "id": "PA-C52-pias",
+  "pathSegment": "PA-PATH-52-HEALTH52",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-52-HEALTH52",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:8a126271eea28f25",
+  "lessonIds": [
+    "IT-C43-paura",
+    "IT-C43-rabbia",
+    "IT-C43-tristezza",
+    "IT-C43-felice",
+    "IT-C43-triste"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch43.txt",
+  "json": "italian/narration/ch43.json",
+  "textHash": "fnv1a64:9e1fbada7ffdcf51",
+  "jsonHash": "fnv1a64:e0dac51c344c5e8e",
+  "findings": []
+}

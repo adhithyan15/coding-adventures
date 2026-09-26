@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C107-aglio",
+    "language": "italian",
+    "chapter": 107,
+    "sequence": 5130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d4304dd9229a561"
+  },
+  "findings": []
+}

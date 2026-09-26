@@ -3,7 +3,7 @@
     "id": "GU-C01-aabhaar",
     "language": "gujarati",
     "chapter": 2,
-    "sequence": 20,
+    "sequence": 21,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:debb8e7788f2f008",
+    "sourceHash": "fnv1a64:78fefe7066890d65",
     "detachableSegments": [
       "The letters in this word",
       "Script retrieval"

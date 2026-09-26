@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 67,
-  "sourceHash": "fnv1a64:0755fa35fe2a9128",
+  "sourceHash": "fnv1a64:db2c750111b1e05c",
   "lessonIds": [
     "GU-C67-cow",
     "GU-C67-buffalo",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch67.txt",
   "json": "gujarati/narration/ch67.json",
   "textHash": "fnv1a64:7486a103a5dce530",
-  "jsonHash": "fnv1a64:391447ef5775aae6",
+  "jsonHash": "fnv1a64:5aafb65304461a22",
   "findings": []
 }

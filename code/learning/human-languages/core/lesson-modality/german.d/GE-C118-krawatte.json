@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C118-krawatte",
+    "language": "german",
+    "chapter": 118,
+    "sequence": 4780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c213b813ea1a415a"
+  },
+  "findings": []
+}

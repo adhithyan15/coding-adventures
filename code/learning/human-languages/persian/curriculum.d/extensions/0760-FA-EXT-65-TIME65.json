@@ -1,0 +1,8 @@
+{
+  "id": "FA-EXT-65-TIME65",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a minute, today, yesterday, tomorrow and now.",
+  "prerequisites": []
+}

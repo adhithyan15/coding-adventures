@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Socks, Blouse, Beef, Vegetables, Mushroom",
+  "label": "ch:ge-socks-blouse-beef-vegetables-mushroom",
+  "canDo": "I can say socks, a blouse, beef, vegetables and a mushroom.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C120-pilz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say socks, a blouse, beef, vegetables and a mushroom.",
+    "assesses": [
+      "GE-LEX-C120-KLEIDUNG120-03",
+      "GE-LEX-C120-KLEIDUNG120-04",
+      "GE-LEX-C120-KLEIDUNG120-05"
+    ]
+  }
+}

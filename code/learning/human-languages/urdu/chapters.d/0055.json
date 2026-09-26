@@ -1,0 +1,19 @@
+{
+  "chapter": 55,
+  "title": "Potato, Tomato, Carrot, Sugar, Salt",
+  "label": "ch:ur-potato-tomato-carrot-sugar-salt",
+  "canDo": "I can say a potato, a tomato, a carrot, sugar and salt.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "UR-C55-namak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 55: i can say a potato, a tomato, a carrot, sugar and salt.",
+    "assesses": [
+      "UR-LEX-C55-FOOD55-03",
+      "UR-LEX-C55-FOOD55-04",
+      "UR-LEX-C55-FOOD55-05"
+    ]
+  }
+}

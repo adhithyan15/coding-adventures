@@ -1,0 +1,11 @@
+{
+  "id": "GE-C92-leise",
+  "pathSegment": "GE-PATH-92-ADJ4",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-92-ADJ4",
+      "order": 4
+    }
+  ]
+}

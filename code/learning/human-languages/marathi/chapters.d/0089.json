@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "Onion, Mango, Window, Chair, Table",
+  "label": "ch:mr-onion-mango-window-chair-table",
+  "canDo": "I can say an onion, a mango, a window, a chair and a table.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "MR-C89-tebal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can say an onion, a mango, a window, a chair and a table.",
+    "assesses": [
+      "MR-LEX-C89-FOOD89-03",
+      "MR-LEX-C89-FOOD89-04",
+      "MR-LEX-C89-FOOD89-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-135-TEMPS87",
+  "spine_node": "SPINE-TIME-OF-DAY",
+  "before": [],
+  "inline": [
+    "FR-EXT-135-TEMPS87"
+  ],
+  "after": []
+}

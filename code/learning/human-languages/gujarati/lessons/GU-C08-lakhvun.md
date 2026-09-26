@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C08-lakhvun
 spine_node: SPINE-NAME-EVERYDAY-ACTIONS
-sequence: 470
+sequence: 483
 chapter: 14
 type: word
 headword: લખવું

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C35-alegria",
+  "pathSegment": "PT-PATH-35-SAUDE2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-35-SAUDE2",
+      "order": 4
+    }
+  ]
+}

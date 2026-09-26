@@ -1,0 +1,11 @@
+{
+  "id": "UR-C64-pahar",
+  "pathSegment": "UR-PATH-64-NATURE64",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-64-NATURE64",
+      "order": 1
+    }
+  ]
+}

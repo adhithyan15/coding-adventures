@@ -1127,6 +1127,34 @@ impl Tokenizer {
                         .trim_end_matches(')');
                     self.temporary_buffer.push_str(literal);
                 }
+                // `switch_to_if_appropriate_end_tag(yes, no)`: the HTML
+                // text-mode end tag states (RCDATA, RAWTEXT, script data)
+                // decide at the first whitespace or `/` after `</name` whether
+                // this is a real end tag (the name matches the last start tag)
+                // or just text. The decision is a state branch, like
+                // `switch_to_if_temporary_buffer_equals`:
+                //
+                //   <title>a</title >   title = title  → yes: a tag, keep lexing it
+                //   <title>a</tit >     tit ≠ title    → no:  "</tit " is text
+                _ if action.starts_with("switch_to_if_appropriate_end_tag(")
+                    && action.ends_with(')') =>
+                {
+                    let arguments = action
+                        .trim_start_matches("switch_to_if_appropriate_end_tag(")
+                        .trim_end_matches(')');
+                    let parts = arguments.split(',').map(str::trim).collect::<Vec<_>>();
+                    if parts.len() != 2 || parts.iter().any(|part| part.is_empty()) {
+                        return Err(TokenizerError::UnknownAction(action.clone()));
+                    }
+                    let target = if self.current_end_tag_matches_last_start_tag() {
+                        parts[0]
+                    } else {
+                        parts[1]
+                    };
+                    self.machine
+                        .set_current_state(target.to_string())
+                        .map_err(TokenizerError::Machine)?;
+                }
                 _ if action.starts_with("parse_error_if_appropriate_end_tag(")
                     && action.ends_with(')') =>
                 {
@@ -1220,6 +1248,10 @@ impl Tokenizer {
                 attributes.push(attribute);
                 Ok(())
             }
+            // An end tag's attributes are lexed like a start tag's (so a
+            // quoted `>` inside one does not end the tag) and then dropped:
+            // WHATWG end tags carry no attributes.
+            CurrentToken::EndTag { .. } => Ok(()),
             other => Err(TokenizerError::InvalidCurrentToken {
                 action: action.to_string(),
                 expected: "start-tag",
@@ -1260,6 +1292,8 @@ impl Tokenizer {
                     false
                 }
             }
+            // Dropped, as in `commit_attribute`.
+            CurrentToken::EndTag { .. } => false,
             other => {
                 return Err(TokenizerError::InvalidCurrentToken {
                     action: action.to_string(),
@@ -1284,6 +1318,8 @@ impl Tokenizer {
                 *self_closing = true;
                 Ok(())
             }
+            // `</br/>`: the flag means nothing on an end tag and is dropped.
+            CurrentToken::EndTag { .. } => Ok(()),
             other => Err(TokenizerError::InvalidCurrentToken {
                 action: action.to_string(),
                 expected: "start-tag",
@@ -1410,10 +1446,13 @@ impl Tokenizer {
                     position,
                 });
             }
-            CurrentToken::EndTag { name } => self.tokens.push_back(PositionedToken {
-                token: Token::EndTag { name },
-                position,
-            }),
+            CurrentToken::EndTag { name } => {
+                self.current_attribute = None;
+                self.tokens.push_back(PositionedToken {
+                    token: Token::EndTag { name },
+                    position,
+                })
+            }
             CurrentToken::Comment { data } => self.tokens.push_back(PositionedToken {
                 token: Token::Comment(data),
                 position,

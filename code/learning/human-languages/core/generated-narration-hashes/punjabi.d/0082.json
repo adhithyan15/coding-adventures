@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:97731c6fa00002c1",
+  "lessonIds": [
+    "PA-C82-bharia",
+    "PA-C82-khali",
+    "PA-C82-saf",
+    "PA-C82-mittha",
+    "PA-C82-mota"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch82.txt",
+  "json": "punjabi/narration/ch82.json",
+  "textHash": "fnv1a64:469497ee6fadbff8",
+  "jsonHash": "fnv1a64:42dca066a3ed5ab1",
+  "findings": []
+}

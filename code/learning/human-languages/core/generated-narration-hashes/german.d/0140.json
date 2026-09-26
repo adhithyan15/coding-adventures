@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:1ff69e9bce10d3e0",
+  "lessonIds": [
+    "GE-C140-liegen",
+    "GE-C140-sich-anziehen",
+    "GE-C140-erzaehlen",
+    "GE-C140-fuehlen",
+    "GE-C140-fallen"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch140.txt",
+  "json": "german/narration/ch140.json",
+  "textHash": "fnv1a64:0a014cdfea3e2f18",
+  "jsonHash": "fnv1a64:3332bcd9f04743f1",
+  "findings": []
+}

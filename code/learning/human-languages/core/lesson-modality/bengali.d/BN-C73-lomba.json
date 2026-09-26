@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C73-lomba",
+    "language": "bengali",
+    "chapter": 73,
+    "sequence": 3800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0c9300d868e6ef8"
+  },
+  "findings": []
+}

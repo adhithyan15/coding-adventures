@@ -1,0 +1,11 @@
+{
+  "id": "BN-C62-chabi",
+  "pathSegment": "BN-PATH-62-HOME62",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-62-HOME62",
+      "order": 1
+    }
+  ]
+}

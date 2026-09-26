@@ -1,0 +1,11 @@
+{
+  "id": "PT-C95-pasta-de-dentes",
+  "pathSegment": "PT-PATH-95-CASA95",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-95-CASA95",
+      "order": 3
+    }
+  ]
+}

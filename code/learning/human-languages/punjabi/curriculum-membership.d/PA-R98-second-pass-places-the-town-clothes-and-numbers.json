@@ -1,0 +1,11 @@
+{
+  "id": "PA-R98-second-pass-places-the-town-clothes-and-numbers",
+  "pathSegment": "PA-PATH-98-WORLD98",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PA-EXT-98-WORLD98",
+      "order": 6
+    }
+  ]
+}

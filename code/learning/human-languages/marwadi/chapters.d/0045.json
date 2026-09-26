@@ -1,0 +1,19 @@
+{
+  "chapter": 45,
+  "title": "Stomach, Finger, Lip, Face, Knee",
+  "label": "ch:mw-stomach-finger-lip-face-knee",
+  "canDo": "I can say the stomach, a finger, a lip, the face, the mouth and a knee.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C45-godo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 45: i can say the stomach, a finger, a lip, the face, the mouth and a knee.",
+    "assesses": [
+      "MW-LEX-C45-BODY45-03",
+      "MW-LEX-C45-BODY45-04",
+      "MW-LEX-C45-BODY45-05"
+    ]
+  }
+}

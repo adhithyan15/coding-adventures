@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:a30fe3221b4dbf2a",
+  "lessonIds": [
+    "RU-C90-car-park",
+    "RU-C90-lift",
+    "RU-C90-north",
+    "RU-C90-south",
+    "RU-C90-east"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch90.txt",
+  "json": "russian/narration/ch90.json",
+  "textHash": "fnv1a64:ca91e7076eb37367",
+  "jsonHash": "fnv1a64:dc6d2c87495174e7",
+  "findings": []
+}

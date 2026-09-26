@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:80c60c2bda87ccdc",
+  "lessonIds": [
+    "GE-C110-neben",
+    "GE-C110-zwischen",
+    "GE-C110-hinter",
+    "GE-C110-u-bahn",
+    "GE-C110-strassenbahn"
+  ],
+  "tex": "german/book/chapters/ch110-next-to-between-behind-underground-tram.tex"
+}

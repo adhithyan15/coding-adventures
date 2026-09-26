@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:f646abd44558f5c4",
+  "lessonIds": [
+    "PA-C94-pagg",
+    "PA-C94-jutti",
+    "PA-C94-topi",
+    "PA-C94-kamiz",
+    "PA-C94-chhe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch94.txt",
+  "json": "punjabi/narration/ch94.json",
+  "textHash": "fnv1a64:fc4291553c344b13",
+  "jsonHash": "fnv1a64:e8fa2d833ad22f5b",
+  "findings": []
+}

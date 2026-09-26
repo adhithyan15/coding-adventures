@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C65-farda",
+    "language": "persian",
+    "chapter": 65,
+    "sequence": 3160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a2338c5e447a3a2"
+  },
+  "findings": []
+}

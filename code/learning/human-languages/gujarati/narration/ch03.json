@@ -4,11 +4,336 @@
   "chapter": 3,
   "title": "Nine Doorway Forms",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1d4665979c21232d",
+  "sourceHash": "fnv1a64:e74d5a3e1fb9865a",
   "lessons": [
     {
+      "id": "GU-C03-chhip",
+      "sequence": 62,
+      "title": "છીપ (chīp) — a seashell",
+      "headword": "છીપ",
+      "romanization": "chīp",
+      "gloss": "a seashell",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:3fb83a67a8ef7906",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Play the courtesy exchange once more: greet, answer yes or no, thank, and say goodbye."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: છીપ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "છીપ — chīp — \"a seashell\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: chīp. Look at its shape as you say it: the lessons that follow take pieces of it, છ (chha), ી (-ī) and, a little later, પ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chīp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chīp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chīp, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chīp*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a seashell\"? (છીપ, chīp.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C03-kan",
+      "sequence": 63,
+      "title": "કણ (kaṇ) — a grain",
+      "headword": "કણ",
+      "romanization": "kaṇ",
+      "gloss": "a grain",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:309b1535a3ecd173",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: કણ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કણ — kaṇ — \"a grain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: kaṇ. Look at its shape as you say it: the lessons that follow take pieces of it, ક and ણ (ṇa), and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a grain\"? (કણ, kaṇ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C03-shak",
+      "sequence": 64,
+      "title": "શક (śak) — a doubt",
+      "headword": "શક",
+      "romanization": "śak",
+      "gloss": "a doubt",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:ede219108cee797f",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: શક",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "શક — śak — \"a doubt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: śak. Look at its shape as you say it: the lessons that follow take pieces of it, શ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śak, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śak*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a doubt\"? (શક, śak.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GU-W03-ja",
-      "sequence": 61,
+      "sequence": 65,
       "title": "જ — the consonant ja",
       "headword": "જ",
       "romanization": "ja",
@@ -21,7 +346,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3cf3106b6c207e9c",
+      "sourceHash": "fnv1a64:3bc9aca30412eb80",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -131,7 +456,7 @@
     },
     {
       "id": "GU-W03-o-matra",
-      "sequence": 62,
+      "sequence": 66,
       "title": "ો (-o) — the attached vowel sign o",
       "headword": "ો",
       "romanization": "-o",
@@ -144,7 +469,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f5d037bec9b02079",
+      "sourceHash": "fnv1a64:36e8efe303c7e1f5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -254,7 +579,7 @@
     },
     {
       "id": "GU-W03-anusvara",
-      "sequence": 63,
+      "sequence": 67,
       "title": "ં (ṃ) — the nasal mark anusvara",
       "headword": "ં",
       "romanization": "ṃ",
@@ -267,7 +592,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:048d3a3ab924d8b5",
+      "sourceHash": "fnv1a64:e1ab3aa923711931",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -377,7 +702,7 @@
     },
     {
       "id": "GU-W03-ii-matra",
-      "sequence": 64,
+      "sequence": 68,
       "title": "ી (-ī) — the attached long-i vowel sign",
       "headword": "ી",
       "romanization": "-ī",
@@ -390,7 +715,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0497c5d0befca482",
+      "sourceHash": "fnv1a64:ed88b13a0374f782",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -500,7 +825,7 @@
     },
     {
       "id": "GU-W03-u-matra",
-      "sequence": 65,
+      "sequence": 69,
       "title": "ુ — the attached short-u vowel sign",
       "headword": "ુ",
       "romanization": "-u",
@@ -513,7 +838,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eb8ecc843e1427e3",
+      "sourceHash": "fnv1a64:ca4bbf08f0aab1ef",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -623,7 +948,7 @@
     },
     {
       "id": "GU-W03-chha",
-      "sequence": 66,
+      "sequence": 70,
       "title": "છ — the consonant chha",
       "headword": "છ",
       "romanization": "chha",
@@ -636,7 +961,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:70adcb6d5f355ca1",
+      "sourceHash": "fnv1a64:155c606d64a26b48",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -746,7 +1071,7 @@
     },
     {
       "id": "GU-W03-ka",
-      "sequence": 67,
+      "sequence": 71,
       "title": "ક — the consonant ka",
       "headword": "ક",
       "romanization": "ka",
@@ -759,7 +1084,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e7f34ff1a2f9ba36",
+      "sourceHash": "fnv1a64:5a3fa0b1a6bb70d7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -869,7 +1194,7 @@
     },
     {
       "id": "GU-W03-nna",
-      "sequence": 68,
+      "sequence": 72,
       "title": "ણ (ṇa) — the retroflex consonant nna",
       "headword": "ણ",
       "romanization": "ṇa",
@@ -882,7 +1207,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bad708aa4b957a16",
+      "sourceHash": "fnv1a64:6e9862d9743dd83f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -992,7 +1317,7 @@
     },
     {
       "id": "GU-W03-sha",
-      "sequence": 69,
+      "sequence": 73,
       "title": "શ — the consonant sha",
       "headword": "શ",
       "romanization": "sha",
@@ -1005,7 +1330,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4c1078577b59748f",
+      "sourceHash": "fnv1a64:1233c950a4c2203b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1180,7 +1505,7 @@
     },
     {
       "id": "GU-R03-doorway-three-r1",
-      "sequence": 70,
+      "sequence": 74,
       "title": "ક — ણ (ṇa) — શ (ka — retroflex nna — sha): the last three return",
       "headword": "ક — ણ — શ",
       "romanization": "ka — retroflex nna — sha",
@@ -1192,7 +1517,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:4a2fcfa3d9aedc1c",
+      "sourceHash": "fnv1a64:fd476c7a10185f0b",
       "notice": {
         "modality": "pen",
         "needs": [

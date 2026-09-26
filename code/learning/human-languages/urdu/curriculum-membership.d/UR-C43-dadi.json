@@ -1,0 +1,11 @@
+{
+  "id": "UR-C43-dadi",
+  "pathSegment": "UR-PATH-43-FAMILY43",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-43-FAMILY43",
+      "order": 4
+    }
+  ]
+}

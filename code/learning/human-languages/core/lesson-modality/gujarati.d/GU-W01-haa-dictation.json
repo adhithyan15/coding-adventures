@@ -3,7 +3,7 @@
     "id": "GU-W01-haa-dictation",
     "language": "gujarati",
     "chapter": 2,
-    "sequence": 45,
+    "sequence": 46,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:d39c96c50833bf9f",
+    "sourceHash": "fnv1a64:c90aac0e02fac3f8",
     "detachableSegments": [
       "Writing — short dictation"
     ],

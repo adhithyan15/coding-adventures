@@ -4,11 +4,11 @@
   "chapter": 29,
   "title": "The Time Words Reach the Page",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1f040aae83e531c4",
+  "sourceHash": "fnv1a64:8f50dd2102dbe1ca",
   "lessons": [
     {
       "id": "GU-C25-savaar",
-      "sequence": 1300,
+      "sequence": 1313,
       "title": "Savār reaches the page",
       "headword": "સવાર",
       "romanization": "savār",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:8806469075e6e7de",
+      "sourceHash": "fnv1a64:7f484f6c12cd28ca",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -127,7 +127,7 @@
     },
     {
       "id": "GU-C25-bapor",
-      "sequence": 1310,
+      "sequence": 1323,
       "title": "Bapor reaches the page",
       "headword": "બપોર",
       "romanization": "bapor",
@@ -138,7 +138,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:633a9fe06dc8d8ad",
+      "sourceHash": "fnv1a64:fa495e0681883a8f",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -246,7 +246,7 @@
     },
     {
       "id": "GU-C25-saanj",
-      "sequence": 1320,
+      "sequence": 1333,
       "title": "Sānj reaches the page",
       "headword": "સાંજ",
       "romanization": "sānj",
@@ -257,7 +257,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:bf825a9fe7068cbb",
+      "sourceHash": "fnv1a64:5bae5321fc7acd6f",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -365,7 +365,7 @@
     },
     {
       "id": "GU-C25-divas",
-      "sequence": 1330,
+      "sequence": 1343,
       "title": "Divas reaches the page",
       "headword": "દિવસ",
       "romanization": "divas",
@@ -376,7 +376,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:6aa644b1a0fced48",
+      "sourceHash": "fnv1a64:d7c5f55140c03d1e",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -484,7 +484,7 @@
     },
     {
       "id": "GU-C25-mahino",
-      "sequence": 1340,
+      "sequence": 1353,
       "title": "Mahino reaches the page",
       "headword": "મહિનો",
       "romanization": "mahino",
@@ -495,7 +495,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:0b471dd68e374c86",
+      "sourceHash": "fnv1a64:300aa028e4ec14ca",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -603,7 +603,7 @@
     },
     {
       "id": "GU-C25-atyaare",
-      "sequence": 1350,
+      "sequence": 1363,
       "title": "Atyāre reaches the page",
       "headword": "અત્યારે",
       "romanization": "atyāre",
@@ -614,7 +614,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:12d6d9043296441d",
+      "sourceHash": "fnv1a64:9852165dffb4e8ef",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -722,7 +722,7 @@
     },
     {
       "id": "GU-C25-time-written",
-      "sequence": 1360,
+      "sequence": 1373,
       "title": "All eight time words, now on the page",
       "headword": "સવાર — બપોર — સાંજ — દિવસ — મહિનો — અત્યારે",
       "romanization": "savār — bapor — sānj — divas — mahino — atyāre",
@@ -733,7 +733,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:1e6cd2a1ea7f6173",
+      "sourceHash": "fnv1a64:571a18981a2ad93f",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -874,7 +874,7 @@
     },
     {
       "id": "GU-R25-time-written-r1",
-      "sequence": 1370,
+      "sequence": 1383,
       "title": "The written time words return at R1",
       "headword": "સવાર — બપોર — સાંજ — દિવસ — મહિનો — અત્યારે",
       "romanization": "savār — bapor — sānj — divas — mahino — atyāre",
@@ -885,7 +885,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:240c7818889c0857",
+      "sourceHash": "fnv1a64:37f22f1a07efcb3d",
       "notice": {
         "modality": "pen",
         "needs": [],

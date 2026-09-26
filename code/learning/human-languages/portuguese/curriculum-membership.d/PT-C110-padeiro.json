@@ -1,0 +1,11 @@
+{
+  "id": "PT-C110-padeiro",
+  "pathSegment": "PT-PATH-110-TRABALHO110",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-110-TRABALHO110",
+      "order": 4
+    }
+  ]
+}

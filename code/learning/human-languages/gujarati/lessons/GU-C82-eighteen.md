@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C82-eighteen
 spine_node: SPINE-RESPOND-BASIC
-sequence: 4170
+sequence: 4183
 chapter: 82
 type: word
 headword: "અઢાર"

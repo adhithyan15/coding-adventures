@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 87,
-  "sourceHash": "fnv1a64:10ead19f6b5cfc69",
+  "sourceHash": "fnv1a64:efbae4cbd11ad8f0",
   "lessonIds": [
     "GU-C87-dhoti",
     "GU-C87-shirt",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch87.txt",
   "json": "gujarati/narration/ch87.json",
   "textHash": "fnv1a64:1c41a8745bd327c5",
-  "jsonHash": "fnv1a64:be2c5c10ad198093",
+  "jsonHash": "fnv1a64:41d8a796998da9a6",
   "findings": []
 }

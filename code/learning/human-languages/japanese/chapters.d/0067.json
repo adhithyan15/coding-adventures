@@ -1,0 +1,19 @@
+{
+  "chapter": 67,
+  "title": "Hand fan, Folding fan, Charcoal, Well, Beach",
+  "label": "ch:ja-hand-fan-folding-fan-charcoal-well-beach",
+  "canDo": "I can say a hand fan, a folding fan, charcoal, a well and a beach.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "JA-C67-hama",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 67: i can say a hand fan, a folding fan, charcoal, a well and a beach.",
+    "assesses": [
+      "JA-LEX-C67-THINGS67-03",
+      "JA-LEX-C67-THINGS67-04",
+      "JA-LEX-C67-THINGS67-05"
+    ]
+  }
+}

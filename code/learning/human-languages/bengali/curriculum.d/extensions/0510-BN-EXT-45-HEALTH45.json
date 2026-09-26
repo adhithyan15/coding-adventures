@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-45-HEALTH45",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say happy, a doctor, a father, a son and a daughter.",
+  "prerequisites": []
+}

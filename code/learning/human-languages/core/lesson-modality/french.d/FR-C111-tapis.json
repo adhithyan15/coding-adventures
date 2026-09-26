@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C111-tapis",
+    "language": "french",
+    "chapter": 111,
+    "sequence": 4950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80054d4d252426f6"
+  },
+  "findings": []
+}

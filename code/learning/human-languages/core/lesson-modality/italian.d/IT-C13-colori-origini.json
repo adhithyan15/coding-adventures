@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C13-colori-origini",
+    "language": "italian",
+    "chapter": 13,
+    "sequence": 485,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a94f509b532329e4"
+  },
+  "findings": []
+}

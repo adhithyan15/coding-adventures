@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C76-aj",
+    "language": "urdu",
+    "chapter": 76,
+    "sequence": 3860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8d2d2357d01351b"
+  },
+  "findings": []
+}

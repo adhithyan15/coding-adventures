@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ML-C04-uduppu",
+    "language": "malayalam",
+    "chapter": 4,
+    "sequence": 217,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:87c1c5d1ac490fb6"
+  },
+  "findings": []
+}

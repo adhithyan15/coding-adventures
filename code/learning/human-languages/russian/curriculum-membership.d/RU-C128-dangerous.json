@@ -1,0 +1,11 @@
+{
+  "id": "RU-C128-dangerous",
+  "pathSegment": "RU-PATH-128-QUAL128",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-128-QUAL128",
+      "order": 2
+    }
+  ]
+}

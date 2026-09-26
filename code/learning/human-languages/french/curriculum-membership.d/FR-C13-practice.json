@@ -1,11 +1,11 @@
 {
   "id": "FR-C13-practice",
   "pathSegment": "FR-PATH-015",
-  "pathOrder": 76,
+  "pathOrder": 64,
   "extensions": [
     {
       "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
-      "order": 76
+      "order": 64
     }
   ]
 }

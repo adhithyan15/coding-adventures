@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 114,
+  "sourceHash": "fnv1a64:fad34cd0a7d04944",
+  "lessonIds": [
+    "FR-C114-dentifrice",
+    "FR-C114-shampooing",
+    "FR-C114-peigne",
+    "FR-C114-poubelle",
+    "FR-C114-balai"
+  ],
+  "tex": "french/book/chapters/ch114-toothpaste-shampoo-comb-bin-broom.tex"
+}

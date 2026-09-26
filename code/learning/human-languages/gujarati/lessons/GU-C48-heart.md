@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C48-heart
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2450
+sequence: 2463
 chapter: 48
 type: word
 headword: "હૃદય"

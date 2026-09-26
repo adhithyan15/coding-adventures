@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-42-HEALTH42",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say hunger, happy, sad, a father and dad.",
+  "prerequisites": []
+}

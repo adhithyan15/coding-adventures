@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:ea3759790ad5ae36",
+  "lessonIds": [
+    "RU-C103-hat",
+    "RU-C103-jacket",
+    "RU-C103-shirt",
+    "RU-C103-trousers",
+    "RU-C103-dress"
+  ],
+  "tex": "russian/book/chapters/ch103-hat-jacket-shirt-trousers-dress.tex"
+}

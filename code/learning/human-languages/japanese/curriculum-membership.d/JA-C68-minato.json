@@ -1,0 +1,11 @@
+{
+  "id": "JA-C68-minato",
+  "pathSegment": "JA-PATH-68-THINGS68",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-68-THINGS68",
+      "order": 3
+    }
+  ]
+}

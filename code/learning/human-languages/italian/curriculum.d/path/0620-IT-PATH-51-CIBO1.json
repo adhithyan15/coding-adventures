@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-51-CIBO1",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "IT-EXT-51-CIBO1"
+  ],
+  "after": []
+}

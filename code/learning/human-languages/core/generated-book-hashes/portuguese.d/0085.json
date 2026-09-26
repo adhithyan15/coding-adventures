@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:d2e2705d9615cb83",
+  "lessonIds": [
+    "PT-C85-aeroporto",
+    "PT-C85-paragem",
+    "PT-C85-correios",
+    "PT-C85-cinema",
+    "PT-C85-camara-municipal"
+  ],
+  "tex": "portuguese/book/chapters/ch85-airport-stop-post-office-cinema-town-hall.tex"
+}

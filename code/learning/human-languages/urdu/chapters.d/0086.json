@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "Seventy, Eighty, Ninety, World, Colour",
+  "label": "ch:ur-seventy-eighty-ninety-world-colour",
+  "canDo": "I can say seventy, eighty, ninety, the world and a colour.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C86-rang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can say seventy, eighty, ninety, the world and a colour.",
+    "assesses": [
+      "UR-LEX-C86-NUMBERS86-03",
+      "UR-LEX-C86-NUMBERS86-04",
+      "UR-LEX-C86-NUMBERS86-05"
+    ]
+  }
+}

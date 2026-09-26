@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C109-ouest",
+    "language": "french",
+    "chapter": 109,
+    "sequence": 4880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ef061bbda8b87ac"
+  },
+  "findings": []
+}

@@ -9,17 +9,17 @@ type: writing
 headword: "ಓ"
 gloss: the single character ಓ — recognised inside words you already say
 romanization: "ō"
-prerequisites: [KA-S130-letter-ii]
+prerequisites: [KA-S130-letter-ii, KA-C29-oota]
 sounds: []
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [KA-SCRIPT-RECOG-130]
+  knowledge: [KA-SCRIPT-RECOG-130, KA-LEX-ANCHOR-OOTA]
 introduces:
   knowledge: [KA-SCRIPT-RECOG-125]
 practises:
-  knowledge: [KA-SCRIPT-RECOG-130, KA-SCRIPT-RECOG-125]
+  knowledge: [KA-SCRIPT-RECOG-130, KA-SCRIPT-RECOG-125, KA-LEX-ANCHOR-OOTA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,7 +31,7 @@ reviews_of: [KA-S130-letter-ii]
 # ಓ — one character, met inside a word you already say
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-130] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-130, KA-LEX-ANCHOR-OOTA] -->
 
 [PAUSE 1s] Before the new one: ಈ — what sound does it carry, and what is
 its riding half?

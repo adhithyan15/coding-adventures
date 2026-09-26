@@ -3,7 +3,7 @@
     "id": "GU-R18-majaa-r4",
     "language": "gujarati",
     "chapter": 22,
-    "sequence": 830,
+    "sequence": 843,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:456c32b6271daada",
+    "sourceHash": "fnv1a64:9fd540f6ac677c28",
     "detachableSegments": [
       "Writing — from sound"
     ]

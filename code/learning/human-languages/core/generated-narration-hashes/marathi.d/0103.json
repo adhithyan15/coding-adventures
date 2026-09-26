@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:1cadfecf08909848",
+  "lessonIds": [
+    "MR-C103-mungi",
+    "MR-C103-badak",
+    "MR-C103-nava",
+    "MR-C103-juna",
+    "MR-C103-vait",
+    "MR-R103-first-pass-food-the-home-and-school",
+    "MR-R103-second-pass-nature-and-animals"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch103.txt",
+  "json": "marathi/narration/ch103.json",
+  "textHash": "fnv1a64:ba16809107282558",
+  "jsonHash": "fnv1a64:8b7e82804ff64cb7",
+  "findings": []
+}

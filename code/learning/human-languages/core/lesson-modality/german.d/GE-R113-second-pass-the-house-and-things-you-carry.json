@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-R113-second-pass-the-house-and-things-you-carry",
+    "language": "german",
+    "chapter": 113,
+    "sequence": 4510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b92c1f832ff24db8"
+  },
+  "findings": []
+}

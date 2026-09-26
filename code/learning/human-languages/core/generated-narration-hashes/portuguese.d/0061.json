@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:88bbe56402571791",
+  "lessonIds": [
+    "PT-C61-passaro",
+    "PT-C61-rato",
+    "PT-C61-lobo",
+    "PT-C61-urso",
+    "PT-C61-raposa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch61.txt",
+  "json": "portuguese/narration/ch61.json",
+  "textHash": "fnv1a64:63d85809ccf0d58a",
+  "jsonHash": "fnv1a64:690c61d24fe1d217",
+  "findings": []
+}

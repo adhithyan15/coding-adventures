@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C90-birthday
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 4570
+sequence: 4583
 chapter: 90
 type: word
 headword: "જન્મદિવસ"

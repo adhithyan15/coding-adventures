@@ -1,0 +1,11 @@
+{
+  "id": "JA-C61-kushi",
+  "pathSegment": "JA-PATH-61-WORLD61",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-61-WORLD61",
+      "order": 2
+    }
+  ]
+}

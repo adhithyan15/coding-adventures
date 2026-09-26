@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:f2c27e01fd5e5d40",
+  "lessonIds": [
+    "PT-C112-cliente",
+    "PT-C112-chefe",
+    "PT-C112-turma",
+    "PT-C112-aula",
+    "PT-C112-exame"
+  ],
+  "tex": "portuguese/book/chapters/ch112-customer-boss-class-lesson-exam.tex"
+}

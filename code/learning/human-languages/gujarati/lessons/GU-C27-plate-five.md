@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C27-plate-five
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1510
+sequence: 1523
 chapter: 31
 type: practice
 headword: ભાત — દાળ — શાક — તેલ — કેરી

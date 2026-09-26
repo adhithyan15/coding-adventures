@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C49-thirst
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2530
+sequence: 2543
 chapter: 49
 type: word
 headword: "તરસ"

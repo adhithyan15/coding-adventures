@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C57-coin
 spine_node: SPINE-COURTESY-THANK
-sequence: 2930
+sequence: 2943
 chapter: 57
 type: word
 headword: "સિક્કો"

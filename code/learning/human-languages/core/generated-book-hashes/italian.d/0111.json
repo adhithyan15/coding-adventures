@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:a8aec93ce420f794",
+  "lessonIds": [
+    "IT-C111-infermiera",
+    "IT-C111-cuoco",
+    "IT-C111-poliziotto",
+    "IT-C111-commesso",
+    "IT-C111-contadino"
+  ],
+  "tex": "italian/book/chapters/ch111-nurse-cook-police-officer-shop-assistant-farmer.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C89-sangit",
+    "language": "marwadi",
+    "chapter": 89,
+    "sequence": 5770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:41314b38babd19a3"
+  },
+  "findings": []
+}

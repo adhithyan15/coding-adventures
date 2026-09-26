@@ -3,7 +3,7 @@
     "id": "GU-C31-maaf",
     "language": "gujarati",
     "chapter": 35,
-    "sequence": 1810,
+    "sequence": 1823,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:26976c9b5aeccc92"
+    "sourceHash": "fnv1a64:8f91140210a74924"
   },
   "findings": []
 }

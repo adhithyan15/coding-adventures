@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-60-GEFUEHLE1",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say healthy, thirst, hunger, sad and happy.",
+  "prerequisites": []
+}

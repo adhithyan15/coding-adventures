@@ -1,0 +1,11 @@
+{
+  "id": "UR-C68-bakri",
+  "pathSegment": "UR-PATH-68-ANIMALS68",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-68-ANIMALS68",
+      "order": 0
+    }
+  ]
+}

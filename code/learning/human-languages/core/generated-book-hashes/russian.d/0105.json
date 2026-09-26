@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:04effa11aef03933",
+  "lessonIds": [
+    "RU-C105-flour",
+    "RU-C105-chocolate",
+    "RU-C105-biscuits",
+    "RU-C105-sandwich",
+    "RU-C105-sauce"
+  ],
+  "tex": "russian/book/chapters/ch105-flour-chocolate-biscuits-sandwich-sauce.tex"
+}

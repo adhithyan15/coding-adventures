@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: [IT-ETYMON-NERO-BIANCO-02, IT-ETYMON-NERO-BIANCO-03, IT-ETYMON-NERO-BIANCO-04]
 introduces:
-  knowledge: [IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04, IT-NOTICE-ROSSO-BLU-05]
+  knowledge: [IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: [IT-CULTURE-AZZURRI-NATIONAL-TEAMS-01]
 practises:
-  knowledge: [IT-ETYMON-NERO-BIANCO-02, IT-ETYMON-NERO-BIANCO-03, IT-ETYMON-NERO-BIANCO-04, IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04, IT-NOTICE-ROSSO-BLU-05]
+  knowledge: [IT-ETYMON-NERO-BIANCO-02, IT-ETYMON-NERO-BIANCO-03, IT-ETYMON-NERO-BIANCO-04, IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -73,19 +73,8 @@ English **azure**.
 Italy's national teams are **gli Azzurri**, "the blue ones" — named, at the end of
 a very long chain, after a **blue stone mined in Afghanistan**.
 
-## What you've built: the colour paths
-<!-- hl-knowledge: introduces=[IT-NOTICE-ROSSO-BLU-05]; assesses=[] -->
-
-| Italian | source |
-|---|---|
-| nero | Latin *niger* |
-| **bianco** | **Germanic** *blank* |
-| rosso | Latin *russus* (ancient PIE root) |
-| **blu** | **Germanic** *blāo* |
-| **azzurro** | **Arabic** *lāzaward* |
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-NERO-BIANCO-02, IT-ETYMON-NERO-BIANCO-03, IT-ETYMON-NERO-BIANCO-04, IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04, IT-NOTICE-ROSSO-BLU-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-NERO-BIANCO-02, IT-ETYMON-NERO-BIANCO-03, IT-ETYMON-NERO-BIANCO-04, IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "rosso, blu, azzurro"]
@@ -94,7 +83,7 @@ a very long chain, after a **blue stone mined in Afghanistan**.
 - [YOU SAY: "gli Azzurri" — and think of the stone]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-NERO-BIANCO-02, IT-ETYMON-NERO-BIANCO-03, IT-ETYMON-NERO-BIANCO-04, IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04, IT-NOTICE-ROSSO-BLU-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[IT-ETYMON-NERO-BIANCO-02, IT-ETYMON-NERO-BIANCO-03, IT-ETYMON-NERO-BIANCO-04, IT-ETYMON-ROSSO-BLU-02, IT-ETYMON-ROSSO-BLU-03, IT-ETYMON-ROSSO-BLU-04] -->
 
 [PAUSE 3s] Is *rosso* related to English *red* by borrowing or descent?
 (**Descent** — PIE ***h₁rewdʰ-***.) Which two Italian colours are Germanic loans?

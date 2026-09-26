@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 66,
+  "sourceHash": "fnv1a64:27adba31c3645523",
+  "lessonIds": [
+    "AR-C66-aruzz",
+    "AR-C66-fakiha",
+    "AR-C66-tuffaha",
+    "AR-C66-mawz",
+    "AR-C66-batatis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch66.txt",
+  "json": "arabic/narration/ch66.json",
+  "textHash": "fnv1a64:f7346341b1d39832",
+  "jsonHash": "fnv1a64:3f8ca459ef288e1c",
+  "findings": []
+}

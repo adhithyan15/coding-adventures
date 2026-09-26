@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:12706d618842d3f4",
+  "lessonIds": [
+    "PA-C67-nashta",
+    "PA-C67-anda",
+    "PA-C67-ghar",
+    "PA-C67-khirki",
+    "PA-C67-kursi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch67.txt",
+  "json": "punjabi/narration/ch67.json",
+  "textHash": "fnv1a64:18ae108f394f558d",
+  "jsonHash": "fnv1a64:1865393c1cf6d2f2",
+  "findings": []
+}

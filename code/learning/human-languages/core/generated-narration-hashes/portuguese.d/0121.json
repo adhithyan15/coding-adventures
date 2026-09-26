@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:422c50103dc566da",
+  "lessonIds": [
+    "PT-C121-lilas",
+    "PT-C121-roxo",
+    "PT-C121-castanho",
+    "PT-C121-ocupado",
+    "PT-C121-livre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch121.txt",
+  "json": "portuguese/narration/ch121.json",
+  "textHash": "fnv1a64:4dba71cdad436d33",
+  "jsonHash": "fnv1a64:41ca99444825e9c6",
+  "findings": []
+}

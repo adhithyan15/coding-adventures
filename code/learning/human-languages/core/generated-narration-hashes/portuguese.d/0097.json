@@ -1,0 +1,19 @@
+{
+  "language": "portuguese",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:90060fefefd9fe0f",
+  "lessonIds": [
+    "PT-C97-panela",
+    "PT-C97-frigideira",
+    "PT-C97-balde",
+    "PT-C97-corda",
+    "PT-C97-prego"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "portuguese/narration/ch97.txt",
+  "json": "portuguese/narration/ch97.json",
+  "textHash": "fnv1a64:3f162bf624500490",
+  "jsonHash": "fnv1a64:18115cf61ec7cf71",
+  "findings": []
+}

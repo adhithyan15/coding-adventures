@@ -1,0 +1,11 @@
+{
+  "id": "UR-C69-richh",
+  "pathSegment": "UR-PATH-69-ANIMALS69",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-69-ANIMALS69",
+      "order": 3
+    }
+  ]
+}

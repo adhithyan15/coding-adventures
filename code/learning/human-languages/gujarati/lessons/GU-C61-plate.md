@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C61-plate
 spine_node: SPINE-COURTESY-THANK
-sequence: 3090
+sequence: 3103
 chapter: 61
 type: word
 headword: "થાળી"

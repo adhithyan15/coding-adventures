@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "Skirt, Coat, Shoes, Socks, Blouse",
+  "label": "ch:it-skirt-coat-shoes-socks-blouse",
+  "canDo": "I can say a skirt, a coat, shoes, socks and a blouse.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C104-camicetta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can say a skirt, a coat, shoes, socks and a blouse.",
+    "assesses": [
+      "IT-LEX-C104-VESTITI104-03",
+      "IT-LEX-C104-VESTITI104-04",
+      "IT-LEX-C104-VESTITI104-05"
+    ]
+  }
+}

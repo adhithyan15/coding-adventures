@@ -3,7 +3,7 @@
     "id": "GU-C54-suvu",
     "language": "gujarati",
     "chapter": 54,
-    "sequence": 2770,
+    "sequence": 2783,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:829942be98848bb3"
+    "sourceHash": "fnv1a64:18e7fdd266446da1"
   },
   "findings": []
 }

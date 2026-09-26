@@ -8,20 +8,20 @@ type: writing
 headword: "ك، ر"
 gloss: two more letters — kāf (k), and rā (r), another non-joiner like alif
 romanization: "kāf, rā"
-prerequisites: [AR-W07-hook-family-ha-kha]
+prerequisites: [AR-W07-hook-family-ha-kha, AR-C03-haajj]
 sounds: [arabic-kaf, arabic-ra]
 roots: [phoenician-kaph, phoenician-resh]
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [AR-LEX-ANCHOR-HAAJJ]
 introduces:
   knowledge: [AR-CONCEPT-W08-KAF-AND-RA-01, AR-CONCEPT-W08-KAF-AND-RA-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-CONCEPT-W08-KAF-AND-RA-01, AR-CONCEPT-W08-KAF-AND-RA-02]
+  knowledge: [AR-CONCEPT-W08-KAF-AND-RA-01, AR-CONCEPT-W08-KAF-AND-RA-02, AR-LEX-ANCHOR-HAAJJ]
 skills: [speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -33,7 +33,7 @@ reviews_of: [AR-W07-hook-family-ha-kha, AR-W00-alif-mim-salam]
 # ك and ر — an angular k, and an r that won't hold hands
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-LEX-ANCHOR-HAAJJ] -->
 
 [PAUSE 2s] Two more shapes, and then — next lesson — you can write **خير**. Meet
 **ك** (*kāf*, "k") and **ر** (*rā*, "r"). One is angular and new; the other

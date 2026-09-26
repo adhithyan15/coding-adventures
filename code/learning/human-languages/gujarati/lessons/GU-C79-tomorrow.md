@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C79-tomorrow
 spine_node: SPINE-TAKE-LEAVE
-sequence: 4030
+sequence: 4043
 chapter: 79
 type: word
 headword: "આવતીકાલ"

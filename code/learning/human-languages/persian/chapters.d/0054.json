@@ -1,0 +1,19 @@
+{
+  "chapter": 54,
+  "title": "Soil, Wind, Desert, Dog, Cat",
+  "label": "ch:fa-soil-wind-desert-dog-cat",
+  "canDo": "I can say soil, wind, a desert, a dog and a cat.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FA-C54-gorbe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 54: i can say soil, wind, a desert, a dog and a cat.",
+    "assesses": [
+      "FA-LEX-C54-NATURE54-03",
+      "FA-LEX-C54-NATURE54-04",
+      "FA-LEX-C54-NATURE54-05"
+    ]
+  }
+}

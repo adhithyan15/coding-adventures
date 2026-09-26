@@ -1,0 +1,19 @@
+{
+  "chapter": 119,
+  "title": "Beef, Vegetables, Mushroom, Beans, Cucumber",
+  "label": "ch:fr-beef-vegetables-mushroom-beans-cucumber",
+  "canDo": "I can name beef, vegetables, a mushroom, beans, a cucumber.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C119-concombre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 119: i can name beef, vegetables, a mushroom, beans, a cucumber.",
+    "assesses": [
+      "FR-LEX-C119-REPAS71-03",
+      "FR-LEX-C119-REPAS71-04",
+      "FR-LEX-C119-REPAS71-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 29,
+  "title": "To stand, To cry, To live, To rest, To enjoy",
+  "label": "ch:ja-to-stand-to-cry-to-live-to-rest-to-enjoy",
+  "canDo": "I can say to stand, to cry, to live, to rest and to enjoy.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "JA-C29-tanoshimu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 29: i can say to stand, to cry, to live, to rest and to enjoy.",
+    "assesses": [
+      "JA-LEX-C29-VERBS29-03",
+      "JA-LEX-C29-VERBS29-04",
+      "JA-LEX-C29-VERBS29-05"
+    ]
+  }
+}

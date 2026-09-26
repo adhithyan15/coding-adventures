@@ -1,0 +1,19 @@
+{
+  "chapter": 96,
+  "title": "Belt, Six, Seven, Eight, Nine",
+  "label": "ch:ar-belt-six-seven-eight-nine",
+  "canDo": "I can say a belt, six, seven, eight and nine.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "AR-C96-tisa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 96: i can say a belt, six, seven, eight and nine.",
+    "assesses": [
+      "AR-LEX-C96-CLOTHES96-03",
+      "AR-LEX-C96-CLOTHES96-04",
+      "AR-LEX-C96-CLOTHES96-05"
+    ]
+  }
+}

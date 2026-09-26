@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C34-kemke
 spine_node: SPINE-SAY-WHY
-sequence: 1930
+sequence: 1943
 chapter: 38
 type: word
 headword: કેમકે

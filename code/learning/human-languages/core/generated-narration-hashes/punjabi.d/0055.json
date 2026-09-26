@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:677be0d7ecabab30",
+  "lessonIds": [
+    "PA-C55-patni",
+    "PA-C55-bachcha",
+    "PA-C55-munda",
+    "PA-C55-kuri",
+    "PA-C55-admi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch55.txt",
+  "json": "punjabi/narration/ch55.json",
+  "textHash": "fnv1a64:02bb1a792b10e136",
+  "jsonHash": "fnv1a64:19e0dddbbb1ec2ef",
+  "findings": []
+}

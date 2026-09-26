@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C123-policier",
+    "language": "french",
+    "chapter": 123,
+    "sequence": 5620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c71f5fe42ed9c14f"
+  },
+  "findings": []
+}

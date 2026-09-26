@@ -1,0 +1,11 @@
+{
+  "id": "PT-C46-feijao",
+  "pathSegment": "PT-PATH-46-LEGUMES",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-46-LEGUMES",
+      "order": 4
+    }
+  ]
+}

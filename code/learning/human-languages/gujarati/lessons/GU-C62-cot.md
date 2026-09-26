@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C62-cot
 spine_node: SPINE-MEET-GREET
-sequence: 3150
+sequence: 3163
 chapter: 62
 type: word
 headword: "ખાટલો"

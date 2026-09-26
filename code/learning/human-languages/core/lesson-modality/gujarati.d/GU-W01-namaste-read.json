@@ -3,7 +3,7 @@
     "id": "GU-W01-namaste-read",
     "language": "gujarati",
     "chapter": 1,
-    "sequence": 11,
+    "sequence": 12,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:660a214aaaefebd5",
+    "sourceHash": "fnv1a64:ae0f368adea5d940",
     "detachableSegments": [
       "Script"
     ],

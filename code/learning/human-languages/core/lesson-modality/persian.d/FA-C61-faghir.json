@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C61-faghir",
+    "language": "persian",
+    "chapter": 61,
+    "sequence": 2940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e8a8fc7a3327bda"
+  },
+  "findings": []
+}

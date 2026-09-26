@@ -1,0 +1,21 @@
+{
+  "language": "german",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:65f99a7c9d523654",
+  "lessonIds": [
+    "GE-C132-fleissig",
+    "GE-C132-faul",
+    "GE-C132-wach",
+    "GE-C132-nett",
+    "GE-C132-freundlich",
+    "GE-R132-first-pass-describing-people-and-things",
+    "GE-R132-second-pass-more-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "german/narration/ch132.txt",
+  "json": "german/narration/ch132.json",
+  "textHash": "fnv1a64:834ba91ed8fb41f0",
+  "jsonHash": "fnv1a64:4899271f09c922f0",
+  "findings": []
+}

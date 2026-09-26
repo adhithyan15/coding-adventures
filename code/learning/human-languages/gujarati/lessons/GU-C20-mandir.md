@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C20-mandir
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 930
+sequence: 943
 delivery: script
 modality: pen
 modality_reason: The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation.

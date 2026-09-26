@@ -1,0 +1,19 @@
+{
+  "language": "arabic",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:48878f5626987277",
+  "lessonIds": [
+    "AR-C81-jamal",
+    "AR-C81-himar",
+    "AR-C81-dajaja",
+    "AR-C81-kabir",
+    "AR-C81-saghir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "arabic/narration/ch81.txt",
+  "json": "arabic/narration/ch81.json",
+  "textHash": "fnv1a64:30cf0ea81ae9b753",
+  "jsonHash": "fnv1a64:14c2eaaa67482a0f",
+  "findings": []
+}

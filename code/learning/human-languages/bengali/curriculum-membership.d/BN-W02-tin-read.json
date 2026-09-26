@@ -1,7 +1,7 @@
 {
   "id": "BN-W02-tin-read",
   "pathSegment": "BN-PATH-001",
-  "pathOrder": 63,
+  "pathOrder": 68,
   "extensions": [
     {
       "id": "BN-EXT-019-SCRIPT-PIECES-INTO-WORDS",

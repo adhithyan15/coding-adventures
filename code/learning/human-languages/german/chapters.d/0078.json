@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "Cupboard, Floor, Stairs, Mirror, Flat",
+  "label": "ch:ge-cupboard-floor-stairs-mirror-flat",
+  "canDo": "I can say a cupboard, the floor, the stairs, a mirror and a flat, an apartment.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "GE-C78-wohnung",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can say a cupboard, the floor, the stairs, a mirror and a flat, an apartment.",
+    "assesses": [
+      "GE-LEX-C78-HAUS3-03",
+      "GE-LEX-C78-HAUS3-04",
+      "GE-LEX-C78-HAUS3-05"
+    ]
+  }
+}

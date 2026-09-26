@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-C119-baleia",
+    "language": "portuguese",
+    "chapter": 119,
+    "sequence": 5870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ac7063d86c28102"
+  },
+  "findings": []
+}

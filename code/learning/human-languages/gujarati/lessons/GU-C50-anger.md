@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C50-anger
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2550
+sequence: 2563
 chapter: 50
 type: word
 headword: "ગુસ્સો"

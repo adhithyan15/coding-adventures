@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:1638faab195b2f4f",
+  "lessonIds": [
+    "IT-C91-dritto",
+    "IT-C91-davanti",
+    "IT-C91-dietro",
+    "IT-C91-accanto",
+    "IT-C91-tra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch91.txt",
+  "json": "italian/narration/ch91.json",
+  "textHash": "fnv1a64:24a27cade619016f",
+  "jsonHash": "fnv1a64:d3f4471474ba0495",
+  "findings": []
+}

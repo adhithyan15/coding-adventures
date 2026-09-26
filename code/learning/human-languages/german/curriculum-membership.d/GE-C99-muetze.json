@@ -1,0 +1,11 @@
+{
+  "id": "GE-C99-muetze",
+  "pathSegment": "GE-PATH-99-KLEIDUNG",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-99-KLEIDUNG",
+      "order": 3
+    }
+  ]
+}

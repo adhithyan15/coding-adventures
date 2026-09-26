@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:80c5006b41573709",
+  "lessonIds": [
+    "MW-C81-dur",
+    "MW-C81-najik",
+    "MW-C81-may",
+    "MW-C81-barai",
+    "MW-C81-niche"
+  ],
+  "tex": "marwadi/book/chapters/ch81-far-near-inside-outside-below.tex"
+}

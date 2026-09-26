@@ -1,0 +1,11 @@
+{
+  "id": "IT-C79-sopra",
+  "pathSegment": "IT-PATH-79-QUANDO",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-79-QUANDO",
+      "order": 4
+    }
+  ]
+}

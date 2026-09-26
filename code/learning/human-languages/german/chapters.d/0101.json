@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Thirty, Forty, Fifty, Hundred, Thousand",
+  "label": "ch:ge-thirty-forty-fifty-hundred-thousand",
+  "canDo": "I can say thirty, forty, fifty, a hundred and a thousand.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "GE-C101-tausend",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say thirty, forty, fifty, a hundred and a thousand.",
+    "assesses": [
+      "GE-LEX-C101-ZAHLEN-03",
+      "GE-LEX-C101-ZAHLEN-04",
+      "GE-LEX-C101-ZAHLEN-05"
+    ]
+  }
+}

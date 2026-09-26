@@ -2,27 +2,27 @@
 schema_version: 2
 id: MR-W08-ssa
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 92
+sequence: 122
 delivery: script
 chapter: 8
 type: writing
 headword: ष
 romanization: "ṣa"
 gloss: retroflex sha — a third sibilant, written apart and mostly said like sha
-prerequisites: [MR-W08-sha]
+prerequisites: [MR-W08-sha, MR-C08-shesh]
 sounds: [retroflex-sha]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-SCRIPT-SHA-01, MR-SCRIPT-LA-01]
+  knowledge: [MR-SCRIPT-SHA-01, MR-SCRIPT-LA-01, MR-LEX-ANCHOR-SHESH]
 introduces:
   knowledge: [MR-SCRIPT-SSA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-SSA-01, MR-SCRIPT-SHA-01, MR-SCRIPT-LA-01]
+  knowledge: [MR-SCRIPT-SSA-01, MR-SCRIPT-SHA-01, MR-SCRIPT-LA-01, MR-LEX-ANCHOR-SHESH]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-W08-sha, MR-W08-la]
 # ष — the third sibilant, kept on the page
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-ANCHOR-SHESH] -->
 
 Marathi writes three sibilants and says two. This is the third one.
 

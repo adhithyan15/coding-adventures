@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-69-CUISINE21",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a carrot, a cake, a soup, honey, oil.",
+  "prerequisites": []
+}

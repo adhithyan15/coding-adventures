@@ -1,0 +1,19 @@
+{
+  "chapter": 55,
+  "title": "Grandmother, Uncle, Uncle, Husband, Wife",
+  "label": "ch:ar-grandmother-uncle-uncle-husband-wife",
+  "canDo": "I can say a grandmother, an uncle, an uncle, a husband and a wife.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "AR-C55-zawja",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 55: i can say a grandmother, an uncle, an uncle, a husband and a wife.",
+    "assesses": [
+      "AR-LEX-C55-FAMILY55-03",
+      "AR-LEX-C55-FAMILY55-04",
+      "AR-LEX-C55-FAMILY55-05"
+    ]
+  }
+}

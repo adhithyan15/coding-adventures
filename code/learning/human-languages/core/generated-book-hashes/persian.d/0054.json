@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:16a1b8600ac047b0",
+  "lessonIds": [
+    "FA-C54-khak",
+    "FA-C54-bad",
+    "FA-C54-biyaban",
+    "FA-C54-sag",
+    "FA-C54-gorbe"
+  ],
+  "tex": "persian/book/chapters/ch54-soil-wind-desert-dog-cat.tex"
+}

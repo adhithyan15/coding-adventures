@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C88-cinema",
+    "language": "russian",
+    "chapter": 88,
+    "sequence": 4410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d67d6a8da5b7858"
+  },
+  "findings": []
+}

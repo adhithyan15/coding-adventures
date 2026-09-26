@@ -1,0 +1,11 @@
+{
+  "id": "IT-C70-pecora",
+  "pathSegment": "IT-PATH-70-ANIMALI3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-70-ANIMALI3",
+      "order": 3
+    }
+  ]
+}

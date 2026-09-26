@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C71-bakri",
+    "language": "marwadi",
+    "chapter": 71,
+    "sequence": 4870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca8e14450086abb6"
+  },
+  "findings": []
+}

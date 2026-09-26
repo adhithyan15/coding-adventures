@@ -3,7 +3,7 @@
     "id": "GU-C55-randhvu",
     "language": "gujarati",
     "chapter": 55,
-    "sequence": 2790,
+    "sequence": 2803,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:02eb648981e4cab6"
+    "sourceHash": "fnv1a64:e54f0b153c4ac92f"
   },
   "findings": []
 }

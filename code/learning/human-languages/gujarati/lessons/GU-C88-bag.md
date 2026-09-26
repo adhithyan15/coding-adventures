@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C88-bag
 spine_node: SPINE-COURTESY-THANK
-sequence: 4470
+sequence: 4483
 chapter: 88
 type: word
 headword: "થેલી"

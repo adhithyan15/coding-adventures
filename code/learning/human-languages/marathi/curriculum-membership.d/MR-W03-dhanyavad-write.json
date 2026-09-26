@@ -1,11 +1,11 @@
 {
   "id": "MR-W03-dhanyavad-write",
   "pathSegment": "MR-PATH-002",
-  "pathOrder": 13,
+  "pathOrder": 17,
   "extensions": [
     {
       "id": "MR-EXT-021-SCRIPT-DOORWAY",
-      "order": 12
+      "order": 16
     }
   ]
 }

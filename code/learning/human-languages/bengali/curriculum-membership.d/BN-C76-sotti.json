@@ -1,0 +1,11 @@
+{
+  "id": "BN-C76-sotti",
+  "pathSegment": "BN-PATH-76-ADJ76",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-76-ADJ76",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C39-hot",
+  "pathSegment": "UR-PATH-39-BODY39",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-39-BODY39",
+      "order": 3
+    }
+  ]
+}

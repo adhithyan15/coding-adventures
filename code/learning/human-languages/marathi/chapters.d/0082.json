@@ -1,0 +1,19 @@
+{
+  "chapter": 82,
+  "title": "To throw, To fly, To swim, To teach, To make",
+  "label": "ch:mr-to-throw-to-fly-to-swim-to-teach-to-make",
+  "canDo": "I can say to throw, to fly, to swim, to teach and to make.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C82-banavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 82: i can say to throw, to fly, to swim, to teach and to make.",
+    "assesses": [
+      "MR-LEX-C82-VERBS82-03",
+      "MR-LEX-C82-VERBS82-04",
+      "MR-LEX-C82-VERBS82-05"
+    ]
+  }
+}

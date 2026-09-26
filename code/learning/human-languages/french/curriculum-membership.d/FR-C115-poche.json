@@ -1,0 +1,11 @@
+{
+  "id": "FR-C115-poche",
+  "pathSegment": "FR-PATH-115-MAISON67",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-115-MAISON67",
+      "order": 4
+    }
+  ]
+}

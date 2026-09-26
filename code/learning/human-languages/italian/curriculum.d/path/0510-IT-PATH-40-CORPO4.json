@@ -1,0 +1,9 @@
+{
+  "id": "IT-PATH-40-CORPO4",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "IT-EXT-40-CORPO4"
+  ],
+  "after": []
+}

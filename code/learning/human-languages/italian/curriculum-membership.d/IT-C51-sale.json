@@ -1,0 +1,11 @@
+{
+  "id": "IT-C51-sale",
+  "pathSegment": "IT-PATH-51-CIBO1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "IT-EXT-51-CIBO1",
+      "order": 3
+    }
+  ]
+}

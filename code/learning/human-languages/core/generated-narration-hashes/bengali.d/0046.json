@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:3af8b2da1f24798c",
+  "lessonIds": [
+    "BN-C46-dadu",
+    "BN-C46-didima",
+    "BN-C46-kaka",
+    "BN-C46-mama",
+    "BN-C46-mashi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch46.txt",
+  "json": "bengali/narration/ch46.json",
+  "textHash": "fnv1a64:6104ecfdd8b29ed2",
+  "jsonHash": "fnv1a64:86e2d377bef94d40",
+  "findings": []
+}

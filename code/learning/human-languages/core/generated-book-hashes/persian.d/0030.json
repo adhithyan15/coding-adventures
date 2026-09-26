@@ -1,0 +1,13 @@
+{
+  "language": "persian",
+  "chapter": 30,
+  "sourceHash": "fnv1a64:78d089de7edad4a2",
+  "lessonIds": [
+    "FA-C30-ghalb",
+    "FA-C30-bazu",
+    "FA-C30-tab",
+    "FA-C30-bimarestan",
+    "FA-C30-bimar"
+  ],
+  "tex": "persian/book/chapters/ch30-heart-arm-fever-hospital-ill.tex"
+}

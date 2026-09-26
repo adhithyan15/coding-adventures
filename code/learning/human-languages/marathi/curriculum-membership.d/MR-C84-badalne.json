@@ -1,0 +1,11 @@
+{
+  "id": "MR-C84-badalne",
+  "pathSegment": "MR-PATH-84-VERBS84",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-84-VERBS84",
+      "order": 1
+    }
+  ]
+}

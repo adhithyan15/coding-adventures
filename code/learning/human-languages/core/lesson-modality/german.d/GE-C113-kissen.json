@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C113-kissen",
+    "language": "german",
+    "chapter": 113,
+    "sequence": 4490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c6465f0e20cc6b2"
+  },
+  "findings": []
+}

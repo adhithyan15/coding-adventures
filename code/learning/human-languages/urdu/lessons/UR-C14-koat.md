@@ -9,7 +9,7 @@ headword: کوٹ
 romanization: koṭ
 gloss: coat — a modern English loan, closing a chapter that showed loans running in both directions
 concept_tag: UR-COAT
-prerequisites: [UR-C14-topi]
+prerequisites: [UR-C14-topi, UR-C05-khuda-hafiz-more]
 sounds: [rtl, retroflex-t]
 roots: [english-coat]
 etymology_hook: koṭ is borrowed directly from English coat, a modern loan sitting beside the older Sanskrit-derived کوٹ meaning "fort," an unrelated homograph. This chapter has now shown every direction a word can travel -- Persian and Arabic into Urdu (قمیض), Urdu out into English (ٹوپی), and English straight into Urdu (کوٹ) -- three loans, three directions, in four lessons.

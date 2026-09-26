@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Hot, Slowly, Difficult, Expensive, Cheap",
+  "label": "ch:ur-hot-slowly-difficult-expensive-cheap",
+  "canDo": "I can say hot, slowly, difficult, expensive and cheap.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C71-sasta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: i can say hot, slowly, difficult, expensive and cheap.",
+    "assesses": [
+      "UR-LEX-C71-ADJ71-03",
+      "UR-LEX-C71-ADJ71-04",
+      "UR-LEX-C71-ADJ71-05"
+    ]
+  }
+}

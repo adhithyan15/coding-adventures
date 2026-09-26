@@ -1,0 +1,11 @@
+{
+  "id": "PT-C87-semaforo",
+  "pathSegment": "PT-PATH-87-LUGARES87",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-87-LUGARES87",
+      "order": 3
+    }
+  ]
+}

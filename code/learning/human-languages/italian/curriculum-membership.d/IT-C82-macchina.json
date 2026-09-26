@@ -1,0 +1,11 @@
+{
+  "id": "IT-C82-macchina",
+  "pathSegment": "IT-PATH-82-CITTA2",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "IT-EXT-82-CITTA2",
+      "order": 4
+    }
+  ]
+}

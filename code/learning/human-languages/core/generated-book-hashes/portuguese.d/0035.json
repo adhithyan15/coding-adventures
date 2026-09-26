@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:e02d25d19d29dad1",
+  "lessonIds": [
+    "PT-C35-doenca",
+    "PT-C35-fome",
+    "PT-C35-sede",
+    "PT-C35-cansaco",
+    "PT-C35-alegria"
+  ],
+  "tex": "portuguese/book/chapters/ch35-illness-hunger-thirst-tiredness-joy.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PT-R103-second-pass-clothes-and-food",
+    "language": "portuguese",
+    "chapter": 103,
+    "sequence": 4960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d649e01557c0e97"
+  },
+  "findings": []
+}

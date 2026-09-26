@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C137-oft",
+    "language": "german",
+    "chapter": 137,
+    "sequence": 5840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d549a5606110c6ea"
+  },
+  "findings": []
+}

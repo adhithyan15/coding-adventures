@@ -1,0 +1,11 @@
+{
+  "id": "PT-C110-cozinheiro",
+  "pathSegment": "PT-PATH-110-TRABALHO110",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-110-TRABALHO110",
+      "order": 1
+    }
+  ]
+}

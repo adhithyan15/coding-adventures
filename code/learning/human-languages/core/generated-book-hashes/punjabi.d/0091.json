@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:0c5859fe5c43ac31",
+  "lessonIds": [
+    "PA-C91-bass",
+    "PA-C91-pul",
+    "PA-C91-gurduara",
+    "PA-C91-mandar",
+    "PA-C91-hotal"
+  ],
+  "tex": "punjabi/book/chapters/ch91-bus-bridge-gurdwara-temple-hotel.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C28-tsukau",
+    "language": "japanese",
+    "chapter": 28,
+    "sequence": 2010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0aacc861c808746"
+  },
+  "findings": []
+}

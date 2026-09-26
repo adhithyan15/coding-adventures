@@ -4,11 +4,11 @@
   "chapter": 47,
   "title": "Finger, Throat and Tongue",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7539ef37ca6784f2",
+  "sourceHash": "fnv1a64:5fd7eb9753335c5a",
   "lessons": [
     {
       "id": "GU-C47-finger",
-      "sequence": 2390,
+      "sequence": 2403,
       "title": "આંગળી (ā̃gaḷī) — a finger",
       "headword": "આંગળી",
       "romanization": "ā̃gaḷī",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f83f3001bb565dd8",
+      "sourceHash": "fnv1a64:33c3e4ac2a33493d",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C47-throat",
-      "sequence": 2400,
+      "sequence": 2413,
       "title": "ગળું (gaḷũ) — the throat, the neck",
       "headword": "ગળું",
       "romanization": "gaḷũ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:352317c84713cb33",
+      "sourceHash": "fnv1a64:129cb7e3bfaff123",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C47-shoulder",
-      "sequence": 2410,
+      "sequence": 2423,
       "title": "ખભો (khabho) — a shoulder",
       "headword": "ખભો",
       "romanization": "khabho",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b8a6c1b22b23960",
+      "sourceHash": "fnv1a64:f2d2ced2b51ace52",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C47-lip",
-      "sequence": 2420,
+      "sequence": 2433,
       "title": "હોઠ (hoṭh) — a lip, the lips",
       "headword": "હોઠ",
       "romanization": "hoṭh",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f42d96c5f30600f1",
+      "sourceHash": "fnv1a64:a1a7589b49d101d5",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C47-tongue",
-      "sequence": 2430,
+      "sequence": 2443,
       "title": "જીભ (jībh) — the tongue",
       "headword": "જીભ",
       "romanization": "jībh",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73606db471f50a9e",
+      "sourceHash": "fnv1a64:0da864303e63547c",
       "notice": null,
       "blocks": [
         {

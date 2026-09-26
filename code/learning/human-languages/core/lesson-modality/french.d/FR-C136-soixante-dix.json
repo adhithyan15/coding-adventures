@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C136-soixante-dix",
+    "language": "french",
+    "chapter": 136,
+    "sequence": 6320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3ee5d784c84a9f6e"
+  },
+  "findings": []
+}

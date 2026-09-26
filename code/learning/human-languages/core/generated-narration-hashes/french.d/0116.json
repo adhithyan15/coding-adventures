@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:7408b50bb3f8cb64",
+  "lessonIds": [
+    "FR-C116-veste",
+    "FR-C116-cravate",
+    "FR-C116-ceinture",
+    "FR-C116-gants",
+    "FR-C116-echarpe",
+    "FR-R116-first-pass-getting-around-and-the-town",
+    "FR-R116-second-pass-the-house"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "french/narration/ch116.txt",
+  "json": "french/narration/ch116.json",
+  "textHash": "fnv1a64:d4beda32e84421c8",
+  "jsonHash": "fnv1a64:e9f0730b2916f31e",
+  "findings": []
+}

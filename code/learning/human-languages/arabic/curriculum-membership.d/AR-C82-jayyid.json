@@ -1,0 +1,11 @@
+{
+  "id": "AR-C82-jayyid",
+  "pathSegment": "AR-PATH-82-ADJ82",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-82-ADJ82",
+      "order": 2
+    }
+  ]
+}

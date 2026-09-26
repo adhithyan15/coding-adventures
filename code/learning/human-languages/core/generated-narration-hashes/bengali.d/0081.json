@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:cbd1b57c572f64cf",
+  "lessonIds": [
+    "BN-C81-kachhe",
+    "BN-C81-bhitore",
+    "BN-C81-baire",
+    "BN-C81-niche",
+    "BN-C81-samne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch81.txt",
+  "json": "bengali/narration/ch81.json",
+  "textHash": "fnv1a64:66125d416c38ccc5",
+  "jsonHash": "fnv1a64:7608507a7d7dae3a",
+  "findings": []
+}

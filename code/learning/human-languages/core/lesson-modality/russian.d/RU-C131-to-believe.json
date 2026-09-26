@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C131-to-believe",
+    "language": "russian",
+    "chapter": 131,
+    "sequence": 6880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c438877995938a47"
+  },
+  "findings": []
+}

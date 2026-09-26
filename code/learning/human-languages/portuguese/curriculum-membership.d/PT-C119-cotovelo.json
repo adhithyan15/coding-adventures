@@ -1,0 +1,11 @@
+{
+  "id": "PT-C119-cotovelo",
+  "pathSegment": "PT-PATH-119-ANIMAIS119",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-119-ANIMAIS119",
+      "order": 4
+    }
+  ]
+}

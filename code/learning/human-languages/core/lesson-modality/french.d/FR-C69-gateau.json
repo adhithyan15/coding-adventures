@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C69-gateau",
+    "language": "french",
+    "chapter": 69,
+    "sequence": 2820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e6b1c7c01fc748e"
+  },
+  "findings": []
+}

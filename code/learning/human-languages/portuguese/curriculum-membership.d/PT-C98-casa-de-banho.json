@@ -1,0 +1,11 @@
+{
+  "id": "PT-C98-casa-de-banho",
+  "pathSegment": "PT-PATH-98-CASA98",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-98-CASA98",
+      "order": 4
+    }
+  ]
+}

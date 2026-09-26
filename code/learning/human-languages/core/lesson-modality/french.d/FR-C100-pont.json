@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C100-pont",
+    "language": "french",
+    "chapter": 100,
+    "sequence": 4390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8724f2f66730140"
+  },
+  "findings": []
+}

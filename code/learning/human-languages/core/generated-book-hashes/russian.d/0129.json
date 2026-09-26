@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:915726d3255debe4",
+  "lessonIds": [
+    "RU-C129-soft",
+    "RU-C129-hard",
+    "RU-C129-round",
+    "RU-C129-wide",
+    "RU-C129-narrow"
+  ],
+  "tex": "russian/book/chapters/ch129-soft-hard-round-wide-narrow.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C65-envoyer",
+  "pathSegment": "FR-PATH-65-VERBES17",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-65-VERBES17",
+      "order": 2
+    }
+  ]
+}

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C70-yellow
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3570
+sequence: 3583
 chapter: 70
 type: word
 headword: "પીળો"

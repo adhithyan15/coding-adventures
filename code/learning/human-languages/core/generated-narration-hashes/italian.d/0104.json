@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:70ae87ed5c53c8de",
+  "lessonIds": [
+    "IT-C104-gonna",
+    "IT-C104-cappotto",
+    "IT-C104-scarpe",
+    "IT-C104-calzini",
+    "IT-C104-camicetta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch104.txt",
+  "json": "italian/narration/ch104.json",
+  "textHash": "fnv1a64:a0029c26642bf131",
+  "jsonHash": "fnv1a64:4d73e5d04c1ee10c",
+  "findings": []
+}

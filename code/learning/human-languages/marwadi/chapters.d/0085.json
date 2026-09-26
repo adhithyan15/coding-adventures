@@ -1,0 +1,19 @@
+{
+  "chapter": 85,
+  "title": "Sock, Pocket, Ring, Watch, Cap",
+  "label": "ch:mw-sock-pocket-ring-watch-cap",
+  "canDo": "I can say a sock, a pocket, a ring, a watch, a clock and a cap.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "MW-C85-topi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 85: i can say a sock, a pocket, a ring, a watch, a clock and a cap.",
+    "assesses": [
+      "MW-LEX-C85-CLOTHES85-03",
+      "MW-LEX-C85-CLOTHES85-04",
+      "MW-LEX-C85-CLOTHES85-05"
+    ]
+  }
+}

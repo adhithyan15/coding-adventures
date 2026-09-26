@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-72-HOME72",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a fork, a bottle, a door, a kitchen and a garden.",
+  "prerequisites": []
+}

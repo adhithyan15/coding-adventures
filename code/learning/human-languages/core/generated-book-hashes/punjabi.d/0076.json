@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:46454d98d10e5339",
+  "lessonIds": [
+    "PA-C76-samundar",
+    "PA-C76-agg",
+    "PA-C76-baraf",
+    "PA-C76-mimh",
+    "PA-C76-hava"
+  ],
+  "tex": "punjabi/book/chapters/ch76-sea-fire-snow-rain-wind.tex"
+}

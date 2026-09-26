@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:b34d6cc4589ecd15",
+  "lessonIds": [
+    "AR-C78-nar",
+    "AR-C78-thalj",
+    "AR-C78-rih",
+    "AR-C78-sama",
+    "AR-C78-hisan"
+  ],
+  "tex": "arabic/book/chapters/ch78-fire-snow-wind-sky-horse.tex"
+}

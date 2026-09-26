@@ -1,0 +1,11 @@
+{
+  "id": "MW-C67-chitthi",
+  "pathSegment": "MW-PATH-67-SCHOOL67",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-67-SCHOOL67",
+      "order": 1
+    }
+  ]
+}

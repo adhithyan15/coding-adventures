@@ -1,0 +1,11 @@
+{
+  "id": "PT-C57-lago",
+  "pathSegment": "PT-PATH-57-NATUREZA2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-57-NATUREZA2",
+      "order": 1
+    }
+  ]
+}

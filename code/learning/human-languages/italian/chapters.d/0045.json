@@ -1,0 +1,19 @@
+{
+  "chapter": 45,
+  "title": "Wife, Aunt, Cousins, a Little Boy",
+  "label": "ch:it-wife-aunt-cousins-a-little-boy",
+  "canDo": "I can name a wife, an aunt, a cousin (male), a cousin (female), a little boy.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "IT-C45-bambino",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 45: i can name a wife, an aunt, a cousin (male), a cousin (female), a little boy.",
+    "assesses": [
+      "IT-LEX-C45-FAMIGLIA2-03",
+      "IT-LEX-C45-FAMIGLIA2-04",
+      "IT-LEX-C45-FAMIGLIA2-05"
+    ]
+  }
+}

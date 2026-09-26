@@ -1,0 +1,11 @@
+{
+  "id": "GE-C114-seife",
+  "pathSegment": "GE-PATH-114-HAUS114",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-114-HAUS114",
+      "order": 2
+    }
+  ]
+}

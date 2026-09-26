@@ -3,7 +3,7 @@
     "id": "GU-C80-holi",
     "language": "gujarati",
     "chapter": 80,
-    "sequence": 4100,
+    "sequence": 4113,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3a9e498a142254af"
+    "sourceHash": "fnv1a64:58de5a9fd555a423"
   },
   "findings": []
 }

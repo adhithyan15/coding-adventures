@@ -1,0 +1,11 @@
+{
+  "id": "BN-C62-tala",
+  "pathSegment": "BN-PATH-62-HOME62",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-62-HOME62",
+      "order": 2
+    }
+  ]
+}

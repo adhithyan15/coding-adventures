@@ -1,0 +1,11 @@
+{
+  "id": "PT-C94-banheira",
+  "pathSegment": "PT-PATH-94-CASA94",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PT-EXT-94-CASA94",
+      "order": 1
+    }
+  ]
+}

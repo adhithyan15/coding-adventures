@@ -1,9 +1,10 @@
 {
   "language": "urdu",
   "chapter": 3,
-  "sourceHash": "fnv1a64:e7f5ea809abec376",
+  "sourceHash": "fnv1a64:2b2980ab35bf95ff",
   "lessonIds": [
     "UR-C03-aap-tum-tu",
+    "UR-C03-aap-tum-tu-more",
     "UR-C03-kya",
     "UR-W03-lam",
     "UR-C03-aap-ka-naam-kya-hai",
@@ -11,11 +12,11 @@
     "UR-W03-mim",
     "UR-C03-practice"
   ],
-  "voiceLessons": 4,
-  "drivablePrefix": 2,
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
   "text": "urdu/narration/ch03.txt",
   "json": "urdu/narration/ch03.json",
-  "textHash": "fnv1a64:abacf2f411d76061",
-  "jsonHash": "fnv1a64:546124726d4c72be",
+  "textHash": "fnv1a64:1c69c92c530ea841",
+  "jsonHash": "fnv1a64:e42ea65f5e89b2fe",
   "findings": []
 }

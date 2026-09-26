@@ -1,0 +1,11 @@
+{
+  "id": "GE-C106-schwimmbad",
+  "pathSegment": "GE-PATH-106-ORT106",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "GE-EXT-106-ORT106",
+      "order": 2
+    }
+  ]
+}

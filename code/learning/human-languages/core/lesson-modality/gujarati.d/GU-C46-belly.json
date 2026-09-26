@@ -3,7 +3,7 @@
     "id": "GU-C46-belly",
     "language": "gujarati",
     "chapter": 46,
-    "sequence": 2360,
+    "sequence": 2373,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:86a7119b52044d94"
+    "sourceHash": "fnv1a64:08dd745a8b8ce3d0"
   },
   "findings": []
 }

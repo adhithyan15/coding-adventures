@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C91-diva",
+    "language": "marathi",
+    "chapter": 91,
+    "sequence": 3950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1443aec1c0539db5"
+  },
+  "findings": []
+}

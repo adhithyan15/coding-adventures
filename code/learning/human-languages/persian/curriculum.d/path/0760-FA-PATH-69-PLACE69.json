@@ -1,0 +1,9 @@
+{
+  "id": "FA-PATH-69-PLACE69",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "FA-EXT-69-PLACE69"
+  ],
+  "after": []
+}

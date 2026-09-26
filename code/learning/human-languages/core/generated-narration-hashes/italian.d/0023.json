@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 23,
-  "sourceHash": "fnv1a64:c10c02b8e7198afe",
+  "sourceHash": "fnv1a64:372d4d89799da91c",
   "lessonIds": [
     "IT-C23-amico-amica",
     "IT-C23-famiglia",
@@ -13,6 +13,6 @@
   "text": "italian/narration/ch23.txt",
   "json": "italian/narration/ch23.json",
   "textHash": "fnv1a64:4c763763d2a5a3fa",
-  "jsonHash": "fnv1a64:f45c6913c6a2d936",
+  "jsonHash": "fnv1a64:1626eda1bd3a39cd",
   "findings": []
 }

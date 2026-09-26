@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "To get dressed, To wash, To get up, To sit down, To fall",
+  "label": "ch:it-to-get-dressed-to-wash-to-get-up-to-sit-down-to-fall",
+  "canDo": "I can say to get dressed, to wash, to get up, to sit down and to fall.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "IT-C134-cadere",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can say to get dressed, to wash, to get up, to sit down and to fall.",
+    "assesses": [
+      "IT-LEX-C134-VERBI134-03",
+      "IT-LEX-C134-VERBI134-04",
+      "IT-LEX-C134-VERBI134-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:182562f98e262bca",
+  "lessonIds": [
+    "RU-C130-bitter",
+    "RU-C130-salty",
+    "RU-C130-heavy",
+    "RU-C130-thin",
+    "RU-C130-fat"
+  ],
+  "tex": "russian/book/chapters/ch130-bitter-salty-heavy-thin-fat.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 44,
+  "title": "Foot, Head, Hair, Tooth, Throat",
+  "label": "ch:mw-foot-head-hair-tooth-throat",
+  "canDo": "I can say a foot, the head, hair, a tooth and the throat.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MW-C44-galo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 44: i can say a foot, the head, hair, a tooth and the throat.",
+    "assesses": [
+      "MW-LEX-C44-BODY44-03",
+      "MW-LEX-C44-BODY44-04",
+      "MW-LEX-C44-BODY44-05"
+    ]
+  }
+}

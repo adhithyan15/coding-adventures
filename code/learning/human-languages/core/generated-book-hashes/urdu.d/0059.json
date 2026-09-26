@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 59,
+  "sourceHash": "fnv1a64:5a4f6bf863224ca3",
+  "lessonIds": [
+    "UR-C59-almari",
+    "UR-C59-farsh",
+    "UR-C59-sirhi",
+    "UR-C59-aina",
+    "UR-C59-batti"
+  ],
+  "tex": "urdu/book/chapters/ch59-cupboard-floor-stairs-mirror-light.tex"
+}

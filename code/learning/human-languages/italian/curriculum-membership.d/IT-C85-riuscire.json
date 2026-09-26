@@ -1,0 +1,11 @@
+{
+  "id": "IT-C85-riuscire",
+  "pathSegment": "IT-PATH-85-POTERE85",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "IT-EXT-85-POTERE85",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C80-dupur",
+    "language": "bengali",
+    "chapter": 80,
+    "sequence": 4190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1b9b746281ee4f4"
+  },
+  "findings": []
+}

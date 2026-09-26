@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W08-pha
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1800
+sequence: 1813
 delivery: script
 chapter: 35
 type: writing

@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:92e5c6d4f36fa1eb",
+  "lessonIds": [
+    "AR-C52-wajh",
+    "AR-C52-dam",
+    "AR-C52-rukba",
+    "AR-C52-zahr",
+    "AR-C52-qalb"
+  ],
+  "tex": "arabic/book/chapters/ch52-face-blood-knee-back-heart.tex"
+}

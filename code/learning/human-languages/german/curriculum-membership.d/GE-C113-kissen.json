@@ -1,0 +1,11 @@
+{
+  "id": "GE-C113-kissen",
+  "pathSegment": "GE-PATH-113-HAUS113",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-113-HAUS113",
+      "order": 4
+    }
+  ]
+}

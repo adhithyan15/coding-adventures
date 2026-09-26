@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C114-lezione",
+    "language": "italian",
+    "chapter": 114,
+    "sequence": 5450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:74870cac2a7286f6"
+  },
+  "findings": []
+}

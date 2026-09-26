@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C31-samajto-nathi
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1790
+sequence: 1803
 chapter: 35
 type: phrase
 headword: સમજતો નથી

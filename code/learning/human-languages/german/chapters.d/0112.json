@@ -1,0 +1,19 @@
+{
+  "chapter": 112,
+  "title": "Rug, Television, Computer, Fridge, Cooker",
+  "label": "ch:ge-rug-television-computer-fridge-cooker",
+  "canDo": "I can say a rug, a television, a computer, a fridge and a cooker.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "GE-C112-herd",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 112: i can say a rug, a television, a computer, a fridge and a cooker.",
+    "assesses": [
+      "GE-LEX-C112-HAUS112-03",
+      "GE-LEX-C112-HAUS112-04",
+      "GE-LEX-C112-HAUS112-05"
+    ]
+  }
+}

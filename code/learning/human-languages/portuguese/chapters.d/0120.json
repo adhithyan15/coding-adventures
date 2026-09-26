@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Ankle, Wrist, Cheek, Lips, Chest",
+  "label": "ch:pt-ankle-wrist-cheek-lips-chest",
+  "canDo": "I can say an ankle, a wrist, a cheek, lips and the chest.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PT-C120-peito",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say an ankle, a wrist, a cheek, lips and the chest.",
+    "assesses": [
+      "PT-LEX-C120-CORPO120-03",
+      "PT-LEX-C120-CORPO120-04",
+      "PT-LEX-C120-CORPO120-05"
+    ]
+  }
+}

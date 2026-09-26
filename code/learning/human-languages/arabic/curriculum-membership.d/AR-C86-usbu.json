@@ -1,0 +1,11 @@
+{
+  "id": "AR-C86-usbu",
+  "pathSegment": "AR-PATH-86-ADJ86",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-86-ADJ86",
+      "order": 2
+    }
+  ]
+}

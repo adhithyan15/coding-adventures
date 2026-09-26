@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "Wardrobe, Sofa, Pot, Frying pan, Vase",
+  "label": "ch:it-wardrobe-sofa-pot-frying-pan-vase",
+  "canDo": "I can say a wardrobe, a sofa, a pot, a frying pan and a vase.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C98-vaso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 98: i can say a wardrobe, a sofa, a pot, a frying pan and a vase.",
+    "assesses": [
+      "IT-LEX-C98-CASA98-03",
+      "IT-LEX-C98-CASA98-04",
+      "IT-LEX-C98-CASA98-05"
+    ]
+  }
+}

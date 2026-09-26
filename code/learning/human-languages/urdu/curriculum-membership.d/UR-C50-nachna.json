@@ -1,0 +1,11 @@
+{
+  "id": "UR-C50-nachna",
+  "pathSegment": "UR-PATH-50-VERBS50",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-50-VERBS50",
+      "order": 1
+    }
+  ]
+}

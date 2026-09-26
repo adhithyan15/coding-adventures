@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:d2bf1576956b1c9f",
+  "lessonIds": [
+    "UR-C54-chaval",
+    "UR-C54-dal",
+    "UR-C54-phal",
+    "UR-C54-seb",
+    "UR-C54-kela"
+  ],
+  "tex": "urdu/book/chapters/ch54-rice-lentils-fruit-apple-banana.tex"
+}

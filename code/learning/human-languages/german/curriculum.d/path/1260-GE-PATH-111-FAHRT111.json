@@ -1,0 +1,9 @@
+{
+  "id": "GE-PATH-111-FAHRT111",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "GE-EXT-111-FAHRT111"
+  ],
+  "after": []
+}

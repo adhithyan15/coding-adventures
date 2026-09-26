@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:10d53e31e0791fb0",
+  "lessonIds": [
+    "PT-C45-fruta",
+    "PT-C45-maca",
+    "PT-C45-banana",
+    "PT-C45-laranja",
+    "PT-C45-uva"
+  ],
+  "tex": "portuguese/book/chapters/ch45-fruit-apple-banana-orange-grape.tex"
+}

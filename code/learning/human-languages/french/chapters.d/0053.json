@@ -1,0 +1,19 @@
+{
+  "chapter": 53,
+  "title": "Pain, Fever, Cough, Medicine, Doctor",
+  "label": "ch:fr-pain-fever-cough-medicine-doctor",
+  "canDo": "I can name pain, a fever, a cough, a medicine, a doctor.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "FR-C53-medecin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 53: i can name pain, a fever, a cough, a medicine, a doctor.",
+    "assesses": [
+      "FR-LEX-C53-SANTE5-03",
+      "FR-LEX-C53-SANTE5-04",
+      "FR-LEX-C53-SANTE5-05"
+    ]
+  }
+}

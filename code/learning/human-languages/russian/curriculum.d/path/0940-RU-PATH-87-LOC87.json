@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-87-LOC87",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "RU-EXT-87-LOC87"
+  ],
+  "after": []
+}

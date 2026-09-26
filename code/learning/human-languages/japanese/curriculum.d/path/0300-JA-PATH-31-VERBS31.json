@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-31-VERBS31",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "JA-EXT-31-VERBS31"
+  ],
+  "after": []
+}

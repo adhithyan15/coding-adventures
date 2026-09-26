@@ -8,7 +8,7 @@ type: word
 headword: die Hand
 gloss: the hand — the same word as English, and unrelated to Romance manus
 concept_tag: GE-BODY-HAND
-prerequisites: [GE-C17-kopf-haupt, GE-C01-der-die-das]
+prerequisites: [GE-C17-kopf-haupt, GE-C01-der-die-das, GE-C17-kopf-haupt-more]
 sounds: [final-devoicing, vowel-a-german]
 roots: [germanic-handuz]
 etymology_hook: "die Hand IS English hand — Germanic *handuz, with no Latin relative at all; where French/Italian/Portuguese all continue manus, Germanic simply has a different word, so this is the body part where the two families do NOT meet"
@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: [GE-LEX-HAUPT-02, GE-ETYMON-HAUPT-03, GE-SOUND-GRIMMS-LAW-04, GE-CULTURE-HEAD-CONTAINERS-05]
 introduces:
-  knowledge: [GE-LEX-HAND-02, GE-SOUND-HAND-03, GE-ETYMON-HAND-04, GE-ETYMON-HAND-MANUS-05]
+  knowledge: [GE-LEX-HAND-02, GE-SOUND-HAND-03, GE-ETYMON-HAND-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-HAND-02, GE-SOUND-HAND-03, GE-ETYMON-HAND-04, GE-ETYMON-HAND-MANUS-05]
+  knowledge: [GE-LEX-HAND-02, GE-SOUND-HAND-03, GE-ETYMON-HAND-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -66,34 +66,8 @@ and body parts are where you feel it most:
 | **Fuß** | foot |
 | **Herz** | heart |
 
-## Why it's said this way: Where the family tree stops
-<!-- hl-knowledge: introduces=[GE-ETYMON-HAND-MANUS-05]; assesses=[] -->
-
-Now the interesting part. Every Romance language builds "hand" on
-Latin ***manus***:
-
-| | |
-|---|---|
-| French | *la main* |
-| Italian | *la mano* |
-| Portuguese | *a mão* |
-| Spanish | *la mano* |
-
-And Germanic — German, English — has \**handuz*, which is **not related to
-*manus* at all**. The two families simply have different words here.
-
-That is worth noticing, because
-these connections keep turning up, and it can
-start to feel as though everything must connect. It doesn't. Indo-European
-languages share a great deal, and then diverge, and "hand" is one of the places
-where they diverged early and completely.
-
-The Latin word did reach German — but only as **borrowed vocabulary**:
-*Manuskript*, *Maniküre*, *manuell*. Learned imports, sitting beside the native
-word without displacing it.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HAND-02, GE-SOUND-HAND-03, GE-ETYMON-HAND-04, GE-ETYMON-HAND-MANUS-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HAND-02, GE-SOUND-HAND-03, GE-ETYMON-HAND-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "die Hand" — final **d** said as **t**]
@@ -102,7 +76,7 @@ word without displacing it.
 - [YOU SAY: the gap — "*main*, *mano*, *mão* … but **Hand**"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HAND-02, GE-SOUND-HAND-03, GE-ETYMON-HAND-04, GE-ETYMON-HAND-MANUS-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HAND-02, GE-SOUND-HAND-03, GE-ETYMON-HAND-04] -->
 
 [PAUSE 3s] Say "the hand." (*Die Hand* — **feminine**.) How is the final **d**
 pronounced, and why? (As a **t** — German **devoices** final consonants; the *d*

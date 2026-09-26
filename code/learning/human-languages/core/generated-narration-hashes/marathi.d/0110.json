@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:aac3ba1efdd0f307",
+  "lessonIds": [
+    "MR-C110-minit",
+    "MR-C110-aj",
+    "MR-C110-ata",
+    "MR-C110-nehmi",
+    "MR-C110-kadhikadhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch110.txt",
+  "json": "marathi/narration/ch110.json",
+  "textHash": "fnv1a64:374f4a37cc956386",
+  "jsonHash": "fnv1a64:569512a015055de4",
+  "findings": []
+}

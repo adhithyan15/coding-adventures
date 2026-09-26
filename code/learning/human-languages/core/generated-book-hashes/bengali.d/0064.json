@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:fc639a5a0de1fe9f",
+  "lessonIds": [
+    "BN-C64-kolom",
+    "BN-C64-kagoj",
+    "BN-C64-skul",
+    "BN-C64-taka",
+    "BN-C64-proshno"
+  ],
+  "tex": "bengali/book/chapters/ch64-pen-paper-school-money-question.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C131-geschlossen",
+    "language": "german",
+    "chapter": 131,
+    "sequence": 5470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b3737856b43098f"
+  },
+  "findings": []
+}

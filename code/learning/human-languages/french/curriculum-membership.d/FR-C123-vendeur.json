@@ -1,0 +1,11 @@
+{
+  "id": "FR-C123-vendeur",
+  "pathSegment": "FR-PATH-123-METIERS75",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-123-METIERS75",
+      "order": 3
+    }
+  ]
+}

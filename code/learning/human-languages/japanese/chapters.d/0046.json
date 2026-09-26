@@ -1,0 +1,19 @@
+{
+  "chapter": 46,
+  "title": "Insect, Ant, Pigeon, Sheep, Deer",
+  "label": "ch:ja-insect-ant-pigeon-sheep-deer",
+  "canDo": "I can say an insect, an ant, a pigeon, a sheep and a deer.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "JA-C46-shika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 46: i can say an insect, an ant, a pigeon, a sheep and a deer.",
+    "assesses": [
+      "JA-LEX-C46-ANIMALS46-03",
+      "JA-LEX-C46-ANIMALS46-04",
+      "JA-LEX-C46-ANIMALS46-05"
+    ]
+  }
+}

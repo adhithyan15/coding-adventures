@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:24c083b7f35f2584",
+  "lessonIds": [
+    "RU-C123-space",
+    "RU-C123-bottle",
+    "RU-C123-mirror",
+    "RU-C123-stairs",
+    "RU-C123-pink"
+  ],
+  "tex": "russian/book/chapters/ch123-space-bottle-mirror-stairs-pink.tex"
+}

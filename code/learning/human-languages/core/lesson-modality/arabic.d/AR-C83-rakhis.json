@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C83-rakhis",
+    "language": "arabic",
+    "chapter": 83,
+    "sequence": 3150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e7d9c0214d553f2"
+  },
+  "findings": []
+}

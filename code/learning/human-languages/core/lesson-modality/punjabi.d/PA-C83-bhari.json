@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C83-bhari",
+    "language": "punjabi",
+    "chapter": 83,
+    "sequence": 4430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b96bcf9c8d52879b"
+  },
+  "findings": []
+}

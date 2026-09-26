@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:5aa13208ac6dbdf6",
+  "lessonIds": [
+    "PT-C69-verde",
+    "PT-C69-cinzento",
+    "PT-C69-doce",
+    "PT-C69-limpo",
+    "PT-C69-sujo"
+  ],
+  "tex": "portuguese/book/chapters/ch69-green-grey-sweet-clean-dirty.tex"
+}

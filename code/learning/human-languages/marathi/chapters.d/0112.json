@@ -1,0 +1,19 @@
+{
+  "chapter": 112,
+  "title": "Far, Inside, Outside, Behind, Ahead",
+  "label": "ch:mr-far-inside-outside-behind-ahead",
+  "canDo": "I can say far, inside, outside, behind and ahead, in front.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MR-C112-pudhe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 112: i can say far, inside, outside, behind and ahead, in front.",
+    "assesses": [
+      "MR-LEX-C112-PLACE112-03",
+      "MR-LEX-C112-PLACE112-04",
+      "MR-LEX-C112-PLACE112-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PT-C118-ra",
+  "pathSegment": "PT-PATH-118-ANIMAIS118",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-118-ANIMAIS118",
+      "order": 3
+    }
+  ]
+}

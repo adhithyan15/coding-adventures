@@ -1,11 +1,11 @@
 {
   "id": "KA-S138-vowel-sign-ee",
   "pathSegment": "KA-PATH-100",
-  "pathOrder": 39,
+  "pathOrder": 48,
   "extensions": [
     {
       "id": "KA-EXT-100-SCRIPT-RECOGNITION",
-      "order": 39
+      "order": 48
     }
   ]
 }

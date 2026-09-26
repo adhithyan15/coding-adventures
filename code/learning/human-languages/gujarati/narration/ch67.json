@@ -4,11 +4,11 @@
   "chapter": 67,
   "title": "Cow, Buffalo and Goat",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0755fa35fe2a9128",
+  "sourceHash": "fnv1a64:db2c750111b1e05c",
   "lessons": [
     {
       "id": "GU-C67-cow",
-      "sequence": 3390,
+      "sequence": 3403,
       "title": "ગાય (gāy) — a cow",
       "headword": "ગાય",
       "romanization": "gāy",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:becf4204e3e2a1fd",
+      "sourceHash": "fnv1a64:f235b9eb7ff5242c",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C67-buffalo",
-      "sequence": 3400,
+      "sequence": 3413,
       "title": "ભેંસ (bhẽs) — a buffalo",
       "headword": "ભેંસ",
       "romanization": "bhẽs",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1789c56e5d505223",
+      "sourceHash": "fnv1a64:79bc46741a8f20c7",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C67-goat",
-      "sequence": 3410,
+      "sequence": 3423,
       "title": "બકરી (bakrī) — a goat",
       "headword": "બકરી",
       "romanization": "bakrī",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b54f20f178c1183",
+      "sourceHash": "fnv1a64:d55b384b8600b415",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C67-dog",
-      "sequence": 3420,
+      "sequence": 3433,
       "title": "કૂતરો (kūtro) — a dog",
       "headword": "કૂતરો",
       "romanization": "kūtro",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:276b806debedeab0",
+      "sourceHash": "fnv1a64:191d4f311907d2ac",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C67-mouse",
-      "sequence": 3430,
+      "sequence": 3443,
       "title": "ઉંદર (undar) — a mouse, a rat",
       "headword": "ઉંદર",
       "romanization": "undar",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e35513e79aa65eb3",
+      "sourceHash": "fnv1a64:7dae042883d16511",
       "notice": null,
       "blocks": [
         {

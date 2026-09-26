@@ -1,0 +1,11 @@
+{
+  "id": "PT-C115-relva",
+  "pathSegment": "PT-PATH-115-LAZER115",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PT-EXT-115-LAZER115",
+      "order": 4
+    }
+  ]
+}

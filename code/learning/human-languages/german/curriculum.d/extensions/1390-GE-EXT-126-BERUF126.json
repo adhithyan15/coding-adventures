@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-126-BERUF126",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a postman, a waiter, a customer, a till and a boss.",
+  "prerequisites": []
+}

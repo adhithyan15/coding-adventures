@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C43-mast",
+    "language": "persian",
+    "chapter": 43,
+    "sequence": 2000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:07599f34cccefaa2"
+  },
+  "findings": []
+}

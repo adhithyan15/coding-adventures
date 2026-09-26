@@ -2258,6 +2258,20 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "RU-W93-e",
+      "sourceHash": "fnv1a64:8e0b36a119ceeea9",
+      "svgHash": "fnv1a64:aeebf4c10c692927",
+      "svg": "russian/book/figures/RU-W93-e-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "RU-W93-shcha",
+      "sourceHash": "fnv1a64:5455768079d8e75e",
+      "svgHash": "fnv1a64:6b2f75173614201c",
+      "svg": "russian/book/figures/RU-W93-shcha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "SA-S01-letter-ma",
       "sourceHash": "fnv1a64:e1331ae7e27b0733",
       "svgHash": "fnv1a64:4507a2a0b3bb2cb0",

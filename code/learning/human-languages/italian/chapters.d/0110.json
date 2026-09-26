@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Juice, Peach, Jam, Walnut, Pepper",
+  "label": "ch:it-juice-peach-jam-walnut-pepper",
+  "canDo": "I can say juice, a peach, jam, a walnut and pepper.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C110-pepe",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say juice, a peach, jam, a walnut and pepper.",
+    "assesses": [
+      "IT-LEX-C110-CIBO110-03",
+      "IT-LEX-C110-CIBO110-04",
+      "IT-LEX-C110-CIBO110-05"
+    ]
+  }
+}

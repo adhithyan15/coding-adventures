@@ -1,0 +1,11 @@
+{
+  "id": "PT-C88-sul",
+  "pathSegment": "PT-PATH-88-LUGARES88",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-88-LUGARES88",
+      "order": 2
+    }
+  ]
+}

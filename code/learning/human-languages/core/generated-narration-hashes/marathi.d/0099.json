@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:76f8592397e9a6cd",
+  "lessonIds": [
+    "MR-C99-paus",
+    "MR-C99-vara",
+    "MR-C99-akash",
+    "MR-C99-kutra",
+    "MR-C99-manjar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch99.txt",
+  "json": "marathi/narration/ch99.json",
+  "textHash": "fnv1a64:d4cede4e7dc402fa",
+  "jsonHash": "fnv1a64:82bfa1dbfc4ef8c6",
+  "findings": []
+}

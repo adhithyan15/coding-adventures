@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:c9a9d73aabd0802e",
+  "lessonIds": [
+    "PT-C96-lixo",
+    "PT-C96-vassoura",
+    "PT-C96-maquina-de-lavar",
+    "PT-C96-sofa",
+    "PT-C96-armario"
+  ],
+  "tex": "portuguese/book/chapters/ch96-rubbish-broom-washing-machine-sofa-cupboard.tex"
+}

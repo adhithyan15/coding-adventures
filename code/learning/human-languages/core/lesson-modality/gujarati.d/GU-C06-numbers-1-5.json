@@ -3,7 +3,7 @@
     "id": "GU-C06-numbers-1-5",
     "language": "gujarati",
     "chapter": 12,
-    "sequence": 360,
+    "sequence": 373,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:26b3837831443ac7"
+    "sourceHash": "fnv1a64:310b09fba1ed2f23"
   },
   "findings": []
 }

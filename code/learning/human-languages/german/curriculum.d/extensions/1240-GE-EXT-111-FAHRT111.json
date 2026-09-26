@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-111-FAHRT111",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a taxi, a ticket, a suitcase, a lift and to fly.",
+  "prerequisites": []
+}

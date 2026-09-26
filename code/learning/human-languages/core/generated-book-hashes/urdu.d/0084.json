@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 84,
+  "sourceHash": "fnv1a64:140199459aa6b0f6",
+  "lessonIds": [
+    "UR-C84-chaudah",
+    "UR-C84-pandrah",
+    "UR-C84-solah",
+    "UR-C84-satrah",
+    "UR-C84-atharah"
+  ],
+  "tex": "urdu/book/chapters/ch84-fourteen-fifteen-sixteen-seventeen-eighteen.tex"
+}

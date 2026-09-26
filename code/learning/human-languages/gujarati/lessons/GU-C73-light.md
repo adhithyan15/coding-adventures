@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C73-light
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3710
+sequence: 3723
 chapter: 73
 type: word
 headword: "હલકું"

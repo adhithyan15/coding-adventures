@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C89-vieux",
+    "language": "french",
+    "chapter": 89,
+    "sequence": 3850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82afce235e4f3f33"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Strawberry, Cherry, Melon, Garlic, Flour",
+  "label": "ch:fr-strawberry-cherry-melon-garlic-flour",
+  "canDo": "I can name a strawberry, a cherry, a melon, garlic, flour.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C120-farine",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can name a strawberry, a cherry, a melon, garlic, flour.",
+    "assesses": [
+      "FR-LEX-C120-REPAS72-03",
+      "FR-LEX-C120-REPAS72-04",
+      "FR-LEX-C120-REPAS72-05"
+    ]
+  }
+}

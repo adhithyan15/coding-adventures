@@ -1,0 +1,11 @@
+{
+  "id": "AR-C95-qubbaa",
+  "pathSegment": "AR-PATH-95-CLOTHES95",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-95-CLOTHES95",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:181359652a35c0c6",
+  "lessonIds": [
+    "UR-C64-patta",
+    "UR-C64-pahar",
+    "UR-C64-jangal",
+    "UR-C64-darya",
+    "UR-C64-jhil"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch64.txt",
+  "json": "urdu/narration/ch64.json",
+  "textHash": "fnv1a64:7a9f82ce6a247e84",
+  "jsonHash": "fnv1a64:57ccfe93941739ec",
+  "findings": []
+}

@@ -3,7 +3,7 @@
     "id": "GU-C76-all",
     "language": "gujarati",
     "chapter": 76,
-    "sequence": 3870,
+    "sequence": 3883,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:cdd93ace64ea073c"
+    "sourceHash": "fnv1a64:3349326523500a7a"
   },
   "findings": []
 }

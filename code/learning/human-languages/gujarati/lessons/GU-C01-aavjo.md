@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C01-aavjo
 spine_node: SPINE-TAKE-LEAVE
-sequence: 30
+sequence: 31
 chapter: 2
 type: word
 headword: આવજો

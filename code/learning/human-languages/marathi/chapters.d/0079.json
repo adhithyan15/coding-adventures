@@ -1,0 +1,19 @@
+{
+  "chapter": 79,
+  "title": "To wash, To laugh, To cry, To sing, To dance",
+  "label": "ch:mr-to-wash-to-laugh-to-cry-to-sing-to-dance",
+  "canDo": "I can say to wash, to laugh, to cry, to sing and to dance.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C79-nachne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 79: i can say to wash, to laugh, to cry, to sing and to dance.",
+    "assesses": [
+      "MR-LEX-C79-VERBS79-03",
+      "MR-LEX-C79-VERBS79-04",
+      "MR-LEX-C79-VERBS79-05"
+    ]
+  }
+}

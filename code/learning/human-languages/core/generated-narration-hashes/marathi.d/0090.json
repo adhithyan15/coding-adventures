@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:d9c32771587f65a8",
+  "lessonIds": [
+    "MR-C90-bhint",
+    "MR-C90-chhappar",
+    "MR-C90-palang",
+    "MR-C90-kapat",
+    "MR-C90-jamin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch90.txt",
+  "json": "marathi/narration/ch90.json",
+  "textHash": "fnv1a64:5d1a3d18494a035b",
+  "jsonHash": "fnv1a64:f5f943c8f20ea1f1",
+  "findings": []
+}

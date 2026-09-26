@@ -1,0 +1,21 @@
+{
+  "language": "french",
+  "chapter": 77,
+  "sourceHash": "fnv1a64:da2ba887749c57b0",
+  "lessonIds": [
+    "FR-C77-cuillere",
+    "FR-C77-couteau",
+    "FR-C77-fourchette",
+    "FR-C77-bouteille",
+    "FR-C77-tasse",
+    "FR-R77-first-pass-the-body-family-doing-and-food",
+    "FR-R77-second-pass-the-house-the-table-and-things"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "french/narration/ch77.txt",
+  "json": "french/narration/ch77.json",
+  "textHash": "fnv1a64:dda2340ddcc43a56",
+  "jsonHash": "fnv1a64:351f913d366bb985",
+  "findings": []
+}

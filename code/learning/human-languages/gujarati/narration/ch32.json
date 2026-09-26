@@ -4,11 +4,11 @@
   "chapter": 32,
   "title": "Inside the House",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:b6810ff2ad4f181c",
+  "sourceHash": "fnv1a64:770ac12c4bbb9523",
   "lessons": [
     {
       "id": "GU-C28-hear-baarnun",
-      "sequence": 1540,
+      "sequence": 1553,
       "title": "બારણું (bārṇũ) — hear door",
       "headword": "બારણું",
       "romanization": "bārṇũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8690b615abc1f46",
+      "sourceHash": "fnv1a64:262695e945d85d1a",
       "notice": null,
       "blocks": [
         {
@@ -115,7 +115,7 @@
     },
     {
       "id": "GU-C28-hear-baari",
-      "sequence": 1550,
+      "sequence": 1563,
       "title": "બારી (bārī) — hear window",
       "headword": "બારી",
       "romanization": "bārī",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa0fc07a1e8755b4",
+      "sourceHash": "fnv1a64:6f444909ab0fd662",
       "notice": null,
       "blocks": [
         {
@@ -221,7 +221,7 @@
     },
     {
       "id": "GU-C28-hear-khurshi",
-      "sequence": 1560,
+      "sequence": 1573,
       "title": "ખુરશી (khurshī) — hear chair",
       "headword": "ખુરશી",
       "romanization": "khurshī",
@@ -232,7 +232,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db7d47dc08e80bb2",
+      "sourceHash": "fnv1a64:f61a04946f7f8d4e",
       "notice": null,
       "blocks": [
         {
@@ -328,7 +328,7 @@
     },
     {
       "id": "GU-C28-hear-chaavi",
-      "sequence": 1570,
+      "sequence": 1583,
       "title": "ચાવી (chāvī) — hear key",
       "headword": "ચાવી",
       "romanization": "chāvī",
@@ -339,7 +339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef6b61d30568d40a",
+      "sourceHash": "fnv1a64:948c47b73d73ffb8",
       "notice": null,
       "blocks": [
         {
@@ -435,7 +435,7 @@
     },
     {
       "id": "GU-C28-hear-divo",
-      "sequence": 1580,
+      "sequence": 1593,
       "title": "દીવો (dīvo) — hear lamp",
       "headword": "દીવો",
       "romanization": "dīvo",
@@ -446,7 +446,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba824bbed794a909",
+      "sourceHash": "fnv1a64:c06f165b89bb6bb9",
       "notice": null,
       "blocks": [
         {
@@ -543,7 +543,7 @@
     },
     {
       "id": "GU-C28-house-five",
-      "sequence": 1590,
+      "sequence": 1603,
       "title": "Five things in one house, by ear",
       "headword": "બારણું — બારી — ખુરશી — ચાવી — દીવો",
       "romanization": "bārṇũ — bārī — khurshī — chāvī — dīvo",
@@ -554,7 +554,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6b86c219b7ae889",
+      "sourceHash": "fnv1a64:6f71e2d330317d96",
       "notice": null,
       "blocks": [
         {
@@ -678,7 +678,7 @@
     },
     {
       "id": "GU-C28-baari",
-      "sequence": 1600,
+      "sequence": 1613,
       "title": "Bārī reaches the page",
       "headword": "બારી",
       "romanization": "bārī",
@@ -689,7 +689,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:01265d832e2be4e9",
+      "sourceHash": "fnv1a64:258e6805957fa89d",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -835,7 +835,7 @@
     },
     {
       "id": "GU-R28-house-five-r1",
-      "sequence": 1610,
+      "sequence": 1623,
       "title": "The house returns at R1, and the family at R4",
       "headword": "બારણું — બારી — ખુરશી — ચાવી — દીવો",
       "romanization": "bārṇũ — bārī — khurshī — chāvī — dīvo",
@@ -846,7 +846,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:c11dcd7b7fc5454c",
+      "sourceHash": "fnv1a64:55c98d250c39b0ba",
       "notice": {
         "modality": "pen",
         "needs": [],

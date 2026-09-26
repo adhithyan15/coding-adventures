@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:747ff2494f44568c",
+  "lessonIds": [
+    "PA-C72-basta",
+    "PA-C72-paisa",
+    "PA-C72-saval",
+    "PA-C72-javab",
+    "PA-C72-shabad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch72.txt",
+  "json": "punjabi/narration/ch72.json",
+  "textHash": "fnv1a64:79f4e1c0748eadd8",
+  "jsonHash": "fnv1a64:4cc10571593e36ed",
+  "findings": []
+}

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C90-age
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 4580
+sequence: 4593
 chapter: 90
 type: word
 headword: "ઉંમર"

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:355ccb6d783414fd",
+  "lessonIds": [
+    "FR-C57-mari",
+    "FR-C57-femme",
+    "FR-C57-oncle",
+    "FR-C57-tante",
+    "FR-C57-cousine"
+  ],
+  "tex": "french/book/chapters/ch57-husband-woman-uncle-aunt-cousin.tex"
+}

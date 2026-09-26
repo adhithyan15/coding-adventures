@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C33-mikan",
+    "language": "japanese",
+    "chapter": 33,
+    "sequence": 2270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa3eb44f4c594c3b"
+  },
+  "findings": []
+}

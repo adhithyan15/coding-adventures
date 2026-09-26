@@ -1,0 +1,19 @@
+{
+  "chapter": 55,
+  "title": "Breakfast, Pear, Rice, Cheese, Egg",
+  "label": "ch:it-breakfast-pear-rice-cheese-egg",
+  "canDo": "I can name breakfast, a pear, rice, cheese, an egg.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "IT-C55-uovo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 55: i can name breakfast, a pear, rice, cheese, an egg.",
+    "assesses": [
+      "IT-LEX-C55-DISPENSA-03",
+      "IT-LEX-C55-DISPENSA-04",
+      "IT-LEX-C55-DISPENSA-05"
+    ]
+  }
+}

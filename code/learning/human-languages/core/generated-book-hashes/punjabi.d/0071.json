@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:12eeedf6ad4a7615",
+  "lessonIds": [
+    "PA-C71-kamra",
+    "PA-C71-kitab",
+    "PA-C71-kalam",
+    "PA-C71-akhbar",
+    "PA-C71-sakul"
+  ],
+  "tex": "punjabi/book/chapters/ch71-room-book-pen-newspaper-school.tex"
+}

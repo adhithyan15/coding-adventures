@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-97-NATURE97",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "MR-EXT-97-NATURE97"
+  ],
+  "after": []
+}

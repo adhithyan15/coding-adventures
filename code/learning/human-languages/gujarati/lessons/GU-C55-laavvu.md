@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C55-laavvu
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2820
+sequence: 2833
 chapter: 55
 type: word
 headword: "લાવવું"

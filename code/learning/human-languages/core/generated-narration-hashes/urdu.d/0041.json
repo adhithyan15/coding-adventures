@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:3d76859acddfaa82",
+  "lessonIds": [
+    "UR-C41-haspatal",
+    "UR-C41-bimar",
+    "UR-C41-dard",
+    "UR-C41-dava",
+    "UR-C41-pyas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch41.txt",
+  "json": "urdu/narration/ch41.json",
+  "textHash": "fnv1a64:21e9f1a9f7456cc8",
+  "jsonHash": "fnv1a64:5f2ca8e7a01c6b69",
+  "findings": []
+}

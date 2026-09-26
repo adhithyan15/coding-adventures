@@ -1,0 +1,11 @@
+{
+  "id": "FA-C30-bimar",
+  "pathSegment": "FA-PATH-30-BODY30",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-30-BODY30",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "italian",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:7eb84a9976da0425",
+  "lessonIds": [
+    "IT-C95-doccia",
+    "IT-C95-vasca",
+    "IT-C95-scaffale",
+    "IT-C95-tenda",
+    "IT-C95-cuscino",
+    "IT-R95-first-pass-can-want-and-places",
+    "IT-R95-second-pass-getting-around-and-the-house"
+  ],
+  "tex": "italian/book/chapters/ch95-shower-bathtub-shelf-curtain-cushion.tex"
+}

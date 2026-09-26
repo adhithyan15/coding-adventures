@@ -1,0 +1,19 @@
+{
+  "chapter": 46,
+  "title": "Teacher, To eat, To drink, To see, To hear",
+  "label": "ch:ur-teacher-to-eat-to-drink-to-see-to-hear",
+  "canDo": "I can say a teacher, to eat, to drink, to see, to look and to hear, to listen.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "UR-C46-sunna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 46: i can say a teacher, to eat, to drink, to see, to look and to hear, to listen.",
+    "assesses": [
+      "UR-LEX-C46-FAMILY46-03",
+      "UR-LEX-C46-FAMILY46-04",
+      "UR-LEX-C46-FAMILY46-05"
+    ]
+  }
+}

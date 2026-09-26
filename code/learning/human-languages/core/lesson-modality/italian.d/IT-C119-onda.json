@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C119-onda",
+    "language": "italian",
+    "chapter": 119,
+    "sequence": 5800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:68774a36d5a9158b"
+  },
+  "findings": []
+}

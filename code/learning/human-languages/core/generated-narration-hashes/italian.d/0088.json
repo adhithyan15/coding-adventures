@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:041d42f18a06c6e6",
+  "lessonIds": [
+    "IT-C88-municipio",
+    "IT-C88-supermercato",
+    "IT-C88-distributore",
+    "IT-C88-piscina",
+    "IT-C88-stadio"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch88.txt",
+  "json": "italian/narration/ch88.json",
+  "textHash": "fnv1a64:e2f7e07762d9db32",
+  "jsonHash": "fnv1a64:d37dd319d22a548d",
+  "findings": []
+}

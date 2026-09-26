@@ -3,7 +3,7 @@
     "id": "GU-C27-hear-bhaat",
     "language": "gujarati",
     "chapter": 31,
-    "sequence": 1460,
+    "sequence": 1473,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e660297a738e747b"
+    "sourceHash": "fnv1a64:901fead84e68e4ab"
   },
   "findings": []
 }

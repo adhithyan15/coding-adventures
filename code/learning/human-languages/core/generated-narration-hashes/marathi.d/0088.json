@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:c48ced567a823aaa",
+  "lessonIds": [
+    "MR-C88-santre",
+    "MR-C88-limbu",
+    "MR-C88-nashta",
+    "MR-C88-ande",
+    "MR-C88-dahi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch88.txt",
+  "json": "marathi/narration/ch88.json",
+  "textHash": "fnv1a64:26bff244b03d1faf",
+  "jsonHash": "fnv1a64:4d25eec25abac0b1",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PT-PATH-77-ROUPA1",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "PT-EXT-77-ROUPA1"
+  ],
+  "after": []
+}

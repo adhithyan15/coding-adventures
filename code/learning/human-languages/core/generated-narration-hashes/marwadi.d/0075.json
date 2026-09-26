@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:7bd4328d2c2105ec",
+  "lessonIds": [
+    "MW-C75-nicho",
+    "MW-C75-khali",
+    "MW-C75-garib",
+    "MW-C75-mailo",
+    "MW-C75-moto"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch75.txt",
+  "json": "marwadi/narration/ch75.json",
+  "textHash": "fnv1a64:7635799067df8377",
+  "jsonHash": "fnv1a64:89dad9fcd4e36f8f",
+  "findings": []
+}

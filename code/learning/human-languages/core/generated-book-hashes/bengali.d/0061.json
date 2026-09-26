@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:ca12bf20376b34eb",
+  "lessonIds": [
+    "BN-C61-almari",
+    "BN-C61-mejhe",
+    "BN-C61-siri",
+    "BN-C61-ayna",
+    "BN-C61-bati"
+  ],
+  "tex": "bengali/book/chapters/ch61-cupboard-floor-stairs-mirror-lamp.tex"
+}

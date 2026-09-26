@@ -1,0 +1,13 @@
+{
+  "language": "italian",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:9176b8bb40dfad6c",
+  "lessonIds": [
+    "IT-C72-grande",
+    "IT-C72-piccolo",
+    "IT-C72-nuovo",
+    "IT-C72-vecchio",
+    "IT-C72-bello"
+  ],
+  "tex": "italian/book/chapters/ch72-big-small-new-old-beautiful.tex"
+}

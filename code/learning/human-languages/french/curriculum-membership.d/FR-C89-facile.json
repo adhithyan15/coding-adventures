@@ -1,0 +1,11 @@
+{
+  "id": "FR-C89-facile",
+  "pathSegment": "FR-PATH-89-ANIMAUX41",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-89-ANIMAUX41",
+      "order": 4
+    }
+  ]
+}

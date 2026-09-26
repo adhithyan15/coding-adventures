@@ -1,0 +1,19 @@
+{
+  "chapter": 51,
+  "title": "Leg, Knee, Fever, Hospital, Ill",
+  "label": "ch:pa-leg-knee-fever-hospital-ill",
+  "canDo": "I can say a leg, a knee, a fever, a hospital and ill, sick.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C51-bimar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 51: i can say a leg, a knee, a fever, a hospital and ill, sick.",
+    "assesses": [
+      "PA-LEX-C51-BODY51-03",
+      "PA-LEX-C51-BODY51-04",
+      "PA-LEX-C51-BODY51-05"
+    ]
+  }
+}

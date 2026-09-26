@@ -1,0 +1,11 @@
+{
+  "id": "PA-C83-bhari",
+  "pathSegment": "PA-PATH-83-ADJ83",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-83-ADJ83",
+      "order": 2
+    }
+  ]
+}

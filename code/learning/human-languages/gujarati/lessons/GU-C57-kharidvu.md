@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C57-kharidvu
 spine_node: SPINE-COURTESY-THANK
-sequence: 2890
+sequence: 2903
 chapter: 57
 type: word
 headword: "ખરીદવું"

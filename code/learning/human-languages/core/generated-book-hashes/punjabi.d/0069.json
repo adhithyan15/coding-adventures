@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:571a7919905f7ff4",
+  "lessonIds": [
+    "PA-C69-pauri",
+    "PA-C69-shisha",
+    "PA-C69-batti",
+    "PA-C69-chabi",
+    "PA-C69-thali"
+  ],
+  "tex": "punjabi/book/chapters/ch69-stairs-mirror-light-key-plate.tex"
+}

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R45-letters-first-pass
 spine_node: SPINE-MEET-GREET
-sequence: 2320
+sequence: 2333
 chapter: 45
 type: review
 headword: (two letters)

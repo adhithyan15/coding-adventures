@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:5e4095d02b725de5",
+  "lessonIds": [
+    "GE-C111-taxi",
+    "GE-C111-fahrkarte",
+    "GE-C111-koffer",
+    "GE-C111-aufzug",
+    "GE-C111-fliegen"
+  ],
+  "tex": "german/book/chapters/ch111-taxi-ticket-suitcase-lift-to-fly.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FA-C63-ziba",
+  "pathSegment": "FA-PATH-63-ADJ63",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FA-EXT-63-ADJ63",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "Post office, Cinema, Supermarket, Swimming pool, Stadium",
+  "label": "ch:ru-post-office-cinema-supermarket-swimming-pool-stadium",
+  "canDo": "I can say a post office, a cinema, a supermarket, a swimming pool and a stadium.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C88-stadium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can say a post office, a cinema, a supermarket, a swimming pool and a stadium.",
+    "assesses": [
+      "RU-LEX-C88-LOC88-03",
+      "RU-LEX-C88-LOC88-04",
+      "RU-LEX-C88-LOC88-05"
+    ]
+  }
+}

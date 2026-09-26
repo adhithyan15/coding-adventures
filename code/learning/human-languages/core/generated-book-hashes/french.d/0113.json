@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:a381b1c03cd739f0",
+  "lessonIds": [
+    "FR-C113-oreiller",
+    "FR-C113-couverture",
+    "FR-C113-serviette",
+    "FR-C113-savon",
+    "FR-C113-brosse-a-dents"
+  ],
+  "tex": "french/book/chapters/ch113-pillow-blanket-towel-soap-toothbrush.tex"
+}

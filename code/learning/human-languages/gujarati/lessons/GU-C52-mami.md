@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C52-mami
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2670
+sequence: 2683
 chapter: 52
 type: word
 headword: "મામી"

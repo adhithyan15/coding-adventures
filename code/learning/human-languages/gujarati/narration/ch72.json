@@ -4,11 +4,11 @@
   "chapter": 72,
   "title": "Big and Small, Long and Short",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9927a4def1de3400",
+  "sourceHash": "fnv1a64:ef8ac67fab1ffea3",
   "lessons": [
     {
       "id": "GU-C72-big",
-      "sequence": 3660,
+      "sequence": 3673,
       "title": "મોટું (moṭũ) — big",
       "headword": "મોટું",
       "romanization": "moṭũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fab2a686c6a7e1b",
+      "sourceHash": "fnv1a64:188addce1af585ab",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C72-small",
-      "sequence": 3670,
+      "sequence": 3683,
       "title": "નાનું (nānũ) — small",
       "headword": "નાનું",
       "romanization": "nānũ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2eccc3b8da8f9d4",
+      "sourceHash": "fnv1a64:534da0fb0c99ad7a",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C72-long",
-      "sequence": 3680,
+      "sequence": 3693,
       "title": "લાંબું (lā̃bũ) — long, tall",
       "headword": "લાંબું",
       "romanization": "lā̃bũ",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:250e0340902c4da2",
+      "sourceHash": "fnv1a64:f567146dd883244e",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C72-short",
-      "sequence": 3690,
+      "sequence": 3703,
       "title": "ટૂંકું (ṭū̃kũ) — short",
       "headword": "ટૂંકું",
       "romanization": "ṭū̃kũ",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce482b0ccd233ff1",
+      "sourceHash": "fnv1a64:a244545cd50b5ed6",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C72-heavy",
-      "sequence": 3700,
+      "sequence": 3713,
       "title": "ભારે (bhāre) — heavy",
       "headword": "ભારે",
       "romanization": "bhāre",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:861b2b37c7a5de66",
+      "sourceHash": "fnv1a64:74a0bc6ab7fd7a96",
       "notice": null,
       "blocks": [
         {

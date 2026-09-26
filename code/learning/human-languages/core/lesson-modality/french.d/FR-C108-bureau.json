@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C108-bureau",
+    "language": "french",
+    "chapter": 108,
+    "sequence": 4800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01e46e3e20938cf2"
+  },
+  "findings": []
+}

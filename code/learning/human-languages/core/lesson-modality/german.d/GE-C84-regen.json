@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GE-C84-regen",
+    "language": "german",
+    "chapter": 84,
+    "sequence": 2980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:038c0272c062ec0d"
+  },
+  "findings": []
+}

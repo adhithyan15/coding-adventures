@@ -1,0 +1,11 @@
+{
+  "id": "FR-C94-carre",
+  "pathSegment": "FR-PATH-94-ADJ46",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-94-ADJ46",
+      "order": 3
+    }
+  ]
+}

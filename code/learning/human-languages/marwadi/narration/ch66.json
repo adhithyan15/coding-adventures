@@ -1,0 +1,1089 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 66,
+  "title": "Newspaper, School, Question, Answer, Word",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:0a4f974241cfddc9",
+  "lessons": [
+    {
+      "id": "MW-C66-akhbar",
+      "sequence": 4600,
+      "title": "अखबार (akhbār) — a newspaper",
+      "headword": "अखबार",
+      "romanization": "akhbār",
+      "gloss": "a newspaper",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3853ad1b4e057e64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a book, then the Marwadi for a pen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अखबार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अखबार — akhbār — \"a newspaper\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhbār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhbār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akhbār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akhbār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say akhbār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *akhbār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a book, then the Marwadi for a pen, then say akhbār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a book, then the Marwadi for a pen, then say *akhbār* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अखबार (akhbār) mean? (\"A newspaper\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C66-akhbar-type",
+              "prompt": "Type the Marwadi for 'a newspaper'.",
+              "assesses": [
+                "MW-LEX-C66-SCHOOL66-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "अखबार",
+                "akhbār"
+              ],
+              "feedback": {
+                "correct": "Right: अखबार (akhbār) is 'a newspaper'.",
+                "incorrect": "'a newspaper' is अखबार (akhbār)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C66-skul",
+      "sequence": 4610,
+      "title": "स्कूल (skūl) — a school",
+      "headword": "स्कूल",
+      "romanization": "skūl",
+      "gloss": "a school",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:051bf2667ff431d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a pen, then the Marwadi for a newspaper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्कूल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्कूल — skūl — \"a school\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "skūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *skūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "skūl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *skūl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say skūl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *skūl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a pen, then the Marwadi for a newspaper, then say skūl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a pen, then the Marwadi for a newspaper, then say *skūl* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्कूल (skūl) mean? (\"A school\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C66-skul-type",
+              "prompt": "Type the Marwadi for 'a school'.",
+              "assesses": [
+                "MW-LEX-C66-SCHOOL66-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "स्कूल",
+                "skūl"
+              ],
+              "feedback": {
+                "correct": "Right: स्कूल (skūl) is 'a school'.",
+                "incorrect": "'a school' is स्कूल (skūl)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C66-saval",
+      "sequence": 4620,
+      "title": "सवाल (savāl) — a question",
+      "headword": "सवाल",
+      "romanization": "savāl",
+      "gloss": "a question",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4a5c61ab82d01da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a newspaper, then the Marwadi for a school."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सवाल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सवाल — savāl — \"a question\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *savāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "savāl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *savāl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say savāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *savāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a newspaper, then the Marwadi for a school, then say savāl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a newspaper, then the Marwadi for a school, then say *savāl* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सवाल (savāl) mean? (\"A question\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C66-saval-type",
+              "prompt": "Type the Marwadi for 'a question'.",
+              "assesses": [
+                "MW-LEX-C66-SCHOOL66-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सवाल",
+                "savāl"
+              ],
+              "feedback": {
+                "correct": "Right: सवाल (savāl) is 'a question'.",
+                "incorrect": "'a question' is सवाल (savāl)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C66-javab",
+      "sequence": 4630,
+      "title": "जवाब (javāb) — an answer",
+      "headword": "जवाब",
+      "romanization": "javāb",
+      "gloss": "an answer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0bce50f19ea5c810",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a school, then the Marwadi for a question."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जवाब",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जवाब — javāb — \"an answer\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "javāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *javāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "javāb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *javāb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say javāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *javāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a school, then the Marwadi for a question, then say javāb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a school, then the Marwadi for a question, then say *javāb* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जवाब (javāb) mean? (\"An answer\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C66-javab-type",
+              "prompt": "Type the Marwadi for 'an answer'.",
+              "assesses": [
+                "MW-LEX-C66-SCHOOL66-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जवाब",
+                "javāb"
+              ],
+              "feedback": {
+                "correct": "Right: जवाब (javāb) is 'an answer'.",
+                "incorrect": "'an answer' is जवाब (javāb)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C66-sabad",
+      "sequence": 4640,
+      "title": "सबद (sabad) — a word",
+      "headword": "सबद",
+      "romanization": "sabad",
+      "gloss": "a word",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:faf28c59fd6099af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a question, then the Marwadi for an answer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सबद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सबद — sabad — \"a word\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sabad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sabad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sabad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sabad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a question, then the Marwadi for an answer, then say sabad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a question, then the Marwadi for an answer, then say *sabad* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सबद (sabad) mean? (\"A word\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C66-sabad-type",
+              "prompt": "Type the Marwadi for 'a word'.",
+              "assesses": [
+                "MW-LEX-C66-SCHOOL66-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सबद",
+                "sabad"
+              ],
+              "feedback": {
+                "correct": "Right: सबद (sabad) is 'a word'.",
+                "incorrect": "'a word' is सबद (sabad)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R66-first-pass-the-body-family-and-verbs",
+      "sequence": 4650,
+      "title": "The body, family and verbs — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 44-54",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b295f772c6ac31e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for an answer and a word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a foot, the head, hair, a tooth, the throat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a foot, the head, hair, a tooth, the throat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the stomach, a finger, a lip, the face, a knee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the stomach, a finger, a lip, the face, a knee]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the back, the tongue, an eye, the nose, the heart",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the back, the tongue, an eye, the nose, the heart]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fever, ill, pain, medicine, hunger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fever, ill, pain, medicine, hunger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "happy, sad, a doctor, a son, a daughter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: happy, sad, a doctor, a son, a daughter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an uncle, an uncle, a boy, a girl, a man",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an uncle, an uncle, a boy, a girl, a man]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a woman, a neighbour, a guest, a teacher, to eat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a woman, a neighbour, a guest, a teacher, to eat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to drink, to go, to come, to see, to hear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to drink, to go, to come, to see, to hear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sit, to sleep, to get up, to walk, to run",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sit, to sleep, to get up, to walk, to run]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to play, to sell, to give, to take, to keep",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to play, to sell, to give, to take, to keep]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to open, to laugh, to cry, to sing, to dance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to open, to laugh, to cry, to sing, to dance]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A foot? (पग, pag.) The head? (माथो, mātho.) Hair? (बाळ, bāḷ.) A tooth? (दांत, dānt.) The throat? (गळो, gaḷo.) The stomach? (पेट, peṭ.) A finger? (आंगळी, āṅgḷī.) A lip? (होठ, hoṭh.) The face? (मूंडो, mū̃ḍo.) A knee? (गोडो, goḍo.) The back? (पीठ, pīṭh.) The tongue? (जीभ, jībh.) An eye? (आंख, ā̃kh.) The nose? (नाक, nāk.) The heart? (दिल, dil.) A fever? (ताव, tāv.) Ill? (बीमार, bīmār.) Pain? (दरद, darad.) Medicine? (दवाई, davāī.) Hunger? (भूख, bhūkh.) Happy? (राजी, rājī.) Sad? (उदास, udās.) A doctor? (डाक्टर, ḍākṭar.) A son? (बेटो, beṭo.) A daughter? (बेटी, beṭī.) An uncle? (काको, kāko.) An uncle? (मामो, māmo.) A boy? (छोरो, chhoro.) A girl? (छोरी, chhorī.) A man? (आदमी, ādmī.) A woman? (लुगाई, lugāī.) A neighbour? (पाड़ोसी, pāṛosī.) A guest? (पावणो, pāvṇo.) A teacher? (मास्टर, māsṭar.) To eat? (खाणो, khāṇo.) To drink? (पीणो, pīṇo.) To go? (जाणो, jāṇo.) To come? (आवणो, āvṇo.) To see? (देखणो, dekhṇo.) To hear? (सुणणो, suṇṇo.) To sit? (बैठणो, baiṭhṇo.) To sleep? (सोवणो, sovṇo.) To get up? (उठणो, uṭhṇo.) To walk? (चालणो, chālṇo.) To run? (दौड़णो, dauṛṇo.) To play? (खेलणो, khelṇo.) To sell? (बेचणो, bechṇo.) To give? (देणो, deṇo.) To take? (लेणो, leṇo.) To keep? (राखणो, rākhṇo.) To open? (खोलणो, kholṇo.) To laugh? (हंसणो, hãsṇo.) To cry? (रोवणो, rovṇo.) To sing? (गावणो, gāvṇo.) To dance? (नाचणो, nāchṇo.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R66-first-pass-the-body-family-and-verbs-type",
+              "prompt": "Type the Marwadi for 'an answer'.",
+              "assesses": [
+                "MW-LEX-C66-SCHOOL66-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "जवाब",
+                "javāb"
+              ],
+              "feedback": {
+                "correct": "Right: जवाब (javāb) is 'an answer'.",
+                "incorrect": "'an answer' is जवाब (javāb)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-R66-second-pass-more-verbs-food-and-the-home",
+      "sequence": 4660,
+      "title": "More verbs, food and the home — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 55-66",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f3c2bb8ce5195a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to meet and to learn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to meet, to learn, to forget, to bring, to send",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to meet, to learn, to forget, to bring, to send]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to count, to catch, to cut, to stop, to tell",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to count, to catch, to cut, to stop, to tell]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to wear, to leave, to speak, to write, to think",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to wear, to leave, to speak, to write, to think]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to ask, to do, meat, a fish, rice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to ask, to do, meat, a fish, rice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an apple, a banana, a potato, a tomato, a carrot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an apple, a banana, a potato, a tomato, a carrot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugar, salt, a chilli, yoghurt, oil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sugar, salt, a chilli, yoghurt, oil]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grapes, a lemon, flour, an onion, sweets",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: grapes, a lemon, flour, an onion, sweets]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a window, a chair, a table, a wall, a roof",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a window, a chair, a table, a wall, a roof]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a string bed, a cupboard, a lamp, a fan, a key",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a string bed, a cupboard, a lamp, a fan, a key]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cup, a plate, a spoon, a knife, a bottle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cup, a plate, a spoon, a knife, a bottle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a door, a kitchen, a room, a book, a pen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a door, a kitchen, a room, a book, a pen]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a newspaper, a school, a question, an answer, a word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a newspaper, a school, a question, an answer, a word]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To meet? (मिलणो, milṇo.) To learn? (सीखणो, sīkhṇo.) To forget? (भूलणो, bhūlṇo.) To bring? (लावणो, lāvṇo.) To send? (भेजणो, bhejṇo.) To count? (गिणणो, giṇṇo.) To catch? (पकड़णो, pakaṛṇo.) To cut? (काटणो, kāṭṇo.) To stop? (रोकणो, rokṇo.) To tell? (बताणो, batāṇo.) To wear? (पैरणो, pairṇo.) To leave? (छोड़णो, chhoṛṇo.) To speak? (बोलणो, bolṇo.) To write? (लिखणो, likhṇo.) To think? (सोचणो, sochṇo.) To ask? (पूछणो, pūchhṇo.) To do? (करणो, karṇo.) Meat? (मांस, mā̃s.) A fish? (माछली, māchhlī.) Rice? (चावळ, chāvaḷ.) An apple? (सेब, seb.) A banana? (केळो, keḷo.) A potato? (आलू, ālū.) A tomato? (टमाटर, ṭamāṭar.) A carrot? (गाजर, gājar.) Sugar? (खांड, khā̃ḍ.) Salt? (लूण, lūṇ.) A chilli? (मिरच, mirach.) Yoghurt? (दही, dahī.) Oil? (तेल, tel.) Grapes? (अंगूर, aṅgūr.) A lemon? (नींबू, nīmbū.) Flour? (आटो, āṭo.) An onion? (कांदो, kā̃do.) Sweets? (मिठाई, miṭhāī.) A window? (खिड़की, khiṛkī.) A chair? (कुरसी, kursī.) A table? (मेज, mej.) A wall? (भींत, bhī̃t.) A roof? (छात, chhāt.) A string bed? (खाट, khāṭ.) A cupboard? (अलमारी, almārī.) A lamp? (दीयो, dīyo.) A fan? (पंखो, paṅkho.) A key? (चाबी, chābī.) A cup? (प्यालो, pyālo.) A plate? (थाळी, thāḷī.) A spoon? (चमचो, chamcho.) A knife? (छुरी, chhurī.) A bottle? (बोतल, botal.) A door? (किवाड़, kivāṛ.) A kitchen? (रसोई, rasoī.) A room? (कमरो, kamro.) A book? (किताब, kitāb.) A pen? (कलम, kalam.) A newspaper? (अखबार, akhbār.) A school? (स्कूल, skūl.) A question? (सवाल, savāl.) An answer? (जवाब, javāb.) A word? (सबद, sabad.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-R66-second-pass-more-verbs-food-and-the-home-type",
+              "prompt": "Type the Marwadi for 'to meet'.",
+              "assesses": [
+                "MW-LEX-C55-VERBS55-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मिलणो",
+                "milṇo"
+              ],
+              "feedback": {
+                "correct": "Right: मिलणो (milṇo) is 'to meet'.",
+                "incorrect": "'to meet' is मिलणो (milṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

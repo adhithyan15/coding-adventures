@@ -4,11 +4,11 @@
   "chapter": 65,
   "title": "Sea, Lake and Well",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:17ee4bbc8c5492fc",
+  "sourceHash": "fnv1a64:fa167b49923dd24d",
   "lessons": [
     {
       "id": "GU-C65-sea",
-      "sequence": 3290,
+      "sequence": 3303,
       "title": "દરિયો (dariyo) — the sea",
       "headword": "દરિયો",
       "romanization": "dariyo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfc9f528575be3b4",
+      "sourceHash": "fnv1a64:f8ad896477545597",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C65-lake",
-      "sequence": 3300,
+      "sequence": 3313,
       "title": "તળાવ (taḷāv) — a lake, a pond",
       "headword": "તળાવ",
       "romanization": "taḷāv",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50d50279cc96b3d6",
+      "sourceHash": "fnv1a64:96083e3619dce846",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C65-well",
-      "sequence": 3310,
+      "sequence": 3323,
       "title": "કૂવો (kūvo) — a well",
       "headword": "કૂવો",
       "romanization": "kūvo",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45ac605bd0eba81c",
+      "sourceHash": "fnv1a64:c7ae8f6dd20f3a26",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C65-sand",
-      "sequence": 3320,
+      "sequence": 3333,
       "title": "રેતી (retī) — sand",
       "headword": "રેતી",
       "romanization": "retī",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b52fe4bae6836d8",
+      "sourceHash": "fnv1a64:3fff29e498e457c8",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C65-soil",
-      "sequence": 3330,
+      "sequence": 3343,
       "title": "માટી (māṭī) — soil, earth, clay",
       "headword": "માટી",
       "romanization": "māṭī",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0a99ba6d66516e5",
+      "sourceHash": "fnv1a64:226fa653b6d26d43",
       "notice": null,
       "blocks": [
         {

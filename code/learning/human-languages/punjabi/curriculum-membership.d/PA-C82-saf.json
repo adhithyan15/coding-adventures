@@ -1,0 +1,11 @@
+{
+  "id": "PA-C82-saf",
+  "pathSegment": "PA-PATH-82-ADJ82",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-82-ADJ82",
+      "order": 2
+    }
+  ]
+}

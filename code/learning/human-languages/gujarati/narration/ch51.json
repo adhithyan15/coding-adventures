@@ -4,11 +4,11 @@
   "chapter": 51,
   "title": "Father, Mother, Grandparents",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a3e71e58acc243c6",
+  "sourceHash": "fnv1a64:2b7cf463b8ad9f26",
   "lessons": [
     {
       "id": "GU-C51-father",
-      "sequence": 2590,
+      "sequence": 2603,
       "title": "પિતા (pitā) — father",
       "headword": "પિતા",
       "romanization": "pitā",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7f8260d3831b772",
+      "sourceHash": "fnv1a64:d20725e971e8af69",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C51-mother",
-      "sequence": 2600,
+      "sequence": 2613,
       "title": "માતા (mātā) — mother",
       "headword": "માતા",
       "romanization": "mātā",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35a3ecc283bc00c5",
+      "sourceHash": "fnv1a64:4fb93b783078aac9",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C51-grandfather",
-      "sequence": 2610,
+      "sequence": 2623,
       "title": "દાદા (dādā) — grandfather (father's father)",
       "headword": "દાદા",
       "romanization": "dādā",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d0e36c6fc9ef435",
+      "sourceHash": "fnv1a64:2c5e4385f1a30e9b",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C51-grandmother",
-      "sequence": 2620,
+      "sequence": 2633,
       "title": "દાદી (dādī) — grandmother (father's mother)",
       "headword": "દાદી",
       "romanization": "dādī",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82bf366235a38b5a",
+      "sourceHash": "fnv1a64:644814afe10b2eea",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C51-child",
-      "sequence": 2630,
+      "sequence": 2643,
       "title": "બાળક (bāḷak) — a child",
       "headword": "બાળક",
       "romanization": "bāḷak",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5db358d022cf914",
+      "sourceHash": "fnv1a64:01a1a3878d753fb6",
       "notice": null,
       "blocks": [
         {

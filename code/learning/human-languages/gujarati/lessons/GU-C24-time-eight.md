@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C24-time-eight
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1270
+sequence: 1283
 chapter: 28
 type: practice
 headword: સવાર — બપોર — સાંજ — રાત — દિવસ — મહિનો — આજ — અત્યારે

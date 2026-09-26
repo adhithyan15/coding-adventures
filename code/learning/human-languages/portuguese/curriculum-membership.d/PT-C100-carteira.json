@@ -1,0 +1,11 @@
+{
+  "id": "PT-C100-carteira",
+  "pathSegment": "PT-PATH-100-COISAS100",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-100-COISAS100",
+      "order": 3
+    }
+  ]
+}

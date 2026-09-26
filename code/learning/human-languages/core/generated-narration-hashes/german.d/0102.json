@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 102,
+  "sourceHash": "fnv1a64:170a768b9781a4b4",
+  "lessonIds": [
+    "GE-C102-null",
+    "GE-C102-wort",
+    "GE-C102-antwort",
+    "GE-C102-arbeit",
+    "GE-C102-musik"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch102.txt",
+  "json": "german/narration/ch102.json",
+  "textHash": "fnv1a64:8ee0680d8f3779a6",
+  "jsonHash": "fnv1a64:87c17c162694c757",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 55,
+  "sourceHash": "fnv1a64:5bb0ef2e758d93eb",
+  "lessonIds": [
+    "MW-C55-milno",
+    "MW-C55-sikhno",
+    "MW-C55-bhulno",
+    "MW-C55-lavno",
+    "MW-C55-bhejno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch55.txt",
+  "json": "marwadi/narration/ch55.json",
+  "textHash": "fnv1a64:bdf0c69eedb59750",
+  "jsonHash": "fnv1a64:fa3196953c7e5447",
+  "findings": []
+}

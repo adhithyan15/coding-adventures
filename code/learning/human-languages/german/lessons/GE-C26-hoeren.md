@@ -8,7 +8,7 @@ type: word
 headword: hören
 gloss: to hear — the same verb as English hear, and the closing of a chapter of four things you do without going anywhere
 concept_tag: VERB-HEAR
-prerequisites: [GE-C26-schlafen, GE-C26-stehen, GE-C22-hund-katze]
+prerequisites: [GE-C26-schlafen, GE-C26-stehen, GE-C22-hund-katze, GE-C22-hund-katze-more]
 sounds: [umlaut-oe, r-uvular]
 roots: [germanic-hauzijana, pie-kous, grimms-law]
 etymology_hook: "hören is hear, and Gothic hausjan shows the s both languages turned to r; the h is Grimm's law working on the k still audible in Greek akoúein, which gives English acoustic"

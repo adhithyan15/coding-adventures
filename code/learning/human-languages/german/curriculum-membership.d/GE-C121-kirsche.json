@@ -1,0 +1,11 @@
+{
+  "id": "GE-C121-kirsche",
+  "pathSegment": "GE-PATH-121-ESSEN121",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "GE-EXT-121-ESSEN121",
+      "order": 3
+    }
+  ]
+}

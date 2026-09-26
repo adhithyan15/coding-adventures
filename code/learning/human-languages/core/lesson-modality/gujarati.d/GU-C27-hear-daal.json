@@ -3,7 +3,7 @@
     "id": "GU-C27-hear-daal",
     "language": "gujarati",
     "chapter": 31,
-    "sequence": 1470,
+    "sequence": 1483,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:fffafdfe8134cbbb"
+    "sourceHash": "fnv1a64:07cc156e0863a7b5"
   },
   "findings": []
 }

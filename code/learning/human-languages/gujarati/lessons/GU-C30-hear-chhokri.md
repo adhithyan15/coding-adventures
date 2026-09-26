@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C30-hear-chhokri
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1710
+sequence: 1723
 chapter: 34
 type: word
 headword: છોકરી

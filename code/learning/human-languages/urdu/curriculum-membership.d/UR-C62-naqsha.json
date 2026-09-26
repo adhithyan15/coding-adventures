@@ -1,0 +1,11 @@
+{
+  "id": "UR-C62-naqsha",
+  "pathSegment": "UR-PATH-62-SCHOOL62",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-62-SCHOOL62",
+      "order": 2
+    }
+  ]
+}

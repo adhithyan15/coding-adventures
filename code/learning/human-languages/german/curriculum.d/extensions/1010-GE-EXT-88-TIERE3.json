@@ -1,0 +1,8 @@
+{
+  "id": "GE-EXT-88-TIERE3",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a bee, an ant, an elephant, to fetch and to wish.",
+  "prerequisites": []
+}

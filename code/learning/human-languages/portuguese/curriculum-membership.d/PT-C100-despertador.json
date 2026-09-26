@@ -1,0 +1,11 @@
+{
+  "id": "PT-C100-despertador",
+  "pathSegment": "PT-PATH-100-COISAS100",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PT-EXT-100-COISAS100",
+      "order": 0
+    }
+  ]
+}

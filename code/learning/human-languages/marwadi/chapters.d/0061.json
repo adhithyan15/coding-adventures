@@ -1,0 +1,19 @@
+{
+  "chapter": 61,
+  "title": "Grapes, Lemon, Flour, Onion, Sweets",
+  "label": "ch:mw-grapes-lemon-flour-onion-sweets",
+  "canDo": "I can say grapes, a lemon, flour, an onion and sweets.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MW-C61-mithai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 61: i can say grapes, a lemon, flour, an onion and sweets.",
+    "assesses": [
+      "MW-LEX-C61-VERBS61-03",
+      "MW-LEX-C61-VERBS61-04",
+      "MW-LEX-C61-VERBS61-05"
+    ]
+  }
+}

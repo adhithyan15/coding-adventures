@@ -1,0 +1,19 @@
+{
+  "chapter": 40,
+  "title": "Umbrella, School, Homework, Problem, Answer",
+  "label": "ch:ja-umbrella-school-homework-problem-answer",
+  "canDo": "I can say an umbrella, a school, homework, a problem, a question and an answer.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "JA-C40-kotae",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 40: i can say an umbrella, a school, homework, a problem, a question and an answer.",
+    "assesses": [
+      "JA-LEX-C40-HOME40-03",
+      "JA-LEX-C40-HOME40-04",
+      "JA-LEX-C40-HOME40-05"
+    ]
+  }
+}

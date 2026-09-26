@@ -1,0 +1,11 @@
+{
+  "id": "MR-C106-barik",
+  "pathSegment": "MR-PATH-106-ADJ106",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-106-ADJ106",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:bfda5827888ae79b",
+  "lessonIds": [
+    "GE-C75-sahne",
+    "GE-C75-pfeffer",
+    "GE-C75-nuss",
+    "GE-C75-bier",
+    "GE-C75-schneiden"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch75.txt",
+  "json": "german/narration/ch75.json",
+  "textHash": "fnv1a64:45b845ef720dd2f8",
+  "jsonHash": "fnv1a64:d4b0eba5ffb9d653",
+  "findings": []
+}

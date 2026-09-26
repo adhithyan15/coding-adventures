@@ -1,0 +1,11 @@
+{
+  "id": "RU-C133-to-stay",
+  "pathSegment": "RU-PATH-133-ACT133",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-133-ACT133",
+      "order": 2
+    }
+  ]
+}

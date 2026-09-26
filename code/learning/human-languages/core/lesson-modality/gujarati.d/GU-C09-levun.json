@@ -3,7 +3,7 @@
     "id": "GU-C09-levun",
     "language": "gujarati",
     "chapter": 15,
-    "sequence": 480,
+    "sequence": 493,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ce5092e39460ac48",
+    "sourceHash": "fnv1a64:604426944db7cc04",
     "detachableSegments": [
       "The letters in this word"
     ]

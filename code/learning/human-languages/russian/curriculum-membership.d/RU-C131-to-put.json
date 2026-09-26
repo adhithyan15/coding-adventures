@@ -1,0 +1,11 @@
+{
+  "id": "RU-C131-to-put",
+  "pathSegment": "RU-PATH-131-ACT131",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-131-ACT131",
+      "order": 2
+    }
+  ]
+}

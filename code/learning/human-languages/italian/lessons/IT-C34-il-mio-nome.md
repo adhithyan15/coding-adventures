@@ -8,7 +8,7 @@ type: grammar
 headword: il mio nome
 gloss: "the rule Spanish does not have: the Italian possessive keeps its article — except with one family"
 concept_tag: IT-POSSESSIVO-ARTICOLO
-prerequisites: [IT-C34-nostro-vostro, IT-C33-questo-caffe, IT-C30-ne, IT-C14-eta]
+prerequisites: [IT-C34-nostro-vostro, IT-C33-questo-caffe, IT-C30-ne, IT-C14-eta, IT-C14-avere-o-essere]
 sounds: [io-glide, n-single]
 roots: []
 etymology_hook: "Spanish says mi hermano and Italian says il mio fratello; the article is the whole difference, and the kinship exception then takes it back"

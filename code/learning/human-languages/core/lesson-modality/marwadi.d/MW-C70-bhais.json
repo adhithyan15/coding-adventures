@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C70-bhais",
+    "language": "marwadi",
+    "chapter": 70,
+    "sequence": 4860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aa235a90a02f0921"
+  },
+  "findings": []
+}

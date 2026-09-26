@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:82aa6491ab5ebf76",
+  "lessonIds": [
+    "UR-C65-patthar",
+    "UR-C65-ret",
+    "UR-C65-khet",
+    "UR-C65-sitara",
+    "UR-C65-badal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch65.txt",
+  "json": "urdu/narration/ch65.json",
+  "textHash": "fnv1a64:e8df06bd1bcc2b3b",
+  "jsonHash": "fnv1a64:c925cdb67c2d3975",
+  "findings": []
+}

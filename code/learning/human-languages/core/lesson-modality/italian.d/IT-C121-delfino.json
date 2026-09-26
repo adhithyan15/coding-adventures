@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C121-delfino",
+    "language": "italian",
+    "chapter": 121,
+    "sequence": 5940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e5570d323e49b90"
+  },
+  "findings": []
+}

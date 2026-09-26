@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:c30b41cea262749d",
+  "lessonIds": [
+    "FA-C72-ghayegh",
+    "FA-C72-docharkhe",
+    "FA-C72-bazar",
+    "FA-C72-rusta",
+    "FA-C72-shahr"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch72.txt",
+  "json": "persian/narration/ch72.json",
+  "textHash": "fnv1a64:e0232dc80ae4a904",
+  "jsonHash": "fnv1a64:bd528662ee7a86ba",
+  "findings": []
+}

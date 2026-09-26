@@ -3,7 +3,7 @@
     "id": "GU-R35-second-pass-read-it-or-repair-it",
     "language": "gujarati",
     "chapter": 35,
-    "sequence": 1825,
+    "sequence": 1838,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:bed6ec24d418a875",
+    "sourceHash": "fnv1a64:19625ed70001fba7",
     "detachableSegments": [
       "Script: the letters that stand alone, and the two with breath"
     ]

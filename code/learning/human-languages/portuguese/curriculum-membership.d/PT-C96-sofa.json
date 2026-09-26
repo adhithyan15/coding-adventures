@@ -1,0 +1,11 @@
+{
+  "id": "PT-C96-sofa",
+  "pathSegment": "PT-PATH-96-CASA96",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PT-EXT-96-CASA96",
+      "order": 3
+    }
+  ]
+}

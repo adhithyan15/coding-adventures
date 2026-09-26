@@ -17,12 +17,12 @@ duration:
 requires:
   knowledge: []
 introduces:
-  knowledge: [GE-LEX-WETTER-02, GE-ETYMON-WETTER-03, GE-GRAMMAR-WEATHER-SEIN-04, GE-LEX-REGNET-05, GE-ETYMON-REGNET-06]
+  knowledge: [GE-LEX-WETTER-02, GE-ETYMON-WETTER-03, GE-GRAMMAR-WEATHER-SEIN-04]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GE-LEX-WETTER-02, GE-ETYMON-WETTER-03, GE-GRAMMAR-WEATHER-SEIN-04, GE-LEX-REGNET-05, GE-ETYMON-REGNET-06]
+  knowledge: [GE-LEX-WETTER-02, GE-ETYMON-WETTER-03, GE-GRAMMAR-WEATHER-SEIN-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -60,16 +60,8 @@ German uses **sein** ("to be") here — matching the same "**be**" pattern you
 already met in German's own AGE lesson (*ich bin zwanzig*), not the Romance
 "make" periphrasis (*hacer*/*faire*).
 
-## The word, taken apart: es regnet
-<!-- hl-knowledge: introduces=[GE-LEX-REGNET-05, GE-ETYMON-REGNET-06]; assesses=[] -->
-
-> **Es regnet.** — "It's raining." — from **regnen** ← Proto-Germanic
-  ***regnōną*** — the **same root** as English **rain**. Just like *Wetter*/
-  "weather," this is a genuine Germanic cousin-pair, not a shared Latin
-  borrowing the way Spanish's *llueve* and French's *pleut* are.
-
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WETTER-02, GE-ETYMON-WETTER-03, GE-GRAMMAR-WEATHER-SEIN-04, GE-LEX-REGNET-05, GE-ETYMON-REGNET-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WETTER-02, GE-ETYMON-WETTER-03, GE-GRAMMAR-WEATHER-SEIN-04] -->
 
 [PAUSE 1s]
 - [YOU SAY: "Wetter" — weather, the same word as English "weather"]
@@ -77,7 +69,7 @@ already met in German's own AGE lesson (*ich bin zwanzig*), not the Romance
 - [YOU SAY: "Es regnet" — it's raining, same root as English "rain"]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WETTER-02, GE-ETYMON-WETTER-03, GE-GRAMMAR-WEATHER-SEIN-04, GE-LEX-REGNET-05, GE-ETYMON-REGNET-06] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-WETTER-02, GE-ETYMON-WETTER-03, GE-GRAMMAR-WEATHER-SEIN-04] -->
 
 [PAUSE 3s] Does **Wetter** come from Latin, like the Romance languages'
 weather words? (**No** — it's native Germanic, the same word as English

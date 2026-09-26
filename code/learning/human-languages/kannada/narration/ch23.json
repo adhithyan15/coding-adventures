@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fda9c648f908fa8d",
+  "sourceHash": "fnv1a64:25d67db3fd05261c",
   "lessons": [
     {
       "id": "KA-C23-dina",
@@ -141,6 +141,111 @@
       ]
     },
     {
+      "id": "KA-C23-kathe",
+      "sequence": 524,
+      "title": "ಕಥೆ (kathe) — a story",
+      "headword": "ಕಥೆ",
+      "romanization": "kathe",
+      "gloss": "a story",
+      "script": "kannada",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d9e9ade06113ac3a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಕಥೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಕಥೆ — kathe — \"a story\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: kathe. Look at its shape as you say it: the next lesson takes one piece of it, ಥ (tha), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kathe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kathe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kathe, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kathe*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a story\"? (ಕಥೆ, kathe.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "KA-S129-letter-tha",
       "sequence": 525,
       "title": "ಥ (tha) — one character, and the gap it fills",
@@ -155,7 +260,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2878593c07cd0a87",
+      "sourceHash": "fnv1a64:7950558c6daa8d6e",
       "notice": {
         "modality": "pen",
         "needs": [

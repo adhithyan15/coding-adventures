@@ -1,0 +1,19 @@
+{
+  "chapter": 87,
+  "title": "Straight on, Nearby, Airport, Stop, Square",
+  "label": "ch:ru-straight-on-nearby-airport-stop-square",
+  "canDo": "I can say straight on, nearby, an airport, a stop and a square.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C87-square",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 87: i can say straight on, nearby, an airport, a stop and a square.",
+    "assesses": [
+      "RU-LEX-C87-LOC87-03",
+      "RU-LEX-C87-LOC87-04",
+      "RU-LEX-C87-LOC87-05"
+    ]
+  }
+}

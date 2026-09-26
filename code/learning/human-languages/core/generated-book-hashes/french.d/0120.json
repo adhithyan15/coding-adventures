@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:e982f430192bd84b",
+  "lessonIds": [
+    "FR-C120-fraise",
+    "FR-C120-cerise",
+    "FR-C120-melon",
+    "FR-C120-ail",
+    "FR-C120-farine"
+  ],
+  "tex": "french/book/chapters/ch120-strawberry-cherry-melon-garlic-flour.tex"
+}

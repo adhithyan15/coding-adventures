@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Thunderstorm, Ice, Hill, Rock, Wave",
+  "label": "ch:ru-thunderstorm-ice-hill-rock-wave",
+  "canDo": "I can say a thunderstorm, ice, a hill, a rock and a wave.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-R115-second-pass-free-time-and-nature",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: i can say a thunderstorm, ice, a hill, a rock and a wave.",
+    "assesses": [
+      "RU-LEX-C115-THINGS115-03",
+      "RU-LEX-C115-THINGS115-04",
+      "RU-LEX-C115-THINGS115-05"
+    ]
+  }
+}

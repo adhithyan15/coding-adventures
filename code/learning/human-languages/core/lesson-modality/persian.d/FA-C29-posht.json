@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FA-C29-posht",
+    "language": "persian",
+    "chapter": 29,
+    "sequence": 1310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8eacbdcd1c8d3b91"
+  },
+  "findings": []
+}

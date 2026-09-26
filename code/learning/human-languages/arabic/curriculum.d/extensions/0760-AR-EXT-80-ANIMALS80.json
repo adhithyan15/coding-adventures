@@ -1,0 +1,8 @@
+{
+  "id": "AR-EXT-80-ANIMALS80",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a tiger, an elephant, a monkey, a snake and a bear.",
+  "prerequisites": []
+}

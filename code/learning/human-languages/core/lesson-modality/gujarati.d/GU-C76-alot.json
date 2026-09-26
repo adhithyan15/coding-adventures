@@ -3,7 +3,7 @@
     "id": "GU-C76-alot",
     "language": "gujarati",
     "chapter": 76,
-    "sequence": 3860,
+    "sequence": 3873,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:dd72283adeef9e39"
+    "sourceHash": "fnv1a64:56ca6de5e900cec5"
   },
   "findings": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C57-bolno",
+    "language": "marwadi",
+    "chapter": 57,
+    "sequence": 4170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56debdb52d81a95e"
+  },
+  "findings": []
+}

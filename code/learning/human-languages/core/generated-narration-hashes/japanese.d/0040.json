@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 40,
+  "sourceHash": "fnv1a64:a91bfe512d52006d",
+  "lessonIds": [
+    "JA-C40-kasa",
+    "JA-C40-gakkou",
+    "JA-C40-shukudai",
+    "JA-C40-mondai",
+    "JA-C40-kotae"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch40.txt",
+  "json": "japanese/narration/ch40.json",
+  "textHash": "fnv1a64:9ffa112473b2bc35",
+  "jsonHash": "fnv1a64:53317602d2c13287",
+  "findings": []
+}

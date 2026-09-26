@@ -1,0 +1,11 @@
+{
+  "id": "UR-C48-kharidna",
+  "pathSegment": "UR-PATH-48-VERBS48",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-48-VERBS48",
+      "order": 1
+    }
+  ]
+}

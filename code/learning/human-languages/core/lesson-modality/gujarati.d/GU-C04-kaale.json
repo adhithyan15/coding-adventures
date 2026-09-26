@@ -3,7 +3,7 @@
     "id": "GU-C04-kaale",
     "language": "gujarati",
     "chapter": 10,
-    "sequence": 250,
+    "sequence": 263,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c056774b2c19272a",
+    "sourceHash": "fnv1a64:1f85579f351e7970",
     "detachableSegments": [
       "The letters in this word"
     ]

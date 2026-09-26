@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:aac470e49b1d043b",
+  "lessonIds": [
+    "GE-C133-boese",
+    "GE-C133-lustig",
+    "GE-C133-ernst",
+    "GE-C133-beruehmt",
+    "GE-C133-interessant"
+  ],
+  "tex": "german/book/chapters/ch133-angry-funny-serious-famous-interesting.tex"
+}

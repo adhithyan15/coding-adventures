@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 47,
+  "sourceHash": "fnv1a64:ea30e4295a526210",
+  "lessonIds": [
+    "JA-C47-kani",
+    "JA-C47-tako",
+    "JA-C47-ika",
+    "JA-C47-kame",
+    "JA-C47-ookami"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch47.txt",
+  "json": "japanese/narration/ch47.json",
+  "textHash": "fnv1a64:8533c1120738be4b",
+  "jsonHash": "fnv1a64:8f223928b83b9998",
+  "findings": []
+}

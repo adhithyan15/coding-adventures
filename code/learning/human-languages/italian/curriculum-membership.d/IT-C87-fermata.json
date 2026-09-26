@@ -1,0 +1,11 @@
+{
+  "id": "IT-C87-fermata",
+  "pathSegment": "IT-PATH-87-LUOGHI87",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "IT-EXT-87-LUOGHI87",
+      "order": 1
+    }
+  ]
+}

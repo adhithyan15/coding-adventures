@@ -1,0 +1,12 @@
+{
+  "language": "russian",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:22aaf7f7054c1672",
+  "lessonIds": [
+    "RU-W93-e",
+    "RU-W93-shcha",
+    "RU-R93-letters-first-pass",
+    "RU-R93-letters-second-pass"
+  ],
+  "tex": "russian/book/chapters/ch93-the-letters-shch-and-e.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "GE-C69-apfel",
+  "pathSegment": "GE-PATH-69-ESSEN1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-69-ESSEN1",
+      "order": 4
+    }
+  ]
+}

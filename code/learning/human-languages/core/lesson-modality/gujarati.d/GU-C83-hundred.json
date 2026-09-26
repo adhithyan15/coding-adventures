@@ -3,7 +3,7 @@
     "id": "GU-C83-hundred",
     "language": "gujarati",
     "chapter": 83,
-    "sequence": 4220,
+    "sequence": 4233,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:27c71c74c735f0c0"
+    "sourceHash": "fnv1a64:0d70413bd299db70"
   },
   "findings": []
 }

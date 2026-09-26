@@ -1,0 +1,13 @@
+{
+  "language": "arabic",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:fe47e03a6f26eade",
+  "lessonIds": [
+    "AR-C81-jamal",
+    "AR-C81-himar",
+    "AR-C81-dajaja",
+    "AR-C81-kabir",
+    "AR-C81-saghir"
+  ],
+  "tex": "arabic/book/chapters/ch81-camel-donkey-hen-big-small.tex"
+}

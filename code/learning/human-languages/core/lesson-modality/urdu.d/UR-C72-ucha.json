@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C72-ucha",
+    "language": "urdu",
+    "chapter": 72,
+    "sequence": 3650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc09f563079c50c4"
+  },
+  "findings": []
+}

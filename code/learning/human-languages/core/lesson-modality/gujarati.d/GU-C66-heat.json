@@ -3,7 +3,7 @@
     "id": "GU-C66-heat",
     "language": "gujarati",
     "chapter": 66,
-    "sequence": 3360,
+    "sequence": 3373,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:26cd579f130240cf"
+    "sourceHash": "fnv1a64:c33d1dd7347042bf"
   },
   "findings": []
 }

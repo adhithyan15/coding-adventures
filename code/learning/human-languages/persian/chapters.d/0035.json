@@ -1,0 +1,19 @@
+{
+  "chapter": 35,
+  "title": "To eat, To drink, To see, To hear, To sit",
+  "label": "ch:fa-to-eat-to-drink-to-see-to-hear-to-sit",
+  "canDo": "I can say to eat, to drink, to see, to hear and to sit.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FA-C35-neshastan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 35: i can say to eat, to drink, to see, to hear and to sit.",
+    "assesses": [
+      "FA-LEX-C35-VERBS35-03",
+      "FA-LEX-C35-VERBS35-04",
+      "FA-LEX-C35-VERBS35-05"
+    ]
+  }
+}

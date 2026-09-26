@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W05-la
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 76
+sequence: 84
 delivery: script
 chapter: 5
 type: writing
 headword: લ
 romanization: "la"
 gloss: "the consonant la"
-prerequisites: [GU-R04-first-four-r1]
+prerequisites: [GU-R04-first-four-r1, GU-C05-chappal]
 sounds: []
 roots: []
 etymology_hook: "The ordinary l arrives beside the curled-back ળ; one contrast keeps the two apart."
 duration:
   max_seconds: 225
 requires:
-  knowledge: [GU-SCRIPT-LLA-01, GU-SCRIPT-I-MATRA-01]
+  knowledge: [GU-SCRIPT-LLA-01, GU-SCRIPT-I-MATRA-01, GU-LEX-ANCHOR-CHAPPAL]
 introduces:
   knowledge: [GU-SCRIPT-LA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-LLA-01, GU-SCRIPT-LA-01]
+  knowledge: [GU-SCRIPT-LLA-01, GU-SCRIPT-LA-01, GU-LEX-ANCHOR-CHAPPAL]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-R04-first-four-r1]
 # લ — the consonant la
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-LLA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-LLA-01, GU-LEX-ANCHOR-CHAPPAL] -->
 
 Write retroflex **ળ** once from memory. Say *lla*, then put it away. The new
 letter is the ordinary *l* sound.

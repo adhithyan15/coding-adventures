@@ -1,0 +1,19 @@
+{
+  "language": "italian",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:28de81d86bbaa7b0",
+  "lessonIds": [
+    "IT-C62-borsa",
+    "IT-C62-telefono",
+    "IT-C62-ombrello",
+    "IT-C62-soldi",
+    "IT-C62-regalo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "italian/narration/ch62.txt",
+  "json": "italian/narration/ch62.json",
+  "textHash": "fnv1a64:5c5487855b11bf83",
+  "jsonHash": "fnv1a64:6ad100176d9f88e5",
+  "findings": []
+}

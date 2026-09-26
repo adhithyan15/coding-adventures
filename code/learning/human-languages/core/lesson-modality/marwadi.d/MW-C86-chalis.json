@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C86-chalis",
+    "language": "marwadi",
+    "chapter": 86,
+    "sequence": 5630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62736d239fc88452"
+  },
+  "findings": []
+}

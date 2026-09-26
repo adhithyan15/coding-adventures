@@ -4,11 +4,11 @@
   "chapter": 26,
   "title": "City, School, and Road",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b3a6ee139900c9ae",
+  "sourceHash": "fnv1a64:f73e357f94971e02",
   "lessons": [
     {
       "id": "GU-C22-hear-shahar",
-      "sequence": 1020,
+      "sequence": 1033,
       "title": "શહેર (shahar) — hear city first",
       "headword": "શહેર",
       "romanization": "shahar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be2649023e22b9b5",
+      "sourceHash": "fnv1a64:1f6b732285971df1",
       "notice": null,
       "blocks": [
         {
@@ -77,7 +77,7 @@
     },
     {
       "id": "GU-C22-shahar",
-      "sequence": 1030,
+      "sequence": 1043,
       "title": "શહેર (shahar) — city on the page",
       "headword": "શહેર",
       "romanization": "shahar",
@@ -88,7 +88,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:21f7ae9a9efe3bf4",
+      "sourceHash": "fnv1a64:16af0b4d3c032c1e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -153,7 +153,7 @@
     },
     {
       "id": "GU-C22-hear-shaalaa",
-      "sequence": 1040,
+      "sequence": 1053,
       "title": "શાળા (shāḷā) — hear school first",
       "headword": "શાળા",
       "romanization": "shāḷā",
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c456df355ea7fb0b",
+      "sourceHash": "fnv1a64:7f4424ede73a14c7",
       "notice": null,
       "blocks": [
         {
@@ -222,7 +222,7 @@
     },
     {
       "id": "GU-C22-shaalaa",
-      "sequence": 1050,
+      "sequence": 1063,
       "title": "શાળા (shāḷā) — school on the page",
       "headword": "શાળા",
       "romanization": "shāḷā",
@@ -233,7 +233,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:e44c24c9bc777250",
+      "sourceHash": "fnv1a64:84931bcc3a0503ba",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -315,7 +315,7 @@
     },
     {
       "id": "GU-C22-hear-rasto",
-      "sequence": 1060,
+      "sequence": 1073,
       "title": "રસ્તો (rasto) — hear road first",
       "headword": "રસ્તો",
       "romanization": "rasto",
@@ -326,7 +326,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:319916b53eca2658",
+      "sourceHash": "fnv1a64:fac3f1ae6c9b3408",
       "notice": null,
       "blocks": [
         {
@@ -384,7 +384,7 @@
     },
     {
       "id": "GU-C22-rasto",
-      "sequence": 1070,
+      "sequence": 1083,
       "title": "રસ્તો (rasto) — road on the page",
       "headword": "રસ્તો",
       "romanization": "rasto",
@@ -395,7 +395,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:f37060ff64a8845a",
+      "sourceHash": "fnv1a64:5bdcdb16399b2b18",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -460,7 +460,7 @@
     },
     {
       "id": "GU-C22-route-three",
-      "sequence": 1080,
+      "sequence": 1093,
       "title": "Payoff — a three-word route",
       "headword": "શહેર — શાળા — રસ્તો",
       "romanization": "shahar — shāḷā — rasto",
@@ -471,7 +471,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:6dedd6cad544291c",
+      "sourceHash": "fnv1a64:581fb2255a9164f0",
       "notice": {
         "modality": "pen",
         "needs": [

@@ -1,0 +1,19 @@
+{
+  "language": "german",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:ed1a7a6eb3abd0cf",
+  "lessonIds": [
+    "GE-C124-joghurt",
+    "GE-C124-krankenschwester",
+    "GE-C124-koch",
+    "GE-C124-polizist",
+    "GE-C124-verkaeufer"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "german/narration/ch124.txt",
+  "json": "german/narration/ch124.json",
+  "textHash": "fnv1a64:9d800956d1d7587d",
+  "jsonHash": "fnv1a64:e6c96b1fe634b98a",
+  "findings": []
+}

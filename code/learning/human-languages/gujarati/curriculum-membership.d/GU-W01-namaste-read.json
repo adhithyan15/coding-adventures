@@ -1,11 +1,11 @@
 {
   "id": "GU-W01-namaste-read",
   "pathSegment": "GU-PATH-001",
-  "pathOrder": 10,
+  "pathOrder": 11,
   "extensions": [
     {
       "id": "GU-EXT-016-SCRIPT-FIRST-PIECES",
-      "order": 9
+      "order": 10
     }
   ]
 }

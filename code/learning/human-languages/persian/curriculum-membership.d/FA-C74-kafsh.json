@@ -1,0 +1,11 @@
+{
+  "id": "FA-C74-kafsh",
+  "pathSegment": "FA-PATH-74-CLOTHES74",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FA-EXT-74-CLOTHES74",
+      "order": 4
+    }
+  ]
+}

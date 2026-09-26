@@ -1,0 +1,11 @@
+{
+  "id": "GE-C94-sofort",
+  "pathSegment": "GE-PATH-94-WANN",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-94-WANN",
+      "order": 4
+    }
+  ]
+}

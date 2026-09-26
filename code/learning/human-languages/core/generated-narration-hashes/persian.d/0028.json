@@ -1,0 +1,19 @@
+{
+  "language": "persian",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:563b34f4d979fc05",
+  "lessonIds": [
+    "FA-C28-mu",
+    "FA-C28-angosht",
+    "FA-C28-shane",
+    "FA-C28-gardan",
+    "FA-C28-surat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "persian/narration/ch28.txt",
+  "json": "persian/narration/ch28.json",
+  "textHash": "fnv1a64:fa5819d8036dcff9",
+  "jsonHash": "fnv1a64:d134049f72ca89cd",
+  "findings": []
+}

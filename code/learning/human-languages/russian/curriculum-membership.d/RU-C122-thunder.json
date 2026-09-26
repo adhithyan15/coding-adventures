@@ -1,0 +1,11 @@
+{
+  "id": "RU-C122-thunder",
+  "pathSegment": "RU-PATH-122-THINGS122",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-122-THINGS122",
+      "order": 3
+    }
+  ]
+}

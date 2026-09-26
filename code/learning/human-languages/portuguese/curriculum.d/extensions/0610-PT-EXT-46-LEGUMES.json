@@ -1,0 +1,8 @@
+{
+  "id": "PT-EXT-46-LEGUMES",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a potato, a tomato, an onion, a carrot and beans.",
+  "prerequisites": []
+}

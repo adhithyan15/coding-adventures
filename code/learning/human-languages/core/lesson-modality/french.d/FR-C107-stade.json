@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C107-stade",
+    "language": "french",
+    "chapter": 107,
+    "sequence": 4770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:843253382606339b"
+  },
+  "findings": []
+}

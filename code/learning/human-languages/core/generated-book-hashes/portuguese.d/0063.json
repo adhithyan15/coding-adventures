@@ -1,0 +1,13 @@
+{
+  "language": "portuguese",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:c9e62cb7afea4723",
+  "lessonIds": [
+    "PT-C63-leao",
+    "PT-C63-macaco",
+    "PT-C63-abelha",
+    "PT-C63-formiga",
+    "PT-C63-elefante"
+  ],
+  "tex": "portuguese/book/chapters/ch63-lion-monkey-bee-ant-elephant.tex"
+}

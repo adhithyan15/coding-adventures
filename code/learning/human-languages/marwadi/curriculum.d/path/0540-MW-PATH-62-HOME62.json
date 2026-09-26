@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-62-HOME62",
+  "spine_node": "SPINE-MEET-GREET",
+  "before": [],
+  "inline": [
+    "MW-EXT-62-HOME62"
+  ],
+  "after": []
+}

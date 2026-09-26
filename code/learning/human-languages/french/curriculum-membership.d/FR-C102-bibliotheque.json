@@ -1,0 +1,11 @@
+{
+  "id": "FR-C102-bibliotheque",
+  "pathSegment": "FR-PATH-102-VILLE54",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-102-VILLE54",
+      "order": 2
+    }
+  ]
+}

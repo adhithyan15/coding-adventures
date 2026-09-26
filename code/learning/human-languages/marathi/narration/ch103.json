@@ -1,0 +1,909 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "chapter": 103,
+  "title": "Ant, Duck, New, Old, Bad",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:1cadfecf08909848",
+  "lessons": [
+    {
+      "id": "MR-C103-mungi",
+      "sequence": 4530,
+      "title": "मुंगी (muṅgī) — an ant",
+      "headword": "मुंगी",
+      "romanization": "muṅgī",
+      "gloss": "an ant",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b8c0735f31c4b13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a camel, then the Marathi for a butterfly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मुंगी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुंगी — muṅgī — \"an ant\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṅgī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṅgī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṅgī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṅgī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say muṅgī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *muṅgī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a camel, then the Marathi for a butterfly, then say muṅgī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a camel, then the Marathi for a butterfly, then say *muṅgī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मुंगी (muṅgī) mean? (\"An ant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C103-badak",
+      "sequence": 4540,
+      "title": "बदक (badak) — a duck",
+      "headword": "बदक",
+      "romanization": "badak",
+      "gloss": "a duck",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:56e14bbd067fde80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a butterfly, then the Marathi for an ant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बदक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बदक — badak — \"a duck\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "badak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *badak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say badak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *badak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a butterfly, then the Marathi for an ant, then say badak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a butterfly, then the Marathi for an ant, then say *badak* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बदक (badak) mean? (\"A duck\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C103-nava",
+      "sequence": 4550,
+      "title": "नवा (navā) — new",
+      "headword": "नवा",
+      "romanization": "navā",
+      "gloss": "new",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e756a0b3569acc7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for an ant, then the Marathi for a duck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नवा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नवा — navā — \"new\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "navā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *navā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "navā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *navā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say navā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *navā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for an ant, then the Marathi for a duck, then say navā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for an ant, then the Marathi for a duck, then say *navā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नवा (navā) mean? (\"New\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C103-juna",
+      "sequence": 4560,
+      "title": "जुना (junā) — old (things)",
+      "headword": "जुना",
+      "romanization": "junā",
+      "gloss": "old (things)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:03297917ecffa4ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for a duck, then the Marathi for new."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जुना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जुना — junā — \"old (things)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "junā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *junā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "junā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *junā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say junā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *junā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for a duck, then the Marathi for new, then say junā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for a duck, then the Marathi for new, then say *junā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जुना (junā) mean? (\"Old (things)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C103-vait",
+      "sequence": 4570,
+      "title": "वाईट (vāīṭ) — bad",
+      "headword": "वाईट",
+      "romanization": "vāīṭ",
+      "gloss": "bad",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c3fb45c0f89d3a2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marathi for new, then the Marathi for old."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वाईट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाईट — vāīṭ — \"bad\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāīṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāīṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vāīṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vāīṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say vāīṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *vāīṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marathi for new, then the Marathi for old, then say vāīṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marathi for new, then the Marathi for old, then say *vāīṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वाईट (vāīṭ) mean? (\"Bad\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R103-first-pass-food-the-home-and-school",
+      "sequence": 4580,
+      "title": "Food, the home and school — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 87-94",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4278afe630d98b05",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for old and bad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a chilli, butter, honey, oil, grapes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a chilli, butter, honey, oil, grapes]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an orange, a lemon, breakfast, an egg, yoghurt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an orange, a lemon, breakfast, an egg, yoghurt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an onion, a mango, a window, a chair, a table",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an onion, a mango, a window, a chair, a table]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wall, a roof, a bed, a cupboard, the ground",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wall, a roof, a bed, a cupboard, the ground]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "stairs, a mirror, a lamp, a fan, a key",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: stairs, a mirror, a lamp, a fan, a key]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a cup, a plate, a spoon, a knife, a bottle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a cup, a plate, a spoon, a knife, a bottle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a door, a kitchen, a book, an exercise book, a pen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a door, a kitchen, a book, an exercise book, a pen]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a school, a map, a lesson, a question, an answer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a school, a map, a lesson, a question, an answer]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A chilli? (मिरची, mirchī.) Butter? (लोणी, loṇī.) Honey? (मध, madh.) Oil? (तेल, tel.) Grapes? (द्राक्षे, drākṣe.) An orange? (संत्रे, santre.) A lemon? (लिंबू, limbū.) Breakfast? (नाश्ता, nāshtā.) An egg? (अंडे, aṇḍe.) Yoghurt? (दही, dahī.) An onion? (कांदा, kāndā.) A mango? (आंबा, āmbā.) A window? (खिडकी, khiḍkī.) A chair? (खुर्ची, khurchī.) A table? (टेबल, ṭebal.) A wall? (भिंत, bhint.) A roof? (छप्पर, chhappar.) A bed? (पलंग, palaṅg.) A cupboard? (कपाट, kapāṭ.) The ground? (जमीन, jamīn.) Stairs? (जिना, jinā.) A mirror? (आरसा, ārsā.) A lamp? (दिवा, divā.) A fan? (पंखा, paṅkhā.) A key? (किल्ली, killī.) A cup? (कप, kap.) A plate? (ताट, tāṭ.) A spoon? (चमचा, chamchā.) A knife? (सुरी, surī.) A bottle? (बाटली, bāṭlī.) A door? (दार, dār.) A kitchen? (स्वयंपाकघर, svayampākghar.) A book? (पुस्तक, pustak.) An exercise book? (वही, vahī.) A pen? (पेन, pen.) A school? (शाळा, shāḷā.) A map? (नकाशा, nakāshā.) A lesson? (धडा, dhaḍā.) A question? (प्रश्न, prashna.) An answer? (उत्तर, uttar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-R103-second-pass-nature-and-animals",
+      "sequence": 4590,
+      "title": "Nature and animals — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 95-103",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:561ea3903c5c04ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a word and a game."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a word, a game, a letter, a picture, a tree",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a word, a game, a letter, a picture, a tree]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flower, a leaf, a mountain, a forest, a river",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flower, a leaf, a mountain, a forest, a river]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lake, a stone, sand, a field, a star",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lake, a stone, sand, a field, a star]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the sun, the moon, the sea, fire, snow; ice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the sun, the moon, the sea, fire, snow; ice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rain, wind, the sky, a dog, a cat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rain, wind, the sky, a dog, a cat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a horse, a cow, a goat, a sheep, a bird",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a horse, a cow, a goat, a sheep, a bird]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mouse, a lion, a tiger, an elephant, a monkey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mouse, a lion, a tiger, an elephant, a monkey]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a snake, a peacock, a bear, a camel, a butterfly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a snake, a peacock, a bear, a camel, a butterfly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an ant, a duck, new, old, bad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an ant, a duck, new, old, bad]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A word? (शब्द, shabda.) A game? (खेळ, kheḷ.) A letter? (पत्र, patra.) A picture? (चित्र, chitra.) A tree? (झाड, jhāḍ.) A flower? (फूल, phūl.) A leaf? (पान, pān.) A mountain? (डोंगर, ḍoṅgar.) A forest? (जंगल, jaṅgal.) A river? (नदी, nadī.) A lake? (तलाव, talāv.) A stone? (दगड, dagaḍ.) Sand? (वाळू, vāḷū.) A field? (शेत, shet.) A star? (तारा, tārā.) The sun? (सूर्य, sūrya.) The moon? (चंद्र, chandra.) The sea? (समुद्र, samudra.) Fire? (आग, āg.) Snow; ice? (बर्फ, barpha.) Rain? (पाऊस, pāūs.) Wind? (वारा, vārā.) The sky? (आकाश, ākāsh.) A dog? (कुत्रा, kutrā.) A cat? (मांजर, māñjar.) A horse? (घोडा, ghoḍā.) A cow? (गाय, gāy.) A goat? (शेळी, sheḷī.) A sheep? (मेंढी, meṇḍhī.) A bird? (पक्षी, pakṣī.) A mouse? (उंदीर, undīr.) A lion? (सिंह, siṁha.) A tiger? (वाघ, vāgh.) An elephant? (हत्ती, hattī.) A monkey? (माकड, mākaḍ.) A snake? (साप, sāp.) A peacock? (मोर, mor.) A bear? (अस्वल, asval.) A camel? (उंट, uṇṭ.) A butterfly? (फुलपाखरू, phulpākhrū.) An ant? (मुंगी, muṅgī.) A duck? (बदक, badak.) New? (नवा, navā.) Old? (जुना, junā.) Bad? (वाईट, vāīṭ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 28,
+  "sourceHash": "fnv1a64:2b451f700a33acbb",
+  "lessonIds": [
+    "JA-C28-tsukau",
+    "JA-C28-utau",
+    "JA-C28-iu",
+    "JA-C28-omou",
+    "JA-C28-motsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch28.txt",
+  "json": "japanese/narration/ch28.json",
+  "textHash": "fnv1a64:a475b149c0599ebf",
+  "jsonHash": "fnv1a64:992b2ff9a1770602",
+  "findings": []
+}

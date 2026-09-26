@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C84-gram",
+    "language": "bengali",
+    "chapter": 84,
+    "sequence": 4380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0438ccae9e977c48"
+  },
+  "findings": []
+}

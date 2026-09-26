@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-124-METIERS76",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a baker, a student, a driver, a lawyer, an engineer.",
+  "prerequisites": []
+}

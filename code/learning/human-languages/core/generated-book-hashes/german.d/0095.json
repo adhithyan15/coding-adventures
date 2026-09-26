@@ -1,0 +1,13 @@
+{
+  "language": "german",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:bd962b87fd0bf6b6",
+  "lessonIds": [
+    "GE-C95-heute",
+    "GE-C95-manchmal",
+    "GE-C95-dort",
+    "GE-C95-weit",
+    "GE-C95-rechts"
+  ],
+  "tex": "german/book/chapters/ch95-today-sometimes-there-far-on-the-right.tex"
+}

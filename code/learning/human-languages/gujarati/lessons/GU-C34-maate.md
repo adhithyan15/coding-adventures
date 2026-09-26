@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C34-maate
 spine_node: SPINE-SAY-WHY
-sequence: 1960
+sequence: 1973
 chapter: 38
 type: word
 headword: માટે

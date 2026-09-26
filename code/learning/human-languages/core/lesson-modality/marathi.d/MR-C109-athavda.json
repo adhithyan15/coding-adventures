@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C109-athavda",
+    "language": "marathi",
+    "chapter": 109,
+    "sequence": 4860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3aa3b3b6066285c"
+  },
+  "findings": []
+}

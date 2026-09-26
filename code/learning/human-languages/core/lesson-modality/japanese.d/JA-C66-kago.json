@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C66-kago",
+    "language": "japanese",
+    "chapter": 66,
+    "sequence": 3950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1d635e578562dca"
+  },
+  "findings": []
+}

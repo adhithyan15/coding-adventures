@@ -3,7 +3,7 @@
     "id": "GU-C85-port",
     "language": "gujarati",
     "chapter": 85,
-    "sequence": 4350,
+    "sequence": 4363,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9e1a6a6b92fbfed8"
+    "sourceHash": "fnv1a64:9640e9961c9d659a"
   },
   "findings": []
 }

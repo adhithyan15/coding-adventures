@@ -2031,7 +2031,7 @@
       ],
       "diagnostics": [
         "end-tag-with-attributes",
-        "eof-in-end-tag-name-state"
+        "eof-in-tag"
       ]
     },
     {
@@ -23688,10 +23688,12 @@
       "description": "End tag closing RCDATA or RAWTEXT (ending with space)",
       "input": "foo</xmp ",
       "tokens": [
-        "Text(data=foo</xmp )",
+        "Text(data=foo)",
         "EOF"
       ],
-      "diagnostics": [],
+      "diagnostics": [
+        "eof-in-tag"
+      ],
       "initial_state": "RCDATA state",
       "last_start_tag": "xmp"
     },
@@ -23700,10 +23702,12 @@
       "description": "End tag closing RCDATA or RAWTEXT (ending with space)",
       "input": "foo</xmp ",
       "tokens": [
-        "Text(data=foo</xmp )",
+        "Text(data=foo)",
         "EOF"
       ],
-      "diagnostics": [],
+      "diagnostics": [
+        "eof-in-tag"
+      ],
       "initial_state": "RAWTEXT state",
       "last_start_tag": "xmp"
     },
@@ -23736,10 +23740,12 @@
       "description": "End tag closing RCDATA or RAWTEXT (ending with slash)",
       "input": "foo</xmp/",
       "tokens": [
-        "Text(data=foo</xmp/)",
+        "Text(data=foo)",
         "EOF"
       ],
-      "diagnostics": [],
+      "diagnostics": [
+        "eof-in-tag"
+      ],
       "initial_state": "RCDATA state",
       "last_start_tag": "xmp"
     },
@@ -23748,10 +23754,12 @@
       "description": "End tag closing RCDATA or RAWTEXT (ending with slash)",
       "input": "foo</xmp/",
       "tokens": [
-        "Text(data=foo</xmp/)",
+        "Text(data=foo)",
         "EOF"
       ],
-      "diagnostics": [],
+      "diagnostics": [
+        "eof-in-tag"
+      ],
       "initial_state": "RAWTEXT state",
       "last_start_tag": "xmp"
     },

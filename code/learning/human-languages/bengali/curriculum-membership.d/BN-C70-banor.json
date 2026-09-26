@@ -1,0 +1,11 @@
+{
+  "id": "BN-C70-banor",
+  "pathSegment": "BN-PATH-70-ANIMALS70",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-70-ANIMALS70",
+      "order": 2
+    }
+  ]
+}

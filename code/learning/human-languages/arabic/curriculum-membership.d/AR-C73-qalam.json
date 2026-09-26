@@ -1,0 +1,11 @@
+{
+  "id": "AR-C73-qalam",
+  "pathSegment": "AR-PATH-73-SCHOOL73",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "AR-EXT-73-SCHOOL73",
+      "order": 2
+    }
+  ]
+}

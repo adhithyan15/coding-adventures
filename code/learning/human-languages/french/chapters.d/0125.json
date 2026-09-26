@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Firefighter, Postman, Waiter, Customer, Till",
+  "label": "ch:fr-firefighter-postman-waiter-customer-till",
+  "canDo": "I can name a firefighter, a postman, a waiter, a customer, a till.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C125-caisse",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can name a firefighter, a postman, a waiter, a customer, a till.",
+    "assesses": [
+      "FR-LEX-C125-METIERS77-03",
+      "FR-LEX-C125-METIERS77-04",
+      "FR-LEX-C125-METIERS77-05"
+    ]
+  }
+}

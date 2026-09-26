@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Drawing, Life, Time, Colour, Price",
+  "label": "ch:fr-drawing-life-time-colour-price",
+  "canDo": "I can name a drawing, life, a time, a colour, a price.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "FR-C129-prix",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can name a drawing, life, a time, a colour, a price.",
+    "assesses": [
+      "FR-LEX-C129-LOISIRS81-03",
+      "FR-LEX-C129-LOISIRS81-04",
+      "FR-LEX-C129-LOISIRS81-05"
+    ]
+  }
+}

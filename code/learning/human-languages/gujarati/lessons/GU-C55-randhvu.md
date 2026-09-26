@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C55-randhvu
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2790
+sequence: 2803
 chapter: 55
 type: word
 headword: "રાંધવું"

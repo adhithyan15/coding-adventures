@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C70-red
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3560
+sequence: 3573
 chapter: 70
 type: word
 headword: "લાલ"

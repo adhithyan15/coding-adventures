@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "IT-C57-bagno",
+    "language": "italian",
+    "chapter": 57,
+    "sequence": 2450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b6b60c3da7a6dc2"
+  },
+  "findings": []
+}

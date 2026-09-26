@@ -1,0 +1,11 @@
+{
+  "id": "MW-C46-nak",
+  "pathSegment": "MW-PATH-46-BODY46",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-46-BODY46",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C108-baker",
+  "pathSegment": "RU-PATH-108-THINGS108",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-108-THINGS108",
+      "order": 3
+    }
+  ]
+}

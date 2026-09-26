@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C20-hear-ghar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 900
+sequence: 913
 chapter: 24
 type: word
 headword: ઘર

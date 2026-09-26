@@ -1,0 +1,11 @@
+{
+  "id": "BN-R89-second-pass-time-places-the-town-clothes-and-numbers",
+  "pathSegment": "BN-PATH-89-WORLD89",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "BN-EXT-89-WORLD89",
+      "order": 6
+    }
+  ]
+}

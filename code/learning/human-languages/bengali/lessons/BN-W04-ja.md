@@ -9,18 +9,18 @@ type: writing
 headword: জ
 romanization: "jô"
 gloss: "the consonant ja — the voiced cell of the roof"
-prerequisites: [BN-W04-achhi-read]
+prerequisites: [BN-W04-achhi-read, BN-C09-jal]
 sounds: []
 roots: []
 etymology_hook: "The voiced partner of the roof consonant, and the letter that closes a grid twelve cells wide: four places in the mouth, three switches, and no shape memorised on its own."
 duration:
   max_seconds: 200
 requires:
-  knowledge: [BN-SCRIPT-CHA-01, BN-SCRIPT-CHHA-01, BN-SCRIPT-AA-MATRA-01]
+  knowledge: [BN-SCRIPT-CHA-01, BN-SCRIPT-CHHA-01, BN-SCRIPT-AA-MATRA-01, BN-LEX-ANCHOR-JAL]
 introduces:
   knowledge: [BN-SCRIPT-JA-01]
 practises:
-  knowledge: [BN-SCRIPT-CHA-01, BN-SCRIPT-CHHA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-JA-01, BN-SCRIPT-BA-01, BN-SCRIPT-BHA-01, BN-SCRIPT-KHA-01, BN-SCRIPT-GA-01, BN-SCRIPT-KA-01, BN-SCRIPT-PA-01, BN-SCRIPT-DA-01, BN-SCRIPT-DHA-01, BN-SCRIPT-TA-01, BN-SCRIPT-ACHHI-READ-01, BN-SCRIPT-ABAR-READ-01, BN-SCRIPT-BHALO-READ-01]
+  knowledge: [BN-SCRIPT-CHA-01, BN-SCRIPT-CHHA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-JA-01, BN-SCRIPT-BA-01, BN-SCRIPT-BHA-01, BN-SCRIPT-KHA-01, BN-SCRIPT-GA-01, BN-SCRIPT-KA-01, BN-SCRIPT-PA-01, BN-SCRIPT-DA-01, BN-SCRIPT-DHA-01, BN-SCRIPT-TA-01, BN-SCRIPT-ACHHI-READ-01, BN-SCRIPT-ABAR-READ-01, BN-SCRIPT-BHALO-READ-01, BN-LEX-ANCHOR-JAL]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [BN-W04-cha, BN-W04-achhi-read, BN-W03-ga, BN-W02-ta]
 # জ — the consonant ja, and the grid closed
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-CHA-01, BN-SCRIPT-CHHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-CHA-01, BN-SCRIPT-CHHA-01, BN-LEX-ANCHOR-JAL] -->
 
 [PAUSE 2s] Write **চ** and **ছ**, and say what separates them.
 

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 74,
+  "sourceHash": "fnv1a64:83697936ac423941",
+  "lessonIds": [
+    "PA-C74-pahar",
+    "PA-C74-jangal",
+    "PA-C74-daria",
+    "PA-C74-jhil",
+    "PA-C74-patthar"
+  ],
+  "tex": "punjabi/book/chapters/ch74-mountain-forest-river-lake-stone.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C63-phul",
+  "pathSegment": "UR-PATH-63-SCHOOL63",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-63-SCHOOL63",
+      "order": 4
+    }
+  ]
+}

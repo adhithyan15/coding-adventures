@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "AR-C74-haqiba",
+    "language": "arabic",
+    "chapter": 74,
+    "sequence": 2640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3f843a17891dae0"
+  },
+  "findings": []
+}

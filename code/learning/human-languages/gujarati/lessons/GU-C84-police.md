@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C84-police
 spine_node: SPINE-MEET-GREET
-sequence: 4280
+sequence: 4293
 chapter: 84
 type: word
 headword: "પોલીસ"

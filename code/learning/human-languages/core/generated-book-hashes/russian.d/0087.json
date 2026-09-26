@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:e39671aa94a964ae",
+  "lessonIds": [
+    "RU-C87-straight-on",
+    "RU-C87-nearby",
+    "RU-C87-airport",
+    "RU-C87-stop",
+    "RU-C87-square"
+  ],
+  "tex": "russian/book/chapters/ch87-straight-on-nearby-airport-stop-square.tex"
+}

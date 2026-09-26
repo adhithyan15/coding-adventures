@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:5623fa2a15bfe6fd",
+  "lessonIds": [
+    "RU-C118-squirrel",
+    "RU-C118-owl",
+    "RU-C118-whale",
+    "RU-C118-dolphin",
+    "RU-C118-elbow"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch118.txt",
+  "json": "russian/narration/ch118.json",
+  "textHash": "fnv1a64:98e8cbd2670e7077",
+  "jsonHash": "fnv1a64:625f0695fcdb5fb0",
+  "findings": []
+}

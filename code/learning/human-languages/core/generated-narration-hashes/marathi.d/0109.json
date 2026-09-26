@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:b759fcb4402a8f46",
+  "lessonIds": [
+    "MR-C109-mhatara",
+    "MR-C109-athavda",
+    "MR-C109-mahina",
+    "MR-C109-varsa",
+    "MR-C109-tas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch109.txt",
+  "json": "marathi/narration/ch109.json",
+  "textHash": "fnv1a64:92d579cfee490b32",
+  "jsonHash": "fnv1a64:1767503f10ced83e",
+  "findings": []
+}

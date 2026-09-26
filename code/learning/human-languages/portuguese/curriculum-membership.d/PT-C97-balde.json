@@ -1,0 +1,11 @@
+{
+  "id": "PT-C97-balde",
+  "pathSegment": "PT-PATH-97-CASA97",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PT-EXT-97-CASA97",
+      "order": 2
+    }
+  ]
+}

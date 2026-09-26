@@ -1,0 +1,19 @@
+{
+  "chapter": 86,
+  "title": "Supermarket, Petrol station, Swimming pool, Stadium, Factory",
+  "label": "ch:pt-supermarket-petrol-station-swimming-pool-stadium-factory",
+  "canDo": "I can say a supermarket, a petrol station, a swimming pool, a stadium and a factory.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PT-C86-fabrica",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 86: i can say a supermarket, a petrol station, a swimming pool, a stadium and a factory.",
+    "assesses": [
+      "PT-LEX-C86-LUGARES86-03",
+      "PT-LEX-C86-LUGARES86-04",
+      "PT-LEX-C86-LUGARES86-05"
+    ]
+  }
+}

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C69-fish
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3550
+sequence: 3563
 chapter: 69
 type: word
 headword: "માછલી"

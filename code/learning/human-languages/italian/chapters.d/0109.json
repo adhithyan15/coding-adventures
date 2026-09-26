@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Meal, Yoghurt, Ice cream, Steak, Ham",
+  "label": "ch:it-meal-yoghurt-ice-cream-steak-ham",
+  "canDo": "I can say a meal, a yoghurt, ice cream, a steak and ham.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "IT-C109-prosciutto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say a meal, a yoghurt, ice cream, a steak and ham.",
+    "assesses": [
+      "IT-LEX-C109-CIBO109-03",
+      "IT-LEX-C109-CIBO109-04",
+      "IT-LEX-C109-CIBO109-05"
+    ]
+  }
+}

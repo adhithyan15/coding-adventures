@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:dd070a0a236f7c8b",
+  "lessonIds": [
+    "MR-C89-kanda",
+    "MR-C89-amba",
+    "MR-C89-khidki",
+    "MR-C89-khurchi",
+    "MR-C89-tebal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch89.txt",
+  "json": "marathi/narration/ch89.json",
+  "textHash": "fnv1a64:b671fb0f02570942",
+  "jsonHash": "fnv1a64:b417c45bb2530b9b",
+  "findings": []
+}

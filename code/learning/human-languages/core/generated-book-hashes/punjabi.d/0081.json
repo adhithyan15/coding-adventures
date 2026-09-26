@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 81,
+  "sourceHash": "fnv1a64:9aceece5c8e760d2",
+  "lessonIds": [
+    "PA-C81-saukha",
+    "PA-C81-mahinga",
+    "PA-C81-sasta",
+    "PA-C81-uchcha",
+    "PA-C81-nivam"
+  ],
+  "tex": "punjabi/book/chapters/ch81-easy-expensive-cheap-high-low.tex"
+}

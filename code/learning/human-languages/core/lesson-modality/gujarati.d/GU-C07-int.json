@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C07-int",
+    "language": "gujarati",
+    "chapter": 7,
+    "sequence": 97,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e83d5b31b5a5b249"
+  },
+  "findings": []
+}

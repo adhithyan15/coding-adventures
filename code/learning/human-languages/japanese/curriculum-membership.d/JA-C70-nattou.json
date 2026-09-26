@@ -1,0 +1,11 @@
+{
+  "id": "JA-C70-nattou",
+  "pathSegment": "JA-PATH-70-THINGS70",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-70-THINGS70",
+      "order": 1
+    }
+  ]
+}

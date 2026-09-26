@@ -8,7 +8,7 @@ type: practice
 headword: Herz · Haupt · Entschuldigung
 gloss: the last of the words this book showed once, gathered on purpose — a heart, a head, and an apology
 concept_tag: GE-REVIEW-LETZTE-EINMAL
-prerequisites: [GE-C03-schoen, GE-C03-vielen-dank, GE-C17-kopf-haupt, GE-C20-entschuldigung, GE-C31-herz]
+prerequisites: [GE-C03-schoen, GE-C03-vielen-dank, GE-C17-kopf-haupt, GE-C20-entschuldigung, GE-C31-herz, GE-C17-kopf-haupt-more]
 sounds: []
 roots: []
 duration:

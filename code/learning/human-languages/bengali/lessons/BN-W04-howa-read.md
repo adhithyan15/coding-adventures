@@ -9,18 +9,18 @@ type: writing
 headword: হওয়া
 romanization: "hôwā"
 gloss: "to be, to become — the verb behind the farewell, read whole"
-prerequisites: [BN-W04-nukta]
+prerequisites: [BN-W04-nukta, BN-C10-para]
 sounds: []
 roots: []
 etymology_hook: "Four pieces, four syllabic jobs, and no consonant cluster anywhere: the word is a small demonstration that Bengali spells vowel-heavy verbs exactly as they sound."
 duration:
   max_seconds: 220
 requires:
-  knowledge: [BN-SCRIPT-HA-01, BN-SCRIPT-O-INDEP-01, BN-SCRIPT-YA-01, BN-SCRIPT-NUKTA-01, BN-SCRIPT-AA-MATRA-01]
+  knowledge: [BN-SCRIPT-HA-01, BN-SCRIPT-O-INDEP-01, BN-SCRIPT-YA-01, BN-SCRIPT-NUKTA-01, BN-SCRIPT-AA-MATRA-01, BN-LEX-ANCHOR-PARA]
 introduces:
   knowledge: [BN-SCRIPT-HOWA-READ-01]
 practises:
-  knowledge: [BN-SCRIPT-HOWA-READ-01, BN-SCRIPT-HA-01, BN-SCRIPT-O-INDEP-01, BN-SCRIPT-YA-01, BN-SCRIPT-NUKTA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-BA-01, BN-SCRIPT-E-MATRA-01]
+  knowledge: [BN-SCRIPT-HOWA-READ-01, BN-SCRIPT-HA-01, BN-SCRIPT-O-INDEP-01, BN-SCRIPT-YA-01, BN-SCRIPT-NUKTA-01, BN-SCRIPT-AA-MATRA-01, BN-SCRIPT-BA-01, BN-SCRIPT-E-MATRA-01, BN-LEX-ANCHOR-PARA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [BN-W04-nukta, BN-C04-dekha-hobe, BN-W02-e-matra]
 # হওয়া — to be, read whole
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-NUKTA-01, BN-SCRIPT-O-INDEP-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-NUKTA-01, BN-SCRIPT-O-INDEP-01, BN-LEX-ANCHOR-PARA] -->
 
 [PAUSE 2s] Write **য়**. Then write **ও** and say why it is not a sign.
 

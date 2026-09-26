@@ -1,0 +1,11 @@
+{
+  "id": "GE-C111-fliegen",
+  "pathSegment": "GE-PATH-111-FAHRT111",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "GE-EXT-111-FAHRT111",
+      "order": 4
+    }
+  ]
+}

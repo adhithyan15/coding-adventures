@@ -49,7 +49,13 @@ it("pins Arabic lesson-content budgets", () =>
     // letter the reader had read in words and never written) and two reviews.
     // RE-MEASURED against the tree. Idioms, senses and culture claims stay at
     // 2 / 3 / 14: a letter lesson introduces one script atom and nothing else.
-    lessons: 160,
+    // 160 -> 414: chapters 50-99, 250 word lessons and four reviews. None
+    // introduces an idiom, a sense or a culture claim.
+    // 414 -> 419: HL-C443 anchor words for five letter sets in chapters 1-3
+    // (ثابت, عيد, كوخ, ثمن, حاج), each placed before the set it anchors.
+    // 419 -> 421: HL-C443 anchor words for the two mark sets of chapter 2
+    // (مُدَرِّس, أَهْلًا). No idioms, senses or culture claims.
+    lessons: 421,
     idioms: 2,
     senses: 3,
     cultureClaims: 14,

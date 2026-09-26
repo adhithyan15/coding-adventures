@@ -1,0 +1,19 @@
+{
+  "chapter": 95,
+  "title": "Word, Game, Letter, Picture, Tree",
+  "label": "ch:mr-word-game-letter-picture-tree",
+  "canDo": "I can say a word, a game, a letter, a picture and a tree.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "MR-C95-jhad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 95: i can say a word, a game, a letter, a picture and a tree.",
+    "assesses": [
+      "MR-LEX-C95-SCHOOL95-03",
+      "MR-LEX-C95-SCHOOL95-04",
+      "MR-LEX-C95-SCHOOL95-05"
+    ]
+  }
+}

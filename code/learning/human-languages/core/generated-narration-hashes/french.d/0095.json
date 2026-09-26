@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:fe7904fe1a273270",
+  "lessonIds": [
+    "FR-C95-mouille",
+    "FR-C95-semaine",
+    "FR-C95-mois",
+    "FR-C95-matin",
+    "FR-C95-toujours"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch95.txt",
+  "json": "french/narration/ch95.json",
+  "textHash": "fnv1a64:fc8d61684a28cab3",
+  "jsonHash": "fnv1a64:6a6023c18b6da262",
+  "findings": []
+}

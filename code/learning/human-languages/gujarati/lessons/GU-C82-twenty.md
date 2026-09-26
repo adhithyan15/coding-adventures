@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C82-twenty
 spine_node: SPINE-RESPOND-BASIC
-sequence: 4180
+sequence: 4193
 chapter: 82
 type: word
 headword: "વીસ"

@@ -1,0 +1,19 @@
+{
+  "chapter": 66,
+  "title": "Basket, Spinning top, Raft, Flute, Drum",
+  "label": "ch:ja-basket-spinning-top-raft-flute-drum",
+  "canDo": "I can say a basket, a spinning top, a raft, a flute and a drum.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "JA-C66-taiko",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 66: i can say a basket, a spinning top, a raft, a flute and a drum.",
+    "assesses": [
+      "JA-LEX-C66-THINGS66-03",
+      "JA-LEX-C66-THINGS66-04",
+      "JA-LEX-C66-THINGS66-05"
+    ]
+  }
+}
