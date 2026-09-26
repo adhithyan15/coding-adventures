@@ -94,6 +94,35 @@ describe("anchoring", () => {
     expect(track(report).cold).toBe(1);
   });
 
+  it("counts a digit no word holds as a numeral, not cold", () => {
+    // TELUGU DIGIT ONE, TELUGU LETTER KA.
+    const report = measureLetterAnchoring([
+      lesson("TE-S1", 10, { type: "writing", headword: "\u0C67", language: "telugu" }),
+      lesson("TE-S2", 20, { type: "writing", headword: "\u0C15", language: "telugu" }),
+    ]);
+    const telugu = track(report, "telugu");
+    expect(telugu.letterLessons.map((entry) => entry.anchoring)).toEqual(["numeral", "cold"]);
+    expect(telugu.numeral).toBe(1);
+    expect(telugu.cold).toBe(1);
+    expect(report.summary.numeral).toBe(1);
+  });
+
+  it("does not let a cold letter hide behind a digit in the same set", () => {
+    const report = measureLetterAnchoring([
+      lesson("TE-S1", 10, { type: "writing", headword: "\u0C67, \u0C15", language: "telugu" }),
+    ]);
+    expect(track(report, "telugu").letterLessons.map((entry) => entry.anchoring)).toEqual(["cold"]);
+  });
+
+  it("anchors a digit that an earlier word holds", () => {
+    // KANNADA DIGIT ONE + NE: "first", as on a sign.
+    const report = measureLetterAnchoring([
+      lesson("KA-C1", 10, { headword: "\u0CE7\u0CA8\u0CC7", language: "kannada" }),
+      lesson("KA-S1", 20, { type: "writing", chapter: 2, headword: "\u0CE7", language: "kannada" }),
+    ]);
+    expect(track(report, "kannada").letterLessons.map((entry) => entry.anchoring)).toEqual(["anchored"]);
+  });
+
   it("reports a Han component with no visible anchor as unmeasured, not cold", () => {
     const report = measureLetterAnchoring([
       lesson("ZH-S1", 10, { type: "writing", headword: PERSON_RADICAL, language: "chinese" }),
@@ -212,23 +241,30 @@ describe("the real corpus", () => {
   // औ after औरत, ण after प्रणाम. The four left need more than a move: घ and ढ
   // depend on each other in the script ladder, and ऊ and ओ have no word before
   // chapter 96.
+  //
+  // Telugu (10 -> 0), Kannada (10 -> 0) and Punjabi (7 -> 3) fell when digit
+  // lessons began to count as `numeral`: no word is spelled with ౧ or ೨, so a
+  // digit could never be anchored by a word, and its real anchor is the amount
+  // the reader already knows. Punjabi's 3 left are real letter sets. Arabic's
+  // builds-toward (5 -> 4) and Bengali's (12 -> 11) fell with the anchor words
+  // of HL-C443's earlier passes.
   const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
-    arabic: [2, 5, 0],
-    bengali: [0, 12, 0],
+    arabic: [2, 4, 0],
+    bengali: [0, 11, 0],
     chinese: [0, 51, 0],
     gujarati: [34, 5, 0],
     hindi: [0, 1, 0],
     japanese: [2, 35, 0],
-    kannada: [10, 0, 0],
+    kannada: [0, 0, 0],
     malayalam: [3, 12, 0],
     marathi: [37, 4, 0],
     marwadi: [0, 49, 0],
     persian: [0, 4, 0],
-    punjabi: [7, 2, 0],
+    punjabi: [3, 2, 0],
     russian: [1, 0, 0],
     sanskrit: [0, 0, 0],
     tamil: [0, 9, 0],
-    telugu: [10, 0, 0],
+    telugu: [0, 0, 0],
     urdu: [0, 5, 0],
   };
 

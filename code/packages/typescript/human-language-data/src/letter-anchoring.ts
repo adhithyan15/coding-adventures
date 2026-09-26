@@ -23,15 +23,18 @@
 // Three kinds of letter lesson
 // ---------------------------------------------------------------------------
 //
-// Walking a track in reading order, each letter lesson is exactly one of:
+// Walking a track in reading order, each letter lesson is exactly one of
+// (plus `unmeasured`, for Han components, below):
 //
 //   anchored        every glyph of the letter appeared in an EARLIER word
 //                   headword.  This is the rule.
 //   builds-toward   not anchored, but a word LATER IN THE SAME CHAPTER holds
 //                   it.  Marwadi opens this way: र, then ा, then the word राम.
 //                   The word is close, but the letter still comes first.
-//   cold            neither.  No word the reader knows, or is about to meet in
-//                   this chapter, holds the letter.
+//   numeral         not anchored, but every missing glyph is a digit, whose
+//                   anchor is the quantity it stands for (see below).
+//   cold            none of these.  No word the reader knows, or is about to
+//                   meet in this chapter, holds the letter.
 //
 // "builds-toward" is split from "cold" because the two need different fixes.
 // Builds-toward is usually a resequencing inside one chapter. Cold needs a
@@ -48,6 +51,28 @@
 // does not hold. So a letter lesson whose unanchored glyphs are all Han is
 // counted as `unmeasured`, never as cold. Reporting it as cold would blame the
 // tracks for a gap in the measure itself.
+//
+// ---------------------------------------------------------------------------
+// Numerals are anchored in a quantity, not a word
+// ---------------------------------------------------------------------------
+//
+// A track's own digits (Telugu ౧, Kannada ೨, Gurmukhi ੫) are written shapes
+// too, and they get stroke-order filmstrips like any letter. But no word holds
+// them: ఒకటి "one" is spelled with letters, never with ౧. So "a word the
+// reader knows holds this shape" can never come true for a digit, however the
+// track is ordered, and a numeral lesson would stay cold forever.
+//
+// That is not a digit with nothing to hang it on. A numeral stands for an
+// amount, and the reader arrives knowing every amount from 0 to 9 and a digit
+// for each. ౧ is taught as "one, written this way": a new shape for something
+// already known. That is the anchoring the rule asks for. The anchor is a
+// quantity, not a word.
+//
+// So a letter lesson whose unanchored glyphs are all decimal digits (Unicode
+// category Nd) is counted as `numeral`, never as cold. A digit that DOES appear
+// in an earlier word headword ("೧ನೇ", "first") is simply anchored. A digit in
+// a set with a real letter is judged with that letter, so a cold letter cannot
+// hide behind a numeral.
 //
 // ---------------------------------------------------------------------------
 // What counts as a word and as a letter lesson
@@ -89,7 +114,7 @@ import { hasOwn } from "./constants.js";
 import type { ParsedLesson } from "./parse.js";
 import { SCRIPT_SYSTEMS, belongsToAny, readingOrder, systemOf } from "./ramp.js";
 
-export type LetterAnchoring = "anchored" | "builds-toward" | "cold" | "unmeasured";
+export type LetterAnchoring = "anchored" | "builds-toward" | "numeral" | "cold" | "unmeasured";
 
 /** One letter lesson and what, if anything, it was anchored in. */
 export interface LetterLessonAnchor {
@@ -108,6 +133,8 @@ export interface TrackLetterAnchoring {
   letterLessons: LetterLessonAnchor[];
   anchored: number;
   buildsToward: number;
+  /** Digit lessons: anchored in a known quantity, not a word. */
+  numeral: number;
   cold: number;
   unmeasured: number;
   /** Distinct glyphs any word headword shows. */
@@ -129,6 +156,7 @@ export interface LetterAnchoringReport {
     letterLessons: number;
     anchored: number;
     buildsToward: number;
+    numeral: number;
     cold: number;
     unmeasured: number;
     unwritten: number;
@@ -192,6 +220,9 @@ function combinationParts(ch: string): string[] {
   return mark === undefined ? [ch] : [parts[0]!, mark];
 }
 
+/** A decimal digit in any script: ౧, ೨, ੫, ٣. See "Numerals" above. */
+const DIGIT = /^\p{Nd}$/u;
+
 /** The target-script glyphs in a string, in order, deduplicated. */
 function glyphsIn(text: string, target: ReadonlySet<string>): string[] {
   return [
@@ -247,6 +278,7 @@ export function measureLetterAnchoring(lessons: readonly ParsedLesson[]): Letter
         let anchoring: LetterAnchoring;
         if (missing.length === 0) anchoring = "anchored";
         else if (missing.every((ch) => sameChapter.has(ch))) anchoring = "builds-toward";
+        else if (missing.every((ch) => DIGIT.test(ch))) anchoring = "numeral";
         else if (missing.every((ch) => systemOf(ch) === "Han")) anchoring = "unmeasured";
         else anchoring = "cold";
         letterLessons.push({ lessonId: lesson.realization.lessonId, letter, chapter, anchoring });
@@ -265,6 +297,7 @@ export function measureLetterAnchoring(lessons: readonly ParsedLesson[]): Letter
       letterLessons,
       anchored: count("anchored"),
       buildsToward: count("builds-toward"),
+      numeral: count("numeral"),
       cold: count("cold"),
       unmeasured: count("unmeasured"),
       lettersRead: read.size,
@@ -282,6 +315,7 @@ export function measureLetterAnchoring(lessons: readonly ParsedLesson[]): Letter
       letterLessons: total((track) => track.letterLessons.length),
       anchored: total((track) => track.anchored),
       buildsToward: total((track) => track.buildsToward),
+      numeral: total((track) => track.numeral),
       cold: total((track) => track.cold),
       unmeasured: total((track) => track.unmeasured),
       unwritten: total((track) => track.unwritten.length),
