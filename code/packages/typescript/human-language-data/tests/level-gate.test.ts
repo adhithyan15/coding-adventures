@@ -1,6 +1,6 @@
 // HL09 §3.1 — what it takes to CLAIM a level. See src/level-gate.ts for why.
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { mkdtempSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -24,6 +24,11 @@ import { measureContinuity } from "../src/continuity.js";
 import type { ContinuityReport } from "../src/continuity.js";
 import type { WritingStageReport } from "../src/writing-stages.js";
 import { loadLevelGateAttainmentPins } from "./level-gate-attainment-pins.js";
+
+// Several assertions intentionally rebuild or remeasure the full curriculum.
+// The corpus keeps growing, so give this integration-heavy file one explicit
+// budget instead of chasing whichever assertion next crosses Vitest's default.
+vi.setConfig({ testTimeout: 60_000 });
 
 const ATTAINMENT_DIR = fileURLToPath(new URL("./level-gate-attainment/", import.meta.url));
 const ATTAINMENT = loadLevelGateAttainmentPins(ATTAINMENT_DIR);
@@ -364,7 +369,7 @@ describe("the first rung anybody actually climbed", () => {
   // regression to "none" is the kind of thing a corpus-wide suite reports as a
   // changed integer somewhere rather than as the thing it is.
 
-  it("closes criterion 4 for Spanish at the atom, not just at the summary", () => {
+  it("closes criterion 4 for Spanish at the atom, not just at the summary", { timeout: 60_000 }, () => {
     // `attained === "pre-A1"` is the gate's own verdict, and asserting only the
     // verdict would pass on a gate that had quietly stopped measuring. So this
     // re-derives criterion 4 from the same two inputs the gate reads — the continuity
@@ -661,7 +666,7 @@ describe("the first rung anybody actually climbed", () => {
 });
 
 describe("etymology is a hook, not a skill", () => {
-  it("waives etymology atoms from the reinforcement criterion, and says how many", () => {
+  it("waives etymology atoms from the reinforcement criterion, and says how many", { timeout: 60_000 }, () => {
     // The owner's decision: an etymology is read once, not drilled. Before this the
     // gate demanded every atom be revisited twice, and the only way to satisfy that
     // for an etymon was to re-state it in the Guided Practice and again in the
@@ -1022,7 +1027,7 @@ word ${index + 1}
     }
   });
 
-  it("is absent, not empty, when the caller supplied no policy", () => {
+  it("is absent, not empty, when the caller supplied no policy", { timeout: 60_000 }, () => {
     // "Not measured" and "attained nothing" are opposite facts. A consumer that
     // passes no chapter policy must not see a report claiming zero attainment.
     const e = loadEverything();
