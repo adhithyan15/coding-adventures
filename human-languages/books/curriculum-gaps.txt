@@ -1,26 +1,26 @@
 Human Languages curriculum gap report
 ====================================
-23 tracks, 8856 lessons, 23 books
+23 tracks, 9123 lessons, 23 books
 0 lessons over 300 effective seconds
 0 unknown prerequisites; 46 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 0 mixed, 23 version-2 schema tracks
-7198 drivable lessons (81% of the corpus)
-levels: 5312 pre-A1, 2518 A1, 942 A2, 39 B1, 17 B2, 10 C1, 18 C2; 0 unmapped (100% placed)
+7462 drivable lessons (82% of the corpus)
+levels: 5579 pre-A1, 2518 A1, 942 A2, 39 B1, 17 B2, 10 C1, 18 C2; 0 unmapped (100% placed)
 ramp: 37 lessons above 3 new atoms (98 unmeasurable, 99% measurable); 62 chapters above 12
 script ramp: 31 lessons above 3 new glyphs; 0 opening more than 1 writing system at once; steepest RU-C01-privet at 14
 cousin layer: 216 lessons show another script (max 26 glyphs) — context, never charged to the budget
 script closure: 266 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 46 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1461 glyphs and makes 405 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
-reinforcement: 322 of 10268 atoms never revisited (3%); missed windows R1 1752, R2 5152, R3 6638, R4 5473
-forward references: 919 uses of material a later lesson teaches
+reinforcement: 322 of 10529 atoms never revisited (3%); missed windows R1 1752, R2 5391, R3 6828, R4 5669
+forward references: 917 uses of material a later lesson teaches
 writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 775 evidence blocks, 0 invalid; 243 missing (track, level, stage) pairs
 super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 114 named track/debt items
 writing ramp: 0 track(s) never practise writing; 6 start after lesson one
 gentleness measurement: 98 lesson(s) remain atom-measurement blind
 VOCABULARY vs HL09 §3.1 targets: spanish 1020/1200 at-or-below A2 (1069 total), hindi 416/600 at-or-below A1 (461 total), malayalam 434/600 at-or-below A1 (450 total), tamil 380/600 at-or-below A1 (393 total), sanskrit 360/600 at-or-below A1 (386 total); 23 of 23 tracks short of the level they are working on
-levels with STRUCTURAL COVERAGE COMPLETE (HL09 §3.1 — coverage complete, performance UNVERIFIED): 8 tracks at pre-A1 (gujarati, hindi, kannada, latin, malayalam, sanskrit, tamil, telugu), 1 track at A1 (spanish); 23 track(s) touch a level whose coverage is not complete
+levels with STRUCTURAL COVERAGE COMPLETE (HL09 §3.1 — coverage complete, performance UNVERIFIED): 9 tracks at pre-A1 (gujarati, hindi, kannada, latin, malayalam, russian, sanskrit, tamil, telugu), 1 track at A1 (spanish); 23 track(s) touch a level whose coverage is not complete
   ^ these five criteria measure the CORPUS — headwords, verbs, spine nodes, reinforcement windows, writing stages. None measures a learner. No track has had a single exam item scored against it, so no line above claims a reader can pass anything.
 
 per-track ladder (HL09 §3.1), fewest criteria left first, every blocker listed because §3.1 is a conjunction (shortfalls are in each criterion's own units and never compare across criteria):
@@ -30,7 +30,6 @@ per-track ladder (HL09 §3.1), fewest criteria left first, every blocker listed 
   bengali     touches A2     complete none   working pre-A1 vocabulary 64/300 — 2 blockers: verb-vocabulary 4, vocabulary 236
   japanese    touches A1     complete none   working pre-A1 vocabulary 44/300 — 2 blockers: verb-vocabulary 5, vocabulary 256
   punjabi     touches A2     complete none   working pre-A1 vocabulary 53/300 — 2 blockers: verb-vocabulary 4, vocabulary 247
-  russian     touches A2     complete none   working pre-A1 vocabulary 49/300 — 2 blockers: verb-vocabulary 5, vocabulary 251
   chinese     touches A2     complete none   working pre-A1 vocabulary 48/300 — 3 blockers: spine-nodes 1, verb-vocabulary 4, vocabulary 252
   french      touches A2     complete none   working pre-A1 vocabulary 47/300 — 3 blockers: atom-budget 3, verb-vocabulary 4, vocabulary 253
   german      touches A2     complete none   working pre-A1 vocabulary 99/300 — 3 blockers: atom-budget 5, verb-vocabulary 2, vocabulary 201
@@ -42,19 +41,20 @@ per-track ladder (HL09 §3.1), fewest criteria left first, every blocker listed 
   latin       touches A2     complete pre-A1 working A1     vocabulary 353/600 — 4 blockers: atom-budget 1, reinforcement 10, spine-nodes 6, vocabulary 247
   hindi       touches A2     complete pre-A1 working A1     vocabulary 416/600 — 5 blockers: atom-budget 1, reinforcement 60, spine-nodes 1, verb-vocabulary 24, vocabulary 184
   kannada     touches A2     complete pre-A1 working A1     vocabulary 364/600 — 5 blockers: reinforcement 24, spine-nodes 6, verb-vocabulary 28, vocabulary 236, writing-stage 2
+  russian     touches A2     complete pre-A1 working A1     vocabulary 339/600 — 5 blockers: reinforcement 4, spine-nodes 4, verb-vocabulary 11, vocabulary 261, writing-stage 2
   tamil       touches A2     complete pre-A1 working A1     vocabulary 380/600 — 5 blockers: reinforcement 39, spine-nodes 4, verb-vocabulary 17, vocabulary 220, writing-stage 2
   telugu      touches A2     complete pre-A1 working A1     vocabulary 352/600 — 5 blockers: reinforcement 19, spine-nodes 6, verb-vocabulary 30, vocabulary 248, writing-stage 2
   gujarati    touches A2     complete pre-A1 working A1     vocabulary 344/600 — 6 blockers: atom-budget 2, reinforcement 14, spine-nodes 4, verb-vocabulary 15, vocabulary 256, writing-stage 2
   malayalam   touches A2     complete pre-A1 working A1     vocabulary 434/600 — 6 blockers: atom-budget 1, reinforcement 80, spine-nodes 5, verb-vocabulary 24, vocabulary 166, writing-stage 2
   sanskrit    touches A2     complete pre-A1 working A1     vocabulary 360/600 — 6 blockers: atom-budget 3, reinforcement 22, spine-nodes 5, verb-vocabulary 16, vocabulary 240, writing-stage 2
-0 of 1905 book chapters without an HL05 capability; 89 payoffs below the 0.5 representativeness floor; 10 tracks already clean
+0 of 1958 book chapters without an HL05 capability; 89 payoffs below the 0.5 representativeness floor; 10 tracks already clean
 
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  6622 voice, 898 sight, 1336 pen of 8856 lessons; 81% drivable
+  6886 voice, 900 sight, 1337 pen of 9123 lessons; 82% drivable
   tables of more than 3 column(s) count as sight
-  7198 lessons have a voice CORE; 853 carry a detachable writing segment (576 rescued for the hands-free view)
+  7462 lessons have a voice CORE; 854 carry a detachable writing segment (576 rescued for the hands-free view)
   arabic: 74 voice, 48 sight, 38 pen; 72% drivable; 49 chapters, 89 lessons reachable in chapter-prefix order; 41 rescued by a detachable writing segment
   bengali: 66 voice, 71 sight, 92 pen; 57% drivable; 41 chapters, 111 lessons reachable in chapter-prefix order; 65 rescued by a detachable writing segment
   chinese: 145 voice, 30 sight, 75 pen; 60% drivable; 29 chapters, 23 lessons reachable in chapter-prefix order; 6 rescued by a detachable writing segment
@@ -72,14 +72,14 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   persian: 79 voice, 10 sight, 35 pen; 69% drivable; 26 chapters, 74 lessons reachable in chapter-prefix order; 6 rescued by a detachable writing segment
   portuguese: 107 voice, 9 sight, 4 pen; 90% drivable; 29 chapters, 96 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
   punjabi: 79 voice, 49 sight, 150 pen; 47% drivable; 48 chapters, 73 lessons reachable in chapter-prefix order; 52 rescued by a detachable writing segment
-  russian: 94 voice, 24 sight, 33 pen; 71% drivable; 28 chapters, 87 lessons reachable in chapter-prefix order; 13 rescued by a detachable writing segment
+  russian: 358 voice, 26 sight, 34 pen; 89% drivable; 81 chapters, 351 lessons reachable in chapter-prefix order; 13 rescued by a detachable writing segment
   sanskrit: 403 voice, 29 sight, 54 pen; 86% drivable; 89 chapters, 332 lessons reachable in chapter-prefix order; 14 rescued by a detachable writing segment
   spanish: 1404 voice, 95 sight, 15 pen; 93% drivable; 474 chapters, 1304 lessons reachable in chapter-prefix order; 2 rescued by a detachable writing segment
   tamil: 402 voice, 48 sight, 98 pen; 79% drivable; 112 chapters, 348 lessons reachable in chapter-prefix order; 32 rescued by a detachable writing segment
   telugu: 350 voice, 51 sight, 68 pen; 83% drivable; 99 chapters, 338 lessons reachable in chapter-prefix order; 37 rescued by a detachable writing segment
   urdu: 110 voice, 37 sight, 35 pen; 76% drivable; 37 chapters, 95 lessons reachable in chapter-prefix order; 28 rescued by a detachable writing segment
 
-Chapters that cannot be started by ear (drivable prefix 0): 268
+Chapters that cannot be started by ear (drivable prefix 0): 269
   arabic ch3: 0 of 9 (first blocker AR-W07-hook-family-ha-kha)
   arabic ch4: 0 of 8 (first blocker AR-W10-ayn)
   arabic ch8: 0 of 2 (first blocker AR-C08-al-ahad-al-khamis)
@@ -122,13 +122,13 @@ root ledger: 4248 roots, 3795 spent fewer than 3 times (89%), 2596 never spent a
   taught once and never returned to: a-dios-latin (ES-C05-adios), a-k-l (AR-C30-akala), a-kh-dh (AR-C32-akhadha)
   best-spent root: stare-latin with 15 payoffs
 
-info dump (report-only): 120 of 8856 lessons -- 32 rule statements, 91 paradigm tables (20 full grids)
+info dump (report-only): 120 of 9123 lessons -- 32 rule statements, 91 paradigm tables (20 full grids)
   complete paradigms presented at once: FR-C05-parler (7-row table with 6 person rows), PT-C16-ser-roots (6-row table with 5 person rows), ES-C07-repaso-presente-completo (7-row table with 6 person rows)
 
-lesson content budgets (report-only): 4683 of 8856 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
-  annotation coverage: idioms 4683, senses 4684, culture claims 4683
+lesson content budgets (report-only): 4950 of 9123 lessons measured -- 101 idioms, 103 senses, 208 culture claims; 0 lessons over budget
+  annotation coverage: idioms 4950, senses 4951, culture claims 4950
 
-metalanguage: 54 of 54 grammar terms appear in 7945 lessons; 25127 uses come before introduction, of which 6228 are technical terms across 3464 lessons
-  most-used-before-introduction: verb (1984 lessons), noun (1186 lessons), adjective (365 lessons), pronoun (261 lessons), article (253 lessons), tense (249 lessons)
-literal markup: none in 8856 lessons or any generated book
-glyph coverage: every character renders -- 133 main-font and 800 script characters across 1974 generated files
+metalanguage: 54 of 54 grammar terms appear in 8212 lessons; 25406 uses come before introduction, of which 6232 are technical terms across 3468 lessons
+  most-used-before-introduction: verb (1986 lessons), noun (1187 lessons), adjective (366 lessons), pronoun (261 lessons), article (253 lessons), tense (249 lessons)
+literal markup: none in 9123 lessons or any generated book
+glyph coverage: every character renders -- 133 main-font and 800 script characters across 2027 generated files
