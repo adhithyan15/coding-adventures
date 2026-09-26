@@ -1,0 +1,19 @@
+{
+  "chapter": 36,
+  "title": "Seaweed, Japanese plum, Chestnut, Beans, Uncooked rice",
+  "label": "ch:ja-seaweed-japanese-plum-chestnut-beans-uncooked-rice",
+  "canDo": "I can say seaweed, a Japanese plum, a chestnut, beans and uncooked rice.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "JA-C36-kome",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 36: i can say seaweed, a Japanese plum, a chestnut, beans and uncooked rice.",
+    "assesses": [
+      "JA-LEX-C36-FOOD36-03",
+      "JA-LEX-C36-FOOD36-04",
+      "JA-LEX-C36-FOOD36-05"
+    ]
+  }
+}

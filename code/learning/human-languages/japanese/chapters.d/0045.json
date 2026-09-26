@@ -1,0 +1,19 @@
+{
+  "chapter": 45,
+  "title": "Cat, Horse, Cow, Bird, Bear",
+  "label": "ch:ja-cat-horse-cow-bird-bear",
+  "canDo": "I can say a cat, a horse, a cow, a bird and a bear.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "JA-C45-kuma",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 45: i can say a cat, a horse, a cow, a bird and a bear.",
+    "assesses": [
+      "JA-LEX-C45-ANIMALS45-03",
+      "JA-LEX-C45-ANIMALS45-04",
+      "JA-LEX-C45-ANIMALS45-05"
+    ]
+  }
+}

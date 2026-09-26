@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C67-sumi",
+    "language": "japanese",
+    "chapter": 67,
+    "sequence": 4020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e9ee5bc0e813a0e"
+  },
+  "findings": []
+}

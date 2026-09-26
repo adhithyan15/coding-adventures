@@ -1,0 +1,11 @@
+{
+  "id": "JA-C27-kaku",
+  "pathSegment": "JA-PATH-27-VERBS27",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-27-VERBS27",
+      "order": 1
+    }
+  ]
+}

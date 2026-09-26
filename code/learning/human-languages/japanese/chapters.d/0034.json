@@ -1,0 +1,19 @@
+{
+  "chapter": 34,
+  "title": "Watermelon, White radish, Carrot, Tofu, Salt",
+  "label": "ch:ja-watermelon-white-radish-carrot-tofu-salt",
+  "canDo": "I can say a watermelon, a white radish, a carrot, tofu and salt.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "JA-C34-shio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 34: i can say a watermelon, a white radish, a carrot, tofu and salt.",
+    "assesses": [
+      "JA-LEX-C34-FOOD34-03",
+      "JA-LEX-C34-FOOD34-04",
+      "JA-LEX-C34-FOOD34-05"
+    ]
+  }
+}

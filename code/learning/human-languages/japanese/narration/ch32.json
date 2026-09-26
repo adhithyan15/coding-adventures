@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 32,
+  "title": "Fish, Meat, Egg, Vegetables, Fruit",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:59aca03a1d17b25d",
+  "lessons": [
+    {
+      "id": "JA-C32-sakana",
+      "sequence": 2210,
+      "title": "さかな (sakana) — a fish",
+      "headword": "さかな",
+      "romanization": "sakana",
+      "gloss": "a fish",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7212a46ad4504cfb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for to move, then the Japanese for rice; a meal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さかな",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さかな — sakana — \"a fish\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sakana, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sakana*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say sakana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *sakana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for to move, then the Japanese for rice; a meal, then say sakana again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for to move, then the Japanese for rice; a meal, then say *sakana* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さかな (sakana) mean? (\"A fish\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C32-sakana-type",
+              "prompt": "Type the Japanese for 'a fish'.",
+              "assesses": [
+                "JA-LEX-C32-FOOD32-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さかな",
+                "sakana"
+              ],
+              "feedback": {
+                "correct": "Right: さかな (sakana) is 'a fish'.",
+                "incorrect": "'a fish' is さかな (sakana)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C32-niku",
+      "sequence": 2220,
+      "title": "にく (niku) — meat",
+      "headword": "にく",
+      "romanization": "niku",
+      "gloss": "meat",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7c3be565c1a1a71a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for rice; a meal, then the Japanese for a fish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: にく",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "にく — niku — \"meat\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niku, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niku*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say niku",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *niku*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for rice; a meal, then the Japanese for a fish, then say niku again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for rice; a meal, then the Japanese for a fish, then say *niku* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does にく (niku) mean? (\"Meat\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C32-niku-type",
+              "prompt": "Type the Japanese for 'meat'.",
+              "assesses": [
+                "JA-LEX-C32-FOOD32-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "にく",
+                "niku"
+              ],
+              "feedback": {
+                "correct": "Right: にく (niku) is 'meat'.",
+                "incorrect": "'meat' is にく (niku)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C32-tamago",
+      "sequence": 2230,
+      "title": "たまご (tamago) — an egg",
+      "headword": "たまご",
+      "romanization": "tamago",
+      "gloss": "an egg",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51b288a2e052449e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a fish, then the Japanese for meat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たまご",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たまご — tamago — \"an egg\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamago",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamago*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tamago, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tamago*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tamago",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tamago*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a fish, then the Japanese for meat, then say tamago again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a fish, then the Japanese for meat, then say *tamago* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たまご (tamago) mean? (\"An egg\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C32-tamago-type",
+              "prompt": "Type the Japanese for 'an egg'.",
+              "assesses": [
+                "JA-LEX-C32-FOOD32-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たまご",
+                "tamago"
+              ],
+              "feedback": {
+                "correct": "Right: たまご (tamago) is 'an egg'.",
+                "incorrect": "'an egg' is たまご (tamago)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C32-yasai",
+      "sequence": 2240,
+      "title": "やさい (yasai) — vegetables",
+      "headword": "やさい",
+      "romanization": "yasai",
+      "gloss": "vegetables",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0320d1936791c76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for meat, then the Japanese for an egg."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やさい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やさい — yasai — \"vegetables\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yasai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yasai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yasai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yasai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say yasai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *yasai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for meat, then the Japanese for an egg, then say yasai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for meat, then the Japanese for an egg, then say *yasai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やさい (yasai) mean? (\"Vegetables\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C32-yasai-type",
+              "prompt": "Type the Japanese for 'vegetables'.",
+              "assesses": [
+                "JA-LEX-C32-FOOD32-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やさい",
+                "yasai"
+              ],
+              "feedback": {
+                "correct": "Right: やさい (yasai) is 'vegetables'.",
+                "incorrect": "'vegetables' is やさい (yasai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C32-kudamono",
+      "sequence": 2250,
+      "title": "くだもの (kudamono) — fruit",
+      "headword": "くだもの",
+      "romanization": "kudamono",
+      "gloss": "fruit",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ba338545728f8fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an egg, then the Japanese for vegetables."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: くだもの",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "くだもの — kudamono — \"fruit\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kudamono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kudamono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kudamono, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kudamono*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kudamono",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kudamono*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an egg, then the Japanese for vegetables, then say kudamono again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an egg, then the Japanese for vegetables, then say *kudamono* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does くだもの (kudamono) mean? (\"Fruit\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C32-kudamono-type",
+              "prompt": "Type the Japanese for 'fruit'.",
+              "assesses": [
+                "JA-LEX-C32-FOOD32-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "くだもの",
+                "kudamono"
+              ],
+              "feedback": {
+                "correct": "Right: くだもの (kudamono) is 'fruit'.",
+                "incorrect": "'fruit' is くだもの (kudamono)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

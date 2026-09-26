@@ -1,0 +1,19 @@
+{
+  "chapter": 43,
+  "title": "Sand, Rice field, Star, Cloud, Sun",
+  "label": "ch:ja-sand-rice-field-star-cloud-sun",
+  "canDo": "I can say sand, a rice field, a star, a cloud and the sun.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "JA-C43-taiyou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 43: i can say sand, a rice field, a star, a cloud and the sun.",
+    "assesses": [
+      "JA-LEX-C43-NATURE43-03",
+      "JA-LEX-C43-NATURE43-04",
+      "JA-LEX-C43-NATURE43-05"
+    ]
+  }
+}

@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 24,
+  "title": "Pain, Grandfather, Uncle, Son, Daughter",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:01cee22ad6189e1c",
+  "lessons": [
+    {
+      "id": "JA-C24-itami",
+      "sequence": 1810,
+      "title": "いたみ (itami) — pain",
+      "headword": "いたみ",
+      "romanization": "itami",
+      "gloss": "pain",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c7136dbca27d11f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for fun, then the Japanese for scary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いたみ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いたみ — itami — \"pain\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itami",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itami*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itami, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itami*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say itami",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *itami*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for fun, then the Japanese for scary, then say itami again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for fun, then the Japanese for scary, then say *itami* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いたみ (itami) mean? (\"Pain\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C24-itami-type",
+              "prompt": "Type the Japanese for 'pain'.",
+              "assesses": [
+                "JA-LEX-C24-HEALTH24-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いたみ",
+                "itami"
+              ],
+              "feedback": {
+                "correct": "Right: いたみ (itami) is 'pain'.",
+                "incorrect": "'pain' is いたみ (itami)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C24-ojiisan",
+      "sequence": 1820,
+      "title": "おじいさん (ojiisan) — a grandfather",
+      "headword": "おじいさん",
+      "romanization": "ojiisan",
+      "gloss": "a grandfather",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:06a7b378311b7bc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for scary, then the Japanese for pain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おじいさん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おじいさん — ojiisan — \"a grandfather\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ojiisan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ojiisan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ojiisan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ojiisan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ojiisan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ojiisan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for scary, then the Japanese for pain, then say ojiisan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for scary, then the Japanese for pain, then say *ojiisan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おじいさん (ojiisan) mean? (\"A grandfather\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C24-ojiisan-type",
+              "prompt": "Type the Japanese for 'a grandfather'.",
+              "assesses": [
+                "JA-LEX-C24-HEALTH24-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おじいさん",
+                "ojiisan"
+              ],
+              "feedback": {
+                "correct": "Right: おじいさん (ojiisan) is 'a grandfather'.",
+                "incorrect": "'a grandfather' is おじいさん (ojiisan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C24-ojisan",
+      "sequence": 1830,
+      "title": "おじさん (ojisan) — an uncle",
+      "headword": "おじさん",
+      "romanization": "ojisan",
+      "gloss": "an uncle",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3f587c284ec91974",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for pain, then the Japanese for a grandfather."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おじさん",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おじさん — ojisan — \"an uncle\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ojisan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ojisan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ojisan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ojisan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ojisan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ojisan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for pain, then the Japanese for a grandfather, then say ojisan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for pain, then the Japanese for a grandfather, then say *ojisan* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おじさん (ojisan) mean? (\"An uncle\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C24-ojisan-type",
+              "prompt": "Type the Japanese for 'an uncle'.",
+              "assesses": [
+                "JA-LEX-C24-HEALTH24-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おじさん",
+                "ojisan"
+              ],
+              "feedback": {
+                "correct": "Right: おじさん (ojisan) is 'an uncle'.",
+                "incorrect": "'an uncle' is おじさん (ojisan)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C24-musuko",
+      "sequence": 1840,
+      "title": "むすこ (musuko) — a son",
+      "headword": "むすこ",
+      "romanization": "musuko",
+      "gloss": "a son",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd1927389c797559",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a grandfather, then the Japanese for an uncle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: むすこ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むすこ — musuko — \"a son\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musuko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musuko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musuko, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musuko*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say musuko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *musuko*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a grandfather, then the Japanese for an uncle, then say musuko again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a grandfather, then the Japanese for an uncle, then say *musuko* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does むすこ (musuko) mean? (\"A son\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C24-musuko-type",
+              "prompt": "Type the Japanese for 'a son'.",
+              "assesses": [
+                "JA-LEX-C24-HEALTH24-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "むすこ",
+                "musuko"
+              ],
+              "feedback": {
+                "correct": "Right: むすこ (musuko) is 'a son'.",
+                "incorrect": "'a son' is むすこ (musuko)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C24-musume",
+      "sequence": 1850,
+      "title": "むすめ (musume) — a daughter",
+      "headword": "むすめ",
+      "romanization": "musume",
+      "gloss": "a daughter",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41099948700a2f8a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an uncle, then the Japanese for a son."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: むすめ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "むすめ — musume — \"a daughter\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musume",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musume*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musume, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musume*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say musume",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *musume*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an uncle, then the Japanese for a son, then say musume again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an uncle, then the Japanese for a son, then say *musume* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does むすめ (musume) mean? (\"A daughter\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C24-musume-type",
+              "prompt": "Type the Japanese for 'a daughter'.",
+              "assesses": [
+                "JA-LEX-C24-HEALTH24-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "むすめ",
+                "musume"
+              ],
+              "feedback": {
+                "correct": "Right: むすめ (musume) is 'a daughter'.",
+                "incorrect": "'a daughter' is むすめ (musume)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

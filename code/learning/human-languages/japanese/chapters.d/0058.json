@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "Underground, Park, Country, Clothes, Shoes",
+  "label": "ch:ja-underground-park-country-clothes-shoes",
+  "canDo": "I can say underground, a park, a country, clothes and shoes.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "JA-C58-kutsu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 58: i can say underground, a park, a country, clothes and shoes.",
+    "assesses": [
+      "JA-LEX-C58-PLACE58-03",
+      "JA-LEX-C58-PLACE58-04",
+      "JA-LEX-C58-PLACE58-05"
+    ]
+  }
+}

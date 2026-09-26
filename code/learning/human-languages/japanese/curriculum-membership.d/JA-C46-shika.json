@@ -1,0 +1,11 @@
+{
+  "id": "JA-C46-shika",
+  "pathSegment": "JA-PATH-46-ANIMALS46",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-46-ANIMALS46",
+      "order": 4
+    }
+  ]
+}

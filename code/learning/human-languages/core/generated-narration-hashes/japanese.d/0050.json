@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:26557b2c856982c5",
+  "lessonIds": [
+    "JA-C50-amai",
+    "JA-C50-nigai",
+    "JA-C50-hiroi",
+    "JA-C50-semai",
+    "JA-C50-omoi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch50.txt",
+  "json": "japanese/narration/ch50.json",
+  "textHash": "fnv1a64:0ba7caa433270540",
+  "jsonHash": "fnv1a64:eebd4ec3ec327c7d",
+  "findings": []
+}

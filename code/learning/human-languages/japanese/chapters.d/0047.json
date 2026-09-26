@@ -1,0 +1,19 @@
+{
+  "chapter": 47,
+  "title": "Crab, Octopus, Squid, Turtle, Wolf",
+  "label": "ch:ja-crab-octopus-squid-turtle-wolf",
+  "canDo": "I can say a crab, an octopus, a squid, a turtle and a wolf.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "JA-C47-ookami",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 47: i can say a crab, an octopus, a squid, a turtle and a wolf.",
+    "assesses": [
+      "JA-LEX-C47-ANIMALS47-03",
+      "JA-LEX-C47-ANIMALS47-04",
+      "JA-LEX-C47-ANIMALS47-05"
+    ]
+  }
+}

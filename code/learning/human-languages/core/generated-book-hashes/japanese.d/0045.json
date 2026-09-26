@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:c6755de538a588eb",
+  "lessonIds": [
+    "JA-C45-neko",
+    "JA-C45-uma",
+    "JA-C45-ushi",
+    "JA-C45-tori",
+    "JA-C45-kuma"
+  ],
+  "tex": "japanese/book/chapters/ch45-cat-horse-cow-bird-bear.tex"
+}

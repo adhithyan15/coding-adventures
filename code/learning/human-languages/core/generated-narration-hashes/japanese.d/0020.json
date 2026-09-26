@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 20,
+  "sourceHash": "fnv1a64:b2d5babffde1998d",
+  "lessonIds": [
+    "JA-C20-tsume",
+    "JA-C20-hiji",
+    "JA-C20-hiza",
+    "JA-C20-nodo",
+    "JA-C20-mune"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch20.txt",
+  "json": "japanese/narration/ch20.json",
+  "textHash": "fnv1a64:d174a124b559712a",
+  "jsonHash": "fnv1a64:e374977dd0c88d48",
+  "findings": []
+}

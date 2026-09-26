@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 21,
+  "sourceHash": "fnv1a64:28b6dafae59cf0b3",
+  "lessonIds": [
+    "JA-C21-hone",
+    "JA-C21-ago",
+    "JA-C21-hoo",
+    "JA-C21-mayu",
+    "JA-C21-hada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch21.txt",
+  "json": "japanese/narration/ch21.json",
+  "textHash": "fnv1a64:d0b7d060c8eefa0e",
+  "jsonHash": "fnv1a64:33c9cbc714840211",
+  "findings": []
+}

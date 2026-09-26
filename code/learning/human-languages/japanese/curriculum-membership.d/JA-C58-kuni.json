@@ -1,0 +1,11 @@
+{
+  "id": "JA-C58-kuni",
+  "pathSegment": "JA-PATH-58-PLACE58",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-58-PLACE58",
+      "order": 2
+    }
+  ]
+}

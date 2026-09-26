@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C28-motsu",
+    "language": "japanese",
+    "chapter": 28,
+    "sequence": 2050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27093ad9be01ce24"
+  },
+  "findings": []
+}

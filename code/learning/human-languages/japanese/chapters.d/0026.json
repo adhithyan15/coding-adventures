@@ -1,0 +1,19 @@
+{
+  "chapter": 26,
+  "title": "Next door, Companion, To go, To buy, To drink",
+  "label": "ch:ja-next-door-companion-to-go-to-buy-to-drink",
+  "canDo": "I can say next door, a companion, to go, to buy and to drink.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "JA-C26-nomu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 26: i can say next door, a companion, to go, to buy and to drink.",
+    "assesses": [
+      "JA-LEX-C26-FAMILY26-03",
+      "JA-LEX-C26-FAMILY26-04",
+      "JA-LEX-C26-FAMILY26-05"
+    ]
+  }
+}

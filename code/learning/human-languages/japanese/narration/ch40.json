@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 40,
+  "title": "Umbrella, School, Homework, Problem, Answer",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a91bfe512d52006d",
+  "lessons": [
+    {
+      "id": "JA-C40-kasa",
+      "sequence": 2630,
+      "title": "かさ (kasa) — an umbrella",
+      "headword": "かさ",
+      "romanization": "kasa",
+      "gloss": "an umbrella",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e822838a3ebb09b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a shelf, then the Japanese for a box."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: かさ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "かさ — kasa — \"an umbrella\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kasa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kasa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a shelf, then the Japanese for a box, then say kasa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a shelf, then the Japanese for a box, then say *kasa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does かさ (kasa) mean? (\"An umbrella\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C40-kasa-type",
+              "prompt": "Type the Japanese for 'an umbrella'.",
+              "assesses": [
+                "JA-LEX-C40-HOME40-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "かさ",
+                "kasa"
+              ],
+              "feedback": {
+                "correct": "Right: かさ (kasa) is 'an umbrella'.",
+                "incorrect": "'an umbrella' is かさ (kasa)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C40-gakkou",
+      "sequence": 2640,
+      "title": "がっこう (gakkou) — a school",
+      "headword": "がっこう",
+      "romanization": "gakkou",
+      "gloss": "a school",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69a290b8ec00d685",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a box, then the Japanese for an umbrella."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: がっこう",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "がっこう — gakkou — \"a school\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakkou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakkou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gakkou, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gakkou*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gakkou",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gakkou*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a box, then the Japanese for an umbrella, then say gakkou again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a box, then the Japanese for an umbrella, then say *gakkou* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does がっこう (gakkou) mean? (\"A school\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C40-gakkou-type",
+              "prompt": "Type the Japanese for 'a school'.",
+              "assesses": [
+                "JA-LEX-C40-HOME40-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "がっこう",
+                "gakkou"
+              ],
+              "feedback": {
+                "correct": "Right: がっこう (gakkou) is 'a school'.",
+                "incorrect": "'a school' is がっこう (gakkou)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C40-shukudai",
+      "sequence": 2650,
+      "title": "しゅくだい (shukudai) — homework",
+      "headword": "しゅくだい",
+      "romanization": "shukudai",
+      "gloss": "homework",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e78f7f1b47aa0d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for an umbrella, then the Japanese for a school."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: しゅくだい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "しゅくだい — shukudai — \"homework\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shukudai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shukudai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shukudai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shukudai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say shukudai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *shukudai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for an umbrella, then the Japanese for a school, then say shukudai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for an umbrella, then the Japanese for a school, then say *shukudai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does しゅくだい (shukudai) mean? (\"Homework\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C40-shukudai-type",
+              "prompt": "Type the Japanese for 'homework'.",
+              "assesses": [
+                "JA-LEX-C40-HOME40-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "しゅくだい",
+                "shukudai"
+              ],
+              "feedback": {
+                "correct": "Right: しゅくだい (shukudai) is 'homework'.",
+                "incorrect": "'homework' is しゅくだい (shukudai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C40-mondai",
+      "sequence": 2660,
+      "title": "もんだい (mondai) — a problem, a question",
+      "headword": "もんだい",
+      "romanization": "mondai",
+      "gloss": "a problem, a question",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1308207a60c5cc31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a school, then the Japanese for homework."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: もんだい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "もんだい — mondai — \"a problem, a question\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mondai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mondai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mondai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mondai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mondai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mondai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a school, then the Japanese for homework, then say mondai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a school, then the Japanese for homework, then say *mondai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does もんだい (mondai) mean? (\"A problem, a question\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C40-mondai-type",
+              "prompt": "Type the Japanese for 'a problem, a question'.",
+              "assesses": [
+                "JA-LEX-C40-HOME40-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "もんだい",
+                "mondai"
+              ],
+              "feedback": {
+                "correct": "Right: もんだい (mondai) is 'a problem, a question'.",
+                "incorrect": "'a problem, a question' is もんだい (mondai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C40-kotae",
+      "sequence": 2670,
+      "title": "こたえ (kotae) — an answer",
+      "headword": "こたえ",
+      "romanization": "kotae",
+      "gloss": "an answer",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77f60bf6446ef40b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for homework, then the Japanese for a problem."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こたえ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こたえ — kotae — \"an answer\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kotae, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kotae*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kotae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kotae*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for homework, then the Japanese for a problem, then say kotae again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for homework, then the Japanese for a problem, then say *kotae* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こたえ (kotae) mean? (\"An answer\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C40-kotae-type",
+              "prompt": "Type the Japanese for 'an answer'.",
+              "assesses": [
+                "JA-LEX-C40-HOME40-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こたえ",
+                "kotae"
+              ],
+              "feedback": {
+                "correct": "Right: こたえ (kotae) is 'an answer'.",
+                "incorrect": "'an answer' is こたえ (kotae)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

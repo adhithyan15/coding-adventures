@@ -1,0 +1,11 @@
+{
+  "id": "JA-C65-tonbo",
+  "pathSegment": "JA-PATH-65-FOOD265",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-65-FOOD265",
+      "order": 2
+    }
+  ]
+}

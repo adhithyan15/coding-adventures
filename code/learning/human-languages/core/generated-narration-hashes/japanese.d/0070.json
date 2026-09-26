@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 70,
+  "sourceHash": "fnv1a64:79e25811973a9650",
+  "lessonIds": [
+    "JA-C70-mochi",
+    "JA-C70-nattou",
+    "JA-C70-chikuwa",
+    "JA-C70-hiyoko",
+    "JA-C70-hane"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch70.txt",
+  "json": "japanese/narration/ch70.json",
+  "textHash": "fnv1a64:0daa0395bb5c8df6",
+  "jsonHash": "fnv1a64:43306c90a1b73bbb",
+  "findings": []
+}

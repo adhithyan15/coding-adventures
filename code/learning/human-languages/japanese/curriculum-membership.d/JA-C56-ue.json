@@ -1,0 +1,11 @@
+{
+  "id": "JA-C56-ue",
+  "pathSegment": "JA-PATH-56-TIME56",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-56-TIME56",
+      "order": 2
+    }
+  ]
+}

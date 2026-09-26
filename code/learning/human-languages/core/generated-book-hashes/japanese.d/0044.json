@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:32bcd6917350679b",
+  "lessonIds": [
+    "JA-C44-shima",
+    "JA-C44-nami",
+    "JA-C44-tsuchi",
+    "JA-C44-tane",
+    "JA-C44-ame"
+  ],
+  "tex": "japanese/book/chapters/ch44-island-wave-soil-seed-rain.tex"
+}

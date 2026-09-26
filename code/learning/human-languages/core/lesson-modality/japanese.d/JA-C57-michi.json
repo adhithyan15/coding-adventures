@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C57-michi",
+    "language": "japanese",
+    "chapter": 57,
+    "sequence": 3530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ab5e2d5fa7fa9d4"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 57,
+  "sourceHash": "fnv1a64:ca5ba9d75f21b76f",
+  "lessonIds": [
+    "JA-C57-chikai",
+    "JA-C57-tooi",
+    "JA-C57-machi",
+    "JA-C57-michi",
+    "JA-C57-mise"
+  ],
+  "tex": "japanese/book/chapters/ch57-near-far-town-road-shop.tex"
+}

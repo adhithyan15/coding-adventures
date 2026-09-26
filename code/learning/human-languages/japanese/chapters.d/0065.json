@@ -1,0 +1,19 @@
+{
+  "chapter": 65,
+  "title": "Carp, Cicada, Dragonfly, Potato, Burdock root",
+  "label": "ch:ja-carp-cicada-dragonfly-potato-burdock-root",
+  "canDo": "I can say a carp, a cicada, a dragonfly, a potato and burdock root.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "JA-C65-gobou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 65: i can say a carp, a cicada, a dragonfly, a potato and burdock root.",
+    "assesses": [
+      "JA-LEX-C65-FOOD265-03",
+      "JA-LEX-C65-FOOD265-04",
+      "JA-LEX-C65-FOOD265-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C42-kusa",
+    "language": "japanese",
+    "chapter": 42,
+    "sequence": 2750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:16392d0cbf9164ec"
+  },
+  "findings": []
+}

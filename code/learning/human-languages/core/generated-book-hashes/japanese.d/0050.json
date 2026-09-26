@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 50,
+  "sourceHash": "fnv1a64:bca5a96e750091fe",
+  "lessonIds": [
+    "JA-C50-amai",
+    "JA-C50-nigai",
+    "JA-C50-hiroi",
+    "JA-C50-semai",
+    "JA-C50-omoi"
+  ],
+  "tex": "japanese/book/chapters/ch50-sweet-bitter-wide-narrow-heavy.tex"
+}

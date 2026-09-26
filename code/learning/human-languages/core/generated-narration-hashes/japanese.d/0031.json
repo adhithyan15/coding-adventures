@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 31,
+  "sourceHash": "fnv1a64:1eb3ae2045186501",
+  "lessonIds": [
+    "JA-C31-dasu",
+    "JA-C31-otosu",
+    "JA-C31-naosu",
+    "JA-C31-ugoku",
+    "JA-C31-gohan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch31.txt",
+  "json": "japanese/narration/ch31.json",
+  "textHash": "fnv1a64:5fb5814428bf256b",
+  "jsonHash": "fnv1a64:a08808996b18dc70",
+  "findings": []
+}

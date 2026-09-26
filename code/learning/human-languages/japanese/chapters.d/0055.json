@@ -1,0 +1,19 @@
+{
+  "chapter": 55,
+  "title": "Minute, Summer, Winter, Always, Still",
+  "label": "ch:ja-minute-summer-winter-always-still",
+  "canDo": "I can say a minute, summer, winter, always and still, not yet.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "JA-C55-mada",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 55: i can say a minute, summer, winter, always and still, not yet.",
+    "assesses": [
+      "JA-LEX-C55-TIME55-03",
+      "JA-LEX-C55-TIME55-04",
+      "JA-LEX-C55-TIME55-05"
+    ]
+  }
+}

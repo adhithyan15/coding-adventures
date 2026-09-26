@@ -1,0 +1,11 @@
+{
+  "id": "JA-C62-fune",
+  "pathSegment": "JA-PATH-62-WORLD62",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-62-WORLD62",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C34-ninjin",
+  "pathSegment": "JA-PATH-34-FOOD34",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-34-FOOD34",
+      "order": 2
+    }
+  ]
+}

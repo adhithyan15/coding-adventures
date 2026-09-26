@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 52,
+  "sourceHash": "fnv1a64:1e677a48344af5e1",
+  "lessonIds": [
+    "JA-C52-shiroi",
+    "JA-C52-kuroi",
+    "JA-C52-midori",
+    "JA-C52-futoi",
+    "JA-C52-atatakai"
+  ],
+  "tex": "japanese/book/chapters/ch52-white-black-green-thick-warm.tex"
+}

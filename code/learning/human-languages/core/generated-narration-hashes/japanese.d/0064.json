@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:0acc0011cfd1823b",
+  "lessonIds": [
+    "JA-C64-kona",
+    "JA-C64-goma",
+    "JA-C64-uni",
+    "JA-C64-iwashi",
+    "JA-C64-aji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch64.txt",
+  "json": "japanese/narration/ch64.json",
+  "textHash": "fnv1a64:36325be495ceb994",
+  "jsonHash": "fnv1a64:82f21f85a52e7410",
+  "findings": []
+}

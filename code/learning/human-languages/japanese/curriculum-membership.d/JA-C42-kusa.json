@@ -1,0 +1,11 @@
+{
+  "id": "JA-C42-kusa",
+  "pathSegment": "JA-PATH-42-NATURE42",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-42-NATURE42",
+      "order": 2
+    }
+  ]
+}

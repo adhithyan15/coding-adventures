@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 67,
+  "sourceHash": "fnv1a64:bf0d570e3237d8b7",
+  "lessonIds": [
+    "JA-C67-uchiwa",
+    "JA-C67-sensu",
+    "JA-C67-sumi",
+    "JA-C67-ido",
+    "JA-C67-hama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch67.txt",
+  "json": "japanese/narration/ch67.json",
+  "textHash": "fnv1a64:718df264eb93f86a",
+  "jsonHash": "fnv1a64:9d9ca8e3a4e46193",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C36-kome",
+  "pathSegment": "JA-PATH-36-FOOD36",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-36-FOOD36",
+      "order": 4
+    }
+  ]
+}

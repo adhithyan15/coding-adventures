@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C63-nishi",
+    "language": "japanese",
+    "chapter": 63,
+    "sequence": 3820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85504d3c631ad395"
+  },
+  "findings": []
+}

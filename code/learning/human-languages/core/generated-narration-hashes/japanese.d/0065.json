@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 65,
+  "sourceHash": "fnv1a64:6b2b7a5442c5ae7d",
+  "lessonIds": [
+    "JA-C65-koi",
+    "JA-C65-semi",
+    "JA-C65-tonbo",
+    "JA-C65-imo",
+    "JA-C65-gobou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch65.txt",
+  "json": "japanese/narration/ch65.json",
+  "textHash": "fnv1a64:6323cc6f33391d77",
+  "jsonHash": "fnv1a64:224e965234b22e70",
+  "findings": []
+}

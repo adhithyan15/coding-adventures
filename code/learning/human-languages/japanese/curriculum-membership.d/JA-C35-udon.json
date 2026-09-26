@@ -1,0 +1,11 @@
+{
+  "id": "JA-C35-udon",
+  "pathSegment": "JA-PATH-35-FOOD35",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-35-FOOD35",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C70-hane",
+    "language": "japanese",
+    "chapter": 70,
+    "sequence": 4190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f8a7e97c4c35716"
+  },
+  "findings": []
+}

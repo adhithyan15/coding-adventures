@@ -1,0 +1,19 @@
+{
+  "chapter": 30,
+  "title": "To push, To pull, To look for, To lend, To give back",
+  "label": "ch:ja-to-push-to-pull-to-look-for-to-lend-to-give-back",
+  "canDo": "I can say to push, to pull, to look for, to lend and to give back.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "JA-C30-kaesu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 30: i can say to push, to pull, to look for, to lend and to give back.",
+    "assesses": [
+      "JA-LEX-C30-VERBS30-03",
+      "JA-LEX-C30-VERBS30-04",
+      "JA-LEX-C30-VERBS30-05"
+    ]
+  }
+}

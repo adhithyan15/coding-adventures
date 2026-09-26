@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 63,
+  "sourceHash": "fnv1a64:cb5b3372e576d50b",
+  "lessonIds": [
+    "JA-C63-yume",
+    "JA-C63-matsuri",
+    "JA-C63-nishi",
+    "JA-C63-higashi",
+    "JA-C63-minami"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch63.txt",
+  "json": "japanese/narration/ch63.json",
+  "textHash": "fnv1a64:02391ab76913ab35",
+  "jsonHash": "fnv1a64:fa4cc3a4fcfdae6a",
+  "findings": []
+}

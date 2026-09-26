@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:d81c77ad9b64538d",
+  "lessonIds": [
+    "JA-C35-satou",
+    "JA-C35-udon",
+    "JA-C35-sushi",
+    "JA-C35-asagohan",
+    "JA-C35-okashi"
+  ],
+  "tex": "japanese/book/chapters/ch35-sugar-udon-noodles-sushi-breakfast-sweets.tex"
+}

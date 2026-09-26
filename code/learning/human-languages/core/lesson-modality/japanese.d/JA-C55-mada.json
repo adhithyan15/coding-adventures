@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C55-mada",
+    "language": "japanese",
+    "chapter": 55,
+    "sequence": 3440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6eb628793b148c79"
+  },
+  "findings": []
+}
