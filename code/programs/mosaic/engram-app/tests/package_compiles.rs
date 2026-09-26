@@ -1559,15 +1559,15 @@ fn native_project_shells_expose_engram_host_contract() {
     assert_contains(&compose_app, "actionUndoLabel: String,");
     assert_contains(&compose_app, "actionMarkLabel: String,");
     assert_contains(&compose_app, "dispatch: (EngramAppEvent) -> Unit,");
-    let compose_main = fs::read_to_string(
-        tmp.path()
-            .join("compose")
-            .join("src")
-            .join("main")
-            .join("kotlin")
-            .join("Main.kt"),
-    )
-    .expect("compose/src/main/kotlin/Main.kt");
+    // The desktop entry point (`Main.kt`) and the shell every platform shares
+    // (`MosaicAppShell.kt`) together make up the generated Compose host.
+    let compose_kotlin = tmp.path().join("compose").join("src").join("main").join("kotlin");
+    let compose_main = [
+        fs::read_to_string(compose_kotlin.join("Main.kt")).expect("compose Main.kt"),
+        fs::read_to_string(compose_kotlin.join("MosaicAppShell.kt"))
+            .expect("compose MosaicAppShell.kt"),
+    ]
+    .join("\n");
     assert_contains(&compose_main, "fun main() = application");
     assert_contains(
         &compose_main,
