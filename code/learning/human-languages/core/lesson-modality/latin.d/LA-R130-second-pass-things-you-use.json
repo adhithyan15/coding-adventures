@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R130-second-pass-things-you-use",
+    "language": "latin",
+    "chapter": 130,
+    "sequence": 5260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0be58f39637061a"
+  },
+  "findings": []
+}

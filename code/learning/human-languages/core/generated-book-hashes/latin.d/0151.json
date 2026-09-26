@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:5291bdeb8f2a0df1",
+  "lessonIds": [
+    "LA-C151-superbus",
+    "LA-C151-benignus",
+    "LA-C151-crudelis",
+    "LA-C151-turpis",
+    "LA-C151-formosus"
+  ],
+  "tex": "latin/book/chapters/ch151-proud-kind-cruel-ugly-beautiful.tex"
+}

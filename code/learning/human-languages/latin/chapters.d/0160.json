@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "To count, To destroy, To go away, To arrive, To live",
+  "label": "ch:la-to-count-to-destroy-to-go-away-to-arrive-to-live",
+  "canDo": "I can say to count, to destroy, to go away, to arrive and to live.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-R160-second-pass-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: i can say to count, to destroy, to go away, to arrive and to live.",
+    "assesses": [
+      "LA-LEX-C160-ACT160-03",
+      "LA-LEX-C160-ACT160-04",
+      "LA-LEX-C160-ACT160-05"
+    ]
+  }
+}

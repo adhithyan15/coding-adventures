@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:48a2e0dfdaf1f295",
+  "lessonIds": [
+    "LA-C143-durus",
+    "LA-C143-mollis",
+    "LA-C143-tepidus",
+    "LA-C143-antiquus",
+    "LA-C143-angustus"
+  ],
+  "tex": "latin/book/chapters/ch143-hard-soft-lukewarm-ancient-narrow.tex"
+}

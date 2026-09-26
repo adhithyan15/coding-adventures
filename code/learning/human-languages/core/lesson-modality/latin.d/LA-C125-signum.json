@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C125-signum",
+    "language": "latin",
+    "chapter": 125,
+    "sequence": 4960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6780c92185ac0bac"
+  },
+  "findings": []
+}

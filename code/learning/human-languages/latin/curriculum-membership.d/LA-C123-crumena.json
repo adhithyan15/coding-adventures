@@ -1,0 +1,11 @@
+{
+  "id": "LA-C123-crumena",
+  "pathSegment": "LA-PATH-123-THINGS123",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-123-THINGS123",
+      "order": 3
+    }
+  ]
+}

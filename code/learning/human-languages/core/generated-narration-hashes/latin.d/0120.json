@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:dd7f057ccc1d5fe4",
+  "lessonIds": [
+    "LA-C120-saccus",
+    "LA-C120-cista",
+    "LA-C120-pulvinus",
+    "LA-C120-stragulum",
+    "LA-C120-mappa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch120.txt",
+  "json": "latin/narration/ch120.json",
+  "textHash": "fnv1a64:eb0dd542c1a6f5c6",
+  "jsonHash": "fnv1a64:ee531c3aac5820db",
+  "findings": []
+}

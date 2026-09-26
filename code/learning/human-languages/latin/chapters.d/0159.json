@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "To feel, To hang, To be silent, To keep, To change",
+  "label": "ch:la-to-feel-to-hang-to-be-silent-to-keep-to-change",
+  "canDo": "I can say to feel, to hang, to be silent, to keep and to change.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C159-muto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: i can say to feel, to hang, to be silent, to keep and to change.",
+    "assesses": [
+      "LA-LEX-C159-ACT159-03",
+      "LA-LEX-C159-ACT159-04",
+      "LA-LEX-C159-ACT159-05"
+    ]
+  }
+}

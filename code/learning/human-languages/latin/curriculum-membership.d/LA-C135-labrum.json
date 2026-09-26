@@ -1,0 +1,11 @@
+{
+  "id": "LA-C135-labrum",
+  "pathSegment": "LA-PATH-135-THINGS135",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-135-THINGS135",
+      "order": 2
+    }
+  ]
+}

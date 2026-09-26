@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:fe097c1f55775e39",
+  "lessonIds": [
+    "LA-C139-cathedra",
+    "LA-C139-scamnum",
+    "LA-C139-tapete",
+    "LA-C139-fax",
+    "LA-C139-lanterna"
+  ],
+  "tex": "latin/book/chapters/ch139-chair-with-a-back-bench-carpet-torch-lantern.tex"
+}

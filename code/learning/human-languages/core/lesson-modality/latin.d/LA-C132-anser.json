@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C132-anser",
+    "language": "latin",
+    "chapter": 132,
+    "sequence": 5350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:497b18b4b62e0814"
+  },
+  "findings": []
+}

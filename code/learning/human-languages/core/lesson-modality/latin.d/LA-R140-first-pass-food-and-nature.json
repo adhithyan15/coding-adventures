@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R140-first-pass-food-and-nature",
+    "language": "latin",
+    "chapter": 140,
+    "sequence": 5800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bab48389e4010ed3"
+  },
+  "findings": []
+}

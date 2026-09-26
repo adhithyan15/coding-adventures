@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C115-balneum",
+    "language": "latin",
+    "chapter": 115,
+    "sequence": 4430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9a75c543c6f3dfc"
+  },
+  "findings": []
+}

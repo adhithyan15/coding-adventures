@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:a87d711fffb2d2c8",
+  "lessonIds": [
+    "LA-C143-durus",
+    "LA-C143-mollis",
+    "LA-C143-tepidus",
+    "LA-C143-antiquus",
+    "LA-C143-angustus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch143.txt",
+  "json": "latin/narration/ch143.json",
+  "textHash": "fnv1a64:9750f65eada31802",
+  "jsonHash": "fnv1a64:84f6a3bdb79d9d91",
+  "findings": []
+}

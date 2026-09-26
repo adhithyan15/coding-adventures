@@ -1,0 +1,11 @@
+{
+  "id": "LA-C118-sepulcrum",
+  "pathSegment": "LA-PATH-118-LOC118",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-118-LOC118",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C110-oportet",
+  "pathSegment": "LA-PATH-110-CAN110",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-110-CAN110",
+      "order": 2
+    }
+  ]
+}

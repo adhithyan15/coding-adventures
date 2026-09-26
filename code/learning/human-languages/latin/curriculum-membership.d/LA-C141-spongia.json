@@ -1,0 +1,11 @@
+{
+  "id": "LA-C141-spongia",
+  "pathSegment": "LA-PATH-141-THINGS141",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-141-THINGS141",
+      "order": 2
+    }
+  ]
+}

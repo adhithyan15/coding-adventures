@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Step, Library, Food market, Eating-house, Inn",
+  "label": "ch:la-step-library-food-market-eating-house-inn",
+  "canDo": "I can say a step, a library, a food market, an eating-house and an inn.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "LA-C117-caupona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say a step, a library, a food market, an eating-house and an inn.",
+    "assesses": [
+      "LA-LEX-C117-LOC117-03",
+      "LA-LEX-C117-LOC117-04",
+      "LA-LEX-C117-LOC117-05"
+    ]
+  }
+}

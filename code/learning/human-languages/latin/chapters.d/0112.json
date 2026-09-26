@@ -1,0 +1,19 @@
+{
+  "chapter": 112,
+  "title": "Desire, Hope, Longing, Why?, Why?",
+  "label": "ch:la-desire-hope-longing-why-why",
+  "canDo": "I can say a desire, hope, a longing, why? and why?.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "LA-C112-quamobrem",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 112: i can say a desire, hope, a longing, why? and why?.",
+    "assesses": [
+      "LA-LEX-C112-WANT112-03",
+      "LA-LEX-C112-WANT112-04",
+      "LA-LEX-C112-WANT112-05"
+    ]
+  }
+}

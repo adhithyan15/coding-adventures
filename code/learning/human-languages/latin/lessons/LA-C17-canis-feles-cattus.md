@@ -15,14 +15,14 @@ etymology_hook: "canis ('dog') is the source of English canine, French chien, It
 duration:
   max_seconds: 240
 requires:
-  knowledge: [LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04]
+  knowledge: [LA-LEX-UNDECIM-VIGINTI-01, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04]
 introduces:
   knowledge: [LA-ETYMON-CANIS-FELES-CATTUS-01, LA-LEX-CANIS-FELES-CATTUS-02, LA-PRAGMATICS-CANIS-FELES-CATTUS-03]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04, LA-ETYMON-CANIS-FELES-CATTUS-01, LA-LEX-CANIS-FELES-CATTUS-02, LA-PRAGMATICS-CANIS-FELES-CATTUS-03]
+  knowledge: [LA-LEX-UNDECIM-VIGINTI-01, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04, LA-ETYMON-CANIS-FELES-CATTUS-01, LA-LEX-CANIS-FELES-CATTUS-02, LA-PRAGMATICS-CANIS-FELES-CATTUS-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,7 +34,7 @@ reviews_of: [LA-C16-undecim-viginti]
 # canis, fēlēs, cattus — the expected word, and the word that pushed it out
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-UNDECIM-VIGINTI-01, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04] -->
 
 [PAUSE 2s] Spanish's *perro* mysteriously displaced the word Latin gave it.
 Here is that word, and a parallel story about "cat."
@@ -79,7 +79,7 @@ genuinely **unexplained** — a real gap in the historical record, not just a
 simplification for beginners.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04, LA-ETYMON-CANIS-FELES-CATTUS-01, LA-LEX-CANIS-FELES-CATTUS-02, LA-PRAGMATICS-CANIS-FELES-CATTUS-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-UNDECIM-VIGINTI-01, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04, LA-ETYMON-CANIS-FELES-CATTUS-01, LA-LEX-CANIS-FELES-CATTUS-02, LA-PRAGMATICS-CANIS-FELES-CATTUS-03] -->
 
 [PAUSE 1s]
 - [YOU SAY: "canis" — dog, source of English "canine"]
@@ -88,7 +88,7 @@ simplification for beginners.
   Africa]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-UNDECIM-VIGINTI-01, LA-LEX-UNDECIM-VIGINTI-02, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04, LA-ETYMON-CANIS-FELES-CATTUS-01, LA-LEX-CANIS-FELES-CATTUS-02, LA-PRAGMATICS-CANIS-FELES-CATTUS-03] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-UNDECIM-VIGINTI-01, LA-PRAGMATICS-UNDECIM-VIGINTI-03, LA-LEX-UNDECIM-VIGINTI-04, LA-ETYMON-CANIS-FELES-CATTUS-01, LA-LEX-CANIS-FELES-CATTUS-02, LA-PRAGMATICS-CANIS-FELES-CATTUS-03] -->
 
 [PAUSE 3s]
 - What English word is a direct cousin of **canis**? (**Canine**.)

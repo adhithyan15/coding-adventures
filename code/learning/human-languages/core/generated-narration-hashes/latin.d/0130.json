@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:b7786223704ddcae",
+  "lessonIds": [
+    "LA-C130-unda",
+    "LA-C130-glacies",
+    "LA-C130-grando",
+    "LA-C130-tonitrus",
+    "LA-C130-fulgur",
+    "LA-R130-first-pass-places-and-things-in-the-house",
+    "LA-R130-second-pass-things-you-use"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch130.txt",
+  "json": "latin/narration/ch130.json",
+  "textHash": "fnv1a64:fbecd3c5f17d8807",
+  "jsonHash": "fnv1a64:07417f7e68ded354",
+  "findings": []
+}

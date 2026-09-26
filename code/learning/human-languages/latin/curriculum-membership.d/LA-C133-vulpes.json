@@ -1,0 +1,11 @@
+{
+  "id": "LA-C133-vulpes",
+  "pathSegment": "LA-PATH-133-THINGS133",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-133-THINGS133",
+      "order": 3
+    }
+  ]
+}

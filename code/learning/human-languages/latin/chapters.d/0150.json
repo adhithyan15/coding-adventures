@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "Careful, Lazy, Hard-working, Timid, Bold",
+  "label": "ch:la-careful-lazy-hard-working-timid-bold",
+  "canDo": "I can say careful, lazy, hard-working, timid and bold.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-R150-second-pass-describing-words",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: i can say careful, lazy, hard-working, timid and bold.",
+    "assesses": [
+      "LA-LEX-C150-QUAL150-03",
+      "LA-LEX-C150-QUAL150-04",
+      "LA-LEX-C150-QUAL150-05"
+    ]
+  }
+}

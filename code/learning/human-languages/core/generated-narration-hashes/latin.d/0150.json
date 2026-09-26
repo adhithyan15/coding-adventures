@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:48eacbfb5ecb5adc",
+  "lessonIds": [
+    "LA-C150-cautus",
+    "LA-C150-piger",
+    "LA-C150-diligens",
+    "LA-C150-timidus",
+    "LA-C150-audax",
+    "LA-R150-first-pass-people-and-describing-words",
+    "LA-R150-second-pass-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch150.txt",
+  "json": "latin/narration/ch150.json",
+  "textHash": "fnv1a64:80720a49ca9c72b1",
+  "jsonHash": "fnv1a64:65dc29b1c5615a4c",
+  "findings": []
+}

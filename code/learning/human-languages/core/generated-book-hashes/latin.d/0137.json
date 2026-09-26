@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:4f16f734e753241b",
+  "lessonIds": [
+    "LA-C137-faber",
+    "LA-C137-pistor",
+    "LA-C137-sutor",
+    "LA-C137-tonsor",
+    "LA-C137-pastor"
+  ],
+  "tex": "latin/book/chapters/ch137-craftsman-baker-shoemaker-barber-shepherd.tex"
+}

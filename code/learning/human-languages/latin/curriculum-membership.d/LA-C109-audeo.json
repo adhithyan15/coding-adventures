@@ -1,0 +1,11 @@
+{
+  "id": "LA-C109-audeo",
+  "pathSegment": "LA-PATH-109-CAN109",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-109-CAN109",
+      "order": 1
+    }
+  ]
+}

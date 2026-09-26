@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C140-pecten",
+    "language": "latin",
+    "chapter": 140,
+    "sequence": 5750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8486b00256d544ec"
+  },
+  "findings": []
+}

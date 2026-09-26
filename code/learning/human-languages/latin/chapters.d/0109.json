@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "To be able, To dare, To have to, To be used to, Power",
+  "label": "ch:la-to-be-able-to-dare-to-have-to-to-be-used-to-power",
+  "canDo": "I can say to be able, to dare, to have to, to be used to and power.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "LA-C109-potestas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say to be able, to dare, to have to, to be used to and power.",
+    "assesses": [
+      "LA-LEX-C109-CAN109-03",
+      "LA-LEX-C109-CAN109-04",
+      "LA-LEX-C109-CAN109-05"
+    ]
+  }
+}

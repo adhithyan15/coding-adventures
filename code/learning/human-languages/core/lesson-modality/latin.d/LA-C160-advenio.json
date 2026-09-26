@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C160-advenio",
+    "language": "latin",
+    "chapter": 160,
+    "sequence": 6880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6cc24eec1e87c261"
+  },
+  "findings": []
+}

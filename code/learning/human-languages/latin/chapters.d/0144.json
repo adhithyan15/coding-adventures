@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "Low, Thick, Thin, Blind, Sharp",
+  "label": "ch:la-low-thick-thin-blind-sharp",
+  "canDo": "I can say low, thick, thin, blind and sharp.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C144-acutus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: i can say low, thick, thin, blind and sharp.",
+    "assesses": [
+      "LA-LEX-C144-QUAL144-03",
+      "LA-LEX-C144-QUAL144-04",
+      "LA-LEX-C144-QUAL144-05"
+    ]
+  }
+}

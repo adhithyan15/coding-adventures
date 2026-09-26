@@ -1,0 +1,11 @@
+{
+  "id": "LA-C138-domina",
+  "pathSegment": "LA-PATH-138-THINGS138",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-138-THINGS138",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "Chair with a back, Bench, Carpet, Torch, Lantern",
+  "label": "ch:la-chair-with-a-back-bench-carpet-torch-lantern",
+  "canDo": "I can say a chair with a back, a bench, a carpet, a torch and a lantern.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C139-lanterna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: i can say a chair with a back, a bench, a carpet, a torch and a lantern.",
+    "assesses": [
+      "LA-LEX-C139-THINGS139-03",
+      "LA-LEX-C139-THINGS139-04",
+      "LA-LEX-C139-THINGS139-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:91c0950b6550d507",
+  "lessonIds": [
+    "LA-C151-superbus",
+    "LA-C151-benignus",
+    "LA-C151-crudelis",
+    "LA-C151-turpis",
+    "LA-C151-formosus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch151.txt",
+  "json": "latin/narration/ch151.json",
+  "textHash": "fnv1a64:7a13023665f5a833",
+  "jsonHash": "fnv1a64:59683ac27f0f6cbc",
+  "findings": []
+}

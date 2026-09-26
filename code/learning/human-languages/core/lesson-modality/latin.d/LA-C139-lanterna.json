@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C139-lanterna",
+    "language": "latin",
+    "chapter": 139,
+    "sequence": 5740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:71cc47ecad697631"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C149-prudens",
+  "pathSegment": "LA-PATH-149-QUAL149",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-149-QUAL149",
+      "order": 4
+    }
+  ]
+}

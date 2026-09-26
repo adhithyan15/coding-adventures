@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C146-sordidus",
+    "language": "latin",
+    "chapter": 146,
+    "sequence": 6130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c6a8b6893b0f4e4"
+  },
+  "findings": []
+}

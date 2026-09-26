@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C155-facio",
+    "language": "latin",
+    "chapter": 155,
+    "sequence": 6600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bfeb317668aff8f5"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C139-scamnum",
+  "pathSegment": "LA-PATH-139-THINGS139",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-139-THINGS139",
+      "order": 1
+    }
+  ]
+}

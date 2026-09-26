@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C141-spongia",
+    "language": "latin",
+    "chapter": 141,
+    "sequence": 5870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8fc88d7753389e3e"
+  },
+  "findings": []
+}

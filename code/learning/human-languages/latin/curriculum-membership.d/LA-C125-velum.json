@@ -1,0 +1,11 @@
+{
+  "id": "LA-C125-velum",
+  "pathSegment": "LA-PATH-125-THINGS125",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-125-THINGS125",
+      "order": 2
+    }
+  ]
+}

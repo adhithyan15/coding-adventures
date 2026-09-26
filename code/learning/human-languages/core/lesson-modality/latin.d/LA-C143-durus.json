@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C143-durus",
+    "language": "latin",
+    "chapter": 143,
+    "sequence": 5950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4851fab8bfb903c9"
+  },
+  "findings": []
+}

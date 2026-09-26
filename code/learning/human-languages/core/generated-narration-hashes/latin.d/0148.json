@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:fae0d456938734db",
+  "lessonIds": [
+    "LA-C148-felix",
+    "LA-C148-miser",
+    "LA-C148-iratus",
+    "LA-C148-quietus",
+    "LA-C148-purpureus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch148.txt",
+  "json": "latin/narration/ch148.json",
+  "textHash": "fnv1a64:5af276a0a8d528f0",
+  "jsonHash": "fnv1a64:62351e0eeeb6d7f9",
+  "findings": []
+}
