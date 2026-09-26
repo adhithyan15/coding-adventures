@@ -881,7 +881,7 @@ private final class MosaicHostState: ObservableObject {
     switch loader() {
     case .success(let candidate):
       self.bridge = candidate
-      candidate.setPropsChangedHandler? { [weak self] in
+      candidate.setPropsChangedHandler { [weak self] in
         DispatchQueue.main.async {
           self?.refreshProps()
         }
@@ -13577,6 +13577,9 @@ mod tests {
             .app_swift
             .contains("Button(\"Try again\") { host.retryStartup() }"));
         assert!(proj.app_swift.contains("candidate.close()"));
+        assert!(proj
+            .app_swift
+            .contains("candidate.setPropsChangedHandler { [weak self] in"));
         assert!(proj.app_swift.contains(
             "title: MosaicHostValue.optionalString(host.props, \"title\") ?? \"Authored title\","
         ));

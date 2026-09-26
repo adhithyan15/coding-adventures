@@ -187,7 +187,7 @@ CONTRACTS: dict[str, dict[str, tuple[str, ...]]] = {
         "Sources/App/App.swift": (
             "MosaicStartupView(host: host)",
             "MosaicRuntimeHost.loadRecoverable",
-            "candidate.setPropsChangedHandler?",
+            "candidate.setPropsChangedHandler",
             "self?.refreshProps()",
             'applyHostResponse(bridge?.handleEvent(["payload": event.mosaicPayload] as NSDictionary, name: event.mosaicName as NSString)',
             "applyHostResponse(bridge?.applyProps()",
