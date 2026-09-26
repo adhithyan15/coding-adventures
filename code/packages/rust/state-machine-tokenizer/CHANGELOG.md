@@ -6,6 +6,11 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
 
 ### Fixed
 
+- `commit_attribute`, `commit_attribute_dedup` and `mark_self_closing` accept
+  an end tag and drop the attribute or flag, as WHATWG does, so a lexer
+  definition can run end-tag attributes through its ordinary attribute states.
+  Emitting an end tag clears any pending attribute.
+
 - `switch_to_if_appropriate_end_tag(yes, no)` switches state on whether the
   current end tag matches the last start tag, so HTML text-mode end tags are
   decided where the WHATWG tokenizer decides them.

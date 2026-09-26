@@ -134,7 +134,7 @@ fn default_html_lexer_drops_partial_end_tag_at_eof() {
     assert!(lexer
         .diagnostics()
         .iter()
-        .any(|diagnostic| diagnostic.code == "eof-in-end-tag-name-state"));
+        .any(|diagnostic| diagnostic.code == "eof-in-tag"));
 }
 
 #[test]

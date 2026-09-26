@@ -295,6 +295,9 @@ id = "script_data_escaped_self_closing_end_tag_mismatch"
 id = "text_end_tag_eof"
 
 [[states]]
+id = "text_end_tag_attributes"
+
+[[states]]
 id = "rcdata_character_reference"
 
 [[states]]
@@ -1373,7 +1376,7 @@ actions = ["append_text(</)", "flush_text", "emit(EOF)"]
 
 [[transitions]]
 from = "rcdata_end_tag_open"
-matcher = { anything = true }
+matcher = { range = ["A", "Z"] }
 to = "rcdata_end_tag_name"
 actions = [
   "create_end_tag",
@@ -1382,6 +1385,23 @@ actions = [
 ]
 
 [[transitions]]
+from = "rcdata_end_tag_open"
+matcher = { range = ["a", "z"] }
+to = "rcdata_end_tag_name"
+actions = [
+  "create_end_tag",
+  "append_tag_name(current_lowercase)",
+  "append_temporary_buffer(current)",
+]
+
+[[transitions]]
+from = "rcdata_end_tag_open"
+matcher = { anything = true }
+to = "rcdata"
+consume = false
+actions = ["append_text(</)"]
+
+[[transitions]]
 from = "rawtext_end_tag_open"
 matcher = { eof = true }
 to = "done"
@@ -1390,7 +1410,7 @@ actions = ["append_text(</)", "flush_text", "emit(EOF)"]
 
 [[transitions]]
 from = "rawtext_end_tag_open"
-matcher = { anything = true }
+matcher = { range = ["A", "Z"] }
 to = "rawtext_end_tag_name"
 actions = [
   "create_end_tag",
@@ -1399,6 +1419,23 @@ actions = [
 ]
 
 [[transitions]]
+from = "rawtext_end_tag_open"
+matcher = { range = ["a", "z"] }
+to = "rawtext_end_tag_name"
+actions = [
+  "create_end_tag",
+  "append_tag_name(current_lowercase)",
+  "append_temporary_buffer(current)",
+]
+
+[[transitions]]
+from = "rawtext_end_tag_open"
+matcher = { anything = true }
+to = "rawtext"
+consume = false
+actions = ["append_text(</)"]
+
+[[transitions]]
 from = "script_data_end_tag_open"
 matcher = { eof = true }
 to = "done"
@@ -1407,7 +1444,7 @@ actions = ["append_text(</)", "flush_text", "emit(EOF)"]
 
 [[transitions]]
 from = "script_data_end_tag_open"
-matcher = { anything = true }
+matcher = { range = ["A", "Z"] }
 to = "script_data_end_tag_name"
 actions = [
   "create_end_tag",
@@ -1416,6 +1453,23 @@ actions = [
 ]
 
 [[transitions]]
+from = "script_data_end_tag_open"
+matcher = { range = ["a", "z"] }
+to = "script_data_end_tag_name"
+actions = [
+  "create_end_tag",
+  "append_tag_name(current_lowercase)",
+  "append_temporary_buffer(current)",
+]
+
+[[transitions]]
+from = "script_data_end_tag_open"
+matcher = { anything = true }
+to = "script_data"
+consume = false
+actions = ["append_text(</)"]
+
+[[transitions]]
 from = "script_data_escaped_end_tag_open"
 matcher = { eof = true }
 to = "done"
@@ -1424,13 +1478,30 @@ actions = ["append_text(</)", "flush_text", "emit(EOF)"]
 
 [[transitions]]
 from = "script_data_escaped_end_tag_open"
-matcher = { anything = true }
+matcher = { range = ["A", "Z"] }
 to = "script_data_escaped_end_tag_name"
 actions = [
   "create_end_tag",
   "append_tag_name(current_lowercase)",
   "append_temporary_buffer(current)",
 ]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_open"
+matcher = { range = ["a", "z"] }
+to = "script_data_escaped_end_tag_name"
+actions = [
+  "create_end_tag",
+  "append_tag_name(current_lowercase)",
+  "append_temporary_buffer(current)",
+]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_open"
+matcher = { anything = true }
+to = "script_data_escaped"
+consume = false
+actions = ["append_text(</)"]
 
 [[transitions]]
 from = "rcdata_end_tag_name"
@@ -1891,7 +1962,11 @@ actions = [
 from = "rcdata_end_tag_whitespace"
 matcher = { anything = true }
 to = "rcdata_end_tag_attributes"
-actions = ["append_temporary_buffer(current)"]
+consume = false
+actions = [
+  "parse_error_if_appropriate_end_tag(end-tag-with-attributes)",
+  "switch_to_if_appropriate_end_tag(text_end_tag_attributes, rcdata_end_tag_attributes)",
+]
 
 [[transitions]]
 from = "rawtext_end_tag_whitespace"
@@ -1948,7 +2023,11 @@ actions = [
 from = "rawtext_end_tag_whitespace"
 matcher = { anything = true }
 to = "rawtext_end_tag_attributes"
-actions = ["append_temporary_buffer(current)"]
+consume = false
+actions = [
+  "parse_error_if_appropriate_end_tag(end-tag-with-attributes)",
+  "switch_to_if_appropriate_end_tag(text_end_tag_attributes, rawtext_end_tag_attributes)",
+]
 
 [[transitions]]
 from = "script_data_end_tag_whitespace"
@@ -2005,7 +2084,11 @@ actions = [
 from = "script_data_end_tag_whitespace"
 matcher = { anything = true }
 to = "script_data_end_tag_attributes"
-actions = ["append_temporary_buffer(current)"]
+consume = false
+actions = [
+  "parse_error_if_appropriate_end_tag(end-tag-with-attributes)",
+  "switch_to_if_appropriate_end_tag(text_end_tag_attributes, script_data_end_tag_attributes)",
+]
 
 [[transitions]]
 from = "script_data_escaped_end_tag_whitespace"
@@ -2062,7 +2145,11 @@ actions = [
 from = "script_data_escaped_end_tag_whitespace"
 matcher = { anything = true }
 to = "script_data_escaped_end_tag_attributes"
-actions = ["append_temporary_buffer(current)"]
+consume = false
+actions = [
+  "parse_error_if_appropriate_end_tag(end-tag-with-attributes)",
+  "switch_to_if_appropriate_end_tag(text_end_tag_attributes, script_data_escaped_end_tag_attributes)",
+]
 
 [[transitions]]
 from = "rcdata_end_tag_attributes"
@@ -7864,7 +7951,8 @@ actions = ["parse_error(end-tag-with-trailing-solidus)"]
 [[transitions]]
 from = "before_end_tag_close"
 matcher = { anything = true }
-to = "end_tag_attributes"
+to = "before_attribute_name"
+consume = false
 actions = ["parse_error(end-tag-with-attributes)"]
 
 [[transitions]]
@@ -7948,6 +8036,13 @@ from = "end_tag_name"
 matcher = { anything = true }
 to = "end_tag_name"
 actions = ["append_tag_name(current_lowercase)"]
+
+[[transitions]]
+from = "text_end_tag_attributes"
+matcher = { anything = true }
+to = "before_attribute_name"
+consume = false
+actions = ["flush_text"]
 
 [[transitions]]
 from = "text_end_tag_eof"

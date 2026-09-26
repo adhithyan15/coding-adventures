@@ -1248,6 +1248,10 @@ impl Tokenizer {
                 attributes.push(attribute);
                 Ok(())
             }
+            // An end tag's attributes are lexed like a start tag's (so a
+            // quoted `>` inside one does not end the tag) and then dropped:
+            // WHATWG end tags carry no attributes.
+            CurrentToken::EndTag { .. } => Ok(()),
             other => Err(TokenizerError::InvalidCurrentToken {
                 action: action.to_string(),
                 expected: "start-tag",
@@ -1288,6 +1292,8 @@ impl Tokenizer {
                     false
                 }
             }
+            // Dropped, as in `commit_attribute`.
+            CurrentToken::EndTag { .. } => false,
             other => {
                 return Err(TokenizerError::InvalidCurrentToken {
                     action: action.to_string(),
@@ -1312,6 +1318,8 @@ impl Tokenizer {
                 *self_closing = true;
                 Ok(())
             }
+            // `</br/>`: the flag means nothing on an end tag and is dropped.
+            CurrentToken::EndTag { .. } => Ok(()),
             other => Err(TokenizerError::InvalidCurrentToken {
                 action: action.to_string(),
                 expected: "start-tag",
@@ -1438,10 +1446,13 @@ impl Tokenizer {
                     position,
                 });
             }
-            CurrentToken::EndTag { name } => self.tokens.push_back(PositionedToken {
-                token: Token::EndTag { name },
-                position,
-            }),
+            CurrentToken::EndTag { name } => {
+                self.current_attribute = None;
+                self.tokens.push_back(PositionedToken {
+                    token: Token::EndTag { name },
+                    position,
+                })
+            }
             CurrentToken::Comment { data } => self.tokens.push_back(PositionedToken {
                 token: Token::Comment(data),
                 position,

@@ -566,6 +566,12 @@ that turns `</name` back into text and reconsumes in the text state; a matching
 one carries on as a tag, so `<script></script ` followed by end of file drops
 the unfinished tag (`eof-in-tag`) and `</script/ >` still closes the script.
 
+Past the name, a matching end tag's attributes run through the ordinary
+attribute states (`before_attribute_name` onward, entered through
+`text_end_tag_attributes`, which flushes the text before it) and are dropped
+when the tag is emitted, so a quoted `>` does not end the tag. `</` followed by
+anything but an ASCII letter is text in every text state.
+
 ### Text Actions
 
 - `append_text(current)`: append the current code point to `text_buffer`.
