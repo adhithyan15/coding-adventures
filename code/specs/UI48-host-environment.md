@@ -466,6 +466,45 @@ PR. The acceptance test changes the environment and asserts the swap, as §7
 requires: TaskApp gets `TaskApp.compact.mll`, and the iOS simulator gate
 launches it on a phone (compact) and asserts the compact layout's marker.
 
+### 7.3 ENV4 on SwiftUI, designed
+
+ENV3 made SwiftUI *choose* a layout from what it observes. ENV4 makes it
+*tell the runtime*, so an app can also react in logic (§5.2), and so the
+runtime's `environment()` is the one the user is looking at.
+
+- **Every runtime-backed app observes.** The generated shell wraps its root in
+  `MosaicEnvironmentReader` whether or not the package has layout variants;
+  the selector is still generated only for packages that have some. A
+  sample-props shell (no runtime) does not observe: there is nothing to tell.
+- **Reported on bucket change only.** The reader reduces what it sees to the
+  six §4 values (`colorScheme`, `sizeClass`, `pointer`, `hover`,
+  `orientation`, `reducedMotion`) and reports them with `.task(id:)` keyed on
+  those values: once when the window first appears, then only when one of
+  them flips. Dragging a window's edge sends nothing until a threshold is
+  crossed. The host also drops a report equal to the last one it sent.
+- **The start context carries what is known before the first frame.** The
+  host starts the app with the platform's pointer and hover (`coarse`/`none`
+  on iOS, `fine`/`hover` on macOS), reduced motion from the system setting,
+  and on iOS the screen's size class and orientation. A window's real size is
+  only known once it is laid out, so the reader's first report corrects
+  anything the start context guessed; an app that does not react sees no
+  difference.
+- **"No reaction" keeps the current props.** The runtime answers an
+  environment the app ignores with the current revision and `props: null`
+  (§7.1). The Swift host treats an update without props as nothing to render
+  and keeps showing what it showed; it never replaces props with nothing.
+- **Color scheme is the rendered one.** SwiftUI's `colorScheme` is what the
+  window actually uses, so the report says `light` or `dark`, never
+  `system`.
+
+**Acceptance.** Unit tests pin the generated Swift (the reader around every
+runtime-backed root, the `.task(id:)` report, the payload keys and values
+matching `mosaic-app-runtime`'s wire names) and the host template (duplicate
+reports dropped, a props-less update keeping the current props). The CI
+SwiftUI lanes compile the generated app on macOS and for the iOS simulator.
+The resize-and-assert gate §7 asks for lands with the first app that reacts:
+ENV-last's TaskApp compact layout, launched on a phone.
+
 ## 8. Open questions
 
 1. **Should `size-class` thresholds be authorable per component?** A dense
