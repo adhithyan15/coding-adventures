@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C120-farine",
+    "language": "french",
+    "chapter": 120,
+    "sequence": 5490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc87a522a11e46e6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-R138-first-pass-school-and-free-time",
+  "pathSegment": "FR-PATH-138-VERBES90",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "FR-EXT-138-VERBES90",
+      "order": 5
+    }
+  ]
+}

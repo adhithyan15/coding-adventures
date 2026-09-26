@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Office, Factory, Pavement, Crossroads, Red light",
+  "label": "ch:fr-office-factory-pavement-crossroads-red-light",
+  "canDo": "I can name an office, a factory, a pavement, a crossroads, a red light.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "FR-C108-feu-rouge",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can name an office, a factory, a pavement, a crossroads, a red light.",
+    "assesses": [
+      "FR-LEX-C108-VILLE60-03",
+      "FR-LEX-C108-VILLE60-04",
+      "FR-LEX-C108-VILLE60-05"
+    ]
+  }
+}

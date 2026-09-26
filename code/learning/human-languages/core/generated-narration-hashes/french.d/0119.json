@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:156fa7df2af13e13",
+  "lessonIds": [
+    "FR-C119-boeuf",
+    "FR-C119-legumes",
+    "FR-C119-champignon",
+    "FR-C119-haricots",
+    "FR-C119-concombre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch119.txt",
+  "json": "french/narration/ch119.json",
+  "textHash": "fnv1a64:3c058fc2e36d7e6f",
+  "jsonHash": "fnv1a64:bedb386432942f58",
+  "findings": []
+}

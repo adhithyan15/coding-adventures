@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 108,
+  "sourceHash": "fnv1a64:bf0e4341ad4a687e",
+  "lessonIds": [
+    "FR-C108-bureau",
+    "FR-C108-usine",
+    "FR-C108-trottoir",
+    "FR-C108-carrefour",
+    "FR-C108-feu-rouge"
+  ],
+  "tex": "french/book/chapters/ch108-office-factory-pavement-crossroads-red-light.tex"
+}

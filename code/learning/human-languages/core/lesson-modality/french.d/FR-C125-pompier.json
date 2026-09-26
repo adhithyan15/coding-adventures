@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C125-pompier",
+    "language": "french",
+    "chapter": 125,
+    "sequence": 5700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:baaa4ce34cc80f9f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C126-tableau",
+  "pathSegment": "FR-PATH-126-ECOLE78",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-126-ECOLE78",
+      "order": 4
+    }
+  ]
+}

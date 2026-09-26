@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:508ec79a1e9a7927",
+  "lessonIds": [
+    "FR-C124-boulanger",
+    "FR-C124-etudiant",
+    "FR-C124-chauffeur",
+    "FR-C124-avocat",
+    "FR-C124-ingenieur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch124.txt",
+  "json": "french/narration/ch124.json",
+  "textHash": "fnv1a64:c9933ea0f76409e6",
+  "jsonHash": "fnv1a64:07ddbf5a09be6161",
+  "findings": []
+}

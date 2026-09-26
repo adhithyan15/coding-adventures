@@ -1,0 +1,11 @@
+{
+  "id": "FR-C119-boeuf",
+  "pathSegment": "FR-PATH-119-REPAS71",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-119-REPAS71",
+      "order": 0
+    }
+  ]
+}

@@ -1,11 +1,11 @@
 {
   "id": "FR-C12-seize",
   "pathSegment": "FR-PATH-015",
-  "pathOrder": 59,
+  "pathOrder": 47,
   "extensions": [
     {
       "id": "FR-EXT-015-LANGUAGE-SPECIFIC",
-      "order": 59
+      "order": 47
     }
   ]
 }

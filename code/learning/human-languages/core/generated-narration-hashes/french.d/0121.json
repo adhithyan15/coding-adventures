@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:0c45924fb921c34f",
+  "lessonIds": [
+    "FR-C121-biere",
+    "FR-C121-jus",
+    "FR-C121-glace",
+    "FR-C121-chocolat",
+    "FR-C121-biscuit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch121.txt",
+  "json": "french/narration/ch121.json",
+  "textHash": "fnv1a64:4fad6ad8a40395e9",
+  "jsonHash": "fnv1a64:405e4321a3a9376e",
+  "findings": []
+}

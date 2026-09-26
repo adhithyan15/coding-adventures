@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:afb4886331ab8f37",
+  "lessonIds": [
+    "FR-C118-bijou",
+    "FR-C118-bague",
+    "FR-C118-collier",
+    "FR-C118-parfum",
+    "FR-C118-lettre"
+  ],
+  "tex": "french/book/chapters/ch118-jewel-ring-necklace-perfume-letter.tex"
+}

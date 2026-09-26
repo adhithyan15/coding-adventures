@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-126-ECOLE78",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a class, a lesson, an exam, a word, a board.",
+  "prerequisites": []
+}

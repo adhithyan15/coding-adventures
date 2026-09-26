@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C130-joli",
+    "language": "french",
+    "chapter": 130,
+    "sequence": 6040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ca53e6215ec4c1b"
+  },
+  "findings": []
+}

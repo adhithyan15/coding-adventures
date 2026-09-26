@@ -1,0 +1,11 @@
+{
+  "id": "FR-C135-courriel",
+  "pathSegment": "FR-PATH-135-TEMPS87",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-135-TEMPS87",
+      "order": 4
+    }
+  ]
+}

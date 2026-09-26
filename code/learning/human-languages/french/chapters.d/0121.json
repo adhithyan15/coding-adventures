@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Beer, Juice, Ice cream, Chocolate, Biscuit",
+  "label": "ch:fr-beer-juice-ice-cream-chocolate-biscuit",
+  "canDo": "I can name beer, juice, ice cream, chocolate, a biscuit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C121-biscuit",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can name beer, juice, ice cream, chocolate, a biscuit.",
+    "assesses": [
+      "FR-LEX-C121-REPAS73-03",
+      "FR-LEX-C121-REPAS73-04",
+      "FR-LEX-C121-REPAS73-05"
+    ]
+  }
+}

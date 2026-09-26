@@ -1,0 +1,11 @@
+{
+  "id": "FR-C122-sandwich",
+  "pathSegment": "FR-PATH-122-REPAS74",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "FR-EXT-122-REPAS74",
+      "order": 0
+    }
+  ]
+}

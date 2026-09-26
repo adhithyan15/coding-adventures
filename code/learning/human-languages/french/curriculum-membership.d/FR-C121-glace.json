@@ -1,0 +1,11 @@
+{
+  "id": "FR-C121-glace",
+  "pathSegment": "FR-PATH-121-REPAS73",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-121-REPAS73",
+      "order": 2
+    }
+  ]
+}

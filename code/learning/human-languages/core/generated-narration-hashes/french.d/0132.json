@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:a87928dc337b406e",
+  "lessonIds": [
+    "FR-C132-bruyant",
+    "FR-C132-dernier",
+    "FR-C132-prochain",
+    "FR-C132-celebre",
+    "FR-C132-drole"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch132.txt",
+  "json": "french/narration/ch132.json",
+  "textHash": "fnv1a64:5c3b2ecdcaa53b81",
+  "jsonHash": "fnv1a64:181a901e218bf3d3",
+  "findings": []
+}

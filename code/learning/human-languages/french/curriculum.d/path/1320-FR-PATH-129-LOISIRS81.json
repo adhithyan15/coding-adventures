@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-129-LOISIRS81",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "before": [],
+  "inline": [
+    "FR-EXT-129-LOISIRS81"
+  ],
+  "after": []
+}

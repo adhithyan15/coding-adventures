@@ -1,7 +1,7 @@
 ---
 schema_version: 2
 id: FR-C06-neuf
-spine_node: SPINE-TIME-OF-DAY
+spine_node: SPINE-COUNT-ONE-TO-FIVE
 sequence: 209
 chapter: 6
 type: word

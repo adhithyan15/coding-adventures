@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C138-preferer",
+    "language": "french",
+    "chapter": 138,
+    "sequence": 6410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84141eb7532a91bf"
+  },
+  "findings": []
+}

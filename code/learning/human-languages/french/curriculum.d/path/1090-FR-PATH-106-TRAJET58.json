@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-106-TRAJET58",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "FR-EXT-106-TRAJET58"
+  ],
+  "after": []
+}

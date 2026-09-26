@@ -1,0 +1,11 @@
+{
+  "id": "FR-C135-siecle",
+  "pathSegment": "FR-PATH-135-TEMPS87",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-135-TEMPS87",
+      "order": 3
+    }
+  ]
+}

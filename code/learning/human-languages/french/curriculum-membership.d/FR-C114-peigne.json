@@ -1,0 +1,11 @@
+{
+  "id": "FR-C114-peigne",
+  "pathSegment": "FR-PATH-114-MAISON66",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-114-MAISON66",
+      "order": 2
+    }
+  ]
+}

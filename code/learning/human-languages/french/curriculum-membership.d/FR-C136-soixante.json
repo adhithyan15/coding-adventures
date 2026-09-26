@@ -1,0 +1,11 @@
+{
+  "id": "FR-C136-soixante",
+  "pathSegment": "FR-PATH-136-NOMBRES88",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-136-NOMBRES88",
+      "order": 1
+    }
+  ]
+}

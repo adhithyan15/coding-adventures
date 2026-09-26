@@ -4,7 +4,7 @@
   "label": "ch:numbers-1-10",
   "canDo": "I can count from one to ten in French and use the numbers in a short exchange.",
   "spineNodes": [
-    "SPINE-TIME-OF-DAY"
+    "SPINE-COUNT-ONE-TO-FIVE"
   ],
   "payoff": {
     "lesson": "FR-C06-practice",

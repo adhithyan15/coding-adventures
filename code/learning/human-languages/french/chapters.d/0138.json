@@ -1,0 +1,19 @@
+{
+  "chapter": 138,
+  "title": "To know (a person, a place), To prefer, To hope, To drive, To get dressed",
+  "label": "ch:fr-to-know-a-person-a-place-to-prefer-to-hope-to-drive-to-get-dressed",
+  "canDo": "I can say to know (a person, to prefer, to hope, to drive, to get dressed.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-R138-second-pass-describing-words-time-numbers-and-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 138: i can say to know (a person, to prefer, to hope, to drive, to get dressed.",
+    "assesses": [
+      "FR-LEX-C138-VERBES90-03",
+      "FR-LEX-C138-VERBES90-04",
+      "FR-LEX-C138-VERBES90-05"
+    ]
+  }
+}

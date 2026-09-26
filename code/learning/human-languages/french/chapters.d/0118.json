@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Jewel, Ring, Necklace, Perfume, Letter",
+  "label": "ch:fr-jewel-ring-necklace-perfume-letter",
+  "canDo": "I can name a jewel, a ring, a necklace, perfume, a letter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C118-lettre",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can name a jewel, a ring, a necklace, perfume, a letter.",
+    "assesses": [
+      "FR-LEX-C118-OBJETS70-03",
+      "FR-LEX-C118-OBJETS70-04",
+      "FR-LEX-C118-OBJETS70-05"
+    ]
+  }
+}

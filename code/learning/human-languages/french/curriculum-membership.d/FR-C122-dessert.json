@@ -1,0 +1,11 @@
+{
+  "id": "FR-C122-dessert",
+  "pathSegment": "FR-PATH-122-REPAS74",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-122-REPAS74",
+      "order": 3
+    }
+  ]
+}

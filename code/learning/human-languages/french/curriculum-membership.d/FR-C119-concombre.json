@@ -1,0 +1,11 @@
+{
+  "id": "FR-C119-concombre",
+  "pathSegment": "FR-PATH-119-REPAS71",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-119-REPAS71",
+      "order": 4
+    }
+  ]
+}

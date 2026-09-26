@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C135-siecle",
+    "language": "french",
+    "chapter": 135,
+    "sequence": 6280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f7a1e9a5cc2ca72"
+  },
+  "findings": []
+}

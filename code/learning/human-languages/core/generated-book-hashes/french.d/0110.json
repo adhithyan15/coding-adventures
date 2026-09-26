@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:df3b4f8c3ae42ca3",
+  "lessonIds": [
+    "FR-C110-droite",
+    "FR-C110-gauche",
+    "FR-C110-monde",
+    "FR-C110-voyage",
+    "FR-C110-vacances"
+  ],
+  "tex": "french/book/chapters/ch110-right-left-world-journey-holidays.tex"
+}

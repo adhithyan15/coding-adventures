@@ -1,0 +1,11 @@
+{
+  "id": "FR-C128-jeu",
+  "pathSegment": "FR-PATH-128-LOISIRS80",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-128-LOISIRS80",
+      "order": 2
+    }
+  ]
+}

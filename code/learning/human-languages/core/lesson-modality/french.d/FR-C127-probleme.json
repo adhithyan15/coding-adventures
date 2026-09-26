@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C127-probleme",
+    "language": "french",
+    "chapter": 127,
+    "sequence": 5840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2127bf9440de484"
+  },
+  "findings": []
+}

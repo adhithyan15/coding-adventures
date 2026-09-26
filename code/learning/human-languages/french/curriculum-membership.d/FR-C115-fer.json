@@ -1,0 +1,11 @@
+{
+  "id": "FR-C115-fer",
+  "pathSegment": "FR-PATH-115-MAISON67",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-115-MAISON67",
+      "order": 3
+    }
+  ]
+}

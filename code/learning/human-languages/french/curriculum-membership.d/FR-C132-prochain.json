@@ -1,0 +1,11 @@
+{
+  "id": "FR-C132-prochain",
+  "pathSegment": "FR-PATH-132-QUALITES84",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-132-QUALITES84",
+      "order": 2
+    }
+  ]
+}

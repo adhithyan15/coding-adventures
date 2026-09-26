@@ -1,0 +1,11 @@
+{
+  "id": "FR-C108-trottoir",
+  "pathSegment": "FR-PATH-108-VILLE60",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-108-VILLE60",
+      "order": 2
+    }
+  ]
+}

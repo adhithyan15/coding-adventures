@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-112-MAISON64",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a shower, a bathtub, a wardrobe, a shelf, a curtain.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C129-vie",
+  "pathSegment": "FR-PATH-129-LOISIRS81",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-129-LOISIRS81",
+      "order": 1
+    }
+  ]
+}

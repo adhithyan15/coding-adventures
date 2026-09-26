@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:0d2fb5cf28421882",
+  "lessonIds": [
+    "FR-C124-boulanger",
+    "FR-C124-etudiant",
+    "FR-C124-chauffeur",
+    "FR-C124-avocat",
+    "FR-C124-ingenieur"
+  ],
+  "tex": "french/book/chapters/ch124-baker-student-driver-lawyer-engineer.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "To begin, To visit (a place), To answer, To put, To believe",
+  "label": "ch:fr-to-begin-to-visit-a-place-to-answer-to-put-to-believe",
+  "canDo": "I can say to begin, to visit (a place), to answer, to put, to believe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "FR-C137-croire",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: i can say to begin, to visit (a place), to answer, to put, to believe.",
+    "assesses": [
+      "FR-LEX-C137-VERBES89-03",
+      "FR-LEX-C137-VERBES89-04",
+      "FR-LEX-C137-VERBES89-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C113-brosse-a-dents",
+  "pathSegment": "FR-PATH-113-MAISON65",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-113-MAISON65",
+      "order": 4
+    }
+  ]
+}

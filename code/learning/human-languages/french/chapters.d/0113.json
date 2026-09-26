@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Pillow, Blanket, Towel, Soap, Toothbrush",
+  "label": "ch:fr-pillow-blanket-towel-soap-toothbrush",
+  "canDo": "I can name a pillow, a blanket, a towel, soap, a toothbrush.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C113-brosse-a-dents",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can name a pillow, a blanket, a towel, soap, a toothbrush.",
+    "assesses": [
+      "FR-LEX-C113-MAISON65-03",
+      "FR-LEX-C113-MAISON65-04",
+      "FR-LEX-C113-MAISON65-05"
+    ]
+  }
+}

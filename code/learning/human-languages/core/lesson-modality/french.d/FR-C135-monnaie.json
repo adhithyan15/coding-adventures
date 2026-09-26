@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C135-monnaie",
+    "language": "french",
+    "chapter": 135,
+    "sequence": 6260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e62746f8099056cf"
+  },
+  "findings": []
+}

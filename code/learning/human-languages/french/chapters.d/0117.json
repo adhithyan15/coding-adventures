@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Boots, Cap, Swimsuit, Size, Wallet",
+  "label": "ch:fr-boots-cap-swimsuit-size-wallet",
+  "canDo": "I can name boots, a cap, a swimsuit, size, a wallet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "FR-C117-portefeuille",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can name boots, a cap, a swimsuit, size, a wallet.",
+    "assesses": [
+      "FR-LEX-C117-HABITS69-03",
+      "FR-LEX-C117-HABITS69-04",
+      "FR-LEX-C117-HABITS69-05"
+    ]
+  }
+}
