@@ -1,0 +1,9 @@
+{
+  "id": "FR-PATH-65-VERBES17",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "FR-EXT-65-VERBES17"
+  ],
+  "after": []
+}

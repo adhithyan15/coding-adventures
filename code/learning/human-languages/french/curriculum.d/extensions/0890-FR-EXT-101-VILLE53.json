@@ -1,0 +1,8 @@
+{
+  "id": "FR-EXT-101-VILLE53",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a restaurant, a hotel, a pharmacy, a village, the post office.",
+  "prerequisites": []
+}

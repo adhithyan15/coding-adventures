@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C97-hui",
+    "language": "french",
+    "chapter": 97,
+    "sequence": 4270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f1e29986b6e777ea"
+  },
+  "findings": []
+}

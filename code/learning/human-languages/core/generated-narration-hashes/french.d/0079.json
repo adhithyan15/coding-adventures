@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:4e6ef0418a88e98d",
+  "lessonIds": [
+    "FR-C79-telephone",
+    "FR-C79-parapluie",
+    "FR-C79-argent",
+    "FR-C79-cadeau",
+    "FR-C79-lunettes"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch79.txt",
+  "json": "french/narration/ch79.json",
+  "textHash": "fnv1a64:4508a540499027df",
+  "jsonHash": "fnv1a64:fa2d985f1993e6be",
+  "findings": []
+}

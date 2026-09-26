@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:b0553f3b95a321df",
+  "lessonIds": [
+    "FR-C85-vache",
+    "FR-C85-cochon",
+    "FR-C85-oiseau",
+    "FR-C85-souris",
+    "FR-C85-loup"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch85.txt",
+  "json": "french/narration/ch85.json",
+  "textHash": "fnv1a64:72a3f440dcbd97e5",
+  "jsonHash": "fnv1a64:57dab93fe75212b4",
+  "findings": []
+}

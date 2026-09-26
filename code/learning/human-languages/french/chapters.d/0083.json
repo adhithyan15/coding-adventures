@@ -1,0 +1,19 @@
+{
+  "chapter": 83,
+  "title": "Sun, Star, Cloud, Rain, Snow",
+  "label": "ch:fr-sun-star-cloud-rain-snow",
+  "canDo": "I can name the sun, a star, a cloud, rain, snow.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C83-neige",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 83: i can name the sun, a star, a cloud, rain, snow.",
+    "assesses": [
+      "FR-LEX-C83-NATURE35-03",
+      "FR-LEX-C83-NATURE35-04",
+      "FR-LEX-C83-NATURE35-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:70353d3f53ffdff4",
+  "lessonIds": [
+    "FR-C56-triste",
+    "FR-C56-content",
+    "FR-C56-fille",
+    "FR-C56-grand-pere",
+    "FR-C56-grand-mere"
+  ],
+  "tex": "french/book/chapters/ch56-sad-pleased-daughter-grandfather-grandmother.tex"
+}

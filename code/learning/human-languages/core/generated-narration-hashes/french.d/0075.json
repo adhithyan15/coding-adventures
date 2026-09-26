@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 75,
+  "sourceHash": "fnv1a64:059273a425fe7a70",
+  "lessonIds": [
+    "FR-C75-sol",
+    "FR-C75-escalier",
+    "FR-C75-miroir",
+    "FR-C75-salon",
+    "FR-C75-canape"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch75.txt",
+  "json": "french/narration/ch75.json",
+  "textHash": "fnv1a64:f9831b2c09f8970e",
+  "jsonHash": "fnv1a64:61454528d1655ab8",
+  "findings": []
+}

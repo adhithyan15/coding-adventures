@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:b4ccc529a08bae1b",
+  "lessonIds": [
+    "FR-C89-tortue",
+    "FR-C89-nouveau",
+    "FR-C89-vieux",
+    "FR-C89-rapide",
+    "FR-C89-facile"
+  ],
+  "tex": "french/book/chapters/ch89-tortoise-new-old-fast-easy.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "FR-C87-chevre",
+  "pathSegment": "FR-PATH-87-ANIMAUX39",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-87-ANIMAUX39",
+      "order": 1
+    }
+  ]
+}

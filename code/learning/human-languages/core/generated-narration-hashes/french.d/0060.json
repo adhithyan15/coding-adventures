@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:8901144062eb1a78",
+  "lessonIds": [
+    "FR-C60-pleurer",
+    "FR-C60-laver",
+    "FR-C60-cuisiner",
+    "FR-C60-jouer",
+    "FR-C60-apprendre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch60.txt",
+  "json": "french/narration/ch60.json",
+  "textHash": "fnv1a64:5b63b08c3e1769d6",
+  "jsonHash": "fnv1a64:3d42b554a7d83db2",
+  "findings": []
+}

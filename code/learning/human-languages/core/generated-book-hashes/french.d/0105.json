@@ -1,0 +1,15 @@
+{
+  "language": "french",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:74b1106003b794b6",
+  "lessonIds": [
+    "FR-C105-chaussettes",
+    "FR-C105-trente",
+    "FR-C105-quarante",
+    "FR-C105-cinquante",
+    "FR-C105-cent",
+    "FR-R105-first-pass-nature-animals-and-describing-words",
+    "FR-R105-second-pass-time-the-town-clothes-and-numbers"
+  ],
+  "tex": "french/book/chapters/ch105-socks-thirty-forty-fifty-hundred.tex"
+}

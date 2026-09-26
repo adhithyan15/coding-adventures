@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:7942cab3e0f6e5d2",
+  "lessonIds": [
+    "FR-C71-citron",
+    "FR-C71-raisin",
+    "FR-C71-confiture",
+    "FR-C71-yaourt",
+    "FR-C71-jambon"
+  ],
+  "tex": "french/book/chapters/ch71-lemon-grapes-jam-yoghurt-ham.tex"
+}

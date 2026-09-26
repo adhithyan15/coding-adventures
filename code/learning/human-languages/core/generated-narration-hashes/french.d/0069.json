@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 69,
+  "sourceHash": "fnv1a64:16bca8b2ec991c72",
+  "lessonIds": [
+    "FR-C69-carotte",
+    "FR-C69-gateau",
+    "FR-C69-soupe",
+    "FR-C69-miel",
+    "FR-C69-huile"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch69.txt",
+  "json": "french/narration/ch69.json",
+  "textHash": "fnv1a64:68da6c645a5a18bd",
+  "jsonHash": "fnv1a64:6ae61ff35577ae08",
+  "findings": []
+}

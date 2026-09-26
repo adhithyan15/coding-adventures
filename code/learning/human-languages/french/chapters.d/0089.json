@@ -1,0 +1,19 @@
+{
+  "chapter": 89,
+  "title": "Tortoise, New, Old, Fast, Easy",
+  "label": "ch:fr-tortoise-new-old-fast-easy",
+  "canDo": "I can name a tortoise, new, old, fast, easy.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "FR-C89-facile",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 89: i can name a tortoise, new, old, fast, easy.",
+    "assesses": [
+      "FR-LEX-C89-ANIMAUX41-03",
+      "FR-LEX-C89-ANIMAUX41-04",
+      "FR-LEX-C89-ANIMAUX41-05"
+    ]
+  }
+}

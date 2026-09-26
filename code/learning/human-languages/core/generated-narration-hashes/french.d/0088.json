@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 88,
+  "sourceHash": "fnv1a64:d847c118ee2865b5",
+  "lessonIds": [
+    "FR-C88-fourmi",
+    "FR-C88-elephant",
+    "FR-C88-lapin",
+    "FR-C88-grenouille",
+    "FR-C88-tigre"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch88.txt",
+  "json": "french/narration/ch88.json",
+  "textHash": "fnv1a64:b36a06ee580b0aa6",
+  "jsonHash": "fnv1a64:7f694a91bf098615",
+  "findings": []
+}

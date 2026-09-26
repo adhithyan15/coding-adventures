@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:eb1d4f3cd8b267ec",
+  "lessonIds": [
+    "FR-C103-quartier",
+    "FR-C103-aeroport",
+    "FR-C103-vetements",
+    "FR-C103-chemise",
+    "FR-C103-robe"
+  ],
+  "tex": "french/book/chapters/ch103-district-airport-clothes-shirt-dress.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 76,
+  "title": "Cupboard, Ceiling, Corridor, Glass, Plate",
+  "label": "ch:fr-cupboard-ceiling-corridor-glass-plate",
+  "canDo": "I can name a cupboard, a ceiling, a corridor, a glass, a plate.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "FR-C76-assiette",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 76: i can name a cupboard, a ceiling, a corridor, a glass, a plate.",
+    "assesses": [
+      "FR-LEX-C76-MAISON28-03",
+      "FR-LEX-C76-MAISON28-04",
+      "FR-LEX-C76-MAISON28-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:f7249779f8cfbf86",
+  "lessonIds": [
+    "FR-C98-hier",
+    "FR-C98-souvent",
+    "FR-C98-parfois",
+    "FR-C98-ville",
+    "FR-C98-rue"
+  ],
+  "tex": "french/book/chapters/ch98-yesterday-often-sometimes-town-street.tex"
+}

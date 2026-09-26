@@ -1,0 +1,11 @@
+{
+  "id": "FR-C58-bebe",
+  "pathSegment": "FR-PATH-58-FAMILLE10",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "FR-EXT-58-FAMILLE10",
+      "order": 2
+    }
+  ]
+}

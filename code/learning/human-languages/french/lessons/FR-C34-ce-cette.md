@@ -8,7 +8,7 @@ type: grammar
 headword: ce, cet, cette, ces
 gloss: "this and that, standing in front of a noun — four shapes off one root, and the extra t exists only so two vowels never meet"
 concept_tag: FR-DEMONSTRATIVE-CE
-prerequisites: [FR-C34-voici, FR-C01-le-la, FR-C29-ami]
+prerequisites: [FR-C34-voici, FR-C01-le-la, FR-C29-ami, FR-C22-chien-chat-more]
 sounds: [elision, liaison-z]
 roots: [latin-ecce-iste]
 etymology_hook: "cet exists for the same reason l' exists: French will not let two vowels collide, so it borrows a t rather than eliding, and cet ami and cette amie then sound identical"

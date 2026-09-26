@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:8b36ffc80c32dbde",
+  "lessonIds": [
+    "FR-C73-cuisine",
+    "FR-C73-fenetre",
+    "FR-C73-chaise",
+    "FR-C73-cle",
+    "FR-C73-mur"
+  ],
+  "tex": "french/book/chapters/ch73-kitchen-window-chair-key-wall.tex"
+}

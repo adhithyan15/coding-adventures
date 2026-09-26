@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C58-petite-fille",
+    "language": "french",
+    "chapter": 58,
+    "sequence": 2300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25e7b55b18740556"
+  },
+  "findings": []
+}

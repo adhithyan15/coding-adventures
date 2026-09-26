@@ -1,0 +1,19 @@
+{
+  "chapter": 97,
+  "title": "On top, Underneath, Inside, Outside, Today",
+  "label": "ch:fr-on-top-underneath-inside-outside-today",
+  "canDo": "I can name on top, underneath, inside, outside, today.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "FR-C97-hui",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 97: i can name on top, underneath, inside, outside, today.",
+    "assesses": [
+      "FR-LEX-C97-TEMPS49-03",
+      "FR-LEX-C97-TEMPS49-04",
+      "FR-LEX-C97-TEMPS49-05"
+    ]
+  }
+}

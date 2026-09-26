@@ -1,0 +1,11 @@
+{
+  "id": "FR-C95-matin",
+  "pathSegment": "FR-PATH-95-ADJ47",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "FR-EXT-95-ADJ47",
+      "order": 3
+    }
+  ]
+}

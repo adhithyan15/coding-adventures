@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "Salad, Pasta, Cream, Pepper, Walnut",
+  "label": "ch:fr-salad-pasta-cream-pepper-walnut",
+  "canDo": "I can name a salad, pasta, cream, pepper, a walnut.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FR-C72-noix",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can name a salad, pasta, cream, pepper, a walnut.",
+    "assesses": [
+      "FR-LEX-C72-CUISINE24-03",
+      "FR-LEX-C72-CUISINE24-04",
+      "FR-LEX-C72-CUISINE24-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "french",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:de44b207a17b2827",
+  "lessonIds": [
+    "FR-C80-boite",
+    "FR-C80-valise",
+    "FR-C80-billet",
+    "FR-C80-carte",
+    "FR-C80-photo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "french/narration/ch80.txt",
+  "json": "french/narration/ch80.json",
+  "textHash": "fnv1a64:13d08d9416a0b6ce",
+  "jsonHash": "fnv1a64:b6b43615de7d0ce2",
+  "findings": []
+}

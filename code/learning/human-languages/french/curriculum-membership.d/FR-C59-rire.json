@@ -1,0 +1,11 @@
+{
+  "id": "FR-C59-rire",
+  "pathSegment": "FR-PATH-59-FAMILLE11",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-59-FAMILLE11",
+      "order": 4
+    }
+  ]
+}

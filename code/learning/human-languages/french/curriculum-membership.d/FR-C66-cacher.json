@@ -1,0 +1,11 @@
+{
+  "id": "FR-C66-cacher",
+  "pathSegment": "FR-PATH-66-VERBES18",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "FR-EXT-66-VERBES18",
+      "order": 4
+    }
+  ]
+}

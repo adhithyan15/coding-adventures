@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C97-dedans",
+    "language": "french",
+    "chapter": 97,
+    "sequence": 4250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57953a4e1d7165d7"
+  },
+  "findings": []
+}

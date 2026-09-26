@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Banana, Orange, Potato, Tomato, Onion",
+  "label": "ch:fr-banana-orange-potato-tomato-onion",
+  "canDo": "I can name a banana, an orange, a potato, a tomato, an onion.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "FR-C68-oignon",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can name a banana, an orange, a potato, a tomato, an onion.",
+    "assesses": [
+      "FR-LEX-C68-CUISINE20-03",
+      "FR-LEX-C68-CUISINE20-04",
+      "FR-LEX-C68-CUISINE20-05"
+    ]
+  }
+}

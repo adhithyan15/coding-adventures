@@ -1,0 +1,13 @@
+{
+  "language": "french",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:2dfce39407055d08",
+  "lessonIds": [
+    "FR-C79-telephone",
+    "FR-C79-parapluie",
+    "FR-C79-argent",
+    "FR-C79-cadeau",
+    "FR-C79-lunettes"
+  ],
+  "tex": "french/book/chapters/ch79-phone-umbrella-money-present-glasses.tex"
+}

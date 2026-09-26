@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C105-quarante",
+    "language": "french",
+    "chapter": 105,
+    "sequence": 4650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb47be14c4d147bb"
+  },
+  "findings": []
+}

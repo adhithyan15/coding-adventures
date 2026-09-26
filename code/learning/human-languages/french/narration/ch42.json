@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "What the Ear Cannot Hear",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:a0fbf2465a44a906",
+  "sourceHash": "fnv1a64:194fb0b4a70ada67",
   "lessons": [
     {
       "id": "FR-C38-consonne-finale",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50477030b81b6e4f",
+      "sourceHash": "fnv1a64:df932f560a528386",
       "notice": null,
       "blocks": [
         {
@@ -743,7 +743,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20d3e36460c91c04",
+      "sourceHash": "fnv1a64:7fd2008c2589854e",
       "notice": null,
       "blocks": [
         {

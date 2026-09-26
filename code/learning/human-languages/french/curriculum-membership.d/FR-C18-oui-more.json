@@ -1,0 +1,11 @@
+{
+  "id": "FR-C18-oui-more",
+  "pathSegment": "FR-PATH-019",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "FR-EXT-019-LANGUAGE-SPECIFIC",
+      "order": 0
+    }
+  ]
+}

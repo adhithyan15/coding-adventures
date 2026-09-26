@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "FR-C82-sable",
+    "language": "french",
+    "chapter": 82,
+    "sequence": 3500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c9b20383773c565"
+  },
+  "findings": []
+}

@@ -8,7 +8,7 @@ type: practice
 headword: au café, de la maison
 gloss: "two prepositions, four contractions, and every noun the book owns run through both"
 concept_tag: FR-REVIEW-CONTRACTIONS
-prerequisites: [FR-C35-des]
+prerequisites: [FR-C35-des, FR-C22-chien-chat-more]
 sounds: []
 roots: []
 duration:
