@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "Wish, Hope, Dream, Intention, Plan",
+  "label": "ch:te-wish-hope-dream-intention-plan",
+  "canDo": "I can say a wish, hope, a dream, an intention and a plan.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "TE-C107-pranalika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say a wish, hope, a dream, an intention and a plan.",
+    "assesses": [
+      "TE-LEX-C107-WANT107-03",
+      "TE-LEX-C107-WANT107-04",
+      "TE-LEX-C107-WANT107-05"
+    ]
+  }
+}

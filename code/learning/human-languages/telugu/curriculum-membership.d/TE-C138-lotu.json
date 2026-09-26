@@ -1,0 +1,11 @@
+{
+  "id": "TE-C138-lotu",
+  "pathSegment": "TE-PATH-138-QUAL138",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-138-QUAL138",
+      "order": 2
+    }
+  ]
+}

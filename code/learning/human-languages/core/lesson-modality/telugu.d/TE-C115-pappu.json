@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C115-pappu",
+    "language": "telugu",
+    "chapter": 115,
+    "sequence": 4720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94ca93762d73799e"
+  },
+  "findings": []
+}

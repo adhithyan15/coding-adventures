@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 144,
+  "sourceHash": "fnv1a64:565a2c3356ddecf0",
+  "lessonIds": [
+    "TE-C144-vandu",
+    "TE-C144-koyu",
+    "TE-C144-pagalagottu",
+    "TE-C144-pampu",
+    "TE-C144-vetuku"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch144.txt",
+  "json": "telugu/narration/ch144.json",
+  "textHash": "fnv1a64:3feb21057659d4e4",
+  "jsonHash": "fnv1a64:cc6b5e19271e19d1",
+  "findings": []
+}

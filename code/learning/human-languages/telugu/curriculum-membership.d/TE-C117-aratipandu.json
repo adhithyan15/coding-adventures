@@ -1,0 +1,11 @@
+{
+  "id": "TE-C117-aratipandu",
+  "pathSegment": "TE-PATH-117-THINGS117",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-117-THINGS117",
+      "order": 1
+    }
+  ]
+}

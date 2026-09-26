@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C140-abaddham",
+    "language": "telugu",
+    "chapter": 140,
+    "sequence": 6030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0bfeef71c9ab5ee3"
+  },
+  "findings": []
+}

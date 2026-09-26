@@ -1,0 +1,11 @@
+{
+  "id": "TE-C131-langa",
+  "pathSegment": "TE-PATH-131-THINGS131",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-131-THINGS131",
+      "order": 2
+    }
+  ]
+}

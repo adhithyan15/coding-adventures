@@ -1,0 +1,63 @@
+---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: TE-C111-tuvvalu
+spine_node: SPINE-NAME-EVERYDAY-THINGS
+sequence: 4500
+chapter: 111
+type: word
+headword: "తువ్వాలు"
+gloss: "a towel"
+romanization: "tuvvālu"
+concept_tag: TE-THINGS111-TUVVALU
+prerequisites: [TE-C111-duvvena, TE-C111-sabbu]
+sounds: []
+roots: []
+duration:
+  max_seconds: 200
+requires:
+  knowledge: [TE-LEX-C111-THINGS111-01, TE-LEX-C111-THINGS111-02]
+introduces:
+  knowledge: [TE-LEX-C111-THINGS111-03]
+practises:
+  knowledge: [TE-LEX-C111-THINGS111-03, TE-LEX-C111-THINGS111-01, TE-LEX-C111-THINGS111-02]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output]
+register: neutral
+variety: standard-colloquial
+reviews_of: [TE-C111-sabbu]
+---
+
+# తువ్వాలు (tuvvālu) — a towel
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C111-THINGS111-01, TE-LEX-C111-THINGS111-02] -->
+
+[PAUSE 2s] Before the new one: say the Telugu for a comb, then the Telugu for soap.
+
+## You'll want to know: తువ్వాలు
+<!-- hl-knowledge: introduces=[TE-LEX-C111-THINGS111-03]; assesses=[] -->
+
+**తువ్వాలు** — *tuvvālu* — "a towel".
+
+## What you've built
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+One more word for this chapter.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C111-THINGS111-03, TE-LEX-C111-THINGS111-01, TE-LEX-C111-THINGS111-02] -->
+
+[PAUSE 1s]
+- [YOU SAY: *tuvvālu*]
+- [YOU SAY: *tuvvālu*, once more]
+- [YOU SAY: say *tuvvālu*]
+- [YOU RECALL: say the Telugu for a comb, then the Telugu for soap, then say *tuvvālu* again]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C111-THINGS111-03, TE-LEX-C111-THINGS111-01, TE-LEX-C111-THINGS111-02] -->
+
+[PAUSE 3s] What does తువ్వాలు mean? ("A towel".) Say it once more.

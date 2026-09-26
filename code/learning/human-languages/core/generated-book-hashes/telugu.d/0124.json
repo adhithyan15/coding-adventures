@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:ad4338dc291f671d",
+  "lessonIds": [
+    "TE-C124-jinka",
+    "TE-C124-nakka",
+    "TE-C124-pamu",
+    "TE-C124-tabelu",
+    "TE-C124-cilaka"
+  ],
+  "tex": "telugu/book/chapters/ch124-deer-fox-snake-tortoise-parrot.tex"
+}

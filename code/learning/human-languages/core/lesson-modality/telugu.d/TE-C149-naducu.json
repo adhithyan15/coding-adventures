@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C149-naducu",
+    "language": "telugu",
+    "chapter": 149,
+    "sequence": 6470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d82b91dcb2f9dc04"
+  },
+  "findings": []
+}

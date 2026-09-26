@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:eb1b5fef4e64821d",
+  "lessonIds": [
+    "TE-C134-karu",
+    "TE-C134-saikilu",
+    "TE-C134-vimanam",
+    "TE-C134-dhanyam",
+    "TE-C134-godhumalu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch134.txt",
+  "json": "telugu/narration/ch134.json",
+  "textHash": "fnv1a64:13a3b461670a361d",
+  "jsonHash": "fnv1a64:bbeb231ff3b33337",
+  "findings": []
+}

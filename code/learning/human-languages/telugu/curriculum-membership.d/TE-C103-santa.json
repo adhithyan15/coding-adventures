@@ -1,0 +1,11 @@
+{
+  "id": "TE-C103-santa",
+  "pathSegment": "TE-PATH-103-LOC103",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TE-EXT-103-LOC103",
+      "order": 4
+    }
+  ]
+}

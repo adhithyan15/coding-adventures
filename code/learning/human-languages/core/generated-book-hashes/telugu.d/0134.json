@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:c108795c6d082d3d",
+  "lessonIds": [
+    "TE-C134-karu",
+    "TE-C134-saikilu",
+    "TE-C134-vimanam",
+    "TE-C134-dhanyam",
+    "TE-C134-godhumalu"
+  ],
+  "tex": "telugu/book/chapters/ch134-car-bicycle-aeroplane-grain-wheat.tex"
+}

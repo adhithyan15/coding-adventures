@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:15bc9b3e2bd75c5c",
+  "lessonIds": [
+    "TE-C101-paina",
+    "TE-C101-kinda",
+    "TE-C101-lopala",
+    "TE-C101-bayata",
+    "TE-C101-venaka"
+  ],
+  "tex": "telugu/book/chapters/ch101-above-below-inside-outside-behind.tex"
+}

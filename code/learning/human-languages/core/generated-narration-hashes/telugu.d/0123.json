@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:5b331754170e21a3",
+  "lessonIds": [
+    "TE-C123-puli",
+    "TE-C123-simham",
+    "TE-C123-elugubanti",
+    "TE-C123-koti",
+    "TE-C123-kundelu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch123.txt",
+  "json": "telugu/narration/ch123.json",
+  "textHash": "fnv1a64:f3a82d3a84c0c73b",
+  "jsonHash": "fnv1a64:53e8ac135687cc7c",
+  "findings": []
+}

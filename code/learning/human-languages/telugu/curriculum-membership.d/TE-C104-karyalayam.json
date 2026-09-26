@@ -1,0 +1,11 @@
+{
+  "id": "TE-C104-karyalayam",
+  "pathSegment": "TE-PATH-104-LOC104",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-104-LOC104",
+      "order": 1
+    }
+  ]
+}

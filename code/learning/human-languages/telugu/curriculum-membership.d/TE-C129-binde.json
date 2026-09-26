@@ -1,0 +1,11 @@
+{
+  "id": "TE-C129-binde",
+  "pathSegment": "TE-PATH-129-THINGS129",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-129-THINGS129",
+      "order": 2
+    }
+  ]
+}

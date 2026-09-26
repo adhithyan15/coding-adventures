@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 106,
+  "sourceHash": "fnv1a64:3fe45181fca40c6b",
+  "lessonIds": [
+    "TE-C106-avakasam",
+    "TE-C106-parikaram",
+    "TE-C106-asti",
+    "TE-C106-yajamani",
+    "TE-C106-balam"
+  ],
+  "tex": "telugu/book/chapters/ch106-chance-tool-property-owner-strength.tex"
+}

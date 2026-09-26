@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-123-THINGS123",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a tiger, a lion, a bear, a monkey and a rabbit.",
+  "prerequisites": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C117-mamidipandu",
+  "pathSegment": "TE-PATH-117-THINGS117",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-117-THINGS117",
+      "order": 2
+    }
+  ]
+}

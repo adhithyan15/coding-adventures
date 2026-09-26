@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C131-jebu",
+    "language": "telugu",
+    "chapter": 131,
+    "sequence": 5570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d4cb8baba30a5ec"
+  },
+  "findings": []
+}

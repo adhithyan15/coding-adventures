@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "That is exactly why, Bed, Pillow, Blanket, Curtain",
+  "label": "ch:te-that-is-exactly-why-bed-pillow-blanket-curtain",
+  "canDo": "I can say that is exactly why, a bed, a pillow, a blanket and a curtain.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "TE-R109-second-pass-want-why-and-the-house",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say that is exactly why, a bed, a pillow, a blanket and a curtain.",
+    "assesses": [
+      "TE-LEX-C109-WHY109-03",
+      "TE-LEX-C109-WHY109-04",
+      "TE-LEX-C109-WHY109-05"
+    ]
+  }
+}

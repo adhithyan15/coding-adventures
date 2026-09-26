@@ -1,0 +1,6 @@
+{
+  "language": "telugu",
+  "chapter": 123,
+  "output": "telugu/book/chapters/ch123-tiger-lion-bear-monkey-rabbit.tex",
+  "scriptSet": "telugu-comparisons"
+}

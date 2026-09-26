@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Socks, Coat, Dhoti, Blouse, Lotus",
+  "label": "ch:te-socks-coat-dhoti-blouse-lotus",
+  "canDo": "I can say socks, a coat, a dhoti, a blouse and a lotus.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C132-tamarapuvvu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say socks, a coat, a dhoti, a blouse and a lotus.",
+    "assesses": [
+      "TE-LEX-C132-THINGS132-03",
+      "TE-LEX-C132-THINGS132-04",
+      "TE-LEX-C132-THINGS132-05"
+    ]
+  }
+}

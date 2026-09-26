@@ -1,0 +1,11 @@
+{
+  "id": "TE-C102-vantena",
+  "pathSegment": "TE-PATH-102-LOC102",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-102-LOC102",
+      "order": 3
+    }
+  ]
+}

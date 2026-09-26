@@ -1,0 +1,11 @@
+{
+  "id": "TE-C143-egiru",
+  "pathSegment": "TE-PATH-143-QUAL143",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TE-EXT-143-QUAL143",
+      "order": 1
+    }
+  ]
+}

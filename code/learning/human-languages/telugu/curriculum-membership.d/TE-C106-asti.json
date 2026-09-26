@@ -1,0 +1,11 @@
+{
+  "id": "TE-C106-asti",
+  "pathSegment": "TE-PATH-106-CAN106",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TE-EXT-106-CAN106",
+      "order": 2
+    }
+  ]
+}

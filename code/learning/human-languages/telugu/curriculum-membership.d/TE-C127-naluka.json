@@ -1,0 +1,11 @@
+{
+  "id": "TE-C127-naluka",
+  "pathSegment": "TE-PATH-127-THINGS127",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TE-EXT-127-THINGS127",
+      "order": 0
+    }
+  ]
+}

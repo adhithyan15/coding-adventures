@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C137-subhram",
+    "language": "telugu",
+    "chapter": 137,
+    "sequence": 5870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ec3553d3010cb350"
+  },
+  "findings": []
+}

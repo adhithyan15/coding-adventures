@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C112-cemca",
+    "language": "telugu",
+    "chapter": 112,
+    "sequence": 4570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e39f1d5b762f119"
+  },
+  "findings": []
+}

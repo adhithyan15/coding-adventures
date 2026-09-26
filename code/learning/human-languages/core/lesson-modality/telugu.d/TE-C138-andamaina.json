@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C138-andamaina",
+    "language": "telugu",
+    "chapter": 138,
+    "sequence": 5900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f921e75f5d179d18"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 123,
+  "title": "Tiger, Lion, Bear, Monkey, Rabbit",
+  "label": "ch:te-tiger-lion-bear-monkey-rabbit",
+  "canDo": "I can say a tiger, a lion, a bear, a monkey and a rabbit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C123-kundelu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 123: i can say a tiger, a lion, a bear, a monkey and a rabbit.",
+    "assesses": [
+      "TE-LEX-C123-THINGS123-03",
+      "TE-LEX-C123-THINGS123-04",
+      "TE-LEX-C123-THINGS123-05"
+    ]
+  }
+}

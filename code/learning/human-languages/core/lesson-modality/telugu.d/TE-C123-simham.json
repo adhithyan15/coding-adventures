@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C123-simham",
+    "language": "telugu",
+    "chapter": 123,
+    "sequence": 5120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5c2deffe34c9342"
+  },
+  "findings": []
+}

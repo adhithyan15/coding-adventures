@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:e550ffb5500fb62a",
+  "lessonIds": [
+    "TE-C140-suraksitam",
+    "TE-C140-abaddham",
+    "TE-C140-budida",
+    "TE-C140-bangaru",
+    "TE-C140-padaina"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch140.txt",
+  "json": "telugu/narration/ch140.json",
+  "textHash": "fnv1a64:8a989df3c8e06bcd",
+  "jsonHash": "fnv1a64:1355864fa36bcfa0",
+  "findings": []
+}

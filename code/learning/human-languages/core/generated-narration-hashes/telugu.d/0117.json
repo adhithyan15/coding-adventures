@@ -1,0 +1,19 @@
+{
+  "language": "telugu",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:d8b1abb8511c4e03",
+  "lessonIds": [
+    "TE-C117-kuragayalu",
+    "TE-C117-aratipandu",
+    "TE-C117-mamidipandu",
+    "TE-C117-kobbari",
+    "TE-C117-ullipaya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "telugu/narration/ch117.txt",
+  "json": "telugu/narration/ch117.json",
+  "textHash": "fnv1a64:71dcb75f8e62c54c",
+  "jsonHash": "fnv1a64:a584222b92d6046f",
+  "findings": []
+}

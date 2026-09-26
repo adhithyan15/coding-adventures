@@ -1,0 +1,8 @@
+{
+  "id": "TE-EXT-111-THINGS111",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a comb, soap, a towel, glasses and a clock.",
+  "prerequisites": []
+}

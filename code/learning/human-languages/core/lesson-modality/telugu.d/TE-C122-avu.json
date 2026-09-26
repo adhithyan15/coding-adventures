@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C122-avu",
+    "language": "telugu",
+    "chapter": 122,
+    "sequence": 5080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d851312e0cd43d4"
+  },
+  "findings": []
+}

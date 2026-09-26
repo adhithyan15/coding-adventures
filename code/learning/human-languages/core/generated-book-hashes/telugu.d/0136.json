@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 136,
+  "sourceHash": "fnv1a64:6631128cffcf0cec",
+  "lessonIds": [
+    "TE-C136-jamapandu",
+    "TE-C136-pancadara",
+    "TE-C136-podavu",
+    "TE-C136-potti",
+    "TE-C136-baruvu"
+  ],
+  "tex": "telugu/book/chapters/ch136-guava-sugar-tall-short-heavy.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TE-C147-gelucu",
+  "pathSegment": "TE-PATH-147-ACT147",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-147-ACT147",
+      "order": 3
+    }
+  ]
+}

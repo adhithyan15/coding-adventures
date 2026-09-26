@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "To learn, To teach, To forget, To jump, To get down",
+  "label": "ch:te-to-learn-to-teach-to-forget-to-jump-to-get-down",
+  "canDo": "I can say to learn, to teach, to forget, to jump and to get down.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C145-digu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: i can say to learn, to teach, to forget, to jump and to get down.",
+    "assesses": [
+      "TE-LEX-C145-ACT145-03",
+      "TE-LEX-C145-ACT145-04",
+      "TE-LEX-C145-ACT145-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-111-THINGS111",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "TE-EXT-111-THINGS111"
+  ],
+  "after": []
+}

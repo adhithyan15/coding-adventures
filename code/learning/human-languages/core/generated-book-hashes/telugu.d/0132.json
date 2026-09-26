@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:82350d560f45f362",
+  "lessonIds": [
+    "TE-C132-saksu",
+    "TE-C132-kotu",
+    "TE-C132-dhoti",
+    "TE-C132-jakettu",
+    "TE-C132-tamarapuvvu"
+  ],
+  "tex": "telugu/book/chapters/ch132-socks-coat-dhoti-blouse-lotus.tex"
+}

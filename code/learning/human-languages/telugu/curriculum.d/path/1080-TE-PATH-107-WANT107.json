@@ -1,0 +1,9 @@
+{
+  "id": "TE-PATH-107-WANT107",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "before": [],
+  "inline": [
+    "TE-EXT-107-WANT107"
+  ],
+  "after": []
+}

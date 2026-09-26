@@ -1,0 +1,13 @@
+{
+  "language": "telugu",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:0dc0d2f1906f7543",
+  "lessonIds": [
+    "TE-C103-gudi",
+    "TE-C103-badi",
+    "TE-C103-grandhalayam",
+    "TE-C103-byanku",
+    "TE-C103-santa"
+  ],
+  "tex": "telugu/book/chapters/ch103-temple-school-library-bank-market.tex"
+}

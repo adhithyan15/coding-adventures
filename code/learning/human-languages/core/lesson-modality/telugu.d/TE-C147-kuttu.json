@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C147-kuttu",
+    "language": "telugu",
+    "chapter": 147,
+    "sequence": 6390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d5971767c41b5a01"
+  },
+  "findings": []
+}

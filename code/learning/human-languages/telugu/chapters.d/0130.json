@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Television, Computer, Phone, Ticket, Paisa",
+  "label": "ch:te-television-computer-phone-ticket-paisa",
+  "canDo": "I can say a television, a computer, a phone, a ticket and a paisa.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C130-paisa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say a television, a computer, a phone, a ticket and a paisa.",
+    "assesses": [
+      "TE-LEX-C130-THINGS130-03",
+      "TE-LEX-C130-THINGS130-04",
+      "TE-LEX-C130-THINGS130-05"
+    ]
+  }
+}

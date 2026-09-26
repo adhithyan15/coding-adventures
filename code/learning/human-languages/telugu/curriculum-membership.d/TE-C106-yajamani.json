@@ -1,0 +1,11 @@
+{
+  "id": "TE-C106-yajamani",
+  "pathSegment": "TE-PATH-106-CAN106",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-106-CAN106",
+      "order": 3
+    }
+  ]
+}

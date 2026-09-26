@@ -1,0 +1,11 @@
+{
+  "id": "TE-C111-kallajodu",
+  "pathSegment": "TE-PATH-111-THINGS111",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TE-EXT-111-THINGS111",
+      "order": 3
+    }
+  ]
+}

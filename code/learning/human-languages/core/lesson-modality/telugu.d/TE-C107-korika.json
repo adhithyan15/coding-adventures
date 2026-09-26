@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C107-korika",
+    "language": "telugu",
+    "chapter": 107,
+    "sequence": 4250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5865e3a91739193f"
+  },
+  "findings": []
+}

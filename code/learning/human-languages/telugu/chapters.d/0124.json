@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Deer, Fox, Snake, Tortoise, Parrot",
+  "label": "ch:te-deer-fox-snake-tortoise-parrot",
+  "canDo": "I can say a deer, a fox, a snake, a tortoise and a parrot.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TE-C124-cilaka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say a deer, a fox, a snake, a tortoise and a parrot.",
+    "assesses": [
+      "TE-LEX-C124-THINGS124-03",
+      "TE-LEX-C124-THINGS124-04",
+      "TE-LEX-C124-THINGS124-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 147,
+  "title": "To wipe, To tie, To sew, To win, To hide",
+  "label": "ch:te-to-wipe-to-tie-to-sew-to-win-to-hide",
+  "canDo": "I can say to wipe, to tie, to sew, to win and to hide.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TE-C147-dacu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 147: i can say to wipe, to tie, to sew, to win and to hide.",
+    "assesses": [
+      "TE-LEX-C147-ACT147-03",
+      "TE-LEX-C147-ACT147-04",
+      "TE-LEX-C147-ACT147-05"
+    ]
+  }
+}

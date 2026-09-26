@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TE-C144-vetuku",
+    "language": "telugu",
+    "chapter": 144,
+    "sequence": 6260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e08fce4040382dc3"
+  },
+  "findings": []
+}
