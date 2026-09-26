@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:05913f0589f5088a",
+  "lessonIds": [
+    "TA-C154-ani2",
+    "TA-C154-alai2",
+    "TA-C154-valar",
+    "TA-C154-ennu",
+    "TA-C154-kattu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch154.txt",
+  "json": "tamil/narration/ch154.json",
+  "textHash": "fnv1a64:a54af8b8dda26d84",
+  "jsonHash": "fnv1a64:f9ab4181a4aa3fbd",
+  "findings": []
+}

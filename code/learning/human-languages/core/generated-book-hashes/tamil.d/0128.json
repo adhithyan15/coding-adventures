@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:edfc18a1d0e6ce43",
+  "lessonIds": [
+    "TA-C128-alai",
+    "TA-C128-erumai",
+    "TA-C128-kutirai",
+    "TA-C128-yanai",
+    "TA-C128-puli"
+  ],
+  "tex": "tamil/book/chapters/ch128-wave-buffalo-horse-elephant-tiger.tex"
+}

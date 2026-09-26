@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "Tall, Hot, Cold, Heavy, Light",
+  "label": "ch:ta-tall-hot-cold-heavy-light",
+  "canDo": "I can say tall, hot, cold, heavy and light.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "TA-C144-lecana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: i can say tall, hot, cold, heavy and light.",
+    "assesses": [
+      "TA-LEX-C144-QUAL144-03",
+      "TA-LEX-C144-QUAL144-04",
+      "TA-LEX-C144-QUAL144-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Lion, Bear, Monkey, Rabbit, Deer",
+  "label": "ch:ta-lion-bear-monkey-rabbit-deer",
+  "canDo": "I can say a lion, a bear, a monkey, a rabbit and a deer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C129-man2",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say a lion, a bear, a monkey, a rabbit and a deer.",
+    "assesses": [
+      "TA-LEX-C129-THINGS129-03",
+      "TA-LEX-C129-THINGS129-04",
+      "TA-LEX-C129-THINGS129-05"
+    ]
+  }
+}

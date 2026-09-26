@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C114-teru",
+    "language": "tamil",
+    "chapter": 114,
+    "sequence": 4960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d98bd84aa744dc80"
+  },
+  "findings": []
+}

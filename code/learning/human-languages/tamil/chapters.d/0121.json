@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Clock, Skirt, Sari, Lentils, Curry",
+  "label": "ch:ta-clock-skirt-sari-lentils-curry",
+  "canDo": "I can say a clock, a skirt, a sari, lentils and a curry.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-R121-second-pass-things-in-the-house",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say a clock, a skirt, a sari, lentils and a curry.",
+    "assesses": [
+      "TA-LEX-C121-THINGS121-03",
+      "TA-LEX-C121-THINGS121-04",
+      "TA-LEX-C121-THINGS121-05"
+    ]
+  }
+}

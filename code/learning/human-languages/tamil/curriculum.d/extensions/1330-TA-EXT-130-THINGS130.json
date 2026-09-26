@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-130-THINGS130",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a fox, a snake, a rat, a frog and a tortoise.",
+  "prerequisites": []
+}

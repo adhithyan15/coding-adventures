@@ -1,0 +1,11 @@
+{
+  "id": "TA-R157-first-pass-describing-words",
+  "pathSegment": "TA-PATH-157-ACT157",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "TA-EXT-157-ACT157",
+      "order": 5
+    }
+  ]
+}

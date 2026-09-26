@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:74ead008734fe6eb",
+  "lessonIds": [
+    "TA-C125-itli",
+    "TA-C125-tocai",
+    "TA-C125-vatai",
+    "TA-C125-kapi",
+    "TA-C125-katal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch125.txt",
+  "json": "tamil/narration/ch125.json",
+  "textHash": "fnv1a64:83d0e2596f40cfbf",
+  "jsonHash": "fnv1a64:d93177225b41cbb6",
+  "findings": []
+}

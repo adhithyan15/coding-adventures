@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C115-nulakam",
+    "language": "tamil",
+    "chapter": 115,
+    "sequence": 5000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef07ce11df599f33"
+  },
+  "findings": []
+}

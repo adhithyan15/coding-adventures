@@ -1,0 +1,19 @@
+{
+  "chapter": 138,
+  "title": "Exam, Answer, Tamarind, Pepper, Mustard seed",
+  "label": "ch:ta-exam-answer-tamarind-pepper-mustard-seed",
+  "canDo": "I can say an exam, an answer, tamarind, pepper and mustard seed.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C138-katuku",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 138: i can say an exam, an answer, tamarind, pepper and mustard seed.",
+    "assesses": [
+      "TA-LEX-C138-THINGS138-03",
+      "TA-LEX-C138-THINGS138-04",
+      "TA-LEX-C138-THINGS138-05"
+    ]
+  }
+}

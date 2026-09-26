@@ -1,0 +1,11 @@
+{
+  "id": "TA-C148-kaynta",
+  "pathSegment": "TA-PATH-148-QUAL148",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-148-QUAL148",
+      "order": 3
+    }
+  ]
+}

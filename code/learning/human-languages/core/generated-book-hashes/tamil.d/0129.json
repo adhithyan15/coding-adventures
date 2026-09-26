@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:16d890e40d8b8420",
+  "lessonIds": [
+    "TA-C129-cinkam",
+    "TA-C129-karati",
+    "TA-C129-kuranku",
+    "TA-C129-muyal",
+    "TA-C129-man2"
+  ],
+  "tex": "tamil/book/chapters/ch129-lion-bear-monkey-rabbit-deer.tex"
+}

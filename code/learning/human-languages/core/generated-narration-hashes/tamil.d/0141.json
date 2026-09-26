@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 141,
+  "sourceHash": "fnv1a64:0a4c7b3b27411245",
+  "lessonIds": [
+    "TA-C141-tivu",
+    "TA-C141-pucci",
+    "TA-C141-cilanti",
+    "TA-C141-panri",
+    "TA-C141-kalutai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch141.txt",
+  "json": "tamil/narration/ch141.json",
+  "textHash": "fnv1a64:06efa410390af77b",
+  "jsonHash": "fnv1a64:5c54fedfad78095c",
+  "findings": []
+}

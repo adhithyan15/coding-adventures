@@ -1,0 +1,11 @@
+{
+  "id": "TA-C147-comperi",
+  "pathSegment": "TA-PATH-147-QUAL147",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-147-QUAL147",
+      "order": 3
+    }
+  ]
+}

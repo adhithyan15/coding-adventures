@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-123-THINGS123",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say vegetables, a banana, a mango, a coconut and an onion.",
+  "prerequisites": []
+}

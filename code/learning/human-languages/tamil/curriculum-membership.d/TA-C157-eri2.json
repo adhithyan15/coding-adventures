@@ -1,0 +1,11 @@
+{
+  "id": "TA-C157-eri2",
+  "pathSegment": "TA-PATH-157-ACT157",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-157-ACT157",
+      "order": 3
+    }
+  ]
+}

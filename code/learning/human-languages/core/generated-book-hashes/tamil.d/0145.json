@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:065e8a133feea6ca",
+  "lessonIds": [
+    "TA-C145-menmaiyana",
+    "TA-C145-katinamana",
+    "TA-C145-cuttamana",
+    "TA-C145-alukkana",
+    "TA-C145-vekamana"
+  ],
+  "tex": "tamil/book/chapters/ch145-soft-hard-clean-dirty-fast.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C113-munnal",
+    "language": "tamil",
+    "chapter": 113,
+    "sequence": 4940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6e2b1d458be083cb"
+  },
+  "findings": []
+}

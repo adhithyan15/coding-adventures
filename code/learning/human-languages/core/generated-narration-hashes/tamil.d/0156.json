@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:7126ca9e299163cd",
+  "lessonIds": [
+    "TA-C156-tutai",
+    "TA-C156-perukku",
+    "TA-C156-karrukkol",
+    "TA-C156-vel",
+    "TA-C156-kantupiti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch156.txt",
+  "json": "tamil/narration/ch156.json",
+  "textHash": "fnv1a64:5180cdfd758f896f",
+  "jsonHash": "fnv1a64:3544dfdd005089a6",
+  "findings": []
+}

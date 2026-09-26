@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Stove, Vessel, Plate, Cup, Spoon",
+  "label": "ch:ta-stove-vessel-plate-cup-spoon",
+  "canDo": "I can say a stove, a vessel, a plate, a cup and a spoon.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C118-karanti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say a stove, a vessel, a plate, a cup and a spoon.",
+    "assesses": [
+      "TA-LEX-C118-THINGS118-03",
+      "TA-LEX-C118-THINGS118-04",
+      "TA-LEX-C118-THINGS118-05"
+    ]
+  }
+}

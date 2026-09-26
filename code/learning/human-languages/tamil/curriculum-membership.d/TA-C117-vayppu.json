@@ -1,0 +1,11 @@
+{
+  "id": "TA-C117-vayppu",
+  "pathSegment": "TA-PATH-117-CAN117",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-117-CAN117",
+      "order": 2
+    }
+  ]
+}

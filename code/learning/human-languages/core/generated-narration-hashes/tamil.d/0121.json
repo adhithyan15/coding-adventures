@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:7be7df5400816935",
+  "lessonIds": [
+    "TA-C121-katikaram",
+    "TA-C121-pavatai",
+    "TA-C121-celai",
+    "TA-C121-paruppu",
+    "TA-C121-kulambu",
+    "TA-R121-first-pass-places-and-what-you-can-do",
+    "TA-R121-second-pass-things-in-the-house"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch121.txt",
+  "json": "tamil/narration/ch121.json",
+  "textHash": "fnv1a64:24418aecebbf7190",
+  "jsonHash": "fnv1a64:afc23550f7ac6918",
+  "findings": []
+}

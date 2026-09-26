@@ -1,0 +1,11 @@
+{
+  "id": "TA-C144-cutana",
+  "pathSegment": "TA-PATH-144-QUAL144",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-144-QUAL144",
+      "order": 1
+    }
+  ]
+}

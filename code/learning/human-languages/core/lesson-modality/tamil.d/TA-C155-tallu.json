@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C155-tallu",
+    "language": "tamil",
+    "chapter": 155,
+    "sequence": 7200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5b49df211a35209"
+  },
+  "findings": []
+}

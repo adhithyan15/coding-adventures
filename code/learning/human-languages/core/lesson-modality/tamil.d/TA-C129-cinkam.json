@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C129-cinkam",
+    "language": "tamil",
+    "chapter": 129,
+    "sequence": 5750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4021f7c5be87fb3b"
+  },
+  "findings": []
+}

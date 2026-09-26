@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C118-koppai",
+    "language": "tamil",
+    "chapter": 118,
+    "sequence": 5180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f19ecb1f45690d7"
+  },
+  "findings": []
+}

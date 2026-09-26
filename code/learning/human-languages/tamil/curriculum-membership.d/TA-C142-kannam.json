@@ -1,0 +1,11 @@
+{
+  "id": "TA-C142-kannam",
+  "pathSegment": "TA-PATH-142-THINGS142",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-142-THINGS142",
+      "order": 2
+    }
+  ]
+}

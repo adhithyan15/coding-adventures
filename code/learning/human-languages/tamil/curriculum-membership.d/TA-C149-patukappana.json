@@ -1,0 +1,11 @@
+{
+  "id": "TA-C149-patukappana",
+  "pathSegment": "TA-PATH-149-QUAL149",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-149-QUAL149",
+      "order": 2
+    }
+  ]
+}

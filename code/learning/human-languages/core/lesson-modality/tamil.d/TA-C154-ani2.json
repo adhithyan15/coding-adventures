@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C154-ani2",
+    "language": "tamil",
+    "chapter": 154,
+    "sequence": 7150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ec2dce83f60412d"
+  },
+  "findings": []
+}

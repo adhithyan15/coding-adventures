@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:b35d3ca91bf7007f",
+  "lessonIds": [
+    "TA-C128-alai",
+    "TA-C128-erumai",
+    "TA-C128-kutirai",
+    "TA-C128-yanai",
+    "TA-C128-puli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch128.txt",
+  "json": "tamil/narration/ch128.json",
+  "textHash": "fnv1a64:1e4064b1c81513c4",
+  "jsonHash": "fnv1a64:3bd7298b67d60f44",
+  "findings": []
+}
