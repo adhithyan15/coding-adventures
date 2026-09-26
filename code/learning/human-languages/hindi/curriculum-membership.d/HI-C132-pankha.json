@@ -1,0 +1,11 @@
+{
+  "id": "HI-C132-pankha",
+  "pathSegment": "HI-PATH-132-THINGS132",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-132-THINGS132",
+      "order": 3
+    }
+  ]
+}

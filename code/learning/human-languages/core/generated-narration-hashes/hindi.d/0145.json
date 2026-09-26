@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:38b94fca58401e22",
+  "lessonIds": [
+    "HI-C145-adhi",
+    "HI-C145-kohra",
+    "HI-C145-barf",
+    "HI-C145-hava",
+    "HI-C145-ser"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch145.txt",
+  "json": "hindi/narration/ch145.json",
+  "textHash": "fnv1a64:d1ed179dfe1abbac",
+  "jsonHash": "fnv1a64:eb21c5be098a7101",
+  "findings": []
+}

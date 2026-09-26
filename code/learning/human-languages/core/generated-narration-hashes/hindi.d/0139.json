@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:ace4f25fa1589b23",
+  "lessonIds": [
+    "HI-C139-matar",
+    "HI-C139-khira",
+    "HI-C139-am",
+    "HI-C139-kela",
+    "HI-C139-seb"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch139.txt",
+  "json": "hindi/narration/ch139.json",
+  "textHash": "fnv1a64:eb3413be5b25af56",
+  "jsonHash": "fnv1a64:6aa710da43d6c72a",
+  "findings": []
+}

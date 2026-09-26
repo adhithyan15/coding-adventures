@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C157-garib",
+    "language": "hindi",
+    "chapter": 157,
+    "sequence": 7370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40b84909263548c3"
+  },
+  "findings": []
+}

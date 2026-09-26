@@ -1,0 +1,11 @@
+{
+  "id": "HI-C130-hathaura",
+  "pathSegment": "HI-PATH-130-THINGS130",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-130-THINGS130",
+      "order": 0
+    }
+  ]
+}

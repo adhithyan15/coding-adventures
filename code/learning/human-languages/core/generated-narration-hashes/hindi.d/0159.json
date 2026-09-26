@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:ee4b8788bb363a2f",
+  "lessonIds": [
+    "HI-C159-bhara",
+    "HI-C159-sona",
+    "HI-C159-jagna",
+    "HI-C159-daurna",
+    "HI-C159-rakhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch159.txt",
+  "json": "hindi/narration/ch159.json",
+  "textHash": "fnv1a64:fe6047d8908ceb4e",
+  "jsonHash": "fnv1a64:aae6d5910692287b",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C134-anguthi",
+    "language": "hindi",
+    "chapter": 134,
+    "sequence": 6090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9e183da6cb5f14f"
+  },
+  "findings": []
+}

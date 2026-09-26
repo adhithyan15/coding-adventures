@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C134-botal",
+    "language": "hindi",
+    "chapter": 134,
+    "sequence": 6050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c38ba761fd23988d"
+  },
+  "findings": []
+}

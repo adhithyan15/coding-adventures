@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 164,
+  "sourceHash": "fnv1a64:69ef97a28565777e",
+  "lessonIds": [
+    "HI-C164-bulana",
+    "HI-C164-sikhana",
+    "HI-C164-sikhna",
+    "HI-C164-pahucna",
+    "HI-C164-lautna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch164.txt",
+  "json": "hindi/narration/ch164.json",
+  "textHash": "fnv1a64:7a93733add6185f7",
+  "jsonHash": "fnv1a64:80fcefa8d37b0b35",
+  "findings": []
+}

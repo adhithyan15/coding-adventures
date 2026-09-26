@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-146-THINGS146",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a bear, an elephant, a camel, a donkey and a sheep.",
+  "prerequisites": []
+}

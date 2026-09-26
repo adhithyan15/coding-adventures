@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C144-kinara",
+    "language": "hindi",
+    "chapter": 144,
+    "sequence": 6630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c869d026e3aa8222"
+  },
+  "findings": []
+}

@@ -144,7 +144,11 @@ describe("the gate that would have caught the A2 claim", () => {
     const HELD: Readonly<Record<string, string>> = {
       spanish: "A1",
       telugu: "pre-A1",
-      hindi: "pre-A1",
+      // Chapters 129-165 (185 words): the things chapters realize
+      // NAME-EVERYDAY-THINGS; thirty-four verbs; sixty-nine thin atoms revisited;
+      // chapter 22's irregular-teens atom folded into 11-20, which brings the
+      // lesson inside the atom budget.
+      hindi: "A1",
       tamil: "pre-A1",
       kannada: "pre-A1",
       malayalam: "pre-A1",
@@ -258,14 +262,21 @@ describe("the gate that would have caught the A2 claim", () => {
     // were level-scoped it blocked pre-A1 anyway, which made criterion 3 unfalsifiable
     // at the bottom of the ladder for every track.
     //
-    // Hindi now shows it end to end: with chapters 106-127 it ATTAINS pre-A1 while
-    // that one over-budget lesson is still in the track, and the lesson surfaces as
-    // an atom-budget blocker only on the rung it actually sits on, A1.
+    // Hindi showed it end to end first: with chapters 106-127 it ATTAINED pre-A1
+    // while that one over-budget lesson was still in the track, and the lesson
+    // surfaced as an atom-budget blocker only on the rung it actually sat on, A1.
+    // Hindi's A1 tranche then fixed that lesson and Hindi attained A1, so the
+    // witness is now any track in the same position. Several still are (Bengali,
+    // Gujarati, Malayalam, Punjabi and Sanskrit when this was written). If none
+    // were left, this would fail, and the claim would need a synthetic fixture.
     const gate = realReport().levelGate!;
-    const hindi = gate.tracks.find((t) => t.language === "hindi")!;
-    expect(hindi.attained).toBe("pre-A1");
-    expect(hindi.inProgressAt).toBe("A1");
-    expect(hindi.blockers.map((b) => b.criterion)).toContain("atom-budget");
+    const witnesses = gate.tracks.filter(
+      (t) =>
+        t.attained === "pre-A1" &&
+        t.inProgressAt === "A1" &&
+        t.blockers.some((b) => b.criterion === "atom-budget"),
+    );
+    expect(witnesses.length, "a track that attains pre-A1 despite an A1 over-budget lesson").toBeGreaterThan(0);
   });
 
   it("fails an authored-but-unrealized level on a COUNT, not on absence", () => {
@@ -376,9 +387,9 @@ describe("the first rung anybody actually climbed", () => {
     // The rung comes from the gate rather than from a literal, so this reads the
     // renderer against the data it renders — which is the actual claim — instead of
     // against a constant that has now had to be edited twice.
-    // French, German, Italian, Latin, Marathi, Portuguese, Russian and Urdu joined
-    // Spanish at A1, so the line names all nine, in the order the renderer sorts them.
-    expect(line).toContain(`9 tracks at ${held} (french, german, italian, latin, marathi, portuguese, russian, spanish, urdu)`);
+    // French, German, Hindi, Italian, Latin, Marathi, Portuguese, Russian and Urdu
+    // joined Spanish at A1, so the line names all ten, in the order the renderer sorts them.
+    expect(line).toContain(`10 tracks at ${held} (french, german, hindi, italian, latin, marathi, portuguese, russian, spanish, urdu)`);
     // And it must really be a rung that was climbed, not `null` stringified into the
     // sentence. Without this the line above would pass on "1 track at null (spanish)".
     expect(levelRank(held)).toBeGreaterThanOrEqual(levelRank("A1"));

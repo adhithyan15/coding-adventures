@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C165-samjhana",
+    "language": "hindi",
+    "chapter": 165,
+    "sequence": 7770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25e84be837b04326"
+  },
+  "findings": []
+}

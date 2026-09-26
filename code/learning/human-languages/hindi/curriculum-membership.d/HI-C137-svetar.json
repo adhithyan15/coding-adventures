@@ -1,0 +1,11 @@
+{
+  "id": "HI-C137-svetar",
+  "pathSegment": "HI-PATH-137-THINGS137",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-137-THINGS137",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-139-THINGS139",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say peas, a cucumber, a mango, a banana and an apple.",
+  "prerequisites": []
+}

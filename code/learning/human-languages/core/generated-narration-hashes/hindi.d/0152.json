@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:fb3840b66b3c2e78",
+  "lessonIds": [
+    "HI-C152-khun",
+    "HI-C152-dakghar",
+    "HI-C152-pustakalay",
+    "HI-C152-mandir",
+    "HI-C152-masjid"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch152.txt",
+  "json": "hindi/narration/ch152.json",
+  "textHash": "fnv1a64:e85c488c05610eb4",
+  "jsonHash": "fnv1a64:89e0f307f9df3bba",
+  "findings": []
+}

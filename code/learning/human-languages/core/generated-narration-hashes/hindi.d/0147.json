@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:364933423ac95139",
+  "lessonIds": [
+    "HI-C147-khargos",
+    "HI-C147-hiran",
+    "HI-C147-lomri",
+    "HI-C147-bheriya",
+    "HI-C147-kaua",
+    "HI-R147-first-pass-clothes-and-food",
+    "HI-R147-second-pass-food-and-nature"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch147.txt",
+  "json": "hindi/narration/ch147.json",
+  "textHash": "fnv1a64:13f972532260c301",
+  "jsonHash": "fnv1a64:baaef8dee373dbac",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "Chin, Tongue, Neck, Chest, Waist",
+  "label": "ch:hi-chin-tongue-neck-chest-waist",
+  "canDo": "I can say the chin, the tongue, the neck, the chest and the waist.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C151-kamar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: i can say the chin, the tongue, the neck, the chest and the waist.",
+    "assesses": [
+      "HI-LEX-C151-THINGS151-03",
+      "HI-LEX-C151-THINGS151-04",
+      "HI-LEX-C151-THINGS151-05"
+    ]
+  }
+}

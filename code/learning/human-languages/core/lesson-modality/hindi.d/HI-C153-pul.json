@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C153-pul",
+    "language": "hindi",
+    "chapter": 153,
+    "sequence": 7120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f70fceca63bd3e3"
+  },
+  "findings": []
+}

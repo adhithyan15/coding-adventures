@@ -1,0 +1,19 @@
+{
+  "chapter": 160,
+  "title": "To send, To bring, To open, To wash, To bathe",
+  "label": "ch:hi-to-send-to-bring-to-open-to-wash-to-bathe",
+  "canDo": "I can say to send, to bring, to open, to wash and to bathe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C160-nahana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 160: i can say to send, to bring, to open, to wash and to bathe.",
+    "assesses": [
+      "HI-LEX-C160-ACT160-03",
+      "HI-LEX-C160-ACT160-04",
+      "HI-LEX-C160-ACT160-05"
+    ]
+  }
+}

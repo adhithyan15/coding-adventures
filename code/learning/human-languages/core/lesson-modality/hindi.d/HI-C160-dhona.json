@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C160-dhona",
+    "language": "hindi",
+    "chapter": 160,
+    "sequence": 7530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24ed2b1f69ec2a30"
+  },
+  "findings": []
+}

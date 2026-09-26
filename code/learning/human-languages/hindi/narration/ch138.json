@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 138,
+  "title": "Garlic, Ginger, Tomato, Carrot, Cauliflower",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:ad96412fc480324b",
+  "lessons": [
+    {
+      "id": "HI-C138-lahsun",
+      "sequence": 6250,
+      "title": "लहसुन (lahsun) — garlic",
+      "headword": "लहसुन",
+      "romanization": "lahsun",
+      "gloss": "garlic",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b082caf2eb5033b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a potato, then the Hindi for an onion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लहसुन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लहसुन — lahsun — \"garlic\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lahsun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lahsun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lahsun, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lahsun*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say lahsun",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *lahsun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a potato, then the Hindi for an onion, then say lahsun again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a potato, then the Hindi for an onion, then say *lahsun* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लहसुन (lahsun) mean? (\"Garlic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C138-adrak",
+      "sequence": 6260,
+      "title": "अदरक (adrak) — ginger",
+      "headword": "अदरक",
+      "romanization": "adrak",
+      "gloss": "ginger",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e981f96c3c733465",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an onion, then the Hindi for garlic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अदरक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अदरक — adrak — \"ginger\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adrak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adrak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adrak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adrak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say adrak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *adrak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an onion, then the Hindi for garlic, then say adrak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an onion, then the Hindi for garlic, then say *adrak* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अदरक (adrak) mean? (\"Ginger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C138-tamatar",
+      "sequence": 6270,
+      "title": "टमाटर (ṭamāṭar) — a tomato",
+      "headword": "टमाटर",
+      "romanization": "ṭamāṭar",
+      "gloss": "a tomato",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d45847b9961b20cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for garlic, then the Hindi for ginger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: टमाटर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "टमाटर — ṭamāṭar — \"a tomato\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭamāṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭamāṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭamāṭar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭamāṭar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say ṭamāṭar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *ṭamāṭar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for garlic, then the Hindi for ginger, then say ṭamāṭar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for garlic, then the Hindi for ginger, then say *ṭamāṭar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does टमाटर (ṭamāṭar) mean? (\"A tomato\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C138-gajar",
+      "sequence": 6280,
+      "title": "गाजर (gājar) — a carrot",
+      "headword": "गाजर",
+      "romanization": "gājar",
+      "gloss": "a carrot",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5981e86b775b0624",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for ginger, then the Hindi for a tomato."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गाजर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गाजर — gājar — \"a carrot\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gājar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gājar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gājar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gājar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gājar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gājar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for ginger, then the Hindi for a tomato, then say gājar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for ginger, then the Hindi for a tomato, then say *gājar* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गाजर (gājar) mean? (\"A carrot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C138-gobhi",
+      "sequence": 6290,
+      "title": "गोभी (gobhī) — a cauliflower",
+      "headword": "गोभी",
+      "romanization": "gobhī",
+      "gloss": "a cauliflower",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c07ed71c00781856",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a tomato, then the Hindi for a carrot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गोभी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गोभी — gobhī — \"a cauliflower\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gobhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gobhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gobhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gobhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say gobhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *gobhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a tomato, then the Hindi for a carrot, then say gobhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a tomato, then the Hindi for a carrot, then say *gobhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गोभी (gobhī) mean? (\"A cauliflower\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R138-first-pass-the-house-and-things-you-use",
+      "sequence": 6300,
+      "title": "The house and things you use — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 129-133",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:256f3735eca74570",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a carrot and a cauliflower."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lock, a pillow, a blanket, a curtain, a bucket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lock, a pillow, a blanket, a curtain, a bucket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a hammer, a nail, scissors, thread, a comb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a hammer, a nail, scissors, thread, a comb]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a towel, a broom, a box, a bag, a candle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a towel, a broom, a box, a bag, a candle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "matches, a small bowl, a knife, a fan, a watch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: matches, a small bowl, a knife, a fan, a watch]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "glasses, an umbrella, a wallet, a bed frame, bedding",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: glasses, an umbrella, a wallet, a bed frame, bedding]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A lock? (ताला, tālā.) A pillow? (तकिया, takiyā.) A blanket? (कंबल, kambal.) A curtain? (परदा, pardā.) A bucket? (बाल्टी, bālṭī.) A hammer? (हथौड़ा, hathauṛā.) A nail? (कील, kīl.) Scissors? (कैंची, kaĩcī.) Thread? (धागा, dhāgā.) A comb? (कंघी, kaṅghī.) A towel? (तौलिया, tauliyā.) A broom? (झाड़ू, jhāṛū.) A box? (डिब्बा, ḍibbā.) A bag? (थैला, thailā.) A candle? (मोमबत्ती, mombattī.) Matches? (माचिस, māchis.) A small bowl? (कटोरी, kaṭorī.) A knife? (छुरी, churī.) A fan? (पंखा, pankhā.) A watch? (घड़ी, ghaṛī.) Glasses? (चश्मा, caśmā.) An umbrella? (छाता, chātā.) A wallet? (बटुआ, baṭuā.) A bed frame? (पलंग, palaṅg.) Bedding? (बिस्तर, bistar.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R138-second-pass-things-you-carry-and-wear",
+      "sequence": 6310,
+      "title": "Things you carry and wear — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 134-138",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1af64df6ab18125",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a bottle and a pencil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bottle, a pencil, a picture, a mirror, a ring",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bottle, a pencil, a picture, a mirror, a ring]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sandal, a shoe, a sock, a shirt, trousers",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sandal, a shoe, a sock, a shirt, trousers]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a kurta, a sari, a scarf, a cap, a coat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a kurta, a sari, a scarf, a cap, a coat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a jumper, an egg, meat, a potato, an onion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a jumper, an egg, meat, a potato, an onion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garlic, ginger, a tomato, a carrot, a cauliflower",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: garlic, ginger, a tomato, a carrot, a cauliflower]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A bottle? (बोतल, botal.) A pencil? (पेंसिल, pensil.) A picture? (तस्वीर, tasvīr.) A mirror? (शीशा, śīśā.) A ring? (अंगूठी, aṅgūṭhī.) A sandal? (चप्पल, cappal.) A shoe? (जूता, jūtā.) A sock? (मोज़ा, mozā.) A shirt? (कमीज़, kamīz.) Trousers? (पैंट, paiṇṭ.) A kurta? (कुर्ता, kurtā.) A sari? (साड़ी, sāṛī.) A scarf? (दुपट्टा, dupaṭṭā.) A cap? (टोपी, ṭopī.) A coat? (कोट, koṭ.) A jumper? (स्वेटर, sveṭar.) An egg? (अंडा, aṇḍā.) Meat? (गोश्त, gośt.) A potato? (आलू, ālū.) An onion? (प्याज़, pyāz.) Garlic? (लहसुन, lahsun.) Ginger? (अदरक, adrak.) A tomato? (टमाटर, ṭamāṭar.) A carrot? (गाजर, gājar.) A cauliflower? (गोभी, gobhī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

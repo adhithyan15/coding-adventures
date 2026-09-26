@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 156,
+  "sourceHash": "fnv1a64:128d34d3b4e6a601",
+  "lessonIds": [
+    "HI-C156-dhima",
+    "HI-C156-khatta",
+    "HI-C156-karva",
+    "HI-C156-namkin",
+    "HI-C156-tikha",
+    "HI-R156-first-pass-nature-animals-and-the-body",
+    "HI-R156-second-pass-the-body-and-places"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch156.txt",
+  "json": "hindi/narration/ch156.json",
+  "textHash": "fnv1a64:df3b6557d1aae835",
+  "jsonHash": "fnv1a64:4c486937f00722c0",
+  "findings": []
+}

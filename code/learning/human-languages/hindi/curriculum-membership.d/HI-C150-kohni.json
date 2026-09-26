@@ -1,0 +1,11 @@
+{
+  "id": "HI-C150-kohni",
+  "pathSegment": "HI-PATH-150-THINGS150",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-150-THINGS150",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C129-kambal",
+  "pathSegment": "HI-PATH-129-THINGS129",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-129-THINGS129",
+      "order": 2
+    }
+  ]
+}

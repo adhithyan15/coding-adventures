@@ -1,0 +1,19 @@
+{
+  "chapter": 144,
+  "title": "Stone, Sand, Wave, Shore, Electricity",
+  "label": "ch:hi-stone-sand-wave-shore-electricity",
+  "canDo": "I can say a stone, sand, a wave, a shore and electricity.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C144-bijli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 144: i can say a stone, sand, a wave, a shore and electricity.",
+    "assesses": [
+      "HI-LEX-C144-THINGS144-03",
+      "HI-LEX-C144-THINGS144-04",
+      "HI-LEX-C144-THINGS144-05"
+    ]
+  }
+}

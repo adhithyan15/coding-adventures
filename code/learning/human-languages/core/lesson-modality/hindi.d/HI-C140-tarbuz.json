@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C140-tarbuz",
+    "language": "hindi",
+    "chapter": 140,
+    "sequence": 6420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35653e68b53edd3f"
+  },
+  "findings": []
+}

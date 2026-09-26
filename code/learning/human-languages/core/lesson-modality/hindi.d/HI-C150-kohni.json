@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C150-kohni",
+    "language": "hindi",
+    "chapter": 150,
+    "sequence": 6950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6bc106d53cd4c304"
+  },
+  "findings": []
+}

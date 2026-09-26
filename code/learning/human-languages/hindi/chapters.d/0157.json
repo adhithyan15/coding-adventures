@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "Fresh, Rich, Poor, Young, Old",
+  "label": "ch:hi-fresh-rich-poor-young-old",
+  "canDo": "I can say fresh, rich, poor, young and old.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-C157-burha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: i can say fresh, rich, poor, young and old.",
+    "assesses": [
+      "HI-LEX-C157-QUAL157-03",
+      "HI-LEX-C157-QUAL157-04",
+      "HI-LEX-C157-QUAL157-05"
+    ]
+  }
+}

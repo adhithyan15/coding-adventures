@@ -1,0 +1,11 @@
+{
+  "id": "HI-C156-namkin",
+  "pathSegment": "HI-PATH-156-QUAL156",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-156-QUAL156",
+      "order": 3
+    }
+  ]
+}

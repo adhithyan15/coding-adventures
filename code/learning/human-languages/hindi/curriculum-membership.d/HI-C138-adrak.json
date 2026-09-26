@@ -1,0 +1,11 @@
+{
+  "id": "HI-C138-adrak",
+  "pathSegment": "HI-PATH-138-THINGS138",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-138-THINGS138",
+      "order": 1
+    }
+  ]
+}

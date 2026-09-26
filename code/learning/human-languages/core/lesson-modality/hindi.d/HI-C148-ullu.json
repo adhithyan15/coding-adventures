@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C148-ullu",
+    "language": "hindi",
+    "chapter": 148,
+    "sequence": 6870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d210b96532e38f80"
+  },
+  "findings": []
+}

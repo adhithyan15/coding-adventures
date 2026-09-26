@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C139-kela",
+    "language": "hindi",
+    "chapter": 139,
+    "sequence": 6380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b24e265275836b97"
+  },
+  "findings": []
+}

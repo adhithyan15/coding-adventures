@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "Samosa, Lassi, Juice, Mountain, River",
+  "label": "ch:hi-samosa-lassi-juice-mountain-river",
+  "canDo": "I can say a samosa, lassi, juice, a mountain and a river.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C142-nadi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: i can say a samosa, lassi, juice, a mountain and a river.",
+    "assesses": [
+      "HI-LEX-C142-THINGS142-03",
+      "HI-LEX-C142-THINGS142-04",
+      "HI-LEX-C142-THINGS142-05"
+    ]
+  }
+}

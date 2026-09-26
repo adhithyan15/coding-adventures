@@ -1,0 +1,11 @@
+{
+  "id": "HI-C132-katori",
+  "pathSegment": "HI-PATH-132-THINGS132",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-132-THINGS132",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Towel, Broom, Box, Bag, Candle",
+  "label": "ch:hi-towel-broom-box-bag-candle",
+  "canDo": "I can say a towel, a broom, a box, a bag and a candle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C131-mombatti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: i can say a towel, a broom, a box, a bag and a candle.",
+    "assesses": [
+      "HI-LEX-C131-THINGS131-03",
+      "HI-LEX-C131-THINGS131-04",
+      "HI-LEX-C131-THINGS131-05"
+    ]
+  }
+}

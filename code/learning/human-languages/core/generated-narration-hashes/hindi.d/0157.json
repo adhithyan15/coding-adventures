@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:db0faf92d919d232",
+  "lessonIds": [
+    "HI-C157-taza",
+    "HI-C157-amir",
+    "HI-C157-garib",
+    "HI-C157-javan",
+    "HI-C157-burha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch157.txt",
+  "json": "hindi/narration/ch157.json",
+  "textHash": "fnv1a64:e04a2209263f53b9",
+  "jsonHash": "fnv1a64:074322099d2c6d9f",
+  "findings": []
+}

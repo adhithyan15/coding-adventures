@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:99ca0a36aacb17b6",
+  "lessonIds": [
+    "HI-C140-angur",
+    "HI-C140-santara",
+    "HI-C140-tarbuz",
+    "HI-C140-nariyal",
+    "HI-C140-dahi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch140.txt",
+  "json": "hindi/narration/ch140.json",
+  "textHash": "fnv1a64:bbd06cb048e2927e",
+  "jsonHash": "fnv1a64:c1d442b9a727939c",
+  "findings": []
+}

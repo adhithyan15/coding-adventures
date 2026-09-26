@@ -1,0 +1,19 @@
+{
+  "chapter": 159,
+  "title": "Full, To sleep, To wake up, To run, To put",
+  "label": "ch:hi-full-to-sleep-to-wake-up-to-run-to-put",
+  "canDo": "I can say full, to sleep, to wake up, to run and to put.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-C159-rakhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 159: i can say full, to sleep, to wake up, to run and to put.",
+    "assesses": [
+      "HI-LEX-C159-QUAL159-03",
+      "HI-LEX-C159-QUAL159-04",
+      "HI-LEX-C159-QUAL159-05"
+    ]
+  }
+}

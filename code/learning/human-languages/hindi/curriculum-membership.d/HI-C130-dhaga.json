@@ -1,0 +1,11 @@
+{
+  "id": "HI-C130-dhaga",
+  "pathSegment": "HI-PATH-130-THINGS130",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-130-THINGS130",
+      "order": 3
+    }
+  ]
+}

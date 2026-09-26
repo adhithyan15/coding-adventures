@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:7ddc2b638f05abe7",
+  "lessonIds": [
+    "HI-C146-bhalu",
+    "HI-C146-hathi",
+    "HI-C146-ut",
+    "HI-C146-gadha",
+    "HI-C146-bher"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch146.txt",
+  "json": "hindi/narration/ch146.json",
+  "textHash": "fnv1a64:544915cc8b187420",
+  "jsonHash": "fnv1a64:6f0ccd2131136c16",
+  "findings": []
+}
