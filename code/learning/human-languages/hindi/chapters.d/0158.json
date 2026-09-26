@@ -1,0 +1,19 @@
+{
+  "chapter": 158,
+  "title": "Wide, Deep, High, Low, Empty",
+  "label": "ch:hi-wide-deep-high-low-empty",
+  "canDo": "I can say wide, deep, high, low and empty.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-C158-khali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 158: i can say wide, deep, high, low and empty.",
+    "assesses": [
+      "HI-LEX-C158-QUAL158-03",
+      "HI-LEX-C158-QUAL158-04",
+      "HI-LEX-C158-QUAL158-05"
+    ]
+  }
+}

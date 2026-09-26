@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:fa3362bd6983876a",
+  "lessonIds": [
+    "UR-C94-roz",
+    "UR-C94-mausam",
+    "UR-C94-bahar",
+    "UR-C94-garmiyan",
+    "UR-C94-sardiyan"
+  ],
+  "tex": "urdu/book/chapters/ch94-every-day-weather-spring-summer-winter.tex"
+}

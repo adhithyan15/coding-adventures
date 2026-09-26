@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:eea6f109e364a797",
+  "lessonIds": [
+    "MR-C126-ravivar",
+    "MR-C126-tarikh",
+    "MR-C126-sadhya",
+    "MR-C126-roj",
+    "MR-C126-unhala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch126.txt",
+  "json": "marathi/narration/ch126.json",
+  "textHash": "fnv1a64:a551d0c747f2266c",
+  "jsonHash": "fnv1a64:9bf5227f458cca37",
+  "findings": []
+}

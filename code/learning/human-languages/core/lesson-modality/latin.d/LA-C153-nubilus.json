@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C153-nubilus",
+    "language": "latin",
+    "chapter": 153,
+    "sequence": 6500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0ff8e07960ea01f"
+  },
+  "findings": []
+}

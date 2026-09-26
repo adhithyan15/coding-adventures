@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C153-utarne",
+    "language": "marathi",
+    "chapter": 153,
+    "sequence": 7280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:03632cc3be55a23a"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Building, Prison, Main hall of a house, Corner, Street",
+  "label": "ch:la-building-prison-main-hall-of-a-house-corner-street",
+  "canDo": "I can say a building, a prison, the main hall of a house, a corner and a street.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "LA-C116-vicus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say a building, a prison, the main hall of a house, a corner and a street.",
+    "assesses": [
+      "LA-LEX-C116-LOC116-03",
+      "LA-LEX-C116-LOC116-04",
+      "LA-LEX-C116-LOC116-05"
+    ]
+  }
+}

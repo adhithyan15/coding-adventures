@@ -1,0 +1,856 @@
+{
+  "version": 1,
+  "language": "latin",
+  "chapter": 160,
+  "title": "To count, To destroy, To go away, To arrive, To live",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:dc4ae28931bb5b61",
+  "lessons": [
+    {
+      "id": "LA-C160-numero",
+      "sequence": 6850,
+      "title": "numerō, numerāre — to count",
+      "headword": "numerō, numerāre",
+      "romanization": "numerō, numerāre",
+      "gloss": "to count",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:635ab380b3561bc3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to keep, then the Latin for to change."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: numerō, numerāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "numerō, numerāre — \"to count\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "numerō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *numerō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "numerō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *numerō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say numerō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *numerō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to keep, then the Latin for to change, then say numerō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to keep, then the Latin for to change, then say *numerō* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does numerō, numerāre mean? (\"To count\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C160-deleo",
+      "sequence": 6860,
+      "title": "dēleō, dēlēre — to destroy, to wipe out",
+      "headword": "dēleō, dēlēre",
+      "romanization": "dēleō, dēlēre",
+      "gloss": "to destroy, to wipe out",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:498e48110f55cb04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to change, then the Latin for to count."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēleō, dēlēre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēleō, dēlēre — \"to destroy, to wipe out\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēleō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēleō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēleō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēleō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say dēleō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *dēleō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to change, then the Latin for to count, then say dēleō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to change, then the Latin for to count, then say *dēleō* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēleō, dēlēre mean? (\"To destroy, to wipe out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C160-discedo",
+      "sequence": 6870,
+      "title": "discēdō, discēdere — to go away, to leave",
+      "headword": "discēdō, discēdere",
+      "romanization": "discēdō, discēdere",
+      "gloss": "to go away, to leave",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:061e54f7e347bb75",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to count, then the Latin for to destroy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: discēdō, discēdere",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "discēdō, discēdere — \"to go away, to leave\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "discēdō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *discēdō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "discēdō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *discēdō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say discēdō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *discēdō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to count, then the Latin for to destroy, then say discēdō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to count, then the Latin for to destroy, then say *discēdō* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does discēdō, discēdere mean? (\"To go away, to leave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C160-advenio",
+      "sequence": 6880,
+      "title": "adveniō, advenīre — to arrive",
+      "headword": "adveniō, advenīre",
+      "romanization": "adveniō, advenīre",
+      "gloss": "to arrive",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6cc24eec1e87c261",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to destroy, then the Latin for to go away."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: adveniō, advenīre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "adveniō, advenīre — \"to arrive\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adveniō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adveniō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adveniō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adveniō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say adveniō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *adveniō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to destroy, then the Latin for to go away, then say adveniō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to destroy, then the Latin for to go away, then say *adveniō* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does adveniō, advenīre mean? (\"To arrive\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-C160-habito",
+      "sequence": 6890,
+      "title": "habitō, habitāre — to live (somewhere)",
+      "headword": "habitō, habitāre",
+      "romanization": "habitō, habitāre",
+      "gloss": "to live (somewhere)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c00c600dfda014a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Latin for to go away, then the Latin for to arrive."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read aloud as one account: Hodiē labōrō. Vespere domum redeō et dormiō."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: habitō, habitāre",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "habitō, habitāre — \"to live (somewhere)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "habitō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *habitō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "habitō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *habitō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say habitō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *habitō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Latin for to go away, then the Latin for to arrive, then say habitō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Latin for to go away, then the Latin for to arrive, then say *habitō* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does habitō, habitāre mean? (\"To live (somewhere)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R160-first-pass-describing-words-and-verbs",
+      "sequence": 6900,
+      "title": "Describing words and verbs — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "first pass over chapters 151-155",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:106acc47a86fb884",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to arrive and to live."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "proud, kind, cruel, ugly, beautiful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: proud, kind, cruel, ugly, beautiful]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "strong, weak, alone, icy, clear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: strong, weak, alone, icy, clear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cloudy, windy, to build, to climb, to go down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cloudy, windy, to build, to climb, to go down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to join, to visit, to sing, to paint, to lead",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to join, to visit, to sing, to paint, to lead]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to make, to carry, to put on, to take off, to clean",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to make, to carry, to put on, to take off, to clean]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Proud? (superbus, superba, superbum.) Kind? (benignus, benigna, benignum.) Cruel? (crūdēlis, crūdēle.) Ugly? (turpis, turpe.) Beautiful? (fōrmōsus, fōrmōsa, fōrmōsum.) Strong? (validus, valida, validum.) Weak? (īnfirmus, īnfirma, īnfirmum.) Alone? (sōlus, sōla, sōlum.) Icy? (gelidus, gelida, gelidum.) Clear? (serēnus, serēna, serēnum.) Cloudy? (nūbilus, nūbila, nūbilum.) Windy? (ventōsus, ventōsa, ventōsum.) To build? (aedificō, aedificāre.) To climb? (ascendō, ascendere.) To go down? (dēscendō, dēscendere.) To join? (iungō, iungere.) To visit? (vīsitō, vīsitāre.) To sing? (cantō, cantāre.) To paint? (pingō, pingere.) To lead? (dūcō, dūcere.) To make? (faciō, facere.) To carry? (gerō, gerere.) To put on? (induō, induere.) To take off? (exuō, exuere.) To clean? (pūrgō, pūrgāre.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-R160-second-pass-verbs",
+      "sequence": 6910,
+      "title": "Verbs — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "(dialogue)",
+      "gloss": "second pass over chapters 156-160",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:33218eef40e55f39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to break and to throw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to break, to throw, to carry, to carry, to untie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to break, to throw, to carry, to carry, to untie]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to give back, to show, to shine, to lose, to win",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to give back, to show, to shine, to lose, to win]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to grow, to hurry, to stay awake, to dine, to taste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to grow, to hurry, to stay awake, to dine, to taste]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to feel, to hang, to be silent, to keep, to change",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to feel, to hang, to be silent, to keep, to change]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to count, to destroy, to go away, to arrive, to live",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to count, to destroy, to go away, to arrive, to live]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To break? (frangō, frangere.) To throw? (iaciō, iacere.) To carry? (vehō, vehere.) To carry? (portō, portāre.) To untie? (solvō, solvere.) To give back? (reddō, reddere.) To show? (ostendō, ostendere.) To shine? (lūceō, lūcēre.) To lose? (perdō, perdere.) To win? (vincō, vincere.) To grow? (crēscō, crēscere.) To hurry? (festīnō, festīnāre.) To stay awake? (vigilō, vigilāre.) To dine? (cēnō, cēnāre.) To taste? (gustō, gustāre.) To feel? (sentiō, sentīre.) To hang? (pendeō, pendēre.) To be silent? (taceō, tacēre.) To keep? (servō, servāre.) To change? (mūtō, mūtāre.) To count? (numerō, numerāre.) To destroy? (dēleō, dēlēre.) To go away? (discēdō, discēdere.) To arrive? (adveniō, advenīre.) To live? (habitō, habitāre.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

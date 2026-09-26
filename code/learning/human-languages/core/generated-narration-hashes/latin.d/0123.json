@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:d4b98c1e736d4370",
+  "lessonIds": [
+    "LA-C123-vas",
+    "LA-C123-amphora",
+    "LA-C123-lagoena",
+    "LA-C123-crumena",
+    "LA-C123-nummus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch123.txt",
+  "json": "latin/narration/ch123.json",
+  "textHash": "fnv1a64:72177bd1bdea5de7",
+  "jsonHash": "fnv1a64:709c4b28b41a2e5a",
+  "findings": []
+}

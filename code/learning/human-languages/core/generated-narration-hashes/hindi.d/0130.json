@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:73a9af4f9e990151",
+  "lessonIds": [
+    "HI-C130-hathaura",
+    "HI-C130-kil",
+    "HI-C130-kaici",
+    "HI-C130-dhaga",
+    "HI-C130-kanghi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch130.txt",
+  "json": "hindi/narration/ch130.json",
+  "textHash": "fnv1a64:feeaef78ef4c3dd8",
+  "jsonHash": "fnv1a64:2f5cd514149e02a7",
+  "findings": []
+}

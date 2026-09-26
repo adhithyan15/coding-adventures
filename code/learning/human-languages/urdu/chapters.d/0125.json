@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Storm, Ground, Coast, Island, Sparrow",
+  "label": "ch:ur-storm-ground-coast-island-sparrow",
+  "canDo": "I can say a storm, the ground, a coast, an island and a sparrow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C125-chirya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say a storm, the ground, a coast, an island and a sparrow.",
+    "assesses": [
+      "UR-LEX-C125-THINGS125-03",
+      "UR-LEX-C125-THINGS125-04",
+      "UR-LEX-C125-THINGS125-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:48167825344ff602",
+  "lessonIds": [
+    "UR-C120-halva",
+    "UR-C120-khir",
+    "UR-C120-chatni",
+    "UR-C120-kabab",
+    "UR-C120-biryani"
+  ],
+  "tex": "urdu/book/chapters/ch120-halwa-rice-pudding-chutney-kebab-biryani.tex"
+}

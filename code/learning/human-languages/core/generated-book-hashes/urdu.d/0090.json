@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:34016cf6e446628f",
+  "lessonIds": [
+    "UR-C90-tamam",
+    "UR-C90-khud",
+    "UR-C90-kaunsa",
+    "UR-C90-vala",
+    "UR-C90-idhar"
+  ],
+  "tex": "urdu/book/chapters/ch90-all-oneself-which-one-one-here.tex"
+}

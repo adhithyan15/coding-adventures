@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:5e02f6e6f8234b77",
+  "lessonIds": [
+    "LA-C115-huc",
+    "LA-C115-illuc",
+    "LA-C115-theatrum",
+    "LA-C115-balneum",
+    "LA-C115-castra"
+  ],
+  "tex": "latin/book/chapters/ch115-to-here-to-there-theatre-bath-military-camp.tex"
+}

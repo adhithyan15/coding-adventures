@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C144-lahar",
+    "language": "hindi",
+    "chapter": 144,
+    "sequence": 6620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:753b44bb51600834"
+  },
+  "findings": []
+}

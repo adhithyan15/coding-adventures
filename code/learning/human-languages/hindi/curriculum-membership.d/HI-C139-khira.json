@@ -1,0 +1,11 @@
+{
+  "id": "HI-C139-khira",
+  "pathSegment": "HI-PATH-139-THINGS139",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-139-THINGS139",
+      "order": 1
+    }
+  ]
+}

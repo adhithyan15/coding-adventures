@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C144-crassus",
+    "language": "latin",
+    "chapter": 144,
+    "sequence": 6010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cce6f9ccf6a6cd2d"
+  },
+  "findings": []
+}

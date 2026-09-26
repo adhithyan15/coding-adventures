@@ -1,0 +1,11 @@
+{
+  "id": "LA-C143-tepidus",
+  "pathSegment": "LA-PATH-143-QUAL143",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-143-QUAL143",
+      "order": 2
+    }
+  ]
+}

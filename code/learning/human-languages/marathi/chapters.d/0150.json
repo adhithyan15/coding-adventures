@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "Stale, Raw, Calm, Lazy, Hard-working",
+  "label": "ch:mr-stale-raw-calm-lazy-hard-working",
+  "canDo": "I can say stale, raw, calm, lazy and hard-working.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C150-mehanti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: i can say stale, raw, calm, lazy and hard-working.",
+    "assesses": [
+      "MR-LEX-C150-QUAL150-03",
+      "MR-LEX-C150-QUAL150-04",
+      "MR-LEX-C150-QUAL150-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C132-mazbut",
+  "pathSegment": "UR-PATH-132-QUAL132",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-132-QUAL132",
+      "order": 3
+    }
+  ]
+}

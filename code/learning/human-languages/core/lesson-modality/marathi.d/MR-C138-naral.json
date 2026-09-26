@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C138-naral",
+    "language": "marathi",
+    "chapter": 138,
+    "sequence": 6430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3759754972298ca"
+  },
+  "findings": []
+}

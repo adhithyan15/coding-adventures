@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C131-namkin",
+    "language": "urdu",
+    "chapter": 131,
+    "sequence": 6870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00a5006b8d57f5c9"
+  },
+  "findings": []
+}

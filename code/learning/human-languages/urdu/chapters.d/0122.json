@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Sandal, Button, Tie, Gloves, Hill",
+  "label": "ch:ur-sandal-button-tie-gloves-hill",
+  "canDo": "I can say a sandal, a button, a tie, gloves and a hill.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C122-pahari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say a sandal, a button, a tie, gloves and a hill.",
+    "assesses": [
+      "UR-LEX-C122-THINGS122-03",
+      "UR-LEX-C122-THINGS122-04",
+      "UR-LEX-C122-THINGS122-05"
+    ]
+  }
+}

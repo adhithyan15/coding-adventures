@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:f8190cf27f4449e4",
+  "lessonIds": [
+    "UR-C123-nadi",
+    "UR-C123-mitti",
+    "UR-C123-ghas",
+    "UR-C123-bij",
+    "UR-C123-jar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch123.txt",
+  "json": "urdu/narration/ch123.json",
+  "textHash": "fnv1a64:ccf8aee617dd482c",
+  "jsonHash": "fnv1a64:31b7c5c9909c673e",
+  "findings": []
+}

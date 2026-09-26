@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C133-burha",
+    "language": "urdu",
+    "chapter": 133,
+    "sequence": 7010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20d57f647beb6c28"
+  },
+  "findings": []
+}

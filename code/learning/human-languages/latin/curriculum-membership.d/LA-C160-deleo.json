@@ -1,0 +1,11 @@
+{
+  "id": "LA-C160-deleo",
+  "pathSegment": "LA-PATH-160-ACT160",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-160-ACT160",
+      "order": 1
+    }
+  ]
+}

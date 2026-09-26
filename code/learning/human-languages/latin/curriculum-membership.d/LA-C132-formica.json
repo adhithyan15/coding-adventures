@@ -1,0 +1,11 @@
+{
+  "id": "LA-C132-formica",
+  "pathSegment": "LA-PATH-132-THINGS132",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-132-THINGS132",
+      "order": 3
+    }
+  ]
+}

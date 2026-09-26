@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C90-kaunsa",
+    "language": "urdu",
+    "chapter": 90,
+    "sequence": 4620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dd2d24de19f76211"
+  },
+  "findings": []
+}

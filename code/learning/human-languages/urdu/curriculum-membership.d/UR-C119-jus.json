@@ -1,0 +1,11 @@
+{
+  "id": "UR-C119-jus",
+  "pathSegment": "UR-PATH-119-THINGS119",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-119-THINGS119",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C151-crudelis",
+  "pathSegment": "LA-PATH-151-QUAL151",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-151-QUAL151",
+      "order": 2
+    }
+  ]
+}

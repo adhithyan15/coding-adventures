@@ -1,0 +1,19 @@
+{
+  "chapter": 146,
+  "title": "Annoying, Useful, Clean, Dirty, Straight",
+  "label": "ch:la-annoying-useful-clean-dirty-straight",
+  "canDo": "I can say annoying, useful, clean, dirty and straight.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C146-rectus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 146: i can say annoying, useful, clean, dirty and straight.",
+    "assesses": [
+      "LA-LEX-C146-QUAL146-03",
+      "LA-LEX-C146-QUAL146-04",
+      "LA-LEX-C146-QUAL146-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C148-komat",
+  "pathSegment": "MR-PATH-148-QUAL148",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-148-QUAL148",
+      "order": 3
+    }
+  ]
+}

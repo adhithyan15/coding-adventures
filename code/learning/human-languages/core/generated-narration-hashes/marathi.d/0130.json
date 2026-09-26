@@ -1,0 +1,21 @@
+{
+  "language": "marathi",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:46c713b45ad6516b",
+  "lessonIds": [
+    "MR-C130-angan",
+    "MR-C130-darvaja",
+    "MR-C130-usi",
+    "MR-C130-cadar",
+    "MR-C130-gadi",
+    "MR-R130-first-pass-can-want-and-time",
+    "MR-R130-second-pass-time-and-places"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marathi/narration/ch130.txt",
+  "json": "marathi/narration/ch130.json",
+  "textHash": "fnv1a64:4d76c47ea3bc97de",
+  "jsonHash": "fnv1a64:d25d9b221274b171",
+  "findings": []
+}

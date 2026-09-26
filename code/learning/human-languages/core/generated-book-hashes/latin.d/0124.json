@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:801233e3a14f8e91",
+  "lessonIds": [
+    "LA-C124-codex",
+    "LA-C124-atramentum",
+    "LA-C124-calamus",
+    "LA-C124-cera",
+    "LA-C124-pictura"
+  ],
+  "tex": "latin/book/chapters/ch124-book-ink-reed-pen-wax-picture.tex"
+}

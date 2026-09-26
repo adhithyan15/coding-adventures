@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C134-vacca",
+    "language": "latin",
+    "chapter": 134,
+    "sequence": 5450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0eaf51b1b660295"
+  },
+  "findings": []
+}

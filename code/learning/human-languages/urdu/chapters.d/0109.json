@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Stove, Pot, Plate, Drinking glass, Fridge",
+  "label": "ch:ur-stove-pot-plate-drinking-glass-fridge",
+  "canDo": "I can say a stove, a pot, a plate, a drinking glass and a fridge.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C109-friij",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say a stove, a pot, a plate, a drinking glass and a fridge.",
+    "assesses": [
+      "UR-LEX-C109-THINGS109-03",
+      "UR-LEX-C109-THINGS109-04",
+      "UR-LEX-C109-THINGS109-05"
+    ]
+  }
+}

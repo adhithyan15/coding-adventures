@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:51963024290522dc",
+  "lessonIds": [
+    "LA-C140-pecten",
+    "LA-C140-forfex",
+    "LA-C140-acus",
+    "LA-C140-filum",
+    "LA-C140-lana",
+    "LA-R140-first-pass-food-and-nature",
+    "LA-R140-second-pass-animals-and-the-body"
+  ],
+  "tex": "latin/book/chapters/ch140-comb-scissors-needle-thread-wool.tex"
+}

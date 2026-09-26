@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C134-patele",
+    "language": "marathi",
+    "chapter": 134,
+    "sequence": 6210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b5439fba6f297c4a"
+  },
+  "findings": []
+}

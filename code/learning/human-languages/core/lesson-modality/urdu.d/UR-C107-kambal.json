@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C107-kambal",
+    "language": "urdu",
+    "chapter": 107,
+    "sequence": 5550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2174c79c63359936"
+  },
+  "findings": []
+}

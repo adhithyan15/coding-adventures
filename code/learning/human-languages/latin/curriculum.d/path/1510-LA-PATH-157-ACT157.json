@@ -1,0 +1,9 @@
+{
+  "id": "LA-PATH-157-ACT157",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "LA-EXT-157-ACT157"
+  ],
+  "after": []
+}

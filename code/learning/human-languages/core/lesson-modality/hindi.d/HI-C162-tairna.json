@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C162-tairna",
+    "language": "hindi",
+    "chapter": 162,
+    "sequence": 7600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2128491622cf67e0"
+  },
+  "findings": []
+}

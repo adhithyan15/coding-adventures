@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Purple, Golden, Closed, Open, To wake up",
+  "label": "ch:ur-purple-golden-closed-open-to-wake-up",
+  "canDo": "I can say purple, golden, closed, open and to wake up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C137-jagna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: i can say purple, golden, closed, open and to wake up.",
+    "assesses": [
+      "UR-LEX-C137-QUAL137-03",
+      "UR-LEX-C137-QUAL137-04",
+      "UR-LEX-C137-QUAL137-05"
+    ]
+  }
+}

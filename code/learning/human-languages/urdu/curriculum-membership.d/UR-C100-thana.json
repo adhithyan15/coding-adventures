@@ -1,0 +1,11 @@
+{
+  "id": "UR-C100-thana",
+  "pathSegment": "UR-PATH-100-LOC100",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-100-LOC100",
+      "order": 4
+    }
+  ]
+}

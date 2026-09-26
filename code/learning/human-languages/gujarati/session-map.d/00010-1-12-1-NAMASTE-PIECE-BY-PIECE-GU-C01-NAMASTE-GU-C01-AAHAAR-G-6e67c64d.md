@@ -1,0 +1,1 @@
+| 1-12 | 1 | Namaste, Piece by Piece | `GU-C01-namaste` -> `GU-C01-aahaar` -> `GU-W01-ha` -> `GU-W01-aa-matra` -> `GU-W01-aa` -> `GU-W01-na` -> `GU-W01-ma` -> `GU-W01-sa` -> `GU-W01-ta` -> `GU-W01-e-matra` -> `GU-W01-virama` -> `GU-W01-namaste-read` |

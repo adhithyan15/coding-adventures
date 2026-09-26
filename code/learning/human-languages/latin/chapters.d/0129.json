@@ -1,0 +1,19 @@
+{
+  "chapter": 129,
+  "title": "Branch, Tree trunk, Seed, Rock, River bank",
+  "label": "ch:la-branch-tree-trunk-seed-rock-river-bank",
+  "canDo": "I can say a branch, a tree trunk, a seed, a rock and a river bank.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C129-ripa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 129: i can say a branch, a tree trunk, a seed, a rock and a river bank.",
+    "assesses": [
+      "LA-LEX-C129-THINGS129-03",
+      "LA-LEX-C129-THINGS129-04",
+      "LA-LEX-C129-THINGS129-05"
+    ]
+  }
+}

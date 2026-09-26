@@ -1,0 +1,11 @@
+{
+  "id": "HI-C151-kamar",
+  "pathSegment": "HI-PATH-151-THINGS151",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-151-THINGS151",
+      "order": 4
+    }
+  ]
+}

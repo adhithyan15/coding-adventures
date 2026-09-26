@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:44b02e2a41d07958",
+  "lessonIds": [
+    "UR-C98-kona",
+    "UR-C98-taraf",
+    "UR-C98-rasta",
+    "UR-C98-gali",
+    "UR-C98-mor"
+  ],
+  "tex": "urdu/book/chapters/ch98-corner-side-way-lane-turn.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Almond, Peanut, Yoghurt, Oil, Flour",
+  "label": "ch:ur-almond-peanut-yoghurt-oil-flour",
+  "canDo": "I can say an almond, a peanut, yoghurt, oil and flour.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C117-ata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say an almond, a peanut, yoghurt, oil and flour.",
+    "assesses": [
+      "UR-LEX-C117-THINGS117-03",
+      "UR-LEX-C117-THINGS117-04",
+      "UR-LEX-C117-THINGS117-05"
+    ]
+  }
+}

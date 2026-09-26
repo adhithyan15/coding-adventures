@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Hammer, Nail, Scissors, Thread, Comb",
+  "label": "ch:hi-hammer-nail-scissors-thread-comb",
+  "canDo": "I can say a hammer, a nail, scissors, thread and a comb.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C130-kanghi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say a hammer, a nail, scissors, thread and a comb.",
+    "assesses": [
+      "HI-LEX-C130-THINGS130-03",
+      "HI-LEX-C130-THINGS130-04",
+      "HI-LEX-C130-THINGS130-05"
+    ]
+  }
+}

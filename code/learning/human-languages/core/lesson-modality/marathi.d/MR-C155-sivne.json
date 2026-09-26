@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C155-sivne",
+    "language": "marathi",
+    "chapter": 155,
+    "sequence": 7370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bebaac0d19a0f8f1"
+  },
+  "findings": []
+}

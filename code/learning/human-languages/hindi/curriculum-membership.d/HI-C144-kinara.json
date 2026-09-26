@@ -1,0 +1,11 @@
+{
+  "id": "HI-C144-kinara",
+  "pathSegment": "HI-PATH-144-THINGS144",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-144-THINGS144",
+      "order": 3
+    }
+  ]
+}

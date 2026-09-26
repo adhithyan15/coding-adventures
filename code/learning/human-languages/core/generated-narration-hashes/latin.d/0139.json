@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:f2c54b71d151add6",
+  "lessonIds": [
+    "LA-C139-cathedra",
+    "LA-C139-scamnum",
+    "LA-C139-tapete",
+    "LA-C139-fax",
+    "LA-C139-lanterna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch139.txt",
+  "json": "latin/narration/ch139.json",
+  "textHash": "fnv1a64:ca3f6fb33d800da5",
+  "jsonHash": "fnv1a64:e8f755e22e175678",
+  "findings": []
+}

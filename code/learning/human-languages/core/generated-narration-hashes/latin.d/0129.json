@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:5c3e0e2a155ba6d7",
+  "lessonIds": [
+    "LA-C129-ramus",
+    "LA-C129-truncus",
+    "LA-C129-semen",
+    "LA-C129-saxum",
+    "LA-C129-ripa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch129.txt",
+  "json": "latin/narration/ch129.json",
+  "textHash": "fnv1a64:6d8f2bdc1f865060",
+  "jsonHash": "fnv1a64:0c755b36efe84924",
+  "findings": []
+}

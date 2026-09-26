@@ -1,0 +1,9 @@
+{
+  "id": "MR-PATH-150-QUAL150",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "MR-EXT-150-QUAL150"
+  ],
+  "after": []
+}

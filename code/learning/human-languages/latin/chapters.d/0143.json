@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "Hard, Soft, Lukewarm, Ancient, Narrow",
+  "label": "ch:la-hard-soft-lukewarm-ancient-narrow",
+  "canDo": "I can say hard, soft, lukewarm, ancient and narrow.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C143-angustus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: i can say hard, soft, lukewarm, ancient and narrow.",
+    "assesses": [
+      "LA-LEX-C143-QUAL143-03",
+      "LA-LEX-C143-QUAL143-04",
+      "LA-LEX-C143-QUAL143-05"
+    ]
+  }
+}

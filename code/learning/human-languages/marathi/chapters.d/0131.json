@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Curtain, Lock, Bucket, Rope, Nail",
+  "label": "ch:mr-curtain-lock-bucket-rope-nail",
+  "canDo": "I can say a curtain, a lock, a bucket, a rope and a nail.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C131-khila",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: i can say a curtain, a lock, a bucket, a rope and a nail.",
+    "assesses": [
+      "MR-LEX-C131-THINGS131-03",
+      "MR-LEX-C131-THINGS131-04",
+      "MR-LEX-C131-THINGS131-05"
+    ]
+  }
+}

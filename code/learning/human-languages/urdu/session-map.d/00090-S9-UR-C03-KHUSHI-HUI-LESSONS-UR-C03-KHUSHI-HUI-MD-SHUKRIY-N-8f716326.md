@@ -1,0 +1,1 @@
+| **S9** | [`UR-C03-khushi-hui`](./lessons/UR-C03-khushi-hui.md): **آپ سے مل کر خوشی ہوئی** | *shukriyā* *(N+7)*; the three “you” forms *(N+3)*; the name question *(N+1)* | close the introduction warmly |

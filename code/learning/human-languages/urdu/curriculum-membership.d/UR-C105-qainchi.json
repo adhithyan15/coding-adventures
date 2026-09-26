@@ -1,0 +1,11 @@
+{
+  "id": "UR-C105-qainchi",
+  "pathSegment": "UR-PATH-105-WANT105",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-105-WANT105",
+      "order": 3
+    }
+  ]
+}

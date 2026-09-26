@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C109-soleo",
+    "language": "latin",
+    "chapter": 109,
+    "sequence": 4130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30c485069d7b1e7c"
+  },
+  "findings": []
+}

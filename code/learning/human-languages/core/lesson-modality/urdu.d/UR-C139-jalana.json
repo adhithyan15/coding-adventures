@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C139-jalana",
+    "language": "urdu",
+    "chapter": 139,
+    "sequence": 7320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ffedaa3f14276936"
+  },
+  "findings": []
+}

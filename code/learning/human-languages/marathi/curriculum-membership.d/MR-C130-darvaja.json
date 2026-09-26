@@ -1,0 +1,11 @@
+{
+  "id": "MR-C130-darvaja",
+  "pathSegment": "MR-PATH-130-LOC130",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-130-LOC130",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Craftsman, Baker, Shoemaker, Barber, Shepherd",
+  "label": "ch:la-craftsman-baker-shoemaker-barber-shepherd",
+  "canDo": "I can say a craftsman, a baker, a shoemaker, a barber and a shepherd.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C137-pastor",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: i can say a craftsman, a baker, a shoemaker, a barber and a shepherd.",
+    "assesses": [
+      "LA-LEX-C137-THINGS137-03",
+      "LA-LEX-C137-THINGS137-04",
+      "LA-LEX-C137-THINGS137-05"
+    ]
+  }
+}

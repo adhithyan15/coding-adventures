@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:505caa22f21ff019",
+  "lessonIds": [
+    "MR-C129-granthalay",
+    "MR-C129-upahargrh",
+    "MR-C129-tapal",
+    "MR-C129-imarat",
+    "MR-C129-nhanighar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch129.txt",
+  "json": "marathi/narration/ch129.json",
+  "textHash": "fnv1a64:595dba9c3d622763",
+  "jsonHash": "fnv1a64:92bd6978c1eb9cb5",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "Grey, Golden, To climb, To get down, To arrive",
+  "label": "ch:mr-grey-golden-to-climb-to-get-down-to-arrive",
+  "canDo": "I can say grey, golden, to climb, to get down and to arrive.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "MR-C153-pohocne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: i can say grey, golden, to climb, to get down and to arrive.",
+    "assesses": [
+      "MR-LEX-C153-QUAL153-03",
+      "MR-LEX-C153-QUAL153-04",
+      "MR-LEX-C153-QUAL153-05"
+    ]
+  }
+}

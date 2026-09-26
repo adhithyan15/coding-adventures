@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "Aeroplane, Train, Near, To be able to, To manage to",
+  "label": "ch:ur-aeroplane-train-near-to-be-able-to-to-manage-to",
+  "canDo": "I can say an aeroplane, a train, near, to be able to and to manage to.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-C103-pana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say an aeroplane, a train, near, to be able to and to manage to.",
+    "assesses": [
+      "UR-LEX-C103-LOC103-03",
+      "UR-LEX-C103-LOC103-04",
+      "UR-LEX-C103-LOC103-05"
+    ]
+  }
+}

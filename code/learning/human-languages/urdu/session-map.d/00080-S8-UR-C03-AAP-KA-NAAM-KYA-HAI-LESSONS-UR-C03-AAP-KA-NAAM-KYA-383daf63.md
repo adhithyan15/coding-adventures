@@ -1,0 +1,1 @@
+| **S8** | [`UR-C03-aap-ka-naam-kya-hai`](./lessons/UR-C03-aap-ka-naam-kya-hai.md): **آپ کا نام کیا ہے؟** | *salām* *(N+7)*; *merā nām ... hai* *(N+3)*; *kyā* *(N+1)* | ask, then answer with your name |

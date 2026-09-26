@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:a910a7518b6a2212",
+  "lessonIds": [
+    "LA-C152-validus",
+    "LA-C152-infirmus",
+    "LA-C152-solus",
+    "LA-C152-gelidus",
+    "LA-C152-serenus"
+  ],
+  "tex": "latin/book/chapters/ch152-strong-weak-alone-icy-clear.tex"
+}

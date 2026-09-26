@@ -288,7 +288,11 @@ describe("real curriculum", () => {
       // (the body, family, thirty-seven verbs, food, home, school, nature,
       // animals, describing words, time, place, the town, clothes and the
       // numbers from eleven to ninety), closed by four reviews.
-      ...Array.from({ length: 50 }, (_, i) => 38 + i)]);
+      ...Array.from({ length: 50 }, (_, i) => 38 + i),
+      // 87 -> 142: the A1 tranche, fifty-four chapters of five words (this and
+      // that, time, places, can and want, things, describing words and verbs),
+      // with chapter 99 writing ز and ط from روز and طرف.
+      ...Array.from({ length: 55 }, (_, i) => 88 + i)]);
     expect(
       books.books
         .find((book) => book.language === "russian")

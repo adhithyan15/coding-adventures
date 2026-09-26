@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C95-pichhla",
+    "language": "urdu",
+    "chapter": 95,
+    "sequence": 4880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7784acf017a7a69b"
+  },
+  "findings": []
+}

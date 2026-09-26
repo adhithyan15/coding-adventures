@@ -1,0 +1,11 @@
+{
+  "id": "UR-C101-park",
+  "pathSegment": "UR-PATH-101-LOC101",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-101-LOC101",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 139,
+  "sourceHash": "fnv1a64:0b8985f5229bdb55",
+  "lessonIds": [
+    "UR-C139-banana",
+    "UR-C139-torna",
+    "UR-C139-jalana",
+    "UR-C139-bhagna",
+    "UR-C139-bulana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch139.txt",
+  "json": "urdu/narration/ch139.json",
+  "textHash": "fnv1a64:9ddf9720f28e69b4",
+  "jsonHash": "fnv1a64:a9b38ad6da127fa9",
+  "findings": []
+}

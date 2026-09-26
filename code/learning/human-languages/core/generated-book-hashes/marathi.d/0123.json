@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:e8b05c8b7c7d4a34",
+  "lessonIds": [
+    "MR-C123-garaj",
+    "MR-C123-asa",
+    "MR-C123-svapna",
+    "MR-C123-magne",
+    "MR-C123-tharavne"
+  ],
+  "tex": "marathi/book/chapters/ch123-need-hope-dream-to-ask-for-to-decide.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:3b40b7e3151cca24",
+  "lessonIds": [
+    "LA-C122-clavus",
+    "LA-C122-malleus",
+    "LA-C122-serra",
+    "LA-C122-securis",
+    "LA-C122-scalae"
+  ],
+  "tex": "latin/book/chapters/ch122-nail-hammer-saw-axe-ladder.tex"
+}

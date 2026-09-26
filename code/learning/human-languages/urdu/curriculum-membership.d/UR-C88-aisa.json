@@ -1,0 +1,11 @@
+{
+  "id": "UR-C88-aisa",
+  "pathSegment": "UR-PATH-88-DEF88",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-88-DEF88",
+      "order": 2
+    }
+  ]
+}

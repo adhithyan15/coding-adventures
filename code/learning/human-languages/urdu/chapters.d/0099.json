@@ -1,0 +1,18 @@
+{
+  "chapter": 99,
+  "title": "The Letters Ze and Toe",
+  "label": "ch:ur-letters-ze-toe",
+  "canDo": "I can write ze and toe, and find them in words I already say.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-R99-letters-second-pass",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 99: i can write ze and toe, and find them in words I already say.",
+    "assesses": [
+      "UR-SCRIPT-C99-ZE-01",
+      "UR-SCRIPT-C99-TOE-01"
+    ]
+  }
+}

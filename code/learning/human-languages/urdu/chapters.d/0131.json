@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Bitter, Sour, Salty, Fast, Slow",
+  "label": "ch:ur-bitter-sour-salty-fast-slow",
+  "canDo": "I can say bitter, sour, salty, fast and slow.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C131-dhima",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: i can say bitter, sour, salty, fast and slow.",
+    "assesses": [
+      "UR-LEX-C131-QUAL131-03",
+      "UR-LEX-C131-QUAL131-04",
+      "UR-LEX-C131-QUAL131-05"
+    ]
+  }
+}

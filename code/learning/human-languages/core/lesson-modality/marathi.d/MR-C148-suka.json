@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C148-suka",
+    "language": "marathi",
+    "chapter": 148,
+    "sequence": 6990,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6247b8b75f2bba7f"
+  },
+  "findings": []
+}

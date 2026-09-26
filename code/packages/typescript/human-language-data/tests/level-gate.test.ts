@@ -144,13 +144,20 @@ describe("the gate that would have caught the A2 claim", () => {
     const HELD: Readonly<Record<string, string>> = {
       spanish: "A1",
       telugu: "pre-A1",
-      hindi: "pre-A1",
+      // Chapters 129-165 (185 words): the things chapters realize
+      // NAME-EVERYDAY-THINGS; thirty-four verbs; sixty-nine thin atoms revisited;
+      // chapter 22's irregular-teens atom folded into 11-20, which brings the
+      // lesson inside the atom budget.
+      hindi: "A1",
       tamil: "pre-A1",
       kannada: "pre-A1",
       malayalam: "pre-A1",
       sanskrit: "pre-A1",
       gujarati: "pre-A1",
-      latin: "pre-A1",
+      // Chapters 109-160 (260 words): can, want, why, place, things and qualities
+      // chapters realize their nodes; eleven thin atoms revisited; chapter 16's
+      // 16-17 atom folded into 11-15, which brings it inside the atom budget.
+      latin: "A1",
       // Chapters 82-135 (265 words): this/that, time, place and things chapters
       // realize their nodes; chapter 93 writes э and щ; four thin atoms revisited.
       russian: "A1",
@@ -166,9 +173,14 @@ describe("the gate that would have caught the A2 claim", () => {
       // Chapters 104-141 (190 words), the numbers chapter filed on
       // SPINE-COUNT-ONE-TO-FIVE, and twenty thin atoms revisited.
       german: "A1",
-      urdu: "pre-A1",
+      // Chapters 88-142 (270 words): this/that, time, can and want chapters
+      // realize their nodes; chapter 99 writes ز and ط; six thin atoms revisited.
+      urdu: "A1",
       punjabi: "pre-A1",
-      marathi: "pre-A1",
+      // Chapters 121-158 (190 words): the can and want chapters realize their
+      // nodes; eleven thin atoms revisited; chapter 13's two spelling-tell atoms
+      // folded into one, which brings the numbers lesson inside the atom budget.
+      marathi: "A1",
       marwadi: "pre-A1",
       bengali: "pre-A1",
       arabic: "pre-A1",
@@ -250,14 +262,21 @@ describe("the gate that would have caught the A2 claim", () => {
     // were level-scoped it blocked pre-A1 anyway, which made criterion 3 unfalsifiable
     // at the bottom of the ladder for every track.
     //
-    // Hindi now shows it end to end: with chapters 106-127 it ATTAINS pre-A1 while
-    // that one over-budget lesson is still in the track, and the lesson surfaces as
-    // an atom-budget blocker only on the rung it actually sits on, A1.
+    // Hindi showed it end to end first: with chapters 106-127 it ATTAINED pre-A1
+    // while that one over-budget lesson was still in the track, and the lesson
+    // surfaced as an atom-budget blocker only on the rung it actually sat on, A1.
+    // Hindi's A1 tranche then fixed that lesson and Hindi attained A1, so the
+    // witness is now any track in the same position. Several still are (Bengali,
+    // Gujarati, Malayalam, Punjabi and Sanskrit when this was written). If none
+    // were left, this would fail, and the claim would need a synthetic fixture.
     const gate = realReport().levelGate!;
-    const hindi = gate.tracks.find((t) => t.language === "hindi")!;
-    expect(hindi.attained).toBe("pre-A1");
-    expect(hindi.inProgressAt).toBe("A1");
-    expect(hindi.blockers.map((b) => b.criterion)).toContain("atom-budget");
+    const witnesses = gate.tracks.filter(
+      (t) =>
+        t.attained === "pre-A1" &&
+        t.inProgressAt === "A1" &&
+        t.blockers.some((b) => b.criterion === "atom-budget"),
+    );
+    expect(witnesses.length, "a track that attains pre-A1 despite an A1 over-budget lesson").toBeGreaterThan(0);
   });
 
   it("fails an authored-but-unrealized level on a COUNT, not on absence", () => {
@@ -368,9 +387,9 @@ describe("the first rung anybody actually climbed", () => {
     // The rung comes from the gate rather than from a literal, so this reads the
     // renderer against the data it renders — which is the actual claim — instead of
     // against a constant that has now had to be edited twice.
-    // French, German, Italian, Portuguese and Russian joined Spanish at A1, so
-    // the line names all six, in the order the renderer sorts them.
-    expect(line).toContain(`6 tracks at ${held} (french, german, italian, portuguese, russian, spanish)`);
+    // French, German, Hindi, Italian, Latin, Marathi, Portuguese, Russian and Urdu
+    // joined Spanish at A1, so the line names all ten, in the order the renderer sorts them.
+    expect(line).toContain(`10 tracks at ${held} (french, german, hindi, italian, latin, marathi, portuguese, russian, spanish, urdu)`);
     // And it must really be a rung that was climbed, not `null` stringified into the
     // sentence. Without this the line above would pass on "1 track at null (spanish)".
     expect(levelRank(held)).toBeGreaterThanOrEqual(levelRank("A1"));

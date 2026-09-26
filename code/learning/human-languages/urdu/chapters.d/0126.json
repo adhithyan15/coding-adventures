@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Crow, Peacock, Butterfly, Ant, Donkey",
+  "label": "ch:ur-crow-peacock-butterfly-ant-donkey",
+  "canDo": "I can say a crow, a peacock, a butterfly, an ant and a donkey.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C126-gadha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can say a crow, a peacock, a butterfly, an ant and a donkey.",
+    "assesses": [
+      "UR-LEX-C126-THINGS126-03",
+      "UR-LEX-C126-THINGS126-04",
+      "UR-LEX-C126-THINGS126-05"
+    ]
+  }
+}

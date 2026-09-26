@@ -1,0 +1,11 @@
+{
+  "id": "HI-C153-maidan",
+  "pathSegment": "HI-PATH-153-THINGS153",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-153-THINGS153",
+      "order": 1
+    }
+  ]
+}

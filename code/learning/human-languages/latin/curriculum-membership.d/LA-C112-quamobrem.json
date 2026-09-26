@@ -1,0 +1,11 @@
+{
+  "id": "LA-C112-quamobrem",
+  "pathSegment": "LA-PATH-112-WANT112",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-112-WANT112",
+      "order": 4
+    }
+  ]
+}

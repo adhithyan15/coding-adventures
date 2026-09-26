@@ -1,0 +1,11 @@
+{
+  "id": "LA-C139-lanterna",
+  "pathSegment": "LA-PATH-139-THINGS139",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-139-THINGS139",
+      "order": 4
+    }
+  ]
+}

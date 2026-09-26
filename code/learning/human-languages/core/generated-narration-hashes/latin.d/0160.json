@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:dc4ae28931bb5b61",
+  "lessonIds": [
+    "LA-C160-numero",
+    "LA-C160-deleo",
+    "LA-C160-discedo",
+    "LA-C160-advenio",
+    "LA-C160-habito",
+    "LA-R160-first-pass-describing-words-and-verbs",
+    "LA-R160-second-pass-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch160.txt",
+  "json": "latin/narration/ch160.json",
+  "textHash": "fnv1a64:b30fe9f8b9cf46ac",
+  "jsonHash": "fnv1a64:8a7058edf575db47",
+  "findings": []
+}

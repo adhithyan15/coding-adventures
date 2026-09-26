@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C123-jar",
+    "language": "urdu",
+    "chapter": 123,
+    "sequence": 6490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf65931d2aa4a9d6"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C126-pomum",
+    "language": "latin",
+    "chapter": 126,
+    "sequence": 5020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:467b019b3e6ddb06"
+  },
+  "findings": []
+}

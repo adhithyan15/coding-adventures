@@ -1,0 +1,11 @@
+{
+  "id": "HI-C138-tamatar",
+  "pathSegment": "HI-PATH-138-THINGS138",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-138-THINGS138",
+      "order": 2
+    }
+  ]
+}

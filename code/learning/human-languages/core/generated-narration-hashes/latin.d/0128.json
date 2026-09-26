@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:7d96adf3de2a0f76",
+  "lessonIds": [
+    "LA-C128-placenta",
+    "LA-C128-cervisia",
+    "LA-C128-sucus",
+    "LA-C128-rosa",
+    "LA-C128-lilium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch128.txt",
+  "json": "latin/narration/ch128.json",
+  "textHash": "fnv1a64:d4326f60af854d14",
+  "jsonHash": "fnv1a64:5d3e192ad37d156d",
+  "findings": []
+}

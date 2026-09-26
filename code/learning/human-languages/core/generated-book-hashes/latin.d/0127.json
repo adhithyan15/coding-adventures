@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:7201da5240ce3898",
+  "lessonIds": [
+    "LA-C127-faba",
+    "LA-C127-pisum",
+    "LA-C127-cucumis",
+    "LA-C127-pullus",
+    "LA-C127-piper"
+  ],
+  "tex": "latin/book/chapters/ch127-bean-pea-cucumber-chicken-pepper.tex"
+}

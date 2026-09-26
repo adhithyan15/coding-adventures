@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:509e8dfd54fbdda3",
+  "lessonIds": [
+    "HI-C149-macchar",
+    "HI-C149-cinti",
+    "HI-C149-mendhak",
+    "HI-C149-kachua",
+    "HI-C149-cuha"
+  ],
+  "tex": "hindi/book/chapters/ch149-mosquito-ant-frog-tortoise-mouse.tex"
+}

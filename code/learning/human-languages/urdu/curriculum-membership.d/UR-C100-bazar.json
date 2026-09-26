@@ -1,0 +1,11 @@
+{
+  "id": "UR-C100-bazar",
+  "pathSegment": "UR-PATH-100-LOC100",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-100-LOC100",
+      "order": 3
+    }
+  ]
+}

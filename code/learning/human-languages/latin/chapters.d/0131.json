@@ -1,0 +1,19 @@
+{
+  "chapter": 131,
+  "title": "Fog, Eagle, Dove, Raven, Duck",
+  "label": "ch:la-fog-eagle-dove-raven-duck",
+  "canDo": "I can say fog, an eagle, a dove, a raven and a duck.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C131-anas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 131: i can say fog, an eagle, a dove, a raven and a duck.",
+    "assesses": [
+      "LA-LEX-C131-THINGS131-03",
+      "LA-LEX-C131-THINGS131-04",
+      "LA-LEX-C131-THINGS131-05"
+    ]
+  }
+}

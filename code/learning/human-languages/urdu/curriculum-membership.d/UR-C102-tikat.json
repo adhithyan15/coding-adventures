@@ -1,0 +1,11 @@
+{
+  "id": "UR-C102-tikat",
+  "pathSegment": "UR-PATH-102-LOC102",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-102-LOC102",
+      "order": 2
+    }
+  ]
+}

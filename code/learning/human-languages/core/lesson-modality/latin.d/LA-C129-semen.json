@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C129-semen",
+    "language": "latin",
+    "chapter": 129,
+    "sequence": 5170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aebc6d86fd690c9b"
+  },
+  "findings": []
+}

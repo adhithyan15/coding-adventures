@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C130-nakhun",
+    "language": "urdu",
+    "chapter": 130,
+    "sequence": 6820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc1ec69d0dfa2736"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Loose trousers, Scarf, Jumper, Jacket, Pyjamas",
+  "label": "ch:ur-loose-trousers-scarf-jumper-jacket-pyjamas",
+  "canDo": "I can say loose trousers, a scarf, a jumper, a jacket and pyjamas.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-R121-second-pass-food-and-clothes",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say loose trousers, a scarf, a jumper, a jacket and pyjamas.",
+    "assesses": [
+      "UR-LEX-C121-THINGS121-03",
+      "UR-LEX-C121-THINGS121-04",
+      "UR-LEX-C121-THINGS121-05"
+    ]
+  }
+}

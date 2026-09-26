@@ -1,0 +1,11 @@
+{
+  "id": "MR-C153-pohocne",
+  "pathSegment": "MR-PATH-153-QUAL153",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-153-QUAL153",
+      "order": 4
+    }
+  ]
+}

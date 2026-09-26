@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "Ginger, Cauliflower, Peas, Cucumber, Watermelon",
+  "label": "ch:ur-ginger-cauliflower-peas-cucumber-watermelon",
+  "canDo": "I can say ginger, a cauliflower, peas, a cucumber and a watermelon.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C115-tarbuz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: i can say ginger, a cauliflower, peas, a cucumber and a watermelon.",
+    "assesses": [
+      "UR-LEX-C115-THINGS115-03",
+      "UR-LEX-C115-THINGS115-04",
+      "UR-LEX-C115-THINGS115-05"
+    ]
+  }
+}

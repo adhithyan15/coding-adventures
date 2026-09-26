@@ -1,0 +1,11 @@
+{
+  "id": "UR-C131-tez",
+  "pathSegment": "UR-PATH-131-QUAL131",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-131-QUAL131",
+      "order": 3
+    }
+  ]
+}

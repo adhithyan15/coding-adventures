@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C156-khatta",
+    "language": "hindi",
+    "chapter": 156,
+    "sequence": 7260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee266caa2f6c3520"
+  },
+  "findings": []
+}

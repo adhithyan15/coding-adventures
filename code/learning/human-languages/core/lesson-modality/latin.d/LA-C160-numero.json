@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C160-numero",
+    "language": "latin",
+    "chapter": 160,
+    "sequence": 6850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:635ab380b3561bc3"
+  },
+  "findings": []
+}

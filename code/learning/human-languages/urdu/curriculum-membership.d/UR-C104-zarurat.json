@@ -1,0 +1,11 @@
+{
+  "id": "UR-C104-zarurat",
+  "pathSegment": "UR-PATH-104-CAN104",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-104-CAN104",
+      "order": 4
+    }
+  ]
+}

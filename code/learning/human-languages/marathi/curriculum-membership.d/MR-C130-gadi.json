@@ -1,0 +1,11 @@
+{
+  "id": "MR-C130-gadi",
+  "pathSegment": "MR-PATH-130-LOC130",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-130-LOC130",
+      "order": 4
+    }
+  ]
+}

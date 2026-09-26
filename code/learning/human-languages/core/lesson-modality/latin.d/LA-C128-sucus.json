@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C128-sucus",
+    "language": "latin",
+    "chapter": 128,
+    "sequence": 5120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5f1b5fef0cc47f6f"
+  },
+  "findings": []
+}

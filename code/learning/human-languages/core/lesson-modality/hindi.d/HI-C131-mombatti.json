@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C131-mombatti",
+    "language": "hindi",
+    "chapter": 131,
+    "sequence": 5940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b76c3a8b4fd992d"
+  },
+  "findings": []
+}

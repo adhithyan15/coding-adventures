@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:dfeb748b27a69cb7",
+  "lessonIds": [
+    "UR-C104-hunar",
+    "UR-C104-qabil",
+    "UR-C104-chahiye",
+    "UR-C104-khvahish",
+    "UR-C104-zarurat"
+  ],
+  "tex": "urdu/book/chapters/ch104-skill-able-is-needed-wish-need.tex"
+}

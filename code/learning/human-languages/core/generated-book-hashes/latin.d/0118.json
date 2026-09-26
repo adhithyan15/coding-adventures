@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:5db4496547f39ba0",
+  "lessonIds": [
+    "LA-C118-pavimentum",
+    "LA-C118-puteus",
+    "LA-C118-pistrinum",
+    "LA-C118-officina",
+    "LA-C118-sepulcrum"
+  ],
+  "tex": "latin/book/chapters/ch118-floor-well-bakery-workshop-tomb.tex"
+}

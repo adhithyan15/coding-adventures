@@ -1,0 +1,11 @@
+{
+  "id": "LA-C138-amica",
+  "pathSegment": "LA-PATH-138-THINGS138",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-138-THINGS138",
+      "order": 3
+    }
+  ]
+}

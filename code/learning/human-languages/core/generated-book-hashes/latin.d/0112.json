@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:0f6e7fd3abdc0dcc",
+  "lessonIds": [
+    "LA-C112-cupiditas",
+    "LA-C112-spes",
+    "LA-C112-desiderium",
+    "LA-C112-quare",
+    "LA-C112-quamobrem"
+  ],
+  "tex": "latin/book/chapters/ch112-desire-hope-longing-why-why.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:2fe8bf7c2e433828",
+  "lessonIds": [
+    "UR-C111-batua",
+    "UR-C111-chhatri",
+    "UR-C111-thaila",
+    "UR-C111-tokri",
+    "UR-C111-mombatti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch111.txt",
+  "json": "urdu/narration/ch111.json",
+  "textHash": "fnv1a64:7a127fed2d9000ae",
+  "jsonHash": "fnv1a64:ea1a20ef0249a5ee",
+  "findings": []
+}

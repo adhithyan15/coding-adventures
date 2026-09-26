@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C92-budh",
+    "language": "urdu",
+    "chapter": 92,
+    "sequence": 4710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:937f9aca0784879c"
+  },
+  "findings": []
+}

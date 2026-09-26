@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "Dark, Grey, Golden, Silver, Wise",
+  "label": "ch:la-dark-grey-golden-silver-wise",
+  "canDo": "I can say dark, grey, golden, silver and wise.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C149-prudens",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: i can say dark, grey, golden, silver and wise.",
+    "assesses": [
+      "LA-LEX-C149-QUAL149-03",
+      "LA-LEX-C149-QUAL149-04",
+      "LA-LEX-C149-QUAL149-05"
+    ]
+  }
+}

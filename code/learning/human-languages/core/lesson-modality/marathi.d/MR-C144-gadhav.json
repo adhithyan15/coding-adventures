@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C144-gadhav",
+    "language": "marathi",
+    "chapter": 144,
+    "sequence": 6760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2eccb203478736e"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:850f4c3398dc9975",
+  "lessonIds": [
+    "UR-C107-kambal",
+    "UR-C107-parda",
+    "UR-C107-chadar",
+    "UR-C107-balti",
+    "UR-C107-rassi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch107.txt",
+  "json": "urdu/narration/ch107.json",
+  "textHash": "fnv1a64:123e6e58fc200f93",
+  "jsonHash": "fnv1a64:5843819e4218067c",
+  "findings": []
+}

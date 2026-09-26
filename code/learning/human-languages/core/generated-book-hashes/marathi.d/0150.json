@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:4a1552c3e6193243",
+  "lessonIds": [
+    "MR-C150-sila",
+    "MR-C150-kacca",
+    "MR-C150-sant",
+    "MR-C150-alsi",
+    "MR-C150-mehanti"
+  ],
+  "tex": "marathi/book/chapters/ch150-stale-raw-calm-lazy-hard-working.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C135-balaena",
+    "language": "latin",
+    "chapter": 135,
+    "sequence": 5500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f00f0142c5bb4fd"
+  },
+  "findings": []
+}

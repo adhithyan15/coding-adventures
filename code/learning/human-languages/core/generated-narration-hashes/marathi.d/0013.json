@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 13,
-  "sourceHash": "fnv1a64:ce7627c291f91d37",
+  "sourceHash": "fnv1a64:69ebe42dff0aa9b4",
   "lessonIds": [
     "MR-R09-script-a-r3",
     "MR-R09-script-b-r3",
@@ -19,6 +19,6 @@
   "text": "marathi/narration/ch13.txt",
   "json": "marathi/narration/ch13.json",
   "textHash": "fnv1a64:0bf6ea4825e90c76",
-  "jsonHash": "fnv1a64:2306f66b4af8f749",
+  "jsonHash": "fnv1a64:9a9967f9a952c5b1",
   "findings": []
 }

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C133-casma",
+    "language": "hindi",
+    "chapter": 133,
+    "sequence": 6000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:860bd978b724f676"
+  },
+  "findings": []
+}

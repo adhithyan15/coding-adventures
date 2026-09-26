@@ -1,0 +1,11 @@
+{
+  "id": "LA-C139-tapete",
+  "pathSegment": "LA-PATH-139-THINGS139",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-139-THINGS139",
+      "order": 2
+    }
+  ]
+}

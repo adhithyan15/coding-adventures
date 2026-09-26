@@ -1,0 +1,11 @@
+{
+  "id": "LA-C119-contra",
+  "pathSegment": "LA-PATH-119-LOC119",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-119-LOC119",
+      "order": 4
+    }
+  ]
+}

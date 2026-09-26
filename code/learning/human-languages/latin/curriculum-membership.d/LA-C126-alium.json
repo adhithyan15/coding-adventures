@@ -1,0 +1,11 @@
+{
+  "id": "LA-C126-alium",
+  "pathSegment": "LA-PATH-126-THINGS126",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-126-THINGS126",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C124-calamus",
+  "pathSegment": "LA-PATH-124-THINGS124",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-124-THINGS124",
+      "order": 2
+    }
+  ]
+}

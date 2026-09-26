@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C138-tairna",
+    "language": "urdu",
+    "chapter": 138,
+    "sequence": 7270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d6668fc9019af6f"
+  },
+  "findings": []
+}

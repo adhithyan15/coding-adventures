@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 145,
+  "sourceHash": "fnv1a64:deb2ed6d3905342e",
+  "lessonIds": [
+    "HI-C145-adhi",
+    "HI-C145-kohra",
+    "HI-C145-barf",
+    "HI-C145-hava",
+    "HI-C145-ser"
+  ],
+  "tex": "hindi/book/chapters/ch145-storm-fog-snow-wind-lion.tex"
+}

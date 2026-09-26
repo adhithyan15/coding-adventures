@@ -1,0 +1,11 @@
+{
+  "id": "LA-C118-pistrinum",
+  "pathSegment": "LA-PATH-118-LOC118",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-118-LOC118",
+      "order": 2
+    }
+  ]
+}

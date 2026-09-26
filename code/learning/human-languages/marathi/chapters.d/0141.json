@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "Shore, Island, Lightning, Storm, Crow",
+  "label": "ch:mr-shore-island-lightning-storm-crow",
+  "canDo": "I can say a shore, an island, lightning, a storm and a crow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C141-kavla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: i can say a shore, an island, lightning, a storm and a crow.",
+    "assesses": [
+      "MR-LEX-C141-THINGS141-03",
+      "MR-LEX-C141-THINGS141-04",
+      "MR-LEX-C141-THINGS141-05"
+    ]
+  }
+}

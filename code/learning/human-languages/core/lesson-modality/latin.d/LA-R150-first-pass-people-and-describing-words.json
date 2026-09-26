@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R150-first-pass-people-and-describing-words",
+    "language": "latin",
+    "chapter": 150,
+    "sequence": 6350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:35a3fb65558d8c66"
+  },
+  "findings": []
+}

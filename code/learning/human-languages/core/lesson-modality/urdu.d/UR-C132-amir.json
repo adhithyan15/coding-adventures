@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C132-amir",
+    "language": "urdu",
+    "chapter": 132,
+    "sequence": 6910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d90ac4ab96edaa4c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C129-tapal",
+    "language": "marathi",
+    "chapter": 129,
+    "sequence": 5920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:530ad6ea20dc455f"
+  },
+  "findings": []
+}

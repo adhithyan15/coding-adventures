@@ -1,0 +1,19 @@
+{
+  "chapter": 157,
+  "title": "To taste, To sow, To grow, To get tired, To stay awake",
+  "label": "ch:mr-to-taste-to-sow-to-grow-to-get-tired-to-stay-awake",
+  "canDo": "I can say to taste, to sow, to grow, to get tired and to stay awake.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C157-jagne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 157: i can say to taste, to sow, to grow, to get tired and to stay awake.",
+    "assesses": [
+      "MR-LEX-C157-ACT157-03",
+      "MR-LEX-C157-ACT157-04",
+      "MR-LEX-C157-ACT157-05"
+    ]
+  }
+}

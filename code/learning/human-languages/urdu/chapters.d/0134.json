@@ -1,0 +1,19 @@
+{
+  "chapter": 134,
+  "title": "Wet, Dry, Wide, Narrow, Deep",
+  "label": "ch:ur-wet-dry-wide-narrow-deep",
+  "canDo": "I can say wet, dry, wide, narrow and deep.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "UR-C134-gahra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 134: i can say wet, dry, wide, narrow and deep.",
+    "assesses": [
+      "UR-LEX-C134-QUAL134-03",
+      "UR-LEX-C134-QUAL134-04",
+      "UR-LEX-C134-QUAL134-05"
+    ]
+  }
+}

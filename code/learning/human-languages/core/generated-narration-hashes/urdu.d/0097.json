@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 97,
+  "sourceHash": "fnv1a64:b906083ee63102d7",
+  "lessonIds": [
+    "UR-C97-sidha",
+    "UR-C97-samne",
+    "UR-C97-pichhe",
+    "UR-C97-bich",
+    "UR-C97-kinara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch97.txt",
+  "json": "urdu/narration/ch97.json",
+  "textHash": "fnv1a64:331028bf2a769a3b",
+  "jsonHash": "fnv1a64:4c7182cb4b789cb4",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C133-batua",
+    "language": "hindi",
+    "chapter": 133,
+    "sequence": 6020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:076ee072d920e6c7"
+  },
+  "findings": []
+}

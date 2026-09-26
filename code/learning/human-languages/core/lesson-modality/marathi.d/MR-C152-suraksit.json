@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C152-suraksit",
+    "language": "marathi",
+    "chapter": 152,
+    "sequence": 7200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:79cd2ba176403ab8"
+  },
+  "findings": []
+}

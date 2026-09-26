@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:05d068b1d031e53e",
+  "lessonIds": [
+    "HI-C161-pakana",
+    "HI-C161-katna",
+    "HI-C161-torna",
+    "HI-C161-girna",
+    "HI-C161-urna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch161.txt",
+  "json": "hindi/narration/ch161.json",
+  "textHash": "fnv1a64:fbd76ccb635c54d4",
+  "jsonHash": "fnv1a64:7b1620491dad8554",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C92-sava",
+    "language": "urdu",
+    "chapter": 92,
+    "sequence": 4740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2984d87336f8c31"
+  },
+  "findings": []
+}

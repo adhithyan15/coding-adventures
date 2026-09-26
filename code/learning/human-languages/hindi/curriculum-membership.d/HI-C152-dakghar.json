@@ -1,0 +1,11 @@
+{
+  "id": "HI-C152-dakghar",
+  "pathSegment": "HI-PATH-152-THINGS152",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-152-THINGS152",
+      "order": 1
+    }
+  ]
+}

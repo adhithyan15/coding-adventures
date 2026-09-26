@@ -1,0 +1,11 @@
+{
+  "id": "HI-C142-lassi",
+  "pathSegment": "HI-PATH-142-THINGS142",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-142-THINGS142",
+      "order": 1
+    }
+  ]
+}

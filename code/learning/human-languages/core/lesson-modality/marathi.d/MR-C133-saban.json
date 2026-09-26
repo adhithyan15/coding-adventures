@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C133-saban",
+    "language": "marathi",
+    "chapter": 133,
+    "sequence": 6150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c56768a5498652c2"
+  },
+  "findings": []
+}

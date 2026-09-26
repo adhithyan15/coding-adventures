@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:d14be3f1ea0b226e",
+  "lessonIds": [
+    "UR-C119-jus",
+    "UR-C119-sup",
+    "UR-C119-nan",
+    "UR-C119-paratha",
+    "UR-C119-samosa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch119.txt",
+  "json": "urdu/narration/ch119.json",
+  "textHash": "fnv1a64:33f88c3fe3a46851",
+  "jsonHash": "fnv1a64:86eed420a64abba4",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C140-angur",
+    "language": "hindi",
+    "chapter": 140,
+    "sequence": 6400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d23b03c7d57e0b02"
+  },
+  "findings": []
+}

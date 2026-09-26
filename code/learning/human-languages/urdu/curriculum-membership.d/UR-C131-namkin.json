@@ -1,0 +1,11 @@
+{
+  "id": "UR-C131-namkin",
+  "pathSegment": "UR-PATH-131-QUAL131",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-131-QUAL131",
+      "order": 2
+    }
+  ]
+}

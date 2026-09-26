@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C160-bhejna",
+    "language": "hindi",
+    "chapter": 160,
+    "sequence": 7500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94d52c27522e088a"
+  },
+  "findings": []
+}

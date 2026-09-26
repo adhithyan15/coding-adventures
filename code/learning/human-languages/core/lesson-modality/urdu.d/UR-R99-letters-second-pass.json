@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-R99-letters-second-pass",
+    "language": "urdu",
+    "chapter": 99,
+    "sequence": 5130,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:546b48a64b02fee1"
+  },
+  "findings": []
+}

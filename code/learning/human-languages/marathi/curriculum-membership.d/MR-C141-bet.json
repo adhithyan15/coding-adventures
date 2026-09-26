@@ -1,0 +1,11 @@
+{
+  "id": "MR-C141-bet",
+  "pathSegment": "MR-PATH-141-THINGS141",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-141-THINGS141",
+      "order": 1
+    }
+  ]
+}

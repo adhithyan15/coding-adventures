@@ -1,0 +1,11 @@
+{
+  "id": "LA-C153-aedifico",
+  "pathSegment": "LA-PATH-153-QUAL153",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-153-QUAL153",
+      "order": 2
+    }
+  ]
+}

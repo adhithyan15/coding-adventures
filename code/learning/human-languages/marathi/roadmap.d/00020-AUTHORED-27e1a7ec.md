@@ -1,0 +1,98 @@
+## Authored
+
+- **Ch. 1 — Greetings**: namaskār → dhanyavād → ho → nāhī → baraṁ → yeto/yete →
+  practice. Devanagari introduced through the words; Marathi's distinctives
+  foregrounded.
+- **Ch. 2 — Introducing Yourself**: nāv → mājhaṁ → āhe → "my name is…" → tū/tumhī
+  → kāy → "what's your name?" → ānand → practice. The copula *āhe* going last;
+  three-gender agreement.
+- **Ch. 3 — How Are You**: kasā → "tumhī kase āhāt?" → mī → "mī barā āhe" → kāhī
+  harkat nāhī → practice. The *k-* questions; the Perso-Arabic *harkat*.
+- **Ch. 4 — Farewells**: punhā → bheṭū → "punhā bheṭū" → "udyā bheṭū" → kāḷjī ghyā
+  → practice. The future-wish *-ū*; the retroflex ळ.
+- **Ch. 5 — The First Verbs**: bolṇe → "mī marāṭhī bolto" → rāhṇe → kām karṇe →
+  practice. The *-ṇe* infinitive; the gendered present (*-to/-te*); postposition
+  *-āt*.
+- **Ch. 6 — Numbers 1–5** (`MR-C06-numbers-1-5` →
+  `MR-C06-number-differences`): first make *ek, don, tīn, chār, pāch* automatic,
+  then earn the deeper comparison in a separate sub-five-minute etymology
+  lesson. The differences are **two different kinds of thing**. **दोन** *don*'s
+  *-n* is an **innovation**: Prakrit
+  *doṇṇi* took its ending **by analogy** from *tiṇṇi* "three" (where the **ṇ**
+  genuinely belongs, ← neuter *trī́ṇi*, the doubling being a Prakrit trade for
+  the lost *r*), so *two* was reshaped to rhyme with
+  *three* — the same thing English *four* did in taking its *f-* from *five*. But
+  **पाच** *pāch* against Hindi's *pāṁch* **is** a plain retention difference.
+  So "neither language is simply older" holds, sharpened: one is an innovation
+  adopted, the other a retention made. Plus a third difference invisible in the
+  spelling — Marathi **च** before *ā* is nearer **ts**, so चार is said *tsār*.
+  **Authored.**
+- **Ch. 7 — The Core Verbs** (`MR-C07-asne` → `MR-C07-jane` → `MR-C07-yene` →
+  `MR-C07-khane` → `MR-C07-pahne` → `MR-C07-mahit-asne`): the track's first
+  `SPINE-SAY-WHAT-I-DO` material, and its first chapter above A1. One idea per
+  lesson, deliberately: the copula **आहे** and the verb-last rule; the
+  present-tense ending that declares the subject's gender; *jāṇe* and *yeṇe* as
+  one Sanskrit root (*yā-* bare, *ā-yā-* "toward here"); the *-णे* infinitive as
+  a **neuter** noun, which is where Marathi's third gender becomes visible;
+  *paś-* ← Indo-European *\*spek-* and its English cousin-web; and the dative
+  knower, *malā māhīt āhe*, with **माहीत** marked as the Persian/Arabic
+  Deccan-layer loan it is beside inherited **जाणणे** (*jñā-*, cousin of *know*).
+  All six lessons are `voice` — the chapter is fully drivable. **Authored.**
+- **Ch. 8 — The Mind and the Page** (`MR-C08-vichar-karne` → `MR-C08-samajne` →
+  `MR-C08-vachne` → `MR-C08-lihine`): four verbs whose roots all meant something
+  physical first. *car-* "to turn" (← *\*kʷelh₁-*, behind **wheel**, **cycle**),
+  *budh-* "to wake" (which named the **Buddha**), *vac-* "to speak" (Latin
+  *vōx* → **voice**), *likh-* "to scratch" — the last with its external PIE
+  cousins reported as **disputed**, and the lesson resting on the true parallel
+  to Latin *scrībere* and English *write* instead of inventing one. **समजणे**
+  takes the dative, so *malā marāṭhī samajte* joins *malā marāṭhī yete*.
+  **Authored.**
+- **Ch. 9 — Taking, Asking, Helping, Liking** (`MR-C09-ghene` →
+  `MR-C09-vicharne` → `MR-C09-madat-karne` → `MR-C09-avadne`): **घेणे** is the
+  verb inside Ch. 4's *kāḷjī ghyā*, on Vedic **ग्रभ्** *grabh-* = English
+  **grab**; **विचारणे** is Ch. 8's **विचार** with *-णे*, so thinking and
+  asking are one word; **मदत** is Arabic through Persian, the **माहीत** layer,
+  spelled with a final **त** where Hindi and Urdu write **द**; and **आवडणे** is
+  **native**, with no securely established Sanskrit ancestor, where Hindi and
+  Urdu borrowed Persian *pasand*. *Malā marāṭhī āvaḍte* makes three sentences on
+  one frame, beside **प्रेम करणे** (← *\*preyH-*, cousin of **friend** and
+  **free**), where you *are* the subject. **Authored.**
+
+Ch. 12 and Ch. 9 above carry a `## The letters in this word` section each,
+which derives as `sight` at full modality — but that section is detachable, so every
+lesson is `coreVoice` and both chapters stay fully drivable.
+
+- **Book chapters 5-8 — the second Devanagari runway** (`MR-W05-*` → `MR-W06-*`
+  → `MR-W07-*` → `MR-W08-*`, with `MR-R05-*`…`MR-R08-*` as payoffs): twenty-four
+  signs — **ि ु ू ृ ँ अ**, **ख ग घ च छ ज झ**, **ट ठ ड ण प**, **ल श ष उ ऊ ए** —
+  one per lesson, inserted **before** the introductions chapter rather than
+  appended after the book. Script closure is measured in **reading order**, so a
+  glyph taught late cannot retire a violation that happens early: seventeen of
+  these signs were already somewhere in the corpus and still left forty-four
+  lessons asking the reader to decode something untaught. Teaching them here
+  took Marathi's closure violations **44 → 0** and its never-taught glyphs
+  **7 → 0** — the first Devanagari track in the corpus with neither. Nine
+  ear-only retrieval lessons (book chapters 9, 13 and 22) carry all twenty-four
+  atoms through R2, R3 and R4. Every sign cites a stroke-order source that was
+  checked to exist before the lesson was written. **Authored.**
+
+- **Ch. 26-29 — The pre-A1 verb tranche** (`MR-C22-*` → `MR-C23-*` →
+  `MR-C24-*` → `MR-R25-*`): twelve verbs on four pre-A1 spine nodes, authored
+  because the track had 149 lessons standing behind 36 pre-A1 headwords. Asking
+  (**देणे, पिणे, आणणे, ठेवणे**), a visit (**बसणे, वाटणे, झोपणे, चालणे**), and
+  what passes between two people (**सांगणे, म्हणणे, शिकणे, मिळणे**), then a
+  wider-spaced consolidation. Pre-A1 vocabulary 36 → 48; the HL09 §3.1
+  **verb-vocabulary** and **reinforcement** criteria both close, leaving
+  vocabulary as the track's only pre-A1 blocker.
+
+  Two things about the shape are deliberate. The chapters sit **after** the A1
+  writing runways in book order while realizing **pre-A1** nodes — a node's
+  level is a property of the node, not of where the chapter falls — which is the
+  same arrangement Hindi, Telugu, Malayalam and Kannada already use. And
+  **सांगणे** was authored **gloss-first**: its **ग** had never been taught, so the
+  word was usable by ear before it was writable, its Devanagari stayed in the
+  headword where the romanization exemption makes it exposure, and **म्हणणे**
+  arrived in the same chapter as the fully readable partner. The second runway
+  above has since taught **ग**, so the debt that shape was recording is paid.
+  **Authored.**
+

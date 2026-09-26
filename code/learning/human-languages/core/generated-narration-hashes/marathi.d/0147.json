@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:2ee8431e2a248efd",
+  "lessonIds": [
+    "MR-C147-tvaca",
+    "MR-C147-had",
+    "MR-C147-rund",
+    "MR-C147-arund",
+    "MR-C147-patal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch147.txt",
+  "json": "marathi/narration/ch147.json",
+  "textHash": "fnv1a64:1d7e8f629cfb83f0",
+  "jsonHash": "fnv1a64:f204aaa99d775daf",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R138-second-pass-things-you-carry-and-wear",
+    "language": "hindi",
+    "chapter": 138,
+    "sequence": 6310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1af64df6ab18125"
+  },
+  "findings": []
+}

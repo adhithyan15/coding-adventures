@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:2b96e89ab6a1c64f",
+  "lessonIds": [
+    "HI-C146-bhalu",
+    "HI-C146-hathi",
+    "HI-C146-ut",
+    "HI-C146-gadha",
+    "HI-C146-bher"
+  ],
+  "tex": "hindi/book/chapters/ch146-bear-elephant-camel-donkey-sheep.tex"
+}

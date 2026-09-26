@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:3bcbc27c76be65d9",
+  "lessonIds": [
+    "LA-C120-saccus",
+    "LA-C120-cista",
+    "LA-C120-pulvinus",
+    "LA-C120-stragulum",
+    "LA-C120-mappa"
+  ],
+  "tex": "latin/book/chapters/ch120-sack-box-cushion-blanket-napkin.tex"
+}

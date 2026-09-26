@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 147,
+  "sourceHash": "fnv1a64:25448b78e29629f8",
+  "lessonIds": [
+    "LA-C147-surdus",
+    "LA-C147-falsus",
+    "LA-C147-certus",
+    "LA-C147-tutus",
+    "LA-C147-periculosus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch147.txt",
+  "json": "latin/narration/ch147.json",
+  "textHash": "fnv1a64:2e93d298f9b00371",
+  "jsonHash": "fnv1a64:bfd40adc23eed7a3",
+  "findings": []
+}

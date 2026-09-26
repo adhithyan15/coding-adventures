@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C113-nam",
+    "language": "latin",
+    "chapter": 113,
+    "sequence": 4300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6af2a77eb9e6b9ab"
+  },
+  "findings": []
+}

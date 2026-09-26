@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:f759ef04fb42b5d3",
+  "lessonIds": [
+    "UR-C91-dopahar",
+    "UR-C91-savera",
+    "UR-C91-adhirat",
+    "UR-C91-parson",
+    "UR-C91-itvar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch91.txt",
+  "json": "urdu/narration/ch91.json",
+  "textHash": "fnv1a64:4f3a985143060abd",
+  "jsonHash": "fnv1a64:b24d0709d73d7b0e",
+  "findings": []
+}

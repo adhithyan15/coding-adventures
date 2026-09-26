@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C141-urna",
+    "language": "latin",
+    "chapter": 141,
+    "sequence": 5880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:adabeb1d75e5711e"
+  },
+  "findings": []
+}

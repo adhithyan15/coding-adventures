@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "To return, To set out, To run away, To break off, To break",
+  "label": "ch:mr-to-return-to-set-out-to-run-away-to-break-off-to-break",
+  "canDo": "I can say to return, to set out, to run away, to break off and to break.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "MR-C154-modne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: i can say to return, to set out, to run away, to break off and to break.",
+    "assesses": [
+      "MR-LEX-C154-ACT154-03",
+      "MR-LEX-C154-ACT154-04",
+      "MR-LEX-C154-ACT154-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:230ae9a0eb03c8c6",
+  "lessonIds": [
+    "UR-C93-paune",
+    "UR-C93-adha",
+    "UR-C93-ab",
+    "UR-C93-tab",
+    "UR-C93-kab"
+  ],
+  "tex": "urdu/book/chapters/ch93-quarter-to-half-now-then-when.tex"
+}

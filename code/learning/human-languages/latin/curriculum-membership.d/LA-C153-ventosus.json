@@ -1,0 +1,11 @@
+{
+  "id": "LA-C153-ventosus",
+  "pathSegment": "LA-PATH-153-QUAL153",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-153-QUAL153",
+      "order": 1
+    }
+  ]
+}

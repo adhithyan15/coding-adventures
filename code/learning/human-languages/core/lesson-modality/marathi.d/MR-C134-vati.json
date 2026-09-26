@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C134-vati",
+    "language": "marathi",
+    "chapter": 134,
+    "sequence": 6200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43abf73b592285df"
+  },
+  "findings": []
+}

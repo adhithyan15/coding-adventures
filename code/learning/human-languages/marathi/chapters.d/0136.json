@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Coat, Jumper, Chapati, Vegetable dish, Plain dal",
+  "label": "ch:mr-coat-jumper-chapati-vegetable-dish-plain-dal",
+  "canDo": "I can say a coat, a jumper, a chapati, a vegetable dish and plain dal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C136-varan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: i can say a coat, a jumper, a chapati, a vegetable dish and plain dal.",
+    "assesses": [
+      "MR-LEX-C136-THINGS136-03",
+      "MR-LEX-C136-THINGS136-04",
+      "MR-LEX-C136-THINGS136-05"
+    ]
+  }
+}

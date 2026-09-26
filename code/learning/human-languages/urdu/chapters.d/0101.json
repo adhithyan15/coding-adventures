@@ -1,0 +1,19 @@
+{
+  "chapter": 101,
+  "title": "Palace, Park, Cinema, Field, Door",
+  "label": "ch:ur-palace-park-cinema-field-door",
+  "canDo": "I can say a palace, a park, a cinema, a field and a door.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "UR-C101-darvaza",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 101: i can say a palace, a park, a cinema, a field and a door.",
+    "assesses": [
+      "UR-LEX-C101-LOC101-03",
+      "UR-LEX-C101-LOC101-04",
+      "UR-LEX-C101-LOC101-05"
+    ]
+  }
+}

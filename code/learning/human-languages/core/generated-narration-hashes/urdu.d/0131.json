@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:09382c65838a49a2",
+  "lessonIds": [
+    "UR-C131-karva",
+    "UR-C131-khatta",
+    "UR-C131-namkin",
+    "UR-C131-tez",
+    "UR-C131-dhima"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch131.txt",
+  "json": "urdu/narration/ch131.json",
+  "textHash": "fnv1a64:b872ba931fc6cdd5",
+  "jsonHash": "fnv1a64:30a710b18ea14388",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C164-pahucna",
+  "pathSegment": "HI-PATH-164-ACT164",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-164-ACT164",
+      "order": 3
+    }
+  ]
+}

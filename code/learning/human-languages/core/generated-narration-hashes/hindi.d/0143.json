@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:7ee8caa06e44bf91",
+  "lessonIds": [
+    "HI-C143-jhil",
+    "HI-C143-samudra",
+    "HI-C143-jangal",
+    "HI-C143-per",
+    "HI-C143-jar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch143.txt",
+  "json": "hindi/narration/ch143.json",
+  "textHash": "fnv1a64:d286217a91e27bbc",
+  "jsonHash": "fnv1a64:7586acb95d43d5b7",
+  "findings": []
+}

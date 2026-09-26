@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:2cf5fb1abd280122",
+  "lessonIds": [
+    "LA-C123-vas",
+    "LA-C123-amphora",
+    "LA-C123-lagoena",
+    "LA-C123-crumena",
+    "LA-C123-nummus"
+  ],
+  "tex": "latin/book/chapters/ch123-vessel-two-handled-jar-flask-purse-coin.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:23869b699e34ddf5",
+  "lessonIds": [
+    "MR-C134-vati",
+    "MR-C134-patele",
+    "MR-C134-phala",
+    "MR-C134-pensil",
+    "MR-C134-rabar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch134.txt",
+  "json": "marathi/narration/ch134.json",
+  "textHash": "fnv1a64:740736d12e53ffb3",
+  "jsonHash": "fnv1a64:1c843ad362ae0c3e",
+  "findings": []
+}

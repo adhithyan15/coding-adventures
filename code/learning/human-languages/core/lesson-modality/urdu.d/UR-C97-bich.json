@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C97-bich",
+    "language": "urdu",
+    "chapter": 97,
+    "sequence": 4980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3cb08c8aae55d645"
+  },
+  "findings": []
+}

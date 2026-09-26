@@ -1,0 +1,11 @@
+{
+  "id": "UR-C101-maidan",
+  "pathSegment": "UR-PATH-101-LOC101",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-101-LOC101",
+      "order": 3
+    }
+  ]
+}

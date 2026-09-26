@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C142-tibia",
+    "language": "latin",
+    "chapter": 142,
+    "sequence": 5930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:687f961c6311bd86"
+  },
+  "findings": []
+}

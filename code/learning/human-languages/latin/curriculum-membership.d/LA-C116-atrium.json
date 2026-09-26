@@ -1,0 +1,11 @@
+{
+  "id": "LA-C116-atrium",
+  "pathSegment": "LA-PATH-116-LOC116",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-116-LOC116",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C141-pahunchna",
+    "language": "urdu",
+    "chapter": 141,
+    "sequence": 7420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8f474ccd15052ef1"
+  },
+  "findings": []
+}

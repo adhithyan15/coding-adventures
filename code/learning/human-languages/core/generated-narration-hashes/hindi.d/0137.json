@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 137,
+  "sourceHash": "fnv1a64:2c4e012c62693371",
+  "lessonIds": [
+    "HI-C137-svetar",
+    "HI-C137-anda",
+    "HI-C137-gost",
+    "HI-C137-alu",
+    "HI-C137-pyaz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch137.txt",
+  "json": "hindi/narration/ch137.json",
+  "textHash": "fnv1a64:0e1949d54731b8ac",
+  "jsonHash": "fnv1a64:3e261fa352b98030",
+  "findings": []
+}

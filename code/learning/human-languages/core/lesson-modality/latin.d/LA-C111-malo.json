@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C111-malo",
+    "language": "latin",
+    "chapter": 111,
+    "sequence": 4200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc4b1175401478e7"
+  },
+  "findings": []
+}

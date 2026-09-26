@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C123-nadi",
+    "language": "urdu",
+    "chapter": 123,
+    "sequence": 6450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a12ac35d88d350d8"
+  },
+  "findings": []
+}

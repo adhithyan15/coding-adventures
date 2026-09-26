@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Flattened rice, Ladoo, Cucumber, Garlic, Ginger",
+  "label": "ch:mr-flattened-rice-ladoo-cucumber-garlic-ginger",
+  "canDo": "I can say flattened rice, a ladoo, a cucumber, garlic and ginger.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MR-C137-ale",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: i can say flattened rice, a ladoo, a cucumber, garlic and ginger.",
+    "assesses": [
+      "MR-LEX-C137-THINGS137-03",
+      "MR-LEX-C137-THINGS137-04",
+      "MR-LEX-C137-THINGS137-05"
+    ]
+  }
+}

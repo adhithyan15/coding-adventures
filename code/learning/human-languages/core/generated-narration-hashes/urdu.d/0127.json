@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:b1b2dadd41af3bcb",
+  "lessonIds": [
+    "UR-C127-unt",
+    "UR-C127-lomri",
+    "UR-C127-machchhar",
+    "UR-C127-makkhi",
+    "UR-C127-khargosh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch127.txt",
+  "json": "urdu/narration/ch127.json",
+  "textHash": "fnv1a64:fd0ec0706ea3d84f",
+  "jsonHash": "fnv1a64:b85aef40de64d759",
+  "findings": []
+}

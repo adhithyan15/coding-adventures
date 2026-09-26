@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Chance, Skill, It is necessary, It is allowed, To not want",
+  "label": "ch:la-chance-skill-it-is-necessary-it-is-allowed-to-not-want",
+  "canDo": "I can say a chance, a skill, it is necessary, it is allowed and to not want.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "LA-C110-nolo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say a chance, a skill, it is necessary, it is allowed and to not want.",
+    "assesses": [
+      "LA-LEX-C110-CAN110-03",
+      "LA-LEX-C110-CAN110-04",
+      "LA-LEX-C110-CAN110-05"
+    ]
+  }
+}

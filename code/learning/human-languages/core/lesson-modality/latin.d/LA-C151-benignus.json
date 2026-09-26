@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C151-benignus",
+    "language": "latin",
+    "chapter": 151,
+    "sequence": 6410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:678c49436fd95e45"
+  },
+  "findings": []
+}

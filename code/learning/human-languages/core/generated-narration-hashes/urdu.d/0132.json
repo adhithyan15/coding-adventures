@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:654d7bf8b0c7c87f",
+  "lessonIds": [
+    "UR-C132-ganda",
+    "UR-C132-amir",
+    "UR-C132-sach",
+    "UR-C132-mazbut",
+    "UR-C132-kamzor",
+    "UR-R132-first-pass-nature-animals-and-the-body",
+    "UR-R132-second-pass-the-body-and-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch132.txt",
+  "json": "urdu/narration/ch132.json",
+  "textHash": "fnv1a64:a8206cff1bb364df",
+  "jsonHash": "fnv1a64:e4f808d12909cbba",
+  "findings": []
+}

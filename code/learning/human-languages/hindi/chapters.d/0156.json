@@ -1,0 +1,19 @@
+{
+  "chapter": 156,
+  "title": "Slow, Sour, Bitter, Salty, Spicy",
+  "label": "ch:hi-slow-sour-bitter-salty-spicy",
+  "canDo": "I can say slow, sour, bitter, salty and spicy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "HI-R156-second-pass-the-body-and-places",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 156: i can say slow, sour, bitter, salty and spicy.",
+    "assesses": [
+      "HI-LEX-C156-QUAL156-03",
+      "HI-LEX-C156-QUAL156-04",
+      "HI-LEX-C156-QUAL156-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C132-ganda",
+  "pathSegment": "UR-PATH-132-QUAL132",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-132-QUAL132",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C143-jhil",
+    "language": "hindi",
+    "chapter": 143,
+    "sequence": 6550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4279ad12f2e2716f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C121-patina",
+  "pathSegment": "LA-PATH-121-THINGS121",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-121-THINGS121",
+      "order": 2
+    }
+  ]
+}

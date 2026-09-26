@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C132-apis",
+    "language": "latin",
+    "chapter": 132,
+    "sequence": 5360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:415fb97b089679c5"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C144-patthar",
+    "language": "hindi",
+    "chapter": 144,
+    "sequence": 6600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69c14bae7e066df4"
+  },
+  "findings": []
+}

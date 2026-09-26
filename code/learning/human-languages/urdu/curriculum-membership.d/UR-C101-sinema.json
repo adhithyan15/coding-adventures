@@ -1,0 +1,11 @@
+{
+  "id": "UR-C101-sinema",
+  "pathSegment": "UR-PATH-101-LOC101",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-101-LOC101",
+      "order": 2
+    }
+  ]
+}

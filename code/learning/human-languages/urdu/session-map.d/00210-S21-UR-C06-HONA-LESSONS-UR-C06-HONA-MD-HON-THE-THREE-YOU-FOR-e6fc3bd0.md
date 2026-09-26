@@ -1,0 +1,1 @@
+| **S21** | [`UR-C06-hona`](./lessons/UR-C06-hona.md): **ہونا** *honā* | the three “you” forms *(N+15)*; *ṭhīk* *(N+7)*; *hāfiz* *(N+3)*; Chapter 5 practice *(N+1)* | strip **-nā** and say the stem **ho-** |

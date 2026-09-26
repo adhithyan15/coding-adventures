@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "To get off, To fill, To hide, To be saved, To grow",
+  "label": "ch:ur-to-get-off-to-fill-to-hide-to-be-saved-to-grow",
+  "canDo": "I can say to get off, to fill, to hide, to be saved and to grow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "UR-R142-second-pass-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: i can say to get off, to fill, to hide, to be saved and to grow.",
+    "assesses": [
+      "UR-LEX-C142-ACT142-03",
+      "UR-LEX-C142-ACT142-04",
+      "UR-LEX-C142-ACT142-05"
+    ]
+  }
+}

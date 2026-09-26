@@ -1,0 +1,11 @@
+{
+  "id": "LA-C134-simia",
+  "pathSegment": "LA-PATH-134-THINGS134",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-134-THINGS134",
+      "order": 3
+    }
+  ]
+}

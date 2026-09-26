@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "For, For, For that reason, And so, Reason",
+  "label": "ch:la-for-for-for-that-reason-and-so-reason",
+  "canDo": "I can say for, for, for that reason, and so and a reason.",
+  "spineNodes": [
+    "SPINE-SAY-WHY"
+  ],
+  "payoff": {
+    "lesson": "LA-C113-causa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say for, for, for that reason, and so and a reason.",
+    "assesses": [
+      "LA-LEX-C113-WHY113-03",
+      "LA-LEX-C113-WHY113-04",
+      "LA-LEX-C113-WHY113-05"
+    ]
+  }
+}

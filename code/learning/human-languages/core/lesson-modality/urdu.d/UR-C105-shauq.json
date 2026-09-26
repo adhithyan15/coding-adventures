@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C105-shauq",
+    "language": "urdu",
+    "chapter": 105,
+    "sequence": 5450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:01dd99a27f3fd49f"
+  },
+  "findings": []
+}

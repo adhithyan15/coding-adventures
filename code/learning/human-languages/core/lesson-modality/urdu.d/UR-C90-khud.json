@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C90-khud",
+    "language": "urdu",
+    "chapter": 90,
+    "sequence": 4610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eec0515460dc8f6e"
+  },
+  "findings": []
+}

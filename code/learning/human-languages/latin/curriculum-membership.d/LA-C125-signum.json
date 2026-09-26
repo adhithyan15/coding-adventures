@@ -1,0 +1,11 @@
+{
+  "id": "LA-C125-signum",
+  "pathSegment": "LA-PATH-125-THINGS125",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-125-THINGS125",
+      "order": 1
+    }
+  ]
+}

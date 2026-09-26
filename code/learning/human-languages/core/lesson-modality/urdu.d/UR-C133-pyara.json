@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C133-pyara",
+    "language": "urdu",
+    "chapter": 133,
+    "sequence": 7020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d246604281de38e"
+  },
+  "findings": []
+}

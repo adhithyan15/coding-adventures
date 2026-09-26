@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "Strong, Weak, Alone, Icy, Clear",
+  "label": "ch:la-strong-weak-alone-icy-clear",
+  "canDo": "I can say strong, weak, alone, icy and clear.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C152-serenus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: i can say strong, weak, alone, icy and clear.",
+    "assesses": [
+      "LA-LEX-C152-QUAL152-03",
+      "LA-LEX-C152-QUAL152-04",
+      "LA-LEX-C152-QUAL152-05"
+    ]
+  }
+}

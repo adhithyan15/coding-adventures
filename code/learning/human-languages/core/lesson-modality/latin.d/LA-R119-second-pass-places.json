@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R119-second-pass-places",
+    "language": "latin",
+    "chapter": 119,
+    "sequence": 4660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c67cebc5297c589"
+  },
+  "findings": []
+}

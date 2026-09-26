@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Means, Owner, Strength, Wanted, Wish",
+  "label": "ch:mr-means-owner-strength-wanted-wish",
+  "canDo": "I can say a means, an owner, strength, wanted and a wish.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "MR-C122-iccha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say a means, an owner, strength, wanted and a wish.",
+    "assesses": [
+      "MR-LEX-C122-CAN122-03",
+      "MR-LEX-C122-CAN122-04",
+      "MR-LEX-C122-CAN122-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 154,
+  "sourceHash": "fnv1a64:e6b7892e297f6cdf",
+  "lessonIds": [
+    "HI-C154-garam",
+    "HI-C154-gila",
+    "HI-C154-sukha",
+    "HI-C154-bhari",
+    "HI-C154-halka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch154.txt",
+  "json": "hindi/narration/ch154.json",
+  "textHash": "fnv1a64:3b99e1efd5ae9908",
+  "jsonHash": "fnv1a64:1705be382d27d816",
+  "findings": []
+}

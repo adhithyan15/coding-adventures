@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Bean, Pea, Cucumber, Chicken, Pepper",
+  "label": "ch:la-bean-pea-cucumber-chicken-pepper",
+  "canDo": "I can say a bean, a pea, a cucumber, a chicken and pepper.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C127-piper",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can say a bean, a pea, a cucumber, a chicken and pepper.",
+    "assesses": [
+      "LA-LEX-C127-THINGS127-03",
+      "LA-LEX-C127-THINGS127-04",
+      "LA-LEX-C127-THINGS127-05"
+    ]
+  }
+}

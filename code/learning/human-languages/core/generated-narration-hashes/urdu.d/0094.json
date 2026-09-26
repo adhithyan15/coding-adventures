@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:13eb82f022b0be74",
+  "lessonIds": [
+    "UR-C94-roz",
+    "UR-C94-mausam",
+    "UR-C94-bahar",
+    "UR-C94-garmiyan",
+    "UR-C94-sardiyan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch94.txt",
+  "json": "urdu/narration/ch94.json",
+  "textHash": "fnv1a64:ebe698dc03e0b0e4",
+  "jsonHash": "fnv1a64:ff049a8c0b5eb9cd",
+  "findings": []
+}

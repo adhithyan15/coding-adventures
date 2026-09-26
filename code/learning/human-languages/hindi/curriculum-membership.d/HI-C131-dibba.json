@@ -1,0 +1,11 @@
+{
+  "id": "HI-C131-dibba",
+  "pathSegment": "HI-PATH-131-THINGS131",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-131-THINGS131",
+      "order": 2
+    }
+  ]
+}

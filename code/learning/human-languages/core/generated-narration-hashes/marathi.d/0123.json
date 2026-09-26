@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:58c4e90664783f20",
+  "lessonIds": [
+    "MR-C123-garaj",
+    "MR-C123-asa",
+    "MR-C123-svapna",
+    "MR-C123-magne",
+    "MR-C123-tharavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch123.txt",
+  "json": "marathi/narration/ch123.json",
+  "textHash": "fnv1a64:e4725c71410901c3",
+  "jsonHash": "fnv1a64:74ff7255493d77bf",
+  "findings": []
+}

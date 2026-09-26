@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 129,
+  "sourceHash": "fnv1a64:c4945f687d4cf453",
+  "lessonIds": [
+    "UR-C129-pith",
+    "UR-C129-matha",
+    "UR-C129-gal",
+    "UR-C129-thori",
+    "UR-C129-kalai"
+  ],
+  "tex": "urdu/book/chapters/ch129-back-forehead-cheek-chin-wrist.tex"
+}

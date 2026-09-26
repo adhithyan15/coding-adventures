@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:ec65b95cdc816658",
+  "lessonIds": [
+    "HI-C134-botal",
+    "HI-C134-pensil",
+    "HI-C134-tasvir",
+    "HI-C134-sisa",
+    "HI-C134-anguthi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch134.txt",
+  "json": "hindi/narration/ch134.json",
+  "textHash": "fnv1a64:339ee9b599ce9c54",
+  "jsonHash": "fnv1a64:b8a1c5da3c85c29d",
+  "findings": []
+}

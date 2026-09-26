@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C137-jamni",
+    "language": "urdu",
+    "chapter": 137,
+    "sequence": 7200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de97b7e744035b6c"
+  },
+  "findings": []
+}

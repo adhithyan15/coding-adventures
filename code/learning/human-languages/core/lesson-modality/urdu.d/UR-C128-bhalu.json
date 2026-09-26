@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C128-bhalu",
+    "language": "urdu",
+    "chapter": 128,
+    "sequence": 6730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6edd99e9ab55df9"
+  },
+  "findings": []
+}

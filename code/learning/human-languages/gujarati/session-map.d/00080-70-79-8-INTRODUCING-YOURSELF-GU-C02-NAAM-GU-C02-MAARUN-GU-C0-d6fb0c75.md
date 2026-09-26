@@ -1,0 +1,1 @@
+| 70-79 | 8 | Introducing Yourself | `GU-C02-naam` -> `GU-C02-maarun` -> `GU-C02-chhe` -> `GU-C02-maarun-naam-chhe` -> `GU-C02-anand` -> `GU-C02-tu-tame` -> `GU-C02-shun` -> `GU-C02-tamarun-naam-shun-chhe` -> `GU-R04-doorway-nine-r2` -> `GU-C02-practice` |

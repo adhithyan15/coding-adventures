@@ -1,0 +1,19 @@
+{
+  "chapter": 88,
+  "title": "This very one, That very one, Like this, Like that, This much",
+  "label": "ch:ur-this-very-one-that-very-one-like-this-like-that-this-much",
+  "canDo": "I can say this very one, that very one, like this, like that and this much.",
+  "spineNodes": [
+    "SPINE-DEFINITE-REFERENCE"
+  ],
+  "payoff": {
+    "lesson": "UR-C88-itna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 88: i can say this very one, that very one, like this, like that and this much.",
+    "assesses": [
+      "UR-LEX-C88-DEF88-03",
+      "UR-LEX-C88-DEF88-04",
+      "UR-LEX-C88-DEF88-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:ec458a00796b7d75",
+  "lessonIds": [
+    "HI-C132-machis",
+    "HI-C132-katori",
+    "HI-C132-churi",
+    "HI-C132-pankha",
+    "HI-C132-ghari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch132.txt",
+  "json": "hindi/narration/ch132.json",
+  "textHash": "fnv1a64:220c3ca76a7d9ed3",
+  "jsonHash": "fnv1a64:8d5a8c428103477d",
+  "findings": []
+}

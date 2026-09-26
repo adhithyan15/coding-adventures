@@ -1,0 +1,11 @@
+{
+  "id": "LA-C146-utilis",
+  "pathSegment": "LA-PATH-146-QUAL146",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-146-QUAL146",
+      "order": 1
+    }
+  ]
+}

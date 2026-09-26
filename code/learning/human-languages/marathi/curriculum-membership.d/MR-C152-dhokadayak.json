@@ -1,0 +1,11 @@
+{
+  "id": "MR-C152-dhokadayak",
+  "pathSegment": "MR-PATH-152-QUAL152",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-152-QUAL152",
+      "order": 1
+    }
+  ]
+}

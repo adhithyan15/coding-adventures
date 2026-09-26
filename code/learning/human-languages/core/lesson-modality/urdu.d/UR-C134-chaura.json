@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C134-chaura",
+    "language": "urdu",
+    "chapter": 134,
+    "sequence": 7070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42f94eca789ed6b8"
+  },
+  "findings": []
+}

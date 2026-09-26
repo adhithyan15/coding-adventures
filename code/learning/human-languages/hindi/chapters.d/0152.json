@@ -1,0 +1,19 @@
+{
+  "chapter": 152,
+  "title": "Blood, Post office, Library, Temple, Mosque",
+  "label": "ch:hi-blood-post-office-library-temple-mosque",
+  "canDo": "I can say blood, a post office, a library, a temple and a mosque.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C152-masjid",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 152: i can say blood, a post office, a library, a temple and a mosque.",
+    "assesses": [
+      "HI-LEX-C152-THINGS152-03",
+      "HI-LEX-C152-THINGS152-04",
+      "HI-LEX-C152-THINGS152-05"
+    ]
+  }
+}

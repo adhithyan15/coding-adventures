@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:f7399203eb293d7e",
+  "lessonIds": [
+    "MR-C157-cakhne",
+    "MR-C157-perne",
+    "MR-C157-vadhne",
+    "MR-C157-thakne",
+    "MR-C157-jagne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch157.txt",
+  "json": "marathi/narration/ch157.json",
+  "textHash": "fnv1a64:350dda7414a85aa7",
+  "jsonHash": "fnv1a64:a53dd45021f54294",
+  "findings": []
+}

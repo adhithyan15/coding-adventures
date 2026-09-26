@@ -1,0 +1,11 @@
+{
+  "id": "UR-C98-gali",
+  "pathSegment": "UR-PATH-98-LOC98",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-98-LOC98",
+      "order": 3
+    }
+  ]
+}

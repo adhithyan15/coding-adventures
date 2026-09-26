@@ -2426,8 +2426,9 @@ jobs:
           xcrun simctl launch "$simulator" dev.codingadventures.trestle
           sleep 10
           # Still running ten seconds later: it started, loaded the engine and
-          # did not crash rendering the first frame.
-          xcrun simctl spawn "$simulator" launchctl list | grep -q 'dev.codingadventures.trestle'
+          # did not crash rendering the first frame. Drain all launchctl output:
+          # grep -q can close the pipe early and make simctl fail with SIGPIPE.
+          xcrun simctl spawn "$simulator" launchctl list | grep 'dev.codingadventures.trestle' > /dev/null
           xcrun simctl shutdown "$simulator"
 
           toolkit_output="$RUNNER_TEMP/mosaic-swift-toolkit"
@@ -2525,6 +2526,24 @@ jobs:
           test "$taskapp_status" -eq 124
           ! grep -F "Mosaic Rust runtime unavailable" "$taskapp_log"
           ! grep -E "missing required MIL prop|ReferenceError|TypeError" "$taskapp_log"
+
+          # Rebuild the exact generated shell with its compile-time acceptance
+          # seam, force runtime loading to fail, and drive the emitted Try again
+          # button. The probe exits successfully only after the second visible
+          # failure, proving retry creates a fresh host instead of merely
+          # checking source markers around a blank window.
+          task_startup_source="$RUNNER_TEMP/mosaic-qt-taskapp-startup-conformance"
+          cp -R "$taskapp_output/qt" "$task_startup_source"
+          cmake -S "$task_startup_source" -B "$task_startup_source/startup-build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_FLAGS=-DMOSAIC_STARTUP_CONFORMANCE=1
+          cmake --build "$task_startup_source/startup-build" --config Release --parallel
+          task_startup_log="$RUNNER_TEMP/mosaic-qt-taskapp-startup.log"
+          env QT_QPA_PLATFORM=offscreen \
+            MOSAIC_APP_LIBRARY="$RUNNER_TEMP/does-not-exist/libtask_mosaic_app.so" \
+            MOSAIC_APP_STATE_PATH="$RUNNER_TEMP/mosaic-qt-taskapp-startup-state.json" \
+            timeout 10s "$task_startup_source/startup-build/TaskApp" >"$task_startup_log" 2>&1
+          grep -F "Qt startup failure/retry conformance passed" "$task_startup_log"
 
           task_ui_source="$RUNNER_TEMP/mosaic-qt-taskapp-ui-conformance"
           cp -R "$taskapp_output/qt" "$task_ui_source"
@@ -2703,16 +2722,25 @@ jobs:
             QT_QPA_PLATFORM=offscreen qml qt-navigation-split-render-check.qml
           )
 
+          # qt_main_with_startup_states (this PR) made every native-complete Qt
+          # shell keep a missing/failed runtime visible in the window and
+          # retryable instead of exiting, so RatingControls no longer exits
+          # non-zero here either. Rebuild it with the same compile-time
+          # acceptance seam TaskApp's startup probe uses above: it self-drives
+          # two attempts and only exits (0) once the second failure is
+          # observed, proving the missing-runtime path is actually reached
+          # and recovered rather than merely not crashing.
+          strict_startup_source="$RUNNER_TEMP/mosaic-qt-rating-controls-startup-conformance"
+          cp -R "$strict_output/qt" "$strict_startup_source"
+          cmake -S "$strict_startup_source" -B "$strict_startup_source/startup-build" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_FLAGS=-DMOSAIC_STARTUP_CONFORMANCE=1
+          cmake --build "$strict_startup_source/startup-build" --config Release --parallel
           strict_log="$RUNNER_TEMP/mosaic-qt-native-complete-missing-runtime.log"
-          set +e
-          QT_QPA_PLATFORM=offscreen \
+          env QT_QPA_PLATFORM=offscreen \
             MOSAIC_APP_LIBRARY="$RUNNER_TEMP/mosaic-app-does-not-exist.so" \
-            timeout 15s "$strict_output/qt/build/RatingControls" >"$strict_log" 2>&1
-          strict_status=$?
-          set -e
-          test "$strict_status" -ne 0
-          test "$strict_status" -ne 124
-          grep -F "native-complete requires the Mosaic Rust application runtime" "$strict_log"
+            timeout 15s "$strict_startup_source/startup-build/RatingControls" >"$strict_log" 2>&1
+          grep -F "Qt startup failure/retry conformance passed" "$strict_log"
 
       - name: Round-trip Rust engine through standard Flutter binding
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'

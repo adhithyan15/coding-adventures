@@ -1,0 +1,19 @@
+{
+  "chapter": 137,
+  "title": "Jumper, Egg, Meat, Potato, Onion",
+  "label": "ch:hi-jumper-egg-meat-potato-onion",
+  "canDo": "I can say a jumper, an egg, meat, a potato and an onion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C137-pyaz",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 137: i can say a jumper, an egg, meat, a potato and an onion.",
+    "assesses": [
+      "HI-LEX-C137-THINGS137-03",
+      "HI-LEX-C137-THINGS137-04",
+      "HI-LEX-C137-THINGS137-05"
+    ]
+  }
+}

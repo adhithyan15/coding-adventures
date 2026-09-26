@@ -1,0 +1,11 @@
+{
+  "id": "HI-C148-tota",
+  "pathSegment": "HI-PATH-148-THINGS148",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-148-THINGS148",
+      "order": 1
+    }
+  ]
+}

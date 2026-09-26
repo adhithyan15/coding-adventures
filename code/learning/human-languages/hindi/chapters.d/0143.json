@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "Lake, Sea, Forest, Tree, Root",
+  "label": "ch:hi-lake-sea-forest-tree-root",
+  "canDo": "I can say a lake, the sea, a forest, a tree and a root.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C143-jar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: i can say a lake, the sea, a forest, a tree and a root.",
+    "assesses": [
+      "HI-LEX-C143-THINGS143-03",
+      "HI-LEX-C143-THINGS143-04",
+      "HI-LEX-C143-THINGS143-05"
+    ]
+  }
+}

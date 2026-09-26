@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:51d97e4f17c4af97",
+  "lessonIds": [
+    "UR-C124-shakh",
+    "UR-C124-chattan",
+    "UR-C124-jharna",
+    "UR-C124-talab",
+    "UR-C124-kuan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch124.txt",
+  "json": "urdu/narration/ch124.json",
+  "textHash": "fnv1a64:7f5be699a3e1641a",
+  "jsonHash": "fnv1a64:89be5d30c2242e8a",
+  "findings": []
+}

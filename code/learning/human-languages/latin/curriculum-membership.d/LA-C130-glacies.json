@@ -1,0 +1,11 @@
+{
+  "id": "LA-C130-glacies",
+  "pathSegment": "LA-PATH-130-THINGS130",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-130-THINGS130",
+      "order": 1
+    }
+  ]
+}

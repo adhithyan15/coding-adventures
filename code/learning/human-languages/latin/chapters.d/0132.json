@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Goose, Bee, Fly, Ant, Butterfly",
+  "label": "ch:la-goose-bee-fly-ant-butterfly",
+  "canDo": "I can say a goose, a bee, a fly, an ant and a butterfly.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C132-papilio",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say a goose, a bee, a fly, an ant and a butterfly.",
+    "assesses": [
+      "LA-LEX-C132-THINGS132-03",
+      "LA-LEX-C132-THINGS132-04",
+      "LA-LEX-C132-THINGS132-05"
+    ]
+  }
+}

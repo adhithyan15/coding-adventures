@@ -1,0 +1,19 @@
+{
+  "chapter": 142,
+  "title": "Fork, Plough, Bell, Flute, Lyre",
+  "label": "ch:la-fork-plough-bell-flute-lyre",
+  "canDo": "I can say a fork, a plough, a bell, a flute and a lyre.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C142-lyra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 142: i can say a fork, a plough, a bell, a flute and a lyre.",
+    "assesses": [
+      "LA-LEX-C142-THINGS142-03",
+      "LA-LEX-C142-THINGS142-04",
+      "LA-LEX-C142-THINGS142-05"
+    ]
+  }
+}

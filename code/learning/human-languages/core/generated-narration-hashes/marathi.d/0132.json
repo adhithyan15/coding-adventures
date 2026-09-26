@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:d4aab44354348e9c",
+  "lessonIds": [
+    "MR-C132-hatoda",
+    "MR-C132-katri",
+    "MR-C132-sui",
+    "MR-C132-dora",
+    "MR-C132-kangva"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch132.txt",
+  "json": "marathi/narration/ch132.json",
+  "textHash": "fnv1a64:5ed84e3f2ce8bf5b",
+  "jsonHash": "fnv1a64:9301e29359281762",
+  "findings": []
+}

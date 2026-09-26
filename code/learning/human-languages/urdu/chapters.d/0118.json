@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Biscuit, Chocolate, Green tea, Sweet drink, Lassi",
+  "label": "ch:ur-biscuit-chocolate-green-tea-sweet-drink-lassi",
+  "canDo": "I can say a biscuit, chocolate, green tea, a sweet drink and lassi.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "UR-C118-lassi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say a biscuit, chocolate, green tea, a sweet drink and lassi.",
+    "assesses": [
+      "UR-LEX-C118-THINGS118-03",
+      "UR-LEX-C118-THINGS118-04",
+      "UR-LEX-C118-THINGS118-05"
+    ]
+  }
+}

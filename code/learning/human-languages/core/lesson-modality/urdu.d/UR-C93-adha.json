@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C93-adha",
+    "language": "urdu",
+    "chapter": 93,
+    "sequence": 4760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:766a5ef883ad748d"
+  },
+  "findings": []
+}

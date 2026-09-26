@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:16c5f081db8228d4",
+  "lessonIds": [
+    "HI-C135-cappal",
+    "HI-C135-juta",
+    "HI-C135-moza",
+    "HI-C135-kamiz",
+    "HI-C135-paint"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch135.txt",
+  "json": "hindi/narration/ch135.json",
+  "textHash": "fnv1a64:a158077ed0bffd21",
+  "jsonHash": "fnv1a64:37e5a70a0c8528ee",
+  "findings": []
+}

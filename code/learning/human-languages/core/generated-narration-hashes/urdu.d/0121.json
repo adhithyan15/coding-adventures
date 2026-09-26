@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:da1509ad58b9c2f5",
+  "lessonIds": [
+    "UR-C121-shalvar",
+    "UR-C121-dupatta",
+    "UR-C121-svetar",
+    "UR-C121-jaiket",
+    "UR-C121-pajama",
+    "UR-R121-first-pass-things-you-carry-school-and-food",
+    "UR-R121-second-pass-food-and-clothes"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch121.txt",
+  "json": "urdu/narration/ch121.json",
+  "textHash": "fnv1a64:63af937b683087f7",
+  "jsonHash": "fnv1a64:fe030e7539bd2693",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C106-shisha",
+  "pathSegment": "UR-PATH-106-THINGS106",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-106-THINGS106",
+      "order": 3
+    }
+  ]
+}

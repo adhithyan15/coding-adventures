@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "To join, To visit, To sing, To paint, To lead",
+  "label": "ch:la-to-join-to-visit-to-sing-to-paint-to-lead",
+  "canDo": "I can say to join, to visit, to sing, to paint and to lead.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "LA-C154-duco",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: i can say to join, to visit, to sing, to paint and to lead.",
+    "assesses": [
+      "LA-LEX-C154-ACT154-03",
+      "LA-LEX-C154-ACT154-04",
+      "LA-LEX-C154-ACT154-05"
+    ]
+  }
+}

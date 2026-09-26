@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "Lucky, Wretched, Angry, Quiet, Purple",
+  "label": "ch:la-lucky-wretched-angry-quiet-purple",
+  "canDo": "I can say lucky, wretched, angry, quiet and purple.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C148-purpureus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: i can say lucky, wretched, angry, quiet and purple.",
+    "assesses": [
+      "LA-LEX-C148-QUAL148-03",
+      "LA-LEX-C148-QUAL148-04",
+      "LA-LEX-C148-QUAL148-05"
+    ]
+  }
+}
