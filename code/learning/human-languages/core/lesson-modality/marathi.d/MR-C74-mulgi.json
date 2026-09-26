@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C74-mulgi",
+    "language": "marathi",
+    "chapter": 74,
+    "sequence": 3100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:651bf20fb6369a44"
+  },
+  "findings": []
+}

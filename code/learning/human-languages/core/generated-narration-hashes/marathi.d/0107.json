@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:17132e435e5e35a4",
+  "lessonIds": [
+    "MR-C107-khare",
+    "MR-C107-hirva",
+    "MR-C107-pivla",
+    "MR-C107-lal",
+    "MR-C107-nila"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch107.txt",
+  "json": "marathi/narration/ch107.json",
+  "textHash": "fnv1a64:4357915b6d86944f",
+  "jsonHash": "fnv1a64:5862660b50fc16f5",
+  "findings": []
+}

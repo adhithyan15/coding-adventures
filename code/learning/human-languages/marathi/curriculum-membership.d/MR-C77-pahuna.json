@@ -1,0 +1,11 @@
+{
+  "id": "MR-C77-pahuna",
+  "pathSegment": "MR-PATH-77-FAMILY77",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-77-FAMILY77",
+      "order": 1
+    }
+  ]
+}

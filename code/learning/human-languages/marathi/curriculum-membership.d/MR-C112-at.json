@@ -1,0 +1,11 @@
+{
+  "id": "MR-C112-at",
+  "pathSegment": "MR-PATH-112-PLACE112",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-112-PLACE112",
+      "order": 1
+    }
+  ]
+}

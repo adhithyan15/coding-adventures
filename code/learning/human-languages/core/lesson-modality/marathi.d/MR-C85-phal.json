@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C85-phal",
+    "language": "marathi",
+    "chapter": 85,
+    "sequence": 3640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e4ceb78c832759a0"
+  },
+  "findings": []
+}

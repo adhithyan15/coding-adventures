@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:cebc22b74c9f7d1d",
+  "lessonIds": [
+    "MR-C100-ghoda",
+    "MR-C100-gay",
+    "MR-C100-sheli",
+    "MR-C100-mendhi",
+    "MR-C100-paksi"
+  ],
+  "tex": "marathi/book/chapters/ch100-horse-cow-goat-sheep-bird.tex"
+}

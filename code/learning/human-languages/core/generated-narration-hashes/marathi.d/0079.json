@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 79,
+  "sourceHash": "fnv1a64:fdbab531012fbf8c",
+  "lessonIds": [
+    "MR-C79-dhune",
+    "MR-C79-hasne",
+    "MR-C79-radne",
+    "MR-C79-gane",
+    "MR-C79-nachne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch79.txt",
+  "json": "marathi/narration/ch79.json",
+  "textHash": "fnv1a64:b449c6c9e80b7e5e",
+  "jsonHash": "fnv1a64:22c8283654da1ca8",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 71,
+  "title": "Stomach, Shoulder, Finger, Neck, Face",
+  "label": "ch:mr-stomach-shoulder-finger-neck-face",
+  "canDo": "I can say the stomach, a shoulder, a finger, the neck and the face.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "MR-C71-chehra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 71: i can say the stomach, a shoulder, a finger, the neck and the face.",
+    "assesses": [
+      "MR-LEX-C71-BODY71-03",
+      "MR-LEX-C71-BODY71-04",
+      "MR-LEX-C71-BODY71-05"
+    ]
+  }
+}

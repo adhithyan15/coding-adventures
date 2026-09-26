@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C117-tis",
+    "language": "marathi",
+    "chapter": 117,
+    "sequence": 5290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e9c99a6198a34c6"
+  },
+  "findings": []
+}

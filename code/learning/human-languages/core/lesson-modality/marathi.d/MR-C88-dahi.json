@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C88-dahi",
+    "language": "marathi",
+    "chapter": 88,
+    "sequence": 3820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0cba940ee9b6693c"
+  },
+  "findings": []
+}

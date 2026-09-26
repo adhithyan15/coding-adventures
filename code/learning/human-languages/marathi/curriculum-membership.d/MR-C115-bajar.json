@@ -1,0 +1,11 @@
+{
+  "id": "MR-C115-bajar",
+  "pathSegment": "MR-PATH-115-TOWN115",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-115-TOWN115",
+      "order": 2
+    }
+  ]
+}

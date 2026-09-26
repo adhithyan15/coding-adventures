@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C71-chehra",
+    "language": "marathi",
+    "chapter": 71,
+    "sequence": 2950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b29563292059248"
+  },
+  "findings": []
+}

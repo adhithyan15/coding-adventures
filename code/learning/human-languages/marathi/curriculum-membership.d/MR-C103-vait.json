@@ -1,0 +1,11 @@
+{
+  "id": "MR-C103-vait",
+  "pathSegment": "MR-PATH-103-ANIMALS103",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-103-ANIMALS103",
+      "order": 4
+    }
+  ]
+}

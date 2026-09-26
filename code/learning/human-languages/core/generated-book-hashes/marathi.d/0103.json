@@ -1,0 +1,15 @@
+{
+  "language": "marathi",
+  "chapter": 103,
+  "sourceHash": "fnv1a64:a0ee267e9d4968ce",
+  "lessonIds": [
+    "MR-C103-mungi",
+    "MR-C103-badak",
+    "MR-C103-nava",
+    "MR-C103-juna",
+    "MR-C103-vait",
+    "MR-R103-first-pass-food-the-home-and-school",
+    "MR-R103-second-pass-nature-and-animals"
+  ],
+  "tex": "marathi/book/chapters/ch103-ant-duck-new-old-bad.tex"
+}

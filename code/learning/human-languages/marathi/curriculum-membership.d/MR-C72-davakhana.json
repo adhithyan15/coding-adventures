@@ -1,0 +1,11 @@
+{
+  "id": "MR-C72-davakhana",
+  "pathSegment": "MR-PATH-72-BODY72",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MR-EXT-72-BODY72",
+      "order": 4
+    }
+  ]
+}

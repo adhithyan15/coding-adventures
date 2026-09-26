@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:6930426480755274",
+  "lessonIds": [
+    "MR-C109-mhatara",
+    "MR-C109-athavda",
+    "MR-C109-mahina",
+    "MR-C109-varsa",
+    "MR-C109-tas"
+  ],
+  "tex": "marathi/book/chapters/ch109-old-week-month-year-hour.tex"
+}

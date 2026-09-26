@@ -1,0 +1,11 @@
+{
+  "id": "MR-C94-nakasha",
+  "pathSegment": "MR-PATH-94-SCHOOL94",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MR-EXT-94-SCHOOL94",
+      "order": 1
+    }
+  ]
+}

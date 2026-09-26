@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C90-chhappar",
+    "language": "marathi",
+    "chapter": 90,
+    "sequence": 3890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c0defc96ce4513e"
+  },
+  "findings": []
+}

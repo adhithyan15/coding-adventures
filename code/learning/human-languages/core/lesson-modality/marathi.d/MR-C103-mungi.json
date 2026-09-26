@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C103-mungi",
+    "language": "marathi",
+    "chapter": 103,
+    "sequence": 4530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b8c0735f31c4b13"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C95-patra",
+  "pathSegment": "MR-PATH-95-SCHOOL95",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-95-SCHOOL95",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Watch, Cap, Shoe, Sandal, Thirty",
+  "label": "ch:mr-watch-cap-shoe-sandal-thirty",
+  "canDo": "I can say a watch, a clock, a cap, a shoe, a boot, a sandal and thirty.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "MR-C117-tis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say a watch, a clock, a cap, a shoe, a boot, a sandal and thirty.",
+    "assesses": [
+      "MR-LEX-C117-CLOTHES117-03",
+      "MR-LEX-C117-CLOTHES117-04",
+      "MR-LEX-C117-CLOTHES117-05"
+    ]
+  }
+}

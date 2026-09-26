@@ -1,0 +1,19 @@
+{
+  "chapter": 85,
+  "title": "Fish, Cooked rice, Lentils, Fruit, Apple",
+  "label": "ch:mr-fish-cooked-rice-lentils-fruit-apple",
+  "canDo": "I can say a fish, cooked rice, lentils, a fruit and an apple.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "MR-C85-safarchand",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 85: i can say a fish, cooked rice, lentils, a fruit and an apple.",
+    "assesses": [
+      "MR-LEX-C85-FOOD85-03",
+      "MR-LEX-C85-FOOD85-04",
+      "MR-LEX-C85-FOOD85-05"
+    ]
+  }
+}

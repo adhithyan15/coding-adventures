@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:45c6e3d88d01ce82",
+  "lessonIds": [
+    "MR-C87-mirchi",
+    "MR-C87-loni",
+    "MR-C87-madh",
+    "MR-C87-tel",
+    "MR-C87-drakse"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch87.txt",
+  "json": "marathi/narration/ch87.json",
+  "textHash": "fnv1a64:2134016ea5f69c45",
+  "jsonHash": "fnv1a64:f69de48b216ed9e9",
+  "findings": []
+}

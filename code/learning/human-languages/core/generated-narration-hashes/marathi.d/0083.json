@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 83,
+  "sourceHash": "fnv1a64:19c8bcdc35f174b2",
+  "lessonIds": [
+    "MR-C83-uchalne",
+    "MR-C83-odhne",
+    "MR-C83-dhakalne",
+    "MR-C83-lapavne",
+    "MR-C83-jinkne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch83.txt",
+  "json": "marathi/narration/ch83.json",
+  "textHash": "fnv1a64:658c5e360f8448ea",
+  "jsonHash": "fnv1a64:aa80b4b1f1831c45",
+  "findings": []
+}

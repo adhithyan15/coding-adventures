@@ -1,0 +1,11 @@
+{
+  "id": "MR-C114-karyalay",
+  "pathSegment": "MR-PATH-114-TOWN114",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MR-EXT-114-TOWN114",
+      "order": 3
+    }
+  ]
+}

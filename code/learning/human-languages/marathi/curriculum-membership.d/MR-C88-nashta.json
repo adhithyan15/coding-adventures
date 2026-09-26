@@ -1,0 +1,11 @@
+{
+  "id": "MR-C88-nashta",
+  "pathSegment": "MR-PATH-88-FOOD88",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-88-FOOD88",
+      "order": 2
+    }
+  ]
+}

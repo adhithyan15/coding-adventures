@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:5f1ce2265c6c5cd0",
+  "lessonIds": [
+    "MR-C82-phekne",
+    "MR-C82-udne",
+    "MR-C82-pohne",
+    "MR-C82-shikavne",
+    "MR-C82-banavne"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch82.txt",
+  "json": "marathi/narration/ch82.json",
+  "textHash": "fnv1a64:0bfebd29a7100823",
+  "jsonHash": "fnv1a64:219e787d91a57f23",
+  "findings": []
+}

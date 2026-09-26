@@ -1,0 +1,11 @@
+{
+  "id": "MR-R120-first-pass-describing-words-and-time",
+  "pathSegment": "MR-PATH-120-WORLD120",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MR-EXT-120-WORLD120",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Clean, Sweet, Thick, Thin, Light",
+  "label": "ch:mr-clean-sweet-thick-thin-light",
+  "canDo": "I can say clean, sweet, thick, fat, thin and light.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C106-halka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can say clean, sweet, thick, fat, thin and light.",
+    "assesses": [
+      "MR-LEX-C106-ADJ106-03",
+      "MR-LEX-C106-ADJ106-04",
+      "MR-LEX-C106-ADJ106-05"
+    ]
+  }
+}

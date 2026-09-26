@@ -260,5 +260,14 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // Chapter 69: the near row, the far row, the system lesson that makes them
     // pronouns, and the review.
     ["69", 4],
+    // Chapters 70-120: the pre-A1 vocabulary tranche, five word lessons each,
+    // cut into three runs of seventeen chapters. The last chapter of each run
+    // (86, 103, 120) also carries that run's two review lessons, which is why
+    // they hold seven. Three runs rather than two keeps each review under the
+    // 300-second lesson ceiling.
+    ...Array.from({ length: 51 }, (_, i): [string, number] => [
+      String(70 + i),
+      [86, 103, 120].includes(70 + i) ? 7 : 5,
+    ]),
   ]);
 });

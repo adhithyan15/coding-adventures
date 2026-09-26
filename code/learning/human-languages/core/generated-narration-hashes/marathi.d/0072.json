@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 72,
+  "sourceHash": "fnv1a64:7da70d69487d2157",
+  "lessonIds": [
+    "MR-C72-rakta",
+    "MR-C72-gudgha",
+    "MR-C72-doke",
+    "MR-C72-tap",
+    "MR-C72-davakhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch72.txt",
+  "json": "marathi/narration/ch72.json",
+  "textHash": "fnv1a64:9bed4341eb96c364",
+  "jsonHash": "fnv1a64:f82b018c317ad106",
+  "findings": []
+}

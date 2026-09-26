@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C72-davakhana",
+    "language": "marathi",
+    "chapter": 72,
+    "sequence": 3000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c8bd8a1e2ba239f8"
+  },
+  "findings": []
+}

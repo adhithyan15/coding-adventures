@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Forty, Fifty, Sixty, Seventy, Ninety",
+  "label": "ch:mr-forty-fifty-sixty-seventy-ninety",
+  "canDo": "I can say forty, fifty, sixty, seventy and ninety.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C118-navvad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say forty, fifty, sixty, seventy and ninety.",
+    "assesses": [
+      "MR-LEX-C118-NUMBERS118-03",
+      "MR-LEX-C118-NUMBERS118-04",
+      "MR-LEX-C118-NUMBERS118-05"
+    ]
+  }
+}

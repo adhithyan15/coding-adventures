@@ -1,0 +1,19 @@
+{
+  "chapter": 78,
+  "title": "To run, To play, To sell, To open, To cook",
+  "label": "ch:mr-to-run-to-play-to-sell-to-open-to-cook",
+  "canDo": "I can say to run, to play, to sell, to open and to cook.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "MR-C78-shijavne",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 78: i can say to run, to play, to sell, to open and to cook.",
+    "assesses": [
+      "MR-LEX-C78-VERBS78-03",
+      "MR-LEX-C78-VERBS78-04",
+      "MR-LEX-C78-VERBS78-05"
+    ]
+  }
+}

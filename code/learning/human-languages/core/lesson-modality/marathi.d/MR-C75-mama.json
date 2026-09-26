@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C75-mama",
+    "language": "marathi",
+    "chapter": 75,
+    "sequence": 3150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:162c39ea56cb01f2"
+  },
+  "findings": []
+}

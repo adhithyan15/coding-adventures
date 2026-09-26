@@ -1,0 +1,7 @@
+{
+  "language": "marathi",
+  "chapter": 100,
+  "output": "marathi/book/chapters/ch100-horse-cow-goat-sheep-bird.tex",
+  "unicodeScript": "Devanagari",
+  "scriptCommand": "mr"
+}

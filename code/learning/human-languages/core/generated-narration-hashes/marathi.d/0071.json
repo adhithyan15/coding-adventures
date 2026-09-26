@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 71,
+  "sourceHash": "fnv1a64:db1537ddbd424c43",
+  "lessonIds": [
+    "MR-C71-pot",
+    "MR-C71-khanda",
+    "MR-C71-bot",
+    "MR-C71-man",
+    "MR-C71-chehra"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch71.txt",
+  "json": "marathi/narration/ch71.json",
+  "textHash": "fnv1a64:4f956aca38f703fc",
+  "jsonHash": "fnv1a64:ce92c7833f8b7b17",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-C107-pivla",
+  "pathSegment": "MR-PATH-107-ADJ107",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MR-EXT-107-ADJ107",
+      "order": 2
+    }
+  ]
+}

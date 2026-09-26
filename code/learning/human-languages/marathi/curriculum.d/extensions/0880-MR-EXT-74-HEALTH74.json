@@ -1,0 +1,8 @@
+{
+  "id": "MR-EXT-74-HEALTH74",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say sad, a father, a mother, a son and a daughter.",
+  "prerequisites": []
+}

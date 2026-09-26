@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:f88849e3d0461c94",
+  "lessonIds": [
+    "MR-C104-garam",
+    "MR-C104-thand",
+    "MR-C104-halu",
+    "MR-C104-jalad",
+    "MR-C104-mahag"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch104.txt",
+  "json": "marathi/narration/ch104.json",
+  "textHash": "fnv1a64:0808c47a3739f7ad",
+  "jsonHash": "fnv1a64:57f47b66129d38f8",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marathi",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:9bf1c186d624cf1e",
+  "lessonIds": [
+    "MR-C112-dur",
+    "MR-C112-at",
+    "MR-C112-baher",
+    "MR-C112-mage",
+    "MR-C112-pudhe"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marathi/narration/ch112.txt",
+  "json": "marathi/narration/ch112.json",
+  "textHash": "fnv1a64:bdf96c8f9eed3c82",
+  "jsonHash": "fnv1a64:81fe2bbb1be5ba23",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MR-R120-second-pass-places-the-town-clothes-and-numbers",
+  "pathSegment": "MR-PATH-120-WORLD120",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "MR-EXT-120-WORLD120",
+      "order": 6
+    }
+  ]
+}

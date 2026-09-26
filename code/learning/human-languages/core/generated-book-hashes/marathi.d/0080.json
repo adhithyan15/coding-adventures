@@ -1,0 +1,13 @@
+{
+  "language": "marathi",
+  "chapter": 80,
+  "sourceHash": "fnv1a64:72aca7ab8f0df305",
+  "lessonIds": [
+    "MR-C80-visarne",
+    "MR-C80-pathavne",
+    "MR-C80-mojne",
+    "MR-C80-pakadne",
+    "MR-C80-kapne"
+  ],
+  "tex": "marathi/book/chapters/ch80-to-forget-to-send-to-count-to-catch-to-cut.tex"
+}
