@@ -1,9 +1,9 @@
 # BR03 — A tree builder built the way the HTML specification is written
 
-**Status:** in progress (2026-09-25): steps 1 to 3 done (every insertion
-mode, and foreign content); 2,415 of 2,655 corpus cases pass, and every
-remaining failure is a fragment case or listed in §5's closing notes. This is
-BR02 phase P2.
+**Status:** in progress (2026-09-25): steps 1 to 4 done (every insertion
+mode, foreign content, fragments); 2,614 of 2,655 corpus cases pass,
+including `template.dat:124`, and the 41 failures are all outside the crate
+(§5's closing notes, plus 6 scripted cases). This is BR02 phase P2.
 
 **Builds on:** [BR02 — Venture completion roadmap](BR02-venture-completion-roadmap.md)
 §2 and §4 P2. It depends on the P1 work: the scripted-case fakes are gone

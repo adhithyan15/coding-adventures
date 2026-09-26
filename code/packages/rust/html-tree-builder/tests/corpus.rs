@@ -18,7 +18,10 @@
 //! and review the diff: lines should only ever disappear.
 
 use coding_adventures_html_lexer::HtmlScriptingMode;
-use coding_adventures_html_tree_builder::{html5lib, parse_document, TreeBuilderOptions};
+use coding_adventures_html_tree_builder::arena::Namespace;
+use coding_adventures_html_tree_builder::{
+    html5lib, parse_document, parse_fragment, FragmentContext, TreeBuilderOptions,
+};
 use std::collections::BTreeSet;
 
 const CORPUS: &str =
@@ -30,7 +33,8 @@ struct Case {
     source: String,
     data: String,
     scripting: Option<HtmlScriptingMode>,
-    fragment: bool,
+    /// `#document-fragment` context: `td`, or `svg desc` / `math mi`.
+    fragment: Option<String>,
     document: Vec<String>,
 }
 
@@ -55,11 +59,13 @@ fn cases() -> Vec<Case> {
             data.push(line);
         }
         let mut scripting = None;
-        let mut fragment = false;
-        for line in lines.by_ref() {
+        let mut fragment = None;
+        while let Some(line) = lines.next() {
             match line {
                 "#document" => break,
-                "#document-fragment" => fragment = true,
+                "#document-fragment" => {
+                    fragment = lines.next().map(str::to_string);
+                }
                 "#script-on" => scripting = Some(HtmlScriptingMode::Enabled),
                 "#script-off" => scripting = Some(HtmlScriptingMode::Disabled),
                 _ => {}
@@ -86,20 +92,41 @@ fn cases() -> Vec<Case> {
     cases
 }
 
-fn passes(case: &Case) -> bool {
-    // Fragment parsing is BR03 §5 step 4.
-    if case.fragment {
-        return false;
+/// A `#document-fragment` line as a context element.
+fn fragment_context(line: &str) -> FragmentContext {
+    let (namespace, name) = match line.split_once(' ') {
+        Some(("svg", name)) => (Namespace::Svg, name),
+        Some(("math", name)) => (Namespace::MathMl, name),
+        _ => (Namespace::Html, line),
+    };
+    FragmentContext {
+        namespace,
+        name: name.to_string(),
+        attributes: Vec::new(),
     }
+}
+
+fn tree_for(case: &Case, scripting: HtmlScriptingMode) -> Option<Vec<String>> {
+    let options = TreeBuilderOptions { scripting };
+    let lines = match &case.fragment {
+        Some(context) => parse_fragment(&case.data, &fragment_context(context), options)
+            .ok()
+            .map(|output| html5lib::node_lines(&output.nodes))?,
+        None => parse_document(&case.data, options)
+            .ok()
+            .map(|output| html5lib::document_lines(&output.document))?,
+    };
+    Some(normalized(lines))
+}
+
+fn passes(case: &Case) -> bool {
     let modes = match case.scripting {
         Some(mode) => vec![mode],
         None => vec![HtmlScriptingMode::Enabled, HtmlScriptingMode::Disabled],
     };
-    modes.into_iter().all(|scripting| {
-        parse_document(&case.data, TreeBuilderOptions { scripting })
-            .map(|output| normalized(html5lib::document_lines(&output.document)) == case.document)
-            .unwrap_or(false)
-    })
+    modes
+        .into_iter()
+        .all(|scripting| tree_for(case, scripting).is_some_and(|tree| tree == case.document))
 }
 
 /// The smoke corpus was imported with its line endings normalised, so a U+000D
@@ -181,9 +208,9 @@ fn show_selected_cases() {
         .filter(|case| wanted.contains(case.source.as_str()))
     {
         let scripting = case.scripting.unwrap_or(HtmlScriptingMode::Enabled);
-        let actual = parse_document(&case.data, TreeBuilderOptions { scripting })
-            .map(|output| html5lib::document_lines(&output.document).join("\n"))
-            .unwrap_or_else(|error| error.to_string());
+        let actual = tree_for(case, scripting)
+            .map(|lines| lines.join("\n"))
+            .unwrap_or_else(|| "(parse error)".to_string());
         println!(
             "== {} {:?}\n-- expected\n{}\n-- actual\n{}",
             case.source,
