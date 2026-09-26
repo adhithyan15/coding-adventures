@@ -1,12 +1,13 @@
 {
   "language": "punjabi",
   "chapter": 20,
-  "sourceHash": "fnv1a64:fe645e85335d6d6d",
+  "sourceHash": "fnv1a64:8bf8009ee3e53b15",
   "lessonIds": [
     "PA-W05-ka",
     "PA-W05-work-label",
     "PA-W05-kha",
     "PA-W05-farming",
+    "PA-C20-mausam",
     "PA-W05-au-matra",
     "PA-W05-job"
   ],

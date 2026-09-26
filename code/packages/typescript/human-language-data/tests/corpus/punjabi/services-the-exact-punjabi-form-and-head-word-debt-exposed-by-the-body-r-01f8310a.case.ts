@@ -31,7 +31,9 @@ it("services the exact Punjabi form and head-word debt exposed by the body R4 br
   const bridge = bridgeIds.map((id) =>
     ordered.find((lesson) => lesson.realization.lessonId === id)!,
   );
-  expect(bridge.map((lesson) => ordered.indexOf(lesson))).toEqual([172, 173]);
+  // HL-C443: +1, from ਮੌਸਮ (mausam), the anchor word placed before the
+  // chapter-20 ੌ lesson. Every bridge lesson sits after it.
+  expect(bridge.map((lesson) => ordered.indexOf(lesson))).toEqual([173, 174]);
   expect(bridge.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 210)).toBe(true);
   expect(bridge.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
 
@@ -84,7 +86,10 @@ it("services the exact Punjabi form and head-word debt exposed by the body R4 br
   // not because reinforcement got worse. The serviced-debt assertions above still hold
   // exactly. The residue -- Chapter 4 and 5 atoms with no later lesson putting them
   // back in front of the reader -- is named in BACKLOG.d as the next tranche's work.
-  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 88, R3: 150, R4: 91 });
+  // {37, 88, 150, 91} -> {37, 89, 151, 92}: ਮੌਸਮ (mausam), HL-C443's anchor
+  // word before the chapter-20 ੌ lesson, has R2-R4 windows that start out
+  // missed in this prefix.
+  expect(report.summary.missedByWindow).toEqual({ R1: 37, R2: 89, R3: 151, R4: 92 });
 
   const before = measureContinuity(
     ordered.filter((lesson) => !bridgeIds.includes(lesson.realization.lessonId)),
@@ -102,7 +107,9 @@ it("services the exact Punjabi form and head-word debt exposed by the body R4 br
   expect([...afterPairs].filter((pair) => !beforePairs.has(pair)).sort()).toEqual([
     "R3|PA-FORM-THREE-SELECTION-REPAIR-01",
     "R3|PA-FORM-THREE-SPELLING-REPAIR-01",
-    "R4|PA-SCRIPT-II-MATRA-01",
+    // HL-C443: shifted by one lesson with ਮੌਸਮ (mausam). ੀ's R4 window now
+    // opens with the previous bridge, and ਸ's opens with this one.
     "R4|PA-SCRIPT-MA-01",
+    "R4|PA-SCRIPT-SA-01",
   ]);
 });

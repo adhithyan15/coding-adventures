@@ -9,20 +9,20 @@ type: writing
 headword: "ਨੌਕਰੀ"
 romanization: "naukarī"
 gloss: "job as a neutral work value"
-prerequisites: [PA-W05-au-matra]
+prerequisites: [PA-W05-au-matra, PA-C20-mausam]
 sounds: []
 roots: []
 duration:
   max_seconds: 175
 requires:
-  knowledge: [PA-SCRIPT-NA-01, PA-SCRIPT-AU-MATRA-01, PA-SCRIPT-KA-01, PA-SCRIPT-RA-01, PA-SCRIPT-II-MATRA-01]
+  knowledge: [PA-SCRIPT-NA-01, PA-SCRIPT-AU-MATRA-01, PA-SCRIPT-KA-01, PA-SCRIPT-RA-01, PA-SCRIPT-II-MATRA-01, PA-LEX-ANCHOR-MAUSAM]
 introduces:
   knowledge: [PA-FORM-WORK-JOB-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [PA-SCRIPT-NA-01, PA-SCRIPT-AU-MATRA-01, PA-SCRIPT-KA-01, PA-SCRIPT-RA-01, PA-SCRIPT-II-MATRA-01, PA-FORM-WORK-JOB-01]
+  knowledge: [PA-SCRIPT-NA-01, PA-SCRIPT-AU-MATRA-01, PA-SCRIPT-KA-01, PA-SCRIPT-RA-01, PA-SCRIPT-II-MATRA-01, PA-FORM-WORK-JOB-01, PA-LEX-ANCHOR-MAUSAM]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -34,7 +34,7 @@ reviews_of: [PA-W05-au-matra, PA-W05-ka, PA-W04-ra, PA-W01-ii-matra]
 # ਨੌਕਰੀ — assemble the other work value
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-NA-01, PA-SCRIPT-AU-MATRA-01, PA-SCRIPT-KA-01, PA-SCRIPT-RA-01, PA-SCRIPT-II-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-NA-01, PA-SCRIPT-AU-MATRA-01, PA-SCRIPT-KA-01, PA-SCRIPT-RA-01, PA-SCRIPT-II-MATRA-01, PA-LEX-ANCHOR-MAUSAM] -->
 
 Touch the known pieces **ਨੌ**, **ਕ**, **ਰੀ** in order.
 

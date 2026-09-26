@@ -1,12 +1,13 @@
 {
   "language": "punjabi",
   "chapter": 20,
-  "sourceHash": "fnv1a64:a77e4c66070b809d",
+  "sourceHash": "fnv1a64:53d015895901fc4d",
   "lessonIds": [
     "PA-W05-ka",
     "PA-W05-work-label",
     "PA-W05-kha",
     "PA-W05-farming",
+    "PA-C20-mausam",
     "PA-W05-au-matra",
     "PA-W05-job"
   ],
@@ -14,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch20.txt",
   "json": "punjabi/narration/ch20.json",
-  "textHash": "fnv1a64:db7514e9266aeb48",
-  "jsonHash": "fnv1a64:369900f05f8ac52c",
+  "textHash": "fnv1a64:9694a52a7a60f6ed",
+  "jsonHash": "fnv1a64:901d58fcfe46065d",
   "findings": []
 }

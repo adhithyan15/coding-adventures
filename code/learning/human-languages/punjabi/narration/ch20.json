@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Build the Work Label and Values",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a77e4c66070b809d",
+  "sourceHash": "fnv1a64:53d015895901fc4d",
   "lessons": [
     {
       "id": "PA-W05-ka",
@@ -369,6 +369,111 @@
       ]
     },
     {
+      "id": "PA-C20-mausam",
+      "sequence": 1289,
+      "title": "ਮੌਸਮ (mausam) — the weather",
+      "headword": "ਮੌਸਮ",
+      "romanization": "mausam",
+      "gloss": "the weather",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:409772e59e826088",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮੌਸਮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੌਸਮ — mausam — \"the weather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: mausam. Look at its shape as you say it: the lessons that follow take pieces of it, ੌ (au-matra), and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mausam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mausam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mausam, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mausam*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"the weather\"? (ਮੌਸਮ, mausam.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "PA-W05-au-matra",
       "sequence": 1290,
       "title": "ੌ (au-matra) — one new vowel sign",
@@ -382,7 +487,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d2e5703a5282ccde",
+      "sourceHash": "fnv1a64:29afcc497a19a8e0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -472,7 +577,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:90e8142f35daa529",
+      "sourceHash": "fnv1a64:75203e4ff6117ecb",
       "notice": {
         "modality": "pen",
         "needs": [
