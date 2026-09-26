@@ -70,6 +70,8 @@
 //! | `InvalidKernelVersion`  | `kernel.version` is anything other than `"1"`         |
 //! | `InvalidSemverString`   | `package.version` or a dependency value not semver-y  |
 //! | `InvalidInitialWindowSize` | either `[app]` initial-window dimension is zero |
+//! | `InvalidDisplayName`    | `[app].display-name` is empty, too long, or has control characters |
+//! | `InvalidBundleIdentifier` | `[app].bundle-identifier` is not reverse DNS |
 //! | `InvalidStylePath`      | `[styles].token_palette` is not a safe relative JSON path |
 //! | `DuplicateHostEffectHandler` | two `[host_effects].handlers` for one backend |
 //! | `HostEffectFileWithoutHandler` | a `[host_effects].files` backend declares no handler |
@@ -127,6 +129,10 @@ pub struct StylesSection {
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct AppSection {
     pub initial_window_size: Option<WindowSize>,
+    /// The name an installed app shows under its icon (UI32, UI89).
+    pub display_name: Option<String>,
+    /// The installed app's reverse-DNS identity (UI32, UI89).
+    pub bundle_identifier: Option<String>,
 }
 
 /// A desktop window's initial logical-pixel dimensions.
@@ -296,6 +302,13 @@ pub enum ManifestError {
     /// `[app]` declared a desktop window outside the portable positive
     /// signed-32-bit range accepted by every target window API.
     InvalidInitialWindowSize { width: u32, height: u32 },
+    /// `[app].display-name` was empty, over 64 characters, or contained a
+    /// control character.
+    InvalidDisplayName(String),
+    /// `[app].bundle-identifier` was not reverse DNS: two or more
+    /// dot-separated parts of ASCII letters, digits and `-`, at most 155
+    /// characters.
+    InvalidBundleIdentifier(String),
     /// `[styles].token_palette` was not a safe, portable package-relative
     /// JSON path.
     InvalidStylePath(String),
@@ -380,6 +393,14 @@ impl std::fmt::Display for ManifestError {
             Self::InvalidInitialWindowSize { width, height } => write!(
                 f,
                 "invalid `[app]` initial window size {width}x{height} (both dimensions must be between 1 and 2147483647)"
+            ),
+            Self::InvalidDisplayName(name) => write!(
+                f,
+                "invalid `[app]` display-name {name:?} (1 to 64 characters, no control characters)"
+            ),
+            Self::InvalidBundleIdentifier(identifier) => write!(
+                f,
+                "invalid `[app]` bundle-identifier {identifier:?} (reverse DNS: two or more dot-separated parts of letters, digits and `-`)"
             ),
             Self::InvalidStylePath(path) => write!(
                 f,
@@ -474,6 +495,10 @@ struct RawApp {
     initial_window_width: Option<u32>,
     #[serde(rename = "initial-window-height")]
     initial_window_height: Option<u32>,
+    #[serde(rename = "display-name")]
+    display_name: Option<String>,
+    #[serde(rename = "bundle-identifier")]
+    bundle_identifier: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -744,9 +769,41 @@ fn validate_app(raw: Option<RawApp>) -> Result<AppSection, ManifestError> {
             });
         }
     };
+    let display_name = match raw.display_name {
+        Some(name)
+            if !name.is_empty()
+                && name.chars().count() <= 64
+                && !name.chars().any(char::is_control) =>
+        {
+            Some(name)
+        }
+        Some(name) => return Err(ManifestError::InvalidDisplayName(name)),
+        None => None,
+    };
+    let bundle_identifier = match raw.bundle_identifier {
+        Some(identifier) if is_bundle_identifier(&identifier) => Some(identifier),
+        Some(identifier) => return Err(ManifestError::InvalidBundleIdentifier(identifier)),
+        None => None,
+    };
     Ok(AppSection {
         initial_window_size,
+        display_name,
+        bundle_identifier,
     })
+}
+
+/// Reverse DNS as Apple and Android both accept it: two or more non-empty
+/// dot-separated parts of ASCII letters, digits and `-`, 155 characters at
+/// most.
+fn is_bundle_identifier(identifier: &str) -> bool {
+    identifier.len() <= 155
+        && identifier.split('.').count() >= 2
+        && identifier.split('.').all(|part| {
+            !part.is_empty()
+                && part
+                    .chars()
+                    .all(|character| character.is_ascii_alphanumeric() || character == '-')
+        })
 }
 
 fn validate_styles(raw: Option<RawStyles>) -> Result<StylesSection, ManifestError> {
@@ -1097,6 +1154,45 @@ version = "1"
         assert!(pkg.app.initial_window_size.is_none());
         assert!(pkg.host_assets.files.is_empty());
         assert_eq!(pkg.kernel.version, "1");
+    }
+
+    fn app_manifest(app: &str) -> String {
+        format!(
+            "[package]\nname = \"task-app\"\nversion = \"0.1.0\"\ndescription = \"d\"\nlicense = \"MIT\"\n[components]\nexports = [\"TaskApp\"]\n[app]\n{app}\n[kernel]\nversion = \"1\"\n"
+        )
+    }
+
+    #[test]
+    fn parses_optional_app_identity() {
+        let pkg = parse(&app_manifest(
+            "display-name = \"Trestle\"\nbundle-identifier = \"dev.codingadventures.trestle\"",
+        ))
+        .expect("manifest valid");
+        assert_eq!(pkg.app.display_name.as_deref(), Some("Trestle"));
+        assert_eq!(
+            pkg.app.bundle_identifier.as_deref(),
+            Some("dev.codingadventures.trestle")
+        );
+        let bare = parse(&app_manifest("")).expect("manifest valid");
+        assert_eq!(bare.app.display_name, None);
+        assert_eq!(bare.app.bundle_identifier, None);
+    }
+
+    #[test]
+    fn app_identity_is_validated() {
+        for name in ["\"\"", "\"two\\nlines\"", &format!("\"{}\"", "x".repeat(65))] {
+            assert!(matches!(
+                parse(&app_manifest(&format!("display-name = {name}"))),
+                Err(ManifestError::InvalidDisplayName(_))
+            ));
+        }
+        for identifier in ["trestle", "dev..trestle", "dev.trestle app", "dev.trestle/x", ".dev.trestle"] {
+            assert!(matches!(
+                parse(&app_manifest(&format!("bundle-identifier = \"{identifier}\""))),
+                Err(ManifestError::InvalidBundleIdentifier(_))
+            ), "{identifier}");
+        }
+        assert!(parse(&app_manifest("bundle-identifier = \"com.example.my-app2\"")).is_ok());
     }
 
     #[test]

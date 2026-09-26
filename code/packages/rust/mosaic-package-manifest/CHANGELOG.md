@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Added — app identity in `[app]` (UI32, UI89 §2.2)
+
+`display-name` (1 to 64 characters, no control characters) and
+`bundle-identifier` (reverse DNS: two or more dot-separated parts of letters,
+digits and `-`, at most 155 characters), both optional, for installed apps.
+New errors `InvalidDisplayName` and `InvalidBundleIdentifier`.
+
 ### Added — a handler may claim the effect kinds it answers (UI87 §7.2)
 
 `[host_effects].handlers` entries take an optional `kinds` list

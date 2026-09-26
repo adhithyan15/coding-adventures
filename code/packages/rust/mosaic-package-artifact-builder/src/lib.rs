@@ -2847,11 +2847,131 @@ fn build_package_inner(
         artifacts.push(target);
     }
 
+    // An .xcframework runtime means iOS / iPadOS: add the app target Xcode
+    // needs to produce an .app (UI89 §2.2). Last, so the project lists every
+    // source the installers above added, the way SwiftPM compiles whatever is
+    // under Sources/App.
+    if opts.emit_project && matches!(opts.backend, Backend::SwiftUI) {
+        if let (Some(root_component), true) = (
+            components_built.first(),
+            runtime_library.is_some_and(is_xcframework),
+        ) {
+            artifacts.extend(write_ios_app_project(&manifest, &backend_dir, root_component)?);
+        }
+    }
+
     Ok(BuildResult {
         artifacts,
         components_built,
         replaced_generated_files,
     })
+}
+
+/// Write `iOS/App.xcodeproj/project.pbxproj` for a SwiftUI package built with a
+/// static runtime, plus the module map that lets Swift import the C loader in
+/// both the Xcode project and the Swift package (UI89 §2.2).
+fn write_ios_app_project(
+    manifest: &MosaicPackage,
+    backend_dir: &Path,
+    root_component: &str,
+) -> Result<Vec<PathBuf>, BuildError> {
+    const LOADER_INCLUDE: &str = "Sources/CMosaicRuntime/include";
+    let mut written = Vec::new();
+
+    let module_map = backend_dir.join(LOADER_INCLUDE).join("module.modulemap");
+    write_file(
+        &module_map,
+        mosaic_ios_project::module_map("CMosaicRuntime", "CMosaicRuntime.h").as_bytes(),
+    )?;
+    written.push(module_map);
+
+    let app = mosaic_ios_project::IosApp {
+        product_name: "App".to_string(),
+        display_name: manifest
+            .app
+            .display_name
+            .clone()
+            .unwrap_or_else(|| root_component.to_string()),
+        bundle_identifier: manifest.app.bundle_identifier.clone().unwrap_or_else(|| {
+            mosaic_ios_project::default_bundle_identifier(&manifest.package.name)
+        }),
+        // Apple's marketing version is dot-separated integers; a pre-release
+        // suffix (`1.2.3-rc.4`) stays in the package, not the app.
+        marketing_version: manifest
+            .package
+            .version
+            .split(['-', '+'])
+            .next()
+            .unwrap_or("0.1.0")
+            .to_string(),
+        deployment_target: "16.0".to_string(),
+        swift_sources: project_files(backend_dir, "Sources/App", "swift")?,
+        c_sources: project_files(backend_dir, "Sources/CMosaicRuntime", "c")?,
+        headers: project_files(backend_dir, "Sources/CMosaicRuntime", "h")?,
+        header_search_paths: vec![LOADER_INCLUDE.to_string()],
+        swift_include_paths: vec![LOADER_INCLUDE.to_string()],
+        preprocessor_definitions: vec!["MOSAIC_RUNTIME_STATIC=1".to_string()],
+        xcframeworks: vec![mosaic_app_bindings::SWIFT_STATIC_RUNTIME_PATH.to_string()],
+        // The project lives in iOS/, so `xcodebuild` in the package directory
+        // still builds the Swift package rather than picking this project up.
+        source_root: "..".to_string(),
+    };
+    let project = mosaic_ios_project::project_pbxproj(&app)
+        .map_err(|error| BuildError::Io(format!("iOS app project: {error}")))?;
+    let project_path = backend_dir.join("iOS/App.xcodeproj/project.pbxproj");
+    if let Some(parent) = project_path.parent() {
+        create_dir_all(parent)?;
+    }
+    write_file(&project_path, project.as_bytes())?;
+    written.push(project_path);
+    Ok(written)
+}
+
+/// Every `.{extension}` file under `backend_dir/relative`, as sorted
+/// `/`-separated paths relative to `backend_dir`. Symbolic links are refused:
+/// the project compiles what it lists, and a link could name a file outside
+/// the package.
+fn project_files(
+    backend_dir: &Path,
+    relative: &str,
+    extension: &str,
+) -> Result<Vec<String>, BuildError> {
+    let mut found = Vec::new();
+    let mut pending = vec![backend_dir.join(relative)];
+    while let Some(directory) = pending.pop() {
+        if !directory.exists() {
+            continue;
+        }
+        for entry in std::fs::read_dir(&directory)
+            .map_err(|error| BuildError::Io(format!("{}: {error}", directory.display())))?
+        {
+            let path = entry
+                .map_err(|error| BuildError::Io(format!("{}: {error}", directory.display())))?
+                .path();
+            let metadata = std::fs::symlink_metadata(&path)
+                .map_err(|error| BuildError::Io(format!("{}: {error}", path.display())))?;
+            if metadata.file_type().is_symlink() {
+                return Err(BuildError::Io(format!(
+                    "{} is a symbolic link; the iOS app project lists only real files",
+                    path.display()
+                )));
+            }
+            if metadata.is_dir() {
+                pending.push(path);
+            } else if path.extension().is_some_and(|found| found == extension) {
+                let relative = path
+                    .strip_prefix(backend_dir)
+                    .map_err(|_| BuildError::Io(format!("{} left the project", path.display())))?;
+                let parts: Vec<String> = relative
+                    .components()
+                    .map(|part| part.as_os_str().to_string_lossy().into_owned())
+                    .collect();
+                found.push(parts.join("/"));
+            }
+        }
+    }
+    found.sort();
+    Ok(found)
 }
 
 /// Copy a package's `[host_effects]` files into the emitted project.
@@ -10578,6 +10698,95 @@ layout NativeEvents {
         assert!(!app.contains("Bundle.module"), "a linked runtime has no bundled path");
         let readme = fs::read_to_string(out.path().join("swiftui/README.md")).unwrap();
         assert!(readme.contains("Runtime/MosaicAppRuntime.xcframework"));
+    }
+
+    /// UI89 §2.2: the same build also writes the Xcode app target, listing
+    /// every generated source, with the package's identity.
+    #[test]
+    fn swiftui_with_an_xcframework_writes_an_ios_app_project() {
+        let pkg = card_package();
+        let framework = fake_xcframework(pkg.path());
+        let out = TempDir::new().unwrap();
+        let result = build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+        )
+        .expect("SwiftUI shell with a static runtime");
+
+        let project_path = out.path().join("swiftui/iOS/App.xcodeproj/project.pbxproj");
+        assert!(result.artifacts.contains(&project_path));
+        let project = fs::read_to_string(&project_path).unwrap();
+        for source in [
+            "Sources/App/App.swift",
+            "Sources/App/Card.swift",
+            "Sources/App/MosaicRuntimeHost.swift",
+            "Sources/CMosaicRuntime/CMosaicRuntime.c",
+            "Sources/CMosaicRuntime/include/CMosaicRuntime.h",
+            "Runtime/MosaicAppRuntime.xcframework",
+        ] {
+            assert!(project.contains(&format!("path = \"{source}\";")), "{source} missing");
+        }
+        // Defaults: the root component names the app, the package names its
+        // identity.
+        assert!(project.contains("INFOPLIST_KEY_CFBundleDisplayName = \"Card\";"));
+        assert!(project.contains("PRODUCT_BUNDLE_IDENTIFIER = \"dev.codingadventures.mosaicpkgcard\";"));
+        let module_map = fs::read_to_string(
+            out.path().join("swiftui/Sources/CMosaicRuntime/include/module.modulemap"),
+        )
+        .unwrap();
+        assert!(module_map.contains("module CMosaicRuntime"));
+    }
+
+    #[test]
+    fn the_ios_app_project_takes_identity_from_the_manifest() {
+        let pkg = card_package();
+        let manifest = pkg.path().join("mosaic-package.toml");
+        let mut text = fs::read_to_string(&manifest).unwrap();
+        text.push_str("\n[app]\ndisplay-name = \"Card Studio\"\nbundle-identifier = \"com.example.cards\"\n");
+        fs::write(&manifest, text).unwrap();
+        let framework = fake_xcframework(pkg.path());
+        let out = TempDir::new().unwrap();
+        build_package_with_profile_and_runtime(
+            &swiftui_options(&pkg, &out, Backend::SwiftUI),
+            BuildProfile::NativeComplete,
+            Some(&framework),
+        )
+        .expect("SwiftUI shell with a static runtime");
+        let project =
+            fs::read_to_string(out.path().join("swiftui/iOS/App.xcodeproj/project.pbxproj")).unwrap();
+        assert!(project.contains("INFOPLIST_KEY_CFBundleDisplayName = \"Card Studio\";"));
+        assert!(project.contains("PRODUCT_BUNDLE_IDENTIFIER = \"com.example.cards\";"));
+    }
+
+    #[test]
+    fn no_ios_app_project_without_a_static_runtime() {
+        let pkg = card_package();
+        let out = TempDir::new().unwrap();
+        build_package(&swiftui_options(&pkg, &out, Backend::SwiftUI)).expect("SwiftUI shell");
+        assert!(!out.path().join("swiftui/iOS").exists());
+        assert!(!out
+            .path()
+            .join("swiftui/Sources/CMosaicRuntime/include/module.modulemap")
+            .exists());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn project_files_refuses_symbolic_links() {
+        let dir = TempDir::new().unwrap();
+        fs::create_dir_all(dir.path().join("Sources/App")).unwrap();
+        fs::write(dir.path().join("Sources/App/A.swift"), "").unwrap();
+        fs::write(dir.path().join("Sources/App/notes.txt"), "").unwrap();
+        fs::create_dir_all(dir.path().join("Sources/App/Nested")).unwrap();
+        fs::write(dir.path().join("Sources/App/Nested/B.swift"), "").unwrap();
+        assert_eq!(
+            project_files(dir.path(), "Sources/App", "swift").unwrap(),
+            vec!["Sources/App/A.swift", "Sources/App/Nested/B.swift"]
+        );
+        std::os::unix::fs::symlink("/etc/hosts", dir.path().join("Sources/App/Evil.swift")).unwrap();
+        assert!(project_files(dir.path(), "Sources/App", "swift").is_err());
+        assert!(project_files(dir.path(), "Sources/Missing", "swift").unwrap().is_empty());
     }
 
     #[test]

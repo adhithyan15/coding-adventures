@@ -59,11 +59,43 @@ calls it directly under `MOSAIC_RUNTIME_STATIC` (a runtime reached only by
 
 An iOS app needs an Xcode project; SwiftPM cannot produce an `.app`. The
 emitter writes `project.pbxproj` itself (an ASCII property list) with one app
-target: the generated Swift sources, the xcframework, an `Info.plist`, an
-asset catalog with the app icon, and `@main` using the SwiftUI `App`
-lifecycle. No XcodeGen or Tuist dependency. iPad is the same target
-(`TARGETED_DEVICE_FAMILY = "1,2"`); iPadOS multitasking and
-`NavigationSplitView` come from SwiftUI.
+target, and `@main` using the SwiftUI `App` lifecycle. No XcodeGen or Tuist
+dependency. This is shared Mosaic infrastructure: every package that is built
+with a static runtime gets the same project, so Trestle, Journal, Engram and
+Venture scale from one generator rather than four hand-made projects.
+
+- **Where:** the generator is its own crate, `mosaic-ios-project` (a pure
+  function from a small description to project text, unit-tested without
+  Xcode). The artifact builder calls it for the SwiftUI backend whenever
+  `--runtime-library` is an `.xcframework`, and writes
+  `swiftui/iOS/App.xcodeproj/project.pbxproj` beside the Swift package, which
+  still builds as before. The project sits in `iOS/`, not beside `Package.swift`: `xcodebuild` in a
+  directory holding an `.xcodeproj` builds that project, so the Swift
+  package's own `xcodebuild -scheme App` builds would silently start building
+  the app instead. Its `projectDirPath` is `..`, so its paths are the
+  package's.
+- **What the target compiles:** the same generated files the Swift package
+  compiles: `Sources/App/*.swift`, and the C loader
+  `Sources/CMosaicRuntime/CMosaicRuntime.c` with `MOSAIC_RUNTIME_STATIC`. It
+  links `Runtime/MosaicAppRuntime.xcframework`; Xcode picks the device or
+  simulator slice. Swift imports the loader through a module map,
+  `Sources/CMosaicRuntime/include/module.modulemap`, which SwiftPM also
+  honours, so both builds see one module.
+- **Info.plist from build settings** (`GENERATE_INFOPLIST_FILE`), the way
+  current Xcode templates do: the display name, a generated launch screen,
+  the scene manifest (multiple scenes, so iPadOS can open several windows),
+  and every orientation. Nothing to keep in sync by hand.
+- **One target for iPhone and iPad:** `TARGETED_DEVICE_FAMILY = "1,2"`.
+  iPadOS multitasking and `NavigationSplitView` come from SwiftUI.
+- **Identity:** the bundle identifier defaults to
+  `dev.codingadventures.<package name>` (letters and digits only), and the
+  version comes from the package manifest. Signing is left to Xcode's
+  automatic style (§6: distribution is out of scope); CI builds with
+  `CODE_SIGNING_ALLOWED=NO` and the simulator runs unsigned builds.
+- **Deterministic:** object identifiers are hashes of each object's role and
+  path, so regenerating produces an identical file.
+- **Not yet:** an app icon. The asset catalog arrives with package-level icon
+  metadata; until then the system shows its default icon.
 
 ### 2.3 Platform behaviour
 
@@ -116,8 +148,8 @@ lanes are green, as their own PRs.
 1. **iOS runtime:** `staticlib` + xcframework in the artifact builder;
    `CMosaicRuntime` resolves from the process. Gate: TaskApp's iOS compile
    now links a real runtime.
-2. **iOS app target:** generated `project.pbxproj`; Trestle builds and
-   launches on the simulator in CI.
+2. **iOS app target:** generated `project.pbxproj` for every package with a
+   static runtime; TaskApp builds and launches on the simulator in CI.
 3. **iOS behaviour:** sandbox state path, restore test, iPad size classes.
 4. **Android project:** `--target android` Gradle project and the desktop-only
    seam; Trestle builds an APK.
