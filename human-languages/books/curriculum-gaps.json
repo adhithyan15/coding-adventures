@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 14037,
+    "totalLessons": 14235,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -23,7 +23,7 @@
     "mixedSchemaTracks": 0,
     "version2SchemaTracks": 23,
     "lessonsWithoutLevel": 0,
-    "rampOverBudgetLessons": 14,
+    "rampOverBudgetLessons": 13,
     "scriptRampOverBudgetLessons": 32,
     "lessonsOpeningMultipleScripts": 0,
     "scriptClosureViolations": 267,
@@ -32,7 +32,7 @@
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 301,
+    "atomsNeverRevisited": 300,
     "forwardReferences": 921,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 94,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 12283,
+    "drivableLessons": 12481,
     "drivablePercent": 88,
     "chaptersWithoutDrivablePrefix": 274,
     "unexplainedModalityOverrides": 0
@@ -4681,7 +4681,45 @@
           117,
           118,
           119,
-          120
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          154,
+          155,
+          156,
+          157,
+          158
         ],
         "bookChapters": [
           1,
@@ -4803,7 +4841,45 @@
           117,
           118,
           119,
-          120
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          154,
+          155,
+          156,
+          157,
+          158
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -6844,9 +6920,9 @@
       {
         "language": "marathi",
         "status": "version-2",
-        "lessonCount": 652,
+        "lessonCount": 850,
         "versions": {
-          "2": 652
+          "2": 850
         }
       },
       {
@@ -7691,8 +7767,8 @@
       },
       {
         "language": "marathi",
-        "bookChapters": 120,
-        "declaredChapters": 120,
+        "bookChapters": 158,
+        "declaredChapters": 158,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -7779,8 +7855,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 2898,
-      "declaredChapters": 2898,
+      "bookChapters": 2936,
+      "declaredChapters": 2936,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -7792,10 +7868,10 @@
     }
   },
   "levels": {
-    "totalLessons": 14037,
+    "totalLessons": 14235,
     "byLevel": {
       "pre-A1": 8747,
-      "A1": 4264,
+      "A1": 4462,
       "A2": 942,
       "B1": 39,
       "B2": 17,
@@ -7987,10 +8063,10 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 652,
+        "lessonCount": 850,
         "byLevel": {
           "pre-A1": 434,
-          "A1": 191,
+          "A1": 389,
           "A2": 27,
           "B1": 0,
           "B2": 0,
@@ -8218,13 +8294,6 @@
         "lessonId": "ML-W108-the-rest",
         "language": "malayalam",
         "chapter": 108,
-        "atoms": 4,
-        "budget": 3
-      },
-      {
-        "lessonId": "MR-C06-numbers-1-5",
-        "language": "marathi",
-        "chapter": 13,
         "atoms": 4,
         "budget": 3
       },
@@ -8792,10 +8861,10 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 652,
-        "measurable": 649,
+        "lessonCount": 850,
+        "measurable": 847,
         "unmeasurable": 3,
-        "lessonViolations": 1,
+        "lessonViolations": 0,
         "chapterViolations": 1
       },
       {
@@ -9364,7 +9433,7 @@
           "language": "marathi",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 652,
+          "lessonCount": 850,
           "totalGlyphs": 56,
           "lessonViolations": 2,
           "systemViolations": 0,
@@ -9490,7 +9559,7 @@
       }
     },
     "summary": {
-      "lessonViolations": 14,
+      "lessonViolations": 13,
       "chapterViolations": 62,
       "unmeasurableLessons": 102,
       "measurablePercent": 99,
@@ -14483,7 +14552,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "MW-SKILL-CONNECTED-READING",
@@ -47688,7 +47757,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "MR-GRAMMAR-DEM-PRENOMINAL",
@@ -47712,7 +47781,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "MR-GRAMMAR-INFINITIVE-NE",
@@ -47736,7 +47805,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "MR-GRAMMAR-NOUN-PLUS-KARNE",
@@ -47748,7 +47817,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "MR-GRAMMAR-PLURAL-RESPECT-AGREEMENT",
@@ -48097,6 +48166,474 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C105-ADJ105-03",
+        "language": "marathi",
+        "introducedBy": "MR-C105-shrimant",
+        "introducedAt": 572,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C105-ADJ105-04",
+        "language": "marathi",
+        "introducedBy": "MR-C105-garib",
+        "introducedAt": 573,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C105-ADJ105-05",
+        "language": "marathi",
+        "introducedBy": "MR-C105-ghan",
+        "introducedAt": 574,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C106-ADJ106-01",
+        "language": "marathi",
+        "introducedBy": "MR-C106-svachchha",
+        "introducedAt": 575,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C106-ADJ106-02",
+        "language": "marathi",
+        "introducedBy": "MR-C106-god",
+        "introducedAt": 576,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C106-ADJ106-03",
+        "language": "marathi",
+        "introducedBy": "MR-C106-jad",
+        "introducedAt": 577,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C106-ADJ106-04",
+        "language": "marathi",
+        "introducedBy": "MR-C106-barik",
+        "introducedAt": 578,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C106-ADJ106-05",
+        "language": "marathi",
+        "introducedBy": "MR-C106-halka",
+        "introducedAt": 579,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C107-ADJ107-01",
+        "language": "marathi",
+        "introducedBy": "MR-C107-khare",
+        "introducedAt": 580,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C107-ADJ107-02",
+        "language": "marathi",
+        "introducedBy": "MR-C107-hirva",
+        "introducedAt": 581,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C107-ADJ107-03",
+        "language": "marathi",
+        "introducedBy": "MR-C107-pivla",
+        "introducedAt": 582,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C107-ADJ107-04",
+        "language": "marathi",
+        "introducedBy": "MR-C107-lal",
+        "introducedAt": 583,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C107-ADJ107-05",
+        "language": "marathi",
+        "introducedBy": "MR-C107-nila",
+        "introducedAt": 584,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C108-ADJ108-01",
+        "language": "marathi",
+        "introducedBy": "MR-C108-kala",
+        "introducedAt": 585,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C108-ADJ108-02",
+        "language": "marathi",
+        "introducedBy": "MR-C108-pandhra",
+        "introducedAt": 586,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C108-ADJ108-03",
+        "language": "marathi",
+        "introducedBy": "MR-C108-tapkiri",
+        "introducedAt": 587,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C108-ADJ108-04",
+        "language": "marathi",
+        "introducedBy": "MR-C108-gulabi",
+        "introducedAt": 588,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C108-ADJ108-05",
+        "language": "marathi",
+        "introducedBy": "MR-C108-tarun",
+        "introducedAt": 589,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C117-CLOTHES117-03",
+        "language": "marathi",
+        "introducedBy": "MR-C117-but",
+        "introducedAt": 632,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C117-CLOTHES117-04",
+        "language": "marathi",
+        "introducedBy": "MR-C117-chappal",
+        "introducedAt": 633,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C117-CLOTHES117-05",
+        "language": "marathi",
+        "introducedBy": "MR-C117-tis",
+        "introducedAt": 634,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C118-NUMBERS118-01",
+        "language": "marathi",
+        "introducedBy": "MR-C118-chalis",
+        "introducedAt": 635,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C120-WORLD120-03",
+        "language": "marathi",
+        "introducedBy": "MR-C120-batmi",
+        "introducedAt": 647,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C120-WORLD120-04",
+        "language": "marathi",
+        "introducedBy": "MR-C120-desh",
+        "introducedAt": 648,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MR-LEX-C120-WORLD120-05",
+        "language": "marathi",
+        "introducedBy": "MR-C120-gosta",
+        "introducedAt": 649,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MR-LEX-C127-TIME127-03",
+        "language": "marathi",
+        "introducedBy": "MR-C127-saral",
+        "introducedAt": 684,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C127-TIME127-04",
+        "language": "marathi",
+        "introducedBy": "MR-C127-valan",
+        "introducedAt": 685,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C127-TIME127-05",
+        "language": "marathi",
+        "introducedBy": "MR-C127-kopra",
+        "introducedAt": 686,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C128-LOC128-01",
+        "language": "marathi",
+        "introducedBy": "MR-C128-cauk",
+        "introducedAt": 687,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C130-LOC130-03",
+        "language": "marathi",
+        "introducedBy": "MR-C130-usi",
+        "introducedAt": 699,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C130-LOC130-04",
+        "language": "marathi",
+        "introducedBy": "MR-C130-cadar",
+        "introducedAt": 700,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MR-LEX-C130-LOC130-05",
+        "language": "marathi",
+        "introducedBy": "MR-C130-gadi",
+        "introducedAt": 701,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MR-LEX-C137-THINGS137-03",
+        "language": "marathi",
+        "introducedBy": "MR-C137-kakdi",
+        "introducedAt": 736,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C137-THINGS137-04",
+        "language": "marathi",
+        "introducedBy": "MR-C137-lasun",
+        "introducedAt": 737,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C137-THINGS137-05",
+        "language": "marathi",
+        "introducedBy": "MR-C137-ale",
+        "introducedAt": 738,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C138-THINGS138-01",
+        "language": "marathi",
+        "introducedBy": "MR-C138-matar",
+        "introducedAt": 739,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C140-THINGS140-03",
+        "language": "marathi",
+        "introducedBy": "MR-C140-mati",
+        "introducedAt": 751,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C140-THINGS140-04",
+        "language": "marathi",
+        "introducedBy": "MR-C140-khadak",
+        "introducedAt": 752,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "MR-LEX-C140-THINGS140-05",
+        "language": "marathi",
+        "introducedBy": "MR-C140-lat",
+        "introducedAt": 753,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "MR-LEX-C71-BODY71-02",
@@ -48648,7 +49185,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "MR-LEX-HA-HI-HE",
@@ -48732,7 +49269,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "MR-PHRASE-KRUPAYA",
@@ -48768,7 +49305,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "MR-PHRASE-PUNHA-BHETU",
@@ -48816,7 +49353,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "MR-PHRASE-TUMHI-KASE-AAHAT",
@@ -48936,7 +49473,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "MR-SKILL-READ-MESSAGE",
@@ -48948,7 +49485,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "MR-SOUND-KARNA-GEMINATION",
@@ -108698,10 +109235,1693 @@
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C105-ADJ105-03",
+        "atom": "MR-LEX-C109-ADJ109-01",
         "language": "marathi",
-        "introducedBy": "MR-C105-shrimant",
-        "introducedAt": 572,
+        "introducedBy": "MR-C109-mhatara",
+        "introducedAt": 590,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C109-ADJ109-02",
+        "language": "marathi",
+        "introducedBy": "MR-C109-athavda",
+        "introducedAt": 591,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C109-ADJ109-03",
+        "language": "marathi",
+        "introducedBy": "MR-C109-mahina",
+        "introducedAt": 592,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C109-ADJ109-04",
+        "language": "marathi",
+        "introducedBy": "MR-C109-varsa",
+        "introducedAt": 593,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C109-ADJ109-05",
+        "language": "marathi",
+        "introducedBy": "MR-C109-tas",
+        "introducedAt": 594,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C110-TIME110-01",
+        "language": "marathi",
+        "introducedBy": "MR-C110-minit",
+        "introducedAt": 595,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C110-TIME110-02",
+        "language": "marathi",
+        "introducedBy": "MR-C110-aj",
+        "introducedAt": 596,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C110-TIME110-03",
+        "language": "marathi",
+        "introducedBy": "MR-C110-ata",
+        "introducedAt": 597,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C110-TIME110-04",
+        "language": "marathi",
+        "introducedBy": "MR-C110-nehmi",
+        "introducedAt": 598,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C110-TIME110-05",
+        "language": "marathi",
+        "introducedBy": "MR-C110-kadhikadhi",
+        "introducedAt": 599,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C111-TIME111-01",
+        "language": "marathi",
+        "introducedBy": "MR-C111-lavkar",
+        "introducedAt": 600,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C111-TIME111-02",
+        "language": "marathi",
+        "introducedBy": "MR-C111-ushir",
+        "introducedAt": 601,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C111-TIME111-03",
+        "language": "marathi",
+        "introducedBy": "MR-C111-adhi",
+        "introducedAt": 602,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C111-TIME111-04",
+        "language": "marathi",
+        "introducedBy": "MR-C111-nantar",
+        "introducedAt": 603,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C111-TIME111-05",
+        "language": "marathi",
+        "introducedBy": "MR-C111-vel",
+        "introducedAt": 604,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C112-PLACE112-01",
+        "language": "marathi",
+        "introducedBy": "MR-C112-dur",
+        "introducedAt": 605,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C112-PLACE112-02",
+        "language": "marathi",
+        "introducedBy": "MR-C112-at",
+        "introducedAt": 606,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C112-PLACE112-03",
+        "language": "marathi",
+        "introducedBy": "MR-C112-baher",
+        "introducedAt": 607,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C112-PLACE112-04",
+        "language": "marathi",
+        "introducedBy": "MR-C112-mage",
+        "introducedAt": 608,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C112-PLACE112-05",
+        "language": "marathi",
+        "introducedBy": "MR-C112-pudhe",
+        "introducedAt": 609,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C113-TOWN113-01",
+        "language": "marathi",
+        "introducedBy": "MR-C113-dukan",
+        "introducedAt": 610,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C113-TOWN113-02",
+        "language": "marathi",
+        "introducedBy": "MR-C113-rasta",
+        "introducedAt": 611,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C113-TOWN113-03",
+        "language": "marathi",
+        "introducedBy": "MR-C113-galli",
+        "introducedAt": 612,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C113-TOWN113-04",
+        "language": "marathi",
+        "introducedBy": "MR-C113-steshan",
+        "introducedAt": 613,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C113-TOWN113-05",
+        "language": "marathi",
+        "introducedBy": "MR-C113-gadi",
+        "introducedAt": 614,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C114-TOWN114-01",
+        "language": "marathi",
+        "introducedBy": "MR-C114-bas",
+        "introducedAt": 615,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C114-TOWN114-02",
+        "language": "marathi",
+        "introducedBy": "MR-C114-pul",
+        "introducedAt": 616,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C114-TOWN114-03",
+        "language": "marathi",
+        "introducedBy": "MR-C114-mandir",
+        "introducedAt": 617,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C114-TOWN114-04",
+        "language": "marathi",
+        "introducedBy": "MR-C114-karyalay",
+        "introducedAt": 618,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C114-TOWN114-05",
+        "language": "marathi",
+        "introducedBy": "MR-C114-polis",
+        "introducedAt": 619,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C115-TOWN115-01",
+        "language": "marathi",
+        "introducedBy": "MR-C115-hodi",
+        "introducedAt": 620,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C115-TOWN115-02",
+        "language": "marathi",
+        "introducedBy": "MR-C115-saykal",
+        "introducedAt": 621,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C115-TOWN115-03",
+        "language": "marathi",
+        "introducedBy": "MR-C115-bajar",
+        "introducedAt": 622,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C115-TOWN115-04",
+        "language": "marathi",
+        "introducedBy": "MR-C115-gav",
+        "introducedAt": 623,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C115-TOWN115-05",
+        "language": "marathi",
+        "introducedBy": "MR-C115-kapde",
+        "introducedAt": 624,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C116-CLOTHES116-01",
+        "language": "marathi",
+        "introducedBy": "MR-C116-sadra",
+        "introducedAt": 625,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C116-CLOTHES116-02",
+        "language": "marathi",
+        "introducedBy": "MR-C116-sadi",
+        "introducedAt": 626,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C116-CLOTHES116-03",
+        "language": "marathi",
+        "introducedBy": "MR-C116-moja",
+        "introducedAt": 627,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C116-CLOTHES116-04",
+        "language": "marathi",
+        "introducedBy": "MR-C116-khisa",
+        "introducedAt": 628,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C116-CLOTHES116-05",
+        "language": "marathi",
+        "introducedBy": "MR-C116-angthi",
+        "introducedAt": 629,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C117-CLOTHES117-01",
+        "language": "marathi",
+        "introducedBy": "MR-C117-ghadyal",
+        "introducedAt": 630,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C117-CLOTHES117-02",
+        "language": "marathi",
+        "introducedBy": "MR-C117-topi",
+        "introducedAt": 631,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C118-NUMBERS118-02",
+        "language": "marathi",
+        "introducedBy": "MR-C118-pannas",
+        "introducedAt": 636,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C118-NUMBERS118-03",
+        "language": "marathi",
+        "introducedBy": "MR-C118-sath",
+        "introducedAt": 637,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C118-NUMBERS118-04",
+        "language": "marathi",
+        "introducedBy": "MR-C118-sattar",
+        "introducedAt": 638,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C118-NUMBERS118-05",
+        "language": "marathi",
+        "introducedBy": "MR-C118-navvad",
+        "introducedAt": 639,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C119-NUMBERS119-01",
+        "language": "marathi",
+        "introducedBy": "MR-C119-shambhar",
+        "introducedAt": 640,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C119-NUMBERS119-02",
+        "language": "marathi",
+        "introducedBy": "MR-C119-hajar",
+        "introducedAt": 641,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C119-NUMBERS119-03",
+        "language": "marathi",
+        "introducedBy": "MR-C119-jag",
+        "introducedAt": 642,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C119-NUMBERS119-04",
+        "language": "marathi",
+        "introducedBy": "MR-C119-rang",
+        "introducedAt": 643,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C119-NUMBERS119-05",
+        "language": "marathi",
+        "introducedBy": "MR-C119-pravas",
+        "introducedAt": 644,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C120-WORLD120-01",
+        "language": "marathi",
+        "introducedBy": "MR-C120-sutti",
+        "introducedAt": 645,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C120-WORLD120-02",
+        "language": "marathi",
+        "introducedBy": "MR-C120-sangit",
+        "introducedAt": 646,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C121-CAN121-01",
+        "language": "marathi",
+        "introducedBy": "MR-C121-sakne",
+        "introducedAt": 652,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C121-CAN121-02",
+        "language": "marathi",
+        "introducedBy": "MR-C121-jamne",
+        "introducedAt": 653,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C121-CAN121-03",
+        "language": "marathi",
+        "introducedBy": "MR-C121-kausalya",
+        "introducedAt": 654,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C121-CAN121-04",
+        "language": "marathi",
+        "introducedBy": "MR-C121-ksamata",
+        "introducedAt": 655,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C121-CAN121-05",
+        "language": "marathi",
+        "introducedBy": "MR-C121-adhikar",
+        "introducedAt": 656,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C122-CAN122-01",
+        "language": "marathi",
+        "introducedBy": "MR-C122-sadhan",
+        "introducedAt": 657,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C122-CAN122-02",
+        "language": "marathi",
+        "introducedBy": "MR-C122-malak",
+        "introducedAt": 658,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C122-CAN122-03",
+        "language": "marathi",
+        "introducedBy": "MR-C122-takad",
+        "introducedAt": 659,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C122-CAN122-04",
+        "language": "marathi",
+        "introducedBy": "MR-C122-hava",
+        "introducedAt": 660,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C122-CAN122-05",
+        "language": "marathi",
+        "introducedBy": "MR-C122-iccha",
+        "introducedAt": 661,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C123-WANT123-01",
+        "language": "marathi",
+        "introducedBy": "MR-C123-garaj",
+        "introducedAt": 662,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C123-WANT123-02",
+        "language": "marathi",
+        "introducedBy": "MR-C123-asa",
+        "introducedAt": 663,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C123-WANT123-03",
+        "language": "marathi",
+        "introducedBy": "MR-C123-svapna",
+        "introducedAt": 664,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C123-WANT123-04",
+        "language": "marathi",
+        "introducedBy": "MR-C123-magne",
+        "introducedAt": 665,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C123-WANT123-05",
+        "language": "marathi",
+        "introducedBy": "MR-C123-tharavne",
+        "introducedAt": 666,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C124-WANT124-01",
+        "language": "marathi",
+        "introducedBy": "MR-C124-yojana",
+        "introducedAt": 667,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C124-WANT124-02",
+        "language": "marathi",
+        "introducedBy": "MR-C124-pahat",
+        "introducedAt": 668,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C124-WANT124-03",
+        "language": "marathi",
+        "introducedBy": "MR-C124-madhyaratra",
+        "introducedAt": 669,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C124-WANT124-04",
+        "language": "marathi",
+        "introducedBy": "MR-C124-parva",
+        "introducedAt": 670,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C124-WANT124-05",
+        "language": "marathi",
+        "introducedBy": "MR-C124-somvar",
+        "introducedAt": 671,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C125-TIME125-01",
+        "language": "marathi",
+        "introducedBy": "MR-C125-mangalvar",
+        "introducedAt": 672,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C125-TIME125-02",
+        "language": "marathi",
+        "introducedBy": "MR-C125-budhvar",
+        "introducedAt": 673,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C125-TIME125-03",
+        "language": "marathi",
+        "introducedBy": "MR-C125-guruvar",
+        "introducedAt": 674,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C125-TIME125-04",
+        "language": "marathi",
+        "introducedBy": "MR-C125-sukravar",
+        "introducedAt": 675,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C125-TIME125-05",
+        "language": "marathi",
+        "introducedBy": "MR-C125-sanivar",
+        "introducedAt": 676,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C126-TIME126-01",
+        "language": "marathi",
+        "introducedBy": "MR-C126-ravivar",
+        "introducedAt": 677,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C126-TIME126-02",
+        "language": "marathi",
+        "introducedBy": "MR-C126-tarikh",
+        "introducedAt": 678,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C126-TIME126-03",
+        "language": "marathi",
+        "introducedBy": "MR-C126-sadhya",
+        "introducedAt": 679,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C126-TIME126-04",
+        "language": "marathi",
+        "introducedBy": "MR-C126-roj",
+        "introducedAt": 680,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C126-TIME126-05",
+        "language": "marathi",
+        "introducedBy": "MR-C126-unhala",
+        "introducedAt": 681,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C127-TIME127-01",
+        "language": "marathi",
+        "introducedBy": "MR-C127-hivala",
+        "introducedAt": 682,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C127-TIME127-02",
+        "language": "marathi",
+        "introducedBy": "MR-C127-pavsala",
+        "introducedAt": 683,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C128-LOC128-02",
+        "language": "marathi",
+        "introducedBy": "MR-C128-bag",
+        "introducedAt": 688,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C128-LOC128-03",
+        "language": "marathi",
+        "introducedBy": "MR-C128-udyan",
+        "introducedAt": 689,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C128-LOC128-04",
+        "language": "marathi",
+        "introducedBy": "MR-C128-vimantal",
+        "introducedAt": 690,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C128-LOC128-05",
+        "language": "marathi",
+        "introducedBy": "MR-C128-rugnalay",
+        "introducedAt": 691,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C129-LOC129-01",
+        "language": "marathi",
+        "introducedBy": "MR-C129-granthalay",
+        "introducedAt": 692,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C129-LOC129-02",
+        "language": "marathi",
+        "introducedBy": "MR-C129-upahargrh",
+        "introducedAt": 693,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C129-LOC129-03",
+        "language": "marathi",
+        "introducedBy": "MR-C129-tapal",
+        "introducedAt": 694,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C129-LOC129-04",
+        "language": "marathi",
+        "introducedBy": "MR-C129-imarat",
+        "introducedAt": 695,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C129-LOC129-05",
+        "language": "marathi",
+        "introducedBy": "MR-C129-nhanighar",
+        "introducedAt": 696,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C130-LOC130-01",
+        "language": "marathi",
+        "introducedBy": "MR-C130-angan",
+        "introducedAt": 697,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C130-LOC130-02",
+        "language": "marathi",
+        "introducedBy": "MR-C130-darvaja",
+        "introducedAt": 698,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C131-THINGS131-01",
+        "language": "marathi",
+        "introducedBy": "MR-C131-padda",
+        "introducedAt": 704,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C131-THINGS131-02",
+        "language": "marathi",
+        "introducedBy": "MR-C131-kulup",
+        "introducedAt": 705,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C131-THINGS131-03",
+        "language": "marathi",
+        "introducedBy": "MR-C131-badli",
+        "introducedAt": 706,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C131-THINGS131-04",
+        "language": "marathi",
+        "introducedBy": "MR-C131-dori",
+        "introducedAt": 707,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C131-THINGS131-05",
+        "language": "marathi",
+        "introducedBy": "MR-C131-khila",
+        "introducedAt": 708,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C132-THINGS132-01",
+        "language": "marathi",
+        "introducedBy": "MR-C132-hatoda",
+        "introducedAt": 709,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C132-THINGS132-02",
+        "language": "marathi",
+        "introducedBy": "MR-C132-katri",
+        "introducedAt": 710,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C132-THINGS132-03",
+        "language": "marathi",
+        "introducedBy": "MR-C132-sui",
+        "introducedAt": 711,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C132-THINGS132-04",
+        "language": "marathi",
+        "introducedBy": "MR-C132-dora",
+        "introducedAt": 712,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C132-THINGS132-05",
+        "language": "marathi",
+        "introducedBy": "MR-C132-kangva",
+        "introducedAt": 713,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C133-THINGS133-01",
+        "language": "marathi",
+        "introducedBy": "MR-C133-saban",
+        "introducedAt": 714,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C133-THINGS133-02",
+        "language": "marathi",
+        "introducedBy": "MR-C133-peti",
+        "introducedAt": 715,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C133-THINGS133-03",
+        "language": "marathi",
+        "introducedBy": "MR-C133-pisvi",
+        "introducedAt": 716,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C133-THINGS133-04",
+        "language": "marathi",
+        "introducedBy": "MR-C133-topli",
+        "introducedAt": 717,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C133-THINGS133-05",
+        "language": "marathi",
+        "introducedBy": "MR-C133-menbatti",
+        "introducedAt": 718,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C134-THINGS134-01",
+        "language": "marathi",
+        "introducedBy": "MR-C134-vati",
+        "introducedAt": 719,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C134-THINGS134-02",
+        "language": "marathi",
+        "introducedBy": "MR-C134-patele",
+        "introducedAt": 720,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C134-THINGS134-03",
+        "language": "marathi",
+        "introducedBy": "MR-C134-phala",
+        "introducedAt": 721,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C134-THINGS134-04",
+        "language": "marathi",
+        "introducedBy": "MR-C134-pensil",
+        "introducedAt": 722,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C134-THINGS134-05",
+        "language": "marathi",
+        "introducedBy": "MR-C134-rabar",
+        "introducedAt": 723,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C135-THINGS135-01",
+        "language": "marathi",
+        "introducedBy": "MR-C135-daptar",
+        "introducedAt": 724,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C135-THINGS135-02",
+        "language": "marathi",
+        "introducedBy": "MR-C135-pariksa",
+        "introducedAt": 725,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C135-THINGS135-03",
+        "language": "marathi",
+        "introducedBy": "MR-C135-varg",
+        "introducedAt": 726,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C135-THINGS135-04",
+        "language": "marathi",
+        "introducedBy": "MR-C135-abhyas",
+        "introducedAt": 727,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C135-THINGS135-05",
+        "language": "marathi",
+        "introducedBy": "MR-C135-sart",
+        "introducedAt": 728,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C136-THINGS136-01",
+        "language": "marathi",
+        "introducedBy": "MR-C136-kot",
+        "introducedAt": 729,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C136-THINGS136-02",
+        "language": "marathi",
+        "introducedBy": "MR-C136-svetar",
+        "introducedAt": 730,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C136-THINGS136-03",
+        "language": "marathi",
+        "introducedBy": "MR-C136-poli",
+        "introducedAt": 731,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C136-THINGS136-04",
+        "language": "marathi",
+        "introducedBy": "MR-C136-bhaji",
+        "introducedAt": 732,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C136-THINGS136-05",
+        "language": "marathi",
+        "introducedBy": "MR-C136-varan",
+        "introducedAt": 733,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C137-THINGS137-01",
+        "language": "marathi",
+        "introducedBy": "MR-C137-pohe",
+        "introducedAt": 734,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C137-THINGS137-02",
+        "language": "marathi",
+        "introducedBy": "MR-C137-ladu",
+        "introducedAt": 735,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C138-THINGS138-02",
+        "language": "marathi",
+        "introducedBy": "MR-C138-dalimb",
+        "introducedAt": 740,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C138-THINGS138-03",
+        "language": "marathi",
+        "introducedBy": "MR-C138-kalingad",
+        "introducedAt": 741,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C138-THINGS138-04",
+        "language": "marathi",
+        "introducedBy": "MR-C138-naral",
+        "introducedAt": 742,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C138-THINGS138-05",
+        "language": "marathi",
+        "introducedBy": "MR-C138-pith",
+        "introducedAt": 743,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C139-THINGS139-01",
+        "language": "marathi",
+        "introducedBy": "MR-C139-tekdi",
+        "introducedAt": 744,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C139-THINGS139-02",
+        "language": "marathi",
+        "introducedBy": "MR-C139-jhara",
+        "introducedAt": 745,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C139-THINGS139-03",
+        "language": "marathi",
+        "introducedBy": "MR-C139-dhabdhaba",
+        "introducedAt": 746,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C139-THINGS139-04",
+        "language": "marathi",
+        "introducedBy": "MR-C139-gavat",
+        "introducedAt": 747,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C139-THINGS139-05",
+        "language": "marathi",
+        "introducedBy": "MR-C139-phandi",
+        "introducedAt": 748,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C140-THINGS140-01",
+        "language": "marathi",
+        "introducedBy": "MR-C140-mul",
+        "introducedAt": 749,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C140-THINGS140-02",
+        "language": "marathi",
+        "introducedBy": "MR-C140-bi",
+        "introducedAt": 750,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C141-THINGS141-01",
+        "language": "marathi",
+        "introducedBy": "MR-C141-kinara",
+        "introducedAt": 756,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C141-THINGS141-02",
+        "language": "marathi",
+        "introducedBy": "MR-C141-bet",
+        "introducedAt": 757,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C141-THINGS141-03",
+        "language": "marathi",
+        "introducedBy": "MR-C141-vij",
+        "introducedAt": 758,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C141-THINGS141-04",
+        "language": "marathi",
+        "introducedBy": "MR-C141-vadal",
+        "introducedAt": 759,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C141-THINGS141-05",
+        "language": "marathi",
+        "introducedBy": "MR-C141-kavla",
+        "introducedAt": 760,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C142-THINGS142-01",
+        "language": "marathi",
+        "introducedBy": "MR-C142-cimni",
+        "introducedAt": 761,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C142-THINGS142-02",
+        "language": "marathi",
+        "introducedBy": "MR-C142-popat",
+        "introducedAt": 762,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C142-THINGS142-03",
+        "language": "marathi",
+        "introducedBy": "MR-C142-kabutar",
+        "introducedAt": 763,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C142-THINGS142-04",
+        "language": "marathi",
+        "introducedBy": "MR-C142-ghubad",
+        "introducedAt": 764,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C142-THINGS142-05",
+        "language": "marathi",
+        "introducedBy": "MR-C142-beduk",
+        "introducedAt": 765,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C143-THINGS143-01",
+        "language": "marathi",
+        "introducedBy": "MR-C143-kasav",
+        "introducedAt": 766,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C143-THINGS143-02",
+        "language": "marathi",
+        "introducedBy": "MR-C143-magar",
+        "introducedAt": 767,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C143-THINGS143-03",
+        "language": "marathi",
+        "introducedBy": "MR-C143-harin",
+        "introducedAt": 768,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C143-THINGS143-04",
+        "language": "marathi",
+        "introducedBy": "MR-C143-sasa",
+        "introducedAt": 769,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C146-THINGS146-03",
+        "language": "marathi",
+        "introducedBy": "MR-C146-path",
+        "introducedAt": 783,
         "missed": [
           "R2",
           "R3"
@@ -108709,10 +110929,10 @@
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C105-ADJ105-04",
+        "atom": "MR-LEX-C146-THINGS146-04",
         "language": "marathi",
-        "introducedBy": "MR-C105-garib",
-        "introducedAt": 573,
+        "introducedBy": "MR-C146-kambar",
+        "introducedAt": 784,
         "missed": [
           "R2",
           "R3"
@@ -108720,10 +110940,10 @@
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C105-ADJ105-05",
+        "atom": "MR-LEX-C146-THINGS146-05",
         "language": "marathi",
-        "introducedBy": "MR-C105-ghan",
-        "introducedAt": 574,
+        "introducedBy": "MR-C146-chati",
+        "introducedAt": 785,
         "missed": [
           "R2",
           "R3"
@@ -108731,10 +110951,10 @@
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C106-ADJ106-01",
+        "atom": "MR-LEX-C147-THINGS147-01",
         "language": "marathi",
-        "introducedBy": "MR-C106-svachchha",
-        "introducedAt": 575,
+        "introducedBy": "MR-C147-tvaca",
+        "introducedAt": 786,
         "missed": [
           "R2",
           "R3"
@@ -108742,10 +110962,10 @@
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C106-ADJ106-02",
+        "atom": "MR-LEX-C149-QUAL149-03",
         "language": "marathi",
-        "introducedBy": "MR-C106-god",
-        "introducedAt": 576,
+        "introducedBy": "MR-C149-kadu",
+        "introducedAt": 798,
         "missed": [
           "R2",
           "R3"
@@ -108753,147 +110973,26 @@
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C106-ADJ106-03",
+        "atom": "MR-LEX-C149-QUAL149-04",
         "language": "marathi",
-        "introducedBy": "MR-C106-jad",
-        "introducedAt": 577,
+        "introducedBy": "MR-C149-tikhat",
+        "introducedAt": 799,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 3
+        "revisits": 4
       },
       {
-        "atom": "MR-LEX-C106-ADJ106-04",
+        "atom": "MR-LEX-C149-QUAL149-05",
         "language": "marathi",
-        "introducedBy": "MR-C106-barik",
-        "introducedAt": 578,
+        "introducedBy": "MR-C149-taja",
+        "introducedAt": 800,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 3
-      },
-      {
-        "atom": "MR-LEX-C106-ADJ106-05",
-        "language": "marathi",
-        "introducedBy": "MR-C106-halka",
-        "introducedAt": 579,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MR-LEX-C107-ADJ107-01",
-        "language": "marathi",
-        "introducedBy": "MR-C107-khare",
-        "introducedAt": 580,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MR-LEX-C107-ADJ107-02",
-        "language": "marathi",
-        "introducedBy": "MR-C107-hirva",
-        "introducedAt": 581,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MR-LEX-C107-ADJ107-03",
-        "language": "marathi",
-        "introducedBy": "MR-C107-pivla",
-        "introducedAt": 582,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MR-LEX-C107-ADJ107-04",
-        "language": "marathi",
-        "introducedBy": "MR-C107-lal",
-        "introducedAt": 583,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MR-LEX-C107-ADJ107-05",
-        "language": "marathi",
-        "introducedBy": "MR-C107-nila",
-        "introducedAt": 584,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MR-LEX-C108-ADJ108-01",
-        "language": "marathi",
-        "introducedBy": "MR-C108-kala",
-        "introducedAt": 585,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MR-LEX-C108-ADJ108-02",
-        "language": "marathi",
-        "introducedBy": "MR-C108-pandhra",
-        "introducedAt": 586,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MR-LEX-C108-ADJ108-03",
-        "language": "marathi",
-        "introducedBy": "MR-C108-tapkiri",
-        "introducedAt": 587,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MR-LEX-C108-ADJ108-04",
-        "language": "marathi",
-        "introducedBy": "MR-C108-gulabi",
-        "introducedAt": 588,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MR-LEX-C108-ADJ108-05",
-        "language": "marathi",
-        "introducedBy": "MR-C108-tarun",
-        "introducedAt": 589,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
+        "revisits": 4
       },
       {
         "atom": "MR-LEX-C70-BODY70-01",
@@ -110542,17 +112641,6 @@
         "missed": [
           "R1",
           "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "MR-SCRIPT-PAACH-NONNASAL",
-        "language": "marathi",
-        "introducedBy": "MR-C06-numbers-1-5",
-        "introducedAt": 112,
-        "missed": [
-          "R3",
-          "R4"
         ],
         "revisits": 2
       },
@@ -157489,460 +159577,550 @@
         "revisits": 4
       },
       {
-        "atom": "MR-LEX-C109-ADJ109-01",
+        "atom": "MR-LEX-C143-THINGS143-05",
         "language": "marathi",
-        "introducedBy": "MR-C109-mhatara",
-        "introducedAt": 590,
+        "introducedBy": "MR-C143-landga",
+        "introducedAt": 770,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C109-ADJ109-02",
+        "atom": "MR-LEX-C144-THINGS144-01",
         "language": "marathi",
-        "introducedBy": "MR-C109-athavda",
-        "introducedAt": 591,
+        "introducedBy": "MR-C144-kolha",
+        "introducedAt": 771,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C109-ADJ109-03",
+        "atom": "MR-LEX-C144-THINGS144-02",
         "language": "marathi",
-        "introducedBy": "MR-C109-mahina",
-        "introducedAt": 592,
+        "introducedBy": "MR-C144-gadhav",
+        "introducedAt": 772,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C109-ADJ109-04",
+        "atom": "MR-LEX-C144-THINGS144-03",
         "language": "marathi",
-        "introducedBy": "MR-C109-varsa",
-        "introducedAt": 593,
+        "introducedBy": "MR-C144-bail",
+        "introducedAt": 773,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C109-ADJ109-05",
+        "atom": "MR-LEX-C144-THINGS144-04",
         "language": "marathi",
-        "introducedBy": "MR-C109-tas",
-        "introducedAt": 594,
+        "introducedBy": "MR-C144-das",
+        "introducedAt": 774,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C110-TIME110-01",
+        "atom": "MR-LEX-C144-THINGS144-05",
         "language": "marathi",
-        "introducedBy": "MR-C110-minit",
-        "introducedAt": 595,
+        "introducedBy": "MR-C144-kapal",
+        "introducedAt": 775,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C110-TIME110-02",
+        "atom": "MR-LEX-C145-THINGS145-01",
         "language": "marathi",
-        "introducedBy": "MR-C110-aj",
-        "introducedAt": 596,
+        "introducedBy": "MR-C145-gal",
+        "introducedAt": 776,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C110-TIME110-03",
+        "atom": "MR-LEX-C145-THINGS145-02",
         "language": "marathi",
-        "introducedBy": "MR-C110-ata",
-        "introducedAt": 597,
+        "introducedBy": "MR-C145-jibh",
+        "introducedAt": 777,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C110-TIME110-04",
+        "atom": "MR-LEX-C145-THINGS145-03",
         "language": "marathi",
-        "introducedBy": "MR-C110-nehmi",
-        "introducedAt": 598,
+        "introducedBy": "MR-C145-hanuvati",
+        "introducedAt": 778,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C110-TIME110-05",
+        "atom": "MR-LEX-C145-THINGS145-04",
         "language": "marathi",
-        "introducedBy": "MR-C110-kadhikadhi",
-        "introducedAt": 599,
+        "introducedBy": "MR-C145-kopar",
+        "introducedAt": 779,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C111-TIME111-01",
+        "atom": "MR-LEX-C145-THINGS145-05",
         "language": "marathi",
-        "introducedBy": "MR-C111-lavkar",
-        "introducedAt": 600,
+        "introducedBy": "MR-C145-managat",
+        "introducedAt": 780,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C111-TIME111-02",
+        "atom": "MR-LEX-C146-THINGS146-01",
         "language": "marathi",
-        "introducedBy": "MR-C111-ushir",
-        "introducedAt": 601,
+        "introducedBy": "MR-C146-angtha",
+        "introducedAt": 781,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C111-TIME111-03",
+        "atom": "MR-LEX-C146-THINGS146-02",
         "language": "marathi",
-        "introducedBy": "MR-C111-adhi",
-        "introducedAt": 602,
+        "introducedBy": "MR-C146-nakh",
+        "introducedAt": 782,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C111-TIME111-04",
+        "atom": "MR-LEX-C147-THINGS147-02",
         "language": "marathi",
-        "introducedBy": "MR-C111-nantar",
-        "introducedAt": 603,
+        "introducedBy": "MR-C147-had",
+        "introducedAt": 787,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C147-THINGS147-03",
+        "language": "marathi",
+        "introducedBy": "MR-C147-rund",
+        "introducedAt": 788,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C147-THINGS147-04",
+        "language": "marathi",
+        "introducedBy": "MR-C147-arund",
+        "introducedAt": 789,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C147-THINGS147-05",
+        "language": "marathi",
+        "introducedBy": "MR-C147-patal",
+        "introducedAt": 790,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C148-QUAL148-01",
+        "language": "marathi",
+        "introducedBy": "MR-C148-jad",
+        "introducedAt": 791,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C148-QUAL148-02",
+        "language": "marathi",
+        "introducedBy": "MR-C148-mau",
+        "introducedAt": 792,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C148-QUAL148-03",
+        "language": "marathi",
+        "introducedBy": "MR-C148-kadak",
+        "introducedAt": 793,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C148-QUAL148-04",
+        "language": "marathi",
+        "introducedBy": "MR-C148-komat",
+        "introducedAt": 794,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C148-QUAL148-05",
+        "language": "marathi",
+        "introducedBy": "MR-C148-suka",
+        "introducedAt": 795,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C149-QUAL149-01",
+        "language": "marathi",
+        "introducedBy": "MR-C149-kharat",
+        "introducedAt": 796,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C149-QUAL149-02",
+        "language": "marathi",
+        "introducedBy": "MR-C149-ambat",
+        "introducedAt": 797,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "MR-LEX-C150-QUAL150-01",
+        "language": "marathi",
+        "introducedBy": "MR-C150-sila",
+        "introducedAt": 803,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C111-TIME111-05",
+        "atom": "MR-LEX-C150-QUAL150-02",
         "language": "marathi",
-        "introducedBy": "MR-C111-vel",
-        "introducedAt": 604,
+        "introducedBy": "MR-C150-kacca",
+        "introducedAt": 804,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C112-PLACE112-01",
+        "atom": "MR-LEX-C150-QUAL150-03",
         "language": "marathi",
-        "introducedBy": "MR-C112-dur",
-        "introducedAt": 605,
+        "introducedBy": "MR-C150-sant",
+        "introducedAt": 805,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C112-PLACE112-02",
+        "atom": "MR-LEX-C150-QUAL150-04",
         "language": "marathi",
-        "introducedBy": "MR-C112-at",
-        "introducedAt": 606,
+        "introducedBy": "MR-C150-alsi",
+        "introducedAt": 806,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C112-PLACE112-03",
+        "atom": "MR-LEX-C150-QUAL150-05",
         "language": "marathi",
-        "introducedBy": "MR-C112-baher",
-        "introducedAt": 607,
+        "introducedBy": "MR-C150-mehanti",
+        "introducedAt": 807,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C112-PLACE112-04",
+        "atom": "MR-LEX-C151-QUAL151-01",
         "language": "marathi",
-        "introducedBy": "MR-C112-mage",
-        "introducedAt": 608,
+        "introducedBy": "MR-C151-pramanik",
+        "introducedAt": 808,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C112-PLACE112-05",
+        "atom": "MR-LEX-C151-QUAL151-02",
         "language": "marathi",
-        "introducedBy": "MR-C112-pudhe",
-        "introducedAt": 609,
+        "introducedBy": "MR-C151-dhadsi",
+        "introducedAt": 809,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C113-TOWN113-01",
+        "atom": "MR-LEX-C151-QUAL151-03",
         "language": "marathi",
-        "introducedBy": "MR-C113-dukan",
-        "introducedAt": 610,
+        "introducedBy": "MR-C151-bhitra",
+        "introducedAt": 810,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C113-TOWN113-02",
+        "atom": "MR-LEX-C151-QUAL151-04",
         "language": "marathi",
-        "introducedBy": "MR-C113-rasta",
-        "introducedAt": 611,
+        "introducedBy": "MR-C151-murkh",
+        "introducedAt": 811,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C113-TOWN113-03",
+        "atom": "MR-LEX-C151-QUAL151-05",
         "language": "marathi",
-        "introducedBy": "MR-C113-galli",
-        "introducedAt": 612,
+        "introducedBy": "MR-C151-prasiddh",
+        "introducedAt": 812,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C113-TOWN113-04",
+        "atom": "MR-LEX-C152-QUAL152-01",
         "language": "marathi",
-        "introducedBy": "MR-C113-steshan",
-        "introducedAt": 613,
+        "introducedBy": "MR-C152-suraksit",
+        "introducedAt": 813,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C113-TOWN113-05",
+        "atom": "MR-LEX-C152-QUAL152-02",
         "language": "marathi",
-        "introducedBy": "MR-C113-gadi",
-        "introducedAt": 614,
+        "introducedBy": "MR-C152-dhokadayak",
+        "introducedAt": 814,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C114-TOWN114-01",
+        "atom": "MR-LEX-C152-QUAL152-03",
         "language": "marathi",
-        "introducedBy": "MR-C114-bas",
-        "introducedAt": 615,
+        "introducedBy": "MR-C152-khote",
+        "introducedAt": 815,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C114-TOWN114-02",
+        "atom": "MR-LEX-C152-QUAL152-04",
         "language": "marathi",
-        "introducedBy": "MR-C114-pul",
-        "introducedAt": 616,
+        "introducedBy": "MR-C152-jambhala",
+        "introducedAt": 816,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C114-TOWN114-03",
+        "atom": "MR-LEX-C152-QUAL152-05",
         "language": "marathi",
-        "introducedBy": "MR-C114-mandir",
-        "introducedAt": 617,
+        "introducedBy": "MR-C152-naringi",
+        "introducedAt": 817,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C114-TOWN114-04",
+        "atom": "MR-LEX-C153-QUAL153-01",
         "language": "marathi",
-        "introducedBy": "MR-C114-karyalay",
-        "introducedAt": 618,
+        "introducedBy": "MR-C153-karda",
+        "introducedAt": 818,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C114-TOWN114-05",
+        "atom": "MR-LEX-C153-QUAL153-02",
         "language": "marathi",
-        "introducedBy": "MR-C114-polis",
-        "introducedAt": 619,
+        "introducedBy": "MR-C153-soneri",
+        "introducedAt": 819,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C115-TOWN115-01",
+        "atom": "MR-LEX-C153-QUAL153-03",
         "language": "marathi",
-        "introducedBy": "MR-C115-hodi",
-        "introducedAt": 620,
+        "introducedBy": "MR-C153-cadhne",
+        "introducedAt": 820,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C115-TOWN115-02",
+        "atom": "MR-LEX-C153-QUAL153-04",
         "language": "marathi",
-        "introducedBy": "MR-C115-saykal",
-        "introducedAt": 621,
+        "introducedBy": "MR-C153-utarne",
+        "introducedAt": 821,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C115-TOWN115-03",
+        "atom": "MR-LEX-C153-QUAL153-05",
         "language": "marathi",
-        "introducedBy": "MR-C115-bajar",
-        "introducedAt": 622,
+        "introducedBy": "MR-C153-pohocne",
+        "introducedAt": 822,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C115-TOWN115-04",
+        "atom": "MR-LEX-C154-ACT154-01",
         "language": "marathi",
-        "introducedBy": "MR-C115-gav",
-        "introducedAt": 623,
+        "introducedBy": "MR-C154-paratne",
+        "introducedAt": 823,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C115-TOWN115-05",
+        "atom": "MR-LEX-C154-ACT154-02",
         "language": "marathi",
-        "introducedBy": "MR-C115-kapde",
-        "introducedAt": 624,
+        "introducedBy": "MR-C154-nighne",
+        "introducedAt": 824,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C116-CLOTHES116-01",
+        "atom": "MR-LEX-C154-ACT154-03",
         "language": "marathi",
-        "introducedBy": "MR-C116-sadra",
-        "introducedAt": 625,
+        "introducedBy": "MR-C154-palne",
+        "introducedAt": 825,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C116-CLOTHES116-02",
+        "atom": "MR-LEX-C154-ACT154-04",
         "language": "marathi",
-        "introducedBy": "MR-C116-sadi",
-        "introducedAt": 626,
+        "introducedBy": "MR-C154-todne",
+        "introducedAt": 826,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C116-CLOTHES116-03",
+        "atom": "MR-LEX-C154-ACT154-05",
         "language": "marathi",
-        "introducedBy": "MR-C116-moja",
-        "introducedAt": 627,
+        "introducedBy": "MR-C154-modne",
+        "introducedAt": 827,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C116-CLOTHES116-04",
+        "atom": "MR-LEX-C155-ACT155-01",
         "language": "marathi",
-        "introducedBy": "MR-C116-khisa",
-        "introducedAt": 628,
+        "introducedBy": "MR-C155-jodne",
+        "introducedAt": 828,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C116-CLOTHES116-05",
+        "atom": "MR-LEX-C155-ACT155-02",
         "language": "marathi",
-        "introducedBy": "MR-C116-angthi",
-        "introducedAt": 629,
+        "introducedBy": "MR-C155-bandhne",
+        "introducedAt": 829,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C117-CLOTHES117-01",
+        "atom": "MR-LEX-C155-ACT155-03",
         "language": "marathi",
-        "introducedBy": "MR-C117-ghadyal",
-        "introducedAt": 630,
+        "introducedBy": "MR-C155-sivne",
+        "introducedAt": 830,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C117-CLOTHES117-02",
+        "atom": "MR-LEX-C155-ACT155-04",
         "language": "marathi",
-        "introducedBy": "MR-C117-topi",
-        "introducedAt": 631,
+        "introducedBy": "MR-C155-rangavne",
+        "introducedAt": 831,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C117-CLOTHES117-03",
+        "atom": "MR-LEX-C155-ACT155-05",
         "language": "marathi",
-        "introducedBy": "MR-C117-but",
-        "introducedAt": 632,
+        "introducedBy": "MR-C155-kadhne",
+        "introducedAt": 832,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "MR-LEX-C117-CLOTHES117-04",
+        "atom": "MR-LEX-C156-ACT156-01",
         "language": "marathi",
-        "introducedBy": "MR-C117-chappal",
-        "introducedAt": 633,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MR-LEX-C117-CLOTHES117-05",
-        "language": "marathi",
-        "introducedBy": "MR-C117-tis",
-        "introducedAt": 634,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "MR-LEX-C118-NUMBERS118-01",
-        "language": "marathi",
-        "introducedBy": "MR-C118-chalis",
-        "introducedAt": 635,
+        "introducedBy": "MR-C156-dakhavne",
+        "introducedAt": 833,
         "missed": [
           "R2"
         ],
@@ -175732,12 +177910,12 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 652,
+        "lessonCount": 850,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 629,
-        "atomsNeverRevisited": 2,
+        "atomsTaught": 818,
+        "atomsNeverRevisited": 1,
         "forwardReferences": 10
       },
       {
@@ -175846,14 +178024,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 15302,
-      "atomsNeverRevisited": 301,
+      "atomsTaught": 15491,
+      "atomsNeverRevisited": 300,
       "neverRevisitedPercent": 2,
       "missedByWindow": {
         "R1": 1761,
-        "R2": 9487,
-        "R3": 9461,
-        "R4": 9828
+        "R2": 9633,
+        "R3": 9532,
+        "R4": 10019
       },
       "forwardReferences": 921
     }
@@ -175967,7 +178145,7 @@
       {
         "language": "marathi",
         "script": "devanagari",
-        "lessonCount": 652,
+        "lessonCount": 850,
         "scriptLessons": 102,
         "taughtGlyphs": 56,
         "shownGlyphs": 56,
@@ -196732,11 +198910,11 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 652,
-        "atomMeasurableLessons": 649,
+        "lessonCount": 850,
+        "atomMeasurableLessons": 847,
         "atomMeasurementBlindLessons": 3,
         "durationViolations": 0,
-        "atomLessonSpikes": 1,
+        "atomLessonSpikes": 0,
         "atomChapterSpikes": 1,
         "glyphLessonSpikes": 2,
         "scriptSystemSpikes": 0,
@@ -196748,14 +198926,14 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 10,
-        "atomsTaught": 629,
-        "atomsNeverRevisited": 2,
-        "reinforcementWindowMisses": 1042,
+        "atomsTaught": 818,
+        "atomsNeverRevisited": 1,
+        "reinforcementWindowMisses": 1450,
         "reinforcementMissesByWindow": {
           "R1": 34,
-          "R2": 342,
-          "R3": 317,
-          "R4": 349
+          "R2": 488,
+          "R3": 388,
+          "R4": 540
         },
         "payoffSurprises": 0,
         "writingPracticeLessons": 157,
@@ -196772,7 +198950,7 @@
           {
             "language": "marathi",
             "kind": "atom-step",
-            "count": 2,
+            "count": 1,
             "unit": "lesson/chapter spike(s)",
             "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
           },
@@ -196786,7 +198964,7 @@
           {
             "language": "marathi",
             "kind": "reinforcement",
-            "count": 1042,
+            "count": 1450,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -197919,14 +200097,14 @@
         "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
       },
       {
-        "language": "marathi",
+        "language": "bengali",
         "kind": "atom-step",
-        "count": 2,
+        "count": 1,
         "unit": "lesson/chapter spike(s)",
         "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
       },
       {
-        "language": "bengali",
+        "language": "marathi",
         "kind": "atom-step",
         "count": 1,
         "unit": "lesson/chapter spike(s)",
@@ -198094,6 +200272,13 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
+        "language": "marathi",
+        "kind": "reinforcement",
+        "count": 1450,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
         "language": "italian",
         "kind": "reinforcement",
         "count": 1429,
@@ -198139,13 +200324,6 @@
         "language": "punjabi",
         "kind": "reinforcement",
         "count": 1054,
-        "unit": "missed window(s)",
-        "detail": "add retrieval at the expanding R1-R4 intervals"
-      },
-      {
-        "language": "marathi",
-        "kind": "reinforcement",
-        "count": 1042,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -198778,31 +200956,26 @@
       {
         "language": "marathi",
         "touches": "A2",
-        "attained": "pre-A1",
-        "inProgressAt": "A1",
+        "attained": "A1",
+        "inProgressAt": "A2",
         "blockers": [
           {
             "criterion": "spine-nodes",
-            "detail": "2 of 12 A1 spine node(s) unrealized: SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO, SPINE-SAY-WHAT-I-WANT",
-            "shortfall": 2
+            "detail": "3 of 5 A2 spine node(s) unrealized: SPINE-TALK-ABOUT-PAST, SPINE-TALK-ABOUT-FUTURE, SPINE-READ-PRACTICAL-TEXTS",
+            "shortfall": 3
           },
           {
             "criterion": "vocabulary",
-            "detail": "teaches 426 distinct headwords at or below A1, against 600",
-            "shortfall": 174
+            "detail": "teaches 631 distinct headwords at or below A2, against 1200",
+            "shortfall": 569
           },
           {
-            "criterion": "atom-budget",
-            "detail": "1 lesson(s) at or below A1 exceed the new-atom budget",
-            "shortfall": 1
-          },
-          {
-            "criterion": "reinforcement",
-            "detail": "8 atom(s) at or below A1 are revisited fewer than twice (34 etymology hook(s) waived)",
-            "shortfall": 8
+            "criterion": "verb-vocabulary",
+            "detail": "teaches 98 distinct verb headwords at or below A2, against 120",
+            "shortfall": 22
           }
         ],
-        "vocabulary": 441
+        "vocabulary": 631
       },
       {
         "language": "marwadi",
@@ -199069,8 +201242,8 @@
       "tracksOverstating": 23,
       "tracksWithAnyLevel": 22,
       "attainedByLevel": {
-        "pre-A1": 18,
-        "A1": 4,
+        "pre-A1": 17,
+        "A1": 5,
         "A2": 0,
         "B1": 0,
         "B2": 0,
@@ -199081,11 +201254,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 14037,
-    "voice": 11707,
+    "totalLessons": 14235,
+    "voice": 11905,
     "sight": 989,
     "pen": 1341,
-    "coreVoice": 12283,
+    "coreVoice": 12481,
     "lessonsWithWritingSegments": 858,
     "drivablePercent": 88,
     "tracks": [
@@ -218325,13 +220498,13 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 652,
-        "voice": 459,
+        "lessonCount": 850,
+        "voice": 657,
         "sight": 91,
         "pen": 102,
-        "coreVoice": 512,
-        "drivablePercent": 79,
-        "drivablePrefixTotal": 483,
+        "coreVoice": 710,
+        "drivablePercent": 84,
+        "drivablePrefixTotal": 681,
         "chapters": [
           {
             "language": "marathi",
@@ -220048,6 +222221,538 @@
           {
             "language": "marathi",
             "chapter": 120,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 121,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 122,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 123,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 124,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 125,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 126,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 127,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 128,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 129,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 130,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 131,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 132,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 133,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 134,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 135,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 136,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 137,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 138,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 139,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 140,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 141,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 142,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 143,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 144,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 145,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 146,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 147,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 148,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 149,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 150,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 151,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 152,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 153,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 154,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 155,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 156,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 157,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "marathi",
+            "chapter": 158,
             "lessonCount": 7,
             "voice": 7,
             "sight": 0,
@@ -241443,7 +244148,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 14037,
+    "lessons": 14235,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -241451,11 +244156,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 14037,
-    "measuredLessons": 9864,
-    "idiomMeasuredLessons": 9864,
-    "senseMeasuredLessons": 9865,
-    "cultureClaimMeasuredLessons": 9864,
+    "lessons": 14235,
+    "measuredLessons": 10062,
+    "idiomMeasuredLessons": 10062,
+    "senseMeasuredLessons": 10063,
+    "cultureClaimMeasuredLessons": 10062,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -241464,18 +244169,18 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 13125,
-    "usesBeforeIntroduction": 30456,
-    "technicalUsesBeforeIntroduction": 6270,
-    "technicalLessons": 3509,
+    "lessonsUsingTerms": 13323,
+    "usesBeforeIntroduction": 30660,
+    "technicalUsesBeforeIntroduction": 6272,
+    "technicalLessons": 3511,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2013
+        "lessons": 2014
       },
       {
         "term": "noun",
-        "lessons": 1189
+        "lessons": 1190
       },
       {
         "term": "adjective",
@@ -241496,12 +244201,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 14037,
+    "lessonsScanned": 14235,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 2967,
+    "filesScanned": 3005,
     "mainCharacters": 134,
     "scriptCharacters": 801,
     "gaps": 0
