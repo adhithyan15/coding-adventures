@@ -3,7 +3,7 @@
     "id": "GU-C52-husband",
     "language": "gujarati",
     "chapter": 52,
-    "sequence": 2680,
+    "sequence": 2693,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0270268d7053e5cc"
+    "sourceHash": "fnv1a64:ac8348df9d3c6d9c"
   },
   "findings": []
 }

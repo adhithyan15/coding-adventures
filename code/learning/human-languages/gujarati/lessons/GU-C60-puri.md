@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C60-puri
 spine_node: SPINE-COURTESY-THANK
-sequence: 3080
+sequence: 3093
 chapter: 60
 type: word
 headword: "પૂરી"

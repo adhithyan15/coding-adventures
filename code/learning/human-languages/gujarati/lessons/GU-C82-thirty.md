@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C82-thirty
 spine_node: SPINE-RESPOND-BASIC
-sequence: 4190
+sequence: 4203
 chapter: 82
 type: word
 headword: "ત્રીસ"

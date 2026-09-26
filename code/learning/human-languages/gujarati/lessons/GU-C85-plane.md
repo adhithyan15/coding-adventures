@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C85-plane
 spine_node: SPINE-MEET-GREET
-sequence: 4340
+sequence: 4353
 chapter: 85
 type: word
 headword: "વિમાન"

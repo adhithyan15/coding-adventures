@@ -3,7 +3,7 @@
     "id": "GU-C23-gaam",
     "language": "gujarati",
     "chapter": 27,
-    "sequence": 1100,
+    "sequence": 1113,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:61c614a28b769d29",
+    "sourceHash": "fnv1a64:4bb4d2b2fb5a4719",
     "delivery": "script",
     "authored": "pen",
     "authoredReason": "The delayed-copy activity requires handwriting; its machine-readable stage is not visible to prose cue derivation."

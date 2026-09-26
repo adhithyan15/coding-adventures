@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C61-pot
 spine_node: SPINE-COURTESY-THANK
-sequence: 3130
+sequence: 3143
 chapter: 61
 type: word
 headword: "તપેલી"

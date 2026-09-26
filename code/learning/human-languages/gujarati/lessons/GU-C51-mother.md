@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C51-mother
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2600
+sequence: 2613
 chapter: 51
 type: word
 headword: "માતા"

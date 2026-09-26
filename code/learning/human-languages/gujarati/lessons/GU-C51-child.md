@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C51-child
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2630
+sequence: 2643
 chapter: 51
 type: word
 headword: "બાળક"

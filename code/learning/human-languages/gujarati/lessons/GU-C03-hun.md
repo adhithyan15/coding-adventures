@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C03-hun
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 180
+sequence: 193
 chapter: 9
 type: word
 headword: હું

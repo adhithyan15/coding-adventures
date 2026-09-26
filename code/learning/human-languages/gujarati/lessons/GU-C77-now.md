@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C77-now
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3930
+sequence: 3943
 chapter: 77
 type: word
 headword: "હવે"

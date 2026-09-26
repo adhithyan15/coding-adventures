@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-R05-second-four-r1
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 80
+sequence: 88
 delivery: script
 chapter: 5
 type: writing
 headword: લ — પ — ચ — બ
 romanization: la — pa — cha — ba
 gloss: retrieve the second four name-exchange forms
-prerequisites: [GU-W05-ba]
+prerequisites: [GU-W05-ba, GU-C05-bagalo]
 sounds: []
 roots: []
 etymology_hook: "The second group returns before the name exchange, with no new shape or word to learn."
 duration:
   max_seconds: 280
 requires:
-  knowledge: [GU-SCRIPT-LLA-01, GU-SCRIPT-CHHA-01, GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01, GU-SCRIPT-LA-01, GU-SCRIPT-PA-01, GU-SCRIPT-CHA-01, GU-SCRIPT-BA-01]
+  knowledge: [GU-SCRIPT-LLA-01, GU-SCRIPT-CHHA-01, GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01, GU-SCRIPT-LA-01, GU-SCRIPT-PA-01, GU-SCRIPT-CHA-01, GU-SCRIPT-BA-01, GU-LEX-ANCHOR-BAGALO]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-LLA-01, GU-SCRIPT-CHHA-01, GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01, GU-SCRIPT-LA-01, GU-SCRIPT-PA-01, GU-SCRIPT-CHA-01, GU-SCRIPT-BA-01]
+  knowledge: [GU-SCRIPT-LLA-01, GU-SCRIPT-CHHA-01, GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01, GU-SCRIPT-LA-01, GU-SCRIPT-PA-01, GU-SCRIPT-CHA-01, GU-SCRIPT-BA-01, GU-LEX-ANCHOR-BAGALO]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus, fluency]
@@ -35,7 +35,7 @@ reviews_of: [GU-W04-lla, GU-W03-chha, GU-W03-ka, GU-W03-nna, GU-W03-sha, GU-W05-
 # લ — પ — ચ — બ: four more forms return
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-LA-01, GU-SCRIPT-PA-01, GU-SCRIPT-CHA-01, GU-SCRIPT-BA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-LA-01, GU-SCRIPT-PA-01, GU-SCRIPT-CHA-01, GU-SCRIPT-BA-01, GU-LEX-ANCHOR-BAGALO] -->
 
 Keep the four cards visible. Point as you say *la*, *pa*, unaspirated *cha*, and
 *ba*. Notice one landmark at a time: rounded body, high hook, middle loop,

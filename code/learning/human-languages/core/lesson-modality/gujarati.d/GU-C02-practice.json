@@ -3,7 +3,7 @@
     "id": "GU-C02-practice",
     "language": "gujarati",
     "chapter": 8,
-    "sequence": 170,
+    "sequence": 183,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4a3d0967ebea7d74"
+    "sourceHash": "fnv1a64:2582e7981b590056"
   },
   "findings": []
 }

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C37-ketla
 spine_node: SPINE-ASK-LOCATION
-sequence: 2120
+sequence: 2133
 chapter: 41
 type: word
 headword: કેટલા

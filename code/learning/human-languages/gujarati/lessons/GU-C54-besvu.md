@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C54-besvu
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2740
+sequence: 2753
 chapter: 54
 type: word
 headword: "બેસવું"

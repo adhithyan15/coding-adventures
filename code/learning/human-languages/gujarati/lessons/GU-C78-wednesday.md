@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C78-wednesday
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3980
+sequence: 3993
 chapter: 78
 type: word
 headword: "બુધવાર"

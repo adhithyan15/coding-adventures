@@ -3,7 +3,7 @@
     "id": "GU-C12-naak",
     "language": "gujarati",
     "chapter": 18,
-    "sequence": 630,
+    "sequence": 643,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e5b5295c5afbe452",
+    "sourceHash": "fnv1a64:3220c5b4bc4ba1a4",
     "detachableSegments": [
       "The letters in this word"
     ]

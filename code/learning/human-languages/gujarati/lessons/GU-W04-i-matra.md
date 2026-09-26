@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W04-i-matra
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 74
+sequence: 80
 delivery: script
 chapter: 4
 type: writing
 headword: િ
 romanization: "-i"
 gloss: "the attached short-i vowel sign"
-prerequisites: [GU-W04-independent-a]
+prerequisites: [GU-W04-independent-a, GU-C04-divaali]
 sounds: []
 roots: []
 etymology_hook: "This sign is seen before its consonant but heard after it; the lesson adds only that one placement rule."
 duration:
   max_seconds: 230
 requires:
-  knowledge: [GU-SCRIPT-INDEPENDENT-A-01, GU-SCRIPT-SHA-01]
+  knowledge: [GU-SCRIPT-INDEPENDENT-A-01, GU-SCRIPT-SHA-01, GU-LEX-ANCHOR-DIVAALI]
 introduces:
   knowledge: [GU-SCRIPT-I-MATRA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-INDEPENDENT-A-01, GU-SCRIPT-SHA-01, GU-SCRIPT-I-MATRA-01]
+  knowledge: [GU-SCRIPT-INDEPENDENT-A-01, GU-SCRIPT-SHA-01, GU-SCRIPT-I-MATRA-01, GU-LEX-ANCHOR-DIVAALI]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W04-independent-a, GU-W03-sha]
 # િ — short i sits before, sounds after
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-INDEPENDENT-A-01, GU-SCRIPT-SHA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-INDEPENDENT-A-01, GU-SCRIPT-SHA-01, GU-LEX-ANCHOR-DIVAALI] -->
 
 Point to **અ** and **શ**. Say independent short *a*, then *sha*. Do not combine
 them; today one small sign changes only the vowel on **શ**.

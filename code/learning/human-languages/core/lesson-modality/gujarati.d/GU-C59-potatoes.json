@@ -3,7 +3,7 @@
     "id": "GU-C59-potatoes",
     "language": "gujarati",
     "chapter": 59,
-    "sequence": 3020,
+    "sequence": 3033,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:61dab0bcc3e57c3f"
+    "sourceHash": "fnv1a64:9c1d6d0807adfe0f"
   },
   "findings": []
 }

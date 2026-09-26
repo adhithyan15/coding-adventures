@@ -4,11 +4,11 @@
   "chapter": 50,
   "title": "How It Feels",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dea751c403bf9b5a",
+  "sourceHash": "fnv1a64:5990106842d7052b",
   "lessons": [
     {
       "id": "GU-C50-happiness",
-      "sequence": 2540,
+      "sequence": 2553,
       "title": "ખુશી (khuśī) — happiness, joy",
       "headword": "ખુશી",
       "romanization": "khuśī",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a17c3a94359a9d8",
+      "sourceHash": "fnv1a64:19493cbb1ffe7068",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C50-anger",
-      "sequence": 2550,
+      "sequence": 2563,
       "title": "ગુસ્સો (gusso) — anger",
       "headword": "ગુસ્સો",
       "romanization": "gusso",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4534ab98e378ab0",
+      "sourceHash": "fnv1a64:f37fb82914b8065a",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C50-fear",
-      "sequence": 2560,
+      "sequence": 2573,
       "title": "બીક (bīk) — fear",
       "headword": "બીક",
       "romanization": "bīk",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42ddc1a6854f516f",
+      "sourceHash": "fnv1a64:dbb462f1ce1e77df",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C50-worry",
-      "sequence": 2570,
+      "sequence": 2583,
       "title": "ચિંતા (cintā) — worry",
       "headword": "ચિંતા",
       "romanization": "cintā",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84297b3f0c4edd33",
+      "sourceHash": "fnv1a64:3f47bb0df1a5f321",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C50-tiredness",
-      "sequence": 2580,
+      "sequence": 2593,
       "title": "થાક (thāk) — tiredness",
       "headword": "થાક",
       "romanization": "thāk",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94b876c85783466d",
+      "sourceHash": "fnv1a64:63c9d687bb257e21",
       "notice": null,
       "blocks": [
         {

@@ -3,7 +3,7 @@
     "id": "GU-C30-kaagal",
     "language": "gujarati",
     "chapter": 34,
-    "sequence": 1760,
+    "sequence": 1773,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6de09b4841b2197c",
+    "sourceHash": "fnv1a64:2b956dbad45947f0",
     "detachableSegments": [
       "Writing — guided copy, model in view"
     ]

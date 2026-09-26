@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C52-husband
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2680
+sequence: 2693
 chapter: 52
 type: word
 headword: "પતિ"

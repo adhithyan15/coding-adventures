@@ -3,7 +3,7 @@
     "id": "GU-C31-repair-five",
     "language": "gujarati",
     "chapter": 35,
-    "sequence": 1820,
+    "sequence": 1833,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a0040b3afe950781"
+    "sourceHash": "fnv1a64:907a8c5bdbedb0a5"
   },
   "findings": []
 }

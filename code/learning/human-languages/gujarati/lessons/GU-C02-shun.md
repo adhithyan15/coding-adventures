@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C02-shun
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 150
+sequence: 163
 chapter: 8
 type: word
 headword: શું

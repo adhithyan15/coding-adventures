@@ -3,7 +3,7 @@
     "id": "GU-C86-map",
     "language": "gujarati",
     "chapter": 86,
-    "sequence": 4380,
+    "sequence": 4393,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3cad42349df86603"
+    "sourceHash": "fnv1a64:ce1db208dbebf9a7"
   },
   "findings": []
 }

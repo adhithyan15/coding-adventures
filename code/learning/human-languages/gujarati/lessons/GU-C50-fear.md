@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C50-fear
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2560
+sequence: 2573
 chapter: 50
 type: word
 headword: "બીક"

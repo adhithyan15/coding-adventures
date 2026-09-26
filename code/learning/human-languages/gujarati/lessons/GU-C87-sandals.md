@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C87-sandals
 spine_node: SPINE-COURTESY-THANK
-sequence: 4430
+sequence: 4443
 chapter: 87
 type: word
 headword: "ચંપલ"

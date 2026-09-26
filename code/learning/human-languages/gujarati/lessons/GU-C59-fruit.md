@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C59-fruit
 spine_node: SPINE-COURTESY-THANK
-sequence: 2990
+sequence: 3003
 chapter: 59
 type: word
 headword: "ફળ"

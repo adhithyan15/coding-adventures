@@ -3,7 +3,7 @@
     "id": "GU-R26-jovun-jaanvun-r4",
     "language": "gujarati",
     "chapter": 30,
-    "sequence": 1410,
+    "sequence": 1423,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1101e7ed80642578",
+    "sourceHash": "fnv1a64:ab8e3a72e18adb1e",
     "detachableSegments": [
       "Writing — from sound, every model covered"
     ]

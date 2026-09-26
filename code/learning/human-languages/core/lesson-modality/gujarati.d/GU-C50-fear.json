@@ -3,7 +3,7 @@
     "id": "GU-C50-fear",
     "language": "gujarati",
     "chapter": 50,
-    "sequence": 2560,
+    "sequence": 2573,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:42ddc1a6854f516f"
+    "sourceHash": "fnv1a64:dbb462f1ce1e77df"
   },
   "findings": []
 }

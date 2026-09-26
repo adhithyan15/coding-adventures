@@ -3,7 +3,7 @@
     "id": "GU-C74-down",
     "language": "gujarati",
     "chapter": 74,
-    "sequence": 3800,
+    "sequence": 3813,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8393d6f9c15dc503"
+    "sourceHash": "fnv1a64:533e825fe0ca4233"
   },
   "findings": []
 }

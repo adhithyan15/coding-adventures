@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C24-raat
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1210
+sequence: 1223
 chapter: 28
 type: practice
 headword: રાત

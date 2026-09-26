@@ -3,7 +3,7 @@
     "id": "GU-C05-bolvun",
     "language": "gujarati",
     "chapter": 11,
-    "sequence": 290,
+    "sequence": 303,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1aed8d621c978f0c",
+    "sourceHash": "fnv1a64:e4f5239b8128fd87",
     "detachableSegments": [
       "The letters in this word"
     ]

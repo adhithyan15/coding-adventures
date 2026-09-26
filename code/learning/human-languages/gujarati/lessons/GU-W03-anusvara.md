@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W03-anusvara
 spine_node: SPINE-MEET-GREET
-sequence: 63
+sequence: 67
 delivery: script
 chapter: 3
 type: writing

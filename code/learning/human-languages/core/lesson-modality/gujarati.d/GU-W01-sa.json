@@ -3,7 +3,7 @@
     "id": "GU-W01-sa",
     "language": "gujarati",
     "chapter": 1,
-    "sequence": 7,
+    "sequence": 8,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:b79850312e718662",
+    "sourceHash": "fnv1a64:50dbc3a062153493",
     "detachableSegments": [
       "Script"
     ],

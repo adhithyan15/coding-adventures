@@ -3,7 +3,7 @@
     "id": "GU-C03-vandho-nahi",
     "language": "gujarati",
     "chapter": 9,
-    "sequence": 220,
+    "sequence": 233,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9c1855cd68b6dd6e",
+    "sourceHash": "fnv1a64:3570a5eff018a51e",
     "detachableSegments": [
       "The letters in this word"
     ]

@@ -3,7 +3,7 @@
     "id": "GU-C87-dhoti",
     "language": "gujarati",
     "chapter": 87,
-    "sequence": 4410,
+    "sequence": 4423,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:874150de6ca96ac5"
+    "sourceHash": "fnv1a64:a6c182b42ceaf0ef"
   },
   "findings": []
 }

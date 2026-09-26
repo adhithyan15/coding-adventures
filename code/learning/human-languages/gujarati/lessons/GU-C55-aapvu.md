@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C55-aapvu
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2810
+sequence: 2823
 chapter: 55
 type: word
 headword: "આપવું"

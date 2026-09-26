@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C39-saat
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 2200
+sequence: 2213
 chapter: 43
 type: word
 headword: સાત

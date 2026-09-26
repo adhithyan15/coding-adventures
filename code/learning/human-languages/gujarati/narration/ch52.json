@@ -4,11 +4,11 @@
   "chapter": 52,
   "title": "Uncles, Aunts and a Husband",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5169a276f790670e",
+  "sourceHash": "fnv1a64:d70d019f35cb525c",
   "lessons": [
     {
       "id": "GU-C52-kaka",
-      "sequence": 2640,
+      "sequence": 2653,
       "title": "કાકા (kākā) — uncle (father's brother)",
       "headword": "કાકા",
       "romanization": "kākā",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2980f07296b1755",
+      "sourceHash": "fnv1a64:d996e04fe34034c5",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C52-kaki",
-      "sequence": 2650,
+      "sequence": 2663,
       "title": "કાકી (kākī) — aunt (father's brother's wife)",
       "headword": "કાકી",
       "romanization": "kākī",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12ff232da4cfbf0c",
+      "sourceHash": "fnv1a64:b87362dfe6833a4a",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C52-mama",
-      "sequence": 2660,
+      "sequence": 2673,
       "title": "મામા (māmā) — uncle (mother's brother)",
       "headword": "મામા",
       "romanization": "māmā",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6618c8eac464538",
+      "sourceHash": "fnv1a64:b9b5d234a5afc0c8",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C52-mami",
-      "sequence": 2670,
+      "sequence": 2683,
       "title": "મામી (māmī) — aunt (mother's brother's wife)",
       "headword": "મામી",
       "romanization": "māmī",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7ba730aee1c5fe0",
+      "sourceHash": "fnv1a64:f0a412c1401330e2",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C52-husband",
-      "sequence": 2680,
+      "sequence": 2693,
       "title": "પતિ (pati) — a husband",
       "headword": "પતિ",
       "romanization": "pati",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0270268d7053e5cc",
+      "sourceHash": "fnv1a64:ac8348df9d3c6d9c",
       "notice": null,
       "blocks": [
         {

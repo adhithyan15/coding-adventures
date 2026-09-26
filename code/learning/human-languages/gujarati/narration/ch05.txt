@@ -1,8 +1,62 @@
 Gujarati, chapter 5: Four More Forms Before Your Name.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+7 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 7.
+ચપ્પલ (cappal) — sandals.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before the new word: say the last thing you learned, once, out loud.
+[pause 2 seconds]
+Write ભ once from memory. Say yes and no (hā, nā), then athāṇũ and what it means.
+
+You'll want to know: ચપ્પલ.
+ચપ્પલ — cappal — "sandals".
+Say it: cappal. Look at its shape as you say it: the lessons that follow take pieces of it, ચ (cha) and લ (la), and write each one on its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: cappal]
+[pause 8 seconds for the answer]
+[your turn — say: cappal, and what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "sandals"? (ચપ્પલ, cappal.)
+
+
+Lesson 2 of 7.
+બગલો (bagalo) — a heron.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+[pause 2 seconds]
+Before the new word: say the last thing you learned, once, out loud.
+[pause 2 seconds]
+Say divāḷī and what it names, then say goodbye (āvjo).
+
+You'll want to know: બગલો.
+બગલો — bagalo — "a heron".
+Say it: bagalo. Look at its shape as you say it: the lessons that follow take pieces of it, બ and, a little later, ગ, and write each one on its own.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: bagalo]
+[pause 8 seconds for the answer]
+[your turn — say: bagalo, and what it means]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What is "a heron"? (બગલો, bagalo.)
+
+
+Lesson 3 of 7.
 લ — the consonant la.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -30,7 +84,7 @@ Point to ordinary la in લ ળ. Then point to retroflex lla.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 2 of 5.
+Lesson 4 of 7.
 પ — the consonant pa.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -58,7 +112,7 @@ Name the first landmark and the pen-lift count.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 3 of 5.
+Lesson 5 of 7.
 ચ — the consonant cha.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -86,7 +140,7 @@ Read ચ (cha) છ aloud, keeping the second sound's puff.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 4 of 5.
+Lesson 6 of 7.
 બ — the consonant ba.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it.
@@ -114,7 +168,7 @@ Name the inner landmark and the pen-lift count.
 Sources: Gujarati Alphabet Writing Practice and the Unicode Gujarati chart.
 
 
-Lesson 5 of 5.
+Lesson 7 of 7.
 લ — પ — ચ — બ (la — pa — cha — ba): four more forms return.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C58-buttermilk
 spine_node: SPINE-COURTESY-THANK
-sequence: 2980
+sequence: 2993
 chapter: 58
 type: word
 headword: "છાશ"

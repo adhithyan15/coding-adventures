@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C83-fifty
 spine_node: SPINE-RESPOND-BASIC
-sequence: 4210
+sequence: 4223
 chapter: 83
 type: word
 headword: "પચાસ"

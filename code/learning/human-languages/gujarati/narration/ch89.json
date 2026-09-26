@@ -4,11 +4,11 @@
   "chapter": 89,
   "title": "Questions and Answers",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:de6bf9b5bc3d928b",
+  "sourceHash": "fnv1a64:8dbf2d2507e62c72",
   "lessons": [
     {
       "id": "GU-C89-student",
-      "sequence": 4510,
+      "sequence": 4523,
       "title": "વિદ્યાર્થી (vidyārthī) — a student",
       "headword": "વિદ્યાર્થી",
       "romanization": "vidyārthī",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ff7c22191f98e1c",
+      "sourceHash": "fnv1a64:44861826df5ee73e",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C89-question",
-      "sequence": 4520,
+      "sequence": 4533,
       "title": "પ્રશ્ન (praśna) — a question",
       "headword": "પ્રશ્ન",
       "romanization": "praśna",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dba418c09045d955",
+      "sourceHash": "fnv1a64:3ec4884ad12da891",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C89-answer",
-      "sequence": 4530,
+      "sequence": 4543,
       "title": "જવાબ (javāb) — an answer",
       "headword": "જવાબ",
       "romanization": "javāb",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e86249fc97e0e3f",
+      "sourceHash": "fnv1a64:5024862b58aff3a5",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C89-bhanvu",
-      "sequence": 4540,
+      "sequence": 4553,
       "title": "ભણવું (bhaṇvũ) — to study",
       "headword": "ભણવું",
       "romanization": "bhaṇvũ",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4620be4d35ed4bb7",
+      "sourceHash": "fnv1a64:e629d83e8c86be67",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C89-shikhavvu",
-      "sequence": 4550,
+      "sequence": 4563,
       "title": "શીખવવું (śīkhavvũ) — to teach",
       "headword": "શીખવવું",
       "romanization": "śīkhavvũ",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a193d33f423189df",
+      "sourceHash": "fnv1a64:a83086cf0f9995b9",
       "notice": null,
       "blocks": [
         {

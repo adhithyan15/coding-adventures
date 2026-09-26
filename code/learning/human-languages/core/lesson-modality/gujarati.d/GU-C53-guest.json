@@ -3,7 +3,7 @@
     "id": "GU-C53-guest",
     "language": "gujarati",
     "chapter": 53,
-    "sequence": 2730,
+    "sequence": 2743,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:60d6ed80d184b3e6"
+    "sourceHash": "fnv1a64:4736e1d12dbb1db0"
   },
   "findings": []
 }

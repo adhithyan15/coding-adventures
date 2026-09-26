@@ -4,11 +4,11 @@
   "chapter": 24,
   "title": "A First Three-Place Map",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:df118aa720f5beef",
+  "sourceHash": "fnv1a64:5f959e577fb76774",
   "lessons": [
     {
       "id": "GU-C20-hear-bajar",
-      "sequence": 880,
+      "sequence": 893,
       "title": "બજાર (bajār) — hear market first",
       "headword": "બજાર",
       "romanization": "bajār",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a6e55dce23081a8",
+      "sourceHash": "fnv1a64:711a746e24729f8c",
       "notice": null,
       "blocks": [
         {
@@ -77,7 +77,7 @@
     },
     {
       "id": "GU-C20-bajar",
-      "sequence": 890,
+      "sequence": 903,
       "title": "બજાર (bajār) — market on the page",
       "headword": "બજાર",
       "romanization": "bajār",
@@ -88,7 +88,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:509b24534ec7d151",
+      "sourceHash": "fnv1a64:3db15fb336a4a074",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -157,7 +157,7 @@
     },
     {
       "id": "GU-C20-hear-ghar",
-      "sequence": 900,
+      "sequence": 913,
       "title": "ઘર (ghar) — hear home first",
       "headword": "ઘર",
       "romanization": "ghar",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d2c3118fc2cdf82",
+      "sourceHash": "fnv1a64:f72eb9a9cc2b4d32",
       "notice": null,
       "blocks": [
         {
@@ -225,7 +225,7 @@
     },
     {
       "id": "GU-W20-gha",
-      "sequence": 905,
+      "sequence": 918,
       "title": "ઘ (gha) — one consonant for gh",
       "headword": "ઘ",
       "romanization": "gha",
@@ -236,7 +236,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:6c13bf7979c075a4",
+      "sourceHash": "fnv1a64:a561c7989fe5077e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -300,7 +300,7 @@
     },
     {
       "id": "GU-C20-ghar",
-      "sequence": 910,
+      "sequence": 923,
       "title": "ઘર (ghar) — home on the page",
       "headword": "ઘર",
       "romanization": "ghar",
@@ -312,7 +312,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:5019b2387a064ceb",
+      "sourceHash": "fnv1a64:694e60140579655d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -382,7 +382,7 @@
     },
     {
       "id": "GU-C20-hear-mandir",
-      "sequence": 920,
+      "sequence": 933,
       "title": "મંદિર (mandir) — hear temple first",
       "headword": "મંદિર",
       "romanization": "mandir",
@@ -393,7 +393,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7dbdd8c62c61cb10",
+      "sourceHash": "fnv1a64:c0e7879d1b827780",
       "notice": null,
       "blocks": [
         {
@@ -451,7 +451,7 @@
     },
     {
       "id": "GU-C20-mandir",
-      "sequence": 930,
+      "sequence": 943,
       "title": "મંદિર (mandir) — temple on the page",
       "headword": "મંદિર",
       "romanization": "mandir",
@@ -462,7 +462,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:96aa6f5c15516c6e",
+      "sourceHash": "fnv1a64:8d86eaf6bd9e775c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -531,7 +531,7 @@
     },
     {
       "id": "GU-C20-places-three",
-      "sequence": 940,
+      "sequence": 953,
       "title": "Three places in four skills",
       "headword": "બજાર — ઘર — મંદિર",
       "romanization": "bajār — ghar — mandir",
@@ -542,7 +542,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:dac913f858f3098a",
+      "sourceHash": "fnv1a64:3a2ab077411f1c1a",
       "notice": {
         "modality": "pen",
         "needs": [

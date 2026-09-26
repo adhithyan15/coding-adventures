@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C30-hear-maanas
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1720
+sequence: 1733
 chapter: 34
 type: word
 headword: માણસ

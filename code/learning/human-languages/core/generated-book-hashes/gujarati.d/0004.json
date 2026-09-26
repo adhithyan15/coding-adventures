@@ -1,8 +1,10 @@
 {
   "language": "gujarati",
   "chapter": 4,
-  "sourceHash": "fnv1a64:16ea7e2d7d59d770",
+  "sourceHash": "fnv1a64:8433d5dbd75ee6a4",
   "lessonIds": [
+    "GU-C04-athaanun",
+    "GU-C04-divaali",
     "GU-W04-lla",
     "GU-W04-tha",
     "GU-W04-independent-a",

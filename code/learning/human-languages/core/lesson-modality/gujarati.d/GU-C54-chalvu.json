@@ -3,7 +3,7 @@
     "id": "GU-C54-chalvu",
     "language": "gujarati",
     "chapter": 54,
-    "sequence": 2750,
+    "sequence": 2763,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:23087e3d208c6706"
+    "sourceHash": "fnv1a64:ce516c33abbaee50"
   },
   "findings": []
 }

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C79-time
 spine_node: SPINE-TAKE-LEAVE
-sequence: 4050
+sequence: 4063
 chapter: 79
 type: word
 headword: "સમય"

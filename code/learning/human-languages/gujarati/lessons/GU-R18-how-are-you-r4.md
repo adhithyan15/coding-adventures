@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R18-how-are-you-r4
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 820
+sequence: 833
 chapter: 22
 type: practice
 headword: તમે કેમ છો?

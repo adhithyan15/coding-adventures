@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C28-hear-baari
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1550
+sequence: 1563
 chapter: 32
 type: word
 headword: બારી

@@ -3,7 +3,7 @@
     "id": "GU-C59-banana",
     "language": "gujarati",
     "chapter": 59,
-    "sequence": 3000,
+    "sequence": 3013,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:47f5b02f7461391c"
+    "sourceHash": "fnv1a64:e7d7bbef7a5da3cc"
   },
   "findings": []
 }

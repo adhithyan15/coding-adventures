@@ -3,7 +3,7 @@
     "id": "GU-C05-rahevun",
     "language": "gujarati",
     "chapter": 11,
-    "sequence": 320,
+    "sequence": 333,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:0ca947cff8f80227",
+    "sourceHash": "fnv1a64:4609bc8e479bf75b",
     "detachableSegments": [
       "The letters in this word"
     ]

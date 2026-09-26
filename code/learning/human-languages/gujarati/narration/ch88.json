@@ -4,11 +4,11 @@
   "chapter": 88,
   "title": "Glasses, Bag, Wallet, Letter, Gift",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:53e22b46d1aca16c",
+  "sourceHash": "fnv1a64:70f72b8f8edd80fe",
   "lessons": [
     {
       "id": "GU-C88-glasses",
-      "sequence": 4460,
+      "sequence": 4473,
       "title": "ચશ્માં (caśmā̃) — glasses, spectacles",
       "headword": "ચશ્માં",
       "romanization": "caśmā̃",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bc431b4d0f23b27",
+      "sourceHash": "fnv1a64:b4275b90f6700877",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C88-bag",
-      "sequence": 4470,
+      "sequence": 4483,
       "title": "થેલી (thelī) — a bag",
       "headword": "થેલી",
       "romanization": "thelī",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e83b86e99607fc15",
+      "sourceHash": "fnv1a64:1306fe7d2fbcaefb",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C88-wallet",
-      "sequence": 4480,
+      "sequence": 4493,
       "title": "પાકીટ (pākīṭ) — a wallet",
       "headword": "પાકીટ",
       "romanization": "pākīṭ",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75f7baab59a755eb",
+      "sourceHash": "fnv1a64:5bb66b65975c917b",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C88-letter",
-      "sequence": 4490,
+      "sequence": 4503,
       "title": "પત્ર (patra) — a letter",
       "headword": "પત્ર",
       "romanization": "patra",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15a1ee8ad6332606",
+      "sourceHash": "fnv1a64:4f9550228e532a63",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C88-gift",
-      "sequence": 4500,
+      "sequence": 4513,
       "title": "ભેટ (bheṭ) — a gift",
       "headword": "ભેટ",
       "romanization": "bheṭ",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08399d72e41049b3",
+      "sourceHash": "fnv1a64:a550f93807646b37",
       "notice": null,
       "blocks": [
         {

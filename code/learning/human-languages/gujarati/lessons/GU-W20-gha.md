@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W20-gha
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 905
+sequence: 918
 delivery: script
 chapter: 24
 type: writing

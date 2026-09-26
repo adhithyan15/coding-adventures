@@ -3,7 +3,7 @@
     "id": "GU-W01-virama",
     "language": "gujarati",
     "chapter": 1,
-    "sequence": 10,
+    "sequence": 11,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -16,7 +16,7 @@
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:21dbf6401a0f1aa2",
+    "sourceHash": "fnv1a64:d8087a25e96dee0d",
     "detachableSegments": [
       "Script"
     ],

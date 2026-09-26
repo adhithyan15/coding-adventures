@@ -4,11 +4,11 @@
   "chapter": 76,
   "title": "A Lot, All, Slowly, Quickly, Again",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:59b8bcd33ead93ff",
+  "sourceHash": "fnv1a64:c172c60271535141",
   "lessons": [
     {
       "id": "GU-C76-alot",
-      "sequence": 3860,
+      "sequence": 3873,
       "title": "ઘણું (ghaṇũ) — a lot, much",
       "headword": "ઘણું",
       "romanization": "ghaṇũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd72283adeef9e39",
+      "sourceHash": "fnv1a64:56ca6de5e900cec5",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C76-all",
-      "sequence": 3870,
+      "sequence": 3883,
       "title": "બધું (badhũ) — all, everything",
       "headword": "બધું",
       "romanization": "badhũ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cdd93ace64ea073c",
+      "sourceHash": "fnv1a64:3349326523500a7a",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C76-slowly",
-      "sequence": 3880,
+      "sequence": 3893,
       "title": "ધીમે (dhīme) — slowly",
       "headword": "ધીમે",
       "romanization": "dhīme",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9cba927d4651b869",
+      "sourceHash": "fnv1a64:9aec29c556b15999",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C76-quickly",
-      "sequence": 3890,
+      "sequence": 3903,
       "title": "જલદી (jaldī) — quickly, soon",
       "headword": "જલદી",
       "romanization": "jaldī",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acbba69f6c6cca5a",
+      "sourceHash": "fnv1a64:09e64dde3663a9ad",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C76-again",
-      "sequence": 3900,
+      "sequence": 3913,
       "title": "ફરી (pharī) — again",
       "headword": "ફરી",
       "romanization": "pharī",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28c0d3d03e880e9f",
+      "sourceHash": "fnv1a64:c5630a7d79cb9b8f",
       "notice": null,
       "blocks": [
         {

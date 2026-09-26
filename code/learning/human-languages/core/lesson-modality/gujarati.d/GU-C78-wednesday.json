@@ -3,7 +3,7 @@
     "id": "GU-C78-wednesday",
     "language": "gujarati",
     "chapter": 78,
-    "sequence": 3980,
+    "sequence": 3993,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:df1858e50494bb55"
+    "sourceHash": "fnv1a64:0984b21c4e643e25"
   },
   "findings": []
 }

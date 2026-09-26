@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C33-jaanun-ke
 spine_node: SPINE-SAY-WHAT-I-LIKE
-sequence: 1910
+sequence: 1923
 chapter: 37
 type: phrase
 headword: જાણું છું કે

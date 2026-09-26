@@ -3,7 +3,7 @@
     "id": "GU-C50-tiredness",
     "language": "gujarati",
     "chapter": 50,
-    "sequence": 2580,
+    "sequence": 2593,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:94b876c85783466d"
+    "sourceHash": "fnv1a64:63c9d687bb257e21"
   },
   "findings": []
 }

@@ -3,7 +3,7 @@
     "id": "GU-C21-hear-haath",
     "language": "gujarati",
     "chapter": 25,
-    "sequence": 950,
+    "sequence": 963,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2172fb483d616454"
+    "sourceHash": "fnv1a64:33e2bbf5b166f6fa"
   },
   "findings": []
 }

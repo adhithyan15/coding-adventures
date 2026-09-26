@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W06-independent-u
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 84
+sequence: 94
 delivery: script
 chapter: 6
 type: writing
 headword: ઉ
 romanization: "u"
 gloss: "the independent vowel u"
-prerequisites: [GU-W06-kha]
+prerequisites: [GU-W06-kha, GU-C06-ukhaanun]
 sounds: []
 roots: []
 etymology_hook: "A later verb places short u at the start of a syllable; the standing-alone form comes first."
 duration:
   max_seconds: 230
 requires:
-  knowledge: [GU-SCRIPT-KHA-01, GU-SCRIPT-U-MATRA-01]
+  knowledge: [GU-SCRIPT-KHA-01, GU-SCRIPT-U-MATRA-01, GU-LEX-ANCHOR-UKHAANUN]
 introduces:
   knowledge: [GU-SCRIPT-INDEPENDENT-U-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-U-MATRA-01, GU-SCRIPT-INDEPENDENT-U-01]
+  knowledge: [GU-SCRIPT-U-MATRA-01, GU-SCRIPT-INDEPENDENT-U-01, GU-LEX-ANCHOR-UKHAANUN]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W06-kha, GU-W03-u-matra]
 # ઉ — independent u
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-U-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-U-MATRA-01, GU-LEX-ANCHOR-UKHAANUN] -->
 
 Write attached short-*u* sign **ુ** once and say “needs a consonant.” Put it
 away. The same vowel standing alone needs a whole letter.

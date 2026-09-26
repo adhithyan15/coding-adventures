@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C30-hear-chhokro
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1700
+sequence: 1713
 chapter: 34
 type: word
 headword: છોકરો

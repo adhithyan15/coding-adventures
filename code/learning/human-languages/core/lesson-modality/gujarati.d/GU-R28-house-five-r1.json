@@ -3,7 +3,7 @@
     "id": "GU-R28-house-five-r1",
     "language": "gujarati",
     "chapter": 32,
-    "sequence": 1610,
+    "sequence": 1623,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c11dcd7b7fc5454c",
+    "sourceHash": "fnv1a64:55c98d250c39b0ba",
     "detachableSegments": [
       "Writing — from sound, every model covered"
     ]

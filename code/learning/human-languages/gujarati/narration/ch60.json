@@ -4,11 +4,11 @@
   "chapter": 60,
   "title": "Salt, Chilli and Something Sweet",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:23e1eb6b219e371e",
+  "sourceHash": "fnv1a64:42e389a251395804",
   "lessons": [
     {
       "id": "GU-C60-chilli",
-      "sequence": 3040,
+      "sequence": 3053,
       "title": "મરચું (marcũ) — a chilli",
       "headword": "મરચું",
       "romanization": "marcũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ea5d1a7e3f7593d",
+      "sourceHash": "fnv1a64:849dafeea35583c1",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C60-salt",
-      "sequence": 3050,
+      "sequence": 3063,
       "title": "મીઠું (mīṭhũ) — salt",
       "headword": "મીઠું",
       "romanization": "mīṭhũ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a841df049daa4218",
+      "sourceHash": "fnv1a64:569cca9fba4c4092",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C60-thepla",
-      "sequence": 3060,
+      "sequence": 3073,
       "title": "થેપલાં (theplā̃) — thepla, spiced flatbread",
       "headword": "થેપલાં",
       "romanization": "theplā̃",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b96e8651194b6f1",
+      "sourceHash": "fnv1a64:b8f282a541af3541",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C60-jalebi",
-      "sequence": 3070,
+      "sequence": 3083,
       "title": "જલેબી (jalebī) — jalebi, a syrupy sweet",
       "headword": "જલેબી",
       "romanization": "jalebī",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f40359a8affb1022",
+      "sourceHash": "fnv1a64:e02f378f8f3d6510",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C60-puri",
-      "sequence": 3080,
+      "sequence": 3093,
       "title": "પૂરી (pūrī) — puri, fried bread",
       "headword": "પૂરી",
       "romanization": "pūrī",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac07af2efca6738a",
+      "sourceHash": "fnv1a64:49e538d8b9a2de7a",
       "notice": null,
       "blocks": [
         {

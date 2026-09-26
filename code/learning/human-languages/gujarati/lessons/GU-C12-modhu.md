@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C12-modhu
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 620
+sequence: 633
 chapter: 18
 type: word
 headword: મોઢું

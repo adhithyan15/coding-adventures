@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C24-hear-divas
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1220
+sequence: 1233
 chapter: 28
 type: word
 headword: દિવસ

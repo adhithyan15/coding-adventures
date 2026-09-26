@@ -3,7 +3,7 @@
     "id": "GU-C03-tame-kem-chho",
     "language": "gujarati",
     "chapter": 9,
-    "sequence": 200,
+    "sequence": 213,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:bc7d903aa7d17d98",
+    "sourceHash": "fnv1a64:42a9808faa170b44",
     "detachableSegments": [
       "Script retrieval"
     ]

@@ -3,7 +3,7 @@
     "id": "GU-C38-pahelu",
     "language": "gujarati",
     "chapter": 42,
-    "sequence": 2170,
+    "sequence": 2183,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a020528ccc91f45b"
+    "sourceHash": "fnv1a64:5a41073e5a157b11"
   },
   "findings": []
 }

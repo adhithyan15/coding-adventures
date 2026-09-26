@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C86-journey
 spine_node: SPINE-MEET-GREET
-sequence: 4360
+sequence: 4373
 chapter: 86
 type: word
 headword: "મુસાફરી"

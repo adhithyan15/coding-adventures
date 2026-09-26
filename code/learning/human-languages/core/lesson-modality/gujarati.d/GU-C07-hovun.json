@@ -3,7 +3,7 @@
     "id": "GU-C07-hovun",
     "language": "gujarati",
     "chapter": 13,
-    "sequence": 380,
+    "sequence": 393,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:bab0b48b3d722f04"
+    "sourceHash": "fnv1a64:307b18917a987bf4"
   },
   "findings": []
 }

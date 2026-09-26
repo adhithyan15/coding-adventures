@@ -4,11 +4,11 @@
   "chapter": 35,
   "title": "The Word for Not, and the Word for Sorry",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a342791d0f349c93",
+  "sourceHash": "fnv1a64:39287906208ecdbd",
   "lessons": [
     {
       "id": "GU-C31-nathi",
-      "sequence": 1780,
+      "sequence": 1793,
       "title": "નથી (nathī) — is not",
       "headword": "નથી",
       "romanization": "nathī",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e1a0146fcd362a7",
+      "sourceHash": "fnv1a64:b3eeb940b2b0f357",
       "notice": null,
       "blocks": [
         {
@@ -136,7 +136,7 @@
     },
     {
       "id": "GU-C31-samajto-nathi",
-      "sequence": 1790,
+      "sequence": 1803,
       "title": "સમજતો નથી (samajto nathī) — I do not understand",
       "headword": "સમજતો નથી",
       "romanization": "samajto nathī",
@@ -147,7 +147,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b3e33d34d8481b9",
+      "sourceHash": "fnv1a64:f642ceb0b90e2d5e",
       "notice": null,
       "blocks": [
         {
@@ -271,7 +271,7 @@
     },
     {
       "id": "GU-W08-pha",
-      "sequence": 1800,
+      "sequence": 1813,
       "title": "ફ — the consonant pha",
       "headword": "ફ",
       "romanization": "pha",
@@ -285,7 +285,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:55c5205943b99e6f",
+      "sourceHash": "fnv1a64:739375c2f9a811cb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -385,7 +385,7 @@
     },
     {
       "id": "GU-C31-maaf",
-      "sequence": 1810,
+      "sequence": 1823,
       "title": "માફ કરો (māf karo) — excuse me",
       "headword": "માફ કરો",
       "romanization": "māf karo",
@@ -396,7 +396,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26976c9b5aeccc92",
+      "sourceHash": "fnv1a64:8f91140210a74924",
       "notice": null,
       "blocks": [
         {
@@ -524,7 +524,7 @@
     },
     {
       "id": "GU-C31-repair-five",
-      "sequence": 1820,
+      "sequence": 1833,
       "title": "The repair kit, all together",
       "headword": "નથી — સમજતો નથી — માફ કરો",
       "romanization": "nathī — samajto nathī — māf karo",
@@ -535,7 +535,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0040b3afe950781",
+      "sourceHash": "fnv1a64:907a8c5bdbedb0a5",
       "notice": null,
       "blocks": [
         {
@@ -652,7 +652,7 @@
     },
     {
       "id": "GU-R35-second-pass-read-it-or-repair-it",
-      "sequence": 1825,
+      "sequence": 1838,
       "title": "Read it, or repair it",
       "headword": "માફ કરો",
       "romanization": "māf karo",
@@ -663,7 +663,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bed6ec24d418a875",
+      "sourceHash": "fnv1a64:19625ed70001fba7",
       "notice": {
         "modality": "sight",
         "needs": [

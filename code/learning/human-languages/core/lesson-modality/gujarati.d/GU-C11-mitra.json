@@ -3,7 +3,7 @@
     "id": "GU-C11-mitra",
     "language": "gujarati",
     "chapter": 17,
-    "sequence": 560,
+    "sequence": 573,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a3c22080e5d5220d",
+    "sourceHash": "fnv1a64:6dc3118e3ed353bd",
     "detachableSegments": [
       "The letters in this word"
     ]

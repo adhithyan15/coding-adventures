@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C21-travel-five
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1010
+sequence: 1023
 delivery: script
 modality: pen
 modality_reason: The non-compensatory payoff includes required dictation, so the complete lesson needs a pen even though its oral core is drivable.

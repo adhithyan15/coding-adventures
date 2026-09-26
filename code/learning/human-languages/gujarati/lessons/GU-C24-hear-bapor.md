@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C24-hear-bapor
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1170
+sequence: 1183
 chapter: 28
 type: word
 headword: બપોર

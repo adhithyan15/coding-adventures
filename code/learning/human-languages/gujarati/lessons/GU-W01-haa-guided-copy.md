@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W01-haa-guided-copy
 spine_node: SPINE-RESPOND-BASIC
-sequence: 43
+sequence: 44
 delivery: script
 chapter: 2
 type: writing

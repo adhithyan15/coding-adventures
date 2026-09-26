@@ -4,11 +4,11 @@
   "chapter": 63,
   "title": "Roof, Wall and Garden",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:db452d8b92526484",
+  "sourceHash": "fnv1a64:ae0093d077de4d59",
   "lessons": [
     {
       "id": "GU-C63-roof",
-      "sequence": 3190,
+      "sequence": 3203,
       "title": "છત (chat) — a roof, a ceiling",
       "headword": "છત",
       "romanization": "chat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:12fbd3b20cee269b",
+      "sourceHash": "fnv1a64:008a984cadaf6638",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C63-wall",
-      "sequence": 3200,
+      "sequence": 3213,
       "title": "દીવાલ (dīvāl) — a wall",
       "headword": "દીવાલ",
       "romanization": "dīvāl",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78f3b242e0a374a0",
+      "sourceHash": "fnv1a64:34cf636447451430",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C63-courtyard",
-      "sequence": 3210,
+      "sequence": 3223,
       "title": "આંગણું (ā̃gaṇũ) — a courtyard",
       "headword": "આંગણું",
       "romanization": "ā̃gaṇũ",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a64105b26ad6f76d",
+      "sourceHash": "fnv1a64:9c8613da901ad027",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C63-garden",
-      "sequence": 3220,
+      "sequence": 3233,
       "title": "બગીચો (bagīco) — a garden",
       "headword": "બગીચો",
       "romanization": "bagīco",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43b07d7b84ff873a",
+      "sourceHash": "fnv1a64:78cd31086abc114a",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C63-address",
-      "sequence": 3230,
+      "sequence": 3243,
       "title": "સરનામું (sarnāmũ) — an address",
       "headword": "સરનામું",
       "romanization": "sarnāmũ",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f17d2b07df21d64",
+      "sourceHash": "fnv1a64:342f225099d5561a",
       "notice": null,
       "blocks": [
         {

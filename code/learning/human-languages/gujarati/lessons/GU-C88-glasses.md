@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C88-glasses
 spine_node: SPINE-COURTESY-THANK
-sequence: 4460
+sequence: 4473
 chapter: 88
 type: word
 headword: "ચશ્માં"

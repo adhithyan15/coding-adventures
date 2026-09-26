@@ -3,7 +3,7 @@
     "id": "GU-C57-price",
     "language": "gujarati",
     "chapter": 57,
-    "sequence": 2910,
+    "sequence": 2923,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:619181750ffa6a2e"
+    "sourceHash": "fnv1a64:f439eac9f240d608"
   },
   "findings": []
 }

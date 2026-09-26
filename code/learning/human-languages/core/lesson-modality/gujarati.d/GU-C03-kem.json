@@ -3,7 +3,7 @@
     "id": "GU-C03-kem",
     "language": "gujarati",
     "chapter": 9,
-    "sequence": 190,
+    "sequence": 203,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:368c6f4cc087f0f7",
+    "sourceHash": "fnv1a64:c7a24784da2cb9ec",
     "detachableSegments": [
       "The letters in this word",
       "Script retrieval"

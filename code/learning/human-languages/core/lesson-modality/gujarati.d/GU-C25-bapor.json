@@ -3,7 +3,7 @@
     "id": "GU-C25-bapor",
     "language": "gujarati",
     "chapter": 29,
-    "sequence": 1310,
+    "sequence": 1323,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:633a9fe06dc8d8ad",
+    "sourceHash": "fnv1a64:fa495e0681883a8f",
     "detachableSegments": [
       "Writing — guided copy, model in view"
     ]

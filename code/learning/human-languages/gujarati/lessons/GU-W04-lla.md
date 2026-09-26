@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W04-lla
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 71
+sequence: 77
 delivery: script
 chapter: 4
 type: writing
 headword: ળ
 romanization: "ḷa"
 gloss: "the retroflex lateral consonant lla"
-prerequisites: [GU-R03-doorway-three-r1]
+prerequisites: [GU-R03-doorway-three-r1, GU-C04-divaali]
 sounds: []
 roots: []
 etymology_hook: "The next conversation needs this curled-back l sound; today the hand learns only one new form."
 duration:
   max_seconds: 220
 requires:
-  knowledge: [GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01]
+  knowledge: [GU-SCRIPT-KA-01, GU-SCRIPT-NNA-01, GU-SCRIPT-SHA-01, GU-LEX-ANCHOR-DIVAALI]
 introduces:
   knowledge: [GU-SCRIPT-LLA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-NNA-01, GU-SCRIPT-LLA-01]
+  knowledge: [GU-SCRIPT-NNA-01, GU-SCRIPT-LLA-01, GU-LEX-ANCHOR-DIVAALI]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-R03-doorway-three-r1]
 # ળ — one new shape, retroflex lla
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-NNA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-NNA-01, GU-LEX-ANCHOR-DIVAALI] -->
 
 Write retroflex *nna* once from memory. Keep the tongue-curl idea, but put the
 old shape away: today it receives a different sound and form.

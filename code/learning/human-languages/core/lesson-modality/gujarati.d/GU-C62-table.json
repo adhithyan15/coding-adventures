@@ -3,7 +3,7 @@
     "id": "GU-C62-table",
     "language": "gujarati",
     "chapter": 62,
-    "sequence": 3160,
+    "sequence": 3173,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:95517f612e0e1bb9"
+    "sourceHash": "fnv1a64:27bd35af1c3276bd"
   },
   "findings": []
 }

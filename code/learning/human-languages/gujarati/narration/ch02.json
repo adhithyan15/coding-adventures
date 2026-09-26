@@ -4,11 +4,11 @@
   "chapter": 2,
   "title": "Courtesy and Responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1ddec31a3082edb5",
+  "sourceHash": "fnv1a64:dccd82571bbd3f00",
   "lessons": [
     {
       "id": "GU-W02-ra",
-      "sequence": 12,
+      "sequence": 13,
       "title": "ર — one new shape, ra",
       "headword": "ર",
       "romanization": "ra",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:99fbb2d3638d53cf",
+      "sourceHash": "fnv1a64:3a2d6cc3e0cf9dd2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -137,7 +137,7 @@
     },
     {
       "id": "GU-W02-da",
-      "sequence": 13,
+      "sequence": 14,
       "title": "દ — one continuous shape, da",
       "headword": "દ",
       "romanization": "da",
@@ -150,7 +150,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:575c54d459855a38",
+      "sourceHash": "fnv1a64:f4eece07e0beb053",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -266,7 +266,7 @@
     },
     {
       "id": "GU-W02-va",
-      "sequence": 14,
+      "sequence": 15,
       "title": "વ — rounded body, separate spine, va",
       "headword": "વ",
       "romanization": "va",
@@ -280,7 +280,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:18c9fa168a173111",
+      "sourceHash": "fnv1a64:7e45e700245d1254",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -397,7 +397,7 @@
     },
     {
       "id": "GU-W02-ya",
-      "sequence": 15,
+      "sequence": 16,
       "title": "ય — upper turn, lower body, separate spine, ya",
       "headword": "ય",
       "romanization": "ya",
@@ -410,7 +410,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9e90dc97776bbff9",
+      "sourceHash": "fnv1a64:bdd9b7bf282c7282",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -526,7 +526,7 @@
     },
     {
       "id": "GU-W02-bha",
-      "sequence": 16,
+      "sequence": 17,
       "title": "ભ — broad loop, inner turn, separate spine, bha",
       "headword": "ભ",
       "romanization": "bha",
@@ -539,7 +539,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:68f6395fd1dcd507",
+      "sourceHash": "fnv1a64:fc1ffa218234351a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -655,7 +655,7 @@
     },
     {
       "id": "GU-W02-dha",
-      "sequence": 17,
+      "sequence": 18,
       "title": "ધ — high entry, broad lower body, separate spine, dha",
       "headword": "ધ",
       "romanization": "dha",
@@ -668,7 +668,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3c3e6943a206a008",
+      "sourceHash": "fnv1a64:7d7e97b49c85fcb7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -784,7 +784,7 @@
     },
     {
       "id": "GU-W02-vocalic-r",
-      "sequence": 18,
+      "sequence": 19,
       "title": "ૃ — a small below-consonant sign, -ṛ",
       "headword": "ૃ",
       "romanization": "-ṛ",
@@ -797,7 +797,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1e46bb4a565896a0",
+      "sourceHash": "fnv1a64:d6628fcd97d44d07",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -914,7 +914,7 @@
     },
     {
       "id": "GU-C01-aabhaar",
-      "sequence": 20,
+      "sequence": 21,
       "title": "આભાર (ābhār) — \"thank you,\" an obligation gladly owed",
       "headword": "આભાર",
       "romanization": "ābhār",
@@ -925,7 +925,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:debb8e7788f2f008",
+      "sourceHash": "fnv1a64:78fefe7066890d65",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1067,7 +1067,7 @@
     },
     {
       "id": "GU-C01-aavjo",
-      "sequence": 30,
+      "sequence": 31,
       "title": "આવજો (āvjo) — \"goodbye\" (come again)",
       "headword": "આવજો",
       "romanization": "āvjo",
@@ -1078,7 +1078,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:89ca8313c27816ee",
+      "sourceHash": "fnv1a64:07fb079af88deea5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1220,7 +1220,7 @@
     },
     {
       "id": "GU-C01-haa-naa",
-      "sequence": 40,
+      "sequence": 41,
       "title": "હા / ના (hā / nā) — \"yes\" and \"no\"",
       "headword": "હા / ના",
       "romanization": "hā / nā",
@@ -1231,7 +1231,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b81dda3639bcc3be",
+      "sourceHash": "fnv1a64:2f9f3fde72a054b7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1364,7 +1364,7 @@
     },
     {
       "id": "GU-W01-haa-guided-copy",
-      "sequence": 43,
+      "sequence": 44,
       "title": "હા (hā) — one supported copy",
       "headword": "હા",
       "romanization": "hā",
@@ -1377,7 +1377,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e5a3d44a38f68614",
+      "sourceHash": "fnv1a64:a2350e328aef7d43",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1477,7 +1477,7 @@
     },
     {
       "id": "GU-W01-haa-delayed-copy",
-      "sequence": 44,
+      "sequence": 45,
       "title": "હા (hā) — look, hide, write, compare",
       "headword": "હા",
       "romanization": "hā",
@@ -1491,7 +1491,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:8442f6ebdcdb58fe",
+      "sourceHash": "fnv1a64:499760c74e44ab07",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1605,7 +1605,7 @@
     },
     {
       "id": "GU-W01-haa-dictation",
-      "sequence": 45,
+      "sequence": 46,
       "title": "One heard answer — write what you know",
       "headword": "હા",
       "romanization": "hā",
@@ -1617,7 +1617,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:d39c96c50833bf9f",
+      "sourceHash": "fnv1a64:c90aac0e02fac3f8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1692,7 +1692,7 @@
     },
     {
       "id": "GU-C01-saarun",
-      "sequence": 50,
+      "sequence": 51,
       "title": "સારું (sārũ) — \"good,\" \"okay\"",
       "headword": "સારું",
       "romanization": "sārũ",
@@ -1703,7 +1703,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9fea9ef8b9f51fb5",
+      "sourceHash": "fnv1a64:e8a2c9935cde0c08",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1842,7 +1842,7 @@
     },
     {
       "id": "GU-C01-practice",
-      "sequence": 60,
+      "sequence": 61,
       "title": "Chapter 2 — Courtesy and responses",
       "headword": "(recap)",
       "romanization": "",
@@ -1854,7 +1854,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5bbc5a5146f9ed28",
+      "sourceHash": "fnv1a64:c25afc0c755b3a85",
       "notice": {
         "modality": "pen",
         "needs": [

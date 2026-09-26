@@ -4,11 +4,11 @@
   "chapter": 53,
   "title": "Wife, Son, Daughter and Guests",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ee36065a44ae105d",
+  "sourceHash": "fnv1a64:9640d48b860d3798",
   "lessons": [
     {
       "id": "GU-C53-wife",
-      "sequence": 2690,
+      "sequence": 2703,
       "title": "પત્ની (patnī) — a wife",
       "headword": "પત્ની",
       "romanization": "patnī",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52d82a56a9a40342",
+      "sourceHash": "fnv1a64:262aa04bb1038837",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C53-son",
-      "sequence": 2700,
+      "sequence": 2713,
       "title": "દીકરો (dīkro) — a son",
       "headword": "દીકરો",
       "romanization": "dīkro",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfb0d8d5fdb16cac",
+      "sourceHash": "fnv1a64:c9361cf272c6ac7c",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C53-daughter",
-      "sequence": 2710,
+      "sequence": 2723,
       "title": "દીકરી (dīkrī) — a daughter",
       "headword": "દીકરી",
       "romanization": "dīkrī",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:096c75693b1dc823",
+      "sourceHash": "fnv1a64:e69d12985137a0e1",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C53-relative",
-      "sequence": 2720,
+      "sequence": 2733,
       "title": "સંબંધી (sambandhī) — a relative",
       "headword": "સંબંધી",
       "romanization": "sambandhī",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed7a61fadf641882",
+      "sourceHash": "fnv1a64:aba7c8926a7fb66e",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C53-guest",
-      "sequence": 2730,
+      "sequence": 2743,
       "title": "મહેમાન (mahemān) — a guest",
       "headword": "મહેમાન",
       "romanization": "mahemān",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60d6ed80d184b3e6",
+      "sourceHash": "fnv1a64:4736e1d12dbb1db0",
       "notice": null,
       "blocks": [
         {

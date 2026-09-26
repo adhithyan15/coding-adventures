@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C82-seventeen
 spine_node: SPINE-RESPOND-BASIC
-sequence: 4160
+sequence: 4173
 chapter: 82
 type: word
 headword: "સત્તર"

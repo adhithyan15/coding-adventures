@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C87-shirt
 spine_node: SPINE-COURTESY-THANK
-sequence: 4420
+sequence: 4433
 chapter: 87
 type: word
 headword: "ખમીસ"

@@ -4,11 +4,11 @@
   "chapter": 49,
   "title": "Pain, Medicine and Rest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:93d82ec50574e983",
+  "sourceHash": "fnv1a64:81b78953491b350e",
   "lessons": [
     {
       "id": "GU-C49-pain",
-      "sequence": 2490,
+      "sequence": 2503,
       "title": "દુખાવો (dukhāvo) — pain, an ache",
       "headword": "દુખાવો",
       "romanization": "dukhāvo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bf0761cc5c57a57",
+      "sourceHash": "fnv1a64:2ba3ebdc66edd1d8",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C49-medicine",
-      "sequence": 2500,
+      "sequence": 2513,
       "title": "દવા (davā) — medicine",
       "headword": "દવા",
       "romanization": "davā",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da74979bc8af82ab",
+      "sourceHash": "fnv1a64:47bc6f5384f39b2f",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C49-rest",
-      "sequence": 2510,
+      "sequence": 2523,
       "title": "આરામ (ārām) — rest",
       "headword": "આરામ",
       "romanization": "ārām",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d71fbdd775ebf599",
+      "sourceHash": "fnv1a64:e120274cd020034b",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C49-hunger",
-      "sequence": 2520,
+      "sequence": 2533,
       "title": "ભૂખ (bhūkh) — hunger",
       "headword": "ભૂખ",
       "romanization": "bhūkh",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44b17eede128d46f",
+      "sourceHash": "fnv1a64:7d2b2fcc77ea19df",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C49-thirst",
-      "sequence": 2530,
+      "sequence": 2543,
       "title": "તરસ (taras) — thirst",
       "headword": "તરસ",
       "romanization": "taras",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba6722d8feab4059",
+      "sourceHash": "fnv1a64:af7410c2781a3827",
       "notice": null,
       "blocks": [
         {

@@ -3,7 +3,7 @@
     "id": "GU-R26-numbers-r4",
     "language": "gujarati",
     "chapter": 30,
-    "sequence": 1380,
+    "sequence": 1393,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:e543444fc84d79c8",
+    "sourceHash": "fnv1a64:abe32d6e3f88c9b8",
     "detachableSegments": [
       "Writing — from sound, every model covered"
     ]

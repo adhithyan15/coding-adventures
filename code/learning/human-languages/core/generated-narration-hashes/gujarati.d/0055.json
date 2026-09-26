@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 55,
-  "sourceHash": "fnv1a64:0d2f09579883d219",
+  "sourceHash": "fnv1a64:ef521b65a41d4da9",
   "lessonIds": [
     "GU-C55-randhvu",
     "GU-C55-dhovu",
@@ -14,6 +14,6 @@
   "text": "gujarati/narration/ch55.txt",
   "json": "gujarati/narration/ch55.json",
   "textHash": "fnv1a64:cb13c3737f5d4962",
-  "jsonHash": "fnv1a64:eb6a221ab51ffe9f",
+  "jsonHash": "fnv1a64:d75b2606a01dd8bc",
   "findings": []
 }

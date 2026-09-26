@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C83-which
 spine_node: SPINE-RESPOND-BASIC
-sequence: 4250
+sequence: 4263
 chapter: 83
 type: word
 headword: "કયું"

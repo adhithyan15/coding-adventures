@@ -3,7 +3,7 @@
     "id": "GU-C20-hear-ghar",
     "language": "gujarati",
     "chapter": 24,
-    "sequence": 900,
+    "sequence": 913,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8d2c3118fc2cdf82"
+    "sourceHash": "fnv1a64:f72eb9a9cc2b4d32"
   },
   "findings": []
 }

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C82-forty
 spine_node: SPINE-RESPOND-BASIC
-sequence: 4200
+sequence: 4213
 chapter: 82
 type: word
 headword: "ચાળીસ"

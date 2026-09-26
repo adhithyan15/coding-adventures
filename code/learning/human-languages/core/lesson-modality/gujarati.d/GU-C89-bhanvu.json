@@ -3,7 +3,7 @@
     "id": "GU-C89-bhanvu",
     "language": "gujarati",
     "chapter": 89,
-    "sequence": 4540,
+    "sequence": 4553,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4620be4d35ed4bb7"
+    "sourceHash": "fnv1a64:e629d83e8c86be67"
   },
   "findings": []
 }

@@ -3,7 +3,7 @@
     "id": "GU-C62-cot",
     "language": "gujarati",
     "chapter": 62,
-    "sequence": 3150,
+    "sequence": 3163,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:56870b2718b35357"
+    "sourceHash": "fnv1a64:d6f30e45f884a849"
   },
   "findings": []
 }

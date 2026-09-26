@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C76-all
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 3870
+sequence: 3883
 chapter: 76
 type: word
 headword: "બધું"

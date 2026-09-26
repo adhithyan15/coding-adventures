@@ -3,7 +3,7 @@
     "id": "GU-C75-behind",
     "language": "gujarati",
     "chapter": 75,
-    "sequence": 3820,
+    "sequence": 3833,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:040e29fb83264dc1"
+    "sourceHash": "fnv1a64:96718d154373558d"
   },
   "findings": []
 }

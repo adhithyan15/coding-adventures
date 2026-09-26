@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R23-shaalaa-rasto-r2
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1150
+sequence: 1163
 delivery: script
 modality: pen
 modality_reason: The four separate retrieval checks end in required model-free dictation, so the complete lesson needs a pen.

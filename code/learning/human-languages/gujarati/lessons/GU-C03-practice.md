@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C03-practice
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 230
+sequence: 243
 chapter: 9
 type: practice
 headword: (dialogue)

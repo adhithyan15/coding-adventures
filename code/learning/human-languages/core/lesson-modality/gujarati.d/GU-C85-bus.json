@@ -3,7 +3,7 @@
     "id": "GU-C85-bus",
     "language": "gujarati",
     "chapter": 85,
-    "sequence": 4310,
+    "sequence": 4323,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:33241856cc529305"
+    "sourceHash": "fnv1a64:c84b82931409c797"
   },
   "findings": []
 }

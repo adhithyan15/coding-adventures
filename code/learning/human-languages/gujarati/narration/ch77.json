@@ -4,11 +4,11 @@
   "chapter": 77,
   "title": "Always, Sometimes, Now, Later",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d93137eb68d4c1ee",
+  "sourceHash": "fnv1a64:234dd47e8e9fb30c",
   "lessons": [
     {
       "id": "GU-C77-always",
-      "sequence": 3910,
+      "sequence": 3923,
       "title": "હંમેશા (hammeśā) — always",
       "headword": "હંમેશા",
       "romanization": "hammeśā",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6995edd768dcc04",
+      "sourceHash": "fnv1a64:d2b74861b11a0dbe",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C77-sometimes",
-      "sequence": 3920,
+      "sequence": 3933,
       "title": "ક્યારેક (kyārek) — sometimes",
       "headword": "ક્યારેક",
       "romanization": "kyārek",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3288cf7d03576e6",
+      "sourceHash": "fnv1a64:4cccd7a9ce388916",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C77-now",
-      "sequence": 3930,
+      "sequence": 3943,
       "title": "હવે (have) — now, from now on",
       "headword": "હવે",
       "romanization": "have",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:970c05b494f062dc",
+      "sourceHash": "fnv1a64:88cab2822d623ef2",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C77-later",
-      "sequence": 3940,
+      "sequence": 3953,
       "title": "પછી (pachī) — later, after",
       "headword": "પછી",
       "romanization": "pachī",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c080fe21f96f1ce",
+      "sourceHash": "fnv1a64:9279c5cc964ab6be",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C77-before",
-      "sequence": 3950,
+      "sequence": 3963,
       "title": "પહેલાં (pahelā̃) — before, earlier",
       "headword": "પહેલાં",
       "romanization": "pahelā̃",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1a34d423e266e44",
+      "sourceHash": "fnv1a64:3049f27fb683419e",
       "notice": null,
       "blocks": [
         {

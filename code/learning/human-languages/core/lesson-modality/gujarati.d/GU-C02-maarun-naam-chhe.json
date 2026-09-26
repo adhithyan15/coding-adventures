@@ -3,7 +3,7 @@
     "id": "GU-C02-maarun-naam-chhe",
     "language": "gujarati",
     "chapter": 8,
-    "sequence": 120,
+    "sequence": 133,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d7f3497ab46e51a3"
+    "sourceHash": "fnv1a64:117bb1a359167baf"
   },
   "findings": []
 }

@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W07-tta
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 87
+sequence: 100
 delivery: script
 chapter: 7
 type: writing
 headword: ટ
 romanization: "ṭa"
 gloss: "the retroflex consonant tta"
-prerequisites: [GU-W07-uu-matra]
+prerequisites: [GU-W07-uu-matra, GU-C07-dhool, GU-C07-int]
 sounds: []
 roots: []
 etymology_hook: "Flatbread and family words use this curled-back t; the hand meets it before either word."
 duration:
   max_seconds: 225
 requires:
-  knowledge: [GU-SCRIPT-TA-01, GU-SCRIPT-UU-MATRA-01]
+  knowledge: [GU-SCRIPT-TA-01, GU-SCRIPT-UU-MATRA-01, GU-LEX-ANCHOR-DHOOL, GU-LEX-ANCHOR-INT]
 introduces:
   knowledge: [GU-SCRIPT-TTA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-UU-MATRA-01, GU-SCRIPT-TA-01, GU-SCRIPT-TTA-01]
+  knowledge: [GU-SCRIPT-UU-MATRA-01, GU-SCRIPT-TA-01, GU-SCRIPT-TTA-01, GU-LEX-ANCHOR-DHOOL, GU-LEX-ANCHOR-INT]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W07-uu-matra, GU-W01-ta]
 # ટ — retroflex tta
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-UU-MATRA-01, GU-SCRIPT-TA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-UU-MATRA-01, GU-SCRIPT-TA-01, GU-LEX-ANCHOR-DHOOL, GU-LEX-ANCHOR-INT] -->
 
 Read **મૂ** once and point to its long-*ū* sign. Then write dental **ત** once
 and say *ta* with the tongue at the teeth. Curl the tongue back for retroflex

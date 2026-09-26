@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C51-grandmother
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2620
+sequence: 2633
 chapter: 51
 type: word
 headword: "દાદી"

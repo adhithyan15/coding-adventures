@@ -4,11 +4,11 @@
   "chapter": 59,
   "title": "Fruit and Vegetables",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1809d7cda6b74835",
+  "sourceHash": "fnv1a64:75e9199f475a2f81",
   "lessons": [
     {
       "id": "GU-C59-fruit",
-      "sequence": 2990,
+      "sequence": 3003,
       "title": "ફળ (phaḷ) — fruit",
       "headword": "ફળ",
       "romanization": "phaḷ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e3e48803a971cfd",
+      "sourceHash": "fnv1a64:434695bf955ebc23",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C59-banana",
-      "sequence": 3000,
+      "sequence": 3013,
       "title": "કેળું (keḷũ) — a banana",
       "headword": "કેળું",
       "romanization": "keḷũ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47f5b02f7461391c",
+      "sourceHash": "fnv1a64:e7d7bbef7a5da3cc",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C59-apple",
-      "sequence": 3010,
+      "sequence": 3023,
       "title": "સફરજન (sapharjan) — an apple",
       "headword": "સફરજન",
       "romanization": "sapharjan",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9fd2dd684211eff",
+      "sourceHash": "fnv1a64:e0f261e41e5f9481",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C59-potatoes",
-      "sequence": 3020,
+      "sequence": 3033,
       "title": "બટાકા (baṭākā) — potatoes",
       "headword": "બટાકા",
       "romanization": "baṭākā",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61dab0bcc3e57c3f",
+      "sourceHash": "fnv1a64:9c1d6d0807adfe0f",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C59-tomato",
-      "sequence": 3030,
+      "sequence": 3043,
       "title": "ટામેટું (ṭāmeṭũ) — a tomato",
       "headword": "ટામેટું",
       "romanization": "ṭāmeṭũ",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5186e78f156b72ff",
+      "sourceHash": "fnv1a64:be23e85129354705",
       "notice": null,
       "blocks": [
         {

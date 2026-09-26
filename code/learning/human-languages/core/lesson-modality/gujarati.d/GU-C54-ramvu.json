@@ -3,7 +3,7 @@
     "id": "GU-C54-ramvu",
     "language": "gujarati",
     "chapter": 54,
-    "sequence": 2780,
+    "sequence": 2793,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:06f920adc79bcad9"
+    "sourceHash": "fnv1a64:bf7993198ba1ad6d"
   },
   "findings": []
 }

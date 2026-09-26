@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C28-hear-khurshi
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1560
+sequence: 1573
 chapter: 32
 type: word
 headword: ખુરશી

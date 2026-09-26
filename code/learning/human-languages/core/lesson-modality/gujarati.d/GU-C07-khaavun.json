@@ -3,7 +3,7 @@
     "id": "GU-C07-khaavun",
     "language": "gujarati",
     "chapter": 13,
-    "sequence": 410,
+    "sequence": 423,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7a6fcfcc17e88294"
+    "sourceHash": "fnv1a64:7a0c51a2e392a39e"
   },
   "findings": []
 }

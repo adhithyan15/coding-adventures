@@ -4,11 +4,11 @@
   "chapter": 56,
   "title": "Sing, Dance, Laugh, Listen, Learn",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6dc1231a58437bf1",
+  "sourceHash": "fnv1a64:7b23a30152fce87a",
   "lessons": [
     {
       "id": "GU-C56-gaavu",
-      "sequence": 2840,
+      "sequence": 2853,
       "title": "ગાવું (gāvũ) — to sing",
       "headword": "ગાવું",
       "romanization": "gāvũ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e7728d8a5ec6582",
+      "sourceHash": "fnv1a64:20799f2a3ff217f2",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C56-naachvu",
-      "sequence": 2850,
+      "sequence": 2863,
       "title": "નાચવું (nācvũ) — to dance",
       "headword": "નાચવું",
       "romanization": "nācvũ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:650fb10706735007",
+      "sourceHash": "fnv1a64:371e6e7069bfd061",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C56-hasvu",
-      "sequence": 2860,
+      "sequence": 2873,
       "title": "હસવું (hasvũ) — to laugh",
       "headword": "હસવું",
       "romanization": "hasvũ",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4b0ab22a796558c",
+      "sourceHash": "fnv1a64:736e363af56bce58",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C56-saambhalvu",
-      "sequence": 2870,
+      "sequence": 2883,
       "title": "સાંભળવું (sā̃bhaḷvũ) — to listen, to hear",
       "headword": "સાંભળવું",
       "romanization": "sā̃bhaḷvũ",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1236bddddffc651b",
+      "sourceHash": "fnv1a64:0b257083d3fa1261",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C56-shikhvu",
-      "sequence": 2880,
+      "sequence": 2893,
       "title": "શીખવું (śīkhvũ) — to learn",
       "headword": "શીખવું",
       "romanization": "śīkhvũ",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bc7adb89cf392e4",
+      "sourceHash": "fnv1a64:617a2832c9e4a6e0",
       "notice": null,
       "blocks": [
         {

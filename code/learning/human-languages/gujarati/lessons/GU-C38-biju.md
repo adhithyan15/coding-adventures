@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C38-biju
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 2150
+sequence: 2163
 chapter: 42
 type: word
 headword: બીજું

@@ -1,8 +1,11 @@
 {
   "language": "gujarati",
   "chapter": 3,
-  "sourceHash": "fnv1a64:1d4665979c21232d",
+  "sourceHash": "fnv1a64:e74d5a3e1fb9865a",
   "lessonIds": [
+    "GU-C03-chhip",
+    "GU-C03-kan",
+    "GU-C03-shak",
     "GU-W03-ja",
     "GU-W03-o-matra",
     "GU-W03-anusvara",
@@ -18,7 +21,7 @@
   "drivablePrefix": 0,
   "text": "gujarati/narration/ch03.txt",
   "json": "gujarati/narration/ch03.json",
-  "textHash": "fnv1a64:8b5d12a964deabae",
-  "jsonHash": "fnv1a64:d60eb510f88bb86e",
+  "textHash": "fnv1a64:2bad55f72d6b9024",
+  "jsonHash": "fnv1a64:c9bb4a00c5a414d4",
   "findings": []
 }

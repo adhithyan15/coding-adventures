@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C05-bagalo",
+    "language": "gujarati",
+    "chapter": 5,
+    "sequence": 83,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8348cac0bc16a12a"
+  },
+  "findings": []
+}

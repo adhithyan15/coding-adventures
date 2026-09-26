@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C06-ukhaanun",
+    "language": "gujarati",
+    "chapter": 6,
+    "sequence": 89,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8f55021abda479f2"
+  },
+  "findings": []
+}

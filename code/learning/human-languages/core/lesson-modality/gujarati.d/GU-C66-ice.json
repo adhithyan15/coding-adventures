@@ -3,7 +3,7 @@
     "id": "GU-C66-ice",
     "language": "gujarati",
     "chapter": 66,
-    "sequence": 3370,
+    "sequence": 3383,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6982b989c5585f17"
+    "sourceHash": "fnv1a64:da579b4bead93ce5"
   },
   "findings": []
 }

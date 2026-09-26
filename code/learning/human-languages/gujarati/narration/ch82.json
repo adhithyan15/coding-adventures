@@ -4,11 +4,11 @@
   "chapter": 82,
   "title": "Seventeen to Forty",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ffc30df394996d58",
+  "sourceHash": "fnv1a64:9ef6a5a0d495aa8f",
   "lessons": [
     {
       "id": "GU-C82-seventeen",
-      "sequence": 4160,
+      "sequence": 4173,
       "title": "સત્તર (sattar) — seventeen",
       "headword": "સત્તર",
       "romanization": "sattar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f530a070c64df8b",
+      "sourceHash": "fnv1a64:eb265fa7a0b705db",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C82-eighteen",
-      "sequence": 4170,
+      "sequence": 4183,
       "title": "અઢાર (aḍhār) — eighteen",
       "headword": "અઢાર",
       "romanization": "aḍhār",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1844319cc32d68d5",
+      "sourceHash": "fnv1a64:29f56b2f01d2d6b3",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C82-twenty",
-      "sequence": 4180,
+      "sequence": 4193,
       "title": "વીસ (vīs) — twenty",
       "headword": "વીસ",
       "romanization": "vīs",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aea92e0e8d3ca8f7",
+      "sourceHash": "fnv1a64:b608f20157259787",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C82-thirty",
-      "sequence": 4190,
+      "sequence": 4203,
       "title": "ત્રીસ (trīs) — thirty",
       "headword": "ત્રીસ",
       "romanization": "trīs",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e751e1c8da39ff00",
+      "sourceHash": "fnv1a64:937a7d98176b46c1",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C82-forty",
-      "sequence": 4200,
+      "sequence": 4213,
       "title": "ચાળીસ (cāḷīs) — forty",
       "headword": "ચાળીસ",
       "romanization": "cāḷīs",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:580b7402af05e9c3",
+      "sourceHash": "fnv1a64:2e2aff1e8d01a693",
       "notice": null,
       "blocks": [
         {

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C86-phone
 spine_node: SPINE-MEET-GREET
-sequence: 4390
+sequence: 4403
 chapter: 86
 type: word
 headword: "ફોન"

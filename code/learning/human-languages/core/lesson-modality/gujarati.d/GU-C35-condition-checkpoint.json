@@ -3,7 +3,7 @@
     "id": "GU-C35-condition-checkpoint",
     "language": "gujarati",
     "chapter": 39,
-    "sequence": 2020,
+    "sequence": 2033,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:93e4a7c6d99fb4dd"
+    "sourceHash": "fnv1a64:29b257d51fa2da8d"
   },
   "findings": []
 }

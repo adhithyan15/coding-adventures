@@ -2,28 +2,28 @@
 schema_version: 2
 id: GU-W03-chha
 spine_node: SPINE-MEET-GREET
-sequence: 66
+sequence: 70
 delivery: script
 chapter: 3
 type: writing
 headword: છ
 romanization: "chha"
 gloss: "the consonant chha"
-prerequisites: [GU-W03-u-matra]
+prerequisites: [GU-W03-u-matra, GU-C03-chhip]
 sounds: []
 roots: []
 etymology_hook: "Gujarati keeps the related Devanagari sound system while dropping the continuous headline."
 duration:
   max_seconds: 220
 requires:
-  knowledge: [GU-SCRIPT-U-MATRA-01]
+  knowledge: [GU-SCRIPT-U-MATRA-01, GU-LEX-ANCHOR-CHHIP]
 introduces:
   knowledge: [GU-SCRIPT-CHHA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [GU-SCRIPT-U-MATRA-01, GU-SCRIPT-CHHA-01]
+  knowledge: [GU-SCRIPT-U-MATRA-01, GU-SCRIPT-CHHA-01, GU-LEX-ANCHOR-CHHIP]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -35,7 +35,7 @@ reviews_of: [GU-W03-u-matra]
 # છ — the consonant chha
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-U-MATRA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-U-MATRA-01, GU-LEX-ANCHOR-CHHIP] -->
 
 Write the below-letter u hook once from memory. Keep it compact.
 

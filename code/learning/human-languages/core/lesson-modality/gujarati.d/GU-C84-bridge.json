@@ -3,7 +3,7 @@
     "id": "GU-C84-bridge",
     "language": "gujarati",
     "chapter": 84,
-    "sequence": 4300,
+    "sequence": 4313,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:53ca750fbb4db68f"
+    "sourceHash": "fnv1a64:b905f404dadecd33"
   },
   "findings": []
 }

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C38-triju
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 2140
+sequence: 2153
 chapter: 42
 type: word
 headword: ત્રીજું

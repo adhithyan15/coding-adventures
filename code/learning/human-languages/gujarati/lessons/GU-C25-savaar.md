@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C25-savaar
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1300
+sequence: 1313
 chapter: 29
 type: practice
 headword: સવાર

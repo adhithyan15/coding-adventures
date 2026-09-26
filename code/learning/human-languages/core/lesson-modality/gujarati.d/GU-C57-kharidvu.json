@@ -3,7 +3,7 @@
     "id": "GU-C57-kharidvu",
     "language": "gujarati",
     "chapter": 57,
-    "sequence": 2890,
+    "sequence": 2903,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:19e1a8626a655b54"
+    "sourceHash": "fnv1a64:1491537197c83cc1"
   },
   "findings": []
 }

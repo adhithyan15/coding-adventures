@@ -3,7 +3,7 @@
     "id": "GU-R26-vicharvun-samajvun-r4",
     "language": "gujarati",
     "chapter": 30,
-    "sequence": 1420,
+    "sequence": 1433,
     "modality": "pen",
     "derived": "pen",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:3e03f4fd096bd476",
+    "sourceHash": "fnv1a64:750ee153a97048e6",
     "detachableSegments": [
       "Writing — from sound, every model covered"
     ]

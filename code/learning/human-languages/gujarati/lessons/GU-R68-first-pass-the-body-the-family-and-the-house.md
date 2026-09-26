@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-R68-first-pass-the-body-the-family-and-the-house
 spine_node: SPINE-TAKE-LEAVE
-sequence: 3490
+sequence: 3503
 chapter: 68
 type: review
 headword: (dialogue)

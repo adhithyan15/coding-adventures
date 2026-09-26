@@ -3,7 +3,7 @@
     "id": "GU-C04-pachha-malishun",
     "language": "gujarati",
     "chapter": 10,
-    "sequence": 270,
+    "sequence": 283,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:5ee11226d486e730"
+    "sourceHash": "fnv1a64:efef7a1e4987397a"
   },
   "findings": []
 }

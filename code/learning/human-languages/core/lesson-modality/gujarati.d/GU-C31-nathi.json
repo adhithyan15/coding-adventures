@@ -3,7 +3,7 @@
     "id": "GU-C31-nathi",
     "language": "gujarati",
     "chapter": 35,
-    "sequence": 1780,
+    "sequence": 1793,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1e1a0146fcd362a7"
+    "sourceHash": "fnv1a64:b3eeb940b2b0f357"
   },
   "findings": []
 }

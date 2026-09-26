@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C27-hear-keri
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1500
+sequence: 1513
 chapter: 31
 type: word
 headword: કેરી

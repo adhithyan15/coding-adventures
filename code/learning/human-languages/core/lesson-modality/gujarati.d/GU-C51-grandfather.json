@@ -3,7 +3,7 @@
     "id": "GU-C51-grandfather",
     "language": "gujarati",
     "chapter": 51,
-    "sequence": 2610,
+    "sequence": 2623,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:6d0e36c6fc9ef435"
+    "sourceHash": "fnv1a64:2c5e4385f1a30e9b"
   },
   "findings": []
 }

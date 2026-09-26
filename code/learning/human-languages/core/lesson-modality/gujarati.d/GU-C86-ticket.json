@@ -3,7 +3,7 @@
     "id": "GU-C86-ticket",
     "language": "gujarati",
     "chapter": 86,
-    "sequence": 4370,
+    "sequence": 4383,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:4bb78f6d285efaf0"
+    "sourceHash": "fnv1a64:56ed0aa4193db2de"
   },
   "findings": []
 }

@@ -254,11 +254,16 @@ describe("the real corpus", () => {
   // letters they hold. The six left: chapter 1's five (the chapter is at its
   // twelve-atom budget, and हो is written in the lesson itself), and ँ, which
   // no everyday Marathi word uses.
+  //
+  // Gujarati's cold fell 34 -> 4 (and builds-toward 5 -> 4) the same way:
+  // thirteen words (આહાર, છીપ, કણ, શક, અથાણું, દિવાળી, ચપ્પલ, બગલો, ઉખાણું,
+  // એકલું, ધૂળ, ઈંટ, ઢોલ) open chapters 1 and 3-7. The four left are chapter
+  // 2's દ, ય, ધ and ૃ: that chapter is at its twelve-atom budget.
   const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
     arabic: [2, 4, 0],
     bengali: [0, 11, 0],
     chinese: [0, 51, 0],
-    gujarati: [34, 5, 0],
+    gujarati: [4, 4, 0],
     hindi: [0, 1, 0],
     japanese: [2, 35, 0],
     kannada: [0, 0, 0],

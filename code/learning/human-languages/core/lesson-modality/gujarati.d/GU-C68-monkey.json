@@ -3,7 +3,7 @@
     "id": "GU-C68-monkey",
     "language": "gujarati",
     "chapter": 68,
-    "sequence": 3470,
+    "sequence": 3483,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:f75cfbadda05b520"
+    "sourceHash": "fnv1a64:ebdb7e4c9d4dd246"
   },
   "findings": []
 }

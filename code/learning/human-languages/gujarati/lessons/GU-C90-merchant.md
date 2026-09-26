@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C90-merchant
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 4600
+sequence: 4613
 chapter: 90
 type: word
 headword: "વેપારી"

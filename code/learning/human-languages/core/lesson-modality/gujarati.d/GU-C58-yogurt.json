@@ -3,7 +3,7 @@
     "id": "GU-C58-yogurt",
     "language": "gujarati",
     "chapter": 58,
-    "sequence": 2970,
+    "sequence": 2983,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:1d911764672911e7"
+    "sourceHash": "fnv1a64:cfbb7b796161773d"
   },
   "findings": []
 }

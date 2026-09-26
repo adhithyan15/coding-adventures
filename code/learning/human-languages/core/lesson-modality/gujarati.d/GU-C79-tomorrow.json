@@ -3,7 +3,7 @@
     "id": "GU-C79-tomorrow",
     "language": "gujarati",
     "chapter": 79,
-    "sequence": 4030,
+    "sequence": 4043,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:23dc9d9e4c67f97b"
+    "sourceHash": "fnv1a64:2b5f2464f5f19019"
   },
   "findings": []
 }

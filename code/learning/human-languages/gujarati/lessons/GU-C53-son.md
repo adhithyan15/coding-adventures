@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C53-son
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2700
+sequence: 2713
 chapter: 53
 type: word
 headword: "દીકરો"

@@ -3,7 +3,7 @@
     "id": "GU-C37-kyaan",
     "language": "gujarati",
     "chapter": 41,
-    "sequence": 2090,
+    "sequence": 2103,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:d3d7cb63cae71b5c"
+    "sourceHash": "fnv1a64:0bfcf85062a7f33f"
   },
   "findings": []
 }

@@ -3,7 +3,7 @@
     "id": "GU-C74-expensive",
     "language": "gujarati",
     "chapter": 74,
-    "sequence": 3760,
+    "sequence": 3773,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c69e14a61eb4ab39"
+    "sourceHash": "fnv1a64:72f373868a49e9a5"
   },
   "findings": []
 }

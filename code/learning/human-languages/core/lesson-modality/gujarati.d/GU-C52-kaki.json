@@ -3,7 +3,7 @@
     "id": "GU-C52-kaki",
     "language": "gujarati",
     "chapter": 52,
-    "sequence": 2650,
+    "sequence": 2663,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:12ff232da4cfbf0c"
+    "sourceHash": "fnv1a64:b87362dfe6833a4a"
   },
   "findings": []
 }

@@ -3,7 +3,7 @@
     "id": "GU-C22-hear-rasto",
     "language": "gujarati",
     "chapter": 26,
-    "sequence": 1060,
+    "sequence": 1073,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:319916b53eca2658"
+    "sourceHash": "fnv1a64:fac3f1ae6c9b3408"
   },
   "findings": []
 }

@@ -3,7 +3,7 @@
     "id": "GU-R91-first-pass-colours-size-and-place",
     "language": "gujarati",
     "chapter": 91,
-    "sequence": 4660,
+    "sequence": 4673,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:17491e4dcfc48837"
+    "sourceHash": "fnv1a64:9507e2ededcefd2b"
   },
   "findings": []
 }

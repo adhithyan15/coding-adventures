@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C65-soil
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3330
+sequence: 3343
 chapter: 65
 type: word
 headword: "માટી"

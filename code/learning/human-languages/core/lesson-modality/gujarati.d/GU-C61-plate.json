@@ -3,7 +3,7 @@
     "id": "GU-C61-plate",
     "language": "gujarati",
     "chapter": 61,
-    "sequence": 3090,
+    "sequence": 3103,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:8299ea5239c46d05"
+    "sourceHash": "fnv1a64:325316fe02fd39b4"
   },
   "findings": []
 }

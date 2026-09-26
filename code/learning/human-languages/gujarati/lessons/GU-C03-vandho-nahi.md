@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C03-vandho-nahi
 spine_node: SPINE-COURTESY-THANK
-sequence: 220
+sequence: 233
 chapter: 9
 type: phrase
 headword: વાંધો નહીં

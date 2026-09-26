@@ -3,7 +3,7 @@
     "id": "GU-C87-cap",
     "language": "gujarati",
     "chapter": 87,
-    "sequence": 4440,
+    "sequence": 4453,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:12b6379346bb2e1c"
+    "sourceHash": "fnv1a64:3bde03d4bb8cfa4c"
   },
   "findings": []
 }

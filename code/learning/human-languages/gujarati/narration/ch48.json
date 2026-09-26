@@ -4,11 +4,11 @@
   "chapter": 48,
   "title": "Knee, Heart and a Fever",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ebb7102221a6c44a",
+  "sourceHash": "fnv1a64:8ec5befbc3c13235",
   "lessons": [
     {
       "id": "GU-C48-knee",
-      "sequence": 2440,
+      "sequence": 2453,
       "title": "ઘૂંટણ (ghū̃ṭaṇ) — a knee",
       "headword": "ઘૂંટણ",
       "romanization": "ghū̃ṭaṇ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83462c258f80264f",
+      "sourceHash": "fnv1a64:ab51ced45096d5bf",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C48-heart",
-      "sequence": 2450,
+      "sequence": 2463,
       "title": "હૃદય (hṛday) — the heart",
       "headword": "હૃદય",
       "romanization": "hṛday",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8a8bca05f4a2143",
+      "sourceHash": "fnv1a64:992ba98cf35476fd",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C48-blood",
-      "sequence": 2460,
+      "sequence": 2473,
       "title": "લોહી (lohī) — blood",
       "headword": "લોહી",
       "romanization": "lohī",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdb50e86643c6442",
+      "sourceHash": "fnv1a64:b58b09381a39037e",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C48-fever",
-      "sequence": 2470,
+      "sequence": 2483,
       "title": "તાવ (tāv) — a fever",
       "headword": "તાવ",
       "romanization": "tāv",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2f0170894d013f5",
+      "sourceHash": "fnv1a64:e25189048d6d6deb",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C48-cough",
-      "sequence": 2480,
+      "sequence": 2493,
       "title": "ખાંસી (khā̃sī) — a cough",
       "headword": "ખાંસી",
       "romanization": "khā̃sī",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1070bbca86686be",
+      "sourceHash": "fnv1a64:fc60570287feef3a",
       "notice": null,
       "blocks": [
         {

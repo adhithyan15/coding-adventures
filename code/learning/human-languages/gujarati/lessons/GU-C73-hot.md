@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C73-hot
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3740
+sequence: 3753
 chapter: 73
 type: word
 headword: "ગરમ"

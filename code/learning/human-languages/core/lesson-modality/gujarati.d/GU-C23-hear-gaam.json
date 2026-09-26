@@ -3,7 +3,7 @@
     "id": "GU-C23-hear-gaam",
     "language": "gujarati",
     "chapter": 27,
-    "sequence": 1090,
+    "sequence": 1103,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:c1998e019796f228"
+    "sourceHash": "fnv1a64:4b341774cd255a45"
   },
   "findings": []
 }

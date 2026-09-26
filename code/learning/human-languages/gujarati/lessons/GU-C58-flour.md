@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C58-flour
 spine_node: SPINE-COURTESY-THANK
-sequence: 2950
+sequence: 2963
 chapter: 58
 type: word
 headword: "લોટ"

@@ -3,7 +3,7 @@
     "id": "GU-C60-puri",
     "language": "gujarati",
     "chapter": 60,
-    "sequence": 3080,
+    "sequence": 3093,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ac07af2efca6738a"
+    "sourceHash": "fnv1a64:49e538d8b9a2de7a"
   },
   "findings": []
 }

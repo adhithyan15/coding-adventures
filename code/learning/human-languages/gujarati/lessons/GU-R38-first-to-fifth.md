@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-R38-first-to-fifth
 spine_node: SPINE-COUNT-ONE-TO-FIVE
-sequence: 2180
+sequence: 2193
 chapter: 42
 type: practice
 headword: પહેલું · બીજું · ત્રીજું · ચોથું · પાંચમું

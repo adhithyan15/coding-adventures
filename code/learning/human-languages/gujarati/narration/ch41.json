@@ -4,11 +4,11 @@
   "chapter": 41,
   "title": "Who, Where, When, How Many",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5bc3f4edb7c63a58",
+  "sourceHash": "fnv1a64:98c536f3987087f0",
   "lessons": [
     {
       "id": "GU-C37-kon",
-      "sequence": 2080,
+      "sequence": 2093,
       "title": "કોણ (koṇ) — who",
       "headword": "કોણ",
       "romanization": "koṇ",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:6dff3dbeb514ceec",
+      "sourceHash": "fnv1a64:e4cc0237fa722f3c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -135,7 +135,7 @@
     },
     {
       "id": "GU-C37-kyaan",
-      "sequence": 2090,
+      "sequence": 2103,
       "title": "ક્યાં (kyā̃) — where",
       "headword": "ક્યાં",
       "romanization": "kyā̃",
@@ -146,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d3d7cb63cae71b5c",
+      "sourceHash": "fnv1a64:0bfcf85062a7f33f",
       "notice": null,
       "blocks": [
         {
@@ -259,7 +259,7 @@
     },
     {
       "id": "GU-C37-kyaan-write",
-      "sequence": 2100,
+      "sequence": 2113,
       "title": "ક્યાં (kyā̃) reaches the page",
       "headword": "ક્યાં",
       "romanization": "kyā̃",
@@ -272,7 +272,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:46c96a593e8d31ed",
+      "sourceHash": "fnv1a64:216a007cf2e182fd",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -353,7 +353,7 @@
     },
     {
       "id": "GU-C37-kyaare",
-      "sequence": 2110,
+      "sequence": 2123,
       "title": "ક્યારે (kyāre) — when",
       "headword": "ક્યારે",
       "romanization": "kyāre",
@@ -364,7 +364,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ebc92becb7639b0",
+      "sourceHash": "fnv1a64:1b0ac173435365c2",
       "notice": null,
       "blocks": [
         {
@@ -477,7 +477,7 @@
     },
     {
       "id": "GU-C37-ketla",
-      "sequence": 2120,
+      "sequence": 2133,
       "title": "કેટલા (keṭlā) — how many",
       "headword": "કેટલા",
       "romanization": "keṭlā",
@@ -488,7 +488,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63c1d9c88bb0e4cd",
+      "sourceHash": "fnv1a64:a94014558479903d",
       "notice": null,
       "blocks": [
         {

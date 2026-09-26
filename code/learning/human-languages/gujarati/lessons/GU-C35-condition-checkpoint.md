@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C35-condition-checkpoint
 spine_node: SPINE-SAY-WHAT-I-WANT
-sequence: 2020
+sequence: 2033
 chapter: 39
 type: practice
 headword: જો … તો … — જ્યારે …

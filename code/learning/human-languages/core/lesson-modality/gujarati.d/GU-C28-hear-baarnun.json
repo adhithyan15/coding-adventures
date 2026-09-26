@@ -3,7 +3,7 @@
     "id": "GU-C28-hear-baarnun",
     "language": "gujarati",
     "chapter": 32,
-    "sequence": 1540,
+    "sequence": 1553,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:b8690b615abc1f46"
+    "sourceHash": "fnv1a64:262695e945d85d1a"
   },
   "findings": []
 }

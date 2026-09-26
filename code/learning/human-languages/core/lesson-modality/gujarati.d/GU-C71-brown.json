@@ -3,7 +3,7 @@
     "id": "GU-C71-brown",
     "language": "gujarati",
     "chapter": 71,
-    "sequence": 3620,
+    "sequence": 3633,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a050b1ac748a8998"
+    "sourceHash": "fnv1a64:2c01aec60b238c54"
   },
   "findings": []
 }

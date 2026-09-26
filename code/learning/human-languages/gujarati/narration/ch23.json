@@ -4,11 +4,11 @@
   "chapter": 23,
   "title": "Fourth Return: The Doorway Nine",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a0f0da1a298a35ae",
+  "sourceHash": "fnv1a64:ab92f2e1d49ad2a1",
   "lessons": [
     {
       "id": "GU-R19-doorway-nine-r4",
-      "sequence": 870,
+      "sequence": 883,
       "title": "The doorway nine reach R4",
       "headword": "ો ક ં જ ી ણ છ શ ુ",
       "romanization": "o sign — ka — nasal mark — ja — long-ii sign — retroflex nna — chha — sha — u sign",
@@ -20,7 +20,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:3aeacf5cecb9e841",
+      "sourceHash": "fnv1a64:67f27ecae338311f",
       "notice": {
         "modality": "pen",
         "needs": [

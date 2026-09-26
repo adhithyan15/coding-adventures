@@ -4,11 +4,11 @@
   "chapter": 28,
   "title": "The Day and Its Times",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7999e3f2e1f33f96",
+  "sourceHash": "fnv1a64:6d6e77015f25009c",
   "lessons": [
     {
       "id": "GU-C24-hear-savaar",
-      "sequence": 1160,
+      "sequence": 1173,
       "title": "સવાર (savār) — hear morning first",
       "headword": "સવાર",
       "romanization": "savār",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34ca10584610a8eb",
+      "sourceHash": "fnv1a64:ff5234ff9b3209bf",
       "notice": null,
       "blocks": [
         {
@@ -113,7 +113,7 @@
     },
     {
       "id": "GU-C24-hear-bapor",
-      "sequence": 1170,
+      "sequence": 1183,
       "title": "બપોર (bapor) — hear midday first",
       "headword": "બપોર",
       "romanization": "bapor",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d3fa2ba61914362",
+      "sourceHash": "fnv1a64:c69ab5902038d54c",
       "notice": null,
       "blocks": [
         {
@@ -221,7 +221,7 @@
     },
     {
       "id": "GU-C24-hear-saanj",
-      "sequence": 1180,
+      "sequence": 1193,
       "title": "સાંજ (sānj) — hear evening first",
       "headword": "સાંજ",
       "romanization": "sānj",
@@ -232,7 +232,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf2df6a8a1ec599b",
+      "sourceHash": "fnv1a64:34c63d1d92e8f48f",
       "notice": null,
       "blocks": [
         {
@@ -329,7 +329,7 @@
     },
     {
       "id": "GU-C24-hear-raat",
-      "sequence": 1190,
+      "sequence": 1203,
       "title": "રાત (rāt) — hear night first",
       "headword": "રાત",
       "romanization": "rāt",
@@ -340,7 +340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9484b0073f49ac30",
+      "sourceHash": "fnv1a64:5885fa98e1806e51",
       "notice": null,
       "blocks": [
         {
@@ -436,7 +436,7 @@
     },
     {
       "id": "GU-C24-day-parts-four",
-      "sequence": 1200,
+      "sequence": 1213,
       "title": "The day in four parts, by ear",
       "headword": "સવાર — બપોર — સાંજ — રાત",
       "romanization": "savār — bapor — sānj — rāt",
@@ -447,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c50c55ccf97b60a2",
+      "sourceHash": "fnv1a64:786bd3fd1d0c0612",
       "notice": null,
       "blocks": [
         {
@@ -547,7 +547,7 @@
     },
     {
       "id": "GU-C24-raat",
-      "sequence": 1210,
+      "sequence": 1223,
       "title": "Rāt reaches the page",
       "headword": "રાત",
       "romanization": "rāt",
@@ -558,7 +558,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:42cdf84692686daf",
+      "sourceHash": "fnv1a64:fd3542ffceef025d",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -667,7 +667,7 @@
     },
     {
       "id": "GU-C24-hear-divas",
-      "sequence": 1220,
+      "sequence": 1233,
       "title": "દિવસ (divas) — hear day first",
       "headword": "દિવસ",
       "romanization": "divas",
@@ -678,7 +678,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a046fa2f1701c186",
+      "sourceHash": "fnv1a64:87cad7c6258bdbb6",
       "notice": null,
       "blocks": [
         {
@@ -773,7 +773,7 @@
     },
     {
       "id": "GU-C24-hear-mahino",
-      "sequence": 1230,
+      "sequence": 1243,
       "title": "મહિનો (mahino) — hear month",
       "headword": "મહિનો",
       "romanization": "mahino",
@@ -784,7 +784,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3dc15cffbbf8c40d",
+      "sourceHash": "fnv1a64:d5b1d47006cd2a97",
       "notice": null,
       "blocks": [
         {
@@ -880,7 +880,7 @@
     },
     {
       "id": "GU-C24-hear-aaj",
-      "sequence": 1240,
+      "sequence": 1253,
       "title": "આજ (āj) — hear today first",
       "headword": "આજ",
       "romanization": "āj",
@@ -891,7 +891,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35cafe3fcbe79189",
+      "sourceHash": "fnv1a64:b827f9516edc55f9",
       "notice": null,
       "blocks": [
         {
@@ -987,7 +987,7 @@
     },
     {
       "id": "GU-C24-aaj",
-      "sequence": 1250,
+      "sequence": 1263,
       "title": "Āj reaches the page",
       "headword": "આજ",
       "romanization": "āj",
@@ -998,7 +998,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:b87f265a062ef44d",
+      "sourceHash": "fnv1a64:39ccf91427444913",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -1107,7 +1107,7 @@
     },
     {
       "id": "GU-C24-hear-atyaare",
-      "sequence": 1260,
+      "sequence": 1273,
       "title": "અત્યારે (atyāre) — hear now",
       "headword": "અત્યારે",
       "romanization": "atyāre",
@@ -1118,7 +1118,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c3bc3db98e06941",
+      "sourceHash": "fnv1a64:9db777d97ea7b3b1",
       "notice": null,
       "blocks": [
         {
@@ -1230,7 +1230,7 @@
     },
     {
       "id": "GU-C24-time-eight",
-      "sequence": 1270,
+      "sequence": 1283,
       "title": "Payoff — eight time words in four skills",
       "headword": "સવાર — બપોર — સાંજ — રાત — દિવસ — મહિનો — આજ — અત્યારે",
       "romanization": "savār — bapor — sānj — rāt — divas — mahino — āj — atyāre",
@@ -1241,7 +1241,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:460d1404d8fef640",
+      "sourceHash": "fnv1a64:e50bed95e2fde292",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -1396,7 +1396,7 @@
     },
     {
       "id": "GU-R24-time-eight-r1",
-      "sequence": 1280,
+      "sequence": 1293,
       "title": "The eight time words return at R1",
       "headword": "સવાર — બપોર — સાંજ — રાત — દિવસ — મહિનો — આજ — અત્યારે",
       "romanization": "savār — bapor — sānj — rāt — divas — mahino — āj — atyāre",
@@ -1407,7 +1407,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:b08a4c79f693597e",
+      "sourceHash": "fnv1a64:ef767a9de8ba01ae",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -1536,7 +1536,7 @@
     },
     {
       "id": "GU-R24-map-ten-r3",
-      "sequence": 1290,
+      "sequence": 1303,
       "title": "The map words return at a third window",
       "headword": "શહેર — શાળા — રસ્તો — ગામ — દુકાન",
       "romanization": "shahar — shāḷā — rasto — gām — dukān",
@@ -1547,7 +1547,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:dd2e5ece7f5bd010",
+      "sourceHash": "fnv1a64:4222204a19230fef",
       "notice": {
         "modality": "pen",
         "needs": [],

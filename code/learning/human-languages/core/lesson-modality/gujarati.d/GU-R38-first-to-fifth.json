@@ -3,7 +3,7 @@
     "id": "GU-R38-first-to-fifth",
     "language": "gujarati",
     "chapter": 42,
-    "sequence": 2180,
+    "sequence": 2193,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:a076f7e20507471d"
+    "sourceHash": "fnv1a64:fbf926651ecec4ed"
   },
   "findings": []
 }

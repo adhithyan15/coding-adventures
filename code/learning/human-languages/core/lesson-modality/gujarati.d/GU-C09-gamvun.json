@@ -3,7 +3,7 @@
     "id": "GU-C09-gamvun",
     "language": "gujarati",
     "chapter": 15,
-    "sequence": 510,
+    "sequence": 523,
     "modality": "sight",
     "derived": "sight",
     "drivable": false,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:ca41bfff49c9f465",
+    "sourceHash": "fnv1a64:2fdcc2e30023d56b",
     "detachableSegments": [
       "The letters in this word"
     ]

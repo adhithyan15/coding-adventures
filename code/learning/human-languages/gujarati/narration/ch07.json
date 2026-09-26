@@ -4,11 +4,356 @@
   "chapter": 7,
   "title": "The Last Four Shown Forms",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f46391a772373e6d",
+  "sourceHash": "fnv1a64:1b93923bd847df33",
   "lessons": [
     {
+      "id": "GU-C07-dhool",
+      "sequence": 96,
+      "title": "ધૂળ (dhūḷ) — dust",
+      "headword": "ધૂળ",
+      "romanization": "dhūḷ",
+      "gloss": "dust",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:3a2db117471f2d6d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words from earlier chapters: say chīp, athāṇũ and ukhāṇũ, and what each means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ધૂળ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ધૂળ — dhūḷ — \"dust\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: dhūḷ. Look at its shape as you say it: the lessons that follow take pieces of it, ૂ, and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhūḷ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhūḷ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"dust\"? (ધૂળ, dhūḷ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C07-int",
+      "sequence": 97,
+      "title": "ઈંટ (ĩṭ) — a brick",
+      "headword": "ઈંટ",
+      "romanization": "ĩṭ",
+      "gloss": "a brick",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:e83d5b31b5a5b249",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words from earlier chapters: say kaṇ, divāḷī and eklũ, and what each means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઈંટ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઈંટ — ĩṭ — \"a brick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ĩṭ. Look at its shape as you say it: the lessons that follow take pieces of it, ઈ (ī) and ટ (ṭa), and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ĩṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ĩṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ĩṭ, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ĩṭ*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a brick\"? (ઈંટ, ĩṭ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-C07-dhol",
+      "sequence": 98,
+      "title": "ઢોલ (ḍhol) — a drum",
+      "headword": "ઢોલ",
+      "romanization": "ḍhol",
+      "gloss": "a drum",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:7fd26992da6f83f2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say śak and what it means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ઢોલ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ઢોલ — ḍhol — \"a drum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ḍhol. Look at its shape as you say it: the lessons that follow take pieces of it, ઢ (ḍha), and write each one on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhol",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhol*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhol, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhol*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a drum\"? (ઢોલ, ḍhol.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GU-W07-uu-matra",
-      "sequence": 86,
+      "sequence": 99,
       "title": "ૂ — the long-ū sign",
       "headword": "ૂ",
       "romanization": "ū",
@@ -21,7 +366,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f12aec679f9944a9",
+      "sourceHash": "fnv1a64:eea41cfc6e51e77d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -132,7 +477,7 @@
     },
     {
       "id": "GU-W07-tta",
-      "sequence": 87,
+      "sequence": 100,
       "title": "ટ (ṭa) — retroflex tta",
       "headword": "ટ",
       "romanization": "ṭa",
@@ -145,7 +490,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3ae2e9db8791407c",
+      "sourceHash": "fnv1a64:a1d18e766fc5987d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -255,7 +600,7 @@
     },
     {
       "id": "GU-W07-independent-ii",
-      "sequence": 88,
+      "sequence": 101,
       "title": "ઈ — independent long ī",
       "headword": "ઈ",
       "romanization": "ī",
@@ -268,7 +613,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2c0ccaad8434a0e1",
+      "sourceHash": "fnv1a64:9fc343c6182ed1c4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -378,7 +723,7 @@
     },
     {
       "id": "GU-W07-ddha",
-      "sequence": 89,
+      "sequence": 102,
       "title": "ઢ (ḍha) — retroflex ddha",
       "headword": "ઢ",
       "romanization": "ḍha",
@@ -391,7 +736,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9775f65aa5aa86f3",
+      "sourceHash": "fnv1a64:4704c75be13147c8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -501,7 +846,7 @@
     },
     {
       "id": "GU-R07-second-four-r1",
-      "sequence": 90,
+      "sequence": 103,
       "title": "ૂ (ū) — ટ (ṭa) — ઈ (ī) — ઢ (ḍha) (attached long uu — retroflex tta — independent long ii — retroflex ddha): the final four return",
       "headword": "ૂ — ટ — ઈ — ઢ",
       "romanization": "attached long uu — retroflex tta — independent long ii — retroflex ddha",
@@ -514,7 +859,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:f95ba9119f715c02",
+      "sourceHash": "fnv1a64:7828d25476b03d06",
       "notice": {
         "modality": "pen",
         "needs": [

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C56-naachvu
 spine_node: SPINE-RESPOND-BASIC
-sequence: 2850
+sequence: 2863
 chapter: 56
 type: word
 headword: "નાચવું"

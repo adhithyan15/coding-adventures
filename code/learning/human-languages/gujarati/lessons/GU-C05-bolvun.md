@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C05-bolvun
 spine_node: SPINE-SAY-WHAT-I-DO
-sequence: 290
+sequence: 303
 chapter: 11
 type: word
 headword: બોલવું

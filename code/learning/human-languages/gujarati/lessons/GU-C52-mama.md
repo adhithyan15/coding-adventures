@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C52-mama
 spine_node: SPINE-EXCHANGE-NAMES
-sequence: 2660
+sequence: 2673
 chapter: 52
 type: word
 headword: "મામા"

@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C72-heavy
 spine_node: SPINE-RESPOND-BASIC
-sequence: 3700
+sequence: 3713
 chapter: 72
 type: word
 headword: "ભારે"

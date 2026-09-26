@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 45,
-  "sourceHash": "fnv1a64:b4eb65460ecc436e",
+  "sourceHash": "fnv1a64:f4d3bb7bfe929aee",
   "lessonIds": [
     "GU-W45-gha",
     "GU-W45-ai-sign",
@@ -13,6 +13,6 @@
   "text": "gujarati/narration/ch45.txt",
   "json": "gujarati/narration/ch45.json",
   "textHash": "fnv1a64:e13a2dc7ab68828e",
-  "jsonHash": "fnv1a64:343059e7a8651901",
+  "jsonHash": "fnv1a64:9540cfff59277aea",
   "findings": []
 }

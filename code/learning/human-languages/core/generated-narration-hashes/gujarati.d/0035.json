@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 35,
-  "sourceHash": "fnv1a64:a342791d0f349c93",
+  "sourceHash": "fnv1a64:39287906208ecdbd",
   "lessonIds": [
     "GU-C31-nathi",
     "GU-C31-samajto-nathi",
@@ -15,6 +15,6 @@
   "text": "gujarati/narration/ch35.txt",
   "json": "gujarati/narration/ch35.json",
   "textHash": "fnv1a64:2a48f69a6ee3722a",
-  "jsonHash": "fnv1a64:b5f18f0808416f9f",
+  "jsonHash": "fnv1a64:eb88282d95fd8ccd",
   "findings": []
 }

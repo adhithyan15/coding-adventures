@@ -3,7 +3,7 @@
     "id": "GU-C24-hear-raat",
     "language": "gujarati",
     "chapter": 28,
-    "sequence": 1190,
+    "sequence": 1203,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:9484b0073f49ac30"
+    "sourceHash": "fnv1a64:5885fa98e1806e51"
   },
   "findings": []
 }

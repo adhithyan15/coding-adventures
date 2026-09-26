@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C49-rest
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2510
+sequence: 2523
 chapter: 49
 type: word
 headword: "આરામ"

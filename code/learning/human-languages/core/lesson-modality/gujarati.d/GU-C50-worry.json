@@ -3,7 +3,7 @@
     "id": "GU-C50-worry",
     "language": "gujarati",
     "chapter": 50,
-    "sequence": 2570,
+    "sequence": 2583,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:84297b3f0c4edd33"
+    "sourceHash": "fnv1a64:3f47bb0df1a5f321"
   },
   "findings": []
 }

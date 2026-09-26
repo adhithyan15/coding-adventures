@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "GU-C03-kan",
+    "language": "gujarati",
+    "chapter": 3,
+    "sequence": 63,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:309b1535a3ecd173"
+  },
+  "findings": []
+}

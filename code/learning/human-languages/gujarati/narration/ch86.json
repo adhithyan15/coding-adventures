@@ -4,11 +4,11 @@
   "chapter": 86,
   "title": "On a Journey",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5b3026f9397e7dbf",
+  "sourceHash": "fnv1a64:bd4b171bacf1f18e",
   "lessons": [
     {
       "id": "GU-C86-journey",
-      "sequence": 4360,
+      "sequence": 4373,
       "title": "મુસાફરી (musāpharī) — a journey",
       "headword": "મુસાફરી",
       "romanization": "musāpharī",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a423d25875e8b53e",
+      "sourceHash": "fnv1a64:bb4bc9f1e429544e",
       "notice": null,
       "blocks": [
         {
@@ -131,7 +131,7 @@
     },
     {
       "id": "GU-C86-ticket",
-      "sequence": 4370,
+      "sequence": 4383,
       "title": "ટિકિટ (ṭikiṭ) — a ticket",
       "headword": "ટિકિટ",
       "romanization": "ṭikiṭ",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bb78f6d285efaf0",
+      "sourceHash": "fnv1a64:56ed0aa4193db2de",
       "notice": null,
       "blocks": [
         {
@@ -254,7 +254,7 @@
     },
     {
       "id": "GU-C86-map",
-      "sequence": 4380,
+      "sequence": 4393,
       "title": "નકશો (nakśo) — a map",
       "headword": "નકશો",
       "romanization": "nakśo",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cad42349df86603",
+      "sourceHash": "fnv1a64:ce1db208dbebf9a7",
       "notice": null,
       "blocks": [
         {
@@ -377,7 +377,7 @@
     },
     {
       "id": "GU-C86-phone",
-      "sequence": 4390,
+      "sequence": 4403,
       "title": "ફોન (phon) — a phone",
       "headword": "ફોન",
       "romanization": "phon",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3c916d9f9db0544",
+      "sourceHash": "fnv1a64:e71a5b81b15cf567",
       "notice": null,
       "blocks": [
         {
@@ -500,7 +500,7 @@
     },
     {
       "id": "GU-C86-post",
-      "sequence": 4400,
+      "sequence": 4413,
       "title": "ટપાલ (ṭapāl) — the post, mail",
       "headword": "ટપાલ",
       "romanization": "ṭapāl",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:077ec82daebc63c5",
+      "sourceHash": "fnv1a64:c5c3dc0a93ba2c29",
       "notice": null,
       "blocks": [
         {

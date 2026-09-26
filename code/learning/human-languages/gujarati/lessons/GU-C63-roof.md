@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C63-roof
 spine_node: SPINE-MEET-GREET
-sequence: 3190
+sequence: 3203
 chapter: 63
 type: word
 headword: "છત"

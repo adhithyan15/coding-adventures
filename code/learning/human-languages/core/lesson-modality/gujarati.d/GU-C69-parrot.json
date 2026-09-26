@@ -3,7 +3,7 @@
     "id": "GU-C69-parrot",
     "language": "gujarati",
     "chapter": 69,
-    "sequence": 3520,
+    "sequence": 3533,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,7 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:54118c47f204901c"
+    "sourceHash": "fnv1a64:6bf0e6ab69378fcc"
   },
   "findings": []
 }

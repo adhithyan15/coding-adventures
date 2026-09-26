@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-C29-hear-nadi
 spine_node: SPINE-POLITE-REQUEST-REPAIR
-sequence: 1660
+sequence: 1673
 chapter: 33
 type: word
 headword: નદી

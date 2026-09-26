@@ -5,7 +5,7 @@ introduces_senses: []
 introduces_culture_claims: []
 id: GU-C49-hunger
 spine_node: SPINE-CHECK-WELLBEING
-sequence: 2520
+sequence: 2533
 chapter: 49
 type: word
 headword: "ભૂખ"
