@@ -1,0 +1,1 @@
+- Grid → static `<table>` with `<thead>`/`<tbody>` populated from fixture arrays.

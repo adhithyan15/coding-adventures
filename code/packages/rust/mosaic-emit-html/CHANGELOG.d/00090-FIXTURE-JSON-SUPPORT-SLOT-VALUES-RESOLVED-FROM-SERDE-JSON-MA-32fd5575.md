@@ -1,0 +1,1 @@
+- Fixture JSON support: slot values resolved from `serde_json::Map` at compile time.

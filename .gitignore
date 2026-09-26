@@ -139,6 +139,17 @@ build_output.txt
 /code/packages/rust/spice-netlist-parser/CHANGELOG.md
 /code/packages/rust/venture-browser-core/CHANGELOG.md
 /code/packages/rust/oauth-broker/CHANGELOG.md
+/code/packages/rust/mosaic-package-artifact-builder/CHANGELOG.md
+/code/packages/rust/mosaic-emit-compose/CHANGELOG.md
+/code/packages/rust/mosaic-emit-flutter/CHANGELOG.md
+/code/packages/rust/mosaic-emit-xaml/CHANGELOG.md
+/code/packages/rust/mosaic-emit-swiftui/CHANGELOG.md
+/code/packages/rust/mosaic-emit-html/CHANGELOG.md
+/code/packages/rust/mosaic-app-bindings/CHANGELOG.md
+/code/packages/rust/html-parser/CHANGELOG.md
+/code/programs/mosaic/venture-browser/CHANGELOG.md
+/code/programs/mosaic/engram-app/CHANGELOG.md
+/code/programs/mosaic/journal-app/CHANGELOG.md
 # The monorepo changelog. `CHANGELOG.d/_meta.md` at the repository root is now
 # its entry point, the same rule the repo standard already applies to packages.
 /CHANGELOG.md

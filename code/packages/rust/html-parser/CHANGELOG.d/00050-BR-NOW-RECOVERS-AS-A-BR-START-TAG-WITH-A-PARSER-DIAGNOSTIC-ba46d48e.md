@@ -1,0 +1,1 @@
+- `</br>` now recovers as a `br` start tag with a parser diagnostic.

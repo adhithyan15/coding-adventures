@@ -1,0 +1,1 @@
+- HTML escaping via `html_escape()` for all user-provided slot values.

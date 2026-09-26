@@ -1,0 +1,1 @@
+- `host_table_for_of_cell_in_head_row_emits_for_bracket_around_th`

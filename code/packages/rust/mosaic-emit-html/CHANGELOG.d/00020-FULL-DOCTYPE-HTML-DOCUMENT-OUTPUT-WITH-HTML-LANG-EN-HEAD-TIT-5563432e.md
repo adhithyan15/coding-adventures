@@ -1,0 +1,1 @@
+- Full `<!DOCTYPE html>` document output with `<html lang="en">`, `<head>`, `<title>`, `<body>`.

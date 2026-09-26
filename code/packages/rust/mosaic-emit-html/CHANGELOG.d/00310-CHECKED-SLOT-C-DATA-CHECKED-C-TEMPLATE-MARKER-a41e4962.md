@@ -1,0 +1,1 @@
+- `checked: slot: c` → `data-checked="{{c}}"` template marker.
