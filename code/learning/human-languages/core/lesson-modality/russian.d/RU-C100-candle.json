@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C100-candle",
+    "language": "russian",
+    "chapter": 100,
+    "sequence": 5120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5dc9804d2d92cb2b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:5b76736b151fa481",
+  "lessonIds": [
+    "RU-C125-free",
+    "RU-C125-open",
+    "RU-C125-closed",
+    "RU-C125-quiet",
+    "RU-C125-noisy",
+    "RU-R125-first-pass-animals-the-body-and-the-table",
+    "RU-R125-second-pass-the-house-and-describing-words"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch125.txt",
+  "json": "russian/narration/ch125.json",
+  "textHash": "fnv1a64:d2ba2e229afdd882",
+  "jsonHash": "fnv1a64:9bbc35cb42e9f6a3",
+  "findings": []
+}

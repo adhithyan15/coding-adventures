@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 89,
+  "sourceHash": "fnv1a64:8709c4f98d7080cd",
+  "lessonIds": [
+    "RU-C89-factory",
+    "RU-C89-office",
+    "RU-C89-corner",
+    "RU-C89-crossroads",
+    "RU-C89-traffic-lights"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch89.txt",
+  "json": "russian/narration/ch89.json",
+  "textHash": "fnv1a64:68d930410c5bca38",
+  "jsonHash": "fnv1a64:523fa3a11b4fea43",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:8ab3b0d2f248ceff",
+  "lessonIds": [
+    "RU-C119-ankle",
+    "RU-C119-wrist",
+    "RU-C119-cheek",
+    "RU-C119-lips",
+    "RU-C119-chest"
+  ],
+  "tex": "russian/book/chapters/ch119-ankle-wrist-cheek-lips-chest.tex"
+}

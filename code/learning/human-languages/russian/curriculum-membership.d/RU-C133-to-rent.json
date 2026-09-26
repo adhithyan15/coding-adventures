@@ -1,0 +1,11 @@
+{
+  "id": "RU-C133-to-rent",
+  "pathSegment": "RU-PATH-133-ACT133",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-133-ACT133",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "To go up, To go down, To stay, To rent, To repair",
+  "label": "ch:ru-to-go-up-to-go-down-to-stay-to-rent-to-repair",
+  "canDo": "I can say to go up, to go down, to stay, to rent and to repair.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-C133-to-repair",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say to go up, to go down, to stay, to rent and to repair.",
+    "assesses": [
+      "RU-LEX-C133-ACT133-03",
+      "RU-LEX-C133-ACT133-04",
+      "RU-LEX-C133-ACT133-05"
+    ]
+  }
+}

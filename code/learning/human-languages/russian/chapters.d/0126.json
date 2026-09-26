@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Last, Famous, Important, Interesting, Boring",
+  "label": "ch:ru-last-famous-important-interesting-boring",
+  "canDo": "I can say last, famous, important, interesting and boring.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C126-boring",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can say last, famous, important, interesting and boring.",
+    "assesses": [
+      "RU-LEX-C126-QUAL126-03",
+      "RU-LEX-C126-QUAL126-04",
+      "RU-LEX-C126-QUAL126-05"
+    ]
+  }
+}

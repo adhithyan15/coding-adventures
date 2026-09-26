@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C135-to-win",
+    "language": "russian",
+    "chapter": 135,
+    "sequence": 7060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8be2942c0a71f14a"
+  },
+  "findings": []
+}

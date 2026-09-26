@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 123,
+  "sourceHash": "fnv1a64:da9103e1363ba94e",
+  "lessonIds": [
+    "RU-C123-space",
+    "RU-C123-bottle",
+    "RU-C123-mirror",
+    "RU-C123-stairs",
+    "RU-C123-pink"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch123.txt",
+  "json": "russian/narration/ch123.json",
+  "textHash": "fnv1a64:8baa7b9c0e13d283",
+  "jsonHash": "fnv1a64:e84e4618772b2234",
+  "findings": []
+}

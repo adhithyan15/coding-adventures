@@ -1,0 +1,11 @@
+{
+  "id": "RU-C114-concert",
+  "pathSegment": "RU-PATH-114-THINGS114",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-114-THINGS114",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C116-desert",
+    "language": "russian",
+    "chapter": 116,
+    "sequence": 6000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65b3f0c70aeca8a4"
+  },
+  "findings": []
+}

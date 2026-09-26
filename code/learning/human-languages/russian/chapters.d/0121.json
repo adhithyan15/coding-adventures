@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Shark, Nail, Skin, Stomach, Throat",
+  "label": "ch:ru-shark-nail-skin-stomach-throat",
+  "canDo": "I can say a shark, a nail, skin, a stomach and a throat.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C121-throat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say a shark, a nail, skin, a stomach and a throat.",
+    "assesses": [
+      "RU-LEX-C121-THINGS121-03",
+      "RU-LEX-C121-THINGS121-04",
+      "RU-LEX-C121-THINGS121-05"
+    ]
+  }
+}

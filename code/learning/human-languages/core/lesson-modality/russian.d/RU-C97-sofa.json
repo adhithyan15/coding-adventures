@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C97-sofa",
+    "language": "russian",
+    "chapter": 97,
+    "sequence": 4970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08efd3ef33f86018"
+  },
+  "findings": []
+}

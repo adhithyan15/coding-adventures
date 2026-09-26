@@ -1,0 +1,11 @@
+{
+  "id": "RU-C86-to-the-right",
+  "pathSegment": "RU-PATH-86-LOC86",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-86-LOC86",
+      "order": 3
+    }
+  ]
+}

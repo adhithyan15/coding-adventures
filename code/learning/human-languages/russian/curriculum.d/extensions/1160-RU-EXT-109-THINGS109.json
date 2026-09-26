@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-109-THINGS109",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a lawyer, an engineer, a firefighter, a postman and a waiter.",
+  "prerequisites": []
+}

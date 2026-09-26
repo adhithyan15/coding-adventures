@@ -1,0 +1,11 @@
+{
+  "id": "RU-C82-this-2",
+  "pathSegment": "RU-PATH-82-DEF82",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-82-DEF82",
+      "order": 1
+    }
+  ]
+}

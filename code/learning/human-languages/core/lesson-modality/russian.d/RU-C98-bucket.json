@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C98-bucket",
+    "language": "russian",
+    "chapter": 98,
+    "sequence": 5010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98ea04035a9e9a74"
+  },
+  "findings": []
+}

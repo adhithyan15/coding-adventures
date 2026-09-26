@@ -1,0 +1,11 @@
+{
+  "id": "RU-C99-scissors",
+  "pathSegment": "RU-PATH-99-THINGS99",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-99-THINGS99",
+      "order": 1
+    }
+  ]
+}

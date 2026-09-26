@@ -1,0 +1,11 @@
+{
+  "id": "RU-C123-bottle",
+  "pathSegment": "RU-PATH-123-THINGS123",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-123-THINGS123",
+      "order": 1
+    }
+  ]
+}

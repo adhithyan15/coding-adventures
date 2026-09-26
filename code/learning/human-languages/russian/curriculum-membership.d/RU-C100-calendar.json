@@ -1,0 +1,11 @@
+{
+  "id": "RU-C100-calendar",
+  "pathSegment": "RU-PATH-100-THINGS100",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-100-THINGS100",
+      "order": 3
+    }
+  ]
+}

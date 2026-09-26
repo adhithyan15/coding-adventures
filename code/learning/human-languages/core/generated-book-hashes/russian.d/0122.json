@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:902f3bb2d992925a",
+  "lessonIds": [
+    "RU-C122-chin",
+    "RU-C122-rainbow",
+    "RU-C122-lightning",
+    "RU-C122-thunder",
+    "RU-C122-planet"
+  ],
+  "tex": "russian/book/chapters/ch122-chin-rainbow-lightning-thunder-planet.tex"
+}

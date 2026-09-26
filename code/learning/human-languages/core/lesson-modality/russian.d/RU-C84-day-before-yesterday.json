@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C84-day-before-yesterday",
+    "language": "russian",
+    "chapter": 84,
+    "sequence": 4240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82b1587900cb57f2"
+  },
+  "findings": []
+}

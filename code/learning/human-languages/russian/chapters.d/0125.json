@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Free, Open, Closed, Quiet, Noisy",
+  "label": "ch:ru-free-open-closed-quiet-noisy",
+  "canDo": "I can say free, open, closed, quiet and noisy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-R125-second-pass-the-house-and-describing-words",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say free, open, closed, quiet and noisy.",
+    "assesses": [
+      "RU-LEX-C125-QUAL125-03",
+      "RU-LEX-C125-QUAL125-04",
+      "RU-LEX-C125-QUAL125-05"
+    ]
+  }
+}

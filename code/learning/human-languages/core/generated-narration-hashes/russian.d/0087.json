@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:c31b297a08dccf3b",
+  "lessonIds": [
+    "RU-C87-straight-on",
+    "RU-C87-nearby",
+    "RU-C87-airport",
+    "RU-C87-stop",
+    "RU-C87-square"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch87.txt",
+  "json": "russian/narration/ch87.json",
+  "textHash": "fnv1a64:ac30b232a39c5669",
+  "jsonHash": "fnv1a64:a1b609be17f6b2f7",
+  "findings": []
+}

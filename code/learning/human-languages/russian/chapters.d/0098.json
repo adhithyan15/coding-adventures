@@ -1,0 +1,19 @@
+{
+  "chapter": 98,
+  "title": "Frying pan, Bucket, Rope, Nail, Hammer",
+  "label": "ch:ru-frying-pan-bucket-rope-nail-hammer",
+  "canDo": "I can say a frying pan, a bucket, a rope, a nail and a hammer.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C98-hammer",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 98: i can say a frying pan, a bucket, a rope, a nail and a hammer.",
+    "assesses": [
+      "RU-LEX-C98-THINGS98-03",
+      "RU-LEX-C98-THINGS98-04",
+      "RU-LEX-C98-THINGS98-05"
+    ]
+  }
+}

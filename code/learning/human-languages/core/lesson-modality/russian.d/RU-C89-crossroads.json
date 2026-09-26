@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C89-crossroads",
+    "language": "russian",
+    "chapter": 89,
+    "sequence": 4480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2dcf3a8b77945ef7"
+  },
+  "findings": []
+}

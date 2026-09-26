@@ -1,0 +1,11 @@
+{
+  "id": "RU-C97-washing-machine",
+  "pathSegment": "RU-PATH-97-THINGS97",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-97-THINGS97",
+      "order": 1
+    }
+  ]
+}

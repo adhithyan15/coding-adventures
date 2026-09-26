@@ -333,7 +333,11 @@ describe("real curriculum", () => {
       // words (260 headwords, twenty-three verbs), every one written in letters
       // the track already reads -- no э, щ or ъ yet -- and chapter 81, which
       // writes ё from ребёнок, the one letter those words read but no lesson wrote.
-    ).toEqual(Array.from({ length: 81 }, (_, index) => index + 1));
+      // 81 -> 135: the A1 vocabulary tranche, chapters 82-92 and 94-135 (265
+      // headwords, twenty-five verbs), and chapter 93, which writes э from этот
+      // and щ from площадь -- the two letters these words bring -- before any
+      // review prints them.
+    ).toEqual(Array.from({ length: 135 }, (_, index) => index + 1));
     expect(
       books.books.every((book) =>
         book.chapters.every((chapter) => chapter.tex.length > 100),

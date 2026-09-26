@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C132-to-get-up",
+    "language": "russian",
+    "chapter": 132,
+    "sequence": 6920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa2f53b69669d2f2"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C92-holidays",
+  "pathSegment": "RU-PATH-92-LOC92",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-92-LOC92",
+      "order": 3
+    }
+  ]
+}

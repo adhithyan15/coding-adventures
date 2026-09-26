@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:e89afa10e1f32867",
+  "lessonIds": [
+    "RU-C107-jam",
+    "RU-C107-nut",
+    "RU-C107-pepper",
+    "RU-C107-nurse",
+    "RU-C107-cook"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch107.txt",
+  "json": "russian/narration/ch107.json",
+  "textHash": "fnv1a64:d36b93759445337d",
+  "jsonHash": "fnv1a64:a1e5f7079404ab82",
+  "findings": []
+}

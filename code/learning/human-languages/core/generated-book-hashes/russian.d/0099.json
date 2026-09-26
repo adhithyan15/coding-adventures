@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 99,
+  "sourceHash": "fnv1a64:ea714c911524646d",
+  "lessonIds": [
+    "RU-C99-glue",
+    "RU-C99-scissors",
+    "RU-C99-alarm-clock",
+    "RU-C99-camera",
+    "RU-C99-purse"
+  ],
+  "tex": "russian/book/chapters/ch99-glue-scissors-alarm-clock-camera-purse.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C126-interesting",
+  "pathSegment": "RU-PATH-126-QUAL126",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-126-QUAL126",
+      "order": 3
+    }
+  ]
+}

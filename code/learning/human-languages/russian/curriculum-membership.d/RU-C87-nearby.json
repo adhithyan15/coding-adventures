@@ -1,0 +1,11 @@
+{
+  "id": "RU-C87-nearby",
+  "pathSegment": "RU-PATH-87-LOC87",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-87-LOC87",
+      "order": 1
+    }
+  ]
+}

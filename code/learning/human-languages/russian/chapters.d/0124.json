@@ -1,0 +1,19 @@
+{
+  "chapter": 124,
+  "title": "Purple, Brown, Grey, Orange, Busy",
+  "label": "ch:ru-purple-brown-grey-orange-busy",
+  "canDo": "I can say purple, brown, grey, orange and busy.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C124-busy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 124: i can say purple, brown, grey, orange and busy.",
+    "assesses": [
+      "RU-LEX-C124-QUAL124-03",
+      "RU-LEX-C124-QUAL124-04",
+      "RU-LEX-C124-QUAL124-05"
+    ]
+  }
+}

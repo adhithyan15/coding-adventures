@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C104-vegetables",
+    "language": "russian",
+    "chapter": 104,
+    "sequence": 5310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4d3269e49502bfa"
+  },
+  "findings": []
+}

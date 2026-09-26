@@ -1,0 +1,11 @@
+{
+  "id": "RU-C103-dress",
+  "pathSegment": "RU-PATH-103-THINGS103",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-103-THINGS103",
+      "order": 4
+    }
+  ]
+}

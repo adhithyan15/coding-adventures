@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 85,
+  "sourceHash": "fnv1a64:9bc82474b8bcde05",
+  "lessonIds": [
+    "RU-C85-second",
+    "RU-C85-weekend",
+    "RU-C85-date",
+    "RU-C85-century",
+    "RU-C85-often"
+  ],
+  "tex": "russian/book/chapters/ch85-second-weekend-date-century-often.tex"
+}

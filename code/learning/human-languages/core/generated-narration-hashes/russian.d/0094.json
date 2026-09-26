@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 94,
+  "sourceHash": "fnv1a64:2a7174b0912d30fd",
+  "lessonIds": [
+    "RU-C94-television",
+    "RU-C94-computer",
+    "RU-C94-fridge",
+    "RU-C94-cooker",
+    "RU-C94-shower"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch94.txt",
+  "json": "russian/narration/ch94.json",
+  "textHash": "fnv1a64:fea67ca2b27485a6",
+  "jsonHash": "fnv1a64:2d5d88ecc8cceb49",
+  "findings": []
+}

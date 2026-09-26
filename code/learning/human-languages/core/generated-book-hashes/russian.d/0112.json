@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 112,
+  "sourceHash": "fnv1a64:23c2b90c977ef7a8",
+  "lessonIds": [
+    "RU-C112-problem",
+    "RU-C112-sentence",
+    "RU-C112-page",
+    "RU-C112-music",
+    "RU-C112-sport"
+  ],
+  "tex": "russian/book/chapters/ch112-problem-sentence-page-music-sport.tex"
+}

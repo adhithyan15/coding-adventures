@@ -1,0 +1,19 @@
+{
+  "chapter": 109,
+  "title": "Lawyer, Engineer, Firefighter, Postman, Waiter",
+  "label": "ch:ru-lawyer-engineer-firefighter-postman-waiter",
+  "canDo": "I can say a lawyer, an engineer, a firefighter, a postman and a waiter.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C109-waiter",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 109: i can say a lawyer, an engineer, a firefighter, a postman and a waiter.",
+    "assesses": [
+      "RU-LEX-C109-THINGS109-03",
+      "RU-LEX-C109-THINGS109-04",
+      "RU-LEX-C109-THINGS109-05"
+    ]
+  }
+}

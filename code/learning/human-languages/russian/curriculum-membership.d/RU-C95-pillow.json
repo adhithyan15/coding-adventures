@@ -1,0 +1,11 @@
+{
+  "id": "RU-C95-pillow",
+  "pathSegment": "RU-PATH-95-THINGS95",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-95-THINGS95",
+      "order": 3
+    }
+  ]
+}

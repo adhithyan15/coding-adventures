@@ -1,0 +1,11 @@
+{
+  "id": "RU-C104-melon",
+  "pathSegment": "RU-PATH-104-THINGS104",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-104-THINGS104",
+      "order": 3
+    }
+  ]
+}

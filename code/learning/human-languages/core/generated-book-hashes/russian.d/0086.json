@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:ca9a0e8938f1d1aa",
+  "lessonIds": [
+    "RU-C86-where",
+    "RU-C86-where-to",
+    "RU-C86-where-from",
+    "RU-C86-to-the-right",
+    "RU-C86-to-the-left"
+  ],
+  "tex": "russian/book/chapters/ch86-where-where-to-where-from-to-the-right-to-the-left.tex"
+}

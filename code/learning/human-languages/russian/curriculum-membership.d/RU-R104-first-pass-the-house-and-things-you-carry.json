@@ -1,0 +1,11 @@
+{
+  "id": "RU-R104-first-pass-the-house-and-things-you-carry",
+  "pathSegment": "RU-PATH-104-THINGS104",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-104-THINGS104",
+      "order": 5
+    }
+  ]
+}

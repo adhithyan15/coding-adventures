@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 116,
+  "sourceHash": "fnv1a64:7d3afc48f429e1d0",
+  "lessonIds": [
+    "RU-C116-desert",
+    "RU-C116-volcano",
+    "RU-C116-cave",
+    "RU-C116-waterfall",
+    "RU-C116-donkey"
+  ],
+  "tex": "russian/book/chapters/ch116-desert-volcano-cave-waterfall-donkey.tex"
+}

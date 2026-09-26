@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:afb392387ded4dd6",
+  "lessonIds": [
+    "RU-C135-to-lose",
+    "RU-C135-to-win",
+    "RU-C135-to-look",
+    "RU-C135-to-draw",
+    "RU-C135-to-travel",
+    "RU-R135-first-pass-describing-words",
+    "RU-R135-second-pass-verbs"
+  ],
+  "tex": "russian/book/chapters/ch135-to-lose-to-win-to-look-to-draw-to-travel.tex"
+}

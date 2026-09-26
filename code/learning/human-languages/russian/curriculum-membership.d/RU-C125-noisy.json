@@ -1,0 +1,11 @@
+{
+  "id": "RU-C125-noisy",
+  "pathSegment": "RU-PATH-125-QUAL125",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-125-QUAL125",
+      "order": 4
+    }
+  ]
+}

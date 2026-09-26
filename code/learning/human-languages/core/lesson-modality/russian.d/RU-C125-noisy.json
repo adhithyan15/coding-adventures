@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C125-noisy",
+    "language": "russian",
+    "chapter": 125,
+    "sequence": 6490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d01323947b71ef8e"
+  },
+  "findings": []
+}

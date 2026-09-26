@@ -1,0 +1,11 @@
+{
+  "id": "RU-C91-tram",
+  "pathSegment": "RU-PATH-91-LOC91",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-91-LOC91",
+      "order": 2
+    }
+  ]
+}

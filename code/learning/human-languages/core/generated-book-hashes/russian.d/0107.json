@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 107,
+  "sourceHash": "fnv1a64:ff3250fa17c2ef72",
+  "lessonIds": [
+    "RU-C107-jam",
+    "RU-C107-nut",
+    "RU-C107-pepper",
+    "RU-C107-nurse",
+    "RU-C107-cook"
+  ],
+  "tex": "russian/book/chapters/ch107-jam-nut-pepper-nurse-cook.tex"
+}

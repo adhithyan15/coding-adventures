@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C90-east",
+    "language": "russian",
+    "chapter": 90,
+    "sequence": 4540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e0cb6acebc6b07c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C85-second",
+    "language": "russian",
+    "chapter": 85,
+    "sequence": 4250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:867bdcbd8dbe8c13"
+  },
+  "findings": []
+}

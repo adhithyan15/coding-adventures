@@ -1,0 +1,11 @@
+{
+  "id": "RU-C121-nail-2",
+  "pathSegment": "RU-PATH-121-THINGS121",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-121-THINGS121",
+      "order": 1
+    }
+  ]
+}

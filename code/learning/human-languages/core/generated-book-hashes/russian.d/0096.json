@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:21c6549e32578e29",
+  "lessonIds": [
+    "RU-C96-towel",
+    "RU-C96-soap",
+    "RU-C96-toothbrush",
+    "RU-C96-comb",
+    "RU-C96-rubbish"
+  ],
+  "tex": "russian/book/chapters/ch96-towel-soap-toothbrush-comb-rubbish.tex"
+}

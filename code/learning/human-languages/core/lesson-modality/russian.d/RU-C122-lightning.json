@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C122-lightning",
+    "language": "russian",
+    "chapter": 122,
+    "sequence": 6320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ff476c0c95a7142"
+  },
+  "findings": []
+}

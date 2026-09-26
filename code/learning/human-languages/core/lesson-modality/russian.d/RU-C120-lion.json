@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C120-lion",
+    "language": "russian",
+    "chapter": 120,
+    "sequence": 6200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36ad4199e8e7d3b7"
+  },
+  "findings": []
+}

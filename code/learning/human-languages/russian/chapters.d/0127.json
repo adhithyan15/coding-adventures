@@ -1,0 +1,19 @@
+{
+  "chapter": 127,
+  "title": "Cheerful, Kind, Angry, Serious, Right",
+  "label": "ch:ru-cheerful-kind-angry-serious-right",
+  "canDo": "I can say cheerful, kind, angry, serious and right.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "RU-C127-right",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 127: i can say cheerful, kind, angry, serious and right.",
+    "assesses": [
+      "RU-LEX-C127-QUAL127-03",
+      "RU-LEX-C127-QUAL127-04",
+      "RU-LEX-C127-QUAL127-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C132-to-get-up",
+  "pathSegment": "RU-PATH-132-ACT132",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-132-ACT132",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:dbd4d11c060a3628",
+  "lessonIds": [
+    "RU-C111-exam",
+    "RU-C111-board",
+    "RU-C111-rubber",
+    "RU-C111-homework",
+    "RU-C111-idea"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch111.txt",
+  "json": "russian/narration/ch111.json",
+  "textHash": "fnv1a64:fd75397254cc258e",
+  "jsonHash": "fnv1a64:9c4519a058c57f0d",
+  "findings": []
+}

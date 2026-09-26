@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C95-blanket",
+    "language": "russian",
+    "chapter": 95,
+    "sequence": 4890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e43f648dcbfacaf8"
+  },
+  "findings": []
+}

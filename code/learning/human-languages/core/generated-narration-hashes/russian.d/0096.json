@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 96,
+  "sourceHash": "fnv1a64:2b43861bb6372aec",
+  "lessonIds": [
+    "RU-C96-towel",
+    "RU-C96-soap",
+    "RU-C96-toothbrush",
+    "RU-C96-comb",
+    "RU-C96-rubbish"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch96.txt",
+  "json": "russian/narration/ch96.json",
+  "textHash": "fnv1a64:0acdb567885cd990",
+  "jsonHash": "fnv1a64:a2f1a662603bb17d",
+  "findings": []
+}

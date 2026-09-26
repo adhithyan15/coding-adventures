@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 98,
+  "sourceHash": "fnv1a64:7a8974cebf6a105c",
+  "lessonIds": [
+    "RU-C98-frying-pan",
+    "RU-C98-bucket",
+    "RU-C98-rope",
+    "RU-C98-nail",
+    "RU-C98-hammer"
+  ],
+  "tex": "russian/book/chapters/ch98-frying-pan-bucket-rope-nail-hammer.tex"
+}

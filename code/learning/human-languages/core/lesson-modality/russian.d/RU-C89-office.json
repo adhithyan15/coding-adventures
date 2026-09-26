@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C89-office",
+    "language": "russian",
+    "chapter": 89,
+    "sequence": 4460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:623f39b8ccccf202"
+  },
+  "findings": []
+}

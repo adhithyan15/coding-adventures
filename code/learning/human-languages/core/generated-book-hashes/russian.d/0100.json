@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 100,
+  "sourceHash": "fnv1a64:9e2719d6dd73ee9e",
+  "lessonIds": [
+    "RU-C100-ring",
+    "RU-C100-photograph",
+    "RU-C100-candle",
+    "RU-C100-calendar",
+    "RU-C100-rucksack"
+  ],
+  "tex": "russian/book/chapters/ch100-ring-photograph-candle-calendar-rucksack.tex"
+}

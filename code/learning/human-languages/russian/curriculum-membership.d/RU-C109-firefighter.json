@@ -1,0 +1,11 @@
+{
+  "id": "RU-C109-firefighter",
+  "pathSegment": "RU-PATH-109-THINGS109",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-109-THINGS109",
+      "order": 2
+    }
+  ]
+}

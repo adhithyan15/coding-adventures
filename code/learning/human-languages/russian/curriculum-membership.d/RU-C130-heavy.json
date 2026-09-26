@@ -1,0 +1,11 @@
+{
+  "id": "RU-C130-heavy",
+  "pathSegment": "RU-PATH-130-QUAL130",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-130-QUAL130",
+      "order": 2
+    }
+  ]
+}

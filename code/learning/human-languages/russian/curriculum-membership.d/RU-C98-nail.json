@@ -1,0 +1,11 @@
+{
+  "id": "RU-C98-nail",
+  "pathSegment": "RU-PATH-98-THINGS98",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-98-THINGS98",
+      "order": 3
+    }
+  ]
+}

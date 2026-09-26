@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C130-heavy",
+    "language": "russian",
+    "chapter": 130,
+    "sequence": 6820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a3430ebd00a5c12"
+  },
+  "findings": []
+}

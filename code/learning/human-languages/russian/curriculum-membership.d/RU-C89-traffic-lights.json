@@ -1,0 +1,11 @@
+{
+  "id": "RU-C89-traffic-lights",
+  "pathSegment": "RU-PATH-89-LOC89",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-89-LOC89",
+      "order": 4
+    }
+  ]
+}

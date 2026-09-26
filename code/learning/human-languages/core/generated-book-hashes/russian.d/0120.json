@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:2a4fa1c1058a2836",
+  "lessonIds": [
+    "RU-C120-lion",
+    "RU-C120-monkey",
+    "RU-C120-elephant",
+    "RU-C120-bee",
+    "RU-C120-ant"
+  ],
+  "tex": "russian/book/chapters/ch120-lion-monkey-elephant-bee-ant.tex"
+}

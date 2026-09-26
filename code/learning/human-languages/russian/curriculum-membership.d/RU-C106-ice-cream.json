@@ -1,0 +1,11 @@
+{
+  "id": "RU-C106-ice-cream",
+  "pathSegment": "RU-PATH-106-THINGS106",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-106-THINGS106",
+      "order": 2
+    }
+  ]
+}
