@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 51,
+  "sourceHash": "fnv1a64:f4630de47f2b1d79",
+  "lessonIds": [
+    "JA-C51-tsuyoi",
+    "JA-C51-yowai",
+    "JA-C51-utsukushii",
+    "JA-C51-aoi",
+    "JA-C51-akai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch51.txt",
+  "json": "japanese/narration/ch51.json",
+  "textHash": "fnv1a64:7d49ed2f553e88dc",
+  "jsonHash": "fnv1a64:ca60d90780384849",
+  "findings": []
+}

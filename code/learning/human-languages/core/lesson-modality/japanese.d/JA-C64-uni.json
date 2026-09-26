@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C64-uni",
+    "language": "japanese",
+    "chapter": 64,
+    "sequence": 3870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:adb94741a438ab77"
+  },
+  "findings": []
+}

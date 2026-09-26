@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C71-ana",
+    "language": "japanese",
+    "chapter": 71,
+    "sequence": 4210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94f1d973d6a6d204"
+  },
+  "findings": []
+}

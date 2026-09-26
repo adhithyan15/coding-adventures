@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "Near, Far, Town, Road, Shop",
+  "label": "ch:ja-near-far-town-road-shop",
+  "canDo": "I can say near, far, a town, a road and a shop.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "JA-C57-mise",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: i can say near, far, a town, a road and a shop.",
+    "assesses": [
+      "JA-LEX-C57-PLACE57-03",
+      "JA-LEX-C57-PLACE57-04",
+      "JA-LEX-C57-PLACE57-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 42,
+  "title": "River, Sea, Grass, Forest, Stone",
+  "label": "ch:ja-river-sea-grass-forest-stone",
+  "canDo": "I can say a river, the sea, grass, a forest and a stone.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "JA-C42-ishi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 42: i can say a river, the sea, grass, a forest and a stone.",
+    "assesses": [
+      "JA-LEX-C42-NATURE42-03",
+      "JA-LEX-C42-NATURE42-04",
+      "JA-LEX-C42-NATURE42-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C67-sensu",
+  "pathSegment": "JA-PATH-67-THINGS67",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-67-THINGS67",
+      "order": 1
+    }
+  ]
+}

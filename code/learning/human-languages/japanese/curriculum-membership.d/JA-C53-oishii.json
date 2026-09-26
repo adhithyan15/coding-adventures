@@ -1,0 +1,11 @@
+{
+  "id": "JA-C53-oishii",
+  "pathSegment": "JA-PATH-53-ADJ53",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-53-ADJ53",
+      "order": 1
+    }
+  ]
+}

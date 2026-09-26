@@ -1,0 +1,13 @@
+{
+  "language": "japanese",
+  "chapter": 60,
+  "sourceHash": "fnv1a64:3758a1479e06ec55",
+  "lessonIds": [
+    "JA-C60-man",
+    "JA-C60-juuni",
+    "JA-C60-nasu",
+    "JA-C60-uta",
+    "JA-C60-eda"
+  ],
+  "tex": "japanese/book/chapters/ch60-ten-thousand-twelve-aubergine-song-branch.tex"
+}

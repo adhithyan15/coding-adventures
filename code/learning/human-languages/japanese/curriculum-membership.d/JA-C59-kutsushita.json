@@ -1,0 +1,11 @@
+{
+  "id": "JA-C59-kutsushita",
+  "pathSegment": "JA-PATH-59-CLOTHES59",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "JA-EXT-59-CLOTHES59",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C65-koi",
+    "language": "japanese",
+    "chapter": 65,
+    "sequence": 3900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a739ab6cda659e9"
+  },
+  "findings": []
+}

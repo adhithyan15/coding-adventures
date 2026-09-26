@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C65-ola",
+    "language": "marathi",
+    "chapter": 65,
+    "sequence": 2649,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:895bab88455f9ae6"
+  },
+  "findings": []
+}

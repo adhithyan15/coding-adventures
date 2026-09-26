@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C28-iu",
+    "language": "japanese",
+    "chapter": 28,
+    "sequence": 2030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:160302fabb8e1d70"
+  },
+  "findings": []
+}

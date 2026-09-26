@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-25-FAMILY25",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "JA-EXT-25-FAMILY25"
+  ],
+  "after": []
+}

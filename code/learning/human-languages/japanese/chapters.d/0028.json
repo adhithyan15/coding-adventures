@@ -1,0 +1,19 @@
+{
+  "chapter": 28,
+  "title": "To use, To sing, To say, To think, To hold",
+  "label": "ch:ja-to-use-to-sing-to-say-to-think-to-hold",
+  "canDo": "I can say to use, to sing, to say, to think and to hold.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "JA-C28-motsu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 28: i can say to use, to sing, to say, to think and to hold.",
+    "assesses": [
+      "JA-LEX-C28-VERBS28-03",
+      "JA-LEX-C28-VERBS28-04",
+      "JA-LEX-C28-VERBS28-05"
+    ]
+  }
+}

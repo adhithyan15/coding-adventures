@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 42,
+  "sourceHash": "fnv1a64:c718b8c6dd6ad78a",
+  "lessonIds": [
+    "JA-C42-kawa",
+    "JA-C42-umi",
+    "JA-C42-kusa",
+    "JA-C42-mori",
+    "JA-C42-ishi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch42.txt",
+  "json": "japanese/narration/ch42.json",
+  "textHash": "fnv1a64:b74d85fde155b6f8",
+  "jsonHash": "fnv1a64:912aa25a12617720",
+  "findings": []
+}

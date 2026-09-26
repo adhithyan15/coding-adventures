@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 53,
+  "title": "Cold, Tasty, Hot, Cold, Morning",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:da303c359c65b108",
+  "lessons": [
+    {
+      "id": "JA-C53-tsumetai",
+      "sequence": 3280,
+      "title": "つめたい (tsumetai) — cold (to the touch)",
+      "headword": "つめたい",
+      "romanization": "tsumetai",
+      "gloss": "cold (to the touch)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62c1a225c6479318",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for thick, then the Japanese for warm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つめたい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つめたい — tsumetai — \"cold (to the touch)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsumetai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsumetai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsumetai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsumetai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tsumetai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tsumetai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for thick, then the Japanese for warm, then say tsumetai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for thick, then the Japanese for warm, then say *tsumetai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つめたい (tsumetai) mean? (\"Cold (to the touch)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C53-tsumetai-type",
+              "prompt": "Type the Japanese for 'cold (to the touch)'.",
+              "assesses": [
+                "JA-LEX-C53-ADJ53-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つめたい",
+                "tsumetai"
+              ],
+              "feedback": {
+                "correct": "Right: つめたい (tsumetai) is 'cold (to the touch)'.",
+                "incorrect": "'cold (to the touch)' is つめたい (tsumetai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C53-oishii",
+      "sequence": 3290,
+      "title": "おいしい (oishii) — tasty",
+      "headword": "おいしい",
+      "romanization": "oishii",
+      "gloss": "tasty",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ddb2725ea2f5088",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for warm, then the Japanese for cold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: おいしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "おいしい — oishii — \"tasty\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oishii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oishii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oishii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oishii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say oishii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *oishii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for warm, then the Japanese for cold, then say oishii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for warm, then the Japanese for cold, then say *oishii* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does おいしい (oishii) mean? (\"Tasty\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C53-oishii-type",
+              "prompt": "Type the Japanese for 'tasty'.",
+              "assesses": [
+                "JA-LEX-C53-ADJ53-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "おいしい",
+                "oishii"
+              ],
+              "feedback": {
+                "correct": "Right: おいしい (oishii) is 'tasty'.",
+                "incorrect": "'tasty' is おいしい (oishii)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C53-atsui",
+      "sequence": 3300,
+      "title": "あつい (atsui) — hot",
+      "headword": "あつい",
+      "romanization": "atsui",
+      "gloss": "hot",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4b47e7750aabf19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for cold, then the Japanese for tasty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あつい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あつい — atsui — \"hot\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atsui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atsui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "atsui, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *atsui*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say atsui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *atsui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for cold, then the Japanese for tasty, then say atsui again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for cold, then the Japanese for tasty, then say *atsui* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あつい (atsui) mean? (\"Hot\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C53-atsui-type",
+              "prompt": "Type the Japanese for 'hot'.",
+              "assesses": [
+                "JA-LEX-C53-ADJ53-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あつい",
+                "atsui"
+              ],
+              "feedback": {
+                "correct": "Right: あつい (atsui) is 'hot'.",
+                "incorrect": "'hot' is あつい (atsui)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C53-samui",
+      "sequence": 3310,
+      "title": "さむい (samui) — cold (weather)",
+      "headword": "さむい",
+      "romanization": "samui",
+      "gloss": "cold (weather)",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:18ae32454c82ebe4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for tasty, then the Japanese for hot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: さむい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "さむい — samui — \"cold (weather)\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samui, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samui*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say samui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *samui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for tasty, then the Japanese for hot, then say samui again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for tasty, then the Japanese for hot, then say *samui* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does さむい (samui) mean? (\"Cold (weather)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C53-samui-type",
+              "prompt": "Type the Japanese for 'cold (weather)'.",
+              "assesses": [
+                "JA-LEX-C53-ADJ53-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "さむい",
+                "samui"
+              ],
+              "feedback": {
+                "correct": "Right: さむい (samui) is 'cold (weather)'.",
+                "incorrect": "'cold (weather)' is さむい (samui)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C53-asa",
+      "sequence": 3320,
+      "title": "あさ (asa) — morning",
+      "headword": "あさ",
+      "romanization": "asa",
+      "gloss": "morning",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d72f54d4832cd124",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for hot, then the Japanese for cold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あさ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あさ — asa — \"morning\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asa, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asa*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say asa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *asa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for hot, then the Japanese for cold, then say asa again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for hot, then the Japanese for cold, then say *asa* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あさ (asa) mean? (\"Morning\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C53-asa-type",
+              "prompt": "Type the Japanese for 'morning'.",
+              "assesses": [
+                "JA-LEX-C53-ADJ53-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あさ",
+                "asa"
+              ],
+              "feedback": {
+                "correct": "Right: あさ (asa) is 'morning'.",
+                "incorrect": "'morning' is あさ (asa)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

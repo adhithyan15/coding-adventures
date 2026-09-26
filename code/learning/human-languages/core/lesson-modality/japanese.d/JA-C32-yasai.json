@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C32-yasai",
+    "language": "japanese",
+    "chapter": 32,
+    "sequence": 2240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0320d1936791c76"
+  },
+  "findings": []
+}

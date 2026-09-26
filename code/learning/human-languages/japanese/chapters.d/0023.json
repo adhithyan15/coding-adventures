@@ -1,0 +1,19 @@
+{
+  "chapter": 23,
+  "title": "Medicine, Sleepy, Sad, Fun, Scary",
+  "label": "ch:ja-medicine-sleepy-sad-fun-scary",
+  "canDo": "I can say medicine, sleepy, sad, fun, enjoyable and scary.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "JA-C23-kowai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 23: i can say medicine, sleepy, sad, fun, enjoyable and scary.",
+    "assesses": [
+      "JA-LEX-C23-HEALTH23-03",
+      "JA-LEX-C23-HEALTH23-04",
+      "JA-LEX-C23-HEALTH23-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C64-phanas",
+    "language": "marathi",
+    "chapter": 64,
+    "sequence": 2609,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9cf8738770d97130"
+  },
+  "findings": []
+}

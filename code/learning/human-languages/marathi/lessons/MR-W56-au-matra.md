@@ -10,20 +10,20 @@ headword: ौ
 romanization: -au
 gloss: the au vowel sign — the mark that stands between you and fourteen
 concept_tag: MR-SCRIPT-AU-MATRA-01
-prerequisites: [MR-C56-daha, MR-C56-akra, MR-C56-bara]
+prerequisites: [MR-C56-daha, MR-C56-akra, MR-C56-bara, MR-C56-mauj]
 sounds: [matra-o]
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-LEX-BARA, MR-LEX-NAU, MR-SCRIPT-O-MATRA-01]
+  knowledge: [MR-LEX-BARA, MR-LEX-NAU, MR-SCRIPT-O-MATRA-01, MR-LEX-ANCHOR-MAUJ]
 introduces:
   knowledge: [MR-SCRIPT-AU-MATRA-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-SCRIPT-AU-MATRA-01, MR-LEX-BARA, MR-LEX-NAU, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-E-MATRA-01, MR-LEX-KATHIN, MR-JOIN-JEVHA, MR-LEX-NUMBERS-ONE-TO-FIVE]
+  knowledge: [MR-SCRIPT-AU-MATRA-01, MR-LEX-BARA, MR-LEX-NAU, MR-SCRIPT-O-MATRA-01, MR-SCRIPT-E-MATRA-01, MR-LEX-KATHIN, MR-JOIN-JEVHA, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-LEX-ANCHOR-MAUJ]
 skills: [reading, writing, speaking]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -35,7 +35,7 @@ reviews_of: [MR-C56-daha, MR-C56-akra, MR-C56-bara]
 # ौ — the au vowel sign
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-BARA, MR-LEX-NAU] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-BARA, MR-LEX-NAU, MR-LEX-ANCHOR-MAUJ] -->
 
 [PAUSE 2s] You can write every number so far. The next one but one needs a
 vowel sign the book has never taught.

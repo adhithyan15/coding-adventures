@@ -1,0 +1,19 @@
+{
+  "chapter": 56,
+  "title": "After, Before, Above, Inside, Left",
+  "label": "ch:ja-after-before-above-inside-left",
+  "canDo": "I can say after, later, before, above, on top, inside and left.",
+  "spineNodes": [
+    "SPINE-TAKE-LEAVE"
+  ],
+  "payoff": {
+    "lesson": "JA-C56-hidari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 56: i can say after, later, before, above, on top, inside and left.",
+    "assesses": [
+      "JA-LEX-C56-TIME56-03",
+      "JA-LEX-C56-TIME56-04",
+      "JA-LEX-C56-TIME56-05"
+    ]
+  }
+}

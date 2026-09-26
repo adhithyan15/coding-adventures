@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C64-kona",
+    "language": "japanese",
+    "chapter": 64,
+    "sequence": 3850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1da3e51cdd7b1c81"
+  },
+  "findings": []
+}

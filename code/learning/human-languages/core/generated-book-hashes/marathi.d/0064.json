@@ -1,9 +1,11 @@
 {
   "language": "marathi",
   "chapter": 64,
-  "sourceHash": "fnv1a64:c51fe60ae8424290",
+  "sourceHash": "fnv1a64:06546597db71aa1f",
   "lessonIds": [
+    "MR-C64-dhol",
     "MR-W64-ddha",
+    "MR-C64-phanas",
     "MR-W64-pha",
     "MR-W64-danda",
     "MR-R64-rows-closed"

@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 64,
+  "title": "Powder, Sesame, Sea urchin, Sardine, Flavour",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0acc0011cfd1823b",
+  "lessons": [
+    {
+      "id": "JA-C64-kona",
+      "sequence": 3850,
+      "title": "こな (kona) — powder, flour",
+      "headword": "こな",
+      "romanization": "kona",
+      "gloss": "powder, flour",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1da3e51cdd7b1c81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for east, then the Japanese for south."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: こな",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こな — kona — \"powder, flour\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kona",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kona*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kona, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kona*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kona",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kona*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for east, then the Japanese for south, then say kona again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for east, then the Japanese for south, then say *kona* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does こな (kona) mean? (\"Powder, flour\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C64-kona-type",
+              "prompt": "Type the Japanese for 'powder, flour'.",
+              "assesses": [
+                "JA-LEX-C64-WORLD64-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "こな",
+                "kona"
+              ],
+              "feedback": {
+                "correct": "Right: こな (kona) is 'powder, flour'.",
+                "incorrect": "'powder, flour' is こな (kona)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C64-goma",
+      "sequence": 3860,
+      "title": "ごま (goma) — sesame",
+      "headword": "ごま",
+      "romanization": "goma",
+      "gloss": "sesame",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a61c682f60c105f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for south, then the Japanese for powder."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ごま",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ごま — goma — \"sesame\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goma, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goma*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say goma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *goma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for south, then the Japanese for powder, then say goma again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for south, then the Japanese for powder, then say *goma* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ごま (goma) mean? (\"Sesame\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C64-goma-type",
+              "prompt": "Type the Japanese for 'sesame'.",
+              "assesses": [
+                "JA-LEX-C64-WORLD64-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ごま",
+                "goma"
+              ],
+              "feedback": {
+                "correct": "Right: ごま (goma) is 'sesame'.",
+                "incorrect": "'sesame' is ごま (goma)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C64-uni",
+      "sequence": 3870,
+      "title": "うに (uni) — a sea urchin",
+      "headword": "うに",
+      "romanization": "uni",
+      "gloss": "a sea urchin",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:adb94741a438ab77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for powder, then the Japanese for sesame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うに",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うに — uni — \"a sea urchin\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uni, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uni*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say uni",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *uni*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for powder, then the Japanese for sesame, then say uni again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for powder, then the Japanese for sesame, then say *uni* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うに (uni) mean? (\"A sea urchin\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C64-uni-type",
+              "prompt": "Type the Japanese for 'a sea urchin'.",
+              "assesses": [
+                "JA-LEX-C64-WORLD64-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うに",
+                "uni"
+              ],
+              "feedback": {
+                "correct": "Right: うに (uni) is 'a sea urchin'.",
+                "incorrect": "'a sea urchin' is うに (uni)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C64-iwashi",
+      "sequence": 3880,
+      "title": "いわし (iwashi) — a sardine",
+      "headword": "いわし",
+      "romanization": "iwashi",
+      "gloss": "a sardine",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c3ad75641134d10a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for sesame, then the Japanese for a sea urchin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いわし",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いわし — iwashi — \"a sardine\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iwashi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iwashi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iwashi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iwashi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say iwashi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *iwashi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for sesame, then the Japanese for a sea urchin, then say iwashi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for sesame, then the Japanese for a sea urchin, then say *iwashi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いわし (iwashi) mean? (\"A sardine\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C64-iwashi-type",
+              "prompt": "Type the Japanese for 'a sardine'.",
+              "assesses": [
+                "JA-LEX-C64-WORLD64-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いわし",
+                "iwashi"
+              ],
+              "feedback": {
+                "correct": "Right: いわし (iwashi) is 'a sardine'.",
+                "incorrect": "'a sardine' is いわし (iwashi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C64-aji",
+      "sequence": 3890,
+      "title": "あじ (aji) — a flavour, a taste",
+      "headword": "あじ",
+      "romanization": "aji",
+      "gloss": "a flavour, a taste",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11cdbb1cae0962ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a sea urchin, then the Japanese for a sardine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: あじ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "あじ — aji — \"a flavour, a taste\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aji, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aji*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say aji",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *aji*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a sea urchin, then the Japanese for a sardine, then say aji again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a sea urchin, then the Japanese for a sardine, then say *aji* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does あじ (aji) mean? (\"A flavour, a taste\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C64-aji-type",
+              "prompt": "Type the Japanese for 'a flavour, a taste'.",
+              "assesses": [
+                "JA-LEX-C64-WORLD64-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "あじ",
+                "aji"
+              ],
+              "feedback": {
+                "correct": "Right: あじ (aji) is 'a flavour, a taste'.",
+                "incorrect": "'a flavour, a taste' is あじ (aji)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

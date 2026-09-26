@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C31-otosu",
+    "language": "japanese",
+    "chapter": 31,
+    "sequence": 2170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c5a4143d1004e4cf"
+  },
+  "findings": []
+}

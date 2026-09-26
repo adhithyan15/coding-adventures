@@ -4,8 +4,113 @@
   "chapter": 64,
   "title": "Rows Closed",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8d7f183910ecfcf4",
+  "sourceHash": "fnv1a64:2398e959c4dbc9b4",
   "lessons": [
+    {
+      "id": "MR-C64-dhol",
+      "sequence": 2599,
+      "title": "ढोल (ḍhol) — a drum",
+      "headword": "ढोल",
+      "romanization": "ḍhol",
+      "gloss": "a drum",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:3f9d9c08d8770f95",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ढोल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढोल — ḍhol — \"a drum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ḍhol. Look at its shape as you say it: the next lesson takes one piece of it, ढ (ddha), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhol",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhol*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhol, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhol*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a drum\"? (ढोल, ḍhol.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "MR-W64-ddha",
       "sequence": 2600,
@@ -21,7 +126,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4d10f24c2a6cd8d4",
+      "sourceHash": "fnv1a64:2d31f6f533334d0b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -155,6 +260,111 @@
       ]
     },
     {
+      "id": "MR-C64-phanas",
+      "sequence": 2609,
+      "title": "फणस (phaṇas) — a jackfruit",
+      "headword": "फणस",
+      "romanization": "phaṇas",
+      "gloss": "a jackfruit",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9cf8738770d97130",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फणस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फणस — phaṇas — \"a jackfruit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: phaṇas. Look at its shape as you say it: the next lesson takes one piece of it, फ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phaṇas",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phaṇas*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phaṇas, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phaṇas*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a jackfruit\"? (फणस, phaṇas.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "MR-W64-pha",
       "sequence": 2610,
       "title": "फ (pha) — the gap in the lip row",
@@ -169,7 +379,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:506c9b0df1678c31",
+      "sourceHash": "fnv1a64:54cb6f4244956fdb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -317,7 +527,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4823800add11d3a4",
+      "sourceHash": "fnv1a64:1aa61462e76ba279",
       "notice": {
         "modality": "pen",
         "needs": [

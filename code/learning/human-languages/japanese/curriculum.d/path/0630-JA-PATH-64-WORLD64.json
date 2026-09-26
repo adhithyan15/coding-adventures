@@ -1,0 +1,9 @@
+{
+  "id": "JA-PATH-64-WORLD64",
+  "spine_node": "SPINE-TAKE-LEAVE",
+  "before": [],
+  "inline": [
+    "JA-EXT-64-WORLD64"
+  ],
+  "after": []
+}

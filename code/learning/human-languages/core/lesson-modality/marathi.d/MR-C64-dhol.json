@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MR-C64-dhol",
+    "language": "marathi",
+    "chapter": 64,
+    "sequence": 2599,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3f9d9c08d8770f95"
+  },
+  "findings": []
+}

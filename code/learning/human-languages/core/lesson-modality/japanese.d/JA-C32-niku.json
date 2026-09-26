@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C32-niku",
+    "language": "japanese",
+    "chapter": 32,
+    "sequence": 2220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c3be565c1a1a71a"
+  },
+  "findings": []
+}

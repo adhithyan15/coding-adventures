@@ -1,0 +1,19 @@
+{
+  "chapter": 24,
+  "title": "Pain, Grandfather, Uncle, Son, Daughter",
+  "label": "ch:ja-pain-grandfather-uncle-son-daughter",
+  "canDo": "I can say pain, a grandfather, an uncle, a son and a daughter.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "JA-C24-musume",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 24: i can say pain, a grandfather, an uncle, a son and a daughter.",
+    "assesses": [
+      "JA-LEX-C24-HEALTH24-03",
+      "JA-LEX-C24-HEALTH24-04",
+      "JA-LEX-C24-HEALTH24-05"
+    ]
+  }
+}

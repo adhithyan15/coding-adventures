@@ -133,7 +133,9 @@ describe("the gate that would have caught the A2 claim", () => {
     // 19 -> 20: Arabic, with chapters 50-99 (250 headwords, forty-three verbs).
     // 20 -> 21: Persian, with chapters 27-78 (260 headwords, twenty-seven verbs)
     // after its two over-budget lessons were split.
-    expect(gate.summary.tracksWithAnyLevel).toBe(21);
+    // 21 -> 22: Japanese, with chapters 20-71 (260 hiragana headwords, spelled
+    // only with glyphs the script lessons have taught).
+    expect(gate.summary.tracksWithAnyLevel).toBe(22);
     // Which rungs, and only those. Checking every level is the point: pinning one
     // level's count alone would pass on a gate that had also handed out a spurious
     // C2. The tracks that hold a rung are pinned by name, and the per-level counts
@@ -161,6 +163,7 @@ describe("the gate that would have caught the A2 claim", () => {
       bengali: "pre-A1",
       arabic: "pre-A1",
       persian: "pre-A1",
+      japanese: "pre-A1",
     };
     const expectedByLevel = new Map<string, number>();
     for (const level of Object.values(HELD)) {

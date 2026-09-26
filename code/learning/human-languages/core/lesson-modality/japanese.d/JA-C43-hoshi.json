@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C43-hoshi",
+    "language": "japanese",
+    "chapter": 43,
+    "sequence": 2800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2e0dfab76bda7c7b"
+  },
+  "findings": []
+}

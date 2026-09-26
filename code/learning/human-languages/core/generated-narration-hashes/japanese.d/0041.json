@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 41,
+  "sourceHash": "fnv1a64:087dd77d96924a33",
+  "lessonIds": [
+    "JA-C41-tegami",
+    "JA-C41-jikan",
+    "JA-C41-namae",
+    "JA-C41-okane",
+    "JA-C41-yama"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch41.txt",
+  "json": "japanese/narration/ch41.json",
+  "textHash": "fnv1a64:b06ed96354560836",
+  "jsonHash": "fnv1a64:b20e43e75f026573",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 39,
+  "title": "Garden, Bath, Tatami mat, Shelf, Box",
+  "label": "ch:ja-garden-bath-tatami-mat-shelf-box",
+  "canDo": "I can say a garden, a bath, a tatami mat, a shelf and a box.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "JA-C39-hako",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 39: i can say a garden, a bath, a tatami mat, a shelf and a box.",
+    "assesses": [
+      "JA-LEX-C39-HOME39-03",
+      "JA-LEX-C39-HOME39-04",
+      "JA-LEX-C39-HOME39-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 39,
+  "sourceHash": "fnv1a64:9b6871de08bae5f2",
+  "lessonIds": [
+    "JA-C39-niwa",
+    "JA-C39-ofuro",
+    "JA-C39-tatami",
+    "JA-C39-tana",
+    "JA-C39-hako"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch39.txt",
+  "json": "japanese/narration/ch39.json",
+  "textHash": "fnv1a64:588792d7d35bfab9",
+  "jsonHash": "fnv1a64:34a6dcaffe023f5a",
+  "findings": []
+}

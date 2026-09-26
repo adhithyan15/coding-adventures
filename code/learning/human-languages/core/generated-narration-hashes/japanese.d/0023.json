@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 23,
+  "sourceHash": "fnv1a64:7dc5c4055a68880a",
+  "lessonIds": [
+    "JA-C23-kusuri",
+    "JA-C23-nemui",
+    "JA-C23-kanashii",
+    "JA-C23-tanoshii",
+    "JA-C23-kowai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch23.txt",
+  "json": "japanese/narration/ch23.json",
+  "textHash": "fnv1a64:30bd2ac7a7d1158b",
+  "jsonHash": "fnv1a64:e96d160d498e328b",
+  "findings": []
+}

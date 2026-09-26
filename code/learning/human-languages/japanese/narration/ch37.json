@@ -1,0 +1,1044 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 37,
+  "title": "Home, Window, Chair, Desk, Roof",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:b20a705e50ea18c8",
+  "lessons": [
+    {
+      "id": "JA-C37-uchi",
+      "sequence": 2460,
+      "title": "うち (uchi) — home",
+      "headword": "うち",
+      "romanization": "uchi",
+      "gloss": "home",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35f3b50ac9d3fae1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for beans, then the Japanese for uncooked rice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: うち",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "うち — uchi — \"home\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uchi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uchi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say uchi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *uchi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for beans, then the Japanese for uncooked rice, then say uchi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for beans, then the Japanese for uncooked rice, then say *uchi* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does うち (uchi) mean? (\"Home\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C37-uchi-type",
+              "prompt": "Type the Japanese for 'home'.",
+              "assesses": [
+                "JA-LEX-C37-HOME37-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "うち",
+                "uchi"
+              ],
+              "feedback": {
+                "correct": "Right: うち (uchi) is 'home'.",
+                "incorrect": "'home' is うち (uchi)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C37-mado",
+      "sequence": 2470,
+      "title": "まど (mado) — a window",
+      "headword": "まど",
+      "romanization": "mado",
+      "gloss": "a window",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:949e71a1b3402c1c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for uncooked rice, then the Japanese for home."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: まど",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "まど — mado — \"a window\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mado, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mado*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say mado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *mado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for uncooked rice, then the Japanese for home, then say mado again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for uncooked rice, then the Japanese for home, then say *mado* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does まど (mado) mean? (\"A window\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C37-mado-type",
+              "prompt": "Type the Japanese for 'a window'.",
+              "assesses": [
+                "JA-LEX-C37-HOME37-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "まど",
+                "mado"
+              ],
+              "feedback": {
+                "correct": "Right: まど (mado) is 'a window'.",
+                "incorrect": "'a window' is まど (mado)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C37-isu",
+      "sequence": 2480,
+      "title": "いす (isu) — a chair",
+      "headword": "いす",
+      "romanization": "isu",
+      "gloss": "a chair",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17bf8e53b8e003e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for home, then the Japanese for a window."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: いす",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "いす — isu — \"a chair\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "isu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *isu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say isu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *isu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for home, then the Japanese for a window, then say isu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for home, then the Japanese for a window, then say *isu* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does いす (isu) mean? (\"A chair\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C37-isu-type",
+              "prompt": "Type the Japanese for 'a chair'.",
+              "assesses": [
+                "JA-LEX-C37-HOME37-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "いす",
+                "isu"
+              ],
+              "feedback": {
+                "correct": "Right: いす (isu) is 'a chair'.",
+                "incorrect": "'a chair' is いす (isu)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C37-tsukue",
+      "sequence": 2490,
+      "title": "つくえ (tsukue) — a desk",
+      "headword": "つくえ",
+      "romanization": "tsukue",
+      "gloss": "a desk",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bf548b582af28a21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a window, then the Japanese for a chair."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: つくえ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "つくえ — tsukue — \"a desk\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukue*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tsukue, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tsukue*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say tsukue",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *tsukue*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a window, then the Japanese for a chair, then say tsukue again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a window, then the Japanese for a chair, then say *tsukue* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does つくえ (tsukue) mean? (\"A desk\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C37-tsukue-type",
+              "prompt": "Type the Japanese for 'a desk'.",
+              "assesses": [
+                "JA-LEX-C37-HOME37-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つくえ",
+                "tsukue"
+              ],
+              "feedback": {
+                "correct": "Right: つくえ (tsukue) is 'a desk'.",
+                "incorrect": "'a desk' is つくえ (tsukue)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C37-yane",
+      "sequence": 2500,
+      "title": "やね (yane) — a roof",
+      "headword": "やね",
+      "romanization": "yane",
+      "gloss": "a roof",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5286972f5f5ac2e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for a chair, then the Japanese for a desk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やね",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やね — yane — \"a roof\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yane*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yane, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yane*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say yane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *yane*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for a chair, then the Japanese for a desk, then say yane again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for a chair, then the Japanese for a desk, then say *yane* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やね (yane) mean? (\"A roof\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C37-yane-type",
+              "prompt": "Type the Japanese for 'a roof'.",
+              "assesses": [
+                "JA-LEX-C37-HOME37-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やね",
+                "yane"
+              ],
+              "feedback": {
+                "correct": "Right: やね (yane) is 'a roof'.",
+                "incorrect": "'a roof' is やね (yane)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R37-first-pass-the-body-health-and-family",
+      "sequence": 2510,
+      "title": "The body, health and family — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 20-28",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3569e28f487bb52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a desk and a roof."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a nail, an elbow, a knee, the throat, the chest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a nail, an elbow, a knee, the throat, the chest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bone, the chin, a cheek, an eyebrow, skin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bone, the chin, a cheek, an eyebrow, skin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sweat, tears, a voice, a fever, painful",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sweat, tears, a voice, a fever, painful]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "medicine, sleepy, sad, fun, scary",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: medicine, sleepy, sad, fun, scary]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pain, a grandfather, an uncle, a son, a daughter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pain, a grandfather, an uncle, a son, a daughter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a friend, an adult, a man, a woman, a teacher",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a friend, an adult, a man, a woman, a teacher]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "next door; a neighbour, a companion, to go, to buy, to drink",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: next door; a neighbour, a companion, to go, to buy, to drink]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to read, to write, to speak, to wait, to meet",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to read, to write, to speak, to wait, to meet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to use, to sing, to say, to think, to hold",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to use, to sing, to say, to think, to hold]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A nail? (tsume.) An elbow? (hiji.) A knee? (hiza.) The throat? (nodo.) The chest? (mune.) A bone? (hone.) The chin? (ago.) A cheek? (hoo.) An eyebrow? (mayu.) Skin? (hada.) Sweat? (ase.) Tears? (namida.) A voice? (koe.) A fever? (netsu.) Painful? (itai.) Medicine? (kusuri.) Sleepy? (nemui.) Sad? (kanashii.) Fun? (tanoshii.) Scary? (kowai.) Pain? (itami.) A grandfather? (ojiisan.) An uncle? (ojisan.) A son? (musuko.) A daughter? (musume.) A friend? (tomodachi.) An adult? (otona.) A man? (otoko.) A woman? (onna.) A teacher? (sensei.) Next door; a neighbour? (tonari.) A companion? (nakama.) To go? (iku.) To buy? (kau.) To drink? (nomu.) To read? (yomu.) To write? (kaku.) To speak? (hanasu.) To wait? (matsu.) To meet? (au.) To use? (tsukau.) To sing? (utau.) To say? (iu.) To think? (omou.) To hold? (motsu.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R37-first-pass-the-body-health-and-family-type",
+              "prompt": "Type the Japanese for 'a desk'.",
+              "assesses": [
+                "JA-LEX-C37-HOME37-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "つくえ",
+                "tsukue"
+              ],
+              "feedback": {
+                "correct": "Right: つくえ (tsukue) is 'a desk'.",
+                "incorrect": "'a desk' is つくえ (tsukue)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-R37-second-pass-verbs",
+      "sequence": 2520,
+      "title": "Verbs — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 29-37",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82d6df8df80de376",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for to stand and to cry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stand, to cry, to live, to rest, to enjoy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stand, to cry, to live, to rest, to enjoy]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to push, to pull, to look for, to lend, to give back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to push, to pull, to look for, to lend, to give back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to take out, to drop, to fix, to move, rice; a meal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to take out, to drop, to fix, to move, rice; a meal]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fish, meat, an egg, vegetables, fruit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fish, meat, an egg, vegetables, fruit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an apple, a mandarin orange, a strawberry, a peach, a pear",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an apple, a mandarin orange, a strawberry, a peach, a pear]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a watermelon, a white radish, a carrot, tofu, salt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a watermelon, a white radish, a carrot, tofu, salt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sugar, udon noodles, sushi, breakfast, sweets",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sugar, udon noodles, sushi, breakfast, sweets]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "seaweed, a Japanese plum, a chestnut, beans, uncooked rice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: seaweed, a Japanese plum, a chestnut, beans, uncooked rice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "home, a window, a chair, a desk, a roof",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: home, a window, a chair, a desk, a roof]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To stand? (tatsu.) To cry? (naku.) To live? (sumu.) To rest? (yasumu.) To enjoy? (tanoshimu.) To push? (osu.) To pull? (hiku.) To look for? (sagasu.) To lend? (kasu.) To give back? (kaesu.) To take out? (dasu.) To drop? (otosu.) To fix? (naosu.) To move? (ugoku.) Rice; a meal? (gohan.) A fish? (sakana.) Meat? (niku.) An egg? (tamago.) Vegetables? (yasai.) Fruit? (kudamono.) An apple? (ringo.) A mandarin orange? (mikan.) A strawberry? (ichigo.) A peach? (momo.) A pear? (nashi.) A watermelon? (suika.) A white radish? (daikon.) A carrot? (ninjin.) Tofu? (toufu.) Salt? (shio.) Sugar? (satou.) Udon noodles? (udon.) Sushi? (sushi.) Breakfast? (asagohan.) Sweets? (okashi.) Seaweed? (nori.) A Japanese plum? (ume.) A chestnut? (kuri.) Beans? (mame.) Uncooked rice? (kome.) Home? (uchi.) A window? (mado.) A chair? (isu.) A desk? (tsukue.) A roof? (yane.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-R37-second-pass-verbs-type",
+              "prompt": "Type the Japanese for 'to stand'.",
+              "assesses": [
+                "JA-LEX-C29-VERBS29-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たつ",
+                "tatsu"
+              ],
+              "feedback": {
+                "correct": "Right: たつ (tatsu) is 'to stand'.",
+                "incorrect": "'to stand' is たつ (tatsu)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

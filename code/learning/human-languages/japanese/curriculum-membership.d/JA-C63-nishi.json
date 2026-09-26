@@ -1,0 +1,11 @@
+{
+  "id": "JA-C63-nishi",
+  "pathSegment": "JA-PATH-63-WORLD63",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-63-WORLD63",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "JA-C62-iro",
+  "pathSegment": "JA-PATH-62-WORLD62",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-62-WORLD62",
+      "order": 3
+    }
+  ]
+}

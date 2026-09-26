@@ -9,20 +9,20 @@ headword: दहा · अकरा · बारा
 romanization: dahā · akrā · bārā
 gloss: ten, and the first two of the -रा family built on it
 concept_tag: MR-REVIEW-TEN-TO-TWELVE
-prerequisites: [MR-C56-daha, MR-C56-akra, MR-C56-bara, MR-W56-au-matra]
+prerequisites: [MR-C56-daha, MR-C56-akra, MR-C56-bara, MR-W56-au-matra, MR-C56-mauj]
 sounds: []
 roots: []
 duration:
   max_seconds: 190
 requires:
-  knowledge: [MR-LEX-BARA, MR-LEX-AKRA, MR-LEX-DAHA, MR-LEX-UNCH, MR-GRAMMAR-LYAAVAR, MR-LEX-NUMBERS-ONE-TO-FIVE]
+  knowledge: [MR-LEX-BARA, MR-LEX-AKRA, MR-LEX-DAHA, MR-LEX-UNCH, MR-GRAMMAR-LYAAVAR, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-LEX-ANCHOR-MAUJ]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [MR-LEX-BARA, MR-LEX-AKRA, MR-LEX-DAHA, MR-LEX-UNCH, MR-GRAMMAR-LYAAVAR, MR-LEX-NUMBERS-ONE-TO-FIVE]
+  knowledge: [MR-LEX-BARA, MR-LEX-AKRA, MR-LEX-DAHA, MR-LEX-UNCH, MR-GRAMMAR-LYAAVAR, MR-LEX-NUMBERS-ONE-TO-FIVE, MR-LEX-ANCHOR-MAUJ]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,7 +34,7 @@ reviews_of: [MR-C56-daha, MR-C56-akra, MR-C56-bara, MR-W56-au-matra]
 # Ten, and the first two of the -रा family built on it
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-BARA, MR-LEX-AKRA, MR-LEX-DAHA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-BARA, MR-LEX-AKRA, MR-LEX-DAHA, MR-LEX-ANCHOR-MAUJ] -->
 
 [PAUSE 4s] Count from **एक** to **बारा**. Then say only the two that end in
 **-रा**.

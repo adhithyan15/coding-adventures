@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C53-oishii",
+    "language": "japanese",
+    "chapter": 53,
+    "sequence": 3290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5ddb2725ea2f5088"
+  },
+  "findings": []
+}

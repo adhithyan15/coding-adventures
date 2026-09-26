@@ -223,7 +223,8 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // Twenty comes before nineteen on purpose: ekoNiis is built as one LESS
     // than twenty, so the round number has to exist first.
     ["55", 5],
-    ["56", 5],
+    // +1: HL-C443 anchor word मौज, before the ौ letter lesson.
+    ["56", 6],
     ["57", 5],
     ["58", 5],
     ["59", 4],
@@ -245,10 +246,13 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     ["63", 1],
     // Chapter 64: ddha, pha, the danda, and the cold-retrieval review that
     // keeps the danda from being an atom nothing revisits.
-    ["64", 4],
+    // +2: HL-C443 anchor words ढोल and फणस, before the ढ and फ letter lessons.
+    ["64", 6],
     // Chapter 65: the four standing vowels plus the review that keeps the last
     // of them from being an atom nothing revisits.
-    ["65", 6],
+    // +3: HL-C443 anchor words ईश्वर, ओला and ऐवज, before the independent
+    // ई, ओ and ऐ letter lessons.
+    ["65", 9],
     // Chapter 66: the four parts of the day, the whole day, and the review that
     // keeps the last of them from being an atom nothing revisits.
     ["66", 6],

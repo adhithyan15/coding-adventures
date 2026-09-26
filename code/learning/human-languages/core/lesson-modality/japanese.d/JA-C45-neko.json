@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C45-neko",
+    "language": "japanese",
+    "chapter": 45,
+    "sequence": 2880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:44eff959aa078b6d"
+  },
+  "findings": []
+}

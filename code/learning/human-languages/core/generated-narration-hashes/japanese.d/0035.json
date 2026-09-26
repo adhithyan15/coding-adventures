@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 35,
+  "sourceHash": "fnv1a64:44971418cfcbeb9e",
+  "lessonIds": [
+    "JA-C35-satou",
+    "JA-C35-udon",
+    "JA-C35-sushi",
+    "JA-C35-asagohan",
+    "JA-C35-okashi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch35.txt",
+  "json": "japanese/narration/ch35.json",
+  "textHash": "fnv1a64:b44d5a98f4a19a1f",
+  "jsonHash": "fnv1a64:b0467617e5fc8033",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:86006f5a8f7b876d",
+  "lessonIds": [
+    "JA-C38-yuka",
+    "JA-C38-kagami",
+    "JA-C38-futon",
+    "JA-C38-hashi",
+    "JA-C38-daidokoro"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch38.txt",
+  "json": "japanese/narration/ch38.json",
+  "textHash": "fnv1a64:aef801de988fbc1b",
+  "jsonHash": "fnv1a64:8284c8fc90669144",
+  "findings": []
+}

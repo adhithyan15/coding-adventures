@@ -1,0 +1,11 @@
+{
+  "id": "JA-C23-kowai",
+  "pathSegment": "JA-PATH-23-HEALTH23",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "JA-EXT-23-HEALTH23",
+      "order": 4
+    }
+  ]
+}

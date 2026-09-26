@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 24,
+  "sourceHash": "fnv1a64:01cee22ad6189e1c",
+  "lessonIds": [
+    "JA-C24-itami",
+    "JA-C24-ojiisan",
+    "JA-C24-ojisan",
+    "JA-C24-musuko",
+    "JA-C24-musume"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch24.txt",
+  "json": "japanese/narration/ch24.json",
+  "textHash": "fnv1a64:e491774d4004f186",
+  "jsonHash": "fnv1a64:1be1694e38a7218e",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 46,
+  "sourceHash": "fnv1a64:c13a72e120ef82aa",
+  "lessonIds": [
+    "JA-C46-mushi",
+    "JA-C46-ari",
+    "JA-C46-hato",
+    "JA-C46-hitsuji",
+    "JA-C46-shika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch46.txt",
+  "json": "japanese/narration/ch46.json",
+  "textHash": "fnv1a64:1f02918d410d806e",
+  "jsonHash": "fnv1a64:986ec1302e8d64f6",
+  "findings": []
+}

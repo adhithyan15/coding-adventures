@@ -1,0 +1,11 @@
+{
+  "id": "JA-C53-atsui",
+  "pathSegment": "JA-PATH-53-ADJ53",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "JA-EXT-53-ADJ53",
+      "order": 2
+    }
+  ]
+}

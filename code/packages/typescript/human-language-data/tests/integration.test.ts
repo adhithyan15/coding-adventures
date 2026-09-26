@@ -595,12 +595,13 @@ describe("real curriculum", () => {
     const japanese = lessons.filter((lesson) => lesson.language === "japanese");
     // 157 -> 160: chapter 19, the reading rung. Three lessons, no new word and no
     // new sign -- every kana in them is one the script ladder has taught.
-    expect(japanese).toHaveLength(160);
+    // 160 -> 426: chapters 20-71, the pre-A1 vocabulary tranche -- 260
+    // hiragana word lessons (spelled only with kana the reader has written,
+    // or their voiced forms) and six reviews, each with one objective activity.
+    expect(japanese).toHaveLength(426);
     expect(
       new Set(japanese.map((lesson) => lesson.realization.chapter)),
-    ).toEqual(
-      new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]),
-    );
+    ).toEqual(new Set(Array.from({ length: 71 }, (_, i) => i + 1)));
     expect(
       japanese.every((lesson) => lesson.frontmatter.schema_version === "2"),
     ).toBe(true);

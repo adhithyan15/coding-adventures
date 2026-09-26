@@ -1,0 +1,11 @@
+{
+  "id": "JA-C42-mori",
+  "pathSegment": "JA-PATH-42-NATURE42",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "JA-EXT-42-NATURE42",
+      "order": 3
+    }
+  ]
+}

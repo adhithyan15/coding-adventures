@@ -191,7 +191,8 @@ it("pins Marathi lesson-content budgets", () =>
     //
     // 366 -> 627: chapters 70-120, 255 word lessons and six reviews. None
     // introduces an idiom, a sense or a culture claim.
-    lessons: 627,
+    // 627 -> 633: HL-C443 anchor words for six letters in chapters 56-65.
+    lessons: 633,
     idioms: 5,
     senses: 4,
     // 7 -> 8: MR-CULTURE-SHUBH-FORMAL-WRITTEN-REGISTER-01. The shubh greetings

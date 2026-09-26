@@ -1,11 +1,11 @@
 {
   "id": "MR-W64-danda",
   "pathSegment": "MR-PATH-066",
-  "pathOrder": 2,
+  "pathOrder": 4,
   "extensions": [
     {
       "id": "MR-EXT-079-ROWS-CLOSED",
-      "order": 2
+      "order": 4
     }
   ]
 }

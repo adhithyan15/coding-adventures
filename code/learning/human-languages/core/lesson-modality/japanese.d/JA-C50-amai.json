@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "JA-C50-amai",
+    "language": "japanese",
+    "chapter": 50,
+    "sequence": 3130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:60df313ce8429f11"
+  },
+  "findings": []
+}

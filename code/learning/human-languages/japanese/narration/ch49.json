@@ -1,0 +1,716 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 49,
+  "title": "Tall, Low, Cheap, Fast, Easy",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e1f76f276c14bb0a",
+  "lessons": [
+    {
+      "id": "JA-C49-takai",
+      "sequence": 3080,
+      "title": "たかい (takai) — tall; expensive",
+      "headword": "たかい",
+      "romanization": "takai",
+      "gloss": "tall; expensive",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5a705d69f590d1b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for long, then the Japanese for short."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: たかい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "たかい — takai — \"tall; expensive\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say takai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *takai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for long, then the Japanese for short, then say takai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for long, then the Japanese for short, then say *takai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does たかい (takai) mean? (\"Tall; expensive\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C49-takai-type",
+              "prompt": "Type the Japanese for 'tall'.",
+              "assesses": [
+                "JA-LEX-C49-ADJ49-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "たかい",
+                "takai"
+              ],
+              "feedback": {
+                "correct": "Right: たかい (takai) is 'tall'.",
+                "incorrect": "'tall' is たかい (takai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C49-hikui",
+      "sequence": 3090,
+      "title": "ひくい (hikui) — low",
+      "headword": "ひくい",
+      "romanization": "hikui",
+      "gloss": "low",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e842cd248ee112ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for short, then the Japanese for tall; expensive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ひくい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ひくい — hikui — \"low\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hikui, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hikui*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hikui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hikui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for short, then the Japanese for tall; expensive, then say hikui again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for short, then the Japanese for tall; expensive, then say *hikui* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ひくい (hikui) mean? (\"Low\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C49-hikui-type",
+              "prompt": "Type the Japanese for 'low'.",
+              "assesses": [
+                "JA-LEX-C49-ADJ49-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ひくい",
+                "hikui"
+              ],
+              "feedback": {
+                "correct": "Right: ひくい (hikui) is 'low'.",
+                "incorrect": "'low' is ひくい (hikui)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C49-yasui",
+      "sequence": 3100,
+      "title": "やすい (yasui) — cheap",
+      "headword": "やすい",
+      "romanization": "yasui",
+      "gloss": "cheap",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2369d7b060b8b19c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for tall; expensive, then the Japanese for low."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やすい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やすい — yasui — \"cheap\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yasui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yasui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yasui, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yasui*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say yasui",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *yasui*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for tall; expensive, then the Japanese for low, then say yasui again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for tall; expensive, then the Japanese for low, then say *yasui* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やすい (yasui) mean? (\"Cheap\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C49-yasui-type",
+              "prompt": "Type the Japanese for 'cheap'.",
+              "assesses": [
+                "JA-LEX-C49-ADJ49-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やすい",
+                "yasui"
+              ],
+              "feedback": {
+                "correct": "Right: やすい (yasui) is 'cheap'.",
+                "incorrect": "'cheap' is やすい (yasui)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C49-hayai",
+      "sequence": 3110,
+      "title": "はやい (hayai) — fast; early",
+      "headword": "はやい",
+      "romanization": "hayai",
+      "gloss": "fast; early",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d9ddde74592d29bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for low, then the Japanese for cheap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: はやい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "はやい — hayai — \"fast; early\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hayai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hayai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hayai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hayai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say hayai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *hayai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for low, then the Japanese for cheap, then say hayai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for low, then the Japanese for cheap, then say *hayai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does はやい (hayai) mean? (\"Fast; early\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C49-hayai-type",
+              "prompt": "Type the Japanese for 'fast'.",
+              "assesses": [
+                "JA-LEX-C49-ADJ49-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "はやい",
+                "hayai"
+              ],
+              "feedback": {
+                "correct": "Right: はやい (hayai) is 'fast'.",
+                "incorrect": "'fast' is はやい (hayai)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C49-yasashii",
+      "sequence": 3120,
+      "title": "やさしい (yasashii) — easy; kind",
+      "headword": "やさしい",
+      "romanization": "yasashii",
+      "gloss": "easy; kind",
+      "script": "japanese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:631468366ed09bf4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Japanese for cheap, then the Japanese for fast; early."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: やさしい",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "やさしい — yasashii — \"easy; kind\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yasashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yasashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yasashii, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yasashii*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say yasashii",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *yasashii*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Japanese for cheap, then the Japanese for fast; early, then say yasashii again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Japanese for cheap, then the Japanese for fast; early, then say *yasashii* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does やさしい (yasashii) mean? (\"Easy; kind\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C49-yasashii-type",
+              "prompt": "Type the Japanese for 'easy'.",
+              "assesses": [
+                "JA-LEX-C49-ADJ49-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "やさしい",
+                "yasashii"
+              ],
+              "feedback": {
+                "correct": "Right: やさしい (yasashii) is 'easy'.",
+                "incorrect": "'easy' is やさしい (yasashii)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

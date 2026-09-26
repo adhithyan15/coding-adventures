@@ -1,0 +1,19 @@
+{
+  "language": "japanese",
+  "chapter": 61,
+  "sourceHash": "fnv1a64:4c9a2586ad8150d5",
+  "lessonIds": [
+    "JA-C61-ito",
+    "JA-C61-hari",
+    "JA-C61-kushi",
+    "JA-C61-himo",
+    "JA-C61-tsuna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "japanese/narration/ch61.txt",
+  "json": "japanese/narration/ch61.json",
+  "textHash": "fnv1a64:c9eba4211bc6e852",
+  "jsonHash": "fnv1a64:12d5569e782d0fa2",
+  "findings": []
+}
