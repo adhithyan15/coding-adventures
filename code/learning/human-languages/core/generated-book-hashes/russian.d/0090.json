@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 90,
+  "sourceHash": "fnv1a64:0f3f0d33ba07728f",
+  "lessonIds": [
+    "RU-C90-car-park",
+    "RU-C90-lift",
+    "RU-C90-north",
+    "RU-C90-south",
+    "RU-C90-east"
+  ],
+  "tex": "russian/book/chapters/ch90-car-park-lift-north-south-east.tex"
+}

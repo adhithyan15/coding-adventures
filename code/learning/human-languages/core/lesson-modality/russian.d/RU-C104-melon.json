@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C104-melon",
+    "language": "russian",
+    "chapter": 104,
+    "sequence": 5330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fd27a08c966befbf"
+  },
+  "findings": []
+}

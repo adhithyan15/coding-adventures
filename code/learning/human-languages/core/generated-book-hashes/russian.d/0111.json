@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:2fe2934a908fe87f",
+  "lessonIds": [
+    "RU-C111-exam",
+    "RU-C111-board",
+    "RU-C111-rubber",
+    "RU-C111-homework",
+    "RU-C111-idea"
+  ],
+  "tex": "russian/book/chapters/ch111-exam-board-rubber-homework-idea.tex"
+}

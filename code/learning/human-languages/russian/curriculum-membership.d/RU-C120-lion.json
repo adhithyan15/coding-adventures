@@ -1,0 +1,11 @@
+{
+  "id": "RU-C120-lion",
+  "pathSegment": "RU-PATH-120-THINGS120",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-120-THINGS120",
+      "order": 0
+    }
+  ]
+}

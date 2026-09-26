@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C116-waterfall",
+    "language": "russian",
+    "chapter": 116,
+    "sequence": 6030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8249cdf5d30d9370"
+  },
+  "findings": []
+}

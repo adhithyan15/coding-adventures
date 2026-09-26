@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 104,
+  "sourceHash": "fnv1a64:2532d6783bb70e48",
+  "lessonIds": [
+    "RU-C104-beef",
+    "RU-C104-vegetables",
+    "RU-C104-strawberries",
+    "RU-C104-melon",
+    "RU-C104-garlic",
+    "RU-R104-first-pass-the-house-and-things-you-carry",
+    "RU-R104-second-pass-clothes-and-food"
+  ],
+  "tex": "russian/book/chapters/ch104-beef-vegetables-strawberries-melon-garlic.tex"
+}

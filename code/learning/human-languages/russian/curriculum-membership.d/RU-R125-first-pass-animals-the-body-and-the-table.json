@@ -1,0 +1,11 @@
+{
+  "id": "RU-R125-first-pass-animals-the-body-and-the-table",
+  "pathSegment": "RU-PATH-125-QUAL125",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-125-QUAL125",
+      "order": 5
+    }
+  ]
+}

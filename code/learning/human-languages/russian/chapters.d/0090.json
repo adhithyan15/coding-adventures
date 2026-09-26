@@ -1,0 +1,19 @@
+{
+  "chapter": 90,
+  "title": "Car park, Lift, North, South, East",
+  "label": "ch:ru-car-park-lift-north-south-east",
+  "canDo": "I can say a car park, a lift, the north, the south and the east.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C90-east",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 90: i can say a car park, a lift, the north, the south and the east.",
+    "assesses": [
+      "RU-LEX-C90-LOC90-03",
+      "RU-LEX-C90-LOC90-04",
+      "RU-LEX-C90-LOC90-05"
+    ]
+  }
+}

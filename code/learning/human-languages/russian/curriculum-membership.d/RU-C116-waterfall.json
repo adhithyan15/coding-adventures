@@ -1,0 +1,11 @@
+{
+  "id": "RU-C116-waterfall",
+  "pathSegment": "RU-PATH-116-THINGS116",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-116-THINGS116",
+      "order": 3
+    }
+  ]
+}

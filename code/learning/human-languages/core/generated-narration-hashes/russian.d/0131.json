@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:9db75d06a53b5951",
+  "lessonIds": [
+    "RU-C131-to-begin",
+    "RU-C131-to-visit",
+    "RU-C131-to-put",
+    "RU-C131-to-believe",
+    "RU-C131-to-drive"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch131.txt",
+  "json": "russian/narration/ch131.json",
+  "textHash": "fnv1a64:944aca2936f47681",
+  "jsonHash": "fnv1a64:9a60352399df1796",
+  "findings": []
+}

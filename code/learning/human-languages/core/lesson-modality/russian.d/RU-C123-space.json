@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C123-space",
+    "language": "russian",
+    "chapter": 123,
+    "sequence": 6350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7edd69a85f106507"
+  },
+  "findings": []
+}

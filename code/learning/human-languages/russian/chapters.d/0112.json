@@ -1,0 +1,19 @@
+{
+  "chapter": 112,
+  "title": "Problem, Sentence, Page, Music, Sport",
+  "label": "ch:ru-problem-sentence-page-music-sport",
+  "canDo": "I can say a problem, a sentence, a page, music and sport.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C112-sport",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 112: i can say a problem, a sentence, a page, music and sport.",
+    "assesses": [
+      "RU-LEX-C112-THINGS112-03",
+      "RU-LEX-C112-THINGS112-04",
+      "RU-LEX-C112-THINGS112-05"
+    ]
+  }
+}

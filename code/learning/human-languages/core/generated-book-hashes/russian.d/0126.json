@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:86d2a157db7c8d0a",
+  "lessonIds": [
+    "RU-C126-last",
+    "RU-C126-famous",
+    "RU-C126-important",
+    "RU-C126-interesting",
+    "RU-C126-boring"
+  ],
+  "tex": "russian/book/chapters/ch126-last-famous-important-interesting-boring.tex"
+}

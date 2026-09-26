@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C120-bee",
+    "language": "russian",
+    "chapter": 120,
+    "sequence": 6230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47d6729b2ab7326f"
+  },
+  "findings": []
+}

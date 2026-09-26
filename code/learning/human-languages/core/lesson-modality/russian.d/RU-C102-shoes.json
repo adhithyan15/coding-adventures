@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C102-shoes",
+    "language": "russian",
+    "chapter": 102,
+    "sequence": 5230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:78144eac2ae97b41"
+  },
+  "findings": []
+}

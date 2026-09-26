@@ -1,0 +1,11 @@
+{
+  "id": "RU-C109-waiter",
+  "pathSegment": "RU-PATH-109-THINGS109",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-109-THINGS109",
+      "order": 4
+    }
+  ]
+}

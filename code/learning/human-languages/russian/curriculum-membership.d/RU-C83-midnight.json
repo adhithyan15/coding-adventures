@@ -1,0 +1,11 @@
+{
+  "id": "RU-C83-midnight",
+  "pathSegment": "RU-PATH-83-TIME83",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-83-TIME83",
+      "order": 1
+    }
+  ]
+}

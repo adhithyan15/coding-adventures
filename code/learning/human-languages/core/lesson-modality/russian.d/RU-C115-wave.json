@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C115-wave",
+    "language": "russian",
+    "chapter": 115,
+    "sequence": 5940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:650d4c0a91018095"
+  },
+  "findings": []
+}

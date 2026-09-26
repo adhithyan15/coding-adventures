@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-R93-letters-first-pass",
+    "language": "russian",
+    "chapter": 93,
+    "sequence": 4720,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:63635d09faa29e9d"
+  },
+  "findings": []
+}

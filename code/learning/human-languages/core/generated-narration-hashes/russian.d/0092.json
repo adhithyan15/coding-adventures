@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:2dbba64e2aad34a9",
+  "lessonIds": [
+    "RU-C92-bicycle",
+    "RU-C92-suitcase",
+    "RU-C92-journey",
+    "RU-C92-holidays",
+    "RU-C92-rug"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch92.txt",
+  "json": "russian/narration/ch92.json",
+  "textHash": "fnv1a64:de5eac26c29223c4",
+  "jsonHash": "fnv1a64:0a1c6b0c51c1fa05",
+  "findings": []
+}

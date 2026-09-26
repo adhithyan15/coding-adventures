@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C134-to-go-for-a-walk",
+    "language": "russian",
+    "chapter": 134,
+    "sequence": 7010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63c4a9d4ceb48fb6"
+  },
+  "findings": []
+}

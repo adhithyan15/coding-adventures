@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C118-whale",
+    "language": "russian",
+    "chapter": 118,
+    "sequence": 6120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:52f2d19df1c5ba74"
+  },
+  "findings": []
+}

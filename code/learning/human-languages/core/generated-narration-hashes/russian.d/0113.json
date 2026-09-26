@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:03e338e596043300",
+  "lessonIds": [
+    "RU-C113-game",
+    "RU-C113-film",
+    "RU-C113-song",
+    "RU-C113-drawing",
+    "RU-C113-life"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch113.txt",
+  "json": "russian/narration/ch113.json",
+  "textHash": "fnv1a64:7d7946e9a4c7a856",
+  "jsonHash": "fnv1a64:8cf2f965015246d2",
+  "findings": []
+}

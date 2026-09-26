@@ -1,0 +1,11 @@
+{
+  "id": "RU-C113-drawing",
+  "pathSegment": "RU-PATH-113-THINGS113",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-113-THINGS113",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:31d0ea0b5ad65cb6",
+  "lessonIds": [
+    "RU-C115-thunderstorm",
+    "RU-C115-ice",
+    "RU-C115-hill",
+    "RU-C115-rock",
+    "RU-C115-wave",
+    "RU-R115-first-pass-food-work-and-school",
+    "RU-R115-second-pass-free-time-and-nature"
+  ],
+  "tex": "russian/book/chapters/ch115-thunderstorm-ice-hill-rock-wave.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "RU-C91-ship",
+  "pathSegment": "RU-PATH-91-LOC91",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-91-LOC91",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:1fb32fbc594d8816",
+  "lessonIds": [
+    "RU-C95-bathtub",
+    "RU-C95-shelf",
+    "RU-C95-curtain",
+    "RU-C95-pillow",
+    "RU-C95-blanket"
+  ],
+  "tex": "russian/book/chapters/ch95-bathtub-shelf-curtain-pillow-blanket.tex"
+}

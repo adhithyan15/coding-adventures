@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C111-idea",
+    "language": "russian",
+    "chapter": 111,
+    "sequence": 5740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f73197e8c28ecce3"
+  },
+  "findings": []
+}

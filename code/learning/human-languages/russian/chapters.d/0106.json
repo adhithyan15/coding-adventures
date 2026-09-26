@@ -1,0 +1,19 @@
+{
+  "chapter": 106,
+  "title": "Dessert, Yoghurt, Ice cream, Sausage, Peach",
+  "label": "ch:ru-dessert-yoghurt-ice-cream-sausage-peach",
+  "canDo": "I can say a dessert, a yoghurt, ice cream, sausage and a peach.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C106-peach",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 106: i can say a dessert, a yoghurt, ice cream, sausage and a peach.",
+    "assesses": [
+      "RU-LEX-C106-THINGS106-03",
+      "RU-LEX-C106-THINGS106-04",
+      "RU-LEX-C106-THINGS106-05"
+    ]
+  }
+}

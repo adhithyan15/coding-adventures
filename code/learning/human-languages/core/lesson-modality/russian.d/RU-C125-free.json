@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C125-free",
+    "language": "russian",
+    "chapter": 125,
+    "sequence": 6450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebd49a8caeac0ad2"
+  },
+  "findings": []
+}

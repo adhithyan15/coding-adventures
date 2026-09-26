@@ -1,0 +1,19 @@
+{
+  "chapter": 114,
+  "title": "Price, Football, Concert, Holiday, Fog",
+  "label": "ch:ru-price-football-concert-holiday-fog",
+  "canDo": "I can say a price, football, a concert, a holiday and fog.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C114-fog",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 114: i can say a price, football, a concert, a holiday and fog.",
+    "assesses": [
+      "RU-LEX-C114-THINGS114-03",
+      "RU-LEX-C114-THINGS114-04",
+      "RU-LEX-C114-THINGS114-05"
+    ]
+  }
+}

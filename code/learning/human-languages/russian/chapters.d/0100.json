@@ -1,0 +1,19 @@
+{
+  "chapter": 100,
+  "title": "Ring, Photograph, Candle, Calendar, Rucksack",
+  "label": "ch:ru-ring-photograph-candle-calendar-rucksack",
+  "canDo": "I can say a ring, a photograph, a candle, a calendar and a rucksack.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C100-rucksack",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 100: i can say a ring, a photograph, a candle, a calendar and a rucksack.",
+    "assesses": [
+      "RU-LEX-C100-THINGS100-03",
+      "RU-LEX-C100-THINGS100-04",
+      "RU-LEX-C100-THINGS100-05"
+    ]
+  }
+}

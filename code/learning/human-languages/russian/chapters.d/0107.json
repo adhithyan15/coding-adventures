@@ -1,0 +1,19 @@
+{
+  "chapter": 107,
+  "title": "Jam, Nut, Pepper, Nurse, Cook",
+  "label": "ch:ru-jam-nut-pepper-nurse-cook",
+  "canDo": "I can say jam, a nut, pepper, a nurse and a cook.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C107-cook",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 107: i can say jam, a nut, pepper, a nurse and a cook.",
+    "assesses": [
+      "RU-LEX-C107-THINGS107-03",
+      "RU-LEX-C107-THINGS107-04",
+      "RU-LEX-C107-THINGS107-05"
+    ]
+  }
+}

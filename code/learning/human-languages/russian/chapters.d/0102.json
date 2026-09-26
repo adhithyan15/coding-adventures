@@ -1,0 +1,19 @@
+{
+  "chapter": 102,
+  "title": "Boots, Skirt, Coat, Shoes, Socks",
+  "label": "ch:ru-boots-skirt-coat-shoes-socks",
+  "canDo": "I can say boots, a skirt, a coat, shoes and socks.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C102-socks",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 102: i can say boots, a skirt, a coat, shoes and socks.",
+    "assesses": [
+      "RU-LEX-C102-THINGS102-03",
+      "RU-LEX-C102-THINGS102-04",
+      "RU-LEX-C102-THINGS102-05"
+    ]
+  }
+}

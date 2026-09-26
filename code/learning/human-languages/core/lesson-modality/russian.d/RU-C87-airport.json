@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C87-airport",
+    "language": "russian",
+    "chapter": 87,
+    "sequence": 4370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdf75800a4c402dd"
+  },
+  "findings": []
+}

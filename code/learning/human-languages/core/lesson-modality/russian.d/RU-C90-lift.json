@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C90-lift",
+    "language": "russian",
+    "chapter": 90,
+    "sequence": 4510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f9b81fddd806f59"
+  },
+  "findings": []
+}

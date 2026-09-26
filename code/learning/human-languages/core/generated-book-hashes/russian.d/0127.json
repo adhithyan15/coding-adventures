@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:cc2170d75f768db0",
+  "lessonIds": [
+    "RU-C127-cheerful",
+    "RU-C127-kind",
+    "RU-C127-angry",
+    "RU-C127-serious",
+    "RU-C127-right"
+  ],
+  "tex": "russian/book/chapters/ch127-cheerful-kind-angry-serious-right.tex"
+}

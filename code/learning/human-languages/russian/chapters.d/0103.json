@@ -1,0 +1,19 @@
+{
+  "chapter": 103,
+  "title": "Hat, Jacket, Shirt, Trousers, Dress",
+  "label": "ch:ru-hat-jacket-shirt-trousers-dress",
+  "canDo": "I can say a hat, a jacket, a shirt, trousers and a dress.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C103-dress",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 103: i can say a hat, a jacket, a shirt, trousers and a dress.",
+    "assesses": [
+      "RU-LEX-C103-THINGS103-03",
+      "RU-LEX-C103-THINGS103-04",
+      "RU-LEX-C103-THINGS103-05"
+    ]
+  }
+}

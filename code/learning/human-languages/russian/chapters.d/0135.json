@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "To lose, To win, To look, To draw, To travel",
+  "label": "ch:ru-to-lose-to-win-to-look-to-draw-to-travel",
+  "canDo": "I can say to lose, to win, to look, to draw and to travel.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "RU-R135-second-pass-verbs",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say to lose, to win, to look, to draw and to travel.",
+    "assesses": [
+      "RU-LEX-C135-ACT135-03",
+      "RU-LEX-C135-ACT135-04",
+      "RU-LEX-C135-ACT135-05"
+    ]
+  }
+}

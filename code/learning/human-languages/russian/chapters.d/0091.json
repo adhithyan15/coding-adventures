@@ -1,0 +1,19 @@
+{
+  "chapter": 91,
+  "title": "West, Underground, Tram, Ship, Boat",
+  "label": "ch:ru-west-underground-tram-ship-boat",
+  "canDo": "I can say the west, the underground, a tram, a ship and a boat.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "RU-C91-boat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 91: i can say the west, the underground, a tram, a ship and a boat.",
+    "assesses": [
+      "RU-LEX-C91-LOC91-03",
+      "RU-LEX-C91-LOC91-04",
+      "RU-LEX-C91-LOC91-05"
+    ]
+  }
+}

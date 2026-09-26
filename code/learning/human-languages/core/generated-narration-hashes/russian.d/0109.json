@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:3b1b6e60d9830016",
+  "lessonIds": [
+    "RU-C109-lawyer",
+    "RU-C109-engineer",
+    "RU-C109-firefighter",
+    "RU-C109-postman",
+    "RU-C109-waiter"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch109.txt",
+  "json": "russian/narration/ch109.json",
+  "textHash": "fnv1a64:ded5dec996e02519",
+  "jsonHash": "fnv1a64:f9b7c6355774d8b3",
+  "findings": []
+}

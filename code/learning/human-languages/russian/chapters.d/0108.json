@@ -1,0 +1,19 @@
+{
+  "chapter": 108,
+  "title": "Police officer, Shop assistant, Farmer, Baker, Driver",
+  "label": "ch:ru-police-officer-shop-assistant-farmer-baker-driver",
+  "canDo": "I can say a police officer, a shop assistant, a farmer, a baker and a driver.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C108-driver",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 108: i can say a police officer, a shop assistant, a farmer, a baker and a driver.",
+    "assesses": [
+      "RU-LEX-C108-THINGS108-03",
+      "RU-LEX-C108-THINGS108-04",
+      "RU-LEX-C108-THINGS108-05"
+    ]
+  }
+}

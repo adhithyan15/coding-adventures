@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 105,
+  "sourceHash": "fnv1a64:26d9cc8936a5746d",
+  "lessonIds": [
+    "RU-C105-flour",
+    "RU-C105-chocolate",
+    "RU-C105-biscuits",
+    "RU-C105-sandwich",
+    "RU-C105-sauce"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch105.txt",
+  "json": "russian/narration/ch105.json",
+  "textHash": "fnv1a64:b7d2489746cc4e2f",
+  "jsonHash": "fnv1a64:f176c59bdd728e72",
+  "findings": []
+}

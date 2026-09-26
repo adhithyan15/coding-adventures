@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 130,
+  "sourceHash": "fnv1a64:ee6c2934078b521c",
+  "lessonIds": [
+    "RU-C130-bitter",
+    "RU-C130-salty",
+    "RU-C130-heavy",
+    "RU-C130-thin",
+    "RU-C130-fat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch130.txt",
+  "json": "russian/narration/ch130.json",
+  "textHash": "fnv1a64:d87fe25159b2b896",
+  "jsonHash": "fnv1a64:7263be78e395a0c3",
+  "findings": []
+}

@@ -37,7 +37,10 @@ it("pins Russian lesson-content budgets", () =>
     // lessons (twenty-three verbs) and four reviews; each word lesson introduces
     // one lexical atom and no idiom, sense or culture claim. Chapter 81 adds the
     // ё letter lesson and its two reviews (one script atom). Re-measured.
-    lessons: 418,
+    // 418 -> 695: the A1 vocabulary tranche, chapters 82-135: 265 word lessons,
+    // eight reviews, and chapter 93's two letter lessons and two reviews. No idiom,
+    // sense or culture claim.
+    lessons: 695,
     idioms: 0,
     senses: 4,
     cultureClaims: 10,

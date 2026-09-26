@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-106-THINGS106",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a dessert, a yoghurt, ice cream, sausage and a peach.",
+  "prerequisites": []
+}

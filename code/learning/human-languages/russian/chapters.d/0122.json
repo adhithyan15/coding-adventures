@@ -1,0 +1,19 @@
+{
+  "chapter": 122,
+  "title": "Chin, Rainbow, Lightning, Thunder, Planet",
+  "label": "ch:ru-chin-rainbow-lightning-thunder-planet",
+  "canDo": "I can say a chin, a rainbow, lightning, thunder and a planet.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C122-planet",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 122: i can say a chin, a rainbow, lightning, thunder and a planet.",
+    "assesses": [
+      "RU-LEX-C122-THINGS122-03",
+      "RU-LEX-C122-THINGS122-04",
+      "RU-LEX-C122-THINGS122-05"
+    ]
+  }
+}

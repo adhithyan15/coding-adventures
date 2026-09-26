@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 101,
+  "sourceHash": "fnv1a64:68a32f5ada589fcf",
+  "lessonIds": [
+    "RU-C101-people",
+    "RU-C101-jumper",
+    "RU-C101-tie",
+    "RU-C101-gloves",
+    "RU-C101-scarf"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch101.txt",
+  "json": "russian/narration/ch101.json",
+  "textHash": "fnv1a64:ec58258c93ca769b",
+  "jsonHash": "fnv1a64:fa0275a6576b664b",
+  "findings": []
+}

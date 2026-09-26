@@ -1,0 +1,11 @@
+{
+  "id": "RU-C123-pink",
+  "pathSegment": "RU-PATH-123-THINGS123",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-123-THINGS123",
+      "order": 4
+    }
+  ]
+}

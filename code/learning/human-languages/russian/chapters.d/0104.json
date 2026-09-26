@@ -1,0 +1,19 @@
+{
+  "chapter": 104,
+  "title": "Beef, Vegetables, Strawberries, Melon, Garlic",
+  "label": "ch:ru-beef-vegetables-strawberries-melon-garlic",
+  "canDo": "I can say beef, vegetables, strawberries, a melon and garlic.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-R104-second-pass-clothes-and-food",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 104: i can say beef, vegetables, strawberries, a melon and garlic.",
+    "assesses": [
+      "RU-LEX-C104-THINGS104-03",
+      "RU-LEX-C104-THINGS104-04",
+      "RU-LEX-C104-THINGS104-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 110,
+  "title": "Customer, Till, Boss, Profession, Class",
+  "label": "ch:ru-customer-till-boss-profession-class",
+  "canDo": "I can say a customer, a till, a boss, a profession and a class.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C110-class",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 110: i can say a customer, a till, a boss, a profession and a class.",
+    "assesses": [
+      "RU-LEX-C110-THINGS110-03",
+      "RU-LEX-C110-THINGS110-04",
+      "RU-LEX-C110-THINGS110-05"
+    ]
+  }
+}

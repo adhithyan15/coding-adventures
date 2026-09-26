@@ -1,0 +1,15 @@
+{
+  "language": "russian",
+  "chapter": 125,
+  "sourceHash": "fnv1a64:1bc49bb7d54d3046",
+  "lessonIds": [
+    "RU-C125-free",
+    "RU-C125-open",
+    "RU-C125-closed",
+    "RU-C125-quiet",
+    "RU-C125-noisy",
+    "RU-R125-first-pass-animals-the-body-and-the-table",
+    "RU-R125-second-pass-the-house-and-describing-words"
+  ],
+  "tex": "russian/book/chapters/ch125-free-open-closed-quiet-noisy.tex"
+}

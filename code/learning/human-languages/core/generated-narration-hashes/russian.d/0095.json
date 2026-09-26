@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 95,
+  "sourceHash": "fnv1a64:05ed26929f11e1a4",
+  "lessonIds": [
+    "RU-C95-bathtub",
+    "RU-C95-shelf",
+    "RU-C95-curtain",
+    "RU-C95-pillow",
+    "RU-C95-blanket"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch95.txt",
+  "json": "russian/narration/ch95.json",
+  "textHash": "fnv1a64:7b2b683c1c967dcb",
+  "jsonHash": "fnv1a64:a0b0aedae59f00b5",
+  "findings": []
+}

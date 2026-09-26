@@ -1,0 +1,11 @@
+{
+  "id": "RU-C100-candle",
+  "pathSegment": "RU-PATH-100-THINGS100",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-100-THINGS100",
+      "order": 2
+    }
+  ]
+}

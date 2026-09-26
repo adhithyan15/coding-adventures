@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C108-shop-assistant",
+    "language": "russian",
+    "chapter": 108,
+    "sequence": 5560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4e5739834a28fcc"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 109,
+  "sourceHash": "fnv1a64:a165ec830fe1bac1",
+  "lessonIds": [
+    "RU-C109-lawyer",
+    "RU-C109-engineer",
+    "RU-C109-firefighter",
+    "RU-C109-postman",
+    "RU-C109-waiter"
+  ],
+  "tex": "russian/book/chapters/ch109-lawyer-engineer-firefighter-postman-waiter.tex"
+}

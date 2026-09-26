@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 92,
+  "sourceHash": "fnv1a64:60a221204e669afb",
+  "lessonIds": [
+    "RU-C92-bicycle",
+    "RU-C92-suitcase",
+    "RU-C92-journey",
+    "RU-C92-holidays",
+    "RU-C92-rug"
+  ],
+  "tex": "russian/book/chapters/ch92-bicycle-suitcase-journey-holidays-rug.tex"
+}

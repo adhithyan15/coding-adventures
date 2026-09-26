@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 132,
+  "sourceHash": "fnv1a64:629ea25a19ad9904",
+  "lessonIds": [
+    "RU-C132-to-get-dressed",
+    "RU-C132-to-wash",
+    "RU-C132-to-get-up",
+    "RU-C132-to-sit-down",
+    "RU-C132-to-fall"
+  ],
+  "tex": "russian/book/chapters/ch132-to-get-dressed-to-wash-to-get-up-to-sit-down-to-fall.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 127,
+  "sourceHash": "fnv1a64:afe04c8814acf670",
+  "lessonIds": [
+    "RU-C127-cheerful",
+    "RU-C127-kind",
+    "RU-C127-angry",
+    "RU-C127-serious",
+    "RU-C127-right"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch127.txt",
+  "json": "russian/narration/ch127.json",
+  "textHash": "fnv1a64:80acaff1a577363f",
+  "jsonHash": "fnv1a64:5ae6c4dc459cfb48",
+  "findings": []
+}

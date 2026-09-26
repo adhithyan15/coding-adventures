@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 82,
+  "sourceHash": "fnv1a64:0b4b02b578a1f6e0",
+  "lessonIds": [
+    "RU-C82-this",
+    "RU-C82-this-2",
+    "RU-C82-that",
+    "RU-C82-that-2",
+    "RU-C82-such"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch82.txt",
+  "json": "russian/narration/ch82.json",
+  "textHash": "fnv1a64:1f2be57391c29ec1",
+  "jsonHash": "fnv1a64:6ce63dec384c40c3",
+  "findings": []
+}

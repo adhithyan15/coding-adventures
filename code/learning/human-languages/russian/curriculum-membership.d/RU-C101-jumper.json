@@ -1,0 +1,11 @@
+{
+  "id": "RU-C101-jumper",
+  "pathSegment": "RU-PATH-101-THINGS101",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-101-THINGS101",
+      "order": 1
+    }
+  ]
+}

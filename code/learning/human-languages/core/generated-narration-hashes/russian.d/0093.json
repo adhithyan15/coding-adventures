@@ -1,0 +1,18 @@
+{
+  "language": "russian",
+  "chapter": 93,
+  "sourceHash": "fnv1a64:87610c75dd88f0cd",
+  "lessonIds": [
+    "RU-W93-e",
+    "RU-W93-shcha",
+    "RU-R93-letters-first-pass",
+    "RU-R93-letters-second-pass"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "russian/narration/ch93.txt",
+  "json": "russian/narration/ch93.json",
+  "textHash": "fnv1a64:4828e31102e8ba13",
+  "jsonHash": "fnv1a64:c3850970ef46a860",
+  "findings": []
+}

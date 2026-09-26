@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 91,
+  "sourceHash": "fnv1a64:67f6b1461b2083b5",
+  "lessonIds": [
+    "RU-C91-west",
+    "RU-C91-underground",
+    "RU-C91-tram",
+    "RU-C91-ship",
+    "RU-C91-boat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch91.txt",
+  "json": "russian/narration/ch91.json",
+  "textHash": "fnv1a64:1ee0b4b000a79611",
+  "jsonHash": "fnv1a64:dc94898fb2e26b4f",
+  "findings": []
+}

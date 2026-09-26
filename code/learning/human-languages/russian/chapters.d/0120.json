@@ -1,0 +1,19 @@
+{
+  "chapter": 120,
+  "title": "Lion, Monkey, Elephant, Bee, Ant",
+  "label": "ch:ru-lion-monkey-elephant-bee-ant",
+  "canDo": "I can say a lion, a monkey, an elephant, a bee and an ant.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "RU-C120-ant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 120: i can say a lion, a monkey, an elephant, a bee and an ant.",
+    "assesses": [
+      "RU-LEX-C120-THINGS120-03",
+      "RU-LEX-C120-THINGS120-04",
+      "RU-LEX-C120-THINGS120-05"
+    ]
+  }
+}

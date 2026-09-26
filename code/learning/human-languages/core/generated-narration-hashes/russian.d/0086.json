@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:57ae4dcc69b86d28",
+  "lessonIds": [
+    "RU-C86-where",
+    "RU-C86-where-to",
+    "RU-C86-where-from",
+    "RU-C86-to-the-right",
+    "RU-C86-to-the-left"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch86.txt",
+  "json": "russian/narration/ch86.json",
+  "textHash": "fnv1a64:6ba81ab090fff8e0",
+  "jsonHash": "fnv1a64:434b58db441699df",
+  "findings": []
+}

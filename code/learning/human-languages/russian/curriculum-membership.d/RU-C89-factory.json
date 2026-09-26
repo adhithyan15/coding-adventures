@@ -1,0 +1,11 @@
+{
+  "id": "RU-C89-factory",
+  "pathSegment": "RU-PATH-89-LOC89",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-89-LOC89",
+      "order": 0
+    }
+  ]
+}

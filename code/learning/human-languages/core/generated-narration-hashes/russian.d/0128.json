@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:06bc884fbdaaeaec",
+  "lessonIds": [
+    "RU-C128-wrong",
+    "RU-C128-ready",
+    "RU-C128-dangerous",
+    "RU-C128-wet",
+    "RU-C128-dry"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch128.txt",
+  "json": "russian/narration/ch128.json",
+  "textHash": "fnv1a64:f52189eee4c2e18a",
+  "jsonHash": "fnv1a64:7e82b3c452979675",
+  "findings": []
+}
