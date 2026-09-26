@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { expect, it } from "vitest";
 import { compileLessonActivities } from "../../../src/activity.js";
 import { measureContinuity } from "../../../src/continuity.js";
@@ -8,7 +6,7 @@ import {
   defaultRepoRoot,
   unshardDocContents,
 } from "../../../src/doc-shard-cli.js";
-import { defaultCurriculumRoot, loadTrackLessons } from "../../../src/loader.js";
+import { loadTrackLessons } from "../../../src/loader.js";
 import {
   expectLanguageContinuity,
   expectLanguageLessonBudgets,
@@ -27,10 +25,10 @@ it("keeps Punjabi's 272-row session map aligned with canonical order", () => {
   const ordered = loadTrackLessons("punjabi").sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
-  const markdown = readFileSync(
-    join(defaultCurriculumRoot(), "punjabi", "session-map.md"),
-    "utf8",
-  );
+  const sessionMapPath = "code/learning/human-languages/punjabi/session-map.md";
+  const plan = DOC_SHARD_PLANS.find((candidate) => candidate.path === sessionMapPath);
+  expect(plan).toBeDefined();
+  const markdown = unshardDocContents(defaultRepoRoot(), plan!);
   const rows = [...markdown.matchAll(/^\| (\d+) \| (\d+) \| ([^|]+?) \| (.+) \|$/gm)].map(
     (match) => ({
       session: Number(match[1]),

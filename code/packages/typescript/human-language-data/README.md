@@ -109,6 +109,13 @@ make the full names distinct and code-unit sorting remains deterministic.
 `npm run check:doc-shards` rejects every other new `*.md` basename before
 rendering.
 
+Indian-track roadmaps use the same boundary at level-2 planning sections.
+Session maps use numbered Markdown table rows as their owners, including stable
+letter-prefixed identities such as `S1`; table headings and surrounding prose
+remain in `_meta.md`. The rendered `roadmap.md` and `session-map.md` files are
+local views only, so adding or moving one chapter session changes its own owner
+instead of a track-wide aggregate.
+
 Eighty-five append-only history fragments predate that grammar. Their exact
 document path, basename, and full-content SHA-256 are pinned in
 `src/doc-shard-legacy.ts`; they render in place exactly once. The compatibility

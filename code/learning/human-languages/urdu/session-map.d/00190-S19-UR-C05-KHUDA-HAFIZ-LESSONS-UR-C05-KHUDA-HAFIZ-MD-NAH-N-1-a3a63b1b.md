@@ -1,0 +1,1 @@
+| **S19** | [`UR-C05-khuda-hafiz`](./lessons/UR-C05-khuda-hafiz.md): **خدا حافظ** | *nahī̃* *(N+15)*; the wellbeing question *(N+7)*; Chapter 4 practice *(N+3)*; *hāfiz* *(N+1)* | keep the Urdu space and end an interaction |

@@ -1,0 +1,1 @@
+| **S20** | [`UR-C05-practice`](./lessons/UR-C05-practice.md): open and close | *merā nām ... hai* *(N+15)*; *maiṅ ... hūṅ* *(N+7)*; *khudā* *(N+3)*; *khudā hāfiz* *(N+1)* | choose **salām** at the start and **khudā hāfiz** at the end |

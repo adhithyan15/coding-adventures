@@ -1,0 +1,1 @@
+| **S23** | [`UR-C06-ana`](./lessons/UR-C06-ana.md): **آنا** *ānā* | the name question *(N+15)*; Chapter 4 practice *(N+7)*; Chapter 5 practice *(N+3)*; *jānā* *(N+1)* | pair **jānā** away against **ānā** toward |

@@ -1,0 +1,1 @@
+| **S12** | [`UR-C04-aap-kaise-hain`](./lessons/UR-C04-aap-kaise-hain.md): **آپ کیسے ہیں؟ / آپ کیسی ہیں؟** | *merā nām ... hai* *(N+7)*; the meeting response *(N+3)*; *kaise / kaisī* *(N+1)* | ask respectfully with final *haiṅ* |

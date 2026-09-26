@@ -1,0 +1,1 @@
+| 210-217 | 31 | The Table Is Set | `GU-C27-hear-bhaat` -> `GU-C27-hear-daal` -> `GU-C27-hear-shaak` -> `GU-C27-hear-tel` -> `GU-C27-hear-keri` -> `GU-C27-plate-five` -> `GU-C27-bhaat` -> `GU-R27-plate-five-r1` |

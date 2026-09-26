@@ -187,6 +187,40 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
       newestFirst: true,
     }),
   ),
+  // Indian-track planning documents are edited by the same independent
+  // chapter agents as their lesson owners. Roadmaps split at section headings;
+  // session maps split at numbered Markdown table rows so even the older
+  // single-table maps no longer remain one shared owner. Both are oldest-first.
+  ...[
+    "bengali",
+    "gujarati",
+    "hindi",
+    "kannada",
+    "malayalam",
+    "marathi",
+    "marwadi",
+    "punjabi",
+    "sanskrit",
+    "tamil",
+    "telugu",
+    "urdu",
+  ].flatMap(
+    (track): DocShardPlan[] => [
+      {
+        path: `code/learning/human-languages/${track}/roadmap.md`,
+        headingLevel: 2,
+        newestFirst: false,
+        appendOnly: false,
+      },
+      {
+        path: `code/learning/human-languages/${track}/session-map.md`,
+        headingLevel: 2,
+        newestFirst: false,
+        appendOnly: false,
+        entryShape: "table-row",
+      },
+    ],
+  ),
   {
     // Script Ductus release notes are independently authored alongside script
     // evidence. Split at level 3 so each note owns one file; historical level-2

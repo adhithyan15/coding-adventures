@@ -405,6 +405,71 @@ describe("splitDocument", () => {
   });
 });
 
+describe("splitting on numbered Markdown table rows", () => {
+  it("keeps the title, prose, header, and alignment row in the preamble", () => {
+    const text = "# Sessions\n\nintro\n\n| Session | Lesson |\n|---:|---|\n| 1 | hello |\n| 2 | goodbye |\n";
+    const { preamble, sections } = splitDocument(text, "table-row");
+    expect(preamble).toBe("# Sessions\n\nintro\n\n| Session | Lesson |\n|---:|---|\n");
+    expect(sections.map((section) => section.heading)).toEqual([
+      "| 1 | hello |",
+      "| 2 | goodbye |",
+    ]);
+    expect(preamble + sections.map((section) => section.text).join("")).toBe(text);
+  });
+
+  it("accepts a numbered range while ignoring prose tables", () => {
+    const text = "| Kind | Value |\n|---|---|\n| noun | one |\n\n| Session | Lesson |\n|---:|---|\n| 6–13 | letters |\n";
+    const { preamble, sections } = splitDocument(text, "table-row");
+    expect(sections.map((section) => section.heading)).toEqual(["| 6–13 | letters |"]);
+    expect(preamble).toContain("| noun | one |");
+  });
+
+  it("accepts a stable letter-prefixed session identity", () => {
+    const text = "| Session | Lesson |\n|---|---|\n| S1 | hello |\n| S2 | goodbye |\n";
+    expect(splitDocument(text, "table-row").sections.map((section) => section.heading))
+      .toEqual(["| S1 | hello |", "| S2 | goodbye |"]);
+  });
+});
+
+describe("the Indian planning-document migration", () => {
+  const expectedSha256: Readonly<Record<string, string>> = {
+    "bengali/roadmap.md": "be58d54b7714c870e17009598ed0bf59024124678b0d199c70a96cd86fab315a",
+    "bengali/session-map.md": "f947eb30a0ea7d235e727aeff3de389eafe951a1b490a09494d0c6b3ae03f242",
+    "gujarati/roadmap.md": "beb6624abe2dd015bcfe67e0a5fe11ab5f7eb7e97066292df468e1d1205db3d9",
+    "gujarati/session-map.md": "2e246424da98d9258c0940239a5c0cd946c0e5de5963ea8dc005e73a666841c3",
+    "hindi/roadmap.md": "e7e552ff0287e1bac16818223898f1e1ceb11198ff1d1dacb7caca7ff1f59d09",
+    "hindi/session-map.md": "4c333147b25cdf45f9dafb021988510339ef716f2ad4fa7713a0a9fd5d385daf",
+    "kannada/roadmap.md": "d66e05fa7015e370fc90f1e8d4cefa478f4c63c4ed5c214bc8740f599ff27305",
+    "kannada/session-map.md": "79febb3b102c19a221c93ab4529bb82483a3b5892a81815b82c024f47baf3ae5",
+    "malayalam/roadmap.md": "77c3abf15a13498dbfc1c792b6f4ef61e0311627da3b31eb26f8644e4c67eadd",
+    "malayalam/session-map.md": "845d7252a533699913cde8dfa01c3bbfa9c729d7a559828c466fca8511559218",
+    "marathi/roadmap.md": "feb454b939d4f5ebe58813f5a8656fbf7652f1d63c2088ff46327c0107a82b14",
+    "marathi/session-map.md": "947ac732c2d229b6bf11da21bd33d4a7c2e06bf469c54c43e88e5bba8b21189c",
+    "marwadi/roadmap.md": "674c031e40898a9f3388287dda6321ebcd0a363f3405816564f50551835a3029",
+    "marwadi/session-map.md": "6e56cfa771cfbdb8d9ac2db9649ad07ec79876ce77a5404ee2ccaeb8f7f0f1cf",
+    "punjabi/roadmap.md": "35daceeb279e9e29f8d82456f019172d38e49ac554661df569be6a603b028604",
+    "punjabi/session-map.md": "9f4fb8ae149b7cb5c8c1614c07a641da9932420317886fc5d10c211a228f83d9",
+    "sanskrit/roadmap.md": "cc5d5b3538d7bd4699fbca05d4b66c7e854a39cb7b37e379b1316f0c4b078631",
+    "sanskrit/session-map.md": "2ecc8151cc9b745bf6cd5018a0311ce2f668ab1e292d7ab32177df7b513741bb",
+    "tamil/roadmap.md": "59c07fa003299dd31300ac11ad185df0e1a08c826ef02955ae4652c998818ba0",
+    "tamil/session-map.md": "080b6dd4c80a6bc07834e77f113a0ecb818ae47267b92f248bca4378bb4df652",
+    "telugu/roadmap.md": "6c1ea576c8f024861adc63a40364b4d7c738fbff8d11079f56fbb55cddcae6f8",
+    "telugu/session-map.md": "3036762d48a265521fff93de4e50ba10382a6fc8027639e6b4dd15d66163b659",
+    "urdu/roadmap.md": "93d066408e6dddfc2bbc683a2046bc1c1f986ba22f8e52bb659a84366d57e463",
+    "urdu/session-map.md": "7bd73b93486c86c1611f98ba468bcfda700650690e93b59b1c3100f99f7a9b20",
+  };
+
+  for (const [relative, digest] of Object.entries(expectedSha256)) {
+    it(`${relative} reconstructs the exact pre-migration bytes`, () => {
+      const path = `code/learning/human-languages/${relative}`;
+      const plan = DOC_SHARD_PLANS.find((candidate) => candidate.path === path);
+      expect(plan).toBeDefined();
+      const rendered = unshardDocContents(defaultRepoRoot(), plan!);
+      expect(createHash("sha256").update(rendered, "utf8").digest("hex")).toBe(digest);
+    });
+  }
+});
+
 describe("isDocSharded — absent versus UNKNOWN", () => {
   // A `--check` that says "missing" when it means "I could not read it" is a
   // gate that fails closed, intermittently, with a message that sends the reader
@@ -1051,15 +1116,15 @@ describe("the real documents", () => {
       // bug as the failure message in doc-shard-cli.ts that still read
       // `headingLevel` — a call site that did not follow the split rule.
       const at = docSplitAt(plan);
-      const level = at === "bullet" ? "- " : "#".repeat(at) + " ";
 
       const fromMonolith = rendered
         .split("\n")
-        .filter(
-          (line) =>
-            line.startsWith(level) &&
-            (at === "bullet" ? true : !line.startsWith(level + "#")),
-        );
+        .filter((line) => {
+          if (at === "bullet") return line.startsWith("- ");
+          if (at === "table-row") return /^\| (?=[^|]*[0-9])/.test(line);
+          const level = "#".repeat(at) + " ";
+          return line.startsWith(level) && !line.startsWith(level + "#");
+        });
 
       const dir = docShardDirectoryFor(monolith);
       const names = readdirSync(dir)
@@ -1073,6 +1138,11 @@ describe("the real documents", () => {
       expect(fromShards).toEqual(fromMonolith);
       if (plan.path === HINDI_CHANGELOG) {
         expect(fromShards.length).toBeGreaterThan(HINDI_MIGRATION_MAX_RANK / 10);
+      } else if (plan.path.endsWith("/roadmap.md")) {
+        // Roadmaps are selected as a coordinated planning family, not by the
+        // generic large-document threshold. Even the compact tracks have at
+        // least two independently edited level-2 planning sections.
+        expect(fromShards.length).toBeGreaterThan(1);
       } else {
         // The floor exists so `toEqual` above cannot pass on two EMPTY arrays.
         // It was 100, which held while every plan was a large document and
@@ -1174,13 +1244,24 @@ describe("the append-only deletion guard covers every plan", () => {
     return new RegExp(`(^|['"\\s])${escaped}(['"\\s\\\\)]|$)`, "m").test(text);
   }
 
-  it("names a shard glob for every document in DOC_SHARD_PLANS", () => {
+  it("names a shard glob for every append-only document in DOC_SHARD_PLANS", () => {
     const text = workflow();
-    const missing = DOC_SHARD_PLANS.map(
+    const missing = DOC_SHARD_PLANS.filter((plan) => plan.appendOnly !== false).map(
       (plan) => `${docShardDirectoryFor(plan.path)}/*.md`,
     ).filter((glob) => !hasWholeEntry(text, glob));
 
     expect(missing).toEqual([]);
+  });
+
+  it("keeps mutable planning owners outside the append-only deletion guard", () => {
+    const text = workflow();
+    const mutable = DOC_SHARD_PLANS.filter((plan) => plan.appendOnly === false);
+    expect(mutable).toHaveLength(24);
+    expect(
+      mutable.filter((plan) =>
+        hasWholeEntry(text, `${docShardDirectoryFor(plan.path)}/*.md`),
+      ),
+    ).toEqual([]);
   });
 
   it("the whole-entry match cannot be satisfied by a longer path", () => {
