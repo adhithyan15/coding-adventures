@@ -1,0 +1,11 @@
+{
+  "id": "RU-C60-cow",
+  "pathSegment": "RU-PATH-60-ANIMALS1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-60-ANIMALS1",
+      "order": 3
+    }
+  ]
+}

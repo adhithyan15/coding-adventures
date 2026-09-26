@@ -1,0 +1,11 @@
+{
+  "id": "RU-C45-potatoes",
+  "pathSegment": "RU-PATH-45-VEG",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "RU-EXT-45-VEG",
+      "order": 0
+    }
+  ]
+}

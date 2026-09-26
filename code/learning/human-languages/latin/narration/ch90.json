@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Horse, Ox, Sheep, Goat, Pig",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d4cb6ada94165a32",
+  "sourceHash": "fnv1a64:9723ebbf7a1747e7",
   "lessons": [
     {
       "id": "LA-C90-equus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4dc70645f5e6cafd",
+      "sourceHash": "fnv1a64:64196e1d5ee8a8d1",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for horse, ox, sheep, goat, pig."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7506abdc29378231",
+      "sourceHash": "fnv1a64:b1d247262282143d",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for horse, ox, sheep, goat, pig."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d57612da58115a92",
+      "sourceHash": "fnv1a64:094a95aa3b06e6dc",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for horse, ox, sheep, goat, pig."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a061af2d5a46923b",
+      "sourceHash": "fnv1a64:e5b8d6189cbdf2e5",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for horse, ox, sheep, goat, pig."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e00554cded54d888",
+      "sourceHash": "fnv1a64:5b3dc3e8fcc356d8",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for horse, ox, sheep, goat, pig."
+              "text": "One more word for this chapter."
             }
           ]
         },

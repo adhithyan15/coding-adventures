@@ -1,0 +1,11 @@
+{
+  "id": "RU-C33-hunger",
+  "pathSegment": "RU-PATH-33-HEALTH2",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-33-HEALTH2",
+      "order": 3
+    }
+  ]
+}

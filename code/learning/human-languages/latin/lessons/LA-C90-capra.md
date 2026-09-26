@@ -45,7 +45,7 @@ reviews_of: [LA-C90-ovis]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for horse, ox, sheep, goat, pig.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C90-ANIMALIA1-04, LA-LEX-C90-ANIMALIA1-02, LA-LEX-C90-ANIMALIA1-03] -->

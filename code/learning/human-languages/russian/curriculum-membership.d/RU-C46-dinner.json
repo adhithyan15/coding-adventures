@@ -1,0 +1,11 @@
+{
+  "id": "RU-C46-dinner",
+  "pathSegment": "RU-PATH-46-MEALS",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "RU-EXT-46-MEALS",
+      "order": 2
+    }
+  ]
+}

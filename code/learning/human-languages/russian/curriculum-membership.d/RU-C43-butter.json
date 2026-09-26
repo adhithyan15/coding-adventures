@@ -1,0 +1,11 @@
+{
+  "id": "RU-C43-butter",
+  "pathSegment": "RU-PATH-43-FOOD1",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-43-FOOD1",
+      "order": 3
+    }
+  ]
+}

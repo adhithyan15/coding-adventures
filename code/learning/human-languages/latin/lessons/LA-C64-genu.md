@@ -45,7 +45,7 @@ reviews_of: [LA-C64-umerus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for neck, shoulder, knee, heart.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C64-CORPUS2-03, LA-LEX-C64-CORPUS2-01, LA-LEX-C64-CORPUS2-02] -->

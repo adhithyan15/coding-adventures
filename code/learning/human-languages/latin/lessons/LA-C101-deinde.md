@@ -45,7 +45,7 @@ reviews_of: [LA-C101-statim]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for get up, wander, run away, at once, then.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C101-VERBA7-05, LA-LEX-C101-VERBA7-03, LA-LEX-C101-VERBA7-04] -->

@@ -45,7 +45,7 @@ reviews_of: [LA-C85-gladius]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for ball, wheel, sword, crown, ring.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C85-RES2-04, LA-LEX-C85-RES2-02, LA-LEX-C85-RES2-03] -->

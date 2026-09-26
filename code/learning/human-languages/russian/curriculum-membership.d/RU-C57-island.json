@@ -1,0 +1,11 @@
+{
+  "id": "RU-C57-island",
+  "pathSegment": "RU-PATH-57-NATURE3",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-57-NATURE3",
+      "order": 3
+    }
+  ]
+}

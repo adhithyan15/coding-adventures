@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 78,
+  "sourceHash": "fnv1a64:06d65c6fc3814ce7",
+  "lessonIds": [
+    "RU-C78-bank",
+    "RU-C78-station",
+    "RU-C78-museum",
+    "RU-C78-theatre",
+    "RU-C78-restaurant"
+  ],
+  "tex": "russian/book/chapters/ch78-bank-station-museum-theatre-restaurant.tex"
+}

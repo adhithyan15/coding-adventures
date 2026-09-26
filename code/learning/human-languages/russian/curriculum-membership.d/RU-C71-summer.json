@@ -1,0 +1,11 @@
+{
+  "id": "RU-C71-summer",
+  "pathSegment": "RU-PATH-71-SEASONS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-71-SEASONS",
+      "order": 3
+    }
+  ]
+}

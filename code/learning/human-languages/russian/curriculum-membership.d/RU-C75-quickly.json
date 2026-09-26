@@ -1,0 +1,11 @@
+{
+  "id": "RU-C75-quickly",
+  "pathSegment": "RU-PATH-75-NUM1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-75-NUM1",
+      "order": 1
+    }
+  ]
+}

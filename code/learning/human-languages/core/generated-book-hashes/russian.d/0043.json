@@ -1,0 +1,13 @@
+{
+  "language": "russian",
+  "chapter": 43,
+  "sourceHash": "fnv1a64:1d561b6787b312dd",
+  "lessonIds": [
+    "RU-C43-meat",
+    "RU-C43-fish",
+    "RU-C43-egg",
+    "RU-C43-butter",
+    "RU-C43-salt"
+  ],
+  "tex": "russian/book/chapters/ch43-meat-fish-egg-butter-salt.tex"
+}

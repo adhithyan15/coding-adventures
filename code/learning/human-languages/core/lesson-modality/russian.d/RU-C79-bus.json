@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C79-bus",
+    "language": "russian",
+    "chapter": 79,
+    "sequence": 3920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:144dc6e46cdc5472"
+  },
+  "findings": []
+}

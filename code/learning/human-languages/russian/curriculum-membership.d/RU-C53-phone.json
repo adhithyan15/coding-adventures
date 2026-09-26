@@ -1,0 +1,11 @@
+{
+  "id": "RU-C53-phone",
+  "pathSegment": "RU-PATH-53-THINGS",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-53-THINGS",
+      "order": 1
+    }
+  ]
+}

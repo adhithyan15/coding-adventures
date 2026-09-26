@@ -1,0 +1,11 @@
+{
+  "id": "RU-C39-gotovit",
+  "pathSegment": "RU-PATH-39-VERB2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-39-VERB2",
+      "order": 1
+    }
+  ]
+}

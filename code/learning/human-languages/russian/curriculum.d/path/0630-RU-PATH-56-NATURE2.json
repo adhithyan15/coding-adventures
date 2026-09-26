@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-56-NATURE2",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "RU-EXT-56-NATURE2"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C78-station",
+    "language": "russian",
+    "chapter": 78,
+    "sequence": 3880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e39e2fb0893a490d"
+  },
+  "findings": []
+}

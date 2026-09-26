@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 34,
+  "sourceHash": "fnv1a64:f92a15c2d8f04862",
+  "lessonIds": [
+    "RU-C34-joy",
+    "RU-C34-fear",
+    "RU-C34-anger",
+    "RU-C34-sadness",
+    "RU-C34-tiredness"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch34.txt",
+  "json": "russian/narration/ch34.json",
+  "textHash": "fnv1a64:2178821fc3e75514",
+  "jsonHash": "fnv1a64:8137f0bf8717eb34",
+  "findings": []
+}

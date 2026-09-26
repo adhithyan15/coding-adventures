@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "Bridge, Farmhouse, Clothes, Tunic, Shoe",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:4f511ab5c3c94797",
+  "sourceHash": "fnv1a64:8a6d3d92a2a1c85e",
   "lessons": [
     {
       "id": "LA-C108-pons",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59cba02b417895b6",
+      "sourceHash": "fnv1a64:b7590187150f8248",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bridge, farmhouse, clothes, tunic, shoe."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5e6d3ebedfd92d5",
+      "sourceHash": "fnv1a64:2510c5ebc2cc0ccd",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bridge, farmhouse, clothes, tunic, shoe."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b158409a04fac6c",
+      "sourceHash": "fnv1a64:4db220a3031240c4",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bridge, farmhouse, clothes, tunic, shoe."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0bd1379562b5409",
+      "sourceHash": "fnv1a64:672e56bcacb4c1e1",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bridge, farmhouse, clothes, tunic, shoe."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0caafed54703c00e",
+      "sourceHash": "fnv1a64:0bdd4a19e830ccb8",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for bridge, farmhouse, clothes, tunic, shoe."
+              "text": "One more word for this chapter."
             }
           ]
         },

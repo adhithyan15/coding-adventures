@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 69,
-  "sourceHash": "fnv1a64:e4193c6b9544a756",
+  "sourceHash": "fnv1a64:ea225f0c330335b8",
   "lessonIds": [
     "LA-C69-gaudium",
     "LA-C69-ira",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch69.txt",
   "json": "latin/narration/ch69.json",
-  "textHash": "fnv1a64:db6d348fe79868d9",
-  "jsonHash": "fnv1a64:183c9a308c0b74c1",
+  "textHash": "fnv1a64:8bf5f7949285042b",
+  "jsonHash": "fnv1a64:3f3bd816a58877fc",
   "findings": []
 }

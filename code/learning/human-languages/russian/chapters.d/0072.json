@@ -1,0 +1,19 @@
+{
+  "chapter": 72,
+  "title": "Here, There, Far, Near, Up Above",
+  "label": "ch:ru-here-there-far-near-up-above",
+  "canDo": "I can say here, there, far, near and up above.",
+  "spineNodes": [
+    "SPINE-POLITE-REQUEST-REPAIR"
+  ],
+  "payoff": {
+    "lesson": "RU-C72-above",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 72: i can say here, there, far, near and up above.",
+    "assesses": [
+      "RU-LEX-C72-WHERE1-03",
+      "RU-LEX-C72-WHERE1-04",
+      "RU-LEX-C72-WHERE1-05"
+    ]
+  }
+}

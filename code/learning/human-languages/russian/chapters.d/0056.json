@@ -1,0 +1,19 @@
+{
+  "chapter": 56,
+  "title": "Mountain, Forest, River, Lake, Sea",
+  "label": "ch:ru-mountain-forest-river-lake-sea",
+  "canDo": "I can name a mountain, a forest, a river, a lake and the sea.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C56-sea",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 56: i can name a mountain, a forest, a river, a lake and the sea.",
+    "assesses": [
+      "RU-LEX-C56-NATURE2-03",
+      "RU-LEX-C56-NATURE2-04",
+      "RU-LEX-C56-NATURE2-05"
+    ]
+  }
+}

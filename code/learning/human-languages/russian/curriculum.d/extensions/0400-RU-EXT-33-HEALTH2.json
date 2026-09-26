@@ -1,0 +1,8 @@
+{
+  "id": "RU-EXT-33-HEALTH2",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name a temperature, a cough, rest, hunger and thirst.",
+  "prerequisites": []
+}

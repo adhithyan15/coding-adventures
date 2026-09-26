@@ -45,7 +45,7 @@ reviews_of: [LA-C69-ira]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for joy, anger, fear.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C69-AFFECTUS-03, LA-LEX-C69-AFFECTUS-01, LA-LEX-C69-AFFECTUS-02] -->

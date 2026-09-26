@@ -1,0 +1,19 @@
+{
+  "chapter": 55,
+  "title": "Tree, Flower, Leaf, Grass, Village",
+  "label": "ch:ru-tree-flower-leaf-grass-village",
+  "canDo": "I can name a tree, a flower, a leaf, grass and a village.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C55-village",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 55: i can name a tree, a flower, a leaf, grass and a village.",
+    "assesses": [
+      "RU-LEX-C55-NATURE1-03",
+      "RU-LEX-C55-NATURE1-04",
+      "RU-LEX-C55-NATURE1-05"
+    ]
+  }
+}

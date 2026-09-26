@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-59-WEATHER",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "RU-EXT-59-WEATHER"
+  ],
+  "after": []
+}

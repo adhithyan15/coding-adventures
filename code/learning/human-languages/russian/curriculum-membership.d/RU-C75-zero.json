@@ -1,0 +1,11 @@
+{
+  "id": "RU-C75-zero",
+  "pathSegment": "RU-PATH-75-NUM1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-75-NUM1",
+      "order": 4
+    }
+  ]
+}

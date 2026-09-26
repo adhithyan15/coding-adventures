@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 67,
-  "sourceHash": "fnv1a64:786b7127b21884b5",
+  "sourceHash": "fnv1a64:c5d9b165e1a4036b",
   "lessonIds": [
     "LA-C67-febris",
     "LA-C67-tussis",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch67.txt",
   "json": "latin/narration/ch67.json",
-  "textHash": "fnv1a64:6fd3f2427411a1f3",
-  "jsonHash": "fnv1a64:9072c5f8d75df000",
+  "textHash": "fnv1a64:8624dce0d44b3b1a",
+  "jsonHash": "fnv1a64:b0ca5a4b122060a0",
   "findings": []
 }

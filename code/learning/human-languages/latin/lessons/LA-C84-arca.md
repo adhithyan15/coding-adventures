@@ -45,7 +45,7 @@ reviews_of: [LA-C83-culter]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for chest, paper, pen, tablet, mirror.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C84-RES1-01, LA-LEX-C83-DOMUS2-04, LA-LEX-C83-DOMUS2-05] -->

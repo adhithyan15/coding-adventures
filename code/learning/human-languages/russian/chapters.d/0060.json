@@ -1,0 +1,19 @@
+{
+  "chapter": 60,
+  "title": "Dog, Cat, Horse, Cow, Pig",
+  "label": "ch:ru-dog-cat-horse-cow-pig",
+  "canDo": "I can name a dog, a cat, a horse, a cow and a pig.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "RU-C60-pig",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 60: i can name a dog, a cat, a horse, a cow and a pig.",
+    "assesses": [
+      "RU-LEX-C60-ANIMALS1-03",
+      "RU-LEX-C60-ANIMALS1-04",
+      "RU-LEX-C60-ANIMALS1-05"
+    ]
+  }
+}

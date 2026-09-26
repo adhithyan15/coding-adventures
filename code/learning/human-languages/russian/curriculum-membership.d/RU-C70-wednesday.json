@@ -1,0 +1,11 @@
+{
+  "id": "RU-C70-wednesday",
+  "pathSegment": "RU-PATH-70-WEEK1",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-70-WEEK1",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-29-BODY1",
+  "spine_node": "SPINE-CHECK-WELLBEING",
+  "before": [],
+  "inline": [
+    "RU-EXT-29-BODY1"
+  ],
+  "after": []
+}

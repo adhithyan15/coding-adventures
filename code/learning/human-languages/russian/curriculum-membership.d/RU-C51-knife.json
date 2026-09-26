@@ -1,0 +1,11 @@
+{
+  "id": "RU-C51-knife",
+  "pathSegment": "RU-PATH-51-TABLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-51-TABLE",
+      "order": 3
+    }
+  ]
+}

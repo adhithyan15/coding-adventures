@@ -45,7 +45,7 @@ reviews_of: [LA-C64-sanguis]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for hair, belly, back, forehead, beard.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C65-CORPUS3-01, LA-LEX-C64-CORPUS2-04, LA-LEX-C64-CORPUS2-05] -->

@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Joy, Anger, Fear",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e4193c6b9544a756",
+  "sourceHash": "fnv1a64:ea225f0c330335b8",
   "lessons": [
     {
       "id": "LA-C69-gaudium",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1538fcfcb72f0c12",
+      "sourceHash": "fnv1a64:1a04bef2d0e7d922",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for joy, anger, fear."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bcd18bb26dcfe431",
+      "sourceHash": "fnv1a64:db2e5ae642fd3d5d",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for joy, anger, fear."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad9a044719e3f1f1",
+      "sourceHash": "fnv1a64:ec7fbe4cd6c04149",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for joy, anger, fear."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40ef6c9ae6bedd58",
+      "sourceHash": "fnv1a64:1e2c1cff9254f3d4",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for joy, anger, fear."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:799c9713418b2b28",
+      "sourceHash": "fnv1a64:e28079af86a8e958",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for joy, anger, fear."
+              "text": "One more word for this chapter."
             }
           ]
         },

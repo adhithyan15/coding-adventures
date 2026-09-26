@@ -45,7 +45,7 @@ reviews_of: [LA-C93-brevis]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for big and small, long and short, high.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C93-MAGNUS-05, LA-LEX-C93-MAGNUS-03, LA-LEX-C93-MAGNUS-04] -->

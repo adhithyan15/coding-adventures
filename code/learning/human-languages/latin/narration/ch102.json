@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "Far, Above, Below, Inside, Outside",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c92dce8f29259c1c",
+  "sourceHash": "fnv1a64:71be01e1f8cfb6df",
   "lessons": [
     {
       "id": "LA-C102-procul",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce736f0b758b74c0",
+      "sourceHash": "fnv1a64:668c75e8577441c8",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for far, above, below, inside, outside."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb8bd5dfff890c5c",
+      "sourceHash": "fnv1a64:5c8742e7a5746030",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for far, above, below, inside, outside."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc2c7b68e65bf15f",
+      "sourceHash": "fnv1a64:d2119977f07766cd",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for far, above, below, inside, outside."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b9cbb04bdccbc14",
+      "sourceHash": "fnv1a64:d9a4560b55b7119c",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for far, above, below, inside, outside."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6360bd95530a41d5",
+      "sourceHash": "fnv1a64:94fac887ade8ef1d",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for far, above, below, inside, outside."
+              "text": "One more word for this chapter."
             }
           ]
         },

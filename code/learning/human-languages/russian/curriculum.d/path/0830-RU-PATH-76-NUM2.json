@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-76-NUM2",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "RU-EXT-76-NUM2"
+  ],
+  "after": []
+}

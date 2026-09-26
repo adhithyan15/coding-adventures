@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 104,
-  "sourceHash": "fnv1a64:2ab54ce38f8384fb",
+  "sourceHash": "fnv1a64:037f692dbaf26f9e",
   "lessonIds": [
     "LA-C104-saepe",
     "LA-C104-semper",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch104.txt",
   "json": "latin/narration/ch104.json",
-  "textHash": "fnv1a64:3bd919094f70024d",
-  "jsonHash": "fnv1a64:1ad914bdec05189e",
+  "textHash": "fnv1a64:3faab417d695dfce",
+  "jsonHash": "fnv1a64:50e2faa64bcb3c88",
   "findings": []
 }

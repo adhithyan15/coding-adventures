@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "New, Old, Light, Fast, Slow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f0b4ad70f8866ea1",
+  "sourceHash": "fnv1a64:6a8749d86dfa4f5a",
   "lessons": [
     {
       "id": "LA-C94-novus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:584d0c065d2ec2f3",
+      "sourceHash": "fnv1a64:b6588ba062d7355f",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for new, old, light, fast, slow."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:608ae1b8c52173f0",
+      "sourceHash": "fnv1a64:c8e64850f0a6f434",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for new, old, light, fast, slow."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7f5c0d106c5ac2e",
+      "sourceHash": "fnv1a64:c3a5f5f7a482982c",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for new, old, light, fast, slow."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b24e1851a5efdc5a",
+      "sourceHash": "fnv1a64:c77310a2e3b13d78",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for new, old, light, fast, slow."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72315e28ce1dc139",
+      "sourceHash": "fnv1a64:8412be2501d97053",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for new, old, light, fast, slow."
+              "text": "One more word for this chapter."
             }
           ]
         },

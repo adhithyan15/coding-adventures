@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C38-pet",
+    "language": "russian",
+    "chapter": 38,
+    "sequence": 1860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8af40303b6649cbd"
+  },
+  "findings": []
+}

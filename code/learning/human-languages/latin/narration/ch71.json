@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Husband, Wife, Children",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:46c37aa2d79a9959",
+  "sourceHash": "fnv1a64:d8ec2b059fff6611",
   "lessons": [
     {
       "id": "LA-C71-maritus",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fd7b450e834b61f",
+      "sourceHash": "fnv1a64:b4dd12ecf637a485",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for husband, wife, children."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:daf6a1a662c75f92",
+      "sourceHash": "fnv1a64:f83b2a975b2448bc",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for husband, wife, children."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c637cbd18dc2a1b",
+      "sourceHash": "fnv1a64:a9020bbbfcb0569f",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for husband, wife, children."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8960ea507109276e",
+      "sourceHash": "fnv1a64:7405e334e0624728",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for husband, wife, children."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f67ac4d088347511",
+      "sourceHash": "fnv1a64:23eebcc06a03b3ff",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for husband, wife, children."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Grain, Flour, Pear, Fig, Nut",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a5e6454babc56eff",
+  "sourceHash": "fnv1a64:f2edf23089929159",
   "lessons": [
     {
       "id": "LA-C81-frumentum",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64f28cbde1dd3533",
+      "sourceHash": "fnv1a64:c1ea6c75d95c0045",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for grain, flour, pear, fig, nut."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1bdab00f97e6d1d",
+      "sourceHash": "fnv1a64:14251587c04c3d1d",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for grain, flour, pear, fig, nut."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:371498d1712e719a",
+      "sourceHash": "fnv1a64:298695e2e56d2b86",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for grain, flour, pear, fig, nut."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:611f3cb170db7f20",
+      "sourceHash": "fnv1a64:e1da362e64efb7c6",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for grain, flour, pear, fig, nut."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:849ef3eb52ce80d3",
+      "sourceHash": "fnv1a64:d2476541a3da3e15",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for grain, flour, pear, fig, nut."
+              "text": "One more word for this chapter."
             }
           ]
         },

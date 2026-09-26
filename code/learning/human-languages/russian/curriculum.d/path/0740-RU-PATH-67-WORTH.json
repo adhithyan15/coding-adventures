@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-67-WORTH",
+  "spine_node": "SPINE-RESPOND-BASIC",
+  "before": [],
+  "inline": [
+    "RU-EXT-67-WORTH"
+  ],
+  "after": []
+}

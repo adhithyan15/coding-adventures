@@ -1,0 +1,11 @@
+{
+  "id": "RU-C73-left",
+  "pathSegment": "RU-PATH-73-WHERE2",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-73-WHERE2",
+      "order": 1
+    }
+  ]
+}

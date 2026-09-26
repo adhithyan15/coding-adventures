@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 85,
-  "sourceHash": "fnv1a64:0bd1e9d37172aefe",
+  "sourceHash": "fnv1a64:9effd696dfacc0f5",
   "lessonIds": [
     "LA-C85-pila",
     "LA-C85-rota",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch85.txt",
   "json": "latin/narration/ch85.json",
-  "textHash": "fnv1a64:29a015c28dd447c7",
-  "jsonHash": "fnv1a64:e1899777fe3522cb",
+  "textHash": "fnv1a64:c6926f77039ab202",
+  "jsonHash": "fnv1a64:3c6111620f22d780",
   "findings": []
 }

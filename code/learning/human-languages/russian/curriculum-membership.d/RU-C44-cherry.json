@@ -1,0 +1,11 @@
+{
+  "id": "RU-C44-cherry",
+  "pathSegment": "RU-PATH-44-FRUIT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "RU-EXT-44-FRUIT",
+      "order": 3
+    }
+  ]
+}

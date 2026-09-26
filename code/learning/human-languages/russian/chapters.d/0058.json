@@ -1,0 +1,19 @@
+{
+  "chapter": 58,
+  "title": "Sky, Sun, Moon, Star, Cloud",
+  "label": "ch:ru-sky-sun-moon-star-cloud",
+  "canDo": "I can name the sky, the sun, the moon, a star and a cloud.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "RU-C58-cloud",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 58: i can name the sky, the sun, the moon, a star and a cloud.",
+    "assesses": [
+      "RU-LEX-C58-SKY-03",
+      "RU-LEX-C58-SKY-04",
+      "RU-LEX-C58-SKY-05"
+    ]
+  }
+}

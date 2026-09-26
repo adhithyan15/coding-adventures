@@ -1,0 +1,19 @@
+{
+  "language": "russian",
+  "chapter": 62,
+  "sourceHash": "fnv1a64:e32eae76651e638c",
+  "lessonIds": [
+    "RU-C62-hare",
+    "RU-C62-snake",
+    "RU-C62-hen",
+    "RU-C62-duck",
+    "RU-C62-goat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "russian/narration/ch62.txt",
+  "json": "russian/narration/ch62.json",
+  "textHash": "fnv1a64:dc3ce84d80841b03",
+  "jsonHash": "fnv1a64:069883ba4252310d",
+  "findings": []
+}

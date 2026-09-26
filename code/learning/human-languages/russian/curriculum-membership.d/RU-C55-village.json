@@ -1,0 +1,11 @@
+{
+  "id": "RU-C55-village",
+  "pathSegment": "RU-PATH-55-NATURE1",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "RU-EXT-55-NATURE1",
+      "order": 4
+    }
+  ]
+}

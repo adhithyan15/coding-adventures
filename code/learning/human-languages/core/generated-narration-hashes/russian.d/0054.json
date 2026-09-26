@@ -1,0 +1,21 @@
+{
+  "language": "russian",
+  "chapter": 54,
+  "sourceHash": "fnv1a64:a1ef7014ececdbcc",
+  "lessonIds": [
+    "RU-C54-lesson",
+    "RU-C54-word",
+    "RU-C54-address",
+    "RU-C54-ticket",
+    "RU-C54-map",
+    "RU-R54-first-pass-the-body-family-and-verbs",
+    "RU-R54-second-pass-food-the-house-and-things"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "russian/narration/ch54.txt",
+  "json": "russian/narration/ch54.json",
+  "textHash": "fnv1a64:b9902e643aa0fb56",
+  "jsonHash": "fnv1a64:953ebb26494d0f91",
+  "findings": []
+}

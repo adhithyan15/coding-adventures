@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-44-FRUIT",
+  "spine_node": "SPINE-COURTESY-THANK",
+  "before": [],
+  "inline": [
+    "RU-EXT-44-FRUIT"
+  ],
+  "after": []
+}

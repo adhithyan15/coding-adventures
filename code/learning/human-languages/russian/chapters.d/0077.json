@@ -1,0 +1,19 @@
+{
+  "chapter": 77,
+  "title": "City, Street, Shop, Market, School",
+  "label": "ch:ru-city-street-shop-market-school",
+  "canDo": "I can name a city, a street, a shop, a market and a school.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "RU-C77-school",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 77: i can name a city, a street, a shop, a market and a school.",
+    "assesses": [
+      "RU-LEX-C77-TOWN1-03",
+      "RU-LEX-C77-TOWN1-04",
+      "RU-LEX-C77-TOWN1-05"
+    ]
+  }
+}

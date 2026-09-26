@@ -45,7 +45,7 @@ reviews_of: [LA-C81-ficus]
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-One more word for grain, flour, pear, fig, nut.
+One more word for this chapter.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C81-CIBUS3-05, LA-LEX-C81-CIBUS3-03, LA-LEX-C81-CIBUS3-04] -->

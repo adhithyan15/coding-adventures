@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "RU-C72-far",
+    "language": "russian",
+    "chapter": 72,
+    "sequence": 3590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b437ce63d407202"
+  },
+  "findings": []
+}

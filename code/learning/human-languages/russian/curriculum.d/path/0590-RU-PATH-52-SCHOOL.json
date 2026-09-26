@@ -1,0 +1,9 @@
+{
+  "id": "RU-PATH-52-SCHOOL",
+  "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+  "before": [],
+  "inline": [
+    "RU-EXT-52-SCHOOL"
+  ],
+  "after": []
+}

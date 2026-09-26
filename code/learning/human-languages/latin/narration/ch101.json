@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Get Up, Wander, Run Away, At Once, Then",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:74210a9a3974170c",
+  "sourceHash": "fnv1a64:5bec22d2372e5b5e",
   "lessons": [
     {
       "id": "LA-C101-surgo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb64411e3c94b6f4",
+      "sourceHash": "fnv1a64:a147fa2074aa0b14",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for get up, wander, run away, at once, then."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e57d65adf43abb4",
+      "sourceHash": "fnv1a64:e1e5349630537a08",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for get up, wander, run away, at once, then."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aff0c0550940d7e6",
+      "sourceHash": "fnv1a64:10c63e7d0196fef0",
       "notice": null,
       "blocks": [
         {
@@ -303,7 +303,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for get up, wander, run away, at once, then."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:426ace9c6a1439cb",
+      "sourceHash": "fnv1a64:33e803df4c458397",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for get up, wander, run away, at once, then."
+              "text": "One more word for this chapter."
             }
           ]
         },
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68fc381a4a160cea",
+      "sourceHash": "fnv1a64:400d84b107901e48",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "One more word for get up, wander, run away, at once, then."
+              "text": "One more word for this chapter."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 70,
-  "sourceHash": "fnv1a64:f09dc3dacbe2d4ab",
+  "sourceHash": "fnv1a64:dc57bb624ca66215",
   "lessonIds": [
     "LA-C70-filius",
     "LA-C70-filia",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch70.txt",
   "json": "latin/narration/ch70.json",
-  "textHash": "fnv1a64:bb674265daea2130",
-  "jsonHash": "fnv1a64:9e6dd262c0c61ffd",
+  "textHash": "fnv1a64:edfe835a4e7104b8",
+  "jsonHash": "fnv1a64:6a02e387115564ef",
   "findings": []
 }

@@ -1,0 +1,11 @@
+{
+  "id": "RU-R80-first-pass-nature-animals-and-describing-words",
+  "pathSegment": "RU-PATH-80-PLACES",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "RU-EXT-80-PLACES",
+      "order": 5
+    }
+  ]
+}
