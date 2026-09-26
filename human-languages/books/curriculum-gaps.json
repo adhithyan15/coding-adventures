@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 13208,
+    "totalLessons": 13485,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -27,12 +27,12 @@
     "scriptRampOverBudgetLessons": 32,
     "lessonsOpeningMultipleScripts": 0,
     "scriptClosureViolations": 267,
-    "scriptExposureExemptedGlyphs": 1610,
+    "scriptExposureExemptedGlyphs": 1614,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 46,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 305,
+    "atomsNeverRevisited": 304,
     "forwardReferences": 921,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 94,
@@ -40,9 +40,9 @@
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 243,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 11462,
+    "drivableLessons": 11735,
     "drivablePercent": 87,
-    "chaptersWithoutDrivablePrefix": 272,
+    "chaptersWithoutDrivablePrefix": 273,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -5567,7 +5567,61 @@
           78,
           79,
           80,
-          81
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135
         ],
         "bookChapters": [
           1,
@@ -5650,7 +5704,61 @@
           78,
           79,
           80,
-          81
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -6562,9 +6670,9 @@
       {
         "language": "russian",
         "status": "version-2",
-        "lessonCount": 418,
+        "lessonCount": 695,
         "versions": {
-          "2": 418
+          "2": 695
         }
       },
       {
@@ -6992,6 +7100,27 @@
       {
         "code": "chapter-payoff-not-representative",
         "language": "spanish",
+        "chapter": 28,
+        "lessonId": "ES-C57-f-a-h",
+        "message": "spanish chapter 28 payoff assesses 0/1 of the chapter's atoms (0.00), below the 0.5 floor."
+      },
+      {
+        "code": "chapter-payoff-not-representative",
+        "language": "spanish",
+        "chapter": 51,
+        "lessonId": "ES-C09-profesor",
+        "message": "spanish chapter 51 payoff assesses 1/3 of the chapter's atoms (0.33), below the 0.5 floor."
+      },
+      {
+        "code": "chapter-payoff-not-representative",
+        "language": "spanish",
+        "chapter": 58,
+        "lessonId": "ES-C09-grande",
+        "message": "spanish chapter 58 payoff assesses 1/3 of the chapter's atoms (0.33), below the 0.5 floor."
+      },
+      {
+        "code": "chapter-payoff-not-representative",
+        "language": "spanish",
         "chapter": 143,
         "lessonId": "ES-C26-pan",
         "message": "spanish chapter 143 payoff assesses 3/8 of the chapter's atoms (0.38), below the 0.5 floor."
@@ -7156,27 +7285,6 @@
         "chapter": 273,
         "lessonId": "ES-C273-practice",
         "message": "spanish chapter 273 payoff assesses 3/8 of the chapter's atoms (0.38), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "spanish",
-        "chapter": 28,
-        "lessonId": "ES-C57-f-a-h",
-        "message": "spanish chapter 28 payoff assesses 0/1 of the chapter's atoms (0.00), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "spanish",
-        "chapter": 51,
-        "lessonId": "ES-C09-profesor",
-        "message": "spanish chapter 51 payoff assesses 1/3 of the chapter's atoms (0.33), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "spanish",
-        "chapter": 58,
-        "lessonId": "ES-C09-grande",
-        "message": "spanish chapter 58 payoff assesses 1/3 of the chapter's atoms (0.33), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -7409,8 +7517,8 @@
       },
       {
         "language": "russian",
-        "bookChapters": 81,
-        "declaredChapters": 81,
+        "bookChapters": 135,
+        "declaredChapters": 135,
         "missingCapability": 0,
         "findings": 2,
         "clean": false
@@ -7457,8 +7565,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 2737,
-      "declaredChapters": 2737,
+      "bookChapters": 2791,
+      "declaredChapters": 2791,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 94,
@@ -7470,10 +7578,10 @@
     }
   },
   "levels": {
-    "totalLessons": 13208,
+    "totalLessons": 13485,
     "byLevel": {
       "pre-A1": 8747,
-      "A1": 3435,
+      "A1": 3712,
       "A2": 942,
       "B1": 39,
       "B2": 17,
@@ -7740,10 +7848,10 @@
       },
       {
         "language": "russian",
-        "lessonCount": 418,
+        "lessonCount": 695,
         "byLevel": {
           "pre-A1": 362,
-          "A1": 46,
+          "A1": 323,
           "A2": 10,
           "B1": 0,
           "B2": 0,
@@ -8517,8 +8625,8 @@
       },
       {
         "language": "russian",
-        "lessonCount": 418,
-        "measurable": 418,
+        "lessonCount": 695,
+        "measurable": 695,
         "unmeasurable": 0,
         "lessonViolations": 1,
         "chapterViolations": 4
@@ -9099,8 +9207,8 @@
           "language": "russian",
           "script": "cyrillic",
           "latinScript": false,
-          "lessonCount": 418,
-          "totalGlyphs": 55,
+          "lessonCount": 695,
+          "totalGlyphs": 57,
           "lessonViolations": 4,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
@@ -14428,7 +14536,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 0
+        "revisits": 2
       },
       {
         "atom": "SA-ETYMON-AHAM-EGO",
@@ -51684,6 +51792,174 @@
         "revisits": 2
       },
       {
+        "atom": "RU-LEX-C101-THINGS101-03",
+        "language": "russian",
+        "introducedBy": "RU-C101-tie",
+        "introducedAt": 514,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C101-THINGS101-04",
+        "language": "russian",
+        "introducedBy": "RU-C101-gloves",
+        "introducedAt": 515,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C101-THINGS101-05",
+        "language": "russian",
+        "introducedBy": "RU-C101-scarf",
+        "introducedAt": 516,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C102-THINGS102-01",
+        "language": "russian",
+        "introducedBy": "RU-C102-boots",
+        "introducedAt": 517,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C104-THINGS104-03",
+        "language": "russian",
+        "introducedBy": "RU-C104-strawberries",
+        "introducedAt": 529,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C104-THINGS104-04",
+        "language": "russian",
+        "introducedBy": "RU-C104-melon",
+        "introducedAt": 530,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "RU-LEX-C104-THINGS104-05",
+        "language": "russian",
+        "introducedBy": "RU-C104-garlic",
+        "introducedAt": 531,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "RU-LEX-C112-THINGS112-03",
+        "language": "russian",
+        "introducedBy": "RU-C112-page",
+        "introducedAt": 571,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C112-THINGS112-04",
+        "language": "russian",
+        "introducedBy": "RU-C112-music",
+        "introducedAt": 572,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C112-THINGS112-05",
+        "language": "russian",
+        "introducedBy": "RU-C112-sport",
+        "introducedAt": 573,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C113-THINGS113-01",
+        "language": "russian",
+        "introducedBy": "RU-C113-game",
+        "introducedAt": 574,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C115-THINGS115-03",
+        "language": "russian",
+        "introducedBy": "RU-C115-hill",
+        "introducedAt": 586,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C115-THINGS115-04",
+        "language": "russian",
+        "introducedBy": "RU-C115-rock",
+        "introducedAt": 587,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "RU-LEX-C115-THINGS115-05",
+        "language": "russian",
+        "introducedBy": "RU-C115-wave",
+        "introducedAt": 588,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "RU-LEX-C39-VERB2-02",
         "language": "russian",
         "introducedBy": "RU-C39-gotovit",
@@ -52056,6 +52332,906 @@
         "revisits": 3
       },
       {
+        "atom": "RU-LEX-C66-TEMP-01",
+        "language": "russian",
+        "introducedBy": "RU-C66-hot",
+        "introducedAt": 338,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C66-TEMP-02",
+        "language": "russian",
+        "introducedBy": "RU-C66-cold",
+        "introducedAt": 339,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C66-TEMP-03",
+        "language": "russian",
+        "introducedBy": "RU-C66-warm",
+        "introducedAt": 340,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C66-TEMP-04",
+        "language": "russian",
+        "introducedBy": "RU-C66-fast",
+        "introducedAt": 341,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C66-TEMP-05",
+        "language": "russian",
+        "introducedBy": "RU-C66-slow",
+        "introducedAt": 342,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C67-WORTH-01",
+        "language": "russian",
+        "introducedBy": "RU-C67-easy",
+        "introducedAt": 343,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C67-WORTH-02",
+        "language": "russian",
+        "introducedBy": "RU-C67-hard",
+        "introducedAt": 344,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C67-WORTH-03",
+        "language": "russian",
+        "introducedBy": "RU-C67-expensive",
+        "introducedAt": 345,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C67-WORTH-04",
+        "language": "russian",
+        "introducedBy": "RU-C67-cheap",
+        "introducedAt": 346,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C67-WORTH-05",
+        "language": "russian",
+        "introducedBy": "RU-C67-badly",
+        "introducedAt": 347,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C68-TIME1-01",
+        "language": "russian",
+        "introducedBy": "RU-C68-day",
+        "introducedAt": 348,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C68-TIME1-02",
+        "language": "russian",
+        "introducedBy": "RU-C68-week",
+        "introducedAt": 349,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C68-TIME1-03",
+        "language": "russian",
+        "introducedBy": "RU-C68-month",
+        "introducedAt": 350,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C68-TIME1-04",
+        "language": "russian",
+        "introducedBy": "RU-C68-year",
+        "introducedAt": 351,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C68-TIME1-05",
+        "language": "russian",
+        "introducedBy": "RU-C68-evening",
+        "introducedAt": 352,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C69-TIME2-01",
+        "language": "russian",
+        "introducedBy": "RU-C69-today",
+        "introducedAt": 353,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C77-TOWN1-03",
+        "language": "russian",
+        "introducedBy": "RU-C77-shop",
+        "introducedAt": 395,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C77-TOWN1-04",
+        "language": "russian",
+        "introducedBy": "RU-C77-market",
+        "introducedAt": 396,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C77-TOWN1-05",
+        "language": "russian",
+        "introducedBy": "RU-C77-school",
+        "introducedAt": 397,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C78-TOWN2-01",
+        "language": "russian",
+        "introducedBy": "RU-C78-bank",
+        "introducedAt": 398,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C80-PLACES-03",
+        "language": "russian",
+        "introducedBy": "RU-C80-church",
+        "introducedAt": 410,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C82-DEF82-01",
+        "language": "russian",
+        "introducedBy": "RU-C82-this",
+        "introducedAt": 418,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C82-DEF82-02",
+        "language": "russian",
+        "introducedBy": "RU-C82-this-2",
+        "introducedAt": 419,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C82-DEF82-03",
+        "language": "russian",
+        "introducedBy": "RU-C82-that",
+        "introducedAt": 420,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C82-DEF82-04",
+        "language": "russian",
+        "introducedBy": "RU-C82-that-2",
+        "introducedAt": 421,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C82-DEF82-05",
+        "language": "russian",
+        "introducedBy": "RU-C82-such",
+        "introducedAt": 422,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C83-TIME83-01",
+        "language": "russian",
+        "introducedBy": "RU-C83-midday",
+        "introducedAt": 423,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C83-TIME83-02",
+        "language": "russian",
+        "introducedBy": "RU-C83-midnight",
+        "introducedAt": 424,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C83-TIME83-03",
+        "language": "russian",
+        "introducedBy": "RU-C83-early",
+        "introducedAt": 425,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C83-TIME83-04",
+        "language": "russian",
+        "introducedBy": "RU-C83-late",
+        "introducedAt": 426,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C83-TIME83-05",
+        "language": "russian",
+        "introducedBy": "RU-C83-in-the-morning",
+        "introducedAt": 427,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C84-TIME84-01",
+        "language": "russian",
+        "introducedBy": "RU-C84-in-the-daytime",
+        "introducedAt": 428,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C84-TIME84-02",
+        "language": "russian",
+        "introducedBy": "RU-C84-in-the-evening",
+        "introducedAt": 429,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C84-TIME84-03",
+        "language": "russian",
+        "introducedBy": "RU-C84-at-night",
+        "introducedAt": 430,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C84-TIME84-04",
+        "language": "russian",
+        "introducedBy": "RU-C84-day-after-tomorrow",
+        "introducedAt": 431,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C84-TIME84-05",
+        "language": "russian",
+        "introducedBy": "RU-C84-day-before-yesterday",
+        "introducedAt": 432,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C85-TIME85-01",
+        "language": "russian",
+        "introducedBy": "RU-C85-second",
+        "introducedAt": 433,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C85-TIME85-02",
+        "language": "russian",
+        "introducedBy": "RU-C85-weekend",
+        "introducedAt": 434,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C85-TIME85-03",
+        "language": "russian",
+        "introducedBy": "RU-C85-date",
+        "introducedAt": 435,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C85-TIME85-04",
+        "language": "russian",
+        "introducedBy": "RU-C85-century",
+        "introducedAt": 436,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C85-TIME85-05",
+        "language": "russian",
+        "introducedBy": "RU-C85-often",
+        "introducedAt": 437,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C86-LOC86-01",
+        "language": "russian",
+        "introducedBy": "RU-C86-where",
+        "introducedAt": 438,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C86-LOC86-02",
+        "language": "russian",
+        "introducedBy": "RU-C86-where-to",
+        "introducedAt": 439,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C86-LOC86-03",
+        "language": "russian",
+        "introducedBy": "RU-C86-where-from",
+        "introducedAt": 440,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C86-LOC86-04",
+        "language": "russian",
+        "introducedBy": "RU-C86-to-the-right",
+        "introducedAt": 441,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C86-LOC86-05",
+        "language": "russian",
+        "introducedBy": "RU-C86-to-the-left",
+        "introducedAt": 442,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C87-LOC87-01",
+        "language": "russian",
+        "introducedBy": "RU-C87-straight-on",
+        "introducedAt": 443,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C87-LOC87-02",
+        "language": "russian",
+        "introducedBy": "RU-C87-nearby",
+        "introducedAt": 444,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C87-LOC87-03",
+        "language": "russian",
+        "introducedBy": "RU-C87-airport",
+        "introducedAt": 445,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C87-LOC87-04",
+        "language": "russian",
+        "introducedBy": "RU-C87-stop",
+        "introducedAt": 446,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C87-LOC87-05",
+        "language": "russian",
+        "introducedBy": "RU-C87-square",
+        "introducedAt": 447,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C88-LOC88-01",
+        "language": "russian",
+        "introducedBy": "RU-C88-post-office",
+        "introducedAt": 448,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C88-LOC88-02",
+        "language": "russian",
+        "introducedBy": "RU-C88-cinema",
+        "introducedAt": 449,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C88-LOC88-03",
+        "language": "russian",
+        "introducedBy": "RU-C88-supermarket",
+        "introducedAt": 450,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C88-LOC88-04",
+        "language": "russian",
+        "introducedBy": "RU-C88-swimming-pool",
+        "introducedAt": 451,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C88-LOC88-05",
+        "language": "russian",
+        "introducedBy": "RU-C88-stadium",
+        "introducedAt": 452,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C89-LOC89-01",
+        "language": "russian",
+        "introducedBy": "RU-C89-factory",
+        "introducedAt": 453,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C89-LOC89-02",
+        "language": "russian",
+        "introducedBy": "RU-C89-office",
+        "introducedAt": 454,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C89-LOC89-03",
+        "language": "russian",
+        "introducedBy": "RU-C89-corner",
+        "introducedAt": 455,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C89-LOC89-04",
+        "language": "russian",
+        "introducedBy": "RU-C89-crossroads",
+        "introducedAt": 456,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C89-LOC89-05",
+        "language": "russian",
+        "introducedBy": "RU-C89-traffic-lights",
+        "introducedAt": 457,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C90-LOC90-01",
+        "language": "russian",
+        "introducedBy": "RU-C90-car-park",
+        "introducedAt": 458,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C90-LOC90-02",
+        "language": "russian",
+        "introducedBy": "RU-C90-lift",
+        "introducedAt": 459,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C90-LOC90-03",
+        "language": "russian",
+        "introducedBy": "RU-C90-north",
+        "introducedAt": 460,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C90-LOC90-04",
+        "language": "russian",
+        "introducedBy": "RU-C90-south",
+        "introducedAt": 461,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C90-LOC90-05",
+        "language": "russian",
+        "introducedBy": "RU-C90-east",
+        "introducedAt": 462,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C91-LOC91-01",
+        "language": "russian",
+        "introducedBy": "RU-C91-west",
+        "introducedAt": 463,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C91-LOC91-02",
+        "language": "russian",
+        "introducedBy": "RU-C91-underground",
+        "introducedAt": 464,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C91-LOC91-03",
+        "language": "russian",
+        "introducedBy": "RU-C91-tram",
+        "introducedAt": 465,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C91-LOC91-04",
+        "language": "russian",
+        "introducedBy": "RU-C91-ship",
+        "introducedAt": 466,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C91-LOC91-05",
+        "language": "russian",
+        "introducedBy": "RU-C91-boat",
+        "introducedAt": 467,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C92-LOC92-01",
+        "language": "russian",
+        "introducedBy": "RU-C92-bicycle",
+        "introducedAt": 468,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C92-LOC92-02",
+        "language": "russian",
+        "introducedBy": "RU-C92-suitcase",
+        "introducedAt": 469,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C92-LOC92-03",
+        "language": "russian",
+        "introducedBy": "RU-C92-journey",
+        "introducedAt": 470,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C92-LOC92-05",
+        "language": "russian",
+        "introducedBy": "RU-C92-rug",
+        "introducedAt": 472,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "RU-LEX-KAKOY-01",
         "language": "russian",
         "introducedBy": "RU-C22-kakoy",
@@ -52125,7 +53301,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "RU-SCRIPT-B-01",
@@ -52149,7 +53325,31 @@
           "R3",
           "R4"
         ],
+        "revisits": 4
+      },
+      {
+        "atom": "RU-SCRIPT-C93-E-01",
+        "language": "russian",
+        "introducedBy": "RU-W93-e",
+        "introducedAt": 473,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
         "revisits": 3
+      },
+      {
+        "atom": "RU-SCRIPT-C93-SHCHA-01",
+        "language": "russian",
+        "introducedBy": "RU-W93-shcha",
+        "introducedAt": 474,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "RU-SCRIPT-D-01",
@@ -52209,7 +53409,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "RU-SKILL-READ-WORDS",
@@ -52221,7 +53421,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "SA-COMPARISON-NUMERAL-FAMILY",
@@ -116399,6 +117599,1073 @@
         "revisits": 3
       },
       {
+        "atom": "RU-LEX-C100-THINGS100-01",
+        "language": "russian",
+        "introducedBy": "RU-C100-ring",
+        "introducedAt": 507,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C100-THINGS100-02",
+        "language": "russian",
+        "introducedBy": "RU-C100-photograph",
+        "introducedAt": 508,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C100-THINGS100-03",
+        "language": "russian",
+        "introducedBy": "RU-C100-candle",
+        "introducedAt": 509,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C100-THINGS100-04",
+        "language": "russian",
+        "introducedBy": "RU-C100-calendar",
+        "introducedAt": 510,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C100-THINGS100-05",
+        "language": "russian",
+        "introducedBy": "RU-C100-rucksack",
+        "introducedAt": 511,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C101-THINGS101-01",
+        "language": "russian",
+        "introducedBy": "RU-C101-people",
+        "introducedAt": 512,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C101-THINGS101-02",
+        "language": "russian",
+        "introducedBy": "RU-C101-jumper",
+        "introducedAt": 513,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C102-THINGS102-02",
+        "language": "russian",
+        "introducedBy": "RU-C102-skirt",
+        "introducedAt": 518,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C102-THINGS102-03",
+        "language": "russian",
+        "introducedBy": "RU-C102-coat",
+        "introducedAt": 519,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C102-THINGS102-04",
+        "language": "russian",
+        "introducedBy": "RU-C102-shoes",
+        "introducedAt": 520,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C102-THINGS102-05",
+        "language": "russian",
+        "introducedBy": "RU-C102-socks",
+        "introducedAt": 521,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C103-THINGS103-01",
+        "language": "russian",
+        "introducedBy": "RU-C103-hat",
+        "introducedAt": 522,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C103-THINGS103-02",
+        "language": "russian",
+        "introducedBy": "RU-C103-jacket",
+        "introducedAt": 523,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C103-THINGS103-03",
+        "language": "russian",
+        "introducedBy": "RU-C103-shirt",
+        "introducedAt": 524,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C103-THINGS103-04",
+        "language": "russian",
+        "introducedBy": "RU-C103-trousers",
+        "introducedAt": 525,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C103-THINGS103-05",
+        "language": "russian",
+        "introducedBy": "RU-C103-dress",
+        "introducedAt": 526,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C104-THINGS104-01",
+        "language": "russian",
+        "introducedBy": "RU-C104-beef",
+        "introducedAt": 527,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C104-THINGS104-02",
+        "language": "russian",
+        "introducedBy": "RU-C104-vegetables",
+        "introducedAt": 528,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C105-THINGS105-01",
+        "language": "russian",
+        "introducedBy": "RU-C105-flour",
+        "introducedAt": 534,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C105-THINGS105-02",
+        "language": "russian",
+        "introducedBy": "RU-C105-chocolate",
+        "introducedAt": 535,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C105-THINGS105-03",
+        "language": "russian",
+        "introducedBy": "RU-C105-biscuits",
+        "introducedAt": 536,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C105-THINGS105-04",
+        "language": "russian",
+        "introducedBy": "RU-C105-sandwich",
+        "introducedAt": 537,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C105-THINGS105-05",
+        "language": "russian",
+        "introducedBy": "RU-C105-sauce",
+        "introducedAt": 538,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C106-THINGS106-01",
+        "language": "russian",
+        "introducedBy": "RU-C106-dessert",
+        "introducedAt": 539,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C106-THINGS106-02",
+        "language": "russian",
+        "introducedBy": "RU-C106-yoghurt",
+        "introducedAt": 540,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C106-THINGS106-03",
+        "language": "russian",
+        "introducedBy": "RU-C106-ice-cream",
+        "introducedAt": 541,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C106-THINGS106-04",
+        "language": "russian",
+        "introducedBy": "RU-C106-sausage",
+        "introducedAt": 542,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C106-THINGS106-05",
+        "language": "russian",
+        "introducedBy": "RU-C106-peach",
+        "introducedAt": 543,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C107-THINGS107-01",
+        "language": "russian",
+        "introducedBy": "RU-C107-jam",
+        "introducedAt": 544,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C107-THINGS107-02",
+        "language": "russian",
+        "introducedBy": "RU-C107-nut",
+        "introducedAt": 545,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C107-THINGS107-03",
+        "language": "russian",
+        "introducedBy": "RU-C107-pepper",
+        "introducedAt": 546,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C107-THINGS107-04",
+        "language": "russian",
+        "introducedBy": "RU-C107-nurse",
+        "introducedAt": 547,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C107-THINGS107-05",
+        "language": "russian",
+        "introducedBy": "RU-C107-cook",
+        "introducedAt": 548,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C108-THINGS108-01",
+        "language": "russian",
+        "introducedBy": "RU-C108-police-officer",
+        "introducedAt": 549,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C108-THINGS108-02",
+        "language": "russian",
+        "introducedBy": "RU-C108-shop-assistant",
+        "introducedAt": 550,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C108-THINGS108-03",
+        "language": "russian",
+        "introducedBy": "RU-C108-farmer",
+        "introducedAt": 551,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C108-THINGS108-04",
+        "language": "russian",
+        "introducedBy": "RU-C108-baker",
+        "introducedAt": 552,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C108-THINGS108-05",
+        "language": "russian",
+        "introducedBy": "RU-C108-driver",
+        "introducedAt": 553,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C109-THINGS109-01",
+        "language": "russian",
+        "introducedBy": "RU-C109-lawyer",
+        "introducedAt": 554,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C109-THINGS109-02",
+        "language": "russian",
+        "introducedBy": "RU-C109-engineer",
+        "introducedAt": 555,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C109-THINGS109-03",
+        "language": "russian",
+        "introducedBy": "RU-C109-firefighter",
+        "introducedAt": 556,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C109-THINGS109-04",
+        "language": "russian",
+        "introducedBy": "RU-C109-postman",
+        "introducedAt": 557,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C109-THINGS109-05",
+        "language": "russian",
+        "introducedBy": "RU-C109-waiter",
+        "introducedAt": 558,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C110-THINGS110-01",
+        "language": "russian",
+        "introducedBy": "RU-C110-customer",
+        "introducedAt": 559,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C110-THINGS110-02",
+        "language": "russian",
+        "introducedBy": "RU-C110-till",
+        "introducedAt": 560,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C110-THINGS110-03",
+        "language": "russian",
+        "introducedBy": "RU-C110-boss",
+        "introducedAt": 561,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C110-THINGS110-04",
+        "language": "russian",
+        "introducedBy": "RU-C110-profession",
+        "introducedAt": 562,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C110-THINGS110-05",
+        "language": "russian",
+        "introducedBy": "RU-C110-class",
+        "introducedAt": 563,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C111-THINGS111-01",
+        "language": "russian",
+        "introducedBy": "RU-C111-exam",
+        "introducedAt": 564,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C111-THINGS111-02",
+        "language": "russian",
+        "introducedBy": "RU-C111-board",
+        "introducedAt": 565,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C111-THINGS111-03",
+        "language": "russian",
+        "introducedBy": "RU-C111-rubber",
+        "introducedAt": 566,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C111-THINGS111-04",
+        "language": "russian",
+        "introducedBy": "RU-C111-homework",
+        "introducedAt": 567,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C111-THINGS111-05",
+        "language": "russian",
+        "introducedBy": "RU-C111-idea",
+        "introducedAt": 568,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C112-THINGS112-01",
+        "language": "russian",
+        "introducedBy": "RU-C112-problem",
+        "introducedAt": 569,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C112-THINGS112-02",
+        "language": "russian",
+        "introducedBy": "RU-C112-sentence",
+        "introducedAt": 570,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C113-THINGS113-02",
+        "language": "russian",
+        "introducedBy": "RU-C113-film",
+        "introducedAt": 575,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C113-THINGS113-03",
+        "language": "russian",
+        "introducedBy": "RU-C113-song",
+        "introducedAt": 576,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C113-THINGS113-04",
+        "language": "russian",
+        "introducedBy": "RU-C113-drawing",
+        "introducedAt": 577,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C113-THINGS113-05",
+        "language": "russian",
+        "introducedBy": "RU-C113-life",
+        "introducedAt": 578,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C114-THINGS114-01",
+        "language": "russian",
+        "introducedBy": "RU-C114-price",
+        "introducedAt": 579,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C114-THINGS114-02",
+        "language": "russian",
+        "introducedBy": "RU-C114-football",
+        "introducedAt": 580,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C114-THINGS114-03",
+        "language": "russian",
+        "introducedBy": "RU-C114-concert",
+        "introducedAt": 581,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C114-THINGS114-04",
+        "language": "russian",
+        "introducedBy": "RU-C114-holiday",
+        "introducedAt": 582,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C114-THINGS114-05",
+        "language": "russian",
+        "introducedBy": "RU-C114-fog",
+        "introducedAt": 583,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C115-THINGS115-01",
+        "language": "russian",
+        "introducedBy": "RU-C115-thunderstorm",
+        "introducedAt": 584,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C115-THINGS115-02",
+        "language": "russian",
+        "introducedBy": "RU-C115-ice",
+        "introducedAt": 585,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C116-THINGS116-01",
+        "language": "russian",
+        "introducedBy": "RU-C116-desert",
+        "introducedAt": 591,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C116-THINGS116-02",
+        "language": "russian",
+        "introducedBy": "RU-C116-volcano",
+        "introducedAt": 592,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C116-THINGS116-03",
+        "language": "russian",
+        "introducedBy": "RU-C116-cave",
+        "introducedAt": 593,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C116-THINGS116-04",
+        "language": "russian",
+        "introducedBy": "RU-C116-waterfall",
+        "introducedAt": 594,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C116-THINGS116-05",
+        "language": "russian",
+        "introducedBy": "RU-C116-donkey",
+        "introducedAt": 595,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C117-THINGS117-01",
+        "language": "russian",
+        "introducedBy": "RU-C117-rabbit",
+        "introducedAt": 596,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C117-THINGS117-02",
+        "language": "russian",
+        "introducedBy": "RU-C117-tiger",
+        "introducedAt": 597,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C117-THINGS117-03",
+        "language": "russian",
+        "introducedBy": "RU-C117-butterfly",
+        "introducedAt": 598,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C117-THINGS117-04",
+        "language": "russian",
+        "introducedBy": "RU-C117-frog",
+        "introducedAt": 599,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C117-THINGS117-05",
+        "language": "russian",
+        "introducedBy": "RU-C117-tortoise",
+        "introducedAt": 600,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C118-THINGS118-01",
+        "language": "russian",
+        "introducedBy": "RU-C118-squirrel",
+        "introducedAt": 601,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C118-THINGS118-02",
+        "language": "russian",
+        "introducedBy": "RU-C118-owl",
+        "introducedAt": 602,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C118-THINGS118-03",
+        "language": "russian",
+        "introducedBy": "RU-C118-whale",
+        "introducedAt": 603,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C118-THINGS118-04",
+        "language": "russian",
+        "introducedBy": "RU-C118-dolphin",
+        "introducedAt": 604,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C118-THINGS118-05",
+        "language": "russian",
+        "introducedBy": "RU-C118-elbow",
+        "introducedAt": 605,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C119-THINGS119-01",
+        "language": "russian",
+        "introducedBy": "RU-C119-ankle",
+        "introducedAt": 606,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C119-THINGS119-02",
+        "language": "russian",
+        "introducedBy": "RU-C119-wrist",
+        "introducedAt": 607,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C119-THINGS119-03",
+        "language": "russian",
+        "introducedBy": "RU-C119-cheek",
+        "introducedAt": 608,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C119-THINGS119-04",
+        "language": "russian",
+        "introducedBy": "RU-C119-lips",
+        "introducedAt": 609,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C119-THINGS119-05",
+        "language": "russian",
+        "introducedBy": "RU-C119-chest",
+        "introducedAt": 610,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C120-THINGS120-01",
+        "language": "russian",
+        "introducedBy": "RU-C120-lion",
+        "introducedAt": 611,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C120-THINGS120-02",
+        "language": "russian",
+        "introducedBy": "RU-C120-monkey",
+        "introducedAt": 612,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C120-THINGS120-03",
+        "language": "russian",
+        "introducedBy": "RU-C120-elephant",
+        "introducedAt": 613,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C120-THINGS120-04",
+        "language": "russian",
+        "introducedBy": "RU-C120-bee",
+        "introducedAt": 614,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C122-THINGS122-03",
+        "language": "russian",
+        "introducedBy": "RU-C122-lightning",
+        "introducedAt": 623,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C122-THINGS122-04",
+        "language": "russian",
+        "introducedBy": "RU-C122-thunder",
+        "introducedAt": 624,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C122-THINGS122-05",
+        "language": "russian",
+        "introducedBy": "RU-C122-planet",
+        "introducedAt": 625,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C123-THINGS123-01",
+        "language": "russian",
+        "introducedBy": "RU-C123-space",
+        "introducedAt": 626,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C125-QUAL125-03",
+        "language": "russian",
+        "introducedBy": "RU-C125-closed",
+        "introducedAt": 638,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C125-QUAL125-04",
+        "language": "russian",
+        "introducedBy": "RU-C125-quiet",
+        "introducedAt": 639,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "RU-LEX-C125-QUAL125-05",
+        "language": "russian",
+        "introducedBy": "RU-C125-noisy",
+        "introducedAt": 640,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "RU-LEX-C29-BODY1-01",
         "language": "russian",
         "introducedBy": "RU-C29-head",
@@ -118093,211 +120360,937 @@
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C66-TEMP-01",
+        "atom": "RU-LEX-C69-TIME2-02",
         "language": "russian",
-        "introducedBy": "RU-C66-hot",
-        "introducedAt": 338,
+        "introducedBy": "RU-C69-yesterday",
+        "introducedAt": 354,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C66-TEMP-02",
+        "atom": "RU-LEX-C69-TIME2-03",
         "language": "russian",
-        "introducedBy": "RU-C66-cold",
-        "introducedAt": 339,
+        "introducedBy": "RU-C69-hour",
+        "introducedAt": 355,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C66-TEMP-03",
+        "atom": "RU-LEX-C69-TIME2-04",
         "language": "russian",
-        "introducedBy": "RU-C66-warm",
-        "introducedAt": 340,
+        "introducedBy": "RU-C69-minute",
+        "introducedAt": 356,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C66-TEMP-04",
+        "atom": "RU-LEX-C69-TIME2-05",
         "language": "russian",
-        "introducedBy": "RU-C66-fast",
-        "introducedAt": 341,
+        "introducedBy": "RU-C69-time",
+        "introducedAt": 357,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C66-TEMP-05",
+        "atom": "RU-LEX-C70-WEEK1-01",
         "language": "russian",
-        "introducedBy": "RU-C66-slow",
-        "introducedAt": 342,
+        "introducedBy": "RU-C70-monday",
+        "introducedAt": 358,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C67-WORTH-01",
+        "atom": "RU-LEX-C70-WEEK1-02",
         "language": "russian",
-        "introducedBy": "RU-C67-easy",
-        "introducedAt": 343,
+        "introducedBy": "RU-C70-wednesday",
+        "introducedAt": 359,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C67-WORTH-02",
+        "atom": "RU-LEX-C70-WEEK1-03",
         "language": "russian",
-        "introducedBy": "RU-C67-hard",
-        "introducedAt": 344,
+        "introducedBy": "RU-C70-thursday",
+        "introducedAt": 360,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C67-WORTH-03",
+        "atom": "RU-LEX-C70-WEEK1-04",
         "language": "russian",
-        "introducedBy": "RU-C67-expensive",
-        "introducedAt": 345,
+        "introducedBy": "RU-C70-friday",
+        "introducedAt": 361,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C67-WORTH-04",
+        "atom": "RU-LEX-C70-WEEK1-05",
         "language": "russian",
-        "introducedBy": "RU-C67-cheap",
-        "introducedAt": 346,
+        "introducedBy": "RU-C70-saturday",
+        "introducedAt": 362,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C67-WORTH-05",
+        "atom": "RU-LEX-C71-SEASONS-01",
         "language": "russian",
-        "introducedBy": "RU-C67-badly",
-        "introducedAt": 347,
+        "introducedBy": "RU-C71-sunday",
+        "introducedAt": 363,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C68-TIME1-01",
+        "atom": "RU-LEX-C71-SEASONS-02",
         "language": "russian",
-        "introducedBy": "RU-C68-day",
-        "introducedAt": 348,
+        "introducedBy": "RU-C71-winter",
+        "introducedAt": 364,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C68-TIME1-02",
+        "atom": "RU-LEX-C71-SEASONS-03",
         "language": "russian",
-        "introducedBy": "RU-C68-week",
-        "introducedAt": 349,
+        "introducedBy": "RU-C71-spring",
+        "introducedAt": 365,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C68-TIME1-03",
+        "atom": "RU-LEX-C71-SEASONS-04",
         "language": "russian",
-        "introducedBy": "RU-C68-month",
-        "introducedAt": 350,
+        "introducedBy": "RU-C71-summer",
+        "introducedAt": 366,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C68-TIME1-04",
+        "atom": "RU-LEX-C71-SEASONS-05",
         "language": "russian",
-        "introducedBy": "RU-C68-year",
-        "introducedAt": 351,
+        "introducedBy": "RU-C71-autumn",
+        "introducedAt": 367,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C68-TIME1-05",
+        "atom": "RU-LEX-C72-WHERE1-01",
         "language": "russian",
-        "introducedBy": "RU-C68-evening",
-        "introducedAt": 352,
+        "introducedBy": "RU-C72-here",
+        "introducedAt": 368,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C69-TIME2-01",
+        "atom": "RU-LEX-C72-WHERE1-02",
         "language": "russian",
-        "introducedBy": "RU-C69-today",
-        "introducedAt": 353,
+        "introducedBy": "RU-C72-there",
+        "introducedAt": 369,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C77-TOWN1-03",
+        "atom": "RU-LEX-C72-WHERE1-03",
         "language": "russian",
-        "introducedBy": "RU-C77-shop",
-        "introducedAt": 395,
+        "introducedBy": "RU-C72-far",
+        "introducedAt": 370,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C77-TOWN1-04",
+        "atom": "RU-LEX-C72-WHERE1-04",
         "language": "russian",
-        "introducedBy": "RU-C77-market",
-        "introducedAt": 396,
+        "introducedBy": "RU-C72-near",
+        "introducedAt": 371,
         "missed": [
           "R2",
-          "R3"
+          "R4"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C77-TOWN1-05",
+        "atom": "RU-LEX-C72-WHERE1-05",
         "language": "russian",
-        "introducedBy": "RU-C77-school",
-        "introducedAt": 397,
+        "introducedBy": "RU-C72-above",
+        "introducedAt": 372,
         "missed": [
           "R2",
-          "R3"
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C73-WHERE2-01",
+        "language": "russian",
+        "introducedBy": "RU-C73-below",
+        "introducedAt": 373,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C73-WHERE2-02",
+        "language": "russian",
+        "introducedBy": "RU-C73-left",
+        "introducedAt": 374,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C73-WHERE2-03",
+        "language": "russian",
+        "introducedBy": "RU-C73-right",
+        "introducedAt": 375,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C73-WHERE2-04",
+        "language": "russian",
+        "introducedBy": "RU-C73-alot",
+        "introducedAt": 376,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C73-WHERE2-05",
+        "language": "russian",
+        "introducedBy": "RU-C73-alittle",
+        "introducedAt": 377,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C74-WHEN-01",
+        "language": "russian",
+        "introducedBy": "RU-C74-always",
+        "introducedAt": 378,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C74-WHEN-02",
+        "language": "russian",
+        "introducedBy": "RU-C74-sometimes",
+        "introducedAt": 379,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C74-WHEN-03",
+        "language": "russian",
+        "introducedBy": "RU-C74-never",
+        "introducedAt": 380,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C74-WHEN-04",
+        "language": "russian",
+        "introducedBy": "RU-C74-now",
+        "introducedAt": 381,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C74-WHEN-05",
+        "language": "russian",
+        "introducedBy": "RU-C74-later",
+        "introducedAt": 382,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C75-NUM1-01",
+        "language": "russian",
+        "introducedBy": "RU-C75-already",
+        "introducedAt": 383,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C75-NUM1-02",
+        "language": "russian",
+        "introducedBy": "RU-C75-quickly",
+        "introducedAt": 384,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C75-NUM1-03",
+        "language": "russian",
+        "introducedBy": "RU-C75-eleven",
+        "introducedAt": 385,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C75-NUM1-04",
+        "language": "russian",
+        "introducedBy": "RU-C75-twelve",
+        "introducedAt": 386,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C75-NUM1-05",
+        "language": "russian",
+        "introducedBy": "RU-C75-zero",
+        "introducedAt": 387,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C76-NUM2-01",
+        "language": "russian",
+        "introducedBy": "RU-C76-forty",
+        "introducedAt": 388,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C76-NUM2-02",
+        "language": "russian",
+        "introducedBy": "RU-C76-fifty",
+        "introducedAt": 389,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C76-NUM2-03",
+        "language": "russian",
+        "introducedBy": "RU-C76-ninety",
+        "introducedAt": 390,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C76-NUM2-04",
+        "language": "russian",
+        "introducedBy": "RU-C76-thousand",
+        "introducedAt": 391,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C76-NUM2-05",
+        "language": "russian",
+        "introducedBy": "RU-C76-country",
+        "introducedAt": 392,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C77-TOWN1-01",
+        "language": "russian",
+        "introducedBy": "RU-C77-city",
+        "introducedAt": 393,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C77-TOWN1-02",
+        "language": "russian",
+        "introducedBy": "RU-C77-street",
+        "introducedAt": 394,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C78-TOWN2-02",
+        "language": "russian",
+        "introducedBy": "RU-C78-station",
+        "introducedAt": 399,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C78-TOWN2-03",
+        "language": "russian",
+        "introducedBy": "RU-C78-museum",
+        "introducedAt": 400,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C78-TOWN2-04",
+        "language": "russian",
+        "introducedBy": "RU-C78-theatre",
+        "introducedAt": 401,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C78-TOWN2-05",
+        "language": "russian",
+        "introducedBy": "RU-C78-restaurant",
+        "introducedAt": 402,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C79-TRAVEL-01",
+        "language": "russian",
+        "introducedBy": "RU-C79-bus",
+        "introducedAt": 403,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C79-TRAVEL-02",
+        "language": "russian",
+        "introducedBy": "RU-C79-train",
+        "introducedAt": 404,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C79-TRAVEL-03",
+        "language": "russian",
+        "introducedBy": "RU-C79-plane",
+        "introducedAt": 405,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C79-TRAVEL-04",
+        "language": "russian",
+        "introducedBy": "RU-C79-car",
+        "introducedAt": 406,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C79-TRAVEL-05",
+        "language": "russian",
+        "introducedBy": "RU-C79-bridge",
+        "introducedAt": 407,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C80-PLACES-01",
+        "language": "russian",
+        "introducedBy": "RU-C80-hotel",
+        "introducedAt": 408,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C80-PLACES-02",
+        "language": "russian",
+        "introducedBy": "RU-C80-pharmacy",
+        "introducedAt": 409,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C80-PLACES-04",
+        "language": "russian",
+        "introducedBy": "RU-C80-park",
+        "introducedAt": 411,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "RU-LEX-C80-PLACES-05",
+        "language": "russian",
+        "introducedBy": "RU-C80-taxi",
+        "introducedAt": 412,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "RU-LEX-C92-LOC92-04",
+        "language": "russian",
+        "introducedBy": "RU-C92-holidays",
+        "introducedAt": 471,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-C94-THINGS94-01",
+        "language": "russian",
+        "introducedBy": "RU-C94-television",
+        "introducedAt": 477,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C94-THINGS94-02",
+        "language": "russian",
+        "introducedBy": "RU-C94-computer",
+        "introducedAt": 478,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C94-THINGS94-03",
+        "language": "russian",
+        "introducedBy": "RU-C94-fridge",
+        "introducedAt": 479,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C94-THINGS94-04",
+        "language": "russian",
+        "introducedBy": "RU-C94-cooker",
+        "introducedAt": 480,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C94-THINGS94-05",
+        "language": "russian",
+        "introducedBy": "RU-C94-shower",
+        "introducedAt": 481,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C95-THINGS95-01",
+        "language": "russian",
+        "introducedBy": "RU-C95-bathtub",
+        "introducedAt": 482,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C95-THINGS95-02",
+        "language": "russian",
+        "introducedBy": "RU-C95-shelf",
+        "introducedAt": 483,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C95-THINGS95-03",
+        "language": "russian",
+        "introducedBy": "RU-C95-curtain",
+        "introducedAt": 484,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C95-THINGS95-04",
+        "language": "russian",
+        "introducedBy": "RU-C95-pillow",
+        "introducedAt": 485,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C95-THINGS95-05",
+        "language": "russian",
+        "introducedBy": "RU-C95-blanket",
+        "introducedAt": 486,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C96-THINGS96-01",
+        "language": "russian",
+        "introducedBy": "RU-C96-towel",
+        "introducedAt": 487,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C96-THINGS96-02",
+        "language": "russian",
+        "introducedBy": "RU-C96-soap",
+        "introducedAt": 488,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C96-THINGS96-03",
+        "language": "russian",
+        "introducedBy": "RU-C96-toothbrush",
+        "introducedAt": 489,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C96-THINGS96-04",
+        "language": "russian",
+        "introducedBy": "RU-C96-comb",
+        "introducedAt": 490,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C96-THINGS96-05",
+        "language": "russian",
+        "introducedBy": "RU-C96-rubbish",
+        "introducedAt": 491,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C97-THINGS97-01",
+        "language": "russian",
+        "introducedBy": "RU-C97-broom",
+        "introducedAt": 492,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C97-THINGS97-02",
+        "language": "russian",
+        "introducedBy": "RU-C97-washing-machine",
+        "introducedAt": 493,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C97-THINGS97-03",
+        "language": "russian",
+        "introducedBy": "RU-C97-sofa",
+        "introducedAt": 494,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C97-THINGS97-04",
+        "language": "russian",
+        "introducedBy": "RU-C97-wardrobe",
+        "introducedAt": 495,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C97-THINGS97-05",
+        "language": "russian",
+        "introducedBy": "RU-C97-saucepan",
+        "introducedAt": 496,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C98-THINGS98-01",
+        "language": "russian",
+        "introducedBy": "RU-C98-frying-pan",
+        "introducedAt": 497,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C98-THINGS98-02",
+        "language": "russian",
+        "introducedBy": "RU-C98-bucket",
+        "introducedAt": 498,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C98-THINGS98-03",
+        "language": "russian",
+        "introducedBy": "RU-C98-rope",
+        "introducedAt": 499,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C98-THINGS98-04",
+        "language": "russian",
+        "introducedBy": "RU-C98-nail",
+        "introducedAt": 500,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C98-THINGS98-05",
+        "language": "russian",
+        "introducedBy": "RU-C98-hammer",
+        "introducedAt": 501,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C99-THINGS99-01",
+        "language": "russian",
+        "introducedBy": "RU-C99-glue",
+        "introducedAt": 502,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C99-THINGS99-02",
+        "language": "russian",
+        "introducedBy": "RU-C99-scissors",
+        "introducedAt": 503,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C99-THINGS99-03",
+        "language": "russian",
+        "introducedBy": "RU-C99-alarm-clock",
+        "introducedAt": 504,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C99-THINGS99-04",
+        "language": "russian",
+        "introducedBy": "RU-C99-camera",
+        "introducedAt": 505,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C99-THINGS99-05",
+        "language": "russian",
+        "introducedBy": "RU-C99-purse",
+        "introducedAt": 506,
+        "missed": [
+          "R2",
+          "R4"
         ],
         "revisits": 3
       },
@@ -118883,6 +121876,17 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "RU-SCRIPT-C81-YO-01",
+        "language": "russian",
+        "introducedBy": "RU-W81-yo",
+        "introducedAt": 415,
+        "missed": [
+          "R2",
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "RU-SCRIPT-CH-01",
@@ -152874,454 +155878,554 @@
         "revisits": 4
       },
       {
-        "atom": "RU-LEX-C69-TIME2-02",
+        "atom": "RU-LEX-C120-THINGS120-05",
         "language": "russian",
-        "introducedBy": "RU-C69-yesterday",
-        "introducedAt": 354,
+        "introducedBy": "RU-C120-ant",
+        "introducedAt": 615,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C69-TIME2-03",
+        "atom": "RU-LEX-C121-THINGS121-01",
         "language": "russian",
-        "introducedBy": "RU-C69-hour",
-        "introducedAt": 355,
+        "introducedBy": "RU-C121-shark",
+        "introducedAt": 616,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C69-TIME2-04",
+        "atom": "RU-LEX-C121-THINGS121-02",
         "language": "russian",
-        "introducedBy": "RU-C69-minute",
-        "introducedAt": 356,
+        "introducedBy": "RU-C121-nail-2",
+        "introducedAt": 617,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C69-TIME2-05",
+        "atom": "RU-LEX-C121-THINGS121-03",
         "language": "russian",
-        "introducedBy": "RU-C69-time",
-        "introducedAt": 357,
+        "introducedBy": "RU-C121-skin",
+        "introducedAt": 618,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C70-WEEK1-01",
+        "atom": "RU-LEX-C121-THINGS121-04",
         "language": "russian",
-        "introducedBy": "RU-C70-monday",
-        "introducedAt": 358,
+        "introducedBy": "RU-C121-stomach",
+        "introducedAt": 619,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C70-WEEK1-02",
+        "atom": "RU-LEX-C121-THINGS121-05",
         "language": "russian",
-        "introducedBy": "RU-C70-wednesday",
-        "introducedAt": 359,
+        "introducedBy": "RU-C121-throat",
+        "introducedAt": 620,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C70-WEEK1-03",
+        "atom": "RU-LEX-C122-THINGS122-01",
         "language": "russian",
-        "introducedBy": "RU-C70-thursday",
-        "introducedAt": 360,
+        "introducedBy": "RU-C122-chin",
+        "introducedAt": 621,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C70-WEEK1-04",
+        "atom": "RU-LEX-C122-THINGS122-02",
         "language": "russian",
-        "introducedBy": "RU-C70-friday",
-        "introducedAt": 361,
+        "introducedBy": "RU-C122-rainbow",
+        "introducedAt": 622,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C70-WEEK1-05",
+        "atom": "RU-LEX-C123-THINGS123-02",
         "language": "russian",
-        "introducedBy": "RU-C70-saturday",
-        "introducedAt": 362,
+        "introducedBy": "RU-C123-bottle",
+        "introducedAt": 627,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C123-THINGS123-03",
+        "language": "russian",
+        "introducedBy": "RU-C123-mirror",
+        "introducedAt": 628,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C123-THINGS123-04",
+        "language": "russian",
+        "introducedBy": "RU-C123-stairs",
+        "introducedAt": 629,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C123-THINGS123-05",
+        "language": "russian",
+        "introducedBy": "RU-C123-pink",
+        "introducedAt": 630,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C124-QUAL124-01",
+        "language": "russian",
+        "introducedBy": "RU-C124-purple",
+        "introducedAt": 631,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C124-QUAL124-02",
+        "language": "russian",
+        "introducedBy": "RU-C124-brown",
+        "introducedAt": 632,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C124-QUAL124-03",
+        "language": "russian",
+        "introducedBy": "RU-C124-grey",
+        "introducedAt": 633,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C124-QUAL124-04",
+        "language": "russian",
+        "introducedBy": "RU-C124-orange",
+        "introducedAt": 634,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C124-QUAL124-05",
+        "language": "russian",
+        "introducedBy": "RU-C124-busy",
+        "introducedAt": 635,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C125-QUAL125-01",
+        "language": "russian",
+        "introducedBy": "RU-C125-free",
+        "introducedAt": 636,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C125-QUAL125-02",
+        "language": "russian",
+        "introducedBy": "RU-C125-open",
+        "introducedAt": 637,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "RU-LEX-C126-QUAL126-01",
+        "language": "russian",
+        "introducedBy": "RU-C126-last",
+        "introducedAt": 643,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C71-SEASONS-01",
+        "atom": "RU-LEX-C126-QUAL126-02",
         "language": "russian",
-        "introducedBy": "RU-C71-sunday",
-        "introducedAt": 363,
+        "introducedBy": "RU-C126-famous",
+        "introducedAt": 644,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C71-SEASONS-02",
+        "atom": "RU-LEX-C126-QUAL126-03",
         "language": "russian",
-        "introducedBy": "RU-C71-winter",
-        "introducedAt": 364,
+        "introducedBy": "RU-C126-important",
+        "introducedAt": 645,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C71-SEASONS-03",
+        "atom": "RU-LEX-C126-QUAL126-04",
         "language": "russian",
-        "introducedBy": "RU-C71-spring",
-        "introducedAt": 365,
+        "introducedBy": "RU-C126-interesting",
+        "introducedAt": 646,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C71-SEASONS-04",
+        "atom": "RU-LEX-C126-QUAL126-05",
         "language": "russian",
-        "introducedBy": "RU-C71-summer",
-        "introducedAt": 366,
+        "introducedBy": "RU-C126-boring",
+        "introducedAt": 647,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C71-SEASONS-05",
+        "atom": "RU-LEX-C127-QUAL127-01",
         "language": "russian",
-        "introducedBy": "RU-C71-autumn",
-        "introducedAt": 367,
+        "introducedBy": "RU-C127-cheerful",
+        "introducedAt": 648,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C72-WHERE1-01",
+        "atom": "RU-LEX-C127-QUAL127-02",
         "language": "russian",
-        "introducedBy": "RU-C72-here",
-        "introducedAt": 368,
+        "introducedBy": "RU-C127-kind",
+        "introducedAt": 649,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C72-WHERE1-02",
+        "atom": "RU-LEX-C127-QUAL127-03",
         "language": "russian",
-        "introducedBy": "RU-C72-there",
-        "introducedAt": 369,
+        "introducedBy": "RU-C127-angry",
+        "introducedAt": 650,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C72-WHERE1-03",
+        "atom": "RU-LEX-C127-QUAL127-04",
         "language": "russian",
-        "introducedBy": "RU-C72-far",
-        "introducedAt": 370,
+        "introducedBy": "RU-C127-serious",
+        "introducedAt": 651,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C72-WHERE1-04",
+        "atom": "RU-LEX-C127-QUAL127-05",
         "language": "russian",
-        "introducedBy": "RU-C72-near",
-        "introducedAt": 371,
+        "introducedBy": "RU-C127-right",
+        "introducedAt": 652,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C72-WHERE1-05",
+        "atom": "RU-LEX-C128-QUAL128-01",
         "language": "russian",
-        "introducedBy": "RU-C72-above",
-        "introducedAt": 372,
+        "introducedBy": "RU-C128-wrong",
+        "introducedAt": 653,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C73-WHERE2-01",
+        "atom": "RU-LEX-C128-QUAL128-02",
         "language": "russian",
-        "introducedBy": "RU-C73-below",
-        "introducedAt": 373,
+        "introducedBy": "RU-C128-ready",
+        "introducedAt": 654,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C73-WHERE2-02",
+        "atom": "RU-LEX-C128-QUAL128-03",
         "language": "russian",
-        "introducedBy": "RU-C73-left",
-        "introducedAt": 374,
+        "introducedBy": "RU-C128-dangerous",
+        "introducedAt": 655,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C73-WHERE2-03",
+        "atom": "RU-LEX-C128-QUAL128-04",
         "language": "russian",
-        "introducedBy": "RU-C73-right",
-        "introducedAt": 375,
+        "introducedBy": "RU-C128-wet",
+        "introducedAt": 656,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C73-WHERE2-04",
+        "atom": "RU-LEX-C128-QUAL128-05",
         "language": "russian",
-        "introducedBy": "RU-C73-alot",
-        "introducedAt": 376,
+        "introducedBy": "RU-C128-dry",
+        "introducedAt": 657,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C73-WHERE2-05",
+        "atom": "RU-LEX-C129-QUAL129-01",
         "language": "russian",
-        "introducedBy": "RU-C73-alittle",
-        "introducedAt": 377,
+        "introducedBy": "RU-C129-soft",
+        "introducedAt": 658,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C74-WHEN-01",
+        "atom": "RU-LEX-C129-QUAL129-02",
         "language": "russian",
-        "introducedBy": "RU-C74-always",
-        "introducedAt": 378,
+        "introducedBy": "RU-C129-hard",
+        "introducedAt": 659,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C74-WHEN-02",
+        "atom": "RU-LEX-C129-QUAL129-03",
         "language": "russian",
-        "introducedBy": "RU-C74-sometimes",
-        "introducedAt": 379,
+        "introducedBy": "RU-C129-round",
+        "introducedAt": 660,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C74-WHEN-03",
+        "atom": "RU-LEX-C129-QUAL129-04",
         "language": "russian",
-        "introducedBy": "RU-C74-never",
-        "introducedAt": 380,
+        "introducedBy": "RU-C129-wide",
+        "introducedAt": 661,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C74-WHEN-04",
+        "atom": "RU-LEX-C129-QUAL129-05",
         "language": "russian",
-        "introducedBy": "RU-C74-now",
-        "introducedAt": 381,
+        "introducedBy": "RU-C129-narrow",
+        "introducedAt": 662,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C74-WHEN-05",
+        "atom": "RU-LEX-C130-QUAL130-01",
         "language": "russian",
-        "introducedBy": "RU-C74-later",
-        "introducedAt": 382,
+        "introducedBy": "RU-C130-bitter",
+        "introducedAt": 663,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C75-NUM1-01",
+        "atom": "RU-LEX-C130-QUAL130-02",
         "language": "russian",
-        "introducedBy": "RU-C75-already",
-        "introducedAt": 383,
+        "introducedBy": "RU-C130-salty",
+        "introducedAt": 664,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C75-NUM1-02",
+        "atom": "RU-LEX-C130-QUAL130-03",
         "language": "russian",
-        "introducedBy": "RU-C75-quickly",
-        "introducedAt": 384,
+        "introducedBy": "RU-C130-heavy",
+        "introducedAt": 665,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C75-NUM1-03",
+        "atom": "RU-LEX-C130-QUAL130-04",
         "language": "russian",
-        "introducedBy": "RU-C75-eleven",
-        "introducedAt": 385,
+        "introducedBy": "RU-C130-thin",
+        "introducedAt": 666,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C75-NUM1-04",
+        "atom": "RU-LEX-C130-QUAL130-05",
         "language": "russian",
-        "introducedBy": "RU-C75-twelve",
-        "introducedAt": 386,
+        "introducedBy": "RU-C130-fat",
+        "introducedAt": 667,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C75-NUM1-05",
+        "atom": "RU-LEX-C131-ACT131-01",
         "language": "russian",
-        "introducedBy": "RU-C75-zero",
-        "introducedAt": 387,
+        "introducedBy": "RU-C131-to-begin",
+        "introducedAt": 668,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C76-NUM2-01",
+        "atom": "RU-LEX-C131-ACT131-02",
         "language": "russian",
-        "introducedBy": "RU-C76-forty",
-        "introducedAt": 388,
+        "introducedBy": "RU-C131-to-visit",
+        "introducedAt": 669,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C76-NUM2-02",
+        "atom": "RU-LEX-C131-ACT131-03",
         "language": "russian",
-        "introducedBy": "RU-C76-fifty",
-        "introducedAt": 389,
+        "introducedBy": "RU-C131-to-put",
+        "introducedAt": 670,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C76-NUM2-03",
+        "atom": "RU-LEX-C131-ACT131-04",
         "language": "russian",
-        "introducedBy": "RU-C76-ninety",
-        "introducedAt": 390,
+        "introducedBy": "RU-C131-to-believe",
+        "introducedAt": 671,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C76-NUM2-04",
+        "atom": "RU-LEX-C131-ACT131-05",
         "language": "russian",
-        "introducedBy": "RU-C76-thousand",
-        "introducedAt": 391,
+        "introducedBy": "RU-C131-to-drive",
+        "introducedAt": 672,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C76-NUM2-05",
+        "atom": "RU-LEX-C132-ACT132-01",
         "language": "russian",
-        "introducedBy": "RU-C76-country",
-        "introducedAt": 392,
+        "introducedBy": "RU-C132-to-get-dressed",
+        "introducedAt": 673,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C77-TOWN1-01",
+        "atom": "RU-LEX-C132-ACT132-02",
         "language": "russian",
-        "introducedBy": "RU-C77-city",
-        "introducedAt": 393,
+        "introducedBy": "RU-C132-to-wash",
+        "introducedAt": 674,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C77-TOWN1-02",
+        "atom": "RU-LEX-C132-ACT132-03",
         "language": "russian",
-        "introducedBy": "RU-C77-street",
-        "introducedAt": 394,
+        "introducedBy": "RU-C132-to-get-up",
+        "introducedAt": 675,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C78-TOWN2-01",
+        "atom": "RU-LEX-C132-ACT132-04",
         "language": "russian",
-        "introducedBy": "RU-C78-bank",
-        "introducedAt": 398,
+        "introducedBy": "RU-C132-to-sit-down",
+        "introducedAt": 676,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C80-PLACES-03",
+        "atom": "RU-LEX-C132-ACT132-05",
         "language": "russian",
-        "introducedBy": "RU-C80-church",
-        "introducedAt": 410,
+        "introducedBy": "RU-C132-to-fall",
+        "introducedAt": 677,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "RU-LEX-C80-PLACES-04",
+        "atom": "RU-LEX-C133-ACT133-01",
         "language": "russian",
-        "introducedBy": "RU-C80-park",
-        "introducedAt": 411,
+        "introducedBy": "RU-C133-to-go-up",
+        "introducedAt": 678,
         "missed": [
           "R2"
         ],
         "revisits": 3
-      },
-      {
-        "atom": "RU-LEX-C80-PLACES-05",
-        "language": "russian",
-        "introducedBy": "RU-C80-taxi",
-        "introducedAt": 412,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
       },
       {
         "atom": "RU-LEX-CHAI",
@@ -166507,12 +169611,12 @@
       },
       {
         "language": "russian",
-        "lessonCount": 418,
+        "lessonCount": 695,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 516,
-        "atomsNeverRevisited": 1,
+        "atomsTaught": 783,
+        "atomsNeverRevisited": 0,
         "forwardReferences": 11
       },
       {
@@ -166571,14 +169675,14 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 14504,
-      "atomsNeverRevisited": 305,
+      "atomsTaught": 14771,
+      "atomsNeverRevisited": 304,
       "neverRevisitedPercent": 2,
       "missedByWindow": {
-        "R1": 1759,
-        "R2": 8840,
-        "R3": 9117,
-        "R4": 9025
+        "R1": 1760,
+        "R2": 9057,
+        "R3": 9243,
+        "R4": 9292
       },
       "forwardReferences": 921
     }
@@ -166744,14 +169848,14 @@
       {
         "language": "russian",
         "script": "cyrillic",
-        "lessonCount": 418,
-        "scriptLessons": 33,
-        "taughtGlyphs": 32,
-        "shownGlyphs": 55,
+        "lessonCount": 695,
+        "scriptLessons": 35,
+        "taughtGlyphs": 34,
+        "shownGlyphs": 57,
         "neverTaughtGlyphs": 23,
         "violations": 60,
-        "exposureOnly": 0,
-        "exposureExemptedGlyphs": 98,
+        "exposureOnly": 4,
+        "exposureExemptedGlyphs": 102,
         "headwordsWithoutRomanization": 0
       },
       {
@@ -168682,8 +171786,8 @@
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
       "violations": 267,
-      "exposureOnly": 488,
-      "exposureExemptedGlyphs": 1610,
+      "exposureOnly": 492,
+      "exposureExemptedGlyphs": 1614,
       "headwordsWithoutRomanization": 46,
       "tracksWithUnknownScript": 0
     },
@@ -187830,8 +190934,8 @@
       },
       {
         "language": "russian",
-        "lessonCount": 418,
-        "atomMeasurableLessons": 418,
+        "lessonCount": 695,
+        "atomMeasurableLessons": 695,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 1,
@@ -187846,17 +190950,17 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 11,
-        "atomsTaught": 516,
-        "atomsNeverRevisited": 1,
-        "reinforcementWindowMisses": 909,
+        "atomsTaught": 783,
+        "atomsNeverRevisited": 0,
+        "reinforcementWindowMisses": 1520,
         "reinforcementMissesByWindow": {
-          "R1": 38,
-          "R2": 355,
-          "R3": 263,
-          "R4": 253
+          "R1": 39,
+          "R2": 572,
+          "R3": 389,
+          "R4": 520
         },
         "payoffSurprises": 2,
-        "writingPracticeLessons": 47,
+        "writingPracticeLessons": 49,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -187891,7 +190995,7 @@
           {
             "language": "russian",
             "kind": "reinforcement",
-            "count": 909,
+            "count": 1520,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -188791,6 +191895,13 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
+        "language": "russian",
+        "kind": "reinforcement",
+        "count": 1520,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
         "language": "malayalam",
         "kind": "reinforcement",
         "count": 1455,
@@ -188871,13 +191982,6 @@
         "language": "urdu",
         "kind": "reinforcement",
         "count": 964,
-        "unit": "missed window(s)",
-        "detail": "add retrieval at the expanding R1-R4 intervals"
-      },
-      {
-        "language": "russian",
-        "kind": "reinforcement",
-        "count": 909,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -189645,29 +192749,9 @@
             "criterion": "writing-stage",
             "detail": "2 cumulative writing stage(s) unproved at A1: controlled-composition, timed-assessment-production",
             "shortfall": 2
-          },
-          {
-            "criterion": "spine-nodes",
-            "detail": "4 of 12 A1 spine node(s) unrealized: SPINE-TIME-OF-DAY, SPINE-ASK-LOCATION, SPINE-DEFINITE-REFERENCE, SPINE-NAME-EVERYDAY-THINGS",
-            "shortfall": 4
-          },
-          {
-            "criterion": "vocabulary",
-            "detail": "teaches 339 distinct headwords at or below A1, against 600",
-            "shortfall": 261
-          },
-          {
-            "criterion": "verb-vocabulary",
-            "detail": "teaches 29 distinct verb headwords at or below A1, against 40",
-            "shortfall": 11
-          },
-          {
-            "criterion": "reinforcement",
-            "detail": "4 atom(s) at or below A1 are revisited fewer than twice (55 etymology hook(s) waived)",
-            "shortfall": 4
           }
         ],
-        "vocabulary": 349
+        "vocabulary": 614
       },
       {
         "language": "sanskrit",
@@ -189846,12 +192930,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 13208,
-    "voice": 10886,
-    "sight": 985,
-    "pen": 1337,
-    "coreVoice": 11462,
-    "lessonsWithWritingSegments": 854,
+    "totalLessons": 13485,
+    "voice": 11159,
+    "sight": 987,
+    "pen": 1339,
+    "coreVoice": 11735,
+    "lessonsWithWritingSegments": 856,
     "drivablePercent": 87,
     "tracks": [
       {
@@ -215866,13 +218950,13 @@
       },
       {
         "language": "russian",
-        "lessonCount": 418,
-        "voice": 358,
-        "sight": 26,
-        "pen": 34,
-        "coreVoice": 371,
-        "drivablePercent": 89,
-        "drivablePrefixTotal": 351,
+        "lessonCount": 695,
+        "voice": 631,
+        "sight": 28,
+        "pen": 36,
+        "coreVoice": 644,
+        "drivablePercent": 93,
+        "drivablePrefixTotal": 624,
         "chapters": [
           {
             "language": "russian",
@@ -217027,6 +220111,763 @@
             ],
             "drivablePrefix": 0,
             "firstNonVoiceLesson": "RU-W81-yo"
+          },
+          {
+            "language": "russian",
+            "chapter": 82,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 83,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 84,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 85,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 86,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 87,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 88,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 89,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 90,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 91,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 92,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 93,
+            "lessonCount": 4,
+            "voice": 0,
+            "sight": 2,
+            "pen": 2,
+            "coreVoice": 0,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "RU-W93-e"
+          },
+          {
+            "language": "russian",
+            "chapter": 94,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 95,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 96,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 97,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 98,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 99,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 100,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 101,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 102,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 103,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 104,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 105,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 106,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 107,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 108,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 109,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 110,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 111,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 112,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 113,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 114,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 115,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 116,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 117,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 118,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 119,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 120,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 121,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 122,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 123,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 124,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 125,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 126,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 127,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 128,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 129,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 130,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 131,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 132,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 133,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 134,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "russian",
+            "chapter": 135,
+            "lessonCount": 7,
+            "voice": 7,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 7,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 7,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -229952,7 +233793,7 @@
     "underspentPercent": 89
   },
   "infoDump": {
-    "lessons": 13208,
+    "lessons": 13485,
     "lessonsWithFindings": 120,
     "ruleStatements": 32,
     "paradigmTables": 91,
@@ -229960,11 +233801,11 @@
     "overBudget": 2
   },
   "lessonBudgets": {
-    "lessons": 13208,
-    "measuredLessons": 9035,
-    "idiomMeasuredLessons": 9035,
-    "senseMeasuredLessons": 9036,
-    "cultureClaimMeasuredLessons": 9035,
+    "lessons": 13485,
+    "measuredLessons": 9312,
+    "idiomMeasuredLessons": 9312,
+    "senseMeasuredLessons": 9313,
+    "cultureClaimMeasuredLessons": 9312,
     "idioms": 101,
     "senses": 103,
     "cultureClaims": 208,
@@ -229973,14 +233814,14 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 54,
-    "lessonsUsingTerms": 12296,
-    "usesBeforeIntroduction": 29595,
-    "technicalUsesBeforeIntroduction": 6265,
-    "technicalLessons": 3504,
+    "lessonsUsingTerms": 12573,
+    "usesBeforeIntroduction": 29883,
+    "technicalUsesBeforeIntroduction": 6266,
+    "technicalLessons": 3505,
     "worstTerms": [
       {
         "term": "verb",
-        "lessons": 2008
+        "lessons": 2009
       },
       {
         "term": "noun",
@@ -230005,14 +233846,14 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 13208,
+    "lessonsScanned": 13485,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 2806,
+    "filesScanned": 2860,
     "mainCharacters": 134,
-    "scriptCharacters": 800,
+    "scriptCharacters": 801,
     "gaps": 0
   }
 }
