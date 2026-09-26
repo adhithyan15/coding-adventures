@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C15-dhol",
+    "language": "hindi",
+    "chapter": 15,
+    "sequence": 619,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c28e1fcb4b72ed88"
+  },
+  "findings": []
+}

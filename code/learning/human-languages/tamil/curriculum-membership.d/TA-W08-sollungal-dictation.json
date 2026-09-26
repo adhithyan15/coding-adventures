@@ -1,11 +1,11 @@
 {
   "id": "TA-W08-sollungal-dictation",
   "pathSegment": "TA-PATH-015",
-  "pathOrder": 5,
+  "pathOrder": 6,
   "extensions": [
     {
       "id": "TA-EXT-015-REGISTER",
-      "order": 4
+      "order": 5
     }
   ]
 }

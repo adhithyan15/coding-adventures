@@ -3,9 +3,114 @@
   "language": "tamil",
   "chapter": 8,
   "title": "Please",
-  "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9a6a94e3ce409051",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:4277d0750bf33dee",
   "lessons": [
+    {
+      "id": "TA-C08-sontham",
+      "sequence": 469,
+      "title": "சொந்தம் (sontham) — one's own; a relative",
+      "headword": "சொந்தம்",
+      "romanization": "sontham",
+      "gloss": "one's own; a relative",
+      "script": "tamil",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:be224a0120163f0d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சொந்தம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சொந்தம் — sontham — \"one's own; a relative\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: sontham. Look at its shape as you say it: the next lesson takes one piece of it, சொ, and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sontham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sontham*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sontham, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sontham*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"one's own; a relative\"? (சொந்தம், sontham.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "TA-C08-tayavuseytu",
       "sequence": 470,
@@ -260,7 +365,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1f47f1837c8e5d14",
+      "sourceHash": "fnv1a64:3fdc17fdc7fbe1c4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -357,7 +462,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:e59aea8c1e91fd32",
+      "sourceHash": "fnv1a64:701225f6e36d5914",
       "notice": {
         "modality": "pen",
         "needs": [

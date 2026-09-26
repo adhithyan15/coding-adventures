@@ -1,11 +1,11 @@
 {
   "id": "HI-S141-nuqta-borrowed",
   "pathSegment": "HI-PATH-100",
-  "pathOrder": 49,
+  "pathOrder": 53,
   "extensions": [
     {
       "id": "HI-EXT-100-SCRIPT-RECOGNITION",
-      "order": 38
+      "order": 42
     }
   ]
 }

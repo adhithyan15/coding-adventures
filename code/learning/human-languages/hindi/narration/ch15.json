@@ -3,9 +3,114 @@
   "language": "hindi",
   "chapter": 15,
   "title": "Water and Bread",
-  "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:aa9a6cbe4a1cbea8",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:5e72395e64551681",
   "lessons": [
+    {
+      "id": "HI-C15-dhol",
+      "sequence": 619,
+      "title": "ढोल (ḍhol) — a drum",
+      "headword": "ढोल",
+      "romanization": "ḍhol",
+      "gloss": "a drum",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:c28e1fcb4b72ed88",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: say the last thing you learned, once, out loud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ढोल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ढोल — ḍhol — \"a drum\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it: ḍhol. Look at its shape as you say it: the next lesson takes one piece of it, ढ (ḍha), and writes it on its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhol",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhol*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhol, and what it means",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhol*, and what it means]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is \"a drum\"? (ढोल, ḍhol.)"
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "HI-C15-paani-roti",
       "sequence": 620,
@@ -292,7 +397,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bd843d44444588fb",
+      "sourceHash": "fnv1a64:e80233831768248a",
       "notice": {
         "modality": "pen",
         "needs": [

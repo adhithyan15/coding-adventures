@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C10-para",
+    "language": "bengali",
+    "chapter": 10,
+    "sequence": 649,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3a21cd18381ea7e7"
+  },
+  "findings": []
+}

@@ -214,10 +214,10 @@ describe("the real corpus", () => {
   // chapter 96.
   const CEILINGS: Record<string, [cold: number, buildsToward: number, unwritten: number]> = {
     arabic: [7, 5, 0],
-    bengali: [5, 12, 0],
+    bengali: [0, 12, 0],
     chinese: [0, 51, 0],
     gujarati: [34, 5, 0],
-    hindi: [4, 1, 0],
+    hindi: [0, 1, 0],
     japanese: [2, 35, 0],
     kannada: [19, 0, 0],
     malayalam: [12, 12, 0],
@@ -226,8 +226,8 @@ describe("the real corpus", () => {
     persian: [0, 4, 0],
     punjabi: [7, 2, 0],
     russian: [1, 0, 0],
-    sanskrit: [1, 0, 0],
-    tamil: [1, 9, 0],
+    sanskrit: [0, 0, 0],
+    tamil: [0, 9, 0],
     telugu: [13, 0, 0],
     urdu: [0, 5, 0],
   };

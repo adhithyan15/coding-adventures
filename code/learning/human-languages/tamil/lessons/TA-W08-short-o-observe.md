@@ -9,17 +9,17 @@ type: writing
 headword: "சொ"
 gloss: meet the short-o sign inside familiar solluṅgaḷ
 romanization: "so"
-prerequisites: [TA-C08-sollungal]
+prerequisites: [TA-C08-sollungal, TA-C08-sontham]
 sounds: [tamil-vowel-sign-o]
 roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [TA-LEX-SOLLUNGAL-01]
+  knowledge: [TA-LEX-SOLLUNGAL-01, TA-LEX-ANCHOR-SONTHAM]
 introduces:
   knowledge: [TA-SCRIPT-SHORT-O-01]
 practises:
-  knowledge: [TA-LEX-SOLLUNGAL-01, TA-SCRIPT-SHORT-O-01]
+  knowledge: [TA-LEX-SOLLUNGAL-01, TA-SCRIPT-SHORT-O-01, TA-LEX-ANCHOR-SONTHAM]
 skills: [listening, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -31,7 +31,7 @@ reviews_of: [TA-C08-sollungal, TA-C08-tayavuseytu]
 # சொ — one new sign in a familiar request
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-SOLLUNGAL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-SOLLUNGAL-01, TA-LEX-ANCHOR-SONTHAM] -->
 
 [PAUSE 2s] Say *solluṅgaḷ*: **please tell me**. Its first sound is *so*. You
 already know the sound and meaning; today only its written vowel sign is new.
