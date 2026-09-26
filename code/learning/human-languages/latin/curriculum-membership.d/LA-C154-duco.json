@@ -1,0 +1,11 @@
+{
+  "id": "LA-C154-duco",
+  "pathSegment": "LA-PATH-154-ACT154",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-154-ACT154",
+      "order": 4
+    }
+  ]
+}

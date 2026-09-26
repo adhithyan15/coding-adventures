@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 111,
+  "sourceHash": "fnv1a64:02128dc37315b17d",
+  "lessonIds": [
+    "LA-C111-malo",
+    "LA-C111-cupio",
+    "LA-C111-opto",
+    "LA-C111-desidero",
+    "LA-C111-voluntas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch111.txt",
+  "json": "latin/narration/ch111.json",
+  "textHash": "fnv1a64:5e9cd887779b5dec",
+  "jsonHash": "fnv1a64:177227fd84c58a3c",
+  "findings": []
+}

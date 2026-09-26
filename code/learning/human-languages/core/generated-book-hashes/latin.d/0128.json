@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 128,
+  "sourceHash": "fnv1a64:f40c06b977682c88",
+  "lessonIds": [
+    "LA-C128-placenta",
+    "LA-C128-cervisia",
+    "LA-C128-sucus",
+    "LA-C128-rosa",
+    "LA-C128-lilium"
+  ],
+  "tex": "latin/book/chapters/ch128-flat-cake-beer-juice-rose-lily.tex"
+}

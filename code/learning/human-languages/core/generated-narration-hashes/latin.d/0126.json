@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:b2c805e4b6a5c69f",
+  "lessonIds": [
+    "LA-C126-pallium",
+    "LA-C126-zona",
+    "LA-C126-pomum",
+    "LA-C126-cepa",
+    "LA-C126-alium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch126.txt",
+  "json": "latin/narration/ch126.json",
+  "textHash": "fnv1a64:a50e5bf74c0cbf8d",
+  "jsonHash": "fnv1a64:be3ac9aebd5728a6",
+  "findings": []
+}

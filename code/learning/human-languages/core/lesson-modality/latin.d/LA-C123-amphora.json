@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C123-amphora",
+    "language": "latin",
+    "chapter": 123,
+    "sequence": 4860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:474f28cb55cdc15a"
+  },
+  "findings": []
+}

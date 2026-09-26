@@ -1,0 +1,21 @@
+{
+  "language": "latin",
+  "chapter": 140,
+  "sourceHash": "fnv1a64:1e60b9df36b7093e",
+  "lessonIds": [
+    "LA-C140-pecten",
+    "LA-C140-forfex",
+    "LA-C140-acus",
+    "LA-C140-filum",
+    "LA-C140-lana",
+    "LA-R140-first-pass-food-and-nature",
+    "LA-R140-second-pass-animals-and-the-body"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "latin/narration/ch140.txt",
+  "json": "latin/narration/ch140.json",
+  "textHash": "fnv1a64:d57a2847315f2bf9",
+  "jsonHash": "fnv1a64:ba5bbacd7ad29f7d",
+  "findings": []
+}

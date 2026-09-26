@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C158-vigilo",
+    "language": "latin",
+    "chapter": 158,
+    "sequence": 6770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42568646cb896b66"
+  },
+  "findings": []
+}

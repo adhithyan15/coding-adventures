@@ -1,0 +1,11 @@
+{
+  "id": "LA-C115-illuc",
+  "pathSegment": "LA-PATH-115-LOC115",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-115-LOC115",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C147-surdus",
+    "language": "latin",
+    "chapter": 147,
+    "sequence": 6150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e8e9fea77eabac3"
+  },
+  "findings": []
+}

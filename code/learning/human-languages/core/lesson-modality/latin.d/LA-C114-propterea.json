@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C114-propterea",
+    "language": "latin",
+    "chapter": 114,
+    "sequence": 4360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6b331cf75fff625"
+  },
+  "findings": []
+}

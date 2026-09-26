@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 138,
+  "sourceHash": "fnv1a64:26af5d14d820039a",
+  "lessonIds": [
+    "LA-C138-piscator",
+    "LA-C138-servus",
+    "LA-C138-domina",
+    "LA-C138-amica",
+    "LA-C138-armarium"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch138.txt",
+  "json": "latin/narration/ch138.json",
+  "textHash": "fnv1a64:4ad5db8f6725b65d",
+  "jsonHash": "fnv1a64:c2a4fff086ad40b8",
+  "findings": []
+}

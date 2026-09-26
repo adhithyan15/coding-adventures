@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 134,
+  "sourceHash": "fnv1a64:216ab6b6ca349215",
+  "lessonIds": [
+    "LA-C134-vacca",
+    "LA-C134-mulus",
+    "LA-C134-camelus",
+    "LA-C134-simia",
+    "LA-C134-delphinus"
+  ],
+  "tex": "latin/book/chapters/ch134-cow-mule-camel-monkey-dolphin.tex"
+}

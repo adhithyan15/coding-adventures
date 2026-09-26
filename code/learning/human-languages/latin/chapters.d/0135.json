@@ -1,0 +1,19 @@
+{
+  "chapter": 135,
+  "title": "Whale, Cockerel, Lip, Chin, Back",
+  "label": "ch:la-whale-cockerel-lip-chin-back",
+  "canDo": "I can say a whale, a cockerel, a lip, the chin and the back.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C135-dorsum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 135: i can say a whale, a cockerel, a lip, the chin and the back.",
+    "assesses": [
+      "LA-LEX-C135-THINGS135-03",
+      "LA-LEX-C135-THINGS135-04",
+      "LA-LEX-C135-THINGS135-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C122-securis",
+  "pathSegment": "LA-PATH-122-THINGS122",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-122-THINGS122",
+      "order": 3
+    }
+  ]
+}

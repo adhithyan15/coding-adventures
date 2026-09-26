@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C114-sinister",
+    "language": "latin",
+    "chapter": 114,
+    "sequence": 4390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4a3f1df1fa03a99"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Flat cake, Beer, Juice, Rose, Lily",
+  "label": "ch:la-flat-cake-beer-juice-rose-lily",
+  "canDo": "I can say a flat cake, beer, juice, a rose and a lily.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C128-lilium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can say a flat cake, beer, juice, a rose and a lily.",
+    "assesses": [
+      "LA-LEX-C128-THINGS128-03",
+      "LA-LEX-C128-THINGS128-04",
+      "LA-LEX-C128-THINGS128-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C142-lyra",
+    "language": "latin",
+    "chapter": 142,
+    "sequence": 5940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:880f4e9801f173d2"
+  },
+  "findings": []
+}

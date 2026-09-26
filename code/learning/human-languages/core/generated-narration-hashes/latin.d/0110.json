@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:a4e5ccf3fc589803",
+  "lessonIds": [
+    "LA-C110-facultas",
+    "LA-C110-ars",
+    "LA-C110-oportet",
+    "LA-C110-licet",
+    "LA-C110-nolo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch110.txt",
+  "json": "latin/narration/ch110.json",
+  "textHash": "fnv1a64:4ccf05382a515d5a",
+  "jsonHash": "fnv1a64:92420554e41a0a7a",
+  "findings": []
+}

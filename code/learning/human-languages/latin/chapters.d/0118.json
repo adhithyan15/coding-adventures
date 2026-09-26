@@ -1,0 +1,19 @@
+{
+  "chapter": 118,
+  "title": "Floor, Well, Bakery, Workshop, Tomb",
+  "label": "ch:la-floor-well-bakery-workshop-tomb",
+  "canDo": "I can say a floor, a well, a bakery, a workshop and a tomb.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "LA-C118-sepulcrum",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 118: i can say a floor, a well, a bakery, a workshop and a tomb.",
+    "assesses": [
+      "LA-LEX-C118-LOC118-03",
+      "LA-LEX-C118-LOC118-04",
+      "LA-LEX-C118-LOC118-05"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 135,
+  "sourceHash": "fnv1a64:1a733a9bcff06720",
+  "lessonIds": [
+    "LA-C135-balaena",
+    "LA-C135-gallus",
+    "LA-C135-labrum",
+    "LA-C135-mentum",
+    "LA-C135-dorsum"
+  ],
+  "tex": "latin/book/chapters/ch135-whale-cockerel-lip-chin-back.tex"
+}

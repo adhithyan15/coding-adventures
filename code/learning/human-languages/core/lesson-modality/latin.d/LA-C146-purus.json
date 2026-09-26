@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C146-purus",
+    "language": "latin",
+    "chapter": 146,
+    "sequence": 6120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4edc1ebb0e53af91"
+  },
+  "findings": []
+}

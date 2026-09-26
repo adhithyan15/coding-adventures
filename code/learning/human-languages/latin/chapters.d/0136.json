@@ -1,0 +1,19 @@
+{
+  "chapter": 136,
+  "title": "Elbow, Thumb, Skin, Bone, Stomach",
+  "label": "ch:la-elbow-thumb-skin-bone-stomach",
+  "canDo": "I can say an elbow, a thumb, the skin, a bone and the stomach.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C136-stomachus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 136: i can say an elbow, a thumb, the skin, a bone and the stomach.",
+    "assesses": [
+      "LA-LEX-C136-THINGS136-03",
+      "LA-LEX-C136-THINGS136-04",
+      "LA-LEX-C136-THINGS136-05"
+    ]
+  }
+}

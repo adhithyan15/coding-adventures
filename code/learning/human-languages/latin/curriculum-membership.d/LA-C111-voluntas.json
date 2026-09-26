@@ -1,0 +1,11 @@
+{
+  "id": "LA-C111-voluntas",
+  "pathSegment": "LA-PATH-111-WANT111",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "LA-EXT-111-WANT111",
+      "order": 4
+    }
+  ]
+}

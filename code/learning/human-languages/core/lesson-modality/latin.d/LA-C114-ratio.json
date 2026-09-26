@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C114-ratio",
+    "language": "latin",
+    "chapter": 114,
+    "sequence": 4350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c6b93c536b69bc4"
+  },
+  "findings": []
+}

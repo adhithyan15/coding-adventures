@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 121,
+  "sourceHash": "fnv1a64:f66d1ff945553940",
+  "lessonIds": [
+    "LA-C121-cochlear",
+    "LA-C121-olla",
+    "LA-C121-patina",
+    "LA-C121-catinus",
+    "LA-C121-candela"
+  ],
+  "tex": "latin/book/chapters/ch121-spoon-cooking-pot-dish-bowl-candle.tex"
+}

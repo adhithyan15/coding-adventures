@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 122,
+  "sourceHash": "fnv1a64:81103bedc1a90ce0",
+  "lessonIds": [
+    "LA-C122-clavus",
+    "LA-C122-malleus",
+    "LA-C122-serra",
+    "LA-C122-securis",
+    "LA-C122-scalae"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch122.txt",
+  "json": "latin/narration/ch122.json",
+  "textHash": "fnv1a64:0fac9d81e08d5147",
+  "jsonHash": "fnv1a64:febc541f14dcc960",
+  "findings": []
+}

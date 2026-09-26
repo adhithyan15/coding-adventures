@@ -482,7 +482,6 @@
       "label": "cardinal numerals 11 to 20, including subtractive 18 and 19",
       "probe": [
         "LA-LEX-UNDECIM-VIGINTI-01",
-        "LA-LEX-UNDECIM-VIGINTI-02",
         "LA-PRAGMATICS-UNDECIM-VIGINTI-03"
       ],
       "anchorIds": [

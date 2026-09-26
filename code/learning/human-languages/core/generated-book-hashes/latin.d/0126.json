@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:11e5420afb66f31f",
+  "lessonIds": [
+    "LA-C126-pallium",
+    "LA-C126-zona",
+    "LA-C126-pomum",
+    "LA-C126-cepa",
+    "LA-C126-alium"
+  ],
+  "tex": "latin/book/chapters/ch126-cloak-belt-fruit-onion-garlic.tex"
+}

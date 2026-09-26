@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:a088f172bc8f32c3",
+  "lessonIds": [
+    "LA-C133-aranea",
+    "LA-C133-rana",
+    "LA-C133-lepus",
+    "LA-C133-vulpes",
+    "LA-C133-taurus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch133.txt",
+  "json": "latin/narration/ch133.json",
+  "textHash": "fnv1a64:57b2c40398c64505",
+  "jsonHash": "fnv1a64:b75feb67577c2448",
+  "findings": []
+}

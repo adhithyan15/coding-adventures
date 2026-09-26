@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C126-zona",
+    "language": "latin",
+    "chapter": 126,
+    "sequence": 5010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:13a23ef18edd3679"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 117,
+  "sourceHash": "fnv1a64:6e642871c7ed7770",
+  "lessonIds": [
+    "LA-C117-gradus",
+    "LA-C117-bibliotheca",
+    "LA-C117-macellum",
+    "LA-C117-popina",
+    "LA-C117-caupona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch117.txt",
+  "json": "latin/narration/ch117.json",
+  "textHash": "fnv1a64:cdfb1264420c28ad",
+  "jsonHash": "fnv1a64:53985b6f562aea95",
+  "findings": []
+}

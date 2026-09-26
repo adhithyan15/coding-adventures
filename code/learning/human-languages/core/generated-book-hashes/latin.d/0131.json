@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:fdb77b3c9301fdfc",
+  "lessonIds": [
+    "LA-C131-nebula",
+    "LA-C131-aquila",
+    "LA-C131-columba",
+    "LA-C131-corvus",
+    "LA-C131-anas"
+  ],
+  "tex": "latin/book/chapters/ch131-fog-eagle-dove-raven-duck.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C137-pastor",
+    "language": "latin",
+    "chapter": 137,
+    "sequence": 5640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20b6bf19fc6612a5"
+  },
+  "findings": []
+}

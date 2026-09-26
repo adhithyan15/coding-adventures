@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C135-gallus",
+    "language": "latin",
+    "chapter": 135,
+    "sequence": 5510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4ebf597a5e6c1c8"
+  },
+  "findings": []
+}

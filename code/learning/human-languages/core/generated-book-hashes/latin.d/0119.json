@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:eadbff15f384be62",
+  "lessonIds": [
+    "LA-C119-area",
+    "LA-C119-miliarium",
+    "LA-C119-circa",
+    "LA-C119-iuxta",
+    "LA-C119-contra",
+    "LA-R119-first-pass-can-want-and-why",
+    "LA-R119-second-pass-places"
+  ],
+  "tex": "latin/book/chapters/ch119-open-space-milestone-around-next-to-opposite.tex"
+}

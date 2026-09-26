@@ -1,0 +1,11 @@
+{
+  "id": "LA-C110-ars",
+  "pathSegment": "LA-PATH-110-CAN110",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-110-CAN110",
+      "order": 1
+    }
+  ]
+}

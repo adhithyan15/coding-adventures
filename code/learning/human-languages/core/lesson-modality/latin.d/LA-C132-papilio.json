@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C132-papilio",
+    "language": "latin",
+    "chapter": 132,
+    "sequence": 5390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2f0e80834a35bbc0"
+  },
+  "findings": []
+}

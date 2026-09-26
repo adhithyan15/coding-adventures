@@ -1,0 +1,11 @@
+{
+  "id": "LA-C115-theatrum",
+  "pathSegment": "LA-PATH-115-LOC115",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "LA-EXT-115-LOC115",
+      "order": 2
+    }
+  ]
+}

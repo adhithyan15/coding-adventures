@@ -1,0 +1,11 @@
+{
+  "id": "LA-C150-piger",
+  "pathSegment": "LA-PATH-150-QUAL150",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-150-QUAL150",
+      "order": 1
+    }
+  ]
+}

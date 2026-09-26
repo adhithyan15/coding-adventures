@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:85027336c1ce45d3",
+  "lessonIds": [
+    "LA-C133-aranea",
+    "LA-C133-rana",
+    "LA-C133-lepus",
+    "LA-C133-vulpes",
+    "LA-C133-taurus"
+  ],
+  "tex": "latin/book/chapters/ch133-spider-frog-hare-fox-bull.tex"
+}

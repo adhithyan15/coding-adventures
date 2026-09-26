@@ -1,0 +1,11 @@
+{
+  "id": "LA-C114-propterea",
+  "pathSegment": "LA-PATH-114-WHY114",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-114-WHY114",
+      "order": 1
+    }
+  ]
+}

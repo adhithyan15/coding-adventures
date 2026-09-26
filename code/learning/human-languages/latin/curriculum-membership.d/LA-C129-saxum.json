@@ -1,0 +1,11 @@
+{
+  "id": "LA-C129-saxum",
+  "pathSegment": "LA-PATH-129-THINGS129",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-129-THINGS129",
+      "order": 3
+    }
+  ]
+}

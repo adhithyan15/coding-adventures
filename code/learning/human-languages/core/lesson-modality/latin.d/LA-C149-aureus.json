@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-C149-aureus",
+    "language": "latin",
+    "chapter": 149,
+    "sequence": 6270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d4259d4f30181903"
+  },
+  "findings": []
+}

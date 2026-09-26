@@ -1,0 +1,19 @@
+{
+  "chapter": 126,
+  "title": "Cloak, Belt, Fruit, Onion, Garlic",
+  "label": "ch:la-cloak-belt-fruit-onion-garlic",
+  "canDo": "I can say a cloak, a belt, a fruit, an onion and garlic.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C126-alium",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 126: i can say a cloak, a belt, a fruit, an onion and garlic.",
+    "assesses": [
+      "LA-LEX-C126-THINGS126-03",
+      "LA-LEX-C126-THINGS126-04",
+      "LA-LEX-C126-THINGS126-05"
+    ]
+  }
+}

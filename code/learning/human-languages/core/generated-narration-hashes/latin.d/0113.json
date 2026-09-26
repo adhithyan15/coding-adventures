@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:a4160e59bdad9e26",
+  "lessonIds": [
+    "LA-C113-nam",
+    "LA-C113-enim",
+    "LA-C113-ideo",
+    "LA-C113-itaque",
+    "LA-C113-causa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch113.txt",
+  "json": "latin/narration/ch113.json",
+  "textHash": "fnv1a64:c33ab30d976bc1b1",
+  "jsonHash": "fnv1a64:464c2b26be75f016",
+  "findings": []
+}

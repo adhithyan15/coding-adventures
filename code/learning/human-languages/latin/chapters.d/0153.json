@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "Cloudy, Windy, To build, To climb, To go down",
+  "label": "ch:la-cloudy-windy-to-build-to-climb-to-go-down",
+  "canDo": "I can say cloudy, windy, to build, to climb and to go down.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C153-descendo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: i can say cloudy, windy, to build, to climb and to go down.",
+    "assesses": [
+      "LA-LEX-C153-QUAL153-03",
+      "LA-LEX-C153-QUAL153-04",
+      "LA-LEX-C153-QUAL153-05"
+    ]
+  }
+}

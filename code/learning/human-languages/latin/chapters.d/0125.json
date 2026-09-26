@@ -1,0 +1,19 @@
+{
+  "chapter": 125,
+  "title": "Statue, Sign, Sail, Wagon, Long dress",
+  "label": "ch:la-statue-sign-sail-wagon-long-dress",
+  "canDo": "I can say a statue, a sign, a sail, a wagon and a long dress.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C125-stola",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 125: i can say a statue, a sign, a sail, a wagon and a long dress.",
+    "assesses": [
+      "LA-LEX-C125-THINGS125-03",
+      "LA-LEX-C125-THINGS125-04",
+      "LA-LEX-C125-THINGS125-05"
+    ]
+  }
+}

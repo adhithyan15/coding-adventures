@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 110,
+  "sourceHash": "fnv1a64:af6e0fe846876ecd",
+  "lessonIds": [
+    "LA-C110-facultas",
+    "LA-C110-ars",
+    "LA-C110-oportet",
+    "LA-C110-licet",
+    "LA-C110-nolo"
+  ],
+  "tex": "latin/book/chapters/ch110-chance-skill-it-is-necessary-it-is-allowed-to-not-want.tex"
+}

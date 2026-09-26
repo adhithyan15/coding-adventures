@@ -1,0 +1,19 @@
+{
+  "language": "latin",
+  "chapter": 152,
+  "sourceHash": "fnv1a64:c855279b7a7d8f41",
+  "lessonIds": [
+    "LA-C152-validus",
+    "LA-C152-infirmus",
+    "LA-C152-solus",
+    "LA-C152-gelidus",
+    "LA-C152-serenus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "latin/narration/ch152.txt",
+  "json": "latin/narration/ch152.json",
+  "textHash": "fnv1a64:ba4884f962cc6c25",
+  "jsonHash": "fnv1a64:80d69bc831296f86",
+  "findings": []
+}

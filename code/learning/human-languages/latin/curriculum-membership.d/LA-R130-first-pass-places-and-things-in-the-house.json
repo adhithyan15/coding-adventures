@@ -1,0 +1,11 @@
+{
+  "id": "LA-R130-first-pass-places-and-things-in-the-house",
+  "pathSegment": "LA-PATH-130-THINGS130",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-130-THINGS130",
+      "order": 5
+    }
+  ]
+}

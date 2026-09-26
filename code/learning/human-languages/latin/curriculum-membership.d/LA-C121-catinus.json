@@ -1,0 +1,11 @@
+{
+  "id": "LA-C121-catinus",
+  "pathSegment": "LA-PATH-121-THINGS121",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "LA-EXT-121-THINGS121",
+      "order": 3
+    }
+  ]
+}

@@ -22,7 +22,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [LA-LEX-C50-POINT-02, LA-LEX-C50-POINT-01, LA-LEX-C49-FRAME-02, LA-LEX-C46-NIGHT-02, LA-ETYMON-DICO-02, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-02]
+  knowledge: [LA-LEX-C50-POINT-02, LA-LEX-C50-POINT-01, LA-LEX-C49-FRAME-02, LA-LEX-C46-NIGHT-02, LA-ETYMON-DICO-02, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
@@ -33,7 +33,7 @@ reviews_of: [LA-C50-hic, LA-C49-volo, LA-C46-umbra, LA-C37-dico, LA-C15-weather-
 # iste — the middle point, and the one Latin used to sneer with
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C50-POINT-01, LA-LEX-C49-FRAME-02, LA-LEX-C46-NIGHT-02, LA-ETYMON-DICO-02, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C50-POINT-01, LA-LEX-C49-FRAME-02, LA-LEX-C46-NIGHT-02, LA-ETYMON-DICO-02, LA-LEX-WEATHER-VERBS-02, LA-LEX-UNDECIM-VIGINTI-01] -->
 
 [PAUSE 2s] Six recalls before the new word, at growing distances. They are not
 decoration: each one is the retrieval window this book measures, and each names

@@ -1,0 +1,19 @@
+{
+  "chapter": 115,
+  "title": "To here, To there, Theatre, Bath, Military camp",
+  "label": "ch:la-to-here-to-there-theatre-bath-military-camp",
+  "canDo": "I can say to here, to there, a theatre, a bath and a military camp.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "LA-C115-castra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 115: i can say to here, to there, a theatre, a bath and a military camp.",
+    "assesses": [
+      "LA-LEX-C115-LOC115-03",
+      "LA-LEX-C115-LOC115-04",
+      "LA-LEX-C115-LOC115-05"
+    ]
+  }
+}

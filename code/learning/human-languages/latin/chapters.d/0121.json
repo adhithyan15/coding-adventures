@@ -1,0 +1,19 @@
+{
+  "chapter": 121,
+  "title": "Spoon, Cooking pot, Dish, Bowl, Candle",
+  "label": "ch:la-spoon-cooking-pot-dish-bowl-candle",
+  "canDo": "I can say a spoon, a cooking pot, a dish, a bowl and a candle.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "LA-C121-candela",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 121: i can say a spoon, a cooking pot, a dish, a bowl and a candle.",
+    "assesses": [
+      "LA-LEX-C121-THINGS121-03",
+      "LA-LEX-C121-THINGS121-04",
+      "LA-LEX-C121-THINGS121-05"
+    ]
+  }
+}

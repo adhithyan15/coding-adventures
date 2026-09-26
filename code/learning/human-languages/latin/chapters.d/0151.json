@@ -1,0 +1,19 @@
+{
+  "chapter": 151,
+  "title": "Proud, Kind, Cruel, Ugly, Beautiful",
+  "label": "ch:la-proud-kind-cruel-ugly-beautiful",
+  "canDo": "I can say proud, kind, cruel, ugly and beautiful.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "LA-C151-formosus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 151: i can say proud, kind, cruel, ugly and beautiful.",
+    "assesses": [
+      "LA-LEX-C151-QUAL151-03",
+      "LA-LEX-C151-QUAL151-04",
+      "LA-LEX-C151-QUAL151-05"
+    ]
+  }
+}

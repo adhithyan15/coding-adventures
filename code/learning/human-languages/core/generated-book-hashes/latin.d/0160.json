@@ -1,0 +1,15 @@
+{
+  "language": "latin",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:d38cf9dd960df954",
+  "lessonIds": [
+    "LA-C160-numero",
+    "LA-C160-deleo",
+    "LA-C160-discedo",
+    "LA-C160-advenio",
+    "LA-C160-habito",
+    "LA-R160-first-pass-describing-words-and-verbs",
+    "LA-R160-second-pass-verbs"
+  ],
+  "tex": "latin/book/chapters/ch160-to-count-to-destroy-to-go-away-to-arrive-to-live.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "LA-C131-aquila",
+  "pathSegment": "LA-PATH-131-THINGS131",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "LA-EXT-131-THINGS131",
+      "order": 1
+    }
+  ]
+}

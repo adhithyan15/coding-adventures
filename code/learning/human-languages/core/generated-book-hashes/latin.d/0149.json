@@ -1,0 +1,13 @@
+{
+  "language": "latin",
+  "chapter": 149,
+  "sourceHash": "fnv1a64:12d41129c3ef29a7",
+  "lessonIds": [
+    "LA-C149-fuscus",
+    "LA-C149-canus",
+    "LA-C149-aureus",
+    "LA-C149-argenteus",
+    "LA-C149-prudens"
+  ],
+  "tex": "latin/book/chapters/ch149-dark-grey-golden-silver-wise.tex"
+}

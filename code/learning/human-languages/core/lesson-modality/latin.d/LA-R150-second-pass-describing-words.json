@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "LA-R150-second-pass-describing-words",
+    "language": "latin",
+    "chapter": 150,
+    "sequence": 6360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c17a8e1f31e3a672"
+  },
+  "findings": []
+}

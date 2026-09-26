@@ -1,0 +1,11 @@
+{
+  "id": "LA-R150-first-pass-people-and-describing-words",
+  "pathSegment": "LA-PATH-150-QUAL150",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "LA-EXT-150-QUAL150",
+      "order": 5
+    }
+  ]
+}

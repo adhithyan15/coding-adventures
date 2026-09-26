@@ -1,0 +1,8 @@
+{
+  "id": "LA-EXT-139-THINGS139",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a chair with a back, a bench, a carpet, a torch and a lantern.",
+  "prerequisites": []
+}
