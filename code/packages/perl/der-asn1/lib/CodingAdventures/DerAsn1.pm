@@ -9,7 +9,7 @@ use Math::BigInt;
 use Scalar::Util qw(blessed refaddr);
 use CodingAdventures::DerTlv ();
 
-our $VERSION = 'v0.1.0';
+our $VERSION = '0.1.0';
 our @EXPORT_OK = qw(default_limits decode_boolean decode_integer decode_bit_string
     decode_octet_string decode_implicit_octet_string decode_ia5_string
     decode_implicit_ia5_string decode_null decode_object_identifier
