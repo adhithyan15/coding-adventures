@@ -9,9 +9,14 @@ import { loadLessons } from "../src/loader.js";
 // Numbered chapter `.tex` only: generatedBookOutputs also carries the generated
 // hashes JSON and canonical reference appendices, neither of which has a chapter
 // capability opening.
-const generated = [...generatedBookOutputs().entries()]
-  .filter(([path]) => /\/ch\d+[^/]*\.tex$/.test(path))
-  .map(([, tex]) => tex);
+//
+// Generated ONCE, at import. Rendering every book is the expensive part of this file
+// and grows with the corpus; the first test below used to render them all a second
+// time inside its own 30s budget, which is where it timed out under CI load.
+const chapterOutputs = [...generatedBookOutputs().entries()].filter(([path]) =>
+  /\/ch\d+[^/]*\.tex$/.test(path),
+);
+const generated = chapterOutputs.map(([, tex]) => tex);
 
 describe("the chapter opening", () => {
   it("is present on every generated chapter that has a capability", () => {
@@ -33,8 +38,7 @@ describe("the chapter opening", () => {
           .find((t) => t.language === language)
           ?.chapters.find((c) => c.chapter === chapter)?.canDo,
       );
-    const withoutOpening = [...generatedBookOutputs().entries()]
-      .filter(([path]) => /\/ch\d+[^/]*\.tex$/.test(path))
+    const withoutOpening = chapterOutputs
       .filter(([, tex]) => !tex.includes("\\begin{chapteropening}"))
       .map(([path]) => path);
 
