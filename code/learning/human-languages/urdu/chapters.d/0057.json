@@ -1,0 +1,19 @@
+{
+  "chapter": 57,
+  "title": "Orange, Lemon, Breakfast, Coffee, House",
+  "label": "ch:ur-orange-lemon-breakfast-coffee-house",
+  "canDo": "I can say an orange, a lemon, breakfast, coffee and a house, home.",
+  "spineNodes": [
+    "SPINE-COURTESY-THANK"
+  ],
+  "payoff": {
+    "lesson": "UR-C57-ghar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 57: i can say an orange, a lemon, breakfast, coffee and a house, home.",
+    "assesses": [
+      "UR-LEX-C57-FOOD57-03",
+      "UR-LEX-C57-FOOD57-04",
+      "UR-LEX-C57-FOOD57-05"
+    ]
+  }
+}

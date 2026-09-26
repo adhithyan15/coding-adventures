@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:c678bb8ce14872fd",
+  "lessonIds": [
+    "UR-C86-sattar",
+    "UR-C86-assi",
+    "UR-C86-navve",
+    "UR-C86-dunya",
+    "UR-C86-rang"
+  ],
+  "tex": "urdu/book/chapters/ch86-seventy-eighty-ninety-world-colour.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C56-panir",
+  "pathSegment": "UR-PATH-56-FOOD56",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-56-FOOD56",
+      "order": 2
+    }
+  ]
+}

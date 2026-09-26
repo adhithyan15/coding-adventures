@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 38,
+  "sourceHash": "fnv1a64:3051738adc09d8e6",
+  "lessonIds": [
+    "UR-C38-hath",
+    "UR-C38-sar",
+    "UR-C38-bal",
+    "UR-C38-dant",
+    "UR-C38-gala"
+  ],
+  "tex": "urdu/book/chapters/ch38-hand-head-hair-tooth-throat.tex"
+}

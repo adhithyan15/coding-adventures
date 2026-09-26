@@ -1,9 +1,10 @@
 {
   "language": "urdu",
   "chapter": 3,
-  "sourceHash": "fnv1a64:70980ce5dbe93b6f",
+  "sourceHash": "fnv1a64:a93aa87643d914d2",
   "lessonIds": [
     "UR-C03-aap-tum-tu",
+    "UR-C03-aap-tum-tu-more",
     "UR-C03-kya",
     "UR-W03-lam",
     "UR-C03-aap-ka-naam-kya-hai",

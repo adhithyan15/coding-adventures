@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C38-sar",
+    "language": "urdu",
+    "chapter": 38,
+    "sequence": 1940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c122e8492ea0e8fb"
+  },
+  "findings": []
+}

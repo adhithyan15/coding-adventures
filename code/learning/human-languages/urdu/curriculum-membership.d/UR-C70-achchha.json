@@ -1,0 +1,11 @@
+{
+  "id": "UR-C70-achchha",
+  "pathSegment": "UR-PATH-70-ADJ70",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-70-ADJ70",
+      "order": 2
+    }
+  ]
+}

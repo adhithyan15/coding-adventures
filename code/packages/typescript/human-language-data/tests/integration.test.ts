@@ -281,7 +281,12 @@ describe("real curriculum", () => {
       // 33 -> 37: HL-C443, one lesson per letter the reader had read in words and
       // never written -- sixteen letters in chapters 34-37, each from its word,
       // which also reaches the خ and د of خدا حافظ.
-      26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37]);
+      26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
+      // 37 -> 87: the pre-A1 vocabulary tranche, fifty chapters of five words
+      // (the body, family, thirty-seven verbs, food, home, school, nature,
+      // animals, describing words, time, place, the town, clothes and the
+      // numbers from eleven to ninety), closed by four reviews.
+      ...Array.from({ length: 50 }, (_, i) => 38 + i)]);
     expect(
       books.books
         .find((book) => book.language === "russian")

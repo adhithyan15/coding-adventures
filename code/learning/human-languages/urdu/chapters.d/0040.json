@@ -1,0 +1,19 @@
+{
+  "chapter": 40,
+  "title": "Face, Blood, Leg, Knee, Fever",
+  "label": "ch:ur-face-blood-leg-knee-fever",
+  "canDo": "I can say the face, blood, a leg, a knee and a fever.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "UR-C40-bukhar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 40: i can say the face, blood, a leg, a knee and a fever.",
+    "assesses": [
+      "UR-LEX-C40-BODY40-03",
+      "UR-LEX-C40-BODY40-04",
+      "UR-LEX-C40-BODY40-05"
+    ]
+  }
+}

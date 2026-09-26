@@ -1,0 +1,11 @@
+{
+  "id": "UR-C42-abbu",
+  "pathSegment": "UR-PATH-42-HEALTH42",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "UR-EXT-42-HEALTH42",
+      "order": 4
+    }
+  ]
+}

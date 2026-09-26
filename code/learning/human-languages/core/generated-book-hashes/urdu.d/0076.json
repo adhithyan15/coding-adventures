@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 76,
+  "sourceHash": "fnv1a64:d6b721a7835150f2",
+  "lessonIds": [
+    "UR-C76-minat",
+    "UR-C76-aj",
+    "UR-C76-kal",
+    "UR-C76-abhi",
+    "UR-C76-phir"
+  ],
+  "tex": "urdu/book/chapters/ch76-minute-today-yesterday-right-now-then.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C87-safar",
+  "pathSegment": "UR-PATH-87-WORLD87",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-87-WORLD87",
+      "order": 1
+    }
+  ]
+}

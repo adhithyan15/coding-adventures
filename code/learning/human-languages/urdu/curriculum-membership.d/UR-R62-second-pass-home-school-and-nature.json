@@ -1,0 +1,11 @@
+{
+  "id": "UR-R62-second-pass-home-school-and-nature",
+  "pathSegment": "UR-PATH-62-SCHOOL62",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "UR-EXT-62-SCHOOL62",
+      "order": 6
+    }
+  ]
+}

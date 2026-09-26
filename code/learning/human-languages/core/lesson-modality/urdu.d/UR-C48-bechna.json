@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C48-bechna",
+    "language": "urdu",
+    "chapter": 48,
+    "sequence": 2450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e34bcd0ead7fdbf2"
+  },
+  "findings": []
+}

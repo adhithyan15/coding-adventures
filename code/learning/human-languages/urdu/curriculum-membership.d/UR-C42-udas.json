@@ -1,0 +1,11 @@
+{
+  "id": "UR-C42-udas",
+  "pathSegment": "UR-PATH-42-HEALTH42",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-42-HEALTH42",
+      "order": 2
+    }
+  ]
+}

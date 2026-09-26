@@ -1,0 +1,11 @@
+{
+  "id": "UR-C40-tang",
+  "pathSegment": "UR-PATH-40-BODY40",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-40-BODY40",
+      "order": 2
+    }
+  ]
+}

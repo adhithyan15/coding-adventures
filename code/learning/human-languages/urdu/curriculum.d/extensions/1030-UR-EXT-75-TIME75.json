@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-75-TIME75",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say evening, a week, a month, a year and an hour.",
+  "prerequisites": []
+}

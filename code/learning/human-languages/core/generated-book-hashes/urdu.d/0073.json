@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 73,
+  "sourceHash": "fnv1a64:4c35a233faed5b09",
+  "lessonIds": [
+    "UR-C73-mota",
+    "UR-C73-patla",
+    "UR-C73-halka",
+    "UR-C73-bhari",
+    "UR-C73-zaruri"
+  ],
+  "tex": "urdu/book/chapters/ch73-fat-thin-light-heavy-important.tex"
+}

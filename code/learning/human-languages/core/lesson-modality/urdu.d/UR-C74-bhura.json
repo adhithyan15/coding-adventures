@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C74-bhura",
+    "language": "urdu",
+    "chapter": 74,
+    "sequence": 3770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90291b2cee5a551c"
+  },
+  "findings": []
+}

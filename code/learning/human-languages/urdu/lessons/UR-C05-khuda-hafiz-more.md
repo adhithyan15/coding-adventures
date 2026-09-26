@@ -6,6 +6,7 @@ sequence: 193
 chapter: 5
 type: grammar
 headword: "(خدا حافظ, continued)"
+romanization: "(khudā hāfiz, continued)"
 gloss: "Grammar Lens — a whole social move"
 concept_tag: UR-C05-KHUDA-HAFIZ-MORE
 prerequisites: [UR-C05-khuda-hafiz]

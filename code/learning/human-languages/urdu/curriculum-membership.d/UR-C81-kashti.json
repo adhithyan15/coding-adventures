@@ -1,0 +1,11 @@
+{
+  "id": "UR-C81-kashti",
+  "pathSegment": "UR-PATH-81-TOWN81",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-81-TOWN81",
+      "order": 3
+    }
+  ]
+}

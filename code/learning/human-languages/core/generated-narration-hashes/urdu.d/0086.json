@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 86,
+  "sourceHash": "fnv1a64:433d639ae2d77e10",
+  "lessonIds": [
+    "UR-C86-sattar",
+    "UR-C86-assi",
+    "UR-C86-navve",
+    "UR-C86-dunya",
+    "UR-C86-rang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch86.txt",
+  "json": "urdu/narration/ch86.json",
+  "textHash": "fnv1a64:13e5c1d74a59696b",
+  "jsonHash": "fnv1a64:b4773141c91a3495",
+  "findings": []
+}

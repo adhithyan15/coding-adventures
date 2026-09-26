@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C44-bachcha",
+    "language": "urdu",
+    "chapter": 44,
+    "sequence": 2270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9b4f7722df81982"
+  },
+  "findings": []
+}

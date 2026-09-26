@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 45,
+  "sourceHash": "fnv1a64:343ae57c2f0ca639",
+  "lessonIds": [
+    "UR-C45-larka",
+    "UR-C45-larki",
+    "UR-C45-admi",
+    "UR-C45-parosi",
+    "UR-C45-mehman"
+  ],
+  "tex": "urdu/book/chapters/ch45-boy-girl-man-neighbour-guest.tex"
+}

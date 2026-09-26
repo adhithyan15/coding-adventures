@@ -1,0 +1,19 @@
+{
+  "chapter": 68,
+  "title": "Goat, Sheep, Bird, Mouse, Lion",
+  "label": "ch:ur-goat-sheep-bird-mouse-lion",
+  "canDo": "I can say a goat, a sheep, a bird, a mouse and a lion, a tiger.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C68-sher",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 68: i can say a goat, a sheep, a bird, a mouse and a lion, a tiger.",
+    "assesses": [
+      "UR-LEX-C68-ANIMALS68-03",
+      "UR-LEX-C68-ANIMALS68-04",
+      "UR-LEX-C68-ANIMALS68-05"
+    ]
+  }
+}

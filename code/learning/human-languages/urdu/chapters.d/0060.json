@@ -1,0 +1,19 @@
+{
+  "chapter": 60,
+  "title": "Key, Cup, Spoon, Knife, Fork",
+  "label": "ch:ur-key-cup-spoon-knife-fork",
+  "canDo": "I can say a key, a cup, a spoon, a knife and a fork.",
+  "spineNodes": [
+    "SPINE-MEET-GREET"
+  ],
+  "payoff": {
+    "lesson": "UR-C60-kata",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 60: i can say a key, a cup, a spoon, a knife and a fork.",
+    "assesses": [
+      "UR-LEX-C60-HOME60-03",
+      "UR-LEX-C60-HOME60-04",
+      "UR-LEX-C60-HOME60-05"
+    ]
+  }
+}

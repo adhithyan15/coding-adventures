@@ -1,23 +1,24 @@
 {
   "language": "urdu",
   "chapter": 4,
-  "sourceHash": "fnv1a64:5b82cd2eda58c56a",
+  "sourceHash": "fnv1a64:c91a0fd1c72e8550",
   "lessonIds": [
     "UR-C04-kaise-kaisi",
     "UR-W04-joining",
     "UR-C04-aap-kaise-hain",
     "UR-C04-main-hun",
+    "UR-C04-main-hun-more",
     "UR-W04-kaf",
     "UR-C04-thik",
     "UR-C04-main-thik-hun",
     "UR-W04-nun",
     "UR-C04-practice"
   ],
-  "voiceLessons": 6,
+  "voiceLessons": 7,
   "drivablePrefix": 1,
   "text": "urdu/narration/ch04.txt",
   "json": "urdu/narration/ch04.json",
-  "textHash": "fnv1a64:926f199d78ef2a63",
-  "jsonHash": "fnv1a64:a9c31ceb23f8c6e1",
+  "textHash": "fnv1a64:fc9c17fe4fe191f8",
+  "jsonHash": "fnv1a64:b317b2d4194cf7ba",
   "findings": []
 }

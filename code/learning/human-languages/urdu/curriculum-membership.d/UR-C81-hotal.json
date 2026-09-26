@@ -1,0 +1,11 @@
+{
+  "id": "UR-C81-hotal",
+  "pathSegment": "UR-PATH-81-TOWN81",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "UR-EXT-81-TOWN81",
+      "order": 1
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "When You Are Lost",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e1376b07810debca",
+  "sourceHash": "fnv1a64:f2aff0d125ee2147",
   "lessons": [
     {
       "id": "UR-C22-kahna",
@@ -480,7 +480,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bb0c1b9f5c94d30",
+      "sourceHash": "fnv1a64:a8d12afdcf93e22c",
       "notice": null,
       "blocks": [
         {

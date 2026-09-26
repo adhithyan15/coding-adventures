@@ -1,0 +1,8 @@
+{
+  "id": "UR-EXT-41-HEALTH41",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a hospital, ill, sick, pain, medicine and thirst.",
+  "prerequisites": []
+}

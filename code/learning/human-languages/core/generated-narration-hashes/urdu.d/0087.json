@@ -1,0 +1,21 @@
+{
+  "language": "urdu",
+  "chapter": 87,
+  "sourceHash": "fnv1a64:77ae55a80622ece7",
+  "lessonIds": [
+    "UR-C87-git",
+    "UR-C87-safar",
+    "UR-C87-chhutti",
+    "UR-C87-pyar",
+    "UR-C87-mausiqi",
+    "UR-R87-first-pass-animals-describing-words-and-time",
+    "UR-R87-second-pass-places-the-town-clothes-and-numbers"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "urdu/narration/ch87.txt",
+  "json": "urdu/narration/ch87.json",
+  "textHash": "fnv1a64:448351f8beb9ddb7",
+  "jsonHash": "fnv1a64:9ade448b46400666",
+  "findings": []
+}

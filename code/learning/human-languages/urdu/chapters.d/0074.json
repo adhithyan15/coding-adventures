@@ -1,0 +1,19 @@
+{
+  "chapter": 74,
+  "title": "Green, Yellow, Brown, Day, Night",
+  "label": "ch:ur-green-yellow-brown-day-night",
+  "canDo": "I can say green, yellow, brown, a day and night.",
+  "spineNodes": [
+    "SPINE-RESPOND-BASIC"
+  ],
+  "payoff": {
+    "lesson": "UR-C74-rat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 74: i can say green, yellow, brown, a day and night.",
+    "assesses": [
+      "UR-LEX-C74-ADJ74-03",
+      "UR-LEX-C74-ADJ74-04",
+      "UR-LEX-C74-ADJ74-05"
+    ]
+  }
+}

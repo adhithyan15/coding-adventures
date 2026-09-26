@@ -1,0 +1,13 @@
+{
+  "language": "urdu",
+  "chapter": 64,
+  "sourceHash": "fnv1a64:e799a3beb7eb97f8",
+  "lessonIds": [
+    "UR-C64-patta",
+    "UR-C64-pahar",
+    "UR-C64-jangal",
+    "UR-C64-darya",
+    "UR-C64-jhil"
+  ],
+  "tex": "urdu/book/chapters/ch64-leaf-mountain-forest-river-lake.tex"
+}

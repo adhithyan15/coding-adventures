@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C86-navve",
+    "language": "urdu",
+    "chapter": 86,
+    "sequence": 4370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d45666ba31f87c5"
+  },
+  "findings": []
+}

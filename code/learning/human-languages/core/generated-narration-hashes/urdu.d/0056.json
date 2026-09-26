@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 56,
+  "sourceHash": "fnv1a64:12a98f0bcb5c4687",
+  "lessonIds": [
+    "UR-C56-mirch",
+    "UR-C56-makkhan",
+    "UR-C56-panir",
+    "UR-C56-shahd",
+    "UR-C56-angur"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch56.txt",
+  "json": "urdu/narration/ch56.json",
+  "textHash": "fnv1a64:7ed7ca7f68c95bae",
+  "jsonHash": "fnv1a64:67e1c9fc25c739a2",
+  "findings": []
+}

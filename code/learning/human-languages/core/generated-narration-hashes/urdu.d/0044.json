@@ -1,0 +1,19 @@
+{
+  "language": "urdu",
+  "chapter": 44,
+  "sourceHash": "fnv1a64:b4c46f445d517c92",
+  "lessonIds": [
+    "UR-C44-nana",
+    "UR-C44-nani",
+    "UR-C44-shauhar",
+    "UR-C44-bivi",
+    "UR-C44-bachcha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "urdu/narration/ch44.txt",
+  "json": "urdu/narration/ch44.json",
+  "textHash": "fnv1a64:6fd91c763112d881",
+  "jsonHash": "fnv1a64:132aa656720a9a58",
+  "findings": []
+}

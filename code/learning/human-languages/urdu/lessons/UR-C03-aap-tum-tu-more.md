@@ -6,6 +6,7 @@ sequence: 65
 chapter: 3
 type: etymology
 headword: "(آپ / تم / تو, continued)"
+romanization: "(āp / tum / tū, continued)"
 gloss: "The word, taken apart"
 concept_tag: UR-C03-AAP-TUM-TU-MORE
 prerequisites: [UR-C03-aap-tum-tu]

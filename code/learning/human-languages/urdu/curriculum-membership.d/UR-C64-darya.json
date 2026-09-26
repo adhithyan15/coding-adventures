@@ -1,0 +1,11 @@
+{
+  "id": "UR-C64-darya",
+  "pathSegment": "UR-PATH-64-NATURE64",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-64-NATURE64",
+      "order": 3
+    }
+  ]
+}

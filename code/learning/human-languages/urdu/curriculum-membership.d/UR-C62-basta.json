@@ -1,0 +1,11 @@
+{
+  "id": "UR-C62-basta",
+  "pathSegment": "UR-PATH-62-SCHOOL62",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "UR-EXT-62-SCHOOL62",
+      "order": 0
+    }
+  ]
+}

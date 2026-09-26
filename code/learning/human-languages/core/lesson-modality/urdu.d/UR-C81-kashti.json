@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C81-kashti",
+    "language": "urdu",
+    "chapter": 81,
+    "sequence": 4130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51c0567b94f75d8a"
+  },
+  "findings": []
+}

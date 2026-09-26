@@ -6,6 +6,7 @@ sequence: 133
 chapter: 4
 type: grammar
 headword: "(میں ... ہوں, continued)"
+romanization: "(maiṅ ... hūṅ, continued)"
 gloss: "the verb closes the frame"
 concept_tag: UR-C04-MAIN-HUN-MORE
 prerequisites: [UR-C04-main-hun]

@@ -1,0 +1,11 @@
+{
+  "id": "UR-C44-shauhar",
+  "pathSegment": "UR-PATH-44-FAMILY44",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "UR-EXT-44-FAMILY44",
+      "order": 2
+    }
+  ]
+}

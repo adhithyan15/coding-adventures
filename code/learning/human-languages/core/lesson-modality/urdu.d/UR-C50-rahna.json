@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "UR-C50-rahna",
+    "language": "urdu",
+    "chapter": 50,
+    "sequence": 2560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:86cf5722256f37dc"
+  },
+  "findings": []
+}

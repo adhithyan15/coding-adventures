@@ -1,0 +1,11 @@
+{
+  "id": "UR-C78-andar",
+  "pathSegment": "UR-PATH-78-TIME78",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "UR-EXT-78-TIME78",
+      "order": 3
+    }
+  ]
+}
