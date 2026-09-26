@@ -447,15 +447,6 @@ export const DOC_SHARD_PLANS: readonly DocShardPlan[] = [
     entryShape: "bullet",
   },
   {
-    // 104 top-level bullets written straight under the title; the last 8
-    // commits each insert one at line 3 or 5. 37 touches. `_meta.md` is just
-    // the `# Changelog` title.
-    path: "code/programs/mosaic/venture-browser/CHANGELOG.md",
-    headingLevel: 2,
-    newestFirst: true,
-    entryShape: "bullet",
-  },
-  {
     // 19 `###` entries under `## Unreleased`; the last 8 commits each insert
     // a `###` entry at line 5. 17 touches.
     path: "code/programs/mosaic/engram-app/CHANGELOG.md",

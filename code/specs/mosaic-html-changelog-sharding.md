@@ -2,7 +2,7 @@
 
 ## Goal
 
-Move eleven Mosaic and HTML package changelogs into `CHANGELOG.d/`, using the
+Move ten Mosaic and HTML package changelogs into `CHANGELOG.d/`, using the
 mechanism from [`lang-aot-changelog-sharding.md`](lang-aot-changelog-sharding.md),
 the bullet entry shape from
 [`doc-shard-bullet-entries.md`](doc-shard-bullet-entries.md), and the batch
@@ -28,13 +28,13 @@ Everything above the first entry becomes `_meta.md`. A mode that would leave
 the live insertion point inside `_meta.md`, or inside one large shard, does not
 fix the conflict and was rejected.
 
-`newestFirst` is `true` for all eleven, from direct evidence: the commits
+`newestFirst` is `true` for all ten, from direct evidence: the commits
 measured below insert at the top of the document, never at the bottom.
 
 "Touches" is `git log --since="21 days ago" --oneline -- <path> | wc -l` on
 2026-09-26.
 
-## The eleven, measured
+## The ten, measured
 
 | document | mode | entries | recent inserts | touches | lines |
 |---|---|---:|---|---:|---:|
@@ -46,12 +46,16 @@ measured below insert at the top of the document, never at the bottom.
 | `mosaic-emit-html` | bullet | 84 | 6/8 bullets at line 5 | 18 | 590 |
 | `mosaic-app-bindings` | heading 3 | 19 | 8/8 `###` at line 5 | 10 | 642 |
 | `html-parser` | bullet | 196 | 8/8 bullets at line 8 | 15 | 674 |
-| `programs/mosaic/venture-browser` | bullet | 104 | 8/8 bullets at line 3 or 5 | 37 | 364 |
 | `programs/mosaic/engram-app` | heading 3 | 19 | 8/8 `###` at line 5 | 17 | 1,224 |
 | `programs/mosaic/journal-app` | bullet | 20 | 8/8 bullets at line 5 | 16 | 104 |
 
 Rows are under `code/packages/rust/` unless a path says
 otherwise.
+
+`programs/mosaic/venture-browser` was measured for this batch (bullet, 104
+entries, 37 touches) and held back: any change in that package runs its live
+Flutter test, which currently fails on a toolbar that overflows the test
+window. It moves with the fix for that.
 
 ### Shape notes
 
@@ -88,10 +92,10 @@ html-tree-builder are the next candidates.
 
 Every committed reference was searched by `<package>/CHANGELOG` and by
 `CHANGELOG` inside each package, which covers both the short form and the full
-path. For the eleven migrated documents, the only reader is a prose pointer in
+path. For the ten migrated documents, the only reader is a prose pointer in
 `mosaic-emit-flutter/README.md` ("See `CHANGELOG.md` for the full feature
 matrix"). It now points at `CHANGELOG.d/`. No `BUILD`, `Cargo.toml`, workflow,
-test or script reads any of the eleven files.
+test or script reads any of the ten files.
 
 ## What each migration touches
 

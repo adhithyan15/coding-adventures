@@ -119,7 +119,6 @@ jobs:
               'code/packages/rust/mosaic-emit-html/CHANGELOG.d/*.md'
               'code/packages/rust/mosaic-app-bindings/CHANGELOG.d/*.md'
               'code/packages/rust/html-parser/CHANGELOG.d/*.md'
-              'code/programs/mosaic/venture-browser/CHANGELOG.d/*.md'
               'code/programs/mosaic/engram-app/CHANGELOG.d/*.md'
               'code/programs/mosaic/journal-app/CHANGELOG.d/*.md'
               'CHANGELOG.d/*.md'
@@ -210,7 +209,6 @@ jobs:
             code/packages/rust/mosaic-emit-html/CHANGELOG.md \
             code/packages/rust/mosaic-app-bindings/CHANGELOG.md \
             code/packages/rust/html-parser/CHANGELOG.md \
-            code/programs/mosaic/venture-browser/CHANGELOG.md \
             code/programs/mosaic/engram-app/CHANGELOG.md \
             code/programs/mosaic/journal-app/CHANGELOG.md \
             CHANGELOG.md)
