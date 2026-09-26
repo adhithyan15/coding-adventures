@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:d5d07400a8409d73",
+  "lessonIds": [
+    "HI-C150-kohni",
+    "HI-C150-kalai",
+    "HI-C150-angutha",
+    "HI-C150-nakhun",
+    "HI-C150-gal"
+  ],
+  "tex": "hindi/book/chapters/ch150-elbow-wrist-thumb-fingernail-cheek.tex"
+}

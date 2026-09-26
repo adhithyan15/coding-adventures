@@ -1,0 +1,19 @@
+{
+  "chapter": 145,
+  "title": "Storm, Fog, Snow, Wind, Lion",
+  "label": "ch:hi-storm-fog-snow-wind-lion",
+  "canDo": "I can say a storm, fog, snow, wind and a lion.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C145-ser",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 145: i can say a storm, fog, snow, wind and a lion.",
+    "assesses": [
+      "HI-LEX-C145-THINGS145-03",
+      "HI-LEX-C145-THINGS145-04",
+      "HI-LEX-C145-THINGS145-05"
+    ]
+  }
+}

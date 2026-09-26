@@ -1,0 +1,19 @@
+{
+  "chapter": 161,
+  "title": "To cook, To cut, To break, To fall, To fly",
+  "label": "ch:hi-to-cook-to-cut-to-break-to-fall-to-fly",
+  "canDo": "I can say to cook, to cut, to break, to fall and to fly.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C161-urna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 161: i can say to cook, to cut, to break, to fall and to fly.",
+    "assesses": [
+      "HI-LEX-C161-ACT161-03",
+      "HI-LEX-C161-ACT161-04",
+      "HI-LEX-C161-ACT161-05"
+    ]
+  }
+}

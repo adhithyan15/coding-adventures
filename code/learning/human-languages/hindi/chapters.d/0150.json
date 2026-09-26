@@ -1,0 +1,19 @@
+{
+  "chapter": 150,
+  "title": "Elbow, Wrist, Thumb, Fingernail, Cheek",
+  "label": "ch:hi-elbow-wrist-thumb-fingernail-cheek",
+  "canDo": "I can say an elbow, a wrist, a thumb, a fingernail and a cheek.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C150-gal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 150: i can say an elbow, a wrist, a thumb, a fingernail and a cheek.",
+    "assesses": [
+      "HI-LEX-C150-THINGS150-03",
+      "HI-LEX-C150-THINGS150-04",
+      "HI-LEX-C150-THINGS150-05"
+    ]
+  }
+}

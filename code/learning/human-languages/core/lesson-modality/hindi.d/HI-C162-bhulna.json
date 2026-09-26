@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C162-bhulna",
+    "language": "hindi",
+    "chapter": 162,
+    "sequence": 7640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3daa5ee7228aa7b1"
+  },
+  "findings": []
+}

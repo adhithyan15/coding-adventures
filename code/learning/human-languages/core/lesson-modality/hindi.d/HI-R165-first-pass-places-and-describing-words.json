@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R165-first-pass-places-and-describing-words",
+    "language": "hindi",
+    "chapter": 165,
+    "sequence": 7800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:349b62396f91d86c"
+  },
+  "findings": []
+}

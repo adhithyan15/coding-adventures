@@ -1,0 +1,11 @@
+{
+  "id": "HI-R138-first-pass-the-house-and-things-you-use",
+  "pathSegment": "HI-PATH-138-THINGS138",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-138-THINGS138",
+      "order": 5
+    }
+  ]
+}

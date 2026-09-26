@@ -4,6 +4,14 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+### Fixed — Qt startup failures stay visible and recoverable (#15818)
+
+The generated Qt app now opens on a system-themed loading surface before its
+Rust engine and saved workspace initialize. Runtime and initial-props failures
+remain in the window with diagnostic text, explicit saved-data reassurance, and
+a **Try again** action that discards any partial host and starts fresh. The Linux
+acceptance lane forces the failure and drives the emitted retry control.
+
 - `[app]` names the installed app **Trestle** with the identity
   `dev.codingadventures.trestle`, used by the generated iOS / iPadOS project
   (UI89 §2.2).

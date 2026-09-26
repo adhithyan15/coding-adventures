@@ -1,0 +1,11 @@
+{
+  "id": "HI-C135-moza",
+  "pathSegment": "HI-PATH-135-THINGS135",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-135-THINGS135",
+      "order": 2
+    }
+  ]
+}

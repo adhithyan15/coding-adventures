@@ -1,0 +1,19 @@
+{
+  "chapter": 149,
+  "title": "Mosquito, Ant, Frog, Tortoise, Mouse",
+  "label": "ch:hi-mosquito-ant-frog-tortoise-mouse",
+  "canDo": "I can say a mosquito, an ant, a frog, a tortoise and a mouse.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C149-cuha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 149: i can say a mosquito, an ant, a frog, a tortoise and a mouse.",
+    "assesses": [
+      "HI-LEX-C149-THINGS149-03",
+      "HI-LEX-C149-THINGS149-04",
+      "HI-LEX-C149-THINGS149-05"
+    ]
+  }
+}

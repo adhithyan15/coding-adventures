@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-148-THINGS148",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a pigeon, a parrot, an owl, a butterfly and a fly.",
+  "prerequisites": []
+}

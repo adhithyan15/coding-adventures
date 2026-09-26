@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C147-kaua",
+    "language": "hindi",
+    "chapter": 147,
+    "sequence": 6790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:007e81d4a679c9c4"
+  },
+  "findings": []
+}

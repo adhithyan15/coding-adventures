@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C160-lana",
+    "language": "hindi",
+    "chapter": 160,
+    "sequence": 7510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3c12124a4b5e311"
+  },
+  "findings": []
+}

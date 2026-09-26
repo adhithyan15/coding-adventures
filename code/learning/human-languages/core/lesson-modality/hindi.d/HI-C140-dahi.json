@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C140-dahi",
+    "language": "hindi",
+    "chapter": 140,
+    "sequence": 6440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6f0a35b7b21f6b89"
+  },
+  "findings": []
+}

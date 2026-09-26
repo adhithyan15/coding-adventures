@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C164-pahucna",
+    "language": "hindi",
+    "chapter": 164,
+    "sequence": 7730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc1466e1d51df655"
+  },
+  "findings": []
+}

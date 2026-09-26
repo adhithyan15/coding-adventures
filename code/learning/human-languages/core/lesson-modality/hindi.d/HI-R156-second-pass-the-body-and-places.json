@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R156-second-pass-the-body-and-places",
+    "language": "hindi",
+    "chapter": 156,
+    "sequence": 7310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0181dd95e4eb9e0a"
+  },
+  "findings": []
+}

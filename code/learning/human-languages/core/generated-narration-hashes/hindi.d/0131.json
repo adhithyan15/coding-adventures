@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:de74aafbefe2ead0",
+  "lessonIds": [
+    "HI-C131-tauliya",
+    "HI-C131-jharu",
+    "HI-C131-dibba",
+    "HI-C131-thaila",
+    "HI-C131-mombatti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch131.txt",
+  "json": "hindi/narration/ch131.json",
+  "textHash": "fnv1a64:f39172a2f25c4027",
+  "jsonHash": "fnv1a64:0a2ad66bef018768",
+  "findings": []
+}

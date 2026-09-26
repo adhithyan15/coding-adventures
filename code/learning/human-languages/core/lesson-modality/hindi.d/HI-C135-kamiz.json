@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C135-kamiz",
+    "language": "hindi",
+    "chapter": 135,
+    "sequence": 6130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63362629258b5a50"
+  },
+  "findings": []
+}

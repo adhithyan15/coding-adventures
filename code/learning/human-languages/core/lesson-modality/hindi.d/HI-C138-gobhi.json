@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C138-gobhi",
+    "language": "hindi",
+    "chapter": 138,
+    "sequence": 6290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c07ed71c00781856"
+  },
+  "findings": []
+}

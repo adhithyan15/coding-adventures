@@ -19,7 +19,7 @@ etymology_hook: "कुत्ता (kuttā, 'dog') is of genuinely UNCERTAIN or
 duration:
   max_seconds: 198
 requires:
-  knowledge: [HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-02, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04]
+  knowledge: [HI-CONCEPT-C22-GYARAH-BEES-01, HI-CONCEPT-C22-GYARAH-BEES-03, HI-CONCEPT-C22-GYARAH-BEES-04]
 introduces:
   knowledge: [HI-CONCEPT-C23-KUTTA-BILLI-01]
 practises:

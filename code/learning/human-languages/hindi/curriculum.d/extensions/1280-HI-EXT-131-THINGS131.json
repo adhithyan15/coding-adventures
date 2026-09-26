@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-131-THINGS131",
+  "stage": "pre-A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a towel, a broom, a box, a bag and a candle.",
+  "prerequisites": []
+}

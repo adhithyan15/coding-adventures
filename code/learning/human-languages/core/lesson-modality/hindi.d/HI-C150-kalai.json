@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C150-kalai",
+    "language": "hindi",
+    "chapter": 150,
+    "sequence": 6960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f5d3f364c4ef50c"
+  },
+  "findings": []
+}

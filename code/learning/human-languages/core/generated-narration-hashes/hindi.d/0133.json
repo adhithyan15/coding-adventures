@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 133,
+  "sourceHash": "fnv1a64:6483e40f31cd3677",
+  "lessonIds": [
+    "HI-C133-casma",
+    "HI-C133-chata",
+    "HI-C133-batua",
+    "HI-C133-palang",
+    "HI-C133-bistar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch133.txt",
+  "json": "hindi/narration/ch133.json",
+  "textHash": "fnv1a64:e9ebe20f7e080836",
+  "jsonHash": "fnv1a64:86eeca727f46867f",
+  "findings": []
+}

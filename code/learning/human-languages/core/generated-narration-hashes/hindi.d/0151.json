@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 151,
+  "sourceHash": "fnv1a64:802004c1413ba886",
+  "lessonIds": [
+    "HI-C151-thori",
+    "HI-C151-jibh",
+    "HI-C151-gardan",
+    "HI-C151-chati",
+    "HI-C151-kamar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch151.txt",
+  "json": "hindi/narration/ch151.json",
+  "textHash": "fnv1a64:9b0df700ec73581a",
+  "jsonHash": "fnv1a64:5b7c63f186c8664e",
+  "findings": []
+}

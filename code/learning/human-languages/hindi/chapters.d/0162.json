@@ -1,0 +1,19 @@
+{
+  "chapter": 162,
+  "title": "To swim, To dance, To laugh, To cry, To forget",
+  "label": "ch:hi-to-swim-to-dance-to-laugh-to-cry-to-forget",
+  "canDo": "I can say to swim, to dance, to laugh, to cry and to forget.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C162-bhulna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 162: i can say to swim, to dance, to laugh, to cry and to forget.",
+    "assesses": [
+      "HI-LEX-C162-ACT162-03",
+      "HI-LEX-C162-ACT162-04",
+      "HI-LEX-C162-ACT162-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C153-daftar",
+  "pathSegment": "HI-PATH-153-THINGS153",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-153-THINGS153",
+      "order": 3
+    }
+  ]
+}

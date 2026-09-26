@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C139-seb",
+    "language": "hindi",
+    "chapter": 139,
+    "sequence": 6390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e315cf3ffdef142"
+  },
+  "findings": []
+}

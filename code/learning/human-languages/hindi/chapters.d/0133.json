@@ -1,0 +1,19 @@
+{
+  "chapter": 133,
+  "title": "Glasses, Umbrella, Wallet, Bed frame, Bedding",
+  "label": "ch:hi-glasses-umbrella-wallet-bed-frame-bedding",
+  "canDo": "I can say glasses, an umbrella, a wallet, a bed frame and bedding.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C133-bistar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 133: i can say glasses, an umbrella, a wallet, a bed frame and bedding.",
+    "assesses": [
+      "HI-LEX-C133-THINGS133-03",
+      "HI-LEX-C133-THINGS133-04",
+      "HI-LEX-C133-THINGS133-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:302c98377a43c671",
+  "lessonIds": [
+    "HI-C162-tairna",
+    "HI-C162-nacna",
+    "HI-C162-hasna",
+    "HI-C162-rona",
+    "HI-C162-bhulna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch162.txt",
+  "json": "hindi/narration/ch162.json",
+  "textHash": "fnv1a64:6ab1290b6829415f",
+  "jsonHash": "fnv1a64:5efb760cda990c47",
+  "findings": []
+}

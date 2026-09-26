@@ -1,0 +1,11 @@
+{
+  "id": "HI-C155-tez",
+  "pathSegment": "HI-PATH-155-QUAL155",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-155-QUAL155",
+      "order": 4
+    }
+  ]
+}

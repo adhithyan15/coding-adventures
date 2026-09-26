@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C136-dupatta",
+    "language": "hindi",
+    "chapter": 136,
+    "sequence": 6170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f437c32c2178bcad"
+  },
+  "findings": []
+}

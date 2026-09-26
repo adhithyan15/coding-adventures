@@ -1,0 +1,19 @@
+{
+  "chapter": 148,
+  "title": "Pigeon, Parrot, Owl, Butterfly, Fly",
+  "label": "ch:hi-pigeon-parrot-owl-butterfly-fly",
+  "canDo": "I can say a pigeon, a parrot, an owl, a butterfly and a fly.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "HI-C148-makkhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 148: i can say a pigeon, a parrot, an owl, a butterfly and a fly.",
+    "assesses": [
+      "HI-LEX-C148-THINGS148-03",
+      "HI-LEX-C148-THINGS148-04",
+      "HI-LEX-C148-THINGS148-05"
+    ]
+  }
+}

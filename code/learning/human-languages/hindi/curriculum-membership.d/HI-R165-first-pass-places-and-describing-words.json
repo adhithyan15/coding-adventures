@@ -1,0 +1,11 @@
+{
+  "id": "HI-R165-first-pass-places-and-describing-words",
+  "pathSegment": "HI-PATH-165-ACT165",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-165-ACT165",
+      "order": 5
+    }
+  ]
+}

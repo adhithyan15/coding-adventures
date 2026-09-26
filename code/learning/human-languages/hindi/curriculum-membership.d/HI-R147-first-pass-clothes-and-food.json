@@ -1,0 +1,11 @@
+{
+  "id": "HI-R147-first-pass-clothes-and-food",
+  "pathSegment": "HI-PATH-147-THINGS147",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-147-THINGS147",
+      "order": 5
+    }
+  ]
+}

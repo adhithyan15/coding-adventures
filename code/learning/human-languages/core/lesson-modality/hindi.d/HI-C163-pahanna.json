@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C163-pahanna",
+    "language": "hindi",
+    "chapter": 163,
+    "sequence": 7690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92262bc45540b98a"
+  },
+  "findings": []
+}

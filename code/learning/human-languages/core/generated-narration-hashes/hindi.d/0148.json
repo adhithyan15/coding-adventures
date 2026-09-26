@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 148,
+  "sourceHash": "fnv1a64:4da6def2500b87e3",
+  "lessonIds": [
+    "HI-C148-kabutar",
+    "HI-C148-tota",
+    "HI-C148-ullu",
+    "HI-C148-titli",
+    "HI-C148-makkhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch148.txt",
+  "json": "hindi/narration/ch148.json",
+  "textHash": "fnv1a64:640408fc34702141",
+  "jsonHash": "fnv1a64:655ba1cb81bf83f6",
+  "findings": []
+}

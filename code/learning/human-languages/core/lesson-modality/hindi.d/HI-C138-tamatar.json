@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C138-tamatar",
+    "language": "hindi",
+    "chapter": 138,
+    "sequence": 6270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d45847b9961b20cc"
+  },
+  "findings": []
+}

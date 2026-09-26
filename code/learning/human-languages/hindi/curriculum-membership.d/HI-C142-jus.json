@@ -1,0 +1,11 @@
+{
+  "id": "HI-C142-jus",
+  "pathSegment": "HI-PATH-142-THINGS142",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-142-THINGS142",
+      "order": 2
+    }
+  ]
+}

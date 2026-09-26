@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C142-jus",
+    "language": "hindi",
+    "chapter": 142,
+    "sequence": 6520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92461c4e954bad8e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C150-gal",
+  "pathSegment": "HI-PATH-150-THINGS150",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-150-THINGS150",
+      "order": 4
+    }
+  ]
+}

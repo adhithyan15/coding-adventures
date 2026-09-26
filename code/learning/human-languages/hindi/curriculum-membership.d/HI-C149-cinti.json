@@ -1,0 +1,11 @@
+{
+  "id": "HI-C149-cinti",
+  "pathSegment": "HI-PATH-149-THINGS149",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-149-THINGS149",
+      "order": 1
+    }
+  ]
+}
