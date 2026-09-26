@@ -1,0 +1,19 @@
+{
+  "chapter": 154,
+  "title": "To wear, To call, To grow, To count, To shout",
+  "label": "ch:ta-to-wear-to-call-to-grow-to-count-to-shout",
+  "canDo": "I can say to wear, to call, to grow, to count and to shout.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C154-kattu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 154: i can say to wear, to call, to grow, to count and to shout.",
+    "assesses": [
+      "TA-LEX-C154-ACT154-03",
+      "TA-LEX-C154-ACT154-04",
+      "TA-LEX-C154-ACT154-05"
+    ]
+  }
+}

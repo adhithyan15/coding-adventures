@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:7a695f20525c96ce",
+  "lessonIds": [
+    "TA-C120-kannati",
+    "TA-C120-coppu",
+    "TA-C120-vali",
+    "TA-C120-pena",
+    "TA-C120-kagitam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch120.txt",
+  "json": "tamil/narration/ch120.json",
+  "textHash": "fnv1a64:216da6cca3912cdf",
+  "jsonHash": "fnv1a64:cb409c62e6d74175",
+  "findings": []
+}

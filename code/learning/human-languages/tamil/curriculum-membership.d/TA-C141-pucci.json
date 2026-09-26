@@ -1,0 +1,11 @@
+{
+  "id": "TA-C141-pucci",
+  "pathSegment": "TA-PATH-141-THINGS141",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "TA-EXT-141-THINGS141",
+      "order": 1
+    }
+  ]
+}

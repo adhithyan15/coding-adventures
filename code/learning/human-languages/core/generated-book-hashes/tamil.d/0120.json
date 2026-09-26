@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 120,
+  "sourceHash": "fnv1a64:84b9224377cf7868",
+  "lessonIds": [
+    "TA-C120-kannati",
+    "TA-C120-coppu",
+    "TA-C120-vali",
+    "TA-C120-pena",
+    "TA-C120-kagitam"
+  ],
+  "tex": "tamil/book/chapters/ch120-mirror-soap-bucket-pen-paper.tex"
+}

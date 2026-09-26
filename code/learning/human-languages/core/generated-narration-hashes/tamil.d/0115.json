@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 115,
+  "sourceHash": "fnv1a64:1ea93c0e66ddb65a",
+  "lessonIds": [
+    "TA-C115-nulakam",
+    "TA-C115-vanki",
+    "TA-C115-cantai",
+    "TA-C115-katarkarai",
+    "TA-C115-aluvalakam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch115.txt",
+  "json": "tamil/narration/ch115.json",
+  "textHash": "fnv1a64:4357b9d753a01fa1",
+  "jsonHash": "fnv1a64:84c0066e362c942d",
+  "findings": []
+}

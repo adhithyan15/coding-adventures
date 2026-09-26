@@ -1,0 +1,19 @@
+{
+  "chapter": 155,
+  "title": "To push, To pull, To put, To tie, To wash",
+  "label": "ch:ta-to-push-to-pull-to-put-to-tie-to-wash",
+  "canDo": "I can say to push, to pull, to put, to tie and to wash.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C155-tuvai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 155: i can say to push, to pull, to put, to tie and to wash.",
+    "assesses": [
+      "TA-LEX-C155-ACT155-03",
+      "TA-LEX-C155-ACT155-04",
+      "TA-LEX-C155-ACT155-05"
+    ]
+  }
+}

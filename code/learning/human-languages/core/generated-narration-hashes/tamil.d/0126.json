@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 126,
+  "sourceHash": "fnv1a64:12f37832c72c4c08",
+  "lessonIds": [
+    "TA-C126-eri",
+    "TA-C126-kulam",
+    "TA-C126-katu",
+    "TA-C126-ilai",
+    "TA-C126-man"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch126.txt",
+  "json": "tamil/narration/ch126.json",
+  "textHash": "fnv1a64:705fdc467f864f2d",
+  "jsonHash": "fnv1a64:6bf155a812e20215",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 139,
+  "title": "Cumin, Leafy greens, Jackfruit, Guava, Lemon",
+  "label": "ch:ta-cumin-leafy-greens-jackfruit-guava-lemon",
+  "canDo": "I can say cumin, leafy greens, a jackfruit, a guava and a lemon.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-R139-second-pass-nature-and-animals",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 139: i can say cumin, leafy greens, a jackfruit, a guava and a lemon.",
+    "assesses": [
+      "TA-LEX-C139-THINGS139-03",
+      "TA-LEX-C139-THINGS139-04",
+      "TA-LEX-C139-THINGS139-05"
+    ]
+  }
+}

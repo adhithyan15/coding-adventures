@@ -1,0 +1,21 @@
+{
+  "language": "tamil",
+  "chapter": 157,
+  "sourceHash": "fnv1a64:b8845ac33d4ef754",
+  "lessonIds": [
+    "TA-C157-marai",
+    "TA-C157-kapparru",
+    "TA-C157-utu",
+    "TA-C157-eri2",
+    "TA-C157-anai",
+    "TA-R157-first-pass-describing-words",
+    "TA-R157-second-pass-verbs"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "tamil/narration/ch157.txt",
+  "json": "tamil/narration/ch157.json",
+  "textHash": "fnv1a64:b515b10ec9607bc7",
+  "jsonHash": "fnv1a64:2db47a7e150da8b1",
+  "findings": []
+}

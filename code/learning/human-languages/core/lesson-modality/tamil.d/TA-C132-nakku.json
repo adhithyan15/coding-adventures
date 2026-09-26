@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C132-nakku",
+    "language": "tamil",
+    "chapter": 132,
+    "sequence": 5980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2cfeb0afdde7827"
+  },
+  "findings": []
+}

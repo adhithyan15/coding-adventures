@@ -1,0 +1,19 @@
+{
+  "chapter": 143,
+  "title": "Thumb, Bad, Beautiful, Long, Short",
+  "label": "ch:ta-thumb-bad-beautiful-long-short",
+  "canDo": "I can say a thumb, bad, beautiful, long and short.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C143-kuttaiyana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 143: i can say a thumb, bad, beautiful, long and short.",
+    "assesses": [
+      "TA-LEX-C143-THINGS143-03",
+      "TA-LEX-C143-THINGS143-04",
+      "TA-LEX-C143-THINGS143-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 119,
+  "sourceHash": "fnv1a64:c0b7b15634f20462",
+  "lessonIds": [
+    "TA-C119-cavi",
+    "TA-C119-puttu",
+    "TA-C119-tuntu",
+    "TA-C119-talaiyanai",
+    "TA-C119-porvai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch119.txt",
+  "json": "tamil/narration/ch119.json",
+  "textHash": "fnv1a64:c3b2995f321906f3",
+  "jsonHash": "fnv1a64:c7c8fc9870a16cc0",
+  "findings": []
+}

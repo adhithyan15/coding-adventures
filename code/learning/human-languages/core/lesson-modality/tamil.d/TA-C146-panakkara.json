@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C146-panakkara",
+    "language": "tamil",
+    "chapter": 146,
+    "sequence": 6730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f475f46c792401ca"
+  },
+  "findings": []
+}

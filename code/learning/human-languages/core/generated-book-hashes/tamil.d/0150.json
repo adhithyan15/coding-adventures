@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 150,
+  "sourceHash": "fnv1a64:3269c9aaa360cb2a",
+  "lessonIds": [
+    "TA-C150-uta",
+    "TA-C150-campal",
+    "TA-C150-patu",
+    "TA-C150-camai",
+    "TA-C150-vettu"
+  ],
+  "tex": "tamil/book/chapters/ch150-purple-grey-to-sing-to-cook-to-cut.tex"
+}

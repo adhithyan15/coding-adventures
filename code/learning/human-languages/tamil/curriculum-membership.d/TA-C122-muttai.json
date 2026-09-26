@@ -1,0 +1,11 @@
+{
+  "id": "TA-C122-muttai",
+  "pathSegment": "TA-PATH-122-THINGS122",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-122-THINGS122",
+      "order": 2
+    }
+  ]
+}

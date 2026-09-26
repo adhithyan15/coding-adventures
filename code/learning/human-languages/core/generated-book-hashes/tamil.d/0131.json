@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 131,
+  "sourceHash": "fnv1a64:a322678d68f57338",
+  "lessonIds": [
+    "TA-C131-kili",
+    "TA-C131-pura",
+    "TA-C131-antai",
+    "TA-C131-mayil",
+    "TA-C131-erumpu"
+  ],
+  "tex": "tamil/book/chapters/ch131-parrot-pigeon-owl-peacock-ant.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 118,
+  "sourceHash": "fnv1a64:dc156a5dd3624f64",
+  "lessonIds": [
+    "TA-C118-atuppu",
+    "TA-C118-pattiram",
+    "TA-C118-tattu",
+    "TA-C118-koppai",
+    "TA-C118-karanti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch118.txt",
+  "json": "tamil/narration/ch118.json",
+  "textHash": "fnv1a64:f83c7da30896a3e3",
+  "jsonHash": "fnv1a64:8f4e46a88ea18ccc",
+  "findings": []
+}

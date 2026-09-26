@@ -1,0 +1,19 @@
+{
+  "chapter": 113,
+  "title": "Straight ahead, Near, Distance, Behind, In front",
+  "label": "ch:ta-straight-ahead-near-distance-behind-in-front",
+  "canDo": "I can say straight ahead, near, distance, behind and in front.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C113-munnal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 113: i can say straight ahead, near, distance, behind and in front.",
+    "assesses": [
+      "TA-LEX-C113-LOC113-03",
+      "TA-LEX-C113-LOC113-04",
+      "TA-LEX-C113-LOC113-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C132-vay",
+  "pathSegment": "TA-PATH-132-THINGS132",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-132-THINGS132",
+      "order": 2
+    }
+  ]
+}

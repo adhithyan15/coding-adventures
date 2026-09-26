@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 155,
+  "sourceHash": "fnv1a64:65f240abb84da1bd",
+  "lessonIds": [
+    "TA-C155-tallu",
+    "TA-C155-ilu",
+    "TA-C155-potu",
+    "TA-C155-kattu2",
+    "TA-C155-tuvai"
+  ],
+  "tex": "tamil/book/chapters/ch155-to-push-to-pull-to-put-to-tie-to-wash.tex"
+}

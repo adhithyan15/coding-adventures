@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C149-patukappana",
+    "language": "tamil",
+    "chapter": 149,
+    "sequence": 6920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a9c9fc0b181dac81"
+  },
+  "findings": []
+}

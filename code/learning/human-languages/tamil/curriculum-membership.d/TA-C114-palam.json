@@ -1,0 +1,11 @@
+{
+  "id": "TA-C114-palam",
+  "pathSegment": "TA-PATH-114-LOC114",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-114-LOC114",
+      "order": 2
+    }
+  ]
+}

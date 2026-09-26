@@ -1,0 +1,19 @@
+{
+  "chapter": 117,
+  "title": "Ability, Right, Chance, Tool, Possession",
+  "label": "ch:ta-ability-right-chance-tool-possession",
+  "canDo": "I can say ability, a right, a chance, a tool and a possession.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "TA-C117-utaimai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 117: i can say ability, a right, a chance, a tool and a possession.",
+    "assesses": [
+      "TA-LEX-C117-CAN117-03",
+      "TA-LEX-C117-CAN117-04",
+      "TA-LEX-C117-CAN117-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C113-neraka",
+    "language": "tamil",
+    "chapter": 113,
+    "sequence": 4900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5066292fb6ee2204"
+  },
+  "findings": []
+}

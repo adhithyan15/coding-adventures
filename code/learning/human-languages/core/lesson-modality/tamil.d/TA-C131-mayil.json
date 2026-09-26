@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C131-mayil",
+    "language": "tamil",
+    "chapter": 131,
+    "sequence": 5930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ffbe74d37b6c747"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 128,
+  "title": "Wave, Buffalo, Horse, Elephant, Tiger",
+  "label": "ch:ta-wave-buffalo-horse-elephant-tiger",
+  "canDo": "I can say a wave, a buffalo, a horse, an elephant and a tiger.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C128-puli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 128: i can say a wave, a buffalo, a horse, an elephant and a tiger.",
+    "assesses": [
+      "TA-LEX-C128-THINGS128-03",
+      "TA-LEX-C128-THINGS128-04",
+      "TA-LEX-C128-THINGS128-05"
+    ]
+  }
+}

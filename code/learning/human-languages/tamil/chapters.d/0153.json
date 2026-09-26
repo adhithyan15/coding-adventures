@@ -1,0 +1,19 @@
+{
+  "chapter": 153,
+  "title": "To climb, To get down, To turn, To join, To bathe",
+  "label": "ch:ta-to-climb-to-get-down-to-turn-to-join-to-bathe",
+  "canDo": "I can say to climb, to get down, to turn, to join and to bathe.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "TA-C153-kuli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 153: i can say to climb, to get down, to turn, to join and to bathe.",
+    "assesses": [
+      "TA-LEX-C153-ACT153-03",
+      "TA-LEX-C153-ACT153-04",
+      "TA-LEX-C153-ACT153-05"
+    ]
+  }
+}

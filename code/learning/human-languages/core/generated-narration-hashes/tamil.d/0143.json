@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 143,
+  "sourceHash": "fnv1a64:b3096e9533bfa855",
+  "lessonIds": [
+    "TA-C143-kattaiviral",
+    "TA-C143-ketta",
+    "TA-C143-alakana",
+    "TA-C143-nilamana",
+    "TA-C143-kuttaiyana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch143.txt",
+  "json": "tamil/narration/ch143.json",
+  "textHash": "fnv1a64:225ba07cc33d66dd",
+  "jsonHash": "fnv1a64:07f85b7273c11000",
+  "findings": []
+}

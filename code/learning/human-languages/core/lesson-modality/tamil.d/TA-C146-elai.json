@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C146-elai",
+    "language": "tamil",
+    "chapter": 146,
+    "sequence": 6740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d31b9484fd0d84ad"
+  },
+  "findings": []
+}

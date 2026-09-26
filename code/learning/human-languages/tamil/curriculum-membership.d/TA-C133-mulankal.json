@@ -1,0 +1,11 @@
+{
+  "id": "TA-C133-mulankal",
+  "pathSegment": "TA-PATH-133-THINGS133",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-133-THINGS133",
+      "order": 2
+    }
+  ]
+}

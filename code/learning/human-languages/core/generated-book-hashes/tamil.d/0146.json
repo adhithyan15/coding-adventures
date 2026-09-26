@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 146,
+  "sourceHash": "fnv1a64:92ff4db703cad984",
+  "lessonIds": [
+    "TA-C146-kacappu",
+    "TA-C146-pulippu",
+    "TA-C146-karam",
+    "TA-C146-panakkara",
+    "TA-C146-elai"
+  ],
+  "tex": "tamil/book/chapters/ch146-bitter-sour-spicy-rich-poor.tex"
+}

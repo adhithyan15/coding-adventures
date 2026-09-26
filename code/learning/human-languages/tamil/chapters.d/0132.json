@@ -1,0 +1,19 @@
+{
+  "chapter": 132,
+  "title": "Mosquito, Face, Mouth, Tongue, Finger",
+  "label": "ch:ta-mosquito-face-mouth-tongue-finger",
+  "canDo": "I can say a mosquito, the face, the mouth, the tongue and a finger.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C132-viral",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 132: i can say a mosquito, the face, the mouth, the tongue and a finger.",
+    "assesses": [
+      "TA-LEX-C132-THINGS132-03",
+      "TA-LEX-C132-THINGS132-04",
+      "TA-LEX-C132-THINGS132-05"
+    ]
+  }
+}

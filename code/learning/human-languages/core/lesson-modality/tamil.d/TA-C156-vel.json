@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C156-vel",
+    "language": "tamil",
+    "chapter": 156,
+    "sequence": 7280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5082dec40bb228e9"
+  },
+  "findings": []
+}

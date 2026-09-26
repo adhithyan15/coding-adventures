@@ -1,0 +1,11 @@
+{
+  "id": "TA-C151-tetu",
+  "pathSegment": "TA-PATH-151-ACT151",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "TA-EXT-151-ACT151",
+      "order": 3
+    }
+  ]
+}

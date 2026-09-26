@@ -1,0 +1,13 @@
+{
+  "language": "tamil",
+  "chapter": 124,
+  "sourceHash": "fnv1a64:f3044af5296ae79a",
+  "lessonIds": [
+    "TA-C124-takkali",
+    "TA-C124-milakay",
+    "TA-C124-inci",
+    "TA-C124-puntu",
+    "TA-C124-ten"
+  ],
+  "tex": "tamil/book/chapters/ch124-tomato-chilli-ginger-garlic-honey.tex"
+}

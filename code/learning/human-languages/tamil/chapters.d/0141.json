@@ -1,0 +1,19 @@
+{
+  "chapter": 141,
+  "title": "Island, Insect, Spider, Pig, Donkey",
+  "label": "ch:ta-island-insect-spider-pig-donkey",
+  "canDo": "I can say an island, an insect, a spider, a pig and a donkey.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-C141-kalutai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 141: i can say an island, an insect, a spider, a pig and a donkey.",
+    "assesses": [
+      "TA-LEX-C141-THINGS141-03",
+      "TA-LEX-C141-THINGS141-04",
+      "TA-LEX-C141-THINGS141-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C123-kaykari",
+  "pathSegment": "TA-PATH-123-THINGS123",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-123-THINGS123",
+      "order": 0
+    }
+  ]
+}

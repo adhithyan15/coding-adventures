@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C139-koyya",
+    "language": "tamil",
+    "chapter": 139,
+    "sequence": 6330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8f06c1883e00a0f"
+  },
+  "findings": []
+}

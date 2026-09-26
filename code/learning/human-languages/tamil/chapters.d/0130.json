@@ -1,0 +1,19 @@
+{
+  "chapter": 130,
+  "title": "Fox, Snake, Rat, Frog, Tortoise",
+  "label": "ch:ta-fox-snake-rat-frog-tortoise",
+  "canDo": "I can say a fox, a snake, a rat, a frog and a tortoise.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "TA-R130-second-pass-food",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 130: i can say a fox, a snake, a rat, a frog and a tortoise.",
+    "assesses": [
+      "TA-LEX-C130-THINGS130-03",
+      "TA-LEX-C130-THINGS130-04",
+      "TA-LEX-C130-THINGS130-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 116,
+  "title": "Garden, Corner, Turn, Can, Skill",
+  "label": "ch:ta-garden-corner-turn-can-skill",
+  "canDo": "I can say a garden, a corner, a turn, can and a skill.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "TA-C116-tiramai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 116: i can say a garden, a corner, a turn, can and a skill.",
+    "assesses": [
+      "TA-LEX-C116-LOC116-03",
+      "TA-LEX-C116-LOC116-04",
+      "TA-LEX-C116-LOC116-05"
+    ]
+  }
+}

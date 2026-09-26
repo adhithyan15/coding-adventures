@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C153-iranku",
+    "language": "tamil",
+    "chapter": 153,
+    "sequence": 7110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b71ce951a09578bd"
+  },
+  "findings": []
+}

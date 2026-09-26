@@ -1,0 +1,19 @@
+{
+  "language": "tamil",
+  "chapter": 113,
+  "sourceHash": "fnv1a64:82a6b1f40bbe89e1",
+  "lessonIds": [
+    "TA-C113-neraka",
+    "TA-C113-arukil",
+    "TA-C113-turam",
+    "TA-C113-pinnal",
+    "TA-C113-munnal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "tamil/narration/ch113.txt",
+  "json": "tamil/narration/ch113.json",
+  "textHash": "fnv1a64:dde927e402ed7987",
+  "jsonHash": "fnv1a64:dff1acae2f3b4243",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C118-karanti",
+  "pathSegment": "TA-PATH-118-THINGS118",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "TA-EXT-118-THINGS118",
+      "order": 4
+    }
+  ]
+}

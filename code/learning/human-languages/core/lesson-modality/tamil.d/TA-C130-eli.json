@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C130-eli",
+    "language": "tamil",
+    "chapter": 130,
+    "sequence": 5820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a033feac1afc21c9"
+  },
+  "findings": []
+}

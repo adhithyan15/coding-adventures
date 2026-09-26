@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C149-pirapalamana",
+    "language": "tamil",
+    "chapter": 149,
+    "sequence": 6900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f2cf994646d9d1c"
+  },
+  "findings": []
+}

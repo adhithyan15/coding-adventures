@@ -1,0 +1,847 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 139,
+  "title": "Cumin, Leafy greens, Jackfruit, Guava, Lemon",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:228389393f32a19f",
+  "lessons": [
+    {
+      "id": "TA-C139-cirakam",
+      "sequence": 6300,
+      "title": "சீரகம் (cīrakam) — cumin",
+      "headword": "சீரகம்",
+      "romanization": "cīrakam",
+      "gloss": "cumin",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c894dbf722c0d000",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for pepper, then the Tamil for mustard seed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சீரகம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சீரகம் — cīrakam — \"cumin\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīrakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīrakam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cīrakam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cīrakam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say cīrakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *cīrakam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for pepper, then the Tamil for mustard seed, then say cīrakam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for pepper, then the Tamil for mustard seed, then say *cīrakam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சீரகம் (cīrakam) mean? (\"Cumin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C139-kirai",
+      "sequence": 6310,
+      "title": "கீரை (kīrai) — leafy greens",
+      "headword": "கீரை",
+      "romanization": "kīrai",
+      "gloss": "leafy greens",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41468ab6fa2da48b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for mustard seed, then the Tamil for cumin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கீரை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கீரை — kīrai — \"leafy greens\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kīrai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kīrai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kīrai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kīrai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say kīrai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *kīrai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for mustard seed, then the Tamil for cumin, then say kīrai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for mustard seed, then the Tamil for cumin, then say *kīrai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கீரை (kīrai) mean? (\"Leafy greens\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C139-palappalam",
+      "sequence": 6320,
+      "title": "பலாப்பழம் (palāppaḻam) — a jackfruit",
+      "headword": "பலாப்பழம்",
+      "romanization": "palāppaḻam",
+      "gloss": "a jackfruit",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8dbf1363d3ff2a95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for cumin, then the Tamil for leafy greens."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say எனக்குத் தமிழ் பிடிக்கும், then the plain verb for wanting, விரும்பு."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பலாப்பழம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பலாப்பழம் — palāppaḻam — \"a jackfruit\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palāppaḻam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palāppaḻam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palāppaḻam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palāppaḻam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say palāppaḻam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *palāppaḻam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for cumin, then the Tamil for leafy greens, then say palāppaḻam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for cumin, then the Tamil for leafy greens, then say *palāppaḻam* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பலாப்பழம் (palāppaḻam) mean? (\"A jackfruit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C139-koyya",
+      "sequence": 6330,
+      "title": "கொய்யா (koyyā) — a guava",
+      "headword": "கொய்யா",
+      "romanization": "koyyā",
+      "gloss": "a guava",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a8f06c1883e00a0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for leafy greens, then the Tamil for a jackfruit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கொய்யா",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கொய்யா — koyyā — \"a guava\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koyyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koyyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koyyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koyyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say koyyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *koyyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for leafy greens, then the Tamil for a jackfruit, then say koyyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for leafy greens, then the Tamil for a jackfruit, then say *koyyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கொய்யா (koyyā) mean? (\"A guava\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C139-elumiccai",
+      "sequence": 6340,
+      "title": "எலுமிச்சை (elumiccai) — a lemon",
+      "headword": "எலுமிச்சை",
+      "romanization": "elumiccai",
+      "gloss": "a lemon",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71d3fb41a030cc07",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Tamil for a jackfruit, then the Tamil for a guava."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: எலுமிச்சை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எலுமிச்சை — elumiccai — \"a lemon\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "elumiccai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *elumiccai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "elumiccai, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *elumiccai*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "say elumiccai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: say *elumiccai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Tamil for a jackfruit, then the Tamil for a guava, then say elumiccai again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Tamil for a jackfruit, then the Tamil for a guava, then say *elumiccai* again]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does எலுமிச்சை (elumiccai) mean? (\"A lemon\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R139-first-pass-food-and-nature",
+      "sequence": 6350,
+      "title": "Food and nature — a first pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "first pass over chapters 131-134",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e49e245d2bee4525",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for a guava and a lemon."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a parrot, a pigeon, an owl, a peacock, an ant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a parrot, a pigeon, an owl, a peacock, an ant]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mosquito, the face, the mouth, the tongue, a finger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mosquito, the face, the mouth, the tongue, a finger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a shoulder, the chest, a knee, hair, the skin",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a shoulder, the chest, a knee, hair, the skin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a curtain, a mattress, a television, a mobile phone, a computer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a curtain, a mattress, a television, a mobile phone, a computer]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A parrot? (கிளி, kiḷi.) A pigeon? (புறா, puṟā.) An owl? (ஆந்தை, āntai.) A peacock? (மயில், mayil.) An ant? (எறும்பு, eṟumpu.) A mosquito? (கொசு, kocu.) The face? (முகம், mukam.) The mouth? (வாய், vāy.) The tongue? (நாக்கு, nākku.) A finger? (விரல், viral.) A shoulder? (தோள், tōḷ.) The chest? (மார்பு, mārpu.) A knee? (முழங்கால், muḻaṅkāl.) Hair? (முடி, muṭi.) The skin? (தோல், tōl.) A curtain? (திரைச்சீலை, tiraiccīlai.) A mattress? (மெத்தை, mettai.) A television? (தொலைக்காட்சி, tolaikkāṭci.) A mobile phone? (கைப்பேசி, kaippēci.) A computer? (கணினி, kaṇiṉi.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-R139-second-pass-nature-and-animals",
+      "sequence": 6360,
+      "title": "Nature and animals — a second pass",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "second pass over chapters 135-139",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02687cb7189222f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the words for an electric fan and scissors."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an electric fan, scissors, a hammer, a nail, a ladder",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an electric fan, scissors, a hammer, a nail, a ladder]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bottle, a ball, a kite, a doll, a purse",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bottle, a ball, a kite, a doll, a purse]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a ring, a bangle, a sock, a glove, a class",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a ring, a bangle, a sock, a glove, a class]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an exam, an answer, tamarind, pepper, mustard seed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an exam, an answer, tamarind, pepper, mustard seed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cumin, leafy greens, a jackfruit, a guava, a lemon",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cumin, leafy greens, a jackfruit, a guava, a lemon]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An electric fan? (மின்விசிறி, miṉviciṟi.) Scissors? (கத்தரிக்கோல், kattarikkōl.) A hammer? (சுத்தியல், cuttiyal.) A nail? (ஆணி, āṇi.) A ladder? (ஏணி, ēṇi.) A bottle? (குப்பி, kuppi.) A ball? (பந்து, pantu.) A kite? (பட்டம், paṭṭam.) A doll? (பொம்மை, pommai.) A purse? (பணப்பை, paṇappai.) A ring? (மோதிரம், mōtiram.) A bangle? (வளையல், vaḷaiyal.) A sock? (காலுறை, kāluṟai.) A glove? (கையுறை, kaiyuṟai.) A class? (வகுப்பு, vakuppu.) An exam? (தேர்வு, tērvu.) An answer? (பதில், patil.) Tamarind? (புளி, puḷi.) Pepper? (மிளகு, miḷaku.) Mustard seed? (கடுகு, kaṭuku.) Cumin? (சீரகம், cīrakam.) Leafy greens? (கீரை, kīrai.) A jackfruit? (பலாப்பழம், palāppaḻam.) A guava? (கொய்யா, koyyā.) A lemon? (எலுமிச்சை, elumiccai.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "TA-C129-kuranku",
+  "pathSegment": "TA-PATH-129-THINGS129",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "TA-EXT-129-THINGS129",
+      "order": 2
+    }
+  ]
+}

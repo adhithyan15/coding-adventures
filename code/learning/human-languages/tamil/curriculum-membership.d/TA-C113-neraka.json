@@ -1,0 +1,11 @@
+{
+  "id": "TA-C113-neraka",
+  "pathSegment": "TA-PATH-113-LOC113",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "TA-EXT-113-LOC113",
+      "order": 0
+    }
+  ]
+}

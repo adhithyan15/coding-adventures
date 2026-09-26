@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "TA-C147-vayatana",
+    "language": "tamil",
+    "chapter": 147,
+    "sequence": 6760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42475c16bedf5cef"
+  },
+  "findings": []
+}
