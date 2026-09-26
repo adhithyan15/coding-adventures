@@ -96,7 +96,9 @@
 //
 // A voiced kana (が, ぽ) is a combination of a letter and a mark, so it is
 // measured by its parts: it counts as written once its base kana and the mark
-// have each been written.
+// have each been written. A capital and its small letter (Я and я) are one
+// letter in two forms, so a word holding either form anchors a lesson for the
+// other.
 //
 // letter-ledger.ts asks a neighbouring question: does a script's AUTHORED
 // letter order (data/scripts/<script>-ledger.json) still match the corpus? This
@@ -223,6 +225,24 @@ function combinationParts(ch: string): string[] {
 /** A decimal digit in any script: ౧, ೨, ੫, ٣. See "Numerals" above. */
 const DIGIT = /^\p{Nd}$/u;
 
+/**
+ * A CASE PAIR is one letter in two forms. Russian teaches the capital Я early,
+ * and the small я that spells the word "I" much later. The reader who already
+ * says я has met the letter, and the capital is its other shape, so the capital
+ * is anchored by the word, the same way が is anchored by か and ゛. This is
+ * one-to-one only: a letter whose other case is not a single code point, or
+ * that has no case at all (every Indic, Arabic and kana letter), is itself.
+ *
+ * Only anchoring reads case pairs. The completeness count (`unwritten`) still
+ * asks for each form that a word shows.
+ */
+function otherCase(ch: string): string {
+  const lower = ch.toLowerCase();
+  if (lower !== ch) return [...lower].length === 1 ? lower : ch;
+  const upper = ch.toUpperCase();
+  return [...upper].length === 1 ? upper : ch;
+}
+
 /** The target-script glyphs in a string, in order, deduplicated. */
 function glyphsIn(text: string, target: ReadonlySet<string>): string[] {
   return [
@@ -272,7 +292,7 @@ export function measureLetterAnchoring(lessons: readonly ParsedLesson[]): Letter
       if (letters !== undefined) {
         const letter = letters.join(" ");
         const glyphs = glyphsIn(letters.join(""), target);
-        const missing = glyphs.filter((ch) => !read.has(ch));
+        const missing = glyphs.filter((ch) => !read.has(ch) && !read.has(otherCase(ch)));
         const chapter = chapterOf(lesson);
         const sameChapter = wordGlyphsByChapter.get(chapter) ?? new Set<string>();
         let anchoring: LetterAnchoring;
