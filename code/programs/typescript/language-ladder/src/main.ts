@@ -110,7 +110,15 @@ import { type ReviewPick, refreshesOf, reviewPicks } from "./atomschedule.ts";
 import { type SynthesisDrill, piecesUsed, synthesisDrill } from "./synthesisdrill.ts";
 import { buildVoiceScript, type NarrationLesson } from "./voicescript.ts";
 import { type VoiceHandle, browserSpeech, playVoiceScript } from "./voiceplayer.ts";
-import { loadNarration } from "./narration-sources.ts";
+// narration-sources.ts holds one lazy loader per narration chapter file, and
+// that map is itself code: a static import put every entry (2,500+ path
+// strings, one per chapter per track) on first paint and pushed the eager
+// chunk past its 500 kB budget. Voice mode needs one chapter at a time, so
+// the map loads with the first lesson read aloud, as the module asks.
+async function loadNarration(language: string, chapter: number): Promise<unknown | null> {
+  const { loadNarration: load } = await import("./narration-sources.ts");
+  return load(language, chapter);
+}
 import { browserStorage as masteryStorage, loadMastery, saveMastery } from "./masterystore.ts";
 import { parseFont, boundsOf, type Font } from "@coding-adventures/script-ductus";
 import {
