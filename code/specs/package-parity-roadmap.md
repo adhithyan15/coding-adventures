@@ -14276,8 +14276,8 @@ entering the established-language denominator.
 ### DER ASN.1 portable implementation progress
 
 The closed 122-case, 22-error language-neutral contract now has complete
-package-native consumers in ten of fifteen established lanes: Rust, Python,
-Go, Dart, Java, TypeScript, Kotlin, C#, Ruby, and F#. Every consumer executes all
+package-native consumers in eleven of fifteen established lanes: Rust, Python,
+Go, Dart, Java, TypeScript, Kotlin, C#, Ruby, F#, and Swift. Every consumer executes all
 46 referenced DER TLV framing cases rather than treating delegated rows as
 automatic success. The refined
 corpus adds unsigned-64 OID boundaries, implicit-OID failures, exact explicit
@@ -14305,21 +14305,28 @@ and all 46 delegated framing cases plus all 22 error identifiers, native
 private-constructor, immutable-snapshot, bounded OID equality, limit, helper,
 and redaction checks at 96.55 percent line and 91.03 percent branch coverage;
 packaging, dependency audit, the Windows build front, and the real Go
-build-tool two-package dependency plan pass. All ten use
+build-tool two-package dependency plan pass. Swift passes the complete 122-case
+suite and all 46 delegated framing cases plus all 22 error identifiers,
+immutable snapshots, exact-owner shared budgets, bounded UInt64 OID equality,
+limit, helper, and redaction checks at 97.87 percent source line coverage;
+formatter lint, release warnings-as-errors, package description, both build
+fronts, and the real Go build-tool two-package dependency plan pass. All eleven use
 empty capability manifests, structural limits, shared work budgets,
 transactional cursors, unsigned-width-safe integer and OID handling, and
-payload-free diagnostics. Haskell, Elixir, Lua, Perl, and Swift
+payload-free diagnostics. Haskell, Elixir, Lua, and Perl
 remain in this same serial work item; no parity PR is
 open yet. Independent security review made validated element and primitive
-wrappers unforgeable in Python, Go, Dart, TypeScript, Kotlin, C#, Ruby, and F#, hid raw DER
+wrappers unforgeable in Python, Go, Dart, TypeScript, Kotlin, C#, Ruby, F#, and Swift, hid raw DER
 framing helpers from typed package surfaces, and added adversarial zero-value,
-runtime-token, immutable-snapshot, and redaction tests.
+runtime-token, immutable-snapshot, and redaction tests. Swift cursors additionally
+retain their originating decoder so a same-limit foreign decoder cannot reset
+the shared total-element budget.
 
 A bounded pre-next-lane audit closed the neutral-corpus holes before multiplying
 implementations. The prose now keeps allocation and ownership strategy
 non-normative instead of requiring every language to expose Rust's borrowed,
 `Copy`, or native `u64` representation. The consumer registry is explicitly a
-15-lane target denominator rather than a completion assertion. All ten
+15-lane target denominator rather than a completion assertion. All eleven
 implemented lanes execute the refined corpus; this refinement remains part of
 the same serial work item and no second PR was opened.
 
